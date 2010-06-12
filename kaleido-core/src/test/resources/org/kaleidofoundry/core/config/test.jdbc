@@ -1,0 +1,5 @@
+table=eai_admin.TEST_CONFIG
+propertyName=configName
+propertyValue=configValue
+propertyOrder=configOrder
+propertyEnabled=configEnabled

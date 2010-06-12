@@ -1,0 +1,370 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.kaleidofoundry</groupId>
+	<artifactId>kaleido-parent</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+
+	<name>Kaleido foundry parent POM</name>
+	<description>Parent POM for all kaleido-foundry projects. Provides default project build configuration.</description>
+	<url>http://www.kaleidofoundry.org</url>
+	<packaging>pom</packaging>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<organization>
+		<name>Kaleido foundry</name>
+		<url>http://www.kaleidofoundry.org</url>
+	</organization>
+
+	<developers>
+		<developer>
+			<id>jrad</id>
+			<name>Jerome RADUGET</name>
+			<email>jerome.raduget@kaleidofoundry.org</email>
+			<timezone>FR</timezone>
+			<organization>Consultant</organization>
+			<roles>
+				<role>Project Lead</role>
+				<role>Project Architect</role>
+				<role>Project Developer</role>
+			</roles>
+		</developer>
+	</developers>
+
+	<mailingLists>
+		<mailingList>
+			<name>kaleidofoundry-dev</name>
+			<subscribe>users-subscribe@kaleidofoundry.org</subscribe>
+			<unsubscribe>users-unsubscribe@kaleidofoundry.org</unsubscribe>
+			<post>users@kaleidofoundry.org</post>
+		</mailingList>
+	</mailingLists>
+
+	<properties>
+		<!-- kaleido options -->
+		<kaleido.version>1.0.0-SNAPSHOT</kaleido.version>
+		<!-- jdk / jee global version dependencies -->
+		<jdk.version>1.6</jdk.version>
+		<jee.servlet.version>2.5</jee.servlet.version>
+		<jee.jsf.version>2.0</jee.jsf.version>
+		<jee.jsp.version>2.2</jee.jsp.version>
+		<jee.jpa.version>2.0.0</jee.jpa.version>
+		<jee.jms.version>1.1</jee.jms.version>
+		<jee.mail.version>1.4.3</jee.mail.version>
+		<jee.ejb.version>2.1</jee.ejb.version>
+		<jee.el.version>2.2</jee.el.version>
+		<!-- framework global version dependencies -->
+		<slf4j.version>1.5.11</slf4j.version>
+		<log4j.version>1.2.14</log4j.version>
+		<junit.version>4.7</junit.version>
+		<!--
+			source encoding options
+			<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		-->
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+
+	</properties>
+
+	<modules>
+		<module>../kaleido-core</module>
+		<module>../kaleido-core-guice</module>
+		<module>../kaleido-mail</module>
+		<module>../kaleido-messaging</module>
+		<!-- 
+		<module>../kaleido-model</module>
+		<module>../kaleido-persistence</module>
+		<module>../kaleido-report</module>
+		<module>../kaleido-rules</module>
+		<module>../kaleido-web</module>
+		 -->
+	</modules>
+
+	<dependencies>
+		<!-- Framework for Logging  -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- Framework for testing -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>compile</scope>
+			<!--
+				test scope prefered... but bug with maven-processor-plugin
+			-->
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+			<scope>compile</scope>
+			<!--
+				test scope prefered... but bug with maven-processor-plugin
+			-->
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<!-- Maven central -->
+		<repository>
+			<id>central</id>
+			<name>Maven Plugin Repository</name>
+			<url>http://repo1.maven.org/maven2</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<!-- JavaMail, activation, ... sun API official repo -->
+		<repository>
+			<id>maven2-repository.dev.java.net</id>
+			<name>Java.net Repository for Maven</name>
+			<url>http://download.java.net/maven/2/</url>
+			<layout>default</layout>
+		</repository>
+		<!-- RichFaces, Seam, ... -->
+		<repository>
+			<id>jboss.maven2</id>
+			<name>Jboss Maven 2</name>
+			<url>http://repository.jboss.com/maven2/</url>
+			<layout>default</layout>
+		</repository>
+		<!-- JPA eclipse link provider -->
+		<repository>
+			<id>EclipseLink Repo</id>
+			<url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<!-- Maven central  -->
+		<pluginRepository>
+			<id>central</id>
+			<name>Maven Plugin Repository</name>
+			<url>http://repo1.maven.org/maven2</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+		<!--
+			Maven annotation processor plugin (jdk 6) 
+		<pluginRepository>
+			<id>maven-annotation-plugin</id>
+			<url>http://maven-annotation-plugin.googlecode.com/svn/trunk/mavenrepo</url>
+			<layout>default</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+		-->
+	</pluginRepositories>
+
+	<scm>
+		<connection>scm:svn:http://localhost/svn/${project.name}</connection>
+		<developerConnection>scm:svn:http://localhost/svn/${project.name}</developerConnection>
+		<tag>HEAD</tag>
+		<url>http://localhost/svn/${project.name}</url>
+	</scm>
+
+	<issueManagement>
+		<system>jira</system>
+		<url>http://jira.kaleidofoundry.com/</url>
+	</issueManagement>
+
+	<distributionManagement>
+		<repository>
+			<id>repository.kaleidofoundry.org</id>
+			<url>file://${maven.repository.root}</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots.kaleidofoundry.org</id>
+			<name>Kaleido Snapshot Repository</name>
+			<url>dav:https://snapshots.kaleidofoundry.org/maven2</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+					<!-- <optimize>true</optimize>  -->
+					<!--
+						disable annotation processors during normal compilation, use
+						maven-processor-plugin, waiting maven compiler plugin handle it
+					-->
+					<compilerArgument>-proc:none</compilerArgument>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.5</version>
+			</plugin>			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-plugin</artifactId>
+				<version>1.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<useProjectReferences>true</useProjectReferences>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<locales>fr</locales>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.sonar</groupId>
+				<artifactId>sonar-dev-mojo</artifactId>
+				<version>1.12.6</version>
+			</plugin>
+
+			<!-- annotation processor -->
+			<!-- ******************** -->
+
+			<!-- Annotation processor jdk 6 -->
+			<!--
+				http://maven-annotation-plugin.googlecode.com/svn/docs/usage.html
+			-->
+			<plugin>
+				<groupId>org.bsc.maven</groupId>
+				<artifactId>maven-processor-plugin</artifactId>
+				<version>1.3.5</version>
+				<executions>
+					<execution>
+						<id>process</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<outputDirectory>${project.basedir}/src/main/resources</outputDirectory>
+							<processors>
+								<processor>org.kaleidofoundry.core.plugin.processor.PluginAnnotationProcessor</processor>
+							</processors>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies />
+			</plugin>
+
+			<!--
+				Run annotation processors on src/test/java sources 
+				-->
+			<plugin>
+				<groupId>org.bsc.maven</groupId>
+				<artifactId>maven-processor-plugin</artifactId>
+				<version>1.3.5</version>
+				<executions>
+					<execution>
+						<id>process-test</id>
+						<goals>
+							<goal>process-test</goal>
+						</goals>
+						<phase>process-test-classes</phase>
+						<configuration>
+							<outputDirectory>${project.basedir}/src/test/resources</outputDirectory>
+							<processors>
+								<processor>org.kaleidofoundry.core.plugin.processor.PluginAnnotationProcessor</processor>
+							</processors>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies />
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.6.1</version>
+				<configuration>
+					<links>
+						<link>http://java.sun.com/javase/6/docs/api/</link>
+					</links>
+					<source>${jdk.version}</source>
+					<minmemory>128m</minmemory>
+					<maxmemory>512m</maxmemory>
+					<sourcepath>${project.basedir}/src/main/javadoc;${project.basedir}/src/main/java</sourcepath>
+					<docfilessubdirs>true</docfilessubdirs>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+
+</project>

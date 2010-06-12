@@ -1,0 +1,46 @@
+<root>
+	<application>
+			<name>app</name>
+			<version>1.0.0</version>
+			<description>description of the application...</description>
+			<date>2006-09-01T00:00:00</date>	
+			<librairies>
+				<value>dom4j.jar</value>
+				<value>log4j.jar</value>
+				<value>mail.jar</value>
+			</librairies>
+			<modules>
+				<sales>
+					<name>Sales</name>
+					<version>1.1.0</version>
+				</sales>
+				<marketing>
+					<name>Market.</name>
+				</marketing>
+				<netbusiness>
+					<name></name>
+				</netbusiness>
+			</modules>
+
+			<array>
+				<boolean>
+					<value>false</value>
+					<value>true</value>
+				</boolean>
+				<date>
+					<value>2009-01-02T00:00:00</value>
+					<value>2009-12-31T00:00:00</value>
+					<value>2012-05-15T00:00:00</value>
+				</date>
+				<bigdecimal>
+					<value>987.5 1.123456789</value>
+				</bigdecimal>
+			</array>
+			
+			<single>
+				<boolean>true</boolean>
+				<bigdecimal>1.123456789</bigdecimal>
+			</single>
+		
+	</application>
+</root>

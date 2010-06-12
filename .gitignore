@@ -1,0 +1,14 @@
+.metadata/
+target/
+derby.log
+.classpath
+.project
+.settings/
+.svn/
+.DS_Store
+kaleido-miscellaneous
+kaleido-model
+kaleido-persistence
+kaleido-report
+kaleido-rules
+kaleido-web

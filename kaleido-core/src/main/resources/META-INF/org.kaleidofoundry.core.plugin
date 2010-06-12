@@ -1,0 +1,3 @@
+org.kaleidofoundry.core.cache.Cache
+org.kaleidofoundry.core.config.Configuration
+org.kaleidofoundry.core.store.ResourceStore

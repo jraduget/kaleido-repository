@@ -1,0 +1,113 @@
+<map version="0.9.0">
+<!-- To view this file, download free mind mapping software FreeMind from http://freemind.sourceforge.net -->
+<node CREATED="1273649962457" ID="ID_1871895780" MODIFIED="1274174108703" TEXT="Kaleido-foundry-core-todo">
+<node CREATED="1273649984832" ID="ID_668634339" MODIFIED="1273649998160" POSITION="right" TEXT="deploy">
+<node CREATED="1273649989863" ID="ID_1965308475" MODIFIED="1273649995645" TEXT="Xebia deploy it"/>
+<node CREATED="1273649999848" ID="ID_1891420150" MODIFIED="1273650002520" TEXT="Git"/>
+<node CREATED="1273650008410" ID="ID_1752450432" MODIFIED="1273650017723" TEXT="maven integration"/>
+</node>
+<node CREATED="1273679456364" ID="ID_1059926756" MODIFIED="1274963454851" POSITION="left" TEXT="core">
+<node CREATED="1273679462583" ID="ID_490906218" MODIFIED="1274112575370" TEXT="i18n">
+<node CREATED="1273679469552" ID="ID_1284464272" MODIFIED="1273679475473" TEXT="cache clear"/>
+<node COLOR="#338800" CREATED="1273679478067" ID="ID_797940709" MODIFIED="1274112234343" TEXT="cache internal"/>
+</node>
+<node CREATED="1274112533542" ID="ID_777252037" MODIFIED="1274112553245" TEXT="aspectj">
+<node CREATED="1274112545620" ID="ID_1430127236" MODIFIED="1274112551182" TEXT="NullArgumentException"/>
+<node CREATED="1274112554167" ID="ID_1549212776" MODIFIED="1274112564073" TEXT="RuntimeContext field ioc"/>
+</node>
+<node CREATED="1274112126625" ID="ID_1018401427" MODIFIED="1274174128281" TEXT="cache">
+<node CREATED="1274173996329" ID="ID_1823386917" MODIFIED="1274174002720" TEXT="gigascpace implementation"/>
+<node CREATED="1265890773972" ID="_" MODIFIED="1265890786363" TEXT="jboss cache with pojo query"/>
+<node CREATED="1265890792160" ID="Freemind_Link_755696895" MODIFIED="1265890803988" TEXT="infinispan with query module"/>
+</node>
+<node CREATED="1274174053766" ID="ID_90274298" MODIFIED="1274174725945" TEXT="configuration">
+<node COLOR="#000000" CREATED="1264090597000" ID="Freemind_Link_39876139" MODIFIED="1269610166573" TEXT="AbstractConfiguration : properties en interne, + delegate method pour load, store, ...">
+<font NAME="Dialog" SIZE="12"/>
+<icon BUILTIN="button_ok"/>
+</node>
+<node CREATED="1274112637884" ID="ID_279660509" MODIFIED="1274112655915" TEXT="event">
+<node CREATED="1274112642369" ID="ID_2859420" MODIFIED="1274112669650" TEXT="reload configuration &gt; runtimeContext"/>
+</node>
+<node COLOR="#000000" CREATED="1263132783000" ID="Freemind_Link_38816901" MODIFIED="1274174734882" TEXT="reload JMX  par notif  ou JMS ou event jgroup">
+<font NAME="Dialog" SIZE="12"/>
+</node>
+</node>
+<node CREATED="1274963456288" ID="ID_1409193556" MODIFIED="1274963460617" TEXT="lang">
+<node CREATED="1274963460617" ID="ID_602597646" MODIFIED="1274963464243" TEXT="annotation">
+<node CREATED="1274963464243" ID="ID_1114237606" MODIFIED="1274963511828" TEXT="jsr-305 (@Notnull, @ThreadSafe, ...)"/>
+</node>
+</node>
+</node>
+<node CREATED="1274112340607" ID="ID_587918517" MODIFIED="1274112427387" POSITION="right" TEXT="integration">
+<node CREATED="1274112345466" ID="ID_1651382725" MODIFIED="1274112406309" TEXT="ehcache local &amp; jgroup"/>
+<node CREATED="1274112358982" ID="ID_1245097848" MODIFIED="1274112413809" TEXT="jboss local &amp; jgroup"/>
+<node CREATED="1274112384591" ID="ID_1932982487" MODIFIED="1274112423465" TEXT="infini span local &amp; jgroup"/>
+<node CREATED="1274112428950" ID="ID_1754601736" MODIFIED="1274112499480" TEXT="modules">
+<node CREATED="1274112433793" ID="ID_146215277" MODIFIED="1274112436278" TEXT="i18n"/>
+<node CREATED="1274112440481" ID="ID_1425125791" MODIFIED="1274112444293" TEXT="configuration"/>
+<node CREATED="1274112471121" ID="ID_1039311998" MODIFIED="1274112472480" TEXT="cache"/>
+<node CREATED="1274112500667" ID="ID_585663928" MODIFIED="1274112501917" TEXT="store"/>
+</node>
+</node>
+<node CREATED="1274112116204" ID="ID_1428703511" MODIFIED="1274112624088" POSITION="left" TEXT="core-guice">
+<node CREATED="1274112134360" ID="ID_1447697804" MODIFIED="1274112137969" TEXT="i18n module"/>
+<node CREATED="1274112142172" ID="ID_1149766995" MODIFIED="1274112145703" TEXT="configuration module"/>
+<node CREATED="1274171889090" ID="ID_715137575" MODIFIED="1274171892372" TEXT="store module">
+<node CREATED="1265977570924" ID="Freemind_Link_1049041422" MODIFIED="1265977578424" TEXT="nio buffer datainput"/>
+</node>
+</node>
+<node COLOR="#000000" CREATED="1262608710000" ID="Freemind_Link_38308003" MODIFIED="1263114351000" POSITION="right" TEXT="cleanup">
+<font BOLD="true" NAME="Dialog" SIZE="14"/>
+<node COLOR="#000000" CREATED="1262608745000" ID="Freemind_Link_38308024" MODIFIED="1262608745000" TEXT="passer sonar">
+<font NAME="Dialog" SIZE="12"/>
+</node>
+<node COLOR="#000000" CREATED="1263155444000" ID="Freemind_Link_38840468" MODIFIED="1264090443000" TEXT="core : supprimer formatHelper &amp; xml ?">
+<font NAME="Dialog" SIZE="12"/>
+<icon BUILTIN="button_ok"/>
+</node>
+<node COLOR="#000000" CREATED="1264062789000" ID="Freemind_Link_39833284" MODIFIED="1264062806000" TEXT="jndi naming, faire generix locator + clean up dependency core">
+<font NAME="Dialog" SIZE="12"/>
+</node>
+<node COLOR="#000000" CREATED="1264090467000" ID="Freemind_Link_39875897" MODIFIED="1264090467000" TEXT="package context et naming &#xe0; revoir">
+<font NAME="Dialog" SIZE="12"/>
+</node>
+<node CREATED="1268216808847" ID="Freemind_Link_556480727" MODIFIED="1269610193385" TEXT="slf4j au lieu de commons logging">
+<font NAME="SansSerif" SIZE="12"/>
+<icon BUILTIN="button_ok"/>
+</node>
+</node>
+<node COLOR="#000000" CREATED="1263130165000" ID="Freemind_Link_38815116" MODIFIED="1263130165000" POSITION="left" TEXT="site">
+<font NAME="Dialog" SIZE="12"/>
+<node COLOR="#000000" CREATED="1263130184000" ID="Freemind_Link_38815121" MODIFIED="1263130184000" TEXT="xwiki theme oragne / bleu clair / vert">
+<font NAME="Dialog" SIZE="12"/>
+</node>
+<node COLOR="#000000" CREATED="1263130201000" ID="Freemind_Link_38815131" MODIFIED="1263130201000" TEXT="kaleidofoundry.org &#xe0; d&#xe9;poser">
+<font NAME="Dialog" SIZE="12"/>
+</node>
+<node COLOR="#000000" CREATED="1263130227000" ID="Freemind_Link_38815203" MODIFIED="1263130227000" TEXT="herbergement projet">
+<font NAME="Dialog" SIZE="12"/>
+<node COLOR="#000000" CREATED="1263130232000" ID="Freemind_Link_38815205" MODIFIED="1263130232000" TEXT="google code">
+<font NAME="Dialog" SIZE="12"/>
+</node>
+<node COLOR="#000000" CREATED="1263130239000" ID="Freemind_Link_38815209" MODIFIED="1263130239000" TEXT="source forge">
+<font NAME="Dialog" SIZE="12"/>
+</node>
+<node COLOR="#000000" CREATED="1263130245000" ID="Freemind_Link_38815211" MODIFIED="1263130245000" TEXT="code house">
+<font NAME="Dialog" SIZE="12"/>
+</node>
+<node COLOR="#000000" CREATED="1263130293000" ID="Freemind_Link_38815227" MODIFIED="1263130293000" TEXT="jira / confluence pour open source">
+<font NAME="Dialog" SIZE="12"/>
+</node>
+<node CREATED="1274174074156" ID="ID_487595559" MODIFIED="1274174080000" TEXT="github"/>
+</node>
+</node>
+<node CREATED="1274170410391" ID="ID_83794953" MODIFIED="1274170412703" POSITION="right" TEXT="licence">
+<node COLOR="#000000" CREATED="1263130217000" ID="Freemind_Link_38815198" MODIFIED="1263130270000" TEXT="licence apache ou gpl ?">
+<font NAME="Dialog" SIZE="12"/>
+</node>
+<node COLOR="#000000" CREATED="1262608737000" ID="Freemind_Link_38308022" MODIFIED="1262608737000" TEXT="ajouter /* $Licence */ pour svn &amp; licence en ent&#xea;te package">
+<font NAME="Dialog" SIZE="12"/>
+</node>
+</node>
+</node>
+</map>

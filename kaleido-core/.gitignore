@@ -1,0 +1,7 @@
+.classpath
+.project
+.settings/
+target/
+.svn/
+derby.log
+kaleidoResourceStore

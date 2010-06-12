@@ -1,0 +1,6 @@
+org.kaleidofoundry.core.store.GuiceClasspathResourceStore
+org.kaleidofoundry.core.store.GuiceFileSystemResourceStore
+org.kaleidofoundry.core.store.GuiceFtpResourceStore
+org.kaleidofoundry.core.store.GuiceHttpResourceStore
+org.kaleidofoundry.core.store.GuiceJpaResourceStore
+org.kaleidofoundry.core.store.GuiceWebappResourceStore

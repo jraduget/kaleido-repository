@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment/>
+	<entry key="child.simple.test">fr test child label</entry>
+	<entry key="child.array.test">fr test child label {0}</entry>
+	<entry key="label.simple.test">fr test override parent label</entry>
+</properties>

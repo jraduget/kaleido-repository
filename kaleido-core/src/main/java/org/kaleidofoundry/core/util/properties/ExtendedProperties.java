@@ -1,0 +1,101 @@
+package org.kaleidofoundry.core.util.properties;
+
+import java.util.Properties;
+import java.util.StringTokenizer;
+
+import org.kaleidofoundry.core.lang.annotation.Nullable;
+import org.kaleidofoundry.core.lang.annotation.Tested;
+
+/**
+ * Extension of Properties, managing multiple property values... <br/>
+ * <code>
+ * application.name="fooApp"
+ * application.modules=module1 module2
+ * </code>
+ * 
+ * @author Jerome RADUGET
+ */
+@Tested(value = false)
+public class ExtendedProperties extends Properties {
+
+   private static final long serialVersionUID = 8223542956966149283L;
+
+   /**
+    * @param key the identifier of the property you want to get the value
+    * @return multiple raw values of the property
+    */
+   @Nullable
+   public String[] getMultiValueProperty(final String key) {
+	final String values = super.getProperty(key);
+	if (values == null) { return null; }
+
+	final StringTokenizer st = new StringTokenizer(values, " ");
+	final String[] result = new String[st.countTokens()];
+
+	for (int i = 0; st.hasMoreTokens(); i++) {
+	   result[i] = st.nextToken();
+	}
+
+	return result;
+   }
+
+   /**
+    * @param key the identifier of the property you want to get the value
+    * @param valueSeparator the values separator to use
+    * @return multiple raw values of the property
+    */
+   @Nullable
+   public String[] getMultiValueProperty(final String key, final String valueSeparator) {
+	final String values = super.getProperty(key);
+	if (values == null) { return null; }
+	final StringTokenizer st = new StringTokenizer(values, valueSeparator);
+
+	final String[] result = new String[st.countTokens()];
+
+	for (int i = 0; st.hasMoreTokens(); i++) {
+	   result[i] = st.nextToken();
+	}
+
+	return result;
+   }
+
+   /**
+    * @param key the identifier of the property you want to change the value
+    * @param values values to set to the key property (the valueSeparator will be a single space)
+    * @return the previous value of the specified key in this property list, or null if it did not have one.
+    */
+   @Nullable
+   public String setMultiValueProperty(final String key, final String... values) {
+	final StringBuffer buffer = new StringBuffer();
+
+	for (int i = 0; i < values.length - 1; i++) {
+	   buffer.append(values[i] + ' ');
+	}
+	buffer.append(values[values.length - 1]);
+
+	final String result = (String) super.setProperty(key, buffer.toString());
+
+	return result;
+   }
+
+   /**
+    * @param key the identifier of the property you want to change the value
+    * @param valueSeparator the values separator to use
+    * @param values values to set to the key property
+    * @return the previous value of the specified key in this property list, or null if it did not have one.
+    */
+   @Nullable
+   public String setMultiValueProperty(final String key, final String valueSeparator, final String... values) {
+	final StringBuilder buffer = new StringBuilder();
+
+	for (int i = 0; i < values.length - 1; i++) {
+	   buffer.append(values[i] + valueSeparator);
+	}
+	buffer.append(values[values.length - 1]);
+
+	final String result = (String) super.setProperty(key, buffer.toString());
+
+	return result;
+   }
+
+}

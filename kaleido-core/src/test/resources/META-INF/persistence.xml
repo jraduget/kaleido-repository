@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+	version="1.0">
+
+	<!--**** unit test derby part for ***************************************************************************** -->
+	<persistence-unit name="kaleido-core" transaction-type="RESOURCE_LOCAL">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+
+		<!-- entities declarations -->
+		<class>org.kaleidofoundry.core.store.entity.ResourceStoreEntity</class>
+
+		<class>org.kaleidofoundry.core.i18n.entity.I18nMessage</class>
+		<class>org.kaleidofoundry.core.i18n.entity.I18nMessageGroup</class>
+		<class>org.kaleidofoundry.core.i18n.entity.I18nMessageLanguage</class>
+
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+
+		<!-- JPA 2.0 	-->
+		<properties>
+			<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:derby:target/kaleidoDefaultUnitTest;create=true" />
+			<property name="javax.persistence.jdbc.user" value="APP" />
+			<property name="javax.persistence.jdbc.password" value="APP" />
+			<property name="eclipselink.target-database" value="Derby" />
+			<property name="eclipselink.logging.level" value="FINE" />
+			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+			<property name="eclipselink.ddl-generation.output-mode" value="both" />
+			<property name="eclipselink.application-location" value="./target/test-classes" />
+			<property name="eclipselink.drop-ddl-jdbc-file-name" value="dropDerbySchema.sql" />
+			<property name="eclipselink.create-ddl-jdbc-file-name" value="createDerbySchema.sql" />
+		</properties>
+
+	</persistence-unit>
+
+	<!--**** integration test oracle part for ********************************************************************** -->
+	<persistence-unit name="kaleido-core-oracle" transaction-type="RESOURCE_LOCAL">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+
+		<!-- entities declarations -->
+		<class>org.kaleidofoundry.core.store.ResourceStoreEntity</class>
+
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+
+		<!-- JPA 2.0 	-->
+		<properties>
+			<property name="javax.persistence.jdbc.driver" value="oracle.jdbc.driver.OracleDriver" />
+			<property name="javax.persistence.jdbc.url"
+				value="jdbc:oracle:thin:@(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = oracle-kaleido-dev)(PORT = 1521))) (CONNECT_DATA = (SERVICE_NAME=ORACLE_KALEIDO_DEV) (SERVER = DEDICATED)))" />
+			<property name="javax.persistence.jdbc.user" value="kaleido" />
+			<property name="javax.persistence.jdbc.password" value="kaleido" />
+			<property name="eclipselink.target-database" value="Oracle" />
+			<property name="eclipselink.logging.level" value="FINE" />
+			<property name="eclipselink.ddl-generation" value="create-tables" />
+			<property name="eclipselink.ddl-generation.output-mode" value="both" />
+			<property name="eclipselink.application-location" value="./target/test-classes" />
+			<property name="eclipselink.drop-ddl-jdbc-file-name" value="dropOracleSchema.sql" />
+			<property name="eclipselink.create-ddl-jdbc-file-name" value="createOracleSchema.sql" />
+		</properties>
+
+	</persistence-unit>
+
+
+
+	<!-- custom unit test for PersistenceFactory -->
+	<persistence-unit name="kaleido-core-custom" transaction-type="RESOURCE_LOCAL">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+
+		<properties>
+			<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:derby:target/kaleidoCustomUnitTest;create=true" />
+			<property name="javax.persistence.jdbc.user" value="APP" />
+			<property name="javax.persistence.jdbc.password" value="APP" />
+			<property name="eclipselink.target-database" value="Derby" />
+		</properties>
+
+	</persistence-unit>
+</persistence>

@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  @(#)package.html	1.60 98/01/27
+
+  Copyright 1998 Sun Microsystems, Inc. 901 San Antonio Road, 
+  Palo Alto, California, 94303, U.S.A.  All Rights Reserved.
+
+  This software is the confidential and proprietary information of Sun
+  Microsystems, Inc. ("Confidential Information").  You shall not
+  disclose such Confidential Information and shall use it only in
+  accordance with the terms of the license agreement you entered into
+  with Sun.
+
+  CopyrightVersion 1.2
+
+-->
+</head>
+<body bgcolor="white">
+
+	<p>Ce package fournit plusieurs implémentations de Configuration accessible 
+	via une ConfigurationFactory . La méthode createConfiguration prendra en 
+	argument un chemin vers un fichier, accessible via le programme appelant. 
+	C’est l’extension du fichier qui déterminera l’implémentation à utiliser. 
+	L’association entre l’extension du fichier et l’implémentation à utiliser 
+	est définit dans le fichier ConfigurationEnum. 
+	</p>
+
+ 	<img src="doc-files/diagram.jpg"/>
+ 	
+	<p>Actuellement les extensions suivantes sont utilisées :</p>
+
+	<ul>
+		<li>.xml		:	XmlConfiguration</li>
+		<li>.properties	: 	PropertiesConfiguration</li>
+		<li>.db 		:	DatabaseConfiguration (à implémenter via un fichier intermédiaire)</li>
+	</ul>
+
+	<p>Il existe une autre implémentation ArgsMainConfiguration, permettant de 
+	charger une instance de configuration via les arguments donnés 
+	à une méthode main. 
+	</p>
+
+  <p>Ce package fournit plusieurs implémentations accessible 
+  via une ConfigurationFactory . La méthode createConfiguration prendra 
+  en argument un chemin vers un fichier, accessible via le programme 
+  appelant. C’est l’extension du fichier qui déterminera l’implémentation 
+  à utiliser. L’association entre l’extension du fichier et 
+  l’implémentation à utiliser est définit dans le fichier ConfigurationEnum.
+  </p>
+  
+  <p> 
+  Actuellement les extensions suivantes sont utilisées :
+  <ul>
+  <li>.xml		:	XmlConfiguration</li>
+  <li>.properties	: 	PropertiesConfiguration</li>
+  <li>.db 		:	DatabaseConfiguration (à implémenter via un fichier intermédiaire)</li>
+  </ul>
+  </p>
+  
+  <p>
+  Il existe une autre implémentation ArgsMainConfiguration, permettant de 
+  charger une instance de configuration via les arguments donnés à 
+  une méthode main. 
+  </p>
+  
+  <p> Exemple de clé, pour accéder de manière unifiée au valeur 
+  d'une propriété :
+  
+  <ul>
+  	<li>"//application/version"</li>
+  	<li>"//application/name"</li>
+  	<li>"//application/dateMaj"</li>
+  	<li>"//application/modules/sales/version"</li>
+  </ul>
+ 
+  <p>Exemple de fichier de configuration : "app.properties"</p> 
+  <pre>
+  application.name=app
+  application.version=1.0.0
+  application.description=description of the application...
+  application.date=2006-09-01
+  application.librairies=dom4j.jar log4j.jar mail.jar
+  
+  application.modules.sales=Sales
+  application.modules.sales.version=1.1.0
+  application.modules.marketing=Market.
+  application.modules.netbusiness=
+  </pre>
+  
+  <p>Exemple de programme java</p>
+  <pre>
+  
+   Configuration config = ConfigurationFactory.createConfiguration("app.properties");
+  	
+   config.load();
+  	
+   System.out.println(config.getString("//application/name"));
+   System.out.println(config.getString("//application/version"));
+   System.out.println(config.getDate("//application/dateMaj"));
+   System.out.println(config.getString("//application/modules/sales/version")); 
+  </pre>
+  
+  </p>
+ 
+</body>
+</html>
