@@ -62,6 +62,11 @@ class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCac
     */
    public Jboss32xCacheManagerImpl(final String configuration, final RuntimeContext<CacheManager> context) {
 	super(configuration, context);
+
+	// test if configuration is legal
+	String initTestCacheName = "__inittest__";
+	createCache(initTestCacheName, configuration);
+	destroy(initTestCacheName);
    }
 
    /*
