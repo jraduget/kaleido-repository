@@ -1,3 +1,18 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.store;
 
 import static org.kaleidofoundry.core.store.ResourceStoreConstants.FileSystemStorePluginName;
@@ -13,18 +28,18 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
+import org.kaleidofoundry.core.plugin.Declare;
 
 /**
  * File system resource store implementation (windows, linux, ...) <br/>
  * This implementation is only for read only use<br/>
- * You can extends it and override {@link #doRemove(URI)} and {@link #doStore(URI, ResourceHandler)} to your need, and {@link DeclarePlugin}
+ * You can extends it and override {@link #doRemove(URI)} and {@link #doStore(URI, ResourceHandler)} to your need, and {@link Declare}
  * your implementation to use it
  * 
  * @author Jerome RADUGET
  */
 @Immutable
-@DeclarePlugin(FileSystemStorePluginName)
+@Declare(FileSystemStorePluginName)
 public class FileSystemResourceStore extends AbstractResourceStore implements ResourceStore {
 
    /**
@@ -39,7 +54,7 @@ public class FileSystemResourceStore extends AbstractResourceStore implements Re
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doLoad(java.net.URI)
     */
    @Override
-   protected ResourceHandler doLoad(final URI resourceUri) throws StoreException {
+   protected ResourceHandler doGet(final URI resourceUri) throws StoreException {
 	try {
 	   return new ResourceHandlerBean(new FileInputStream(new File(resourceUri)));
 	} catch (FileNotFoundException fnfe) {

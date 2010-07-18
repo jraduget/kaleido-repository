@@ -1,3 +1,18 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.store;
 
 /**
@@ -6,23 +21,23 @@ package org.kaleidofoundry.core.store;
 public interface GuiceResourceStoreConstants {
 
    /** interface store declare plugin name */
-   public static final String ResourceStorePluginName = "guice-resourceStore";
+   String ResourceStorePluginName = "guice-resourceStore";
 
    /** classpath implementation store plugin name */
-   public static final String ClasspathStorePluginName = "guice-classpathStore";
+   String ClasspathStorePluginName = "guice-classpathStore";
    /** file system implementation store plugin name */
-   public static final String FileSystemStorePluginName = "guice-fileStore";
+   String FileSystemStorePluginName = "guice-fileStore";
    /** http implementation store plugin name */
-   public static final String HttpStorePluginName = "guice-httpStore";
+   String HttpStorePluginName = "guice-httpStore";
    /** ftp implementation store plugin name */
-   public static final String FtpStorePluginName = "guice-ftpStore";
+   String FtpStorePluginName = "guice-ftpStore";
    /** webapp implementation store plugin name */
-   public static final String WebappStorePluginName = "guice-webappStore";
+   String WebappStorePluginName = "guice-webappStore";
    /** jdbc implementation clob store plugin name */
-   public static final String ClobJdbcStorePluginName = "guice-jdbcStore";
+   String ClobJdbcStorePluginName = "guice-jdbcStore";
    /** jpa implementation clob store plugin name */
-   public static final String ClobJpaStorePluginName = "guice-jpaStore";
+   String ClobJpaStorePluginName = "guice-jpaStore";
    /** mocked in memory implementation plugin name */
-   public static final String MemoryStorePluginName = "guice-memoryStore";
+   String MemoryStorePluginName = "guice-memoryStore";
 
 }

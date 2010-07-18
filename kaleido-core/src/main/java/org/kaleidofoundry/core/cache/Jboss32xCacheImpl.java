@@ -1,14 +1,31 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.JbossCachePluginName;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 
 import org.jboss.cache.Cache;
 import org.jboss.cache.Fqn;
 import org.jboss.cache.Node;
-import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
+import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.plugin.Declare;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * @param <K>
  * @param <V>
  */
-@DeclarePlugin(JbossCachePluginName)
+@Declare(JbossCachePluginName)
 public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> implements org.kaleidofoundry.core.cache.Cache<K, V> {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(Jboss32xCacheImpl.class);
@@ -30,21 +47,18 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
 
    /**
     * @param c class of the cache
-    * @param cache jboss cache instanciate via factory
+    * @param cache jboss cache instantiate via factory
     */
-   Jboss32xCacheImpl(final Class<V> c, final Cache<K, V> cache) {
-	this(c != null ? c.getName() : null, cache);
+   Jboss32xCacheImpl(@NotNull final Class<V> c, @NotNull final Cache<K, V> cache) {
+	this(c.getName(), cache);
    }
 
    /**
     * @param name name of the cache
     */
-   Jboss32xCacheImpl(final String name, final Cache<K, V> cache) {
+   Jboss32xCacheImpl(@NotNull final String name, @NotNull final Cache<K, V> cache) {
 
-	if (name == null) { throw new IllegalArgumentException("cache name argument is null"); }
-	if (cache == null) { throw new IllegalArgumentException("cache argument is null"); }
-
-	String cacheName = "/" + name.replaceAll("[.]", "/");
+	final String cacheName = "/" + name.replaceAll("[.]", "/");
 
 	this.cache = cache;
 	this.name = name;
@@ -102,6 +116,15 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
 	return root.getKeys();
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.Cache#values()
+    */
+   @Override
+   public Collection<V> values() {
+	return root.getData().values();
+   }
+
    /**
     * Stop and destroy cache instance
     */
@@ -129,10 +152,13 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
 	return root.dataSize();
    }
 
-   /**
-    * @return internal Jboss cache {@link Cache}
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.Cache#getDelegate()
     */
-   protected Cache<K, V> getJbossCache() {
-	return cache;
+   @Override
+   public Object getDelegate() {
+	return root;
    }
+
 }

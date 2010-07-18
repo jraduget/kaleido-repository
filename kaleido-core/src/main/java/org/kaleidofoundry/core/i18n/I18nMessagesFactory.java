@@ -1,3 +1,18 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.i18n;
 
 import java.util.Locale;
@@ -20,8 +35,8 @@ public class I18nMessagesFactory {
     * it clear internal java resource bundle cache<br/>
     * <br/>
     * when you call multiple times {@link #getMessages(String)}, jdk use an internal cache to get the current bundle
-    * once you call {@link #clearCache()}, then next call to {@link #getMessages(String)} will instanciate / load ... a new
-    * {@link MessageBundle}
+    * once you call {@link #clearCache()}, then next call to {@link #getMessages(String)} will instantiate / load ... a new
+    * {@link DefaultMessageBundle}
     * 
     * @see ResourceBundle#clearCache()
     */
@@ -35,7 +50,7 @@ public class I18nMessagesFactory {
     * @return ResourceBundle with server default locale, and with properties loaded from the same classLoader than ResourceBundle class
     */
    public static I18nMessages getMessages(final String baseName) {
-	return (MessageBundle) ResourceBundle.getBundle(baseName, defaultLocale(), MessageBundle.class.getClassLoader(), new MessageBundleControl());
+	return (DefaultMessageBundle) ResourceBundle.getBundle(baseName, defaultLocale(), DefaultMessageBundle.class.getClassLoader(), new MessageBundleControl());
    }
 
    /**
@@ -44,7 +59,7 @@ public class I18nMessagesFactory {
     * @return ResourceBundle with specified locale, and with properties loaded from the same classLoader than ResourceBundle class
     */
    public static I18nMessages getMessages(final String baseName, final Locale targetLocale) {
-	return (MessageBundle) ResourceBundle.getBundle(baseName, targetLocale, MessageBundle.class.getClassLoader(), new MessageBundleControl());
+	return (DefaultMessageBundle) ResourceBundle.getBundle(baseName, targetLocale, DefaultMessageBundle.class.getClassLoader(), new MessageBundleControl());
    }
 
    /**
@@ -53,9 +68,9 @@ public class I18nMessagesFactory {
     * @return ResourceBundle with server default locale having a parent resource bundle
     */
    public static I18nMessages getMessages(final String baseName, final I18nMessages parent) {
-	final MessageBundle bundle = (MessageBundle) ResourceBundle.getBundle(baseName, defaultLocale(), MessageBundle.class.getClassLoader(),
+	final DefaultMessageBundle bundle = (DefaultMessageBundle) ResourceBundle.getBundle(baseName, defaultLocale(), DefaultMessageBundle.class.getClassLoader(),
 		new MessageBundleControl());
-	bundle.setParent((MessageBundle) parent);
+	bundle.setParent((DefaultMessageBundle) parent);
 	return bundle;
    }
 
@@ -65,7 +80,7 @@ public class I18nMessagesFactory {
     * @return ResourceBundle build with given locale, and having a parent resource bundle
     */
    public static I18nMessages getMessages(final String baseName, final ResourceBundle parent) {
-	final MessageBundle bundle = (MessageBundle) ResourceBundle.getBundle(baseName, defaultLocale(), MessageBundle.class.getClassLoader(),
+	final DefaultMessageBundle bundle = (DefaultMessageBundle) ResourceBundle.getBundle(baseName, defaultLocale(), DefaultMessageBundle.class.getClassLoader(),
 		new MessageBundleControl());
 	bundle.setParent(parent);
 	return bundle;
@@ -78,7 +93,7 @@ public class I18nMessagesFactory {
     * @return ResourceBundle with server default locale having a parent resource bundle
     */
    public static I18nMessages getMessages(final String baseName, final Locale locale, final ResourceBundle parent) {
-	final MessageBundle bundle = (MessageBundle) ResourceBundle.getBundle(baseName, locale, MessageBundle.class.getClassLoader(), new MessageBundleControl());
+	final DefaultMessageBundle bundle = (DefaultMessageBundle) ResourceBundle.getBundle(baseName, locale, DefaultMessageBundle.class.getClassLoader(), new MessageBundleControl());
 	bundle.setParent(parent);
 	return bundle;
    }
@@ -101,8 +116,8 @@ public class I18nMessagesFactory {
     * @return ResourceBundle build with given locale, and having a parent resource bundle
     */
    public static I18nMessages getMessages(final String baseName, final Locale targetLocale, final ClassLoader loader, final I18nMessages parent) {
-	final MessageBundle bundle = (MessageBundle) ResourceBundle.getBundle(baseName, targetLocale, loader, new MessageBundleControl());
-	bundle.setParent((MessageBundle) parent);
+	final DefaultMessageBundle bundle = (DefaultMessageBundle) ResourceBundle.getBundle(baseName, targetLocale, loader, new MessageBundleControl());
+	bundle.setParent((DefaultMessageBundle) parent);
 	return bundle;
    }
 
@@ -113,7 +128,7 @@ public class I18nMessagesFactory {
     * @return ResourceBundle with specified locale, and with properties loaded from specified classLoader
     */
    public static I18nMessages getMessages(final String baseName, final Locale targetLocale, final ClassLoader loader) {
-	return (MessageBundle) ResourceBundle.getBundle(baseName, targetLocale, loader, new MessageBundleControl());
+	return (DefaultMessageBundle) ResourceBundle.getBundle(baseName, targetLocale, loader, new MessageBundleControl());
    }
 
    /*

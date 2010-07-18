@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>kaleido-messaging</artifactId>
-	<name>Kaleido foundry messaging</name>
+	<name>Kaleido foundry module for asynchronous messaging</name>
 	<packaging>jar</packaging>
 
 	<dependencies>
@@ -30,16 +30,7 @@
 			<scope>provided</scope>		
 		</dependency>
 	
-	 	<!-- JMS transport librairies -->
-		<dependency>
-			<groupId>javax.jms</groupId>
-			<artifactId>jms</artifactId>
-			<version>${jee.jms.version}</version>
-			<scope>provided</scope>
-		</dependency>
-			
-			
-		 <!-- Configuration XML - DOM4J & Jaxen -->
+		<!-- Configuration XML - DOM4J & Jaxen -->
 		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>

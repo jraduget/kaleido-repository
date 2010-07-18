@@ -1,5 +1,17 @@
-/*
- * $License$
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.kaleidofoundry.core.config;
 
@@ -29,8 +41,8 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.kaleidofoundry.core.cache.Cache;
-import org.kaleidofoundry.core.cache.CacheEnum;
 import org.kaleidofoundry.core.cache.CacheFactory;
+import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
@@ -64,10 +76,14 @@ public abstract class AbstractConfiguration implements Configuration {
     * enumeration of local context property name
     */
    public static enum ContextProperty {
-	/** readonly usage */
+	/** read-only usage */
 	readonly,
-	/** cache implementation to use */
-	cache;
+	/** resource store {@link URI} to accessed the configuration file */
+	resourceUri,
+	/** resource store used to access the resourceUri */
+	resourceStoreRef,
+	/** cache manager context name to use */
+	cacheManagerRef;
    }
 
    // configuration identifier
@@ -106,24 +122,26 @@ public abstract class AbstractConfiguration implements Configuration {
 	this.context = context;
 
 	// internal resource store instantiation
-	ResourceStore resourceStore = ResourceStoreFactory.createResourceStore(resourceUri);
+	final String resourceStoreRef = context.getProperty(ContextProperty.resourceStoreRef.name());
+	final ResourceStore resourceStore;
+
+	if (!StringHelper.isEmpty(resourceStoreRef)) {
+	   resourceStore = ResourceStoreFactory.createResourceStore(resourceUri, new RuntimeContext<ResourceStore>(resourceStoreRef, context));
+	} else {
+	   resourceStore = ResourceStoreFactory.createResourceStore(resourceUri);
+	}
 	singleResourceStore = new SingleResourceStore(resourceUri, resourceStore);
 
 	// internal cache key / value instantiation
-	CacheFactory<String, String> cacheFactory;
-	String cacheImplKey = context.getProperty(ContextProperty.cache.name());
-	CacheEnum cacheEnum = CacheEnum.findByCode(cacheImplKey);
+	final CacheManager cacheManager;
+	final String cacheManagerContextRef = context.getProperty(ContextProperty.cacheManagerRef.name());
 
-	if (!StringHelper.isEmpty(cacheImplKey) && cacheEnum == null) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage(
-		"config.cache.illegal", ContextProperty.cache.name(), cacheImplKey)); }
-
-	if (cacheEnum != null) {
-	   cacheFactory = CacheFactory.getCacheFactory(cacheEnum);
+	if (!StringHelper.isEmpty(cacheManagerContextRef)) {
+	   cacheManager = CacheFactory.getCacheManager(new RuntimeContext<CacheManager>(cacheManagerContextRef, context));
 	} else {
-	   cacheFactory = CacheFactory.getCacheFactory();
+	   cacheManager = CacheFactory.getCacheManager();
 	}
-
-	cacheProperties = cacheFactory.getCache("kaleidofoundry/configuration/" + identifier);
+	cacheProperties = cacheManager.getCache("kaleidofoundry/configuration/" + identifier);
    }
 
    /**
@@ -180,7 +198,7 @@ public abstract class AbstractConfiguration implements Configuration {
    public final void load() throws StoreException, ConfigurationException {
 	if (isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal01", identifier)); }
 
-	ResourceHandler resourceHandler = singleResourceStore.load();
+	final ResourceHandler resourceHandler = singleResourceStore.get();
 	try {
 	   loadProperties(resourceHandler, cacheProperties);
 	} finally {
@@ -376,8 +394,8 @@ public abstract class AbstractConfiguration implements Configuration {
     */
    @Override
    public List<String> getStringList(final String key) {
-	String rawValues = getRawProperty(key);
-	String[] values = rawValues != null ? StringHelper.split(rawValues, MultiValDefaultSeparator) : null;
+	final String rawValues = getRawProperty(key);
+	final String[] values = rawValues != null ? StringHelper.split(rawValues, MultiValDefaultSeparator) : null;
 
 	if (values == null) {
 	   return null;
@@ -741,7 +759,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
 	if (cl.isAssignableFrom(Date.class)) {
 	   try {
-		// TODO - thread local SimpleDateFormat
+		// TODO use SimpleDateFormat has a thread local
 		return (T) new SimpleDateFormat(StrDateFormat).parse(strValue);
 	   } catch (final ParseException pe) {
 		LOGGER.error(ConfigurationMessageBundle.getMessage("config.date.format", strValue, StrDateFormat));
@@ -761,9 +779,9 @@ public abstract class AbstractConfiguration implements Configuration {
     * @return
     */
    protected <T> List<T> valuesOf(final String strValue, final Class<T> cl) {
-	List<T> result = new LinkedList<T>();
+	final List<T> result = new LinkedList<T>();
 	if (!StringHelper.isEmpty(strValue)) {
-	   StringTokenizer strToken = new StringTokenizer(strValue, MultiValDefaultSeparator);
+	   final StringTokenizer strToken = new StringTokenizer(strValue, MultiValDefaultSeparator);
 	   while (strToken.hasMoreTokens()) {
 		result.add(valueOf(strToken.nextToken(), cl));
 	   }

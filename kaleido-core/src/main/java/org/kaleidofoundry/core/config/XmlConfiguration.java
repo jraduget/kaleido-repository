@@ -1,3 +1,18 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.config;
 
 import static org.kaleidofoundry.core.config.ConfigurationConstants.KeyPropertiesSeparator;
@@ -15,7 +30,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
-import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
+import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.store.SingleResourceStore;
 import org.kaleidofoundry.core.store.StoreException;
@@ -52,7 +67,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Jerome RADUGET
  */
-@DeclarePlugin(ConfigurationConstants.XmlConfigurationPluginName)
+@Declare(ConfigurationConstants.XmlConfigurationPluginName)
 public class XmlConfiguration extends AbstractConfiguration implements Configuration {
 
    // private static final Logger LOGGER = LoggerFactory.getLogger(XmlConfiguration.class);

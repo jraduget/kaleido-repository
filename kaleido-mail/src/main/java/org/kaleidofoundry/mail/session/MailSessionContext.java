@@ -1,9 +1,22 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.mail.session;
 
 import static org.kaleidofoundry.mail.session.MailSessionConstants.LocalRootProperty;
 import static org.kaleidofoundry.mail.session.MailSessionConstants.TypeProperty;
-
-import java.util.Properties;
 
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.context.RuntimeContext;
@@ -13,7 +26,7 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * 
  * @author Jerome RADUGET
  */
-public class MailSessionContext extends RuntimeContext {
+public class MailSessionContext extends RuntimeContext<MailSessionService> {
 
    private static final long serialVersionUID = -8772474592608596423L;
 
@@ -27,49 +40,25 @@ public class MailSessionContext extends RuntimeContext {
    /**
     * @param config
     */
-   public MailSessionContext(final Configuration config) {
-	super(null, config, LocalRootProperty);
-   }
-
-   /**
-    * @param props
-    */
-   public MailSessionContext(final Properties props) {
-	super(null, props, LocalRootProperty);
+   public MailSessionContext(final Configuration... config) {
+	super(null, LocalRootProperty, config);
    }
 
    /**
     * @param name
-    * @param defaults
     * @param prefixProperty
+    * @param defaults
     */
-   public MailSessionContext(final String name, final Configuration defaults, final String prefixProperty) {
-	super(name, defaults, prefixProperty);
+   public MailSessionContext(final String name, final String prefixProperty, final Configuration... defaults) {
+	super(name, prefixProperty, defaults);
    }
 
    /**
     * @param name
     * @param defaults
     */
-   public MailSessionContext(final String name, final Configuration defaults) {
-	super(name, defaults, LocalRootProperty);
-   }
-
-   /**
-    * @param name
-    * @param defaults
-    * @param prefixProperty
-    */
-   public MailSessionContext(final String name, final Properties defaults, final String prefixProperty) {
-	super(name, defaults, prefixProperty);
-   }
-
-   /**
-    * @param name
-    * @param defaults
-    */
-   public MailSessionContext(final String name, final Properties defaults) {
-	super(name, defaults, LocalRootProperty);
+   public MailSessionContext(final String name, final Configuration... defaults) {
+	super(name, LocalRootProperty, defaults);
    }
 
    /**

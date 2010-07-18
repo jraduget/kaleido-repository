@@ -1,6 +1,25 @@
-/*
- * $License$
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+package org.kaleidofoundry.core.naming;
+
+import javax.naming.Context;
+
+import org.kaleidofoundry.core.config.Configuration;
+import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.util.StringHelper;
 
 /*  
  # http://java.sun.com/products/jndi/serviceproviders.html
@@ -24,17 +43,6 @@
  # RMI 			com.sun.jndi.rmi.registry.RegistryContextFactory			
 
  */
-
-package org.kaleidofoundry.core.naming;
-
-import java.util.Properties;
-
-import javax.naming.Context;
-
-import org.kaleidofoundry.core.config.Configuration;
-import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.util.StringHelper;
-
 /**
  * JndiContext used by Jndi client<br/>
  * <p>
@@ -64,19 +72,11 @@ public class JndiContext<T> extends RuntimeContext<T> {
    }
 
    /**
-    * @param config Chargement des informations du contexte à partir d'une configuration
+    * @param config
     * @see Configuration
     */
-   public JndiContext(final Configuration config) {
-	super(null, config, DefaultPrefix);
-   }
-
-   /**
-    * @param props Chargement des informations du contexte à partir d'un properties
-    * @see Properties
-    */
-   public JndiContext(final Properties props) {
-	super(null, props, DefaultPrefix);
+   public JndiContext(final Configuration... config) {
+	super(null, DefaultPrefix, config);
    }
 
    /**
@@ -84,33 +84,16 @@ public class JndiContext<T> extends RuntimeContext<T> {
     * @param defaults
     * @param prefixProperty
     */
-   public JndiContext(final String name, final Configuration defaults, final String prefixProperty) {
-	super(name, defaults, prefixProperty);
+   public JndiContext(final String name, final String prefixProperty, final Configuration... defaults) {
+	super(name, prefixProperty, defaults);
    }
 
    /**
     * @param name
     * @param defaults
     */
-   public JndiContext(final String name, final Configuration defaults) {
-	super(name, defaults, DefaultPrefix);
-   }
-
-   /**
-    * @param name
-    * @param defaults
-    * @param prefixProperty
-    */
-   public JndiContext(final String name, final Properties defaults, final String prefixProperty) {
-	super(name, defaults, prefixProperty);
-   }
-
-   /**
-    * @param name
-    * @param defaults
-    */
-   public JndiContext(final String name, final Properties defaults) {
-	super(name, defaults, DefaultPrefix);
+   public JndiContext(final String name, final Configuration... defaults) {
+	super(name, DefaultPrefix, defaults);
    }
 
    /**
@@ -125,7 +108,7 @@ public class JndiContext<T> extends RuntimeContext<T> {
     * @param context
     */
    public JndiContext(final String name, final RuntimeContext<?> context) {
-	super(name, context, DefaultPrefix);
+	super(name, DefaultPrefix, context);
    }
 
    /**
@@ -145,7 +128,7 @@ public class JndiContext<T> extends RuntimeContext<T> {
    }
 
    /**
-    * @return Context Url package prefices
+    * @return Context URL package prefixes
     * @see Context
     */
    public String getUrlPkgPrefixes() {

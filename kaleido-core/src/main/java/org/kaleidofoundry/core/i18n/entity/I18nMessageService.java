@@ -1,3 +1,18 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.i18n.entity;
 
 import static org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory.KaleidoPersistentContextUnitName;
@@ -13,7 +28,6 @@ import mazz.i18n.annotation.I18NMessage;
 
 import org.kaleidofoundry.core.i18n.entity.I18nMessageConstants.Query_MessagesByLocale;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 
 /**
  * Service which handle {@link I18NMessage} persistent model
@@ -23,21 +37,25 @@ import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 public class I18nMessageService {
 
    @PersistenceContext(unitName = KaleidoPersistentContextUnitName)
-   protected EntityManager em;
+   private EntityManager em;
 
    /**
-    * @return current entity manager (handle managed one or not)
+    * @return current entity manager (handle managed one or not). Can't be null.
     */
    @NotNull
    protected final EntityManager getEntityManager() {
-	// unmanaged environment
-	if (em == null) {
-	   return UnmanagedEntityManagerFactory.currentEntityManager(KaleidoPersistentContextUnitName);
-	}
-	// managed environment
-	else {
-	   return em;
-	}
+	/*
+	 * done via aop :) cf. PersistenceContextAspect
+	 * // unmanaged environment
+	 * if (em == null) {
+	 * return UnmanagedEntityManagerFactory.currentEntityManager(KaleidoPersistentContextUnitName);
+	 * }
+	 * // managed environment
+	 * else {
+	 * return em;
+	 * }
+	 */
+	return em;
    }
 
    /**

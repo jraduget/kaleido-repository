@@ -1,3 +1,18 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.store;
 
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ResourceStoreMessageBundle;
@@ -14,8 +29,7 @@ import javax.persistence.PersistenceContext;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
-import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
+import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.store.entity.ResourceStoreEntity;
 import org.kaleidofoundry.core.util.StringHelper;
 
@@ -24,7 +38,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * 
  * @author Jerome RADUGET
  */
-@DeclarePlugin(ClobJpaStorePluginName)
+@Declare(ClobJpaStorePluginName)
 // TODO - Annotate it as @Stateless ejb to enable ejb exposition + injection - import right ejb 3.x library - problem : coupling it to ejb3
 public class JpaResourceStore extends AbstractResourceStore implements ResourceStore {
 
@@ -46,15 +60,20 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
    /**
     * @return current entity manager (handle managed one or not)
     */
+   @NotNull
    protected final EntityManager getEntityManager() {
-	// unmanaged environment
-	if (em == null) {
-	   return UnmanagedEntityManagerFactory.currentEntityManager(KaleidoPersistentContextUnitName);
-	}
-	// managed environment
-	else {
-	   return em;
-	}
+	/*
+	 * done via aop : PersistenceContextAspect
+	 * // unmanaged environment
+	 * if (em == null) {
+	 * return UnmanagedEntityManagerFactory.currentEntityManager(KaleidoPersistentContextUnitName);
+	 * }
+	 * // managed environment
+	 * else {
+	 * return em;
+	 * }
+	 */
+	return em;
    }
 
    /**
@@ -78,7 +97,7 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doLoad(java.net.URI)
     */
    @Override
-   protected ResourceHandler doLoad(final URI resourceUri) throws StoreException {
+   protected ResourceHandler doGet(final URI resourceUri) throws StoreException {
 	ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.toString());
 	if (entity == null) {
 	   throw new ResourceNotFoundException(resourceUri.toString());

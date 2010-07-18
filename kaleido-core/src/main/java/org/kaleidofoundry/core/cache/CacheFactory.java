@@ -1,56 +1,66 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.cache;
 
-import static org.kaleidofoundry.core.cache.CacheConstants.CACHE_IMPLEMENTATION_ENV;
+import static org.kaleidofoundry.core.cache.CacheConstants.CACHE_PROVIDER_ENV;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.CacheMessageBundle;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Serializable;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.lang.StringUtils;
+import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
+import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
+import org.kaleidofoundry.core.plugin.Declare;
+import org.kaleidofoundry.core.plugin.Plugin;
+import org.kaleidofoundry.core.plugin.PluginFactory;
+import org.kaleidofoundry.core.util.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Abstract cache factory which allow to use different cache implementation with a common interface and behaviors<br/>
  * <br/>
- * Default cache implementation when you call {@link #getCacheFactory()} will use {@link LocalCacheFactoryImpl} (it use an
+ * Default cache implementation when you call {@link #getCacheManager()} will use {@link LocalCacheManagerImpl} (it use an
  * {@link ConcurrentHashMap} internally)<br/>
  * <br/>
- * <b>You can customize default cache implementation, by defining the java env variable :</b>
+ * <b>You can customize default cache provider, by defining the java env. variable :</b>
  * <ul>
- * <li>-Dcache.implementation=cacheImplCode</li>
+ * <li>-Dcache.provider=cacheImplCode</li>
  * </ul>
  * where cacheImplCode can be :
  * <ul>
- * <li>'local' -> kaleidofoundry local implementation (ConcurrentHashMap)</li>
- * <li>'ehcache-1.x' -> ehcache implementation</li>
- * <li>'jboss-cache-3.x' -> jboss cache implementation</li>
- * <li>'infinispan-4.x' -> infinispan implementation</li>
+ * <li>'ehCache1x' -> terracotta ehcache (c)</li>
+ * <li>'jbossCache3x' -> jboss cache (c)</li>
+ * <li>'infinispan4x' -> jboss infinispan (c)</li>
+ * <li>'coherence3x' -> oracle coherence (c)</li>
+ * <li>'gigaspace7x' -> gigaspace (c)</li>
+ * <li>'kaleidoLocalCache' -> kaleidofoundry (c) local (ConcurrentHashMap)</li>
  * </ul>
  * <b>All cache implementations shared a common test case suite, in order to guarantee the same behavior</b>
  * <b>Example :</b>
  * 
  * <pre>
  * 	// Person is a java classic serializeable POJO
- * 	final CacheFactory<Integer, Person> cacheFactory = CacheFactory.getCacheFactory();
+ * 	final CacheFactory cacheFactory = CacheFactory.getCacheFactory();
  * 	final Cache<Integer, Person> cache = cacheFactory.getCache(Person.class);
  * 
  * 	// handle cache
@@ -60,275 +70,86 @@ import org.slf4j.LoggerFactory;
  * </pre>
  * 
  * @author Jerome RADUGET
- * @param <K> Key type of the cache entries
- * @param <V> Entity type of the cache values
+ * @see DefaultCacheProviderEnum
  */
-public abstract class CacheFactory<K extends Serializable, V extends Serializable> {
+@ThreadSafe
+public abstract class CacheFactory {
 
    static final Logger LOGGER = LoggerFactory.getLogger(CacheFactory.class);
 
-   // default cache implementation key to use
-   private static final CacheEnum DEFAULT_CACHE_IMPLEMENTATION;
+   // default cache provider code to use
+   private static final String DEFAULT_CACHE_PROVIDER;
    // set of reserved cache name
    private static final Set<String> RESERVED_CACHE_NAME;
+   // Local registry of cache manager instances */
+   static final transient Registry<Integer, CacheManager> CACHEMANAGER_REGISTRY = new Registry<Integer, CacheManager>();
 
    static {
-	final String userCacheImpl = System.getProperty(CACHE_IMPLEMENTATION_ENV);
-	CacheEnum userDefaultCacheEnum = null;
+	final String userCacheImpl = System.getProperty(CACHE_PROVIDER_ENV);
+	Plugin<CacheManager> defaultCachePlugin = null;
 	boolean userCacheImplNotFound = false;
 
 	if (userCacheImpl != null && !"".equals(userCacheImpl.trim())) {
-	   userDefaultCacheEnum = CacheEnum.findByCode(userCacheImpl);
-	   if (userDefaultCacheEnum == null) {
+	   defaultCachePlugin = findCacheManagerByPluginCode(userCacheImpl);
+	   if (defaultCachePlugin == null) {
 		userCacheImplNotFound = true;
 	   }
 	}
-	userDefaultCacheEnum = userDefaultCacheEnum != null ? userDefaultCacheEnum : CacheEnum.LOCAL;
-
-	DEFAULT_CACHE_IMPLEMENTATION = userDefaultCacheEnum;
+	DEFAULT_CACHE_PROVIDER = defaultCachePlugin != null ? defaultCachePlugin.getName() : DefaultCacheProviderEnum.localCache.name();
 	RESERVED_CACHE_NAME = Collections.synchronizedSet(new HashSet<String>());
 
 	if (userCacheImplNotFound) {
-	   LOGGER.warn(CacheMessageBundle.getMessage("cache.implementation.notfound", userCacheImpl));
+	   LOGGER.warn(CacheMessageBundle.getMessage("cache.provider.notfound", userCacheImpl));
 	}
 
-	LOGGER.info(CacheMessageBundle.getMessage("cache.implementation.default", userDefaultCacheEnum.toString()));
-	LOGGER.info(CacheMessageBundle.getMessage("cache.implementation.customize"));
+	LOGGER.info(CacheMessageBundle.getMessage("cache.provider.default", DEFAULT_CACHE_PROVIDER));
+	LOGGER.info(CacheMessageBundle.getMessage("cache.provider.customize"));
    }
 
    /**
-    * @return the cache implementation id
-    */
-   public abstract CacheEnum getImplementation();
-
-   /**
-    * @param name
-    * @param configurationUri
-    * @return Create it and return it at first call, return previously instanced next call
-    */
-   public abstract Cache<K, V> getCache(@NotNull final String name, @NotNull final String configurationUri);
-
-   /**
-    * @return all cache names instantiate by the factory
-    */
-   public abstract Set<String> getCacheNames();
-
-   /**
-    * @param cacheName cache name to free / destroy
-    */
-   public abstract void destroy(@NotNull final String cacheName);
-
-   /**
-    * stop / destroy / shutdown all cache factory instances
-    */
-   public abstract void destroyAll();
-
-   /**
-    * statistic dump of a cache name
-    * 
-    * @param cacheName
-    * @return statistic information of the given cache
-    */
-   public abstract Map<String, Object> dumpStatistics(@NotNull final String cacheName);
-
-   /**
-    * clear cache statistics for given cache name
-    * 
-    * @param cacheName
-    */
-   public abstract void clearStatistics(@NotNull final String cacheName);
-
-   /**
-    * Default cache implementation configuration will be used
-    * 
-    * @param name name of the cache you want
-    * @return abstract Cache method
-    */
-   public Cache<K, V> getCache(@NotNull final String name) {
-	return getCache(name, null);
-   }
-
-   /**
-    * Default cache implementation configuration will be used
-    * 
-    * @param cl class
-    * @return abstract Cache method
-    */
-   public Cache<K, V> getCache(@NotNull final Class<V> cl) {
-	return getCache(cl, null);
-   }
-
-   /**
-    * @param cl
-    * @param configurationUri
-    * @return Create it and return it at first call, return previously instanced next call
-    */
-   public Cache<K, V> getCache(@NotNull final Class<V> cl, final String configurationUri) {
-	return getCache(cl.getName(), configurationUri);
-   }
-
-   /**
-    * @param cl cache name to free / destroy
-    */
-   public void destroy(@NotNull final Class<V> cl) {
-	destroy(cl.getName());
-   }
-
-   /**
-    * @return dump all cache statistics representation<br/>
-    *         <ul>
-    *         <li>key of the map is cache name
-    *         <li>value of a key cache name, is a map of stat. key name / stat. key value
-    *         </ul>
+    * @return default cache manager provider (java system env. will be used, see class javadoc header)
     */
    @NotNull
-   public Map<String, Map<String, Object>> dumpStatistics() {
-	Map<String, Map<String, Object>> dumpStatistics = new LinkedHashMap<String, Map<String, Object>>();
-	for (String cacheName : getCacheNames()) {
-	   dumpStatistics.put(cacheName, dumpStatistics(cacheName));
-	}
-	return dumpStatistics;
+   public static CacheManager getCacheManager() {
+	return getCacheManager(DEFAULT_CACHE_PROVIDER, null, new RuntimeContext<CacheManager>());
    }
 
    /**
-    * clear all cache statistics
-    */
-   public void clearStatistics() {
-	for (String cacheName : getCacheNames()) {
-	   clearStatistics(cacheName);
-	}
-   }
-
-   /**
-    * print text statistic information to the given {@link OutputStream}
-    * 
-    * @param out
-    * @throws IOException
-    */
-   public void printStatistics(@NotNull final OutputStream out) throws IOException {
-	Writer writer = null;
-	writer = new OutputStreamWriter(out);
-	printStatistics(writer);
-	writer.flush();
-   }
-
-   /**
-    * print text statistic information to the given {@link Writer}
-    * 
-    * @param writer
-    * @throws IOException
-    */
-   public void printStatistics(@NotNull final Writer writer) throws IOException {
-
-	Map<String, Map<String, Object>> stats = dumpStatistics();
-
-	if (stats != null && !stats.isEmpty()) {
-
-	   writer.append("\n");
-
-	   // create table width informations
-	   Map<String, Integer> tableWidths = new LinkedHashMap<String, Integer>();
-	   tableWidths.put("CacheName", 80);
-
-	   // column compute width label and store it in tableWidths
-	   Map<String, Object> firstCacheInfo = stats.values().iterator().next();
-	   for (String column : firstCacheInfo.keySet()) {
-		tableWidths.put(column, column.length() + 4);
-	   }
-
-	   // first line of separator
-	   for (String column : tableWidths.keySet()) {
-		writer.append(StringUtils.rightPad("-", tableWidths.get(column) - 1, "-")).append(" ");
-	   }
-	   writer.append("\n");
-
-	   // columns name
-	   for (String column : tableWidths.keySet()) {
-		writer.append(StringUtils.rightPad(StringUtils.abbreviate(column, tableWidths.get(column)), tableWidths.get(column), " "));
-	   }
-	   writer.append("\n");
-
-	   // second line of separator
-	   for (String column : tableWidths.keySet()) {
-		writer.append(StringUtils.rightPad("-", tableWidths.get(column) - 1, "-")).append(" ");
-	   }
-	   writer.append("\n");
-
-	   if (stats != null) {
-
-		// for each cache
-		for (String cacheName : stats.keySet()) {
-
-		   // first column is cache name
-		   writer.append(StringUtils.rightPad(StringUtils.abbreviate(String.valueOf(cacheName), tableWidths.get("CacheName")),
-			   tableWidths.get("CacheName"), " "));
-
-		   // create a column for each stats of the current cache
-		   Map<String, Object> statsValue = stats.get(cacheName);
-
-		   // append each column value to the writer
-		   for (String statKey : statsValue.keySet()) {
-			writer.append(StringUtils.rightPad(String.valueOf(statsValue.get(statKey)), tableWidths.get(statKey), " "));
-
-		   }
-		   writer.append("\n");
-		}
-	   }
-	}
-   }
-
-   /**
-    * @return spring representation of the cache statistics
-    * @throws IOException
+    * @param providerCodeCode
+    * @return cache manager using specific providerCodeCode
     */
    @NotNull
-   public String printStatistics() throws IOException {
-	StringWriter writer = new StringWriter();
-	printStatistics(writer);
-	return writer.toString();
+   public static CacheManager getCacheManager(@NotNull final String providerCodeCode) {
+	return getCacheManager(providerCodeCode, null, new RuntimeContext<CacheManager>());
    }
 
    /**
-    * @return default factory implementation
-    * @param <K>
-    * @param <V>
+    * @param context
+    * @return cache manager if context specify a specific provider, it will use it, otherwise default cache manager
+    *         provider (java system env. will be used, see class javadoc header)
     */
    @NotNull
-   public static <K extends Serializable, V extends Serializable> CacheFactory<K, V> getCacheFactory() {
-	return getCacheFactory(DEFAULT_CACHE_IMPLEMENTATION);
+   public static CacheManager getCacheManager(final RuntimeContext<CacheManager> context) {
+	return getCacheManager(DEFAULT_CACHE_PROVIDER, null, context);
    }
 
    /**
-    * @param <K>
-    * @param <V>
-    * @param factoryID
+    * @param providerCode
+    * @param configuration
+    * @param context
     * @return cacheFactory implementation
     */
    @NotNull
-   public static <K extends Serializable, V extends Serializable> CacheFactory<K, V> getCacheFactory(@NotNull final CacheEnum factoryID) {
+   public static CacheManager getCacheManager(@NotNull final String providerCode, final String configuration,
+	   @NotNull final RuntimeContext<CacheManager> context) {
 
-	switch (factoryID) {
+	CacheManager cacheManager = CACHEMANAGER_REGISTRY.get(getCacheManagerId(providerCode, configuration));
 
-	case LOCAL: {
-	   return new LocalCacheFactoryImpl<K, V>();
-	}
-	case EHCACHE_1X: {
-	   return new EhCache1xFactoryImpl<K, V>();
-	}
-	case JBOSS_3X: {
-	   return new Jboss32xCacheFactoryImpl<K, V>();
-	}
-	case COHERENCE_3X: {
-	   return new Coherence35xCacheFactoryImpl<K, V>();
-	}
-	case INFINISPAN_4X: {
-	   return new Infinispan4xCacheFactoryImpl<K, V>();
-	}
-	default: {
-	   throw new IllegalArgumentException("Incorrect argument value factoryID:" + factoryID);
+	if (cacheManager == null) {
+	   cacheManager = createCacheManager(providerCode, configuration, context);
 	}
 
-	}
+	return cacheManager;
    }
 
    /**
@@ -340,66 +161,73 @@ public abstract class CacheFactory<K extends Serializable, V extends Serializabl
    }
 
    /**
-    * Search configuration file
-    * <ul>
-    * <li>first via URI if correct</li>
-    * <li>second on file system</li>
-    * <li>second on classpath (and jars resources)</li>
-    * </ul>
-    * 
-    * @param configurationUri
-    * @return InputStream of the input configuration url, or null if none found
+    * @param providerCode
+    * @param configuration
+    * @return unique cache manager identifier
     */
-   protected InputStream getConfiguration(final String configurationUri)
+   static Integer getCacheManagerId(@NotNull final String providerCode, final String configuration) {
+	return (providerCode.hashCode() * 128) + (configuration != null ? configuration.hashCode() : 0);
 
-   {
-	File fconf = null;
-	InputStream fconfIn = null;
-
-	// 1. if file exist via URI first
-	try {
-	   final URI uri = new URI(configurationUri);
-	   fconf = new File(uri);
-	} catch (final URISyntaxException use) {
-	} catch (final IllegalArgumentException iae) {
-	} // new File() Exception
-
-	// 2. if file exist on file system
-	if (fconf == null || !fconf.exists()) {
-	   final URL url = currentClassLoader().getResource(configurationUri);
-	   if (url != null) {
-		fconf = new File(url.getPath());
-	   }
-	}
-
-	// create inputStream if file was found
-	if (fconf != null && fconf.exists()) {
-	   try {
-		fconfIn = new FileInputStream(fconf);
-	   } catch (final FileNotFoundException fnfe) {
-	   }
-	}
-	// 3. search in classpath (jars) resources
-	else {
-	   fconfIn = currentClassLoader().getResourceAsStream(configurationUri);
-	}
-
-	return fconfIn;
    }
 
    /**
-    * @return current classLoader instance (thread instance, or application instance) (never null will be return)
+    * @param providerCode
+    * @param configuration
+    * @param context
+    * @return
     */
-   protected ClassLoader currentClassLoader() {
-	ClassLoader current;
+   private static synchronized CacheManager createCacheManager(@NotNull final String providerCode, final String configuration,
+	   @NotNull final RuntimeContext<CacheManager> context) {
 
-	current = new ThreadLocal<Object>().getClass().getClassLoader();
+	// only for optimization reasons
+	if (providerCode.equalsIgnoreCase(DefaultCacheProviderEnum.localCache.name())) { return new LocalCacheManagerImpl(configuration, context); }
+	if (providerCode.equalsIgnoreCase(DefaultCacheProviderEnum.ehCache1x.name())) { return new EhCache1xManagerImpl(configuration, context); }
+	if (providerCode.equalsIgnoreCase(DefaultCacheProviderEnum.coherence3x.name())) { return new Coherence35xCacheManagerImpl(configuration, context); }
+	if (providerCode.equalsIgnoreCase(DefaultCacheProviderEnum.infinispan4x.name())) { return new Infinispan4xCacheManagerImpl(configuration, context); }
+	if (providerCode.equalsIgnoreCase(DefaultCacheProviderEnum.jbossCache3x.name())) { return new Jboss32xCacheManagerImpl(configuration, context); }
+	// if (providerCode.equalsIgnoreCase(DefaultCacheEnum.gigaspace7x.name())) { return new GigaSpaceManager7xImpl(configuration,
+	// context); }
 
-	if (current == null) {
-	   current = this.getClass().getClassLoader();
+	// dynamic lookup into register plugin
+	final Set<Plugin<CacheManager>> pluginImpls = PluginFactory.getImplementationRegistry().findByInterface(CacheManager.class);
+
+	// scan each @Declare resource store implementation, to get one which handle the given implementation code
+	for (final Plugin<CacheManager> pi : pluginImpls) {
+	   final Class<? extends CacheManager> impl = pi.getAnnotatedClass();
+	   try {
+
+		final Declare declarePlugin = impl.getAnnotation(Declare.class);
+
+		if (providerCode.equalsIgnoreCase(declarePlugin.value())) {
+		   final Constructor<? extends CacheManager> constructor = impl.getConstructor(String.class, RuntimeContext.class);
+		   return constructor.newInstance(configuration, context);
+		}
+
+	   } catch (final NoSuchMethodException e) {
+		throw new CacheException("cache.factory.create.NoSuchConstructorException", impl.getName());
+	   } catch (final InstantiationException e) {
+		throw new CacheException("cache.factory.create.InstantiationException", impl.getName(), e.getMessage());
+	   } catch (final IllegalAccessException e) {
+		throw new CacheException("cache.factory.create.IllegalAccessException=ResourceStore", impl.getName());
+	   } catch (final InvocationTargetException e) {
+		throw new CacheException("cache.factory.create.InvocationTargetException", e.getCause(), impl.getName(), e.getMessage());
+	   }
 	}
+	throw new CacheException("cache.provider.illegal", providerCode);
 
-	return current;
    }
 
+   /*
+    * find cache manager by plugin code
+    */
+   @SuppressWarnings("unchecked")
+   private static Plugin<CacheManager> findCacheManagerByPluginCode(@NotNull final String code) {
+	final Plugin<?> plugin = PluginFactory.getImplementationRegistry().get(code);
+	try {
+	   return (Plugin<CacheManager>) plugin;
+	} catch (final ClassCastException cce) {
+	   throw new CacheException("cache.provider.classcasterror", code, plugin.getClass().getTypeParameters()[0].getClass().getName(), CacheManager.class
+		   .getName());
+	}
+   }
 }

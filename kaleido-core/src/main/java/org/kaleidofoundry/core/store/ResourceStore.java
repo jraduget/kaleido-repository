@@ -1,3 +1,18 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.store;
 
 import static org.kaleidofoundry.core.store.ResourceStoreConstants.ResourceStorePluginName;
@@ -7,7 +22,7 @@ import java.net.URL;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Stateless;
-import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
+import org.kaleidofoundry.core.plugin.Declare;
 
 /**
  * Store for resource like file properties, xml datas, binary content (pdf report, email...) that need to be persit on a
@@ -29,20 +44,20 @@ import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
  * @author Jerome RADUGET
  */
 @Stateless
-@DeclarePlugin(ResourceStorePluginName)
+@Declare(ResourceStorePluginName)
 public interface ResourceStore extends Store<URI, ResourceHandler> {
 
    /**
-    * load a given resource <br/>
+    * get a given resource <br/>
     * 
     * @param resourceUri resource binding informations to access the resource<br/>
-    * @return resource input stream
+    * @return resource input stream to get its content
     * @throws ResourceNotFoundException if resource can't be found, instead of returning null
     * @throws StoreException other kind of error
     */
    @Override
    @NotNull
-   ResourceHandler load(@NotNull URI resourceUri) throws StoreException;
+   ResourceHandler get(@NotNull URI resourceUri) throws StoreException;
 
    /**
     * store updates on current R instance<br/>

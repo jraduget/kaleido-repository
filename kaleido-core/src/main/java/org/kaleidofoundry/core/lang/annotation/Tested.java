@@ -1,5 +1,17 @@
-/*
- * $License$
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.kaleidofoundry.core.lang.annotation;
 
@@ -25,22 +37,21 @@ import java.lang.annotation.Target;
 public @interface Tested {
 
    /**
-    * @return test case have been written or not
-    */
-   boolean value() default true;
-
-   /**
-    * @return class name qualifier of the unit test class
-    */
-   String[] unitClassNames() default "";
-
-   /**
-    * @return method name in the unit test class
-    */
-   String[] unitMethodNames() default "";
-
-   /**
-    * @return free description
+    * @return user description
     */
    String decription() default "";
+
+   /**
+    * @return It represents a reference to the full test method signature (like javadoc syntax)<br/>
+    * <br/>
+    *         Examples :
+    *         <ul>
+    *         <li>@Tested(methods=new String["String#charAt(int)"])
+    *         <li>String#startsWith(String, int)
+    *         <li>com.compagny.module.YourClass#compute(...)
+    *         <li>...
+    *         </ul>
+    */
+   String[] methods() default "";
+
 }

@@ -1,3 +1,18 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.store;
 
 import org.kaleidofoundry.core.lang.annotation.Immutable;
@@ -57,19 +72,19 @@ public abstract class AbstractSingleStore<B, R> implements SingleStore<B, R> {
    }
 
    /**
-    * load implementation to implements<br/>
+    * load it<br/>
     * no need to handle synchronized here, it is done done earlier
     */
-   protected abstract R doLoad() throws StoreException;
+   protected abstract R doGet() throws StoreException;
 
    /**
-    * unload implementation to implements<br/>
+    * unload it<br/>
     * no need to handle synchronized here, it is done done earlier
     */
    protected abstract void doUnload() throws StoreException;
 
    /**
-    * persists current resouce instance
+    * persists current resource instance
     * 
     * @return current resource instance
     */
@@ -80,8 +95,8 @@ public abstract class AbstractSingleStore<B, R> implements SingleStore<B, R> {
     * @see org.kaleidofoundry.core.config.Store#load()
     */
    @Override
-   public synchronized R load() throws StoreException {
-	R content = doLoad();
+   public synchronized R get() throws StoreException {
+	R content = doGet();
 	loaded = true;
 	return content;
    }
@@ -103,7 +118,7 @@ public abstract class AbstractSingleStore<B, R> implements SingleStore<B, R> {
    @Override
    public synchronized R reload() throws StoreException {
 	unload();
-	R content = load();
+	R content = get();
 	return content;
    }
 

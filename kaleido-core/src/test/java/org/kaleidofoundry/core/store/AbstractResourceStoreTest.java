@@ -1,3 +1,18 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.store;
 
 import java.io.IOException;
@@ -26,7 +41,7 @@ public abstract class AbstractResourceStoreTest extends Assert {
    /** mock resource default content */
    static final String DEFAULT_RESOURCE_MOCK_TEST = "line1\nline2";
 
-   // protected property to instanciate by the concrete implementation class
+   // protected property to instantiate by the concrete implementation class
    protected ResourceStore resourceStore;
 
    // valid uri resource to test
@@ -68,7 +83,7 @@ public abstract class AbstractResourceStoreTest extends Assert {
 
 	for (URI uriToTest : existingResources.keySet()) {
 	   try {
-		resource = resourceStore.load(uriToTest);
+		resource = resourceStore.get(uriToTest);
 		assertNotNull(resource);
 		assertNotNull(resource.getInputStream());
 		assertEquals(existingResources.get(uriToTest), IOHelper.toString(resource.getInputStream()));
@@ -85,7 +100,7 @@ public abstract class AbstractResourceStoreTest extends Assert {
 
 	// null argument not allowed
 	try {
-	   resourceStore.load(null);
+	   resourceStore.get(null);
 	   fail("NullArgumentException expected");
 	} catch (NotNullException nae) {
 	}
@@ -93,7 +108,7 @@ public abstract class AbstractResourceStoreTest extends Assert {
 	// load not existing resource, throws ResourceNotFoundException
 	for (URI uriToTest : nonExistingResources) {
 	   try {
-		resourceStore.load(uriToTest);
+		resourceStore.get(uriToTest);
 		fail("uri <" + uriToTest + "> must throws ResourceNotFoundException");
 	   } catch (ResourceNotFoundException rnfe) {
 	   }

@@ -28,14 +28,6 @@
 			<version>2.0</version>
 		</dependency>
 		
-		<!-- JPA -->
-		<dependency>
-			<groupId>org.eclipse.persistence</groupId>
-			<artifactId>javax.persistence</artifactId>
-			<version>${jee.jpa.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		
 	</dependencies>	
 	
 </project>

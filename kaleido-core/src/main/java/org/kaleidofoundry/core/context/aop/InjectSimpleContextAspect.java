@@ -1,0 +1,97 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.kaleidofoundry.core.context.aop;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.FieldSignature;
+import org.kaleidofoundry.core.config.Configuration;
+import org.kaleidofoundry.core.config.ConfigurationFactory;
+import org.kaleidofoundry.core.context.InjectContext;
+import org.kaleidofoundry.core.context.RuntimeContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Aspect used to inject RuntimeContext<?> field that is annotated {@link InjectContext}(...) <br/>
+ * 
+ * <pre>
+ * class YourClass {
+ * 
+ *    &#064;Context(name = &quot;jndi.context&quot;)
+ *    private RuntimeContext&lt;?&gt; runtimeContext;
+ * 
+ *    public YourClass() {           
+ *          	...
+ *          	System.out.println(runtimeContext.getString(&quot;...&quot;)); 
+ *          	...          	
+ *          }
+ * }
+ * </pre>
+ * 
+ * @author Jerome RADUGET
+ */
+@Aspect
+public class InjectSimpleContextAspect {
+
+   private static final Logger LOGGER = LoggerFactory.getLogger(InjectSimpleContextAspect.class);
+
+   // no need to filter on field modifier here, otherwise you can use private || !public at first get argument
+   @Pointcut("get(@org.kaleidofoundry.core.context.InjectContext org.kaleidofoundry.core.context.RuntimeContext *) && if()")
+   public static boolean trackRuntimeContextField(final JoinPoint jp, final JoinPoint.EnclosingStaticPart esjp) {
+	LOGGER.debug("@Pointcut InjectSimpleContextAspect - trackRuntimeContextField match");
+	return true;
+   }
+
+   // track field with ProceedingJoinPoint and annotation information with @annotation(annotation)
+   @SuppressWarnings("unchecked")
+   @Around("trackRuntimeContextField(jp, esjp) && @annotation(annotation)")
+   public Object trackRuntimeContextFieldToInject(final JoinPoint jp, final JoinPoint.EnclosingStaticPart esjp, final ProceedingJoinPoint thisJoinPoint,
+	   final InjectContext annotation) throws Throwable {
+	if (thisJoinPoint.getSignature() instanceof FieldSignature) {
+	   final FieldSignature fs = (FieldSignature) thisJoinPoint.getSignature();
+	   final Object target = thisJoinPoint.getTarget();
+	   final Field field = fs.getField();
+	   field.setAccessible(true);
+	   final Object currentValue = field.get(target);
+
+	   if (currentValue == null) {
+		final String[] configIds = annotation.configurations();
+		final Configuration[] configs = new Configuration[configIds != null ? configIds.length : 0];
+		for (int i = 0; i < configs.length; i++) {
+		   configs[i] = ConfigurationFactory.getRegistry().get(configIds[i]);
+		}
+
+		final Constructor<?> runtimeContextConstructor = fs.getFieldType().getConstructor(String.class, String.class, Configuration[].class);
+		final RuntimeContext<?> runtimeContext = (RuntimeContext<?>) runtimeContextConstructor.newInstance(annotation.value(), null, configs);
+
+		field.set(target, runtimeContext);
+		return runtimeContext;
+	   } else {
+		return thisJoinPoint.proceed();
+	   }
+	} else {
+	   throw new IllegalStateException("aspect advise handle only field, please check your pointcut");
+	}
+   }
+
+}

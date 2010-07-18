@@ -1,13 +1,30 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.cache;
 
-import static org.kaleidofoundry.core.cache.CacheConstants.DefaultLocalPluginName;
+import static org.kaleidofoundry.core.cache.CacheConstants.DefaultLocalCachePluginName;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
+import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.plugin.Declare;
 
 /**
  * Local cache implementation<br/>
@@ -17,7 +34,7 @@ import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
  * @param <K>
  * @param <V>
  */
-@DeclarePlugin(DefaultLocalPluginName)
+@Declare(DefaultLocalCachePluginName)
 public class LocalCacheImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> {
 
    private final ConcurrentMap<K, V> CacheableMap = new ConcurrentHashMap<K, V>();
@@ -27,7 +44,7 @@ public class LocalCacheImpl<K extends Serializable, V extends Serializable> exte
    /**
     * @param name cache name
     */
-   public LocalCacheImpl(final String name) {
+   public LocalCacheImpl(@NotNull final String name) {
 	super();
 	this.name = name;
    }
@@ -56,7 +73,7 @@ public class LocalCacheImpl<K extends Serializable, V extends Serializable> exte
     */
    @Override
    protected boolean doRemove(final K key) {
-	boolean present = CacheableMap.get(key) != null;
+	final boolean present = CacheableMap.get(key) != null;
 	if (present) {
 	   CacheableMap.remove(key);
 	}
@@ -83,6 +100,15 @@ public class LocalCacheImpl<K extends Serializable, V extends Serializable> exte
 
    /*
     * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.Cache#values()
+    */
+   @Override
+   public Collection<V> values() {
+	return CacheableMap.values();
+   }
+
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.Cache#removeAll()
     */
    @Override
@@ -97,6 +123,15 @@ public class LocalCacheImpl<K extends Serializable, V extends Serializable> exte
    @Override
    public int size() {
 	return CacheableMap.size();
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.Cache#getDelegate()
+    */
+   @Override
+   public Object getDelegate() {
+	return CacheableMap;
    }
 
    /**

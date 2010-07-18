@@ -1,5 +1,17 @@
-/*
- * $License$
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.kaleidofoundry.core.config;
 
@@ -13,11 +25,13 @@ import java.util.Set;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Nullable;
-import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
+import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
+import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.store.ClasspathResourceStore;
 import org.kaleidofoundry.core.store.FileSystemResourceStore;
 import org.kaleidofoundry.core.store.FtpResourceStore;
 import org.kaleidofoundry.core.store.HttpResourceStore;
+import org.kaleidofoundry.core.store.JpaResourceStore;
 import org.kaleidofoundry.core.store.ResourceStore;
 import org.kaleidofoundry.core.store.StoreException;
 
@@ -45,8 +59,8 @@ import org.kaleidofoundry.core.store.StoreException;
  * <li>Java classpath - {@link ClasspathResourceStore},</li>
  * <li>Http url - {@link HttpResourceStore},</li>
  * <li>Ftp url - {@link FtpResourceStore},</li>
+ * <li>Jpa custom url - {@link JpaResourceStore},</li>
  * <li>Jdbc custom url - TODO,</li>
- * <li>Jpa custom url - TODO,</li>
  * <li>...</li>
  * </ul>
  * <br/>
@@ -89,7 +103,7 @@ import org.kaleidofoundry.core.store.StoreException;
  * <li><code>//application/name	- configuration.getString("//application/name") -> "app"</code></li>
  * <li><code>//application/version  - configuration.getString("//application/version") -> "1.0.0"</code></li>
  * <li>
- * <code>//application/librairies  - configuration.getStringList("//application/librairies") -> {"dom4j.jar","log4j.jar","mail.jar"}</code></li>
+ * <code>//application/libraries  - configuration.getStringList("//application/libraries") -> {"dom4j.jar","log4j.jar","mail.jar"}</code></li>
  * </ul>
  * Informations :
  * <ul>
@@ -101,7 +115,8 @@ import org.kaleidofoundry.core.store.StoreException;
  * @see ResourceStore
  * @author Jerome RADUGET
  */
-@DeclarePlugin(ConfigurationConstants.ConfigurationPluginName)
+@ThreadSafe
+@Declare(value = ConfigurationConstants.ConfigurationPluginName, singleton = true)
 public interface Configuration {
 
    /**

@@ -1,17 +1,32 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.ioc;
 
 import java.lang.annotation.Annotation;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.kaleidofoundry.core.context.InjectContext;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.context.RuntimeContextProvider;
-import org.kaleidofoundry.core.context.annotation.Context;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.slf4j.Logger;
 
 /**
- * Interceptor used for injecting {@link RuntimeContext} information with {@link Context} annotation <br/>
+ * Interceptor used for injecting {@link RuntimeContext} information with {@link InjectContext} annotation <br/>
  * <p>
  * Context injection handle by :
  * <ul>
@@ -56,13 +71,13 @@ class ContextInjectionMethodInterceptor implements MethodInterceptor {
 	// 2. if one argument instance of RuntimeContext have been fount
 	if (runtimeContextArg != null) {
 	   boolean contextInjected = false;
-	   Context contextAnnot = null;
+	   InjectContext contextAnnot = null;
 
 	   // 2.1 scan method arguments, to detect a @Context declaration
 	   Annotation[] argsAnnot = invocation.getMethod().getParameterAnnotations()[cptArg];
 	   for (Annotation a : argsAnnot) {
-		if (a instanceof Context) {
-		   contextAnnot = (Context) a;
+		if (a instanceof InjectContext) {
+		   contextAnnot = (InjectContext) a;
 		}
 	   }
 	   if (contextAnnot != null) {
@@ -73,7 +88,7 @@ class ContextInjectionMethodInterceptor implements MethodInterceptor {
 
 	   // 2.2 scan method to detect @Context annotation is none argument @Context annotated
 	   if (!contextInjected) {
-		contextAnnot = invocation.getMethod().getAnnotation(Context.class);
+		contextAnnot = invocation.getMethod().getAnnotation(InjectContext.class);
 		if (contextAnnot != null) {
 		   invocation.getArguments()[cptArg] = runtimeContextProvider.provides(contextAnnot, runtimeContextArg);
 		   contextInjected = true;

@@ -1,5 +1,17 @@
-/* 
- * $License$ 
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.kaleidofoundry.core.context;
 
@@ -8,8 +20,13 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.kaleidofoundry.core.config.Configuration;
+import org.kaleidofoundry.core.config.ConfigurationFactory;
+import org.kaleidofoundry.core.config.ConfigurationRegistry;
+import org.kaleidofoundry.core.i18n.InternalBundleHelper;
+import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.plugin.PluginHelper;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -17,15 +34,15 @@ import org.kaleidofoundry.core.util.StringHelper;
  * It will be the ancestor, of all runtime context handled in the framework. The prefixProperty is used to prefix the
  * property names in order to categorize it<br/>
  * You can extend it, and specify your own property prefix<br/>
- * Its data could be load from a {@link Properties} or from a {@link Configuration} <br/>
+ * Its data could be load from a {@link Configuration} <br/>
  * <ul>
  * <li>it encapsulates access to runtime env. informations,
- * <li>it is bind to a {@link Configuration} or {@link Properties}, so configuration changes can be managed at runtime,
- * <li>it can be a subset of this {@link Configuration} or {@link Properties} (the prefixProperty is done for that),
- * <li>it has read only access to the {@link Configuration} or {@link Properties}
+ * <li>it is bind to a {@link Configuration} so configuration changes can be managed at runtime,
+ * <li>it can be a subset of this {@link Configuration} (the prefixProperty is done for that),
+ * <li>it has read only access to the {@link Configuration}
  * </ul>
  * <p>
- * <b>Class is thread safe</b>: it use internally {@link Properties} or {@link Configuration} to store context informations in memory.
+ * <b>Class is thread safe</b>: it use internally {@link Configuration}, to store context informations in memory.
  * </p>
  * <p>
  * Sample, a file <code>jndi-local.properties</code> contains following :
@@ -57,17 +74,23 @@ import org.kaleidofoundry.core.util.StringHelper;
  * <p>
  * 
  * <pre>
- * Properties jndiProperties = new Properties();
- * jndiProperties.load(new FileInputStream(&quot;jndi-local.properties&quot;));
+ * 	try {
+ * 	   // create & load configuration & a extract runtime context
+ * 	   Configuration jndiProperties = ConfigurationFactory.provideConfiguration("myJndiConf", "classpath:/jndi-local.properties");
+ * 	   RuntimeContext tomcatContext = new RuntimeContext("tomcat", "jndi.context", jndiProperties);
+ * 	   
+ * 	   // print properties value
+ * 	   System.out.println(tomcatContext.getProperty("java.naming.env.prefix"));
+ * 	   System.out.println(tomcatContext.getProperty("java.naming.factory.initial"));
  * 
- * RuntimeContext tomcatContext = new RuntimeContext(&quot;tomcat&quot;, jndiProperties, &quot;jndi.context&quot;);
- * Properties tomcatJndiProperties = tomcatContext.toProperties();
- * 
- * System.out.println(tomcatJndiProperties.getProperty(&quot;java.naming.env.prefix&quot;));
- * System.out.println(tomcatJndiProperties.getProperty(&quot;java.naming.factory.initial&quot;));
- * 
- * tomcatJndiProperties.store(new FileOutputStream(&quot;jndi-local-tomcat.properties&quot;), &quot;extraction of tomcat jndi properties&quot;);
- * 
+ * 	   // extract current properties to another file
+ * 	   Properties tomcatJndiProperties = tomcatContext.toProperties();
+ * 	   tomcatJndiProperties.store(new FileOutputStream("jndi-local-tomcat.properties"), "extraction of tomcat jndi properties");
+ * 	} catch (final StoreException stoe) {
+ * 	   ...
+ * 	} catch (final IOException ioe) {
+ * 	   ...
+ * 	}
  * </pre>
  * 
  * </p>
@@ -89,150 +112,96 @@ import org.kaleidofoundry.core.util.StringHelper;
  * @author Jerome RADUGET
  */
 @Review(comment = "review interaction between configuration and runtime context... use case, creation, event handling... have to be thread safe...")
+@Immutable(comment = "instance which have been injected using @InjectContext are immutable after injection")
 public class RuntimeContext<T> {
 
-   private final String name;
-   private final String prefixProperty;
-
-   // One of the two can be instantiated!
-   private final Properties properties;
-   private final Configuration configuration;
-
-   /**
-    * default constructor<br/>
-    * create context internally with a new {@link Properties}
+   /*
+    * Even if the field are not final, the class stay immutable.
+    * a class instance which have been injected with @InjectContext, can't be modifiable
+    * -> see #copyFrom(...) methods
     */
-   public RuntimeContext() {
-	this((String) null);
-   }
-
-   // Constructor without Properties or Configuration ******************************************************************
+   private String name;
+   private String prefixProperty;
+   private Configuration[] configurations;
+   private boolean injected;
 
    /**
-    * create context internally with a new {@link Properties}
+    * constructor with an instance of {@link Configuration}, configurations have to be load before
     * 
-    * @param name context name identifier
+    * @param configurations configuration instances where to find properties
     */
-   public RuntimeContext(final String name) {
-	this(name, new Properties(), null);
+   public RuntimeContext(final Configuration... configurations) {
+	this(null, null, configurations);
    }
 
    /**
-    * create context internally with a new {@link Properties}
+    * constructor with an instance of {@link Configuration}, configurations have to be load before
     * 
     * @param name context name identifier
+    * @param configurations configuration instances where to find properties
+    */
+   public RuntimeContext(final String name, final Configuration... configurations) {
+	this(name, null, configurations);
+   }
+
+   /**
+    * constructor with an instance of {@link Configuration}, configurations have to be load before
+    * 
+    * @param name context name identifier
+    * @param configurations configuration instances where to find properties
+    * @param prefixProperty an optional prefix for the properties name (it can be used to categorized your own
+    *           RuntimeContext)
+    */
+   public RuntimeContext(final String name, final String prefixProperty, @NotNull final Configuration... configurations) {
+	this(name, prefixProperty, false, configurations);
+   }
+
+   /**
+    * @param name your context name
     * @param prefix an optional prefix for the properties name (it can be used to categorized your own RuntimeContext)
-    */
-   public RuntimeContext(final String name, final String prefix) {
-	this(name, new Properties(), prefix);
-   }
-
-   // Constructors with Properties *************************************************************************************
-
-   /**
-    * Default constructor with {@link Properties}, properties have to be load before
-    * 
-    * @param props intial values of the context
-    */
-   public RuntimeContext(@NotNull final Properties props) {
-	this(null, props, null);
-   }
-
-   /**
-    * Default constructor with {@link Properties}, properties have to be load before
-    * 
-    * @param name context name identifier
-    * @param defaults initial values of the context
-    */
-   public RuntimeContext(final String name, @NotNull final Properties defaults) {
-	this(name, defaults, null);
-   }
-
-   /**
-    * Default constructor with {@link Properties}, properties have to be load before
-    * 
-    * @param properties initial values of the context
-    * @param prefixProperty an optional prefix for the properties name (it can be used to categorized your own
-    *           RuntimeContext)
-    */
-   public RuntimeContext(@NotNull final Properties properties, final String prefixProperty) {
-	this(null, properties, prefixProperty);
-   }
-
-   /**
-    * constructor with an instance of {@link Properties} , properties have to be load before
-    * 
-    * @param name context name identifier
-    * @param properties initial values of the context
-    * @param prefixProperty an optional prefix for the properties name (it can be used to categorized your own
-    *           RuntimeContext)
-    */
-   public RuntimeContext(final String name, final @NotNull Properties properties, final String prefixProperty) {
-	this.name = name;
-	this.prefixProperty = prefixProperty;
-	this.properties = properties; // keep original instance, to handle property modification. don't re-copy it
-	configuration = null;
-   }
-
-   // Constructors with Configuration **********************************************************************************
-
-   /**
-    * constructor with an instance of {@link Configuration}, configuration have to be load before
-    * 
-    * @param configuration initial configuration value
-    */
-   public RuntimeContext(final Configuration configuration) {
-	this(null, configuration, null);
-   }
-
-   /**
-    * constructor with an instance of {@link Configuration}, configuration have to be load before
-    * 
-    * @param name context name identifier
-    * @param defaults initial values of the context
-    */
-   public RuntimeContext(final String name, final Configuration defaults) {
-	this(name, defaults, null);
-   }
-
-   /**
-    * constructor with an instance of {@link Configuration}, configuration have to be load before
-    * 
-    * @param defaults initial values of the context
-    * @param prefixProperty an optional prefix for the properties name (it can be used to categorized your own
-    *           RuntimeContext)
-    */
-   public RuntimeContext(final Configuration defaults, final String prefixProperty) {
-	this(null, defaults, prefixProperty);
-   }
-
-   /**
-    * constructor with an instance of {@link Configuration}, configuration have to be load before
-    * 
-    * @param name context name identifier
-    * @param defaults initial values of the context
-    * @param prefixProperty an optional prefix for the properties name (it can be used to categorized your own
-    *           RuntimeContext)
-    */
-   public RuntimeContext(final String name, @NotNull final Configuration defaults, final String prefixProperty) {
-	this.name = name;
-	this.prefixProperty = prefixProperty;
-	properties = null;
-	configuration = defaults;// keep original instance, to handle property modification. don't re-copy it
-   }
-
-   /**
-    * TODO : to review - clone or not the datas ?
-    * 
-    * @param name
     * @param context
-    * @param prefix an optional prefix for the properties name (it can be used to categorized your own RuntimeContext)
     */
-   public RuntimeContext(final String name, @NotNull final RuntimeContext<?> context, final String prefix) {
+   public RuntimeContext(final String name, final String prefix, @NotNull final RuntimeContext<?> context) {
+	this(name, prefix, false, context.getConfigurations());
+   }
+
+   /**
+    * @param name your context name
+    * @param context
+    */
+   public RuntimeContext(final String name, @NotNull final RuntimeContext<?> context) {
+	this(name, null, false, context.getConfigurations());
+   }
+
+   /**
+    * @param name
+    * @param prefixProperty
+    * @param injected
+    * @param configurations
+    */
+   RuntimeContext(final String name, final String prefixProperty, final boolean injected, @NotNull final Configuration... configurations) {
 	this.name = name;
-	prefixProperty = prefix;
-	configuration = context.getConfiguration();
-	properties = context.getProperties();
+	this.prefixProperty = prefixProperty != null ? prefixProperty : PluginHelper.getPluginName(getClassType());
+	this.configurations = configurations; // keep original instance, to handle property modification. don't re-copy it
+	this.injected = injected;
+   }
+
+   /**
+    * Internal helper for re-copy a runtime context, which have not been yet injected
+    * 
+    * @param origin
+    * @param target
+    */
+   static public void copyFrom(final RuntimeContext<?> origin, final RuntimeContext<?> target) {
+	if (!target.injected) {
+	   target.name = origin.name;
+	   target.prefixProperty = origin.prefixProperty;
+	   target.configurations = origin.configurations;
+	   target.injected = false;
+	} else {
+	   // RuntimeContext have already been injected
+	   throw new IllegalStateException(InternalBundleHelper.RuntimeContextMessageBundle.getMessage("context.annotation.illegalinject", target.name));
+	}
    }
 
    /**
@@ -240,6 +209,13 @@ public class RuntimeContext<T> {
     */
    public String getName() {
 	return name;
+   }
+
+   /**
+    * @return does the current instance have been injected via @{@link InjectContext}
+    */
+   public boolean isInjected() {
+	return injected;
    }
 
    /**
@@ -253,9 +229,9 @@ public class RuntimeContext<T> {
    /**
     * @return an optional prefix for the properties name (it can be used to categorized your own RuntimeContext) <br/>
     * <br/>
-    *         For example in kaleido, it could be :
+    *         For example in kaleidofoundry, it could be :
     *         <ul>
-    *         <li>file.store
+    *         <li>resourcestore
     *         <li>jndi.context
     *         <li>messaging.consumer
     *         <li>messaging.transport
@@ -269,12 +245,14 @@ public class RuntimeContext<T> {
 
    /**
     * @param property local property name (without prefix and name)
-    * @return value of the given property
+    * @return value of the given property (the first found when more that one configurations is set)
     */
    public String getProperty(final String property) {
-	if (properties != null) { return properties.getProperty(getFullPropertyName(property)); }
-	if (configuration != null) { return configuration.getString(getFullPropertyName(property)); }
-	throw new IllegalStateException();
+	for (final Configuration config : getConfigurations()) {
+	   final String propVal = config.getString(getFullPropertyName(property));
+	   if (propVal != null) { return propVal; }
+	}
+	return null;
    }
 
    /**
@@ -287,9 +265,9 @@ public class RuntimeContext<T> {
 	str.append("{context name").append("=").append(name).append(" ");
 	str.append("prefix").append("=").append(prefixProperty).append("}").append(separator);
 
-	Set<String> keys = keySet();
+	final Set<String> keys = keySet();
 	if (keys != null) {
-	   for (String key : keys) {
+	   for (final String key : keys) {
 		str.append(key).append("=").append(getProperty(key)).append(separator);
 	   }
 	}
@@ -308,77 +286,63 @@ public class RuntimeContext<T> {
     * @return a clone copy of the properties set names (property name
     */
    public Set<String> keySet() {
-	if (properties != null || configuration != null) {
-	   final String prefix = getFullPrefix().toString();
-	   final Set<String> keys = properties != null ? properties.stringPropertyNames() : configuration.toProperties().stringPropertyNames();
-	   final Set<String> result = new LinkedHashSet<String>();
-	   for (String prop : keys) {
-		if (prop.startsWith(prefix)) {
-		   result.add(prop.substring(prefix.length() <= 0 ? prefix.length() : prefix.length() + 1));
-		}
-	   }
-	   return result;
+
+	final String prefix = getFullPrefix().toString();
+
+	final Set<String> keys = new LinkedHashSet<String>();
+	final Set<String> result = new LinkedHashSet<String>();
+
+	for (final Configuration config : getConfigurations()) {
+	   keys.addAll(config.toProperties().stringPropertyNames());
 	}
-	return null;
+
+	for (final String prop : keys) {
+	   if (prop.startsWith(prefix)) {
+		result.add(prop.substring(prefix.length() <= 0 ? prefix.length() : prefix.length() + 1));
+	   }
+	}
+	return result;
+
    }
 
    /**
-    * @return clone properties of the context
+    * @return clone properties of the context<br/>
+    *         if several {@link Configuration} are set when create {@link RuntimeContext}, then only the first found property will be return
+    *         in the result
     */
    public Properties toProperties() {
 
-	if (properties != null || configuration != null) {
-	   final String prefix = getFullPrefix().toString();
-	   final Properties props = new Properties();
-	   for (String prop : keySet()) {
-		if (prop.startsWith(prefix)) {
-		   props.setProperty(prop.substring(prefix.length() <= 0 ? prefix.length() : prefix.length() + 1), properties != null ? properties
-			   .getProperty(prop) : configuration.getString(prop));
-		}
-	   }
-	   return props;
-	}
+	final String prefix = getFullPrefix().toString();
+	final Properties props = new Properties();
+	for (final String prop : keySet()) {
+	   if (prop.startsWith(prefix)) {
 
-	return null;
+		String configValue = null;
+		for (final Configuration config : getConfigurations()) {
+		   configValue = config.getString(prop);
+		   if (configValue != null) {
+			break;
+		   }
+		}
+
+		props.setProperty(prop.substring(prefix.length() <= 0 ? prefix.length() : prefix.length() + 1), configValue);
+	   }
+	}
+	return props;
+
    }
 
    // ***************************************************************************
    // * PROTECTED
    // ***************************************************************************
-   protected Configuration getConfiguration() {
-	return configuration;
-   }
+   @NotNull
+   protected Configuration[] getConfigurations() {
 
-   protected Properties getProperties() {
-	return properties;
-   }
-
-   /**
-    * @param property (without prefix and name)
-    * @param value value to set to the given property
-    */
-   protected void setProperty(@NotNull final String property, @NotNull final String value) {
-	if (property == null) { throw new NullPointerException(); }
-
-	if (properties != null) {
-	   properties.setProperty(getFullPropertyName(property), value);
-	}
-	if (configuration != null) {
-	   configuration.setProperty(getFullPropertyName(property), value);
-	}
-   }
-
-   /**
-    * @param property (without prefix and name)
-    */
-   protected void removeProperty(@NotNull final String property) {
-	if (property == null) { throw new NullPointerException(); }
-
-	if (properties != null) {
-	   properties.remove(getFullPropertyName(property));
-	}
-	if (configuration != null) {
-	   configuration.removeProperty(getFullPropertyName(property));
+	if (configurations == null || configurations.length <= 0) {
+	   final ConfigurationRegistry registry = ConfigurationFactory.getRegistry();
+	   return registry.values().toArray(new Configuration[registry.size()]);
+	} else {
+	   return configurations;
 	}
    }
 
@@ -403,7 +367,7 @@ public class RuntimeContext<T> {
     * @return Returns the eventual prefix (prefix + name) of property names
     */
    protected StringBuilder getFullPrefix() {
-	StringBuilder prefix = new StringBuilder();
+	final StringBuilder prefix = new StringBuilder();
 
 	if (!StringHelper.isEmpty(prefixProperty)) {
 	   prefix.append(prefixProperty);

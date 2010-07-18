@@ -7,8 +7,7 @@
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
 		<!-- entities declarations -->
-		<class>org.kaleidofoundry.core.store.entity.ResourceStoreEntity</class>
-
+		<class>org.kaleidofoundry.core.store.entity.ResourceStoreEntity</class>		
 		<class>org.kaleidofoundry.core.i18n.entity.I18nMessage</class>
 		<class>org.kaleidofoundry.core.i18n.entity.I18nMessageGroup</class>
 		<class>org.kaleidofoundry.core.i18n.entity.I18nMessageLanguage</class>
@@ -37,7 +36,10 @@
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
 		<!-- entities declarations -->
-		<class>org.kaleidofoundry.core.store.ResourceStoreEntity</class>
+		<class>org.kaleidofoundry.core.store.entity.ResourceStoreEntity</class>		
+		<class>org.kaleidofoundry.core.i18n.entity.I18nMessage</class>
+		<class>org.kaleidofoundry.core.i18n.entity.I18nMessageGroup</class>
+		<class>org.kaleidofoundry.core.i18n.entity.I18nMessageLanguage</class>
 
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 
@@ -65,12 +67,17 @@
 	<persistence-unit name="kaleido-core-custom" transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
+		<!-- entities declarations -->
+		<class>org.kaleidofoundry.core.persistence.PersonEntity</class>
+
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:derby:target/kaleidoCustomUnitTest;create=true" />
 			<property name="javax.persistence.jdbc.user" value="APP" />
 			<property name="javax.persistence.jdbc.password" value="APP" />
+			<property name="eclipselink.logging.level" value="FINE" />
 			<property name="eclipselink.target-database" value="Derby" />
+			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
 		</properties>
 
 	</persistence-unit>

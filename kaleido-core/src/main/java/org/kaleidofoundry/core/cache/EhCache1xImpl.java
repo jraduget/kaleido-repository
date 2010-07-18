@@ -1,15 +1,33 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.EhCachePluginName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 
-import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
+import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.plugin.Declare;
 
 /**
  * EhCache {@link org.kaleidofoundry.core.cache.Cache} implementation <br/>
@@ -20,7 +38,7 @@ import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
  * @param <K>
  * @param <V>
  */
-@DeclarePlugin(EhCachePluginName)
+@Declare(EhCachePluginName)
 public class EhCache1xImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> implements org.kaleidofoundry.core.cache.Cache<K, V> {
 
    private final String name;
@@ -30,17 +48,15 @@ public class EhCache1xImpl<K extends Serializable, V extends Serializable> exten
     * @param c class of the cache
     * @param cache
     */
-   EhCache1xImpl(final Class<V> c, final Cache cache) {
-	this(c != null ? c.getName() : null, cache);
+   EhCache1xImpl(@NotNull final Class<V> c, @NotNull final Cache cache) {
+	this(c.getName(), cache);
    }
 
    /**
     * @param name name of the cache
     * @param cache
     */
-   EhCache1xImpl(final String name, final Cache cache) {
-	if (name == null) { throw new IllegalArgumentException("cache name argument is null"); }
-	if (cache == null) { throw new IllegalArgumentException("cache argument is null"); }
+   EhCache1xImpl(@NotNull final String name, @NotNull final Cache cache) {
 	this.name = name;
 	this.cache = cache;
    }
@@ -93,6 +109,25 @@ public class EhCache1xImpl<K extends Serializable, V extends Serializable> exten
 	return new HashSet<K>(cache.getKeys());
    }
 
+   /**
+    * ehcache don't provide direct values access in the api. Values are encapsulated into {@link Element}<br/>
+    * so for performance reason, this code is no very efficient if cache contains a lot of items. <br/>
+    */
+   @SuppressWarnings("unchecked")
+   @Override
+   public Collection<V> values() {
+
+	Collection<V> result = new ArrayList<V>();
+	V value;
+	for (Object key : cache.getKeys()) {
+	   value = get((K) key);
+	   if (value != null) {
+		result.add(value);
+	   }
+	}
+	return result;
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.Cache#removeAll()
@@ -109,6 +144,15 @@ public class EhCache1xImpl<K extends Serializable, V extends Serializable> exten
    @Override
    public int size() {
 	return cache.getSize();
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.Cache#getDelegate()
+    */
+   @Override
+   public Object getDelegate() {
+	return cache;
    }
 
    /**

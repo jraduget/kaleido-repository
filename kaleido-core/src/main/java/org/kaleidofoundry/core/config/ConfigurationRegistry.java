@@ -1,3 +1,18 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.config;
 
 import java.net.URI;
@@ -15,7 +30,7 @@ import org.kaleidofoundry.core.util.Registry;
  * 
  * @author Jerome RADUGET
  */
-public class ConfigurationRegistry extends Registry<Configuration> {
+public class ConfigurationRegistry extends Registry<String, Configuration> {
 
    private static final long serialVersionUID = -6914735437869325831L;
 
@@ -29,11 +44,11 @@ public class ConfigurationRegistry extends Registry<Configuration> {
    @Nullable
    public Class<? extends Configuration> findByResourceExtension(@NotNull final URI configurationResource) {
 
-	PluginImplementationRegistry pluginRegistry = PluginFactory.getImplementationRegistry();
-	Set<Plugin<Configuration>> configurationImpls = pluginRegistry.findByInterface(Configuration.class);
-	String resourceExtention = configurationResource.getRawPath().substring(configurationResource.getRawPath().lastIndexOf("."));
+	final PluginImplementationRegistry pluginRegistry = PluginFactory.getImplementationRegistry();
+	final Set<Plugin<Configuration>> configurationImpls = pluginRegistry.findByInterface(Configuration.class);
+	final String resourceExtention = configurationResource.getRawPath().substring(configurationResource.getRawPath().lastIndexOf("."));
 
-	for (Plugin<Configuration> pi : configurationImpls) {
+	for (final Plugin<Configuration> pi : configurationImpls) {
 	   if (pi.getName().endsWith(resourceExtention)) { return pi.getAnnotatedClass(); }
 	}
 

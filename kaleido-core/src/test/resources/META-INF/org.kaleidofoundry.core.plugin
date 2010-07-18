@@ -1,1 +1,3 @@
 org.kaleidofoundry.core.plugin.PluginSample
+org.kaleidofoundry.core.context.test.MyServiceInterface
+

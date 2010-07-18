@@ -10,7 +10,7 @@
 				<param name="ConversionPattern" value="%d{yyyy-MM-dd_hh:mm:ss} [%t]
 				[%-5p] %m %n"/>
 			-->
-			<param name="ConversionPattern" value="%m %n" />
+			<param name="ConversionPattern" value="[%-5p] %m %n" />
 		</layout>
 		<filter class="org.apache.log4j.varia.LevelRangeFilter">
 			<param name="AcceptOnMatch" value="true" />
@@ -28,7 +28,7 @@
 				<param name="ConversionPattern" value="%d{yyyy-MM-dd_hh:mm:ss} [%t]
 				[%-5p] [%-30.48c{1}] - %m - [%l] %n"/>
 			-->
-			<param name="ConversionPattern" value="%m %n" />
+			<param name="ConversionPattern" value="[%-5p] %m - [%l] %n" />
 		</layout>
 		<filter class="org.apache.log4j.varia.LevelRangeFilter">
 			<param name="AcceptOnMatch" value="true" />
@@ -40,7 +40,7 @@
 	<appender name="stddebugAppender" class="org.apache.log4j.ConsoleAppender">
 		<param name="Target" value="System.out" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%m %n" />
+			<param name="ConversionPattern" value="[%-5p] %m %n" />
 		</layout>
 		<filter class="org.apache.log4j.varia.LevelRangeFilter">
 			<param name="AcceptOnMatch" value="true" />

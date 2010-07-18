@@ -1,3 +1,18 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.i18n;
 
 import java.util.Arrays;
@@ -103,14 +118,14 @@ public class I18nJpaEntityMessagesTest extends AbstractI18nMessagesTest {
 	   em.merge(message);
 
 	   // print mock entities that have been persist
-	   I18nMessageService i18nMessageService = new I18nMessageService();
+	   final I18nMessageService i18nMessageService = new I18nMessageService();
 
-	   for (Locale currentLocale : Arrays.asList(Locale.FRENCH, Locale.ENGLISH, Locale.GERMAN)) {
+	   for (final Locale currentLocale : Arrays.asList(Locale.FRENCH, Locale.ENGLISH, Locale.GERMAN)) {
 
-		List<I18nMessageLanguage> frMessages = i18nMessageService.findMessagesByLocale(ResourceRoot + "root", currentLocale);
+		final List<I18nMessageLanguage> frMessages = i18nMessageService.findMessagesByLocale(ResourceRoot + "root", currentLocale);
 		LOGGER.info(StringHelper.replicate("#", 140));
 		LOGGER.info("findMessagesByLanguageIso mock database messages for locale '{}' :", currentLocale);
-		for (I18nMessageLanguage ml : frMessages) {
+		for (final I18nMessageLanguage ml : frMessages) {
 		   LOGGER.info("\t{}", ml.toString());
 		}
 		LOGGER.info(StringHelper.replicate("#", 140));
@@ -121,7 +136,7 @@ public class I18nJpaEntityMessagesTest extends AbstractI18nMessagesTest {
 	   // enable jpa control in case it have been disabled (true by default)
 	   I18nMessagesFactory.enableJpaControl();
 
-	} catch (RuntimeException re) {
+	} catch (final RuntimeException re) {
 	   LOGGER.error("static setup", re);
 	   throw re;
 	} finally {
@@ -154,15 +169,15 @@ public class I18nJpaEntityMessagesTest extends AbstractI18nMessagesTest {
    @Test
    public void testResourceBundleCache() {
 
-	MessageBundle messageBundle = (MessageBundle) I18nMessagesFactory.getMessages(ResourceRoot + "root", Locale.FRENCH);
+	I18nMessages messageBundle = I18nMessagesFactory.getMessages(ResourceRoot + "root", Locale.FRENCH);
 	LOGGER.debug(messageBundle.getMessage("label.array.test", "1"));
 	LOGGER.debug(messageBundle.getMessage("label.array.test", "2"));
-	messageBundle = (MessageBundle) I18nMessagesFactory.getMessages(ResourceRoot + "root", Locale.FRENCH);
+	messageBundle = I18nMessagesFactory.getMessages(ResourceRoot + "root", Locale.FRENCH);
 	LOGGER.debug(messageBundle.getMessage("label.array.test", "3"));
 	LOGGER.debug(messageBundle.getMessage("label.array.test", "4"));
 	LOGGER.debug("clear bundle cache");
 	I18nMessagesFactory.clearCache();
-	messageBundle = (MessageBundle) I18nMessagesFactory.getMessages(ResourceRoot + "root", Locale.FRENCH);
+	messageBundle = I18nMessagesFactory.getMessages(ResourceRoot + "root", Locale.FRENCH);
 	LOGGER.debug(messageBundle.getMessage("label.array.test", "1"));
 	LOGGER.debug(messageBundle.getMessage("label.array.test", "2"));
 	LOGGER.debug(messageBundle.getMessage("label.array.test", "3"));

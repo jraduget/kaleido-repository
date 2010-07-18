@@ -1,11 +1,31 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.lang.aop;
 
 import static org.kaleidofoundry.core.lang.NotYetImplementedException.ERROR_NotYetImplemented;
+import static org.kaleidofoundry.core.lang.NotYetImplementedException.ERROR_NotYetImplementedCustom;
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.lang.NotYetImplementedException;
 import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
+import org.kaleidofoundry.core.store.StoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +35,18 @@ import org.slf4j.LoggerFactory;
 public class NotYetImplementedlAspectTest extends Assert {
 
    static Logger LOGGER = LoggerFactory.getLogger(NotImplementedlAspectTest.class);
+
+   @Before
+   public void setup() {
+	// disable i18n message bundle control to speed up test (no need of a local derby instance startup)
+	I18nMessagesFactory.disableJpaControl();
+   }
+
+   @After
+   public void cleanup() throws StoreException {
+	// re-enable i18n jpa message bundle control
+	I18nMessagesFactory.enableJpaControl();
+   }
 
    @Test
    public void constructors() {
@@ -62,7 +94,8 @@ public class NotYetImplementedlAspectTest extends Assert {
 	   service.callNotImplemented(1, "foo2");
 	   fail("NotYetImplementedException expected");
 	} catch (NotYetImplementedException nie) {
-	   assertEquals(ERROR_NotYetImplemented, nie.getCode());
+	   assertEquals(ERROR_NotYetImplementedCustom, nie.getCode());
+	   assertTrue(nie.getMessage().contains("blablabla"));
 	}
    }
 
@@ -74,6 +107,15 @@ public class NotYetImplementedlAspectTest extends Assert {
 	   fail("NotYetImplementedException expected");
 	} catch (NotYetImplementedException nie) {
 	   assertEquals(ERROR_NotYetImplemented, nie.getCode());
+	}
+
+	// have to failed
+	try {
+	   new NotYetImplementedTestService2();
+	   fail("NotYetImplementedException expected");
+	} catch (NotYetImplementedException nie) {
+	   assertEquals(ERROR_NotYetImplementedCustom, nie.getCode());
+	   assertTrue(nie.getMessage().contains("blabla"));
 	}
    }
 }
@@ -110,7 +152,7 @@ class PartialNotYetImplementedTestService {
 	LOGGER.debug("*********************************************************************************************");
    }
 
-   @NotYetImplemented
+   @NotYetImplemented("blablabla")
    public void callNotImplemented(final Integer arg1, final String arg2) {
 	LOGGER.debug("method processing");
 	LOGGER.debug("*********************************************************************************************");
@@ -120,4 +162,8 @@ class PartialNotYetImplementedTestService {
 
 @NotYetImplemented
 class NotYetImplementedTestService {
+}
+
+@NotYetImplemented("blabla")
+class NotYetImplementedTestService2 {
 }

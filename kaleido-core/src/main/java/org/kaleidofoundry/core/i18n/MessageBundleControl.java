@@ -1,3 +1,18 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.i18n;
 
 import java.io.IOException;
@@ -73,7 +88,7 @@ public class MessageBundleControl extends Control {
 	final String bundleName = toBundleName(baseName, locale);
 	final String resourceName = toResourceName(bundleName, format.getExtention());
 
-	MessageBundle messageBundle = null;
+	DefaultMessageBundle messageBundle = null;
 	final Properties properties = new Properties();
 	InputStream inProperties = null;
 
@@ -114,18 +129,23 @@ public class MessageBundleControl extends Control {
 	   if (format == MessageBundleControlFormat.JPA_ENTITY_PROPERTIES && I18nMessagesFactory.JpaIsEnabled) {
 
 		// TODO create a service injector (local / guice / spring / ejb3 local or remote...)
-		I18nMessageService messageService = new I18nMessageService();
-		List<I18nMessageLanguage> messagesLanguage = messageService.findMessagesByLocale(baseName, locale);
+		final I18nMessageService messageService = new I18nMessageService();
+		final List<I18nMessageLanguage> messagesLanguage = messageService.findMessagesByLocale(baseName, locale);
 
 		if (!messagesLanguage.isEmpty()) {
-		   for (I18nMessageLanguage ml : messagesLanguage) {
+		   for (final I18nMessageLanguage ml : messagesLanguage) {
 			properties.put(ml.getMessage().getCode(), ml.getContent());
 		   }
 		   foundResource = true;
 		}
 	   }
 
-	} catch (RuntimeException rie) {
+	   // ...
+	   // TODO - MessageBundleControl {@link Plugin} compatible for extention
+	   // ? do a MessageLoader interface -> with implementation prop, xml, jpa... ?
+	   // ...
+
+	} catch (final RuntimeException rie) {
 	   // usefull for jpa entity manager error
 	   if (LOGGER.isDebugEnabled()) {
 		LOGGER.debug("debug resourceBundle control resolver error: '{}'", rie.getMessage());
@@ -138,7 +158,7 @@ public class MessageBundleControl extends Control {
 	}
 
 	if (foundResource) {
-	   messageBundle = new MessageBundle(resourceName, properties);
+	   messageBundle = new DefaultMessageBundle(resourceName, properties);
 	   LOGGER.debug("\t-> resource found !");
 	} else {
 	   LOGGER.debug("\t-> resource not found...");

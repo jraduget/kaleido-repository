@@ -1,21 +1,35 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.plugin;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
-import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
 import org.kaleidofoundry.core.util.ReflectionHelper;
 import org.kaleidofoundry.core.util.Registry;
 
 /**
  * Registry of all enable plugin implementation <br/>
- * An enable plugin is a concrete class annotation by {@link DeclarePlugin} with enable attribute set to true
+ * An enable plugin is a concrete class annotation by {@link Declare} with enable attribute set to true
  * 
  * @author Jerome RADUGET
  */
 @ThreadSafe
-public class PluginImplementationRegistry extends Registry<Plugin<?>> {
+public class PluginImplementationRegistry extends Registry<String, Plugin<?>> {
 
    private static final long serialVersionUID = 8291953439110040529L;
 
@@ -38,8 +52,7 @@ public class PluginImplementationRegistry extends Registry<Plugin<?>> {
 
 	if (!cinterface.isInterface()) { throw new IllegalArgumentException("argument \"cinterface\" is not an interface."); }
 
-	if (!cinterface.isAnnotationPresent(DeclarePlugin.class)) { throw new IllegalArgumentException(
-		"argument \"cinterface\" is is not annotated by DeclarePlugin"); }
+	if (!cinterface.isAnnotationPresent(Declare.class)) { throw new IllegalArgumentException("argument \"cinterface\" is is not annotated by DeclarePlugin"); }
 
 	Set<Plugin<T>> result = new LinkedHashSet<Plugin<T>>();
 
@@ -48,7 +61,7 @@ public class PluginImplementationRegistry extends Registry<Plugin<?>> {
 	   Set<Class<?>> interfaces = ReflectionHelper.getAllInterfaces(pluginImpl.getAnnotatedClass());
 
 	   for (Class<?> i : interfaces) {
-		if (i == cinterface && i.isAnnotationPresent(DeclarePlugin.class)) {
+		if (i == cinterface && i.isAnnotationPresent(Declare.class)) {
 		   result.add((Plugin<T>) pluginImpl);
 		}
 	   }

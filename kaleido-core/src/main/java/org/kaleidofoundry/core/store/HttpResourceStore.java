@@ -1,3 +1,18 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.store;
 
 import static org.kaleidofoundry.core.store.ResourceStoreConstants.HttpStorePluginName;
@@ -13,17 +28,17 @@ import java.net.URLConnection;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotImplemented;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
+import org.kaleidofoundry.core.plugin.Declare;
 
 /**
  * Simple http & https resource store implementation<br/>
  * This implementation is only for read only use<br/>
- * You can extends it and override {@link #doRemove(URI)} and {@link #doStore(URI, ResourceHandler)} to your need, and {@link DeclarePlugin}
- * your implementation to use it
+ * You can extends it and override {@link #doRemove(URI)} and {@link #doStore(URI, ResourceHandler)} to your need, and {@link Declare} your
+ * implementation to use it
  * 
  * @author Jerome RADUGET
  */
-@DeclarePlugin(HttpStorePluginName)
+@Declare(HttpStorePluginName)
 public class HttpResourceStore extends AbstractResourceStore implements ResourceStore {
 
    /**
@@ -32,10 +47,12 @@ public class HttpResourceStore extends AbstractResourceStore implements Resource
    public static enum ContextProperty {
 	/** current user */
 	user,
+	/** user password */
+	password,
 	/** GET, POST method */
 	method,
-	/** proxy adress to use - proxy type {@link Proxy.Type} will be HTTP */
-	proxyAdress,
+	/** proxy type to use {@link Proxy.Type} will be HTTP */
+	proxyType,
 	/** mime type */
 	contentType,
 	/** connection timeout */
@@ -71,21 +88,22 @@ public class HttpResourceStore extends AbstractResourceStore implements Resource
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doLoad(java.net.URI)
     */
    @Override
-   protected ResourceHandler doLoad(final URI resourceUri) throws StoreException {
+   protected ResourceHandler doGet(final URI resourceUri) throws StoreException {
 	if (resourceUri.getHost() == null) { throw new IllegalStateException(resourceUri.toString()
 		+ " is not an http:// or https:// valid uri. No host is specified..."); }
 	try {
 	   final URL configUrl = resourceUri.toURL();
 	   final URLConnection urlConnection = configUrl.openConnection();
+	   // TODO using RuntimeContext for proxy + readtimeout + user + pwd ...
 	   urlConnection.connect();
 	   try {
 		return new ResourceHandlerBean(urlConnection.getInputStream());
-	   } catch (FileNotFoundException fnfe) {
+	   } catch (final FileNotFoundException fnfe) {
 		throw new ResourceNotFoundException(resourceUri.toString());
 	   }
-	} catch (MalformedURLException mure) {
+	} catch (final MalformedURLException mure) {
 	   throw new IllegalStateException(resourceUri.toString() + " is not an http:// or https:// uri");
-	} catch (IOException ioe) {
+	} catch (final IOException ioe) {
 	   throw new StoreException(ioe);
 	}
    }

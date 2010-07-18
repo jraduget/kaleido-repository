@@ -1,11 +1,28 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.CoherenceCachePluginName;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 
-import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
+import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.plugin.Declare;
 
 import com.tangosol.net.NamedCache;
 import com.tangosol.util.Filter;
@@ -17,7 +34,7 @@ import com.tangosol.util.Filter;
  * @param <K>
  * @param <V>
  */
-@DeclarePlugin(CoherenceCachePluginName)
+@Declare(CoherenceCachePluginName)
 public class Coherence35xCacheImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> implements Cache<K, V> {
 
    private final String name;
@@ -25,21 +42,17 @@ public class Coherence35xCacheImpl<K extends Serializable, V extends Serializabl
 
    /**
     * @param c class of the cache
-    * @param coherence cache instanciate via factory
+    * @param coherence cache instantiate via factory
     */
-   Coherence35xCacheImpl(final Class<V> c, final NamedCache cache) {
-	this(c != null ? c.getName() : null, cache);
+   Coherence35xCacheImpl(@NotNull final Class<V> c, @NotNull final NamedCache cache) {
+	this(c.getName(), cache);
    }
 
    /**
     * @param name name of the cache
-    * @param coherence cache instanciate via factory
+    * @param coherence cache instantiate via factory
     */
-   Coherence35xCacheImpl(final String name, final NamedCache cache) {
-
-	if (name == null) { throw new IllegalArgumentException("cache name argument is null"); }
-	if (cache == null) { throw new IllegalArgumentException("cache argument is null"); }
-
+   Coherence35xCacheImpl(@NotNull final String name, @NotNull final NamedCache cache) {
 	this.namedCache = cache;
 	this.name = name;
    }
@@ -93,6 +106,16 @@ public class Coherence35xCacheImpl<K extends Serializable, V extends Serializabl
 	return namedCache.keySet();
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.Cache#values()
+    */
+   @SuppressWarnings("unchecked")
+   @Override
+   public Collection<V> values() {
+	return namedCache.values();
+   }
+
    /**
     * @param filter
     * @return keys set return by the filter
@@ -119,6 +142,15 @@ public class Coherence35xCacheImpl<K extends Serializable, V extends Serializabl
    @Override
    public int size() {
 	return namedCache.size();
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.Cache#getDelegate()
+    */
+   @Override
+   public Object getDelegate() {
+	return namedCache;
    }
 
    /**

@@ -1,5 +1,17 @@
-/*
- * $License$
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.kaleidofoundry.core.plugin.processor;
 
@@ -32,16 +44,16 @@ import javax.lang.model.util.AbstractElementVisitor6;
 import javax.tools.StandardLocation;
 import javax.tools.Diagnostic.Kind;
 
+import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.plugin.PluginInspector;
 import org.kaleidofoundry.core.plugin.PluginRegistryException;
-import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
 
 /**
  * Java 6 annotation processor, it is use to introspect (at compile time), specific kaleido plugin annotations :<br/>
  * Use META-INF/services/javax.annotation.processing.Processor text file to enumerate your processor factory <br/>
  * Handle annotation : <br/>
  * <ul>
- * <li>{@link DeclarePlugin}</li>
+ * <li>{@link Declare}</li>
  * </ul>
  * <br/>
  * Processor will generate two resources files, use to registry plugin and plugin implementation at runtime. <br/>
@@ -52,10 +64,10 @@ import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
  * </ul>
  * This files have to be include in your jar class resources.
  * 
- * @see DeclarePlugin
+ * @see Declare
  * @author Jerome RADUGET
  */
-@SupportedAnnotationTypes( { "org.kaleidofoundry.core.plugin.annotation.*" })
+@SupportedAnnotationTypes( { "org.kaleidofoundry.core.plugin.*" })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 // @SupportedOptions( { "outputFile" })
 public class PluginAnnotationProcessor extends AbstractProcessor {
@@ -83,7 +95,7 @@ public class PluginAnnotationProcessor extends AbstractProcessor {
 	boolean processedDeclarePlugin = false;
 
 	// scan and accept DeclarePlugin annotation
-	for (final Element element : roundEnvironment.getElementsAnnotatedWith(DeclarePlugin.class)) {
+	for (final Element element : roundEnvironment.getElementsAnnotatedWith(Declare.class)) {
 	   element.accept(registryVisitor, null);
 	   processedDeclarePlugin = true;
 	}
@@ -182,7 +194,7 @@ public class PluginAnnotationProcessor extends AbstractProcessor {
    }
 
    /**
-    * Annotation visitor for registering {@link DeclarePlugin} use
+    * Annotation visitor for registering {@link Declare} use
     * 
     * @author Jerome RADUGET
     */
@@ -209,7 +221,7 @@ public class PluginAnnotationProcessor extends AbstractProcessor {
 	public Void visitType(final TypeElement e, final Void p) {
 	   switch (e.getKind()) {
 	   case CLASS: {
-		final DeclarePlugin registerPluginAnnot = e.getAnnotation(DeclarePlugin.class);
+		final Declare registerPluginAnnot = e.getAnnotation(Declare.class);
 
 		if (registerPluginAnnot != null) {
 		   handleDeclarePluginImplementation(e, registerPluginAnnot);
@@ -217,7 +229,7 @@ public class PluginAnnotationProcessor extends AbstractProcessor {
 		break;
 	   }
 	   case INTERFACE: {
-		final DeclarePlugin registerPluginAnnot = e.getAnnotation(DeclarePlugin.class);
+		final Declare registerPluginAnnot = e.getAnnotation(Declare.class);
 
 		if (registerPluginAnnot != null) {
 		   handleDeclarePlugin(e, registerPluginAnnot);
@@ -274,7 +286,7 @@ public class PluginAnnotationProcessor extends AbstractProcessor {
 	 * @param interfaceDeclaration
 	 * @param declarePluginAnnot
 	 */
-	void handleDeclarePlugin(final TypeElement interfaceDeclaration, final DeclarePlugin declarePluginAnnot) {
+	void handleDeclarePlugin(final TypeElement interfaceDeclaration, final Declare declarePluginAnnot) {
 	   if (declarePluginAnnot.enable()) {
 		pluginsSet.add(interfaceDeclaration.getQualifiedName().toString());
 	   }
@@ -286,7 +298,7 @@ public class PluginAnnotationProcessor extends AbstractProcessor {
 	 * @param decl
 	 * @param declarePluginImplementation
 	 */
-	void handleDeclarePluginImplementation(final TypeElement classDeclaration, final DeclarePlugin declarePluginImplementation) {
+	void handleDeclarePluginImplementation(final TypeElement classDeclaration, final Declare declarePluginImplementation) {
 	   if (declarePluginImplementation.enable()) {
 		pluginsImplementationsSet.add(classDeclaration.getQualifiedName().toString());
 	   }

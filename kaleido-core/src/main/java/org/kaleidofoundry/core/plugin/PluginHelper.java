@@ -1,7 +1,25 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.plugin;
 
+import java.util.Set;
+
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
+import org.kaleidofoundry.core.lang.annotation.Nullable;
+import org.kaleidofoundry.core.util.ReflectionHelper;
 
 /**
  * Plugin static helper methods
@@ -12,15 +30,33 @@ public abstract class PluginHelper {
 
    /**
     * @param classToIntrospect
-    * @return if class is annotated by {@link DeclarePlugin}, return its value attribute, otherwise throws an exception
-    * @throws IllegalStateException if class argument is not annotated by {@link DeclarePlugin}
+    * @return if class is annotated by {@link Declare}, return its value attribute, otherwise throws an exception
+    * @throws IllegalStateException if class argument is not annotated by {@link Declare}
     */
+   @Nullable
    public static String getPluginName(@NotNull final Class<?> classToIntrospect) {
-	if (classToIntrospect.isAnnotationPresent(DeclarePlugin.class)) {
-	   DeclarePlugin plugin = classToIntrospect.getAnnotation(DeclarePlugin.class);
+	if (classToIntrospect.isAnnotationPresent(Declare.class)) {
+	   final Declare plugin = classToIntrospect.getAnnotation(Declare.class);
 	   return plugin.value();
 	} else {
-	   throw new IllegalArgumentException("classToIntrospect must be annoted by ");
+	   return null;
 	}
+   }
+
+   /**
+    * @param classImplInstance plugin implementation class
+    * @return the plugin interface meta-data of the class implementation argument, null if it does not exist or if class implementation
+    *         argument is not annotated @{@link Declare}
+    */
+   @Nullable
+   public static Plugin<?> getInterfacePlugin(@NotNull final Object classImplInstance) {
+	if (classImplInstance.getClass().isAnnotationPresent(Declare.class)) {
+	   final Set<Class<?>> pluginInterface = ReflectionHelper.getAllInterfaces(classImplInstance.getClass());
+	   for (final Class<?> c : pluginInterface) {
+		if (c.isAnnotationPresent(Declare.class)) { return PluginFactory.getInterfaceRegistry().get(c.getAnnotation(Declare.class).value()); }
+	   }
+	}
+	return null;
+
    }
 }

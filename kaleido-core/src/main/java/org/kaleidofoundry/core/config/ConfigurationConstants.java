@@ -1,5 +1,17 @@
-/* 
- * $License$ 
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.kaleidofoundry.core.config;
 
@@ -14,10 +26,28 @@ import org.slf4j.LoggerFactory;
 public interface ConfigurationConstants {
 
    /** Logger */
-   static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
+   Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
 
-   /** Configuration java environment name : java -Dkaleido.configuration=classpath:/datasource.properties ... */
-   static final String JavaEnvProperties = "kaleido.configuration";
+   /**
+    * Configuration java environment name which specify the default configurations to load <br/>
+    * <br/>
+    * Syntax of the property value :
+    * 
+    * <pre>
+    * configurationId01:configurationUri01;configurationId02:configurationUri02;...
+    * </pre>
+    * 
+    * Example :
+    * 
+    * <pre>
+    * java -Dkaleido.configurations=datasource:classpath:/datasource.properties;otherResource:http:/host/path/otherResource;...  YourMainClass
+    * </pre>
+    */
+   String JavaEnvProperties = "kaleido.configuration";
+   /** Configuration item separator */
+   String JavaEnvPropertiesSeparator = ";";
+   /** Configuration value separator */
+   String JavaEnvPropertiesValueSeparator = "=";
 
    // ** Plugin part ***************************************************************************************************
 
@@ -35,35 +65,35 @@ public interface ConfigurationConstants {
    }
 
    /** configuration interface plugin name */
-   public static final String ConfigurationPluginName = "configuration";
+   String ConfigurationPluginName = "configuration";
    /** classic properties implementation configuration plugin name - configuration resource uri have to end with '.properties' */
-   public static final String PropertiesConfigurationPluginName = "configuration.properties";
+   String PropertiesConfigurationPluginName = "configuration.properties";
    /** xml properties implementation configuration plugin name - configuration resource uri have to end with '.xmlproperties' */
-   public static final String XmlPropertiesConfigurationPluginName = "configuration.properties.xml";
+   String XmlPropertiesConfigurationPluginName = "configuration.properties.xml";
    /** xml implementation configuration plugin name - configuration resource uri have to end with '.xml' */
-   public static final String XmlConfigurationPluginName = "configuration.xml";
+   String XmlConfigurationPluginName = "configuration.xml";
    /** java env variable implementation configuration plugin name - configuration resource uri have to end with '.javasystem' */
-   public static final String JavaSystemConfigurationPluginName = "configuration.javasystem";
+   String JavaSystemConfigurationPluginName = "configuration.javasystem";
    /** operating system env variable implementation configuration plugin name - configuration resource uri have to end with '.osenv' */
-   public static final String OsEnvConfigurationPluginName = "configuration.osenv";
+   String OsEnvConfigurationPluginName = "configuration.osenv";
    /** operating system env variable implementation configuration plugin name - configuration resource uri have to end with '.mainargs' */
-   public static final String MainArgsConfigurationPluginName = "configuration.mainargs";
+   String MainArgsConfigurationPluginName = "configuration.mainargs";
 
    // ** Key and property serialization part ***************************************************************************
 
    /** Separator to specify root */
-   static final String KeyRoot = "//";
+   String KeyRoot = "//";
    /** Default separator for key name */
-   static final String KeySeparator = "/";
+   String KeySeparator = "/";
    /** Separator to specify root for properties keys */
-   static final String KeyPropertiesRoot = "";
+   String KeyPropertiesRoot = "";
    /** Default separator for properties name */
-   static final String KeyPropertiesSeparator = ".";
+   String KeyPropertiesSeparator = ".";
    /** Multiple value separator */
-   static final String MultiValDefaultSeparator = " ";
+   String MultiValDefaultSeparator = " ";
    /** String Date Formatter */
-   static final String StrDateFormat = "yyyy-MM-dd'T'hh:mm:ss"; // yyyy-MM-ddThh:mm:ss
+   String StrDateFormat = "yyyy-MM-dd'T'hh:mm:ss"; // yyyy-MM-ddThh:mm:ss
    /** String Number Formatter */
-   static final String StrNumberFormat = "##0.0####";
+   String StrNumberFormat = "##0.0####";
 
 }

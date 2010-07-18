@@ -1,5 +1,17 @@
-/*
- * $License$
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.kaleidofoundry.core.store;
 
@@ -11,7 +23,7 @@ import java.net.URI;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
+import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.system.JavaSystemHelper;
 
 /**
@@ -21,7 +33,7 @@ import org.kaleidofoundry.core.system.JavaSystemHelper;
  * @author Jerome RADUGET
  */
 @Immutable
-@DeclarePlugin(ClasspathStorePluginName)
+@Declare(ClasspathStorePluginName)
 public class ClasspathResourceStore extends AbstractResourceStore implements ResourceStore {
 
    /**
@@ -76,7 +88,7 @@ public class ClasspathResourceStore extends AbstractResourceStore implements Res
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doLoad(java.net.URI)
     */
    @Override
-   protected ResourceHandler doLoad(final URI resourceBinding) throws StoreException {
+   protected ResourceHandler doGet(final URI resourceBinding) throws StoreException {
 	StringBuilder localPath = new StringBuilder();
 
 	if (resourceBinding.getHost() != null) {

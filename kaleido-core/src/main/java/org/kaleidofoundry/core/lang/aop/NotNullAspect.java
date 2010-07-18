@@ -1,4 +1,21 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.lang.aop;
+
+import static org.kaleidofoundry.core.util.AspectjHelper.debugJoinPoint;
 
 import java.lang.annotation.Annotation;
 
@@ -125,7 +142,7 @@ public class NotNullAspect {
     */
    void handleArgument(final JoinPoint jp, final JoinPoint.EnclosingStaticPart esjp) {
 
-	debug(jp);
+	debugJoinPoint(LOGGER, jp);
 
 	Annotation[][] parametersAnnotations = null;
 	String[] parametersName = null;
@@ -155,44 +172,4 @@ public class NotNullAspect {
 	}
    }
 
-   /**
-    * Helper method for debugging
-    * 
-    * @param jp
-    */
-   public static void debug(final JoinPoint jp) {
-
-	if (LOGGER.isDebugEnabled()) {
-	   LOGGER.debug("\t<joinpoint target instance> = {}", jp.getTarget());
-	   LOGGER.debug("\t<joinpoint static signature> = {}", jp.getStaticPart().getSignature());
-	   LOGGER.debug("\t<joinPoint arguments instances> {}  :", jp.toString());
-	   for (int cpt = 0; cpt < jp.getArgs().length; cpt++) {
-		String[] parametersName = null;
-		Annotation[][] parametersAnnotations = null;
-
-		if (jp.getSignature() instanceof ConstructorSignature) {
-		   parametersName = ((ConstructorSignature) jp.getSignature()).getParameterNames();
-		   parametersAnnotations = ((ConstructorSignature) jp.getSignature()).getConstructor().getParameterAnnotations();
-		}
-		if (jp.getSignature() instanceof MethodSignature) {
-		   parametersName = ((MethodSignature) jp.getSignature()).getParameterNames();
-		   parametersAnnotations = ((MethodSignature) jp.getSignature()).getMethod().getParameterAnnotations();
-		}
-
-		if (parametersName != null) {
-		   StringBuilder str = new StringBuilder();
-		   str.append("\t\targ[" + cpt + "] : ");
-		   str.append("name=").append(parametersName[cpt]);
-		   str.append("\tvalue=").append(jp.getArgs()[cpt]);
-		   str.append("\tannotations=");
-		   if (parametersAnnotations != null) {
-			for (Annotation paramAnnot : parametersAnnotations[cpt]) {
-			   str.append(paramAnnot.toString()).append(" ");
-			}
-		   }
-		   LOGGER.debug("{}", str);
-		}
-	   }
-	}
-   }
 }

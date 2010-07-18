@@ -1,3 +1,18 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.messaging.rdv;
 
 import static org.kaleidofoundry.messaging.rdv.RdvTransportConstants.PATH_KEY_CMname;
@@ -61,7 +76,7 @@ public class RdvTransportMessaging extends AbstractTransportMessaging implements
    }
 
    /**
-    * Instanciate du transport
+    * instantiate du transport
     * 
     * @throws TransportMessagingException
     */
@@ -90,8 +105,7 @@ public class RdvTransportMessaging extends AbstractTransportMessaging implements
 		   try {
 			cmTransport.setDefaultTimeLimit(Double.parseDouble(getTimeout()));
 		   } catch (final NumberFormatException nfe) {
-			throw new TransportMessagingException("messaging.transport.rdv.timeout",
-				new String[] { getTimeout() });
+			throw new TransportMessagingException("messaging.transport.rdv.timeout", new String[] { getTimeout() });
 		   }
 		}
 	   }
@@ -108,8 +122,7 @@ public class RdvTransportMessaging extends AbstractTransportMessaging implements
 		   try {
 			cmQueueTransport.setDefaultTimeLimit(Double.parseDouble(getTimeout()));
 		   } catch (final NumberFormatException nfe) {
-			throw new TransportMessagingException("messaging.transport.rdv.timeout",
-				new String[] { getTimeout() });
+			throw new TransportMessagingException("messaging.transport.rdv.timeout", new String[] { getTimeout() });
 		   }
 		}
 
@@ -213,13 +226,12 @@ public class RdvTransportMessaging extends AbstractTransportMessaging implements
 
    /**
     * @param context
-    * @return Get Transport for registry or instanciate it, if needed
+    * @return Get Transport for registry or instantiate it, if needed
     */
-   public static RdvTransportMessaging registeredTransport(final TransportMessagingContext context)
-	   throws TransportMessagingException {
+   public static RdvTransportMessaging registeredTransport(final TransportMessagingContext context) throws TransportMessagingException {
 	RdvTransportMessaging transport = null;
 
-	// transport instance (from registry if already instanciate)
+	// transport instance (from registry if already instantiate)
 	if (TransportRegistry.isRegistered(context.getName())) {
 	   final TransportMessaging transportRegistered = TransportRegistry.getTransportMessaging(context.getName());
 	   if (transportRegistered instanceof RdvTransportMessaging) {

@@ -1,10 +1,21 @@
-/*
- * $License$
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.kaleidofoundry.core.context;
 
 import java.io.IOException;
-import java.util.Properties;
 
 import junit.framework.Assert;
 
@@ -13,7 +24,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
-import org.kaleidofoundry.core.lang.NotNullException;
 import org.kaleidofoundry.core.store.StoreException;
 
 /**
@@ -24,7 +34,6 @@ public class RuntimeContextTest extends Assert {
    private static final String TomcatContextName = "tomcat";
    private static final String ContextPrefix = "jndi.context";
 
-   private Properties properties;
    private Configuration configuration;
 
    @Before
@@ -34,15 +43,13 @@ public class RuntimeContextTest extends Assert {
 	configuration = ConfigurationFactory.provideConfiguration("contextTest", "classpath:/org/kaleidofoundry/core/context/context.properties",
 		new RuntimeContext<Configuration>());
 
-	// runtimeContext create with Properties
-	properties = new Properties();
-	properties.load(getClass().getClassLoader().getResourceAsStream("org/kaleidofoundry/core/context/context.properties"));
    }
 
    @After
    public void cleanup() throws StoreException {
-	configuration.unload();
-	properties.clear();
+	if (configuration != null) {
+	   configuration.unload();
+	}
    }
 
    // context without name, prefix and empty datas
@@ -50,25 +57,9 @@ public class RuntimeContextTest extends Assert {
 
    @Test
    public void createEmptyContext() {
-	RuntimeContext<?> runtimeContext = new RuntimeContext<Object>();
+	final RuntimeContext<?> runtimeContext = new RuntimeContext<Object>();
 	assertNull(runtimeContext.getName());
 	assertNull(runtimeContext.getPrefixProperty());
-	assertNull(runtimeContext.getConfiguration());
-	assertNotNull(runtimeContext.getProperties());
-
-	simpleContextAssertions(runtimeContext);
-   }
-
-   @Test
-   public void createEmptyContextFromProperties() {
-	final RuntimeContext<?> runtimeContext = new RuntimeContext<Object>(properties);
-	assertNull(runtimeContext.getName());
-	assertNull(runtimeContext.getPrefixProperty());
-	assertNull(runtimeContext.getConfiguration());
-	assertNotNull(runtimeContext.getProperties());
-
-	simpleContextAssertions(runtimeContext);
-	simpleSampleAssertions(runtimeContext, null, null);
    }
 
    @Test
@@ -76,10 +67,8 @@ public class RuntimeContextTest extends Assert {
 	final RuntimeContext<?> runtimeContext = new RuntimeContext<Object>(configuration);
 	assertNull(runtimeContext.getName());
 	assertNull(runtimeContext.getPrefixProperty());
-	assertNotNull(runtimeContext.getConfiguration());
-	assertNull(runtimeContext.getProperties());
+	assertNotNull(runtimeContext.getConfigurations());
 
-	simpleContextAssertions(runtimeContext);
 	simpleSampleAssertions(runtimeContext, null, null);
    }
 
@@ -91,79 +80,38 @@ public class RuntimeContextTest extends Assert {
 	assertNotNull(runtimeContext.getName());
 	assertEquals(TomcatContextName, runtimeContext.getName());
 	assertNull(runtimeContext.getPrefixProperty());
-	assertNull(runtimeContext.getConfiguration());
-	assertNotNull(runtimeContext.getProperties());
-
-	simpleContextAssertions(runtimeContext);
-   }
-
-   @Test
-   public void createNamedContextFromProperties() {
-	final RuntimeContext<?> runtimeContext = new RuntimeContext<Object>(TomcatContextName, properties);
-	assertNotNull(runtimeContext.getName());
-	assertEquals(TomcatContextName, runtimeContext.getName());
-	assertNull(runtimeContext.getPrefixProperty());
-	assertNull(runtimeContext.getConfiguration());
-	assertNotNull(runtimeContext.getProperties());
-
-	simpleContextAssertions(runtimeContext);
-	simpleSampleAssertions(runtimeContext, TomcatContextName, null);
    }
 
    @Test
    public void createNamedContextFromConfiguration() {
-	RuntimeContext<?> runtimeContext = new RuntimeContext<Object>(TomcatContextName, configuration);
+	final RuntimeContext<?> runtimeContext = new RuntimeContext<Object>(TomcatContextName, configuration);
 	assertNotNull(runtimeContext.getName());
 	assertEquals(TomcatContextName, runtimeContext.getName());
 	assertNull(runtimeContext.getPrefixProperty());
-	assertNotNull(runtimeContext.getConfiguration());
-	assertNull(runtimeContext.getProperties());
+	assertNotNull(runtimeContext.getConfigurations());
 
-	simpleContextAssertions(runtimeContext);
 	simpleSampleAssertions(runtimeContext, TomcatContextName, null);
    }
 
    // context with name but without prefix and datas *******************************************************************
    @Test
    public void createNamedContextWithPrefix() {
-	RuntimeContext<?> runtimeContext = new RuntimeContext<Object>(TomcatContextName, ContextPrefix);
+	final RuntimeContext<?> runtimeContext = new RuntimeContext<Object>(TomcatContextName, ContextPrefix);
 	assertNotNull(runtimeContext.getName());
 	assertEquals(TomcatContextName, runtimeContext.getName());
 	assertNotNull(runtimeContext.getPrefixProperty());
 	assertEquals(ContextPrefix, runtimeContext.getPrefixProperty());
-	assertNull(runtimeContext.getConfiguration());
-	assertNotNull(runtimeContext.getProperties());
-
-	simpleContextAssertions(runtimeContext);
-   }
-
-   @Test
-   public void createNamedContextWithPrefixFromProperties() {
-	RuntimeContext<?> runtimeContext = new RuntimeContext<Object>(TomcatContextName, properties, ContextPrefix);
-	assertNotNull(runtimeContext.getName());
-	assertEquals(TomcatContextName, runtimeContext.getName());
-	assertNotNull(runtimeContext.getPrefixProperty());
-	assertEquals(ContextPrefix, runtimeContext.getPrefixProperty());
-
-	assertNull(runtimeContext.getConfiguration());
-	assertNotNull(runtimeContext.getProperties());
-
-	simpleContextAssertions(runtimeContext);
-	simpleSampleAssertions(runtimeContext, TomcatContextName, ContextPrefix);
    }
 
    @Test
    public void createNamedContextWithPrefixFromConfiguration() {
-	RuntimeContext<?> runtimeContext = new RuntimeContext<Object>(TomcatContextName, configuration, ContextPrefix);
+	final RuntimeContext<?> runtimeContext = new RuntimeContext<Object>(TomcatContextName, ContextPrefix, configuration);
 	assertNotNull(runtimeContext.getName());
 	assertEquals(TomcatContextName, runtimeContext.getName());
 	assertNotNull(runtimeContext.getPrefixProperty());
 	assertEquals(ContextPrefix, runtimeContext.getPrefixProperty());
+	assertNotNull(runtimeContext.getConfigurations());
 
-	assertNotNull(runtimeContext.getConfiguration());
-	assertNull(runtimeContext.getProperties());
-
-	simpleContextAssertions(runtimeContext);
 	simpleSampleAssertions(runtimeContext, TomcatContextName, ContextPrefix);
    }
 
@@ -171,57 +119,14 @@ public class RuntimeContextTest extends Assert {
    public void echo() {
 	RuntimeContext<?> runtimeContext;
 
-	runtimeContext = new RuntimeContext<Object>(properties);
+	runtimeContext = new RuntimeContext<Object>(configuration);
 	System.out.println(runtimeContext.toString("\n"));
 
-	runtimeContext = new RuntimeContext<Object>(properties, ContextPrefix);
+	runtimeContext = new RuntimeContext<Object>(ContextPrefix, configuration);
 	System.out.println(runtimeContext.toString("\n"));
 
-	runtimeContext = new RuntimeContext<Object>("tomcat", properties, ContextPrefix);
+	runtimeContext = new RuntimeContext<Object>("tomcat", ContextPrefix, configuration);
 	System.out.println(runtimeContext.toString("\n"));
-   }
-
-   /**
-    * simple common assertion for a given {@link RuntimeContext} <br/>
-    * assertion does not reference context.properties datas
-    * 
-    * @param runtimeContext
-    */
-   void simpleContextAssertions(final RuntimeContext<?> runtimeContext) {
-
-	// set a property with a String
-	runtimeContext.setProperty("foo", "value");
-	assertEquals("value", runtimeContext.getProperty("foo"));
-
-	// set null property not allow
-	try {
-	   runtimeContext.setProperty(null, "foo value");
-	   fail();
-	} catch (NullPointerException npe) {
-	} catch (NotNullException npae) {
-	}
-
-	// set null value not allow
-	try {
-	   runtimeContext.setProperty("foonull", null);
-	   fail();
-	} catch (NullPointerException npe) {
-	} catch (NotNullException npae) {
-	}
-
-	// remove a property
-	runtimeContext.removeProperty("foo");
-
-	// remove null property not allow
-	try {
-	   runtimeContext.removeProperty(null);
-	   fail();
-	} catch (NullPointerException npe) {
-	} catch (NotNullException npae) {
-	}
-
-	assertNull(runtimeContext.getProperty("foo"));
-
    }
 
    /**

@@ -14,6 +14,7 @@
 		<license>
 			<name>Apache 2</name>
 			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
 		</license>
 	</licenses>
 
@@ -51,41 +52,58 @@
 		<kaleido.version>1.0.0-SNAPSHOT</kaleido.version>
 		<!-- jdk / jee global version dependencies -->
 		<jdk.version>1.6</jdk.version>
+		
+		<!--  
 		<jee.servlet.version>2.5</jee.servlet.version>
 		<jee.jsf.version>2.0</jee.jsf.version>
 		<jee.jsp.version>2.2</jee.jsp.version>
 		<jee.jpa.version>2.0.0</jee.jpa.version>
 		<jee.jms.version>1.1</jee.jms.version>
 		<jee.mail.version>1.4.3</jee.mail.version>
-		<jee.ejb.version>2.1</jee.ejb.version>
+		<jee.ejb.version>3.0</jee.ejb.version>
 		<jee.el.version>2.2</jee.el.version>
+		-->
+		
 		<!-- framework global version dependencies -->
 		<slf4j.version>1.5.11</slf4j.version>
 		<log4j.version>1.2.14</log4j.version>
 		<junit.version>4.7</junit.version>
-		<!--
-			source encoding options
-			<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		-->
+
+		<!-- source encoding options  -->
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 
 	</properties>
 
 	<modules>
-		<module>../kaleido-core</module>
+		<module>../kaleido-core</module>		
 		<module>../kaleido-core-guice</module>
+		<module>../kaleido-core-spring</module>
+		<module>../kaleido-core-sample</module>
+		
+		<!-- to refactor  -->
 		<module>../kaleido-mail</module>
 		<module>../kaleido-messaging</module>
-		<!-- 
-		<module>../kaleido-model</module>
-		<module>../kaleido-persistence</module>
-		<module>../kaleido-report</module>
-		<module>../kaleido-rules</module>
-		<module>../kaleido-web</module>
-		 -->
+
+		<!--
+			to refactor & remove 
+			<module>../kaleido-model</module>
+			<module>../kaleido-persistence</module>
+			<module>../kaleido-report</module> 
+			<module>../kaleido-rules</module>
+			<module>../kaleido-web</module>
+		-->		
 	</modules>
 
 	<dependencies>
+		
+		<!-- Java ee 6 stack - jpa , ejb, jms,   -->
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>6.0</version>
+			<scope>provided</scope>
+		</dependency>
+		
 		<!-- Framework for Logging  -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -99,7 +117,7 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${slf4j.version}</version>
-			<scope>compile</scope>
+			<scope>provided</scope>
 			<!--
 				test scope prefered... but bug with maven-processor-plugin
 			-->
@@ -108,7 +126,7 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>${log4j.version}</version>
-			<scope>compile</scope>
+			<scope>provided</scope>
 			<!--
 				test scope prefered... but bug with maven-processor-plugin
 			-->
@@ -169,17 +187,18 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</pluginRepository>
-		<!--
-			Maven annotation processor plugin (jdk 6) 
+		<!-- Java.net  -->
 		<pluginRepository>
-			<id>maven-annotation-plugin</id>
-			<url>http://maven-annotation-plugin.googlecode.com/svn/trunk/mavenrepo</url>
-			<layout>default</layout>
+			<id>maven2-repository.dev.java.net</id>
+			<name>Maven Plugin Repository</name>
+			<url>http://download.java.net/maven/2/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
-		</pluginRepository>
-		-->
+		</pluginRepository>		
 	</pluginRepositories>
 
 	<scm>
@@ -208,6 +227,7 @@
 
 	<build>
 		<plugins>
+			<!-- compilation -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -223,6 +243,32 @@
 					<compilerArgument>-proc:none</compilerArgument>
 				</configuration>
 			</plugin>
+			<!-- compilation resouces-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.4.3</version>
+			</plugin>			
+			<!-- aop compile weaving -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>aspectj-maven-plugin</artifactId>
+				<version>1.3</version>
+				<configuration>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+					<complianceLevel>${jdk.version}</complianceLevel>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>       <!-- use this goal to weave all your main classes -->
+							<goal>test-compile</goal>  <!-- use this goal to weave all your test classes -->
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- packaging -->			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -237,11 +283,13 @@
 					</archive>
 				</configuration>
 			</plugin>
+			<!-- deploying -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
 				<version>2.5</version>
-			</plugin>			
+			</plugin>
+			<!-- releasing -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
@@ -273,8 +321,12 @@
 					<useProjectReferences>true</useProjectReferences>
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>true</downloadJavadocs>
+					<configuration>
+						<ajdtVersion>${jdk.version}</ajdtVersion>
+					</configuration>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
@@ -300,7 +352,7 @@
 			<plugin>
 				<groupId>org.bsc.maven</groupId>
 				<artifactId>maven-processor-plugin</artifactId>
-				<version>1.3.5</version>
+				<version>1.3.6</version>
 				<executions>
 					<execution>
 						<id>process</id>
@@ -325,7 +377,7 @@
 			<plugin>
 				<groupId>org.bsc.maven</groupId>
 				<artifactId>maven-processor-plugin</artifactId>
-				<version>1.3.5</version>
+				<version>1.3.6</version>
 				<executions>
 					<execution>
 						<id>process-test</id>

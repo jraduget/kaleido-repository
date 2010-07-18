@@ -1,5 +1,17 @@
-/*
- * $License$
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.kaleidofoundry.core.plugin;
 
@@ -21,10 +33,10 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
-import org.kaleidofoundry.core.plugin.annotation.DeclarePlugin;
 import org.kaleidofoundry.core.plugin.processor.PluginAnnotationProcessor;
 import org.kaleidofoundry.core.system.JavaSystemHelper;
 import org.kaleidofoundry.core.util.ReflectionHelper;
+import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * @author Jerome RADUGET
@@ -168,8 +180,10 @@ public class PluginInspector {
 			line = buffReader.readLine();
 			while (line != null) {
 			   try {
-				echoMessages.add(PluginMessageBundle.getMessage("plugin.info.visitor.resource.processing", "interface", line));
-				pluginsSet.add(inspectPlugin(Class.forName(line.trim())));
+				if (!StringHelper.isEmpty(line)) {
+				   echoMessages.add(PluginMessageBundle.getMessage("plugin.info.visitor.resource.processing", "interface", line));
+				   pluginsSet.add(inspectPlugin(Class.forName(line.trim())));
+				}
 				line = buffReader.readLine();
 			   } catch (final ClassNotFoundException cnfe) {
 				throw new PluginRegistryException("plugin.error.load.classnotfound", cnfe, pluginMetaInfPath, line);
@@ -243,15 +257,15 @@ public class PluginInspector {
    }
 
    /**
-    * introspect class input parameter {@link DeclarePlugin} annotation , and return bean meta data info
+    * introspect class input parameter {@link Declare} annotation , and return bean meta data info
     * 
     * @param classToinspect
-    * @return null if classToinspect not {@link DeclarePlugin} annotated, or bean meta otherwise
+    * @return null if classToinspect not {@link Declare} annotated, or bean meta otherwise
     * @param <T>
     */
    public <T> Plugin<T> inspectPlugin(final Class<T> classToinspect) {
 
-	final DeclarePlugin declarePlugin = classToinspect.getAnnotation(DeclarePlugin.class);
+	final Declare declarePlugin = classToinspect.getAnnotation(Declare.class);
 	if (declarePlugin != null) {
 	   return Plugin.create(declarePlugin, classToinspect);
 	} else {
@@ -268,7 +282,7 @@ public class PluginInspector {
     */
    public <T> Plugin<T> inspectPluginImpl(final Class<T> classToinspect) {
 
-	final DeclarePlugin declarePluginImpl = classToinspect.getAnnotation(DeclarePlugin.class);
+	final Declare declarePluginImpl = classToinspect.getAnnotation(Declare.class);
 	if (declarePluginImpl != null) {
 	   return Plugin.create(declarePluginImpl, classToinspect);
 	} else {
@@ -279,8 +293,8 @@ public class PluginInspector {
    /**
     * coherence check of loaded plugin and pluginImplementation
     * <ul>
-    * <li>1. check that plugin annotated interface is right an interface and right {@link DeclarePlugin} annotated
-    * <li>2. check that plugin implementation is right an concrete class and right {@link DeclarePlugin} annotated
+    * <li>1. check that plugin annotated interface is right an interface and right {@link Declare} annotated
+    * <li>2. check that plugin implementation is right an concrete class and right {@link Declare} annotated
     * <li>3. check the uniqueness name for @DeclarePlugin("name") plugin interface usage</li>
     * <li>4. check the uniqueness name for @DeclarePlugin("name") plugin implementation class usage</li>
     * <li>5. implementation class annotated by @DeclarePlugin have to implements one interface @Declare annotated</li>
@@ -370,7 +384,7 @@ public class PluginInspector {
 	   int pluginDeclareCount = 0;
 	   final Set<Class<?>> pluginInterface = ReflectionHelper.getAllInterfaces(plugin.getAnnotatedClass());
 	   for (final Class<?> c : pluginInterface) {
-		if (c.getAnnotation(DeclarePlugin.class) != null) {
+		if (c.getAnnotation(Declare.class) != null) {
 		   pluginDeclareCount++;
 		}
 	   }

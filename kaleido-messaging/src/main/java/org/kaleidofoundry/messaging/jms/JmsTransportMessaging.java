@@ -1,3 +1,18 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.messaging.jms;
 
 import static org.kaleidofoundry.messaging.jms.JmsTransportConstants.PATH_KEY_AcknowledgeMode;
@@ -57,18 +72,16 @@ public class JmsTransportMessaging extends AbstractTransportMessaging implements
 	sessions = new Vector<Session>();
 	connections = new Vector<Connection>();
 
-	// Check context information before instanciate ConnectionFactory
+	// Check context information before instantiate ConnectionFactory
 	checkContext();
 
 	// ConnectionFactory instanciation
 	try {
 	   final JndiContext jndiContext = new JndiContext(getConnectionFactoryJndiContextName(), context);
-	   final JndiResourceLocator<ConnectionFactory> jndiLocator = new JndiResourceLocator<ConnectionFactory>(
-		   jndiContext);
+	   final JndiResourceLocator<ConnectionFactory> jndiLocator = new JndiResourceLocator<ConnectionFactory>(jndiContext);
 	   connectionFactory = jndiLocator.lookup(getConnectionFactoryJndiName(), ConnectionFactory.class);
 	} catch (final JndiResourceException jndie) {
-	   throw new TransportMessagingException("messaging.transport.jms.connection.factory.lookup", jndie,
-		   getConnectionFactoryJndiName(), jndie.getMessage());
+	   throw new TransportMessagingException("messaging.transport.jms.connection.factory.lookup", jndie, getConnectionFactoryJndiName(), jndie.getMessage());
 	}
    }
 
@@ -79,8 +92,7 @@ public class JmsTransportMessaging extends AbstractTransportMessaging implements
     */
    protected void checkContext() throws TransportMessagingException {
 
-	if (StringHelper.isEmpty(getConnectionFactoryJndiName())) { throw new TransportMessagingException(
-		"messaging.transport.jms.connection.factory.name"); }
+	if (StringHelper.isEmpty(getConnectionFactoryJndiName())) { throw new TransportMessagingException("messaging.transport.jms.connection.factory.name"); }
 
 	if (StringHelper.isEmpty(getConnectionFactoryJndiContextName())) { throw new TransportMessagingException(
 		"messaging.transport.jms.connection.factory.context"); }
@@ -91,8 +103,7 @@ public class JmsTransportMessaging extends AbstractTransportMessaging implements
 	   try {
 		Integer.valueOf(strAcknowledgeMode);
 	   } catch (final NumberFormatException nfe) {
-		throw new TransportMessagingException("messaging.transport.jms.illegal",
-			new String[] { PATH_KEY_AcknowledgeMode });
+		throw new TransportMessagingException("messaging.transport.jms.illegal", new String[] { PATH_KEY_AcknowledgeMode });
 	   }
 	}
    }
@@ -281,13 +292,12 @@ public class JmsTransportMessaging extends AbstractTransportMessaging implements
 
    /**
     * @param context
-    * @return Get Transport for registry or instanciate it, if needed
+    * @return Get Transport for registry or instantiate it, if needed
     */
-   public static JmsTransportMessaging registeredTransport(final TransportMessagingContext context)
-	   throws TransportMessagingException {
+   public static JmsTransportMessaging registeredTransport(final TransportMessagingContext context) throws TransportMessagingException {
 	JmsTransportMessaging transport = null;
 
-	// transport instance (from registry if already instanciate)
+	// transport instance (from registry if already instantiate)
 	if (TransportRegistry.isRegistered(context.getName())) {
 	   final TransportMessaging transportRegistered = TransportRegistry.getTransportMessaging(context.getName());
 	   if (transportRegistered instanceof JmsTransportMessaging) {

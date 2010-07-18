@@ -1,2 +1,7 @@
 org.kaleidofoundry.core.plugin.PluginSampleImpl
 org.kaleidofoundry.core.plugin.PluginSampleImpl2
+org.kaleidofoundry.core.context.test.MyServiceWithFinalNullRuntimeContext
+org.kaleidofoundry.core.context.test.MyServiceWithFinalRuntimeContext
+org.kaleidofoundry.core.context.test.MyServiceWithRuntimeContext
+org.kaleidofoundry.core.context.test.MyServiceWithStaticRuntimeContext
+org.kaleidofoundry.core.context.test.MyServiceWithStaticFinalRuntimeContext

@@ -1,3 +1,18 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.store;
 
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ResourceStoreMessageBundle;
@@ -42,14 +57,14 @@ public abstract class AbstractResourceStore implements ResourceStore {
    public abstract ResourceStoreType[] getStoreType();
 
    /**
-    * load processing, you don't have to check argument validity
+    * resource connection processing, you don't have to check argument validity
     * 
     * @param resourceUri
     * @return
     * @throws StoreException
     * @throws ResourceNotFoundException
     */
-   protected abstract ResourceHandler doLoad(@NotNull URI resourceUri) throws StoreException;
+   protected abstract ResourceHandler doGet(@NotNull URI resourceUri) throws StoreException;
 
    /**
     * remove processing, you don't have to check argument validity
@@ -77,10 +92,10 @@ public abstract class AbstractResourceStore implements ResourceStore {
    @Override
    public boolean isUriManageable(@NotNull final URI resourceUri) {
 
-	ResourceStoreType rst = ResourceStoreTypeEnum.match(resourceUri);
+	final ResourceStoreType rst = ResourceStoreTypeEnum.match(resourceUri);
 
 	if (rst != null) {
-	   for (ResourceStoreType t : getStoreType()) {
+	   for (final ResourceStoreType t : getStoreType()) {
 		if (t.equals(rst)) { return true; }
 	   }
 	}
@@ -93,9 +108,9 @@ public abstract class AbstractResourceStore implements ResourceStore {
     * @see org.kaleidofoundry.core.lang.pattern.Store#load(java.lang.Object)
     */
    @Override
-   public final ResourceHandler load(@NotNull final URI resourceUri) throws StoreException {
+   public final ResourceHandler get(@NotNull final URI resourceUri) throws StoreException {
 	isUriManageable(resourceUri);
-	ResourceHandler in = doLoad(resourceUri);
+	final ResourceHandler in = doGet(resourceUri);
 	if (in == null || in.getInputStream() == null) { throw new ResourceNotFoundException(resourceUri.toString()); }
 	return in;
    }
@@ -135,7 +150,7 @@ public abstract class AbstractResourceStore implements ResourceStore {
 	   remove(destination);
 	}
 
-	ResourceHandler in = load(origin);
+	final ResourceHandler in = get(origin);
 
 	if (in != null) {
 	   store(destination, in);
@@ -152,9 +167,9 @@ public abstract class AbstractResourceStore implements ResourceStore {
    public boolean exists(@NotNull final URI resourceUri) throws StoreException {
 	ResourceHandler resource = null;
 	try {
-	   resource = load(resourceUri);
+	   resource = get(resourceUri);
 	   return true;
-	} catch (ResourceNotFoundException rnfe) {
+	} catch (final ResourceNotFoundException rnfe) {
 	   return false;
 	} finally {
 	   if (resource != null) {

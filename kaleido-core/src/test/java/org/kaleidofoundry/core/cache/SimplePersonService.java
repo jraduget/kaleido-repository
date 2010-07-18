@@ -1,9 +1,21 @@
+/*  
+ * Copyright 2008-2010 the original author or authors 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.kaleidofoundry.core.cache;
 
 import java.util.Set;
-
-import org.kaleidofoundry.core.cache.Cache;
-import org.kaleidofoundry.core.cache.CacheFactory;
 
 /**
  * Simple use case for caching for a java bean (distributed or not, depends on cache configuration)
@@ -21,16 +33,17 @@ public class SimplePersonService {
 	// Get factory cache implementation
 	// *********************************
 	// EhCache implementation by default, to choose implementation use java env variable like :
-	// -Dcache.implementation=ehcache-1.x
-	// -Dcache.implementation=jboss-cache-3.x
-	// -Dcache.implementation=coherence-3.x
+	// -Dcache.provider=localCache
+	// -Dcache.provider=ehCache1x
+	// -Dcache.provider=jbossCache3x
+	// -Dcache.provider=coherence3x
+	// -Dcache.provider=infinispan4x
 	// or manually call factory with (hard coded...)
-	// CacheFactory<Person> cacheFactory = CacheFactory.getCacheFactory(CacheEnum.JBOSS_3X);
+	// CacheManager cacheManager = CacheFactory.getCacheManager("ehCache1x");
+	final CacheManager cacheManager = CacheFactory.getCacheManager();
 
-	final CacheFactory<Integer, Person> cacheFactory = CacheFactory.getCacheFactory();
-
-	// Instanciate your person cache :
-	personCache = cacheFactory.getCache(Person.class);
+	// instantiate your person cache :
+	personCache = cacheManager.getCache(Person.class);
    }
 
    /**

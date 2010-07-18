@@ -13,8 +13,9 @@
 	<packaging>jar</packaging>
 
 	<properties>
+		<!-- AOP -->
 		<aspectj.version>1.6.8</aspectj.version>
-		<!-- cache implementation version -->
+		<!-- Cache implementation version -->
 		<jboss-cache.version>3.2.1.GA</jboss-cache.version>
 		<coherence.version>3.5.2</coherence.version>
 		<ehcache.version>1.7.2</ehcache.version>
@@ -23,42 +24,12 @@
 
 	<dependencies>
 
-		<!-- JPA -->
-		<dependency>
-			<groupId>org.eclipse.persistence</groupId>
-			<artifactId>javax.persistence</artifactId>
-			<version>${jee.jpa.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- Servlet API -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>${jee.servlet.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
 		<!-- AOP  -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
 			<version>${aspectj.version}</version>
 		</dependency>
-
-		<!-- Commons annotations  
-		<dependency>
-			<groupId>javax.annotation</groupId>
-			<artifactId>jsr250-api</artifactId>
-			<version>1.0</version>			
-		</dependency>	
-		 
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-			<version>1.3.8</version>
-		</dependency>
- 		-->
  		
 		<!-- Apache commons lang -->
 		<dependency>
@@ -72,13 +43,6 @@
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache-core</artifactId>
 			<version>${ehcache.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<!-- need by ehcache core (since 1.7)  -->
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -101,11 +65,7 @@
 		</dependency>
 
 
-
-		<!--
-			***** Testing part
-			*****************************************************************************************
-		-->
+		<!-- ** Testing part **************************************************************** -->
 
 		<!-- JPA -->
 		<dependency>
@@ -136,37 +96,5 @@
 		-->
 
 	</dependencies>
-
-	<build>
-		<plugins>
-			<!-- eclipse ajdt aop integration -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>2.8</version>
-				<configuration>
-					<ajdtVersion>${jdk.version}</ajdtVersion>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.3</version>
-				<configuration>
-					<source>${jdk.version}</source>
-					<target>${jdk.version}</target>
-					<complianceLevel>${jdk.version}</complianceLevel>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>compile</goal>       <!-- use this goal to weave all your main classes -->
-							<goal>test-compile</goal>  <!-- use this goal to weave all your test classes -->
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 
 </project>
