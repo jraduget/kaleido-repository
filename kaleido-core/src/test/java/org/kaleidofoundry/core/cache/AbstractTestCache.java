@@ -125,7 +125,6 @@ public abstract class AbstractTestCache extends Assert {
 
 	Person mockPerson1 = Person.newMockInstance();
 	final Person mockPersonToCompare1 = mockPerson1.clone();
-
 	final Person mockPerson2 = Person.newMockInstance();
 	final Person mockPersonToCompare2;
 
