@@ -29,7 +29,7 @@ public class FtpResourceStoreTest extends AbstractResourceStoreTest {
    @Override
    public void setup() throws Throwable {
 	super.setup();
-	resourceStore = new FtpResourceStore(new RuntimeContext<ResourceStore>());
+	resourceStore = new FtpResourceStore(new RuntimeContext<ResourceStore>(ResourceStore.class));
 
 	// anonymous account : ftp://hostname/resourcepath
 	// account : ftp://username:password@hostname/resourcepath

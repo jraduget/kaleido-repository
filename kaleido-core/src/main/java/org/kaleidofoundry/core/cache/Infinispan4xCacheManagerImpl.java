@@ -30,6 +30,8 @@ import org.infinispan.manager.DefaultCacheManager;
 import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
@@ -41,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * @see CacheFactory
  * @author Jerome RADUGET
  */
-@Declare(value = InfinispanCacheManagerPluginName, singleton = true)
+@Declare(value = InfinispanCacheManagerPluginName)
 class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheManager {
 
    /** internal logger */
@@ -65,10 +67,10 @@ class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
     * @param context
     */
    public Infinispan4xCacheManagerImpl(final String configuration, final RuntimeContext<org.kaleidofoundry.core.cache.CacheManager> context) {
-	super(configuration, context);
 
+	super(configuration, context);
 	try {
-	   String configurationUri = getCurrentConfiguration();
+	   final String configurationUri = getCurrentConfiguration();
 
 	   if (StringHelper.isEmpty(configurationUri)) {
 		LOGGER.info(CacheMessageBundle.getMessage("cache.loading.default", getMetaInformations(), DefaultCacheConfiguration));
@@ -146,20 +148,21 @@ class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
     */
    @Override
    public void destroyAll() {
+	super.destroyAll();
 	for (final String name : cachesByName.keySet()) {
-	   LOGGER.info("Destroying '{}' cache '{}' ...", InfinispanCacheManagerPluginName, name);
+	   LOGGER.info(CacheMessageBundle.getMessage("cache.destroy.info", getMetaInformations(), name));
 	   destroy(name);
 	}
 	cacheManager.stop();
-	CacheFactory.CACHEMANAGER_REGISTRY.remove(CacheFactory.getCacheManagerId(DefaultCacheProviderEnum.infinispan4x.name(), getCurrentConfiguration()));
+
+	// unregister cacheManager
+	CacheManagerProvider.getRegistry()
+		.remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.infinispan4x.name(), getCurrentConfiguration()));
    }
 
    /**
     * @param name
-    * @param configurationUri url to the configuration file of the cache.<br/>
-    *           This file have to be in classpath or on extern file system. If null is specified, default / fail-safe
-    *           cache configuration implementation will be loaded
-    * @return
+    * @return provider cache instance
     */
    protected <K, V> org.infinispan.Cache<K, V> createCache(final String name) {
 	try {
@@ -175,8 +178,8 @@ class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
     * @see org.kaleidofoundry.core.cache.CacheFactory#clearStatistics(java.lang.String)
     */
    @Override
+   @Review(category = ReviewCategoryEnum.Todo)
    public void clearStatistics(final String cacheName) {
-	// TODO clearStatistics for infinispan
    }
 
    /*
@@ -184,8 +187,8 @@ class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
     * @see org.kaleidofoundry.core.cache.CacheFactory#dumpStatistics(java.lang.String)
     */
    @Override
+   @Review(category = ReviewCategoryEnum.Todo)
    public Map<String, Object> dumpStatistics(final String cacheName) {
-	// TODO dumpStatistics for infinispan
 	return new LinkedHashMap<String, Object>();
    }
 

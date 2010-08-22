@@ -83,7 +83,7 @@ public class AbstractRdvConsumerMessaging {
 	ProducerMessagingContext publisherContext = null;
 
 	// search and load config
-	config = ConfigurationFactory.provideConfiguration("rdvConsumer", configPath, new RuntimeContext<Configuration>());
+	config = ConfigurationFactory.provides("rdvConsumer", configPath, new RuntimeContext<Configuration>());
 	config.load();
 
 	// context config for listener

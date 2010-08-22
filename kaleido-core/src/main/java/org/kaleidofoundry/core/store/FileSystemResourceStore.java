@@ -54,7 +54,7 @@ public class FileSystemResourceStore extends AbstractResourceStore implements Re
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doLoad(java.net.URI)
     */
    @Override
-   protected ResourceHandler doGet(final URI resourceUri) throws StoreException {
+   protected ResourceHandler doGet(final URI resourceUri) throws ResourceException {
 	try {
 	   return new ResourceHandlerBean(new FileInputStream(new File(resourceUri)));
 	} catch (FileNotFoundException fnfe) {
@@ -67,13 +67,13 @@ public class FileSystemResourceStore extends AbstractResourceStore implements Re
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doRemove(java.net.URI)
     */
    @Override
-   protected void doRemove(final URI resourceUri) throws StoreException {
+   protected void doRemove(final URI resourceUri) throws ResourceException {
 
 	File file = new File(resourceUri);
 	if (file.isDirectory()) {
-	   throw new StoreException("store.resource.remove.directory", resourceUri.toString());
+	   throw new ResourceException("store.resource.remove.directory", resourceUri.toString());
 	} else {
-	   if (file.delete()) { throw new StoreException("store.resource.remove.illegal", resourceUri.toString()); }
+	   if (file.delete()) { throw new ResourceException("store.resource.remove.illegal", resourceUri.toString()); }
 	}
 
    }
@@ -84,7 +84,7 @@ public class FileSystemResourceStore extends AbstractResourceStore implements Re
     * org.kaleidofoundry.core.store.ResourceHandler)
     */
    @Override
-   protected void doStore(final URI resourceUri, final ResourceHandler resource) throws StoreException {
+   protected void doStore(final URI resourceUri, final ResourceHandler resource) throws ResourceException {
 
 	File file;
 	FileOutputStream out = null;
@@ -99,7 +99,7 @@ public class FileSystemResourceStore extends AbstractResourceStore implements Re
 	   }
 
 	} catch (IOException ioe) {
-	   throw new StoreException(ioe);
+	   throw new ResourceException(ioe);
 	} finally {
 	   if (out != null) {
 		try {

@@ -21,9 +21,9 @@ import java.util.Properties;
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.plugin.Declare;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.store.SingleResourceStore;
-import org.kaleidofoundry.core.store.StoreException;
 
 /**
  * Java environment variable configuration implementation (read only)<br/>
@@ -40,36 +40,36 @@ import org.kaleidofoundry.core.store.StoreException;
 public class JavaSystemConfiguration extends AbstractConfiguration implements Configuration {
 
    /**
-    * @param identifier
+    * @param name
     * @param resourceUri ignored
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public JavaSystemConfiguration(final String identifier, final URI resourceUri, final RuntimeContext<Configuration> context) throws StoreException {
-	super(identifier, URI.create("memory:/internal/" + identifier + ".javasystem"), context);
+   public JavaSystemConfiguration(final String name, final URI resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
+	super(name, URI.create("memory:/internal/" + name + ".javasystem"), context);
    }
 
    /**
-    * @param identifier
+    * @param name
     * @param resourceUri
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public JavaSystemConfiguration(final String identifier, final String resourceUri, final RuntimeContext<Configuration> context) throws StoreException {
-	super(identifier, "memory:/internal/" + identifier + ".javasystem", context);
+   public JavaSystemConfiguration(final String name, final String resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
+	super(name, "memory:/internal/" + name + ".javasystem", context);
    }
 
    /**
-    * @param identifier
+    * @param name
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public JavaSystemConfiguration(final String identifier, final RuntimeContext<Configuration> context) throws StoreException {
-	this(identifier, (String) null, context);
+   public JavaSystemConfiguration(final String name, final RuntimeContext<Configuration> context) throws ResourceException {
+	this(name, (String) null, context);
    }
 
    @Override
-   protected Cache<String, String> loadProperties(final ResourceHandler resourceHandler, final Cache<String, String> cacheProperties) throws StoreException,
+   protected Cache<String, String> loadProperties(final ResourceHandler resourceHandler, final Cache<String, String> cacheProperties) throws ResourceException,
 	   ConfigurationException {
 
 	Properties javaEnvVariables = System.getProperties();
@@ -82,7 +82,7 @@ public class JavaSystemConfiguration extends AbstractConfiguration implements Co
    }
 
    @Override
-   protected Cache<String, String> storeProperties(final Cache<String, String> properties, final SingleResourceStore resourceStore) throws StoreException,
+   protected Cache<String, String> storeProperties(final Cache<String, String> properties, final SingleResourceStore resourceStore) throws ResourceException,
 	   ConfigurationException {
 	return properties; // never called
    }

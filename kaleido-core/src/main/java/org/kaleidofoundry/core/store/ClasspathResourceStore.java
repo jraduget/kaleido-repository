@@ -88,7 +88,7 @@ public class ClasspathResourceStore extends AbstractResourceStore implements Res
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doLoad(java.net.URI)
     */
    @Override
-   protected ResourceHandler doGet(final URI resourceBinding) throws StoreException {
+   protected ResourceHandler doGet(final URI resourceBinding) throws ResourceException {
 	StringBuilder localPath = new StringBuilder();
 
 	if (resourceBinding.getHost() != null) {
@@ -118,7 +118,7 @@ public class ClasspathResourceStore extends AbstractResourceStore implements Res
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doRemove(java.net.URI)
     */
    @Override
-   protected void doRemove(final URI resourceBinding) throws StoreException {
+   protected void doRemove(final URI resourceBinding) throws ResourceException {
 	throw new IllegalStateException("Can't remove a resource from classpath. ClasspathResourceStore is for a readonly use");
    }
 
@@ -127,7 +127,7 @@ public class ClasspathResourceStore extends AbstractResourceStore implements Res
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doStore(java.net.URI, java.io.InputStream)
     */
    @Override
-   protected void doStore(final URI resourceBinding, final ResourceHandler resource) throws StoreException {
+   protected void doStore(final URI resourceBinding, final ResourceHandler resource) throws ResourceException {
 	throw new IllegalStateException("Can't store a resource in classpath. ClasspathResourceStore is for a readonly use");
    }
 

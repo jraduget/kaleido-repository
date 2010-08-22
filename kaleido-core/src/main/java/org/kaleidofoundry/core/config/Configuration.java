@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+import org.kaleidofoundry.core.cache.Cache;
+import org.kaleidofoundry.core.context.Provider;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Nullable;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
@@ -32,16 +34,18 @@ import org.kaleidofoundry.core.store.FileSystemResourceStore;
 import org.kaleidofoundry.core.store.FtpResourceStore;
 import org.kaleidofoundry.core.store.HttpResourceStore;
 import org.kaleidofoundry.core.store.JpaResourceStore;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceStore;
-import org.kaleidofoundry.core.store.StoreException;
 
 /**
  * <p>
- * Interface to access runtime configuration data from your application (this data could be technical, environmental, application, ...). A
- * configuration is like a set of key identifier / value(s) , like a {@link Properties} but with different / more functionalities.<br/>
+ * Interface to access runtime configuration data from your application (this data could be this data could be technical / environmental /
+ * application / ...). <br/>
+ * A {@link Configuration} is like a set of key identifier / value(s) (as {@link Properties}) but with more functionalities ({@link Cache},
+ * ...).<br/>
  * <br/>
  * The goal of these interface, is to have unique and uniform to access and managed runtime configuration.<br/>
- * Multiple implementation are provided by default, an configuration "instance" could be :
+ * Multiple format implementation are provided by default, an configuration "instance" could be :
  * <ul>
  * <li>Classic java properties file - {@link PropertiesConfiguration},</li>
  * <li>Xml java properties file - {@link XmlPropertiesConfiguration},</li>
@@ -52,15 +56,14 @@ import org.kaleidofoundry.core.store.StoreException;
  * <li>...</li>
  * </ul>
  * <br/>
- * The configuration resource file could be accessed through different uri (the type of the uri will determine the sub {@link ResourceStore}
- * to use):
+ * The configuration resource file could be accessed through different way, using URI (the type of the uri will determine the sub
+ * {@link ResourceStore} to use):
  * <ul>
  * <li>File system - {@link FileSystemResourceStore},</li>
  * <li>Java classpath - {@link ClasspathResourceStore},</li>
  * <li>Http url - {@link HttpResourceStore},</li>
  * <li>Ftp url - {@link FtpResourceStore},</li>
  * <li>Jpa custom url - {@link JpaResourceStore},</li>
- * <li>Jdbc custom url - TODO,</li>
  * <li>...</li>
  * </ul>
  * <br/>
@@ -73,7 +76,9 @@ import org.kaleidofoundry.core.store.StoreException;
  * </ul>
  * </p>
  * <br/>
- * <b>It will be accessible so distributed or not</b> - for each functionalities load, store, unlaod, getString(...), setProperty(...).
+ * <b>Its values can be accessible locally or via a cache cluster (see {@link ConfigurationContextBuilder}) </b> <br/>
+ * Each functionalities {@link #load()}, {@link #store()}, {@link #unload()}, {@link #getProperty(String)},
+ * {@link #setProperty(String, Object)} can use caches functionalities
  * </p>
  * <p>
  * <a href="package-summary.html"/>Package description</a>
@@ -83,7 +88,7 @@ import org.kaleidofoundry.core.store.StoreException;
  * </p>
  * <b>Use case :</b><br/>
  * <br/>
- * For the following properties file (named "appConfig" in the following javadoc) implements by{@link PropertiesConfiguration} :
+ * For the following properties file (named "appConfig" in the following javadoc) implements by {@link PropertiesConfiguration} :
  * 
  * <pre>
  * application.name=app
@@ -116,13 +121,14 @@ import org.kaleidofoundry.core.store.StoreException;
  * @author Jerome RADUGET
  */
 @ThreadSafe
-@Declare(value = ConfigurationConstants.ConfigurationPluginName, singleton = true)
+@Declare(ConfigurationConstants.ConfigurationPluginName)
+@Provider(value = ConfigurationProvider.class, singletons = true)
 public interface Configuration {
 
    /**
-    * @return configuration unique name identifier
+    * @return configuration name (have to be unique)
     */
-   String getIdentifier();
+   String getName();
 
    // **************************************************************************
    // -> Property configuration access management
@@ -132,13 +138,14 @@ public interface Configuration {
     * @param key key identifier (unique)
     * @return get the raw property value <br>
     */
-   String getRawProperty(@NotNull String key);
+   String getProperty(@NotNull String key);
 
    /**
     * add or update property value
     * 
     * @param key key identifier (unique)
     * @param value property value to set
+    * @throws IllegalStateException if configuration is for read-only use
     */
    void setProperty(@NotNull String key, @NotNull Object value);
 
@@ -146,6 +153,7 @@ public interface Configuration {
     * Remove given property
     * 
     * @param key key identifier (unique)
+    * @throws IllegalStateException if configuration is for read-only use
     */
    void removeProperty(@NotNull String key);
 
@@ -392,17 +400,17 @@ public interface Configuration {
    /**
     * load configuration content
     * 
-    * @throws StoreException
+    * @throws ResourceException
     * @throws ConfigurationException
     */
-   void load() throws StoreException, ConfigurationException;
+   void load() throws ResourceException, ConfigurationException;
 
    /**
     * unload configuration content
     * 
-    * @throws StoreException
+    * @throws ResourceException
     */
-   void unload() throws StoreException;
+   void unload() throws ResourceException;
 
    /**
     * @return Configuration have been loaded ? <code>true/false</code>
@@ -412,10 +420,10 @@ public interface Configuration {
    /**
     * Persist all configuration datas (with updade)
     * 
-    * @throws StoreException
+    * @throws ResourceException
     * @throws ConfigurationException
     */
-   void store() throws StoreException, ConfigurationException;
+   void store() throws ResourceException, ConfigurationException;
 
    /**
     * @return is configuration is for read only use

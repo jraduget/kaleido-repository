@@ -47,7 +47,7 @@ public class CacheFactoryByEnvPropertyTest extends Assert {
 	// assertNotNull(cacheFactory);
 	// assertTrue(cacheFactory instanceof Jboss32xCacheFactoryImpl<?, ?>);
 	//
-	// final Cache<Integer, Person> cache = cacheFactory.getCache(Person.class, "cache/jboss-local.xml");
+	// final Cache<Integer, Person> cache = cacheFactory.getCache(Person.class, "classpath:/cache/jboss-local.xml");
 	// assertTrue(cache instanceof Jboss32xCacheImpl<?, ?>);
 	//
 	// cache.put(Person.newMockInstance().getId(), Person.newMockInstance());

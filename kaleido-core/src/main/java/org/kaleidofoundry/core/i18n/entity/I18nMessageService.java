@@ -22,12 +22,13 @@ import java.util.Locale;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.Query;
 
 import mazz.i18n.annotation.I18NMessage;
 
 import org.kaleidofoundry.core.i18n.entity.I18nMessageConstants.Query_MessagesByLocale;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.lang.annotation.Review;
 
 /**
  * Service which handle {@link I18NMessage} persistent model
@@ -63,10 +64,18 @@ public class I18nMessageService {
     * @param locale
     * @return messages which have the language of the given locale ( {@link Locale#getISO3Country()} )
     */
-   // TODO use JPA Criteria API 2.0 if possible : Class.forName("javax.persistence.criteria.QueryBuilder"); if not found use jpql ?
+   @SuppressWarnings("unchecked")
+   @Review(comment = "use JPA Criteria API 2.0 if possible : Class.forName(\"javax.persistence.criteria.QueryBuilder\"); if not found use jpql ?")
    public List<I18nMessageLanguage> findMessagesByLocale(@NotNull final String resourceName, @NotNull final Locale locale) {
 
-	TypedQuery<I18nMessageLanguage> query = getEntityManager().createNamedQuery(Query_MessagesByLocale.Name, I18nMessageLanguage.class);
+	// JPA 2.0 generic named query
+	// TypedQuery<I18nMessageLanguage> query = getEntityManager().createNamedQuery(Query_MessagesByLocale.Name,
+	// I18nMessageLanguage.class);
+	// query.setParameter(Query_MessagesByLocale.Parameter_ResourceName, resourceName);
+	// query.setParameter(Query_MessagesByLocale.Parameter_Locale, locale.toString());
+
+	// JPA 1.x for jee5 compatibility
+	Query query = getEntityManager().createNativeQuery(Query_MessagesByLocale.Name, I18nMessageLanguage.class);
 	query.setParameter(Query_MessagesByLocale.Parameter_ResourceName, resourceName);
 	query.setParameter(Query_MessagesByLocale.Parameter_Locale, locale.toString());
 

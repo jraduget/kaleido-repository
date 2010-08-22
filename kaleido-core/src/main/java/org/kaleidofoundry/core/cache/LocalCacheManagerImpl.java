@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Jerome RADUGET
  */
-@Declare(value = DefaultLocalCacheManagerPluginName, singleton = true)
+@Declare(value = DefaultLocalCacheManagerPluginName)
 class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheManager {
 
    /** internal logger */
@@ -111,11 +111,15 @@ class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheM
     */
    @Override
    public void destroyAll() {
+	super.destroyAll();
 	for (final String name : cachesByName.keySet()) {
-	   LOGGER.info("Destroying '{}' cache '{}' ...", DefaultLocalCacheManagerPluginName, name);
+	   LOGGER.info(CacheMessageBundle.getMessage("cache.destroy.info", getMetaInformations(), name));
 	   destroy(name);
 	}
-	CacheFactory.CACHEMANAGER_REGISTRY.remove(CacheFactory.getCacheManagerId(DefaultCacheProviderEnum.localCache.name(), getCurrentConfiguration()));
+
+	// unregister cache manager instance
+	CacheManagerProvider.getRegistry().remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.local.name(), getCurrentConfiguration()));
+
    }
 
    /*
@@ -138,7 +142,7 @@ class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheM
    /**
     * @param name
     * @param configurationUri
-    * @return
+    * @return provider cache instance
     */
    protected <K extends Serializable, V extends Serializable> LocalCacheImpl<K, V> createCache(final String name, final String configurationUri) {
 	LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration(), name));

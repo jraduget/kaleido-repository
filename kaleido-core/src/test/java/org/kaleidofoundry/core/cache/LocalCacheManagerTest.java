@@ -30,17 +30,17 @@ public class LocalCacheManagerTest extends AbstractTestCacheManager {
 
    @Override
    protected String getAvailableConfiguration() {
-	return "cache/kaleido-local.xml";
+	return null;
    }
 
    @Override
    protected String getCacheImplementationCode() {
-	return DefaultCacheProviderEnum.localCache.name();
+	return DefaultCacheProviderEnum.local.name();
    }
 
    @Override
    protected RuntimeContext<CacheManager> getCacheManagerContext() {
-	return new RuntimeContext<CacheManager>();
+	return new RuntimeContext<CacheManager>(CacheManager.class);
    }
 
    @Ignore

@@ -79,7 +79,7 @@ public class NotNullException extends I18nRuntimeException {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.exception.I18nCodedRuntimeException#getI18nBundleName()
+    * @see org.kaleidofoundry.core.i18n.I18nRuntimeException#getI18nBundleName()
     */
    @Override
    public String getI18nBundleName() {

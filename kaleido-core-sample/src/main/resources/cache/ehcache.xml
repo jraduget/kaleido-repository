@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns="http://ehcache.sourceforge.net/ehcache.xsd"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+		 xsi:schemaLocation="http://ehcache.sourceforge.net/ehcache.xsd">
+ 		 
+	<diskStore path="java.io.tmpdir/ehcache-test" />
+
+	<!-- Be careful, it is not defaultCache configuration for all declared cache,
+		 these settings will be applied to caches created programmatically using CacheManager.add(String cacheName) -->
+	<defaultCache
+		name="test-ehcache"
+		eternal="false"
+		overflowToDisk="true"
+		diskPersistent="false"
+		maxElementsInMemory="10"
+		maxElementsOnDisk="100000"
+		timeToIdleSeconds="120"
+		timeToLiveSeconds="0"
+		diskExpiryThreadIntervalSeconds="120"
+		memoryStoreEvictionPolicy="LRU" />
+
+	<!-- READ_WRITE -->
+	<cache name="org.kaleidofoundry.core.cache.YourBean"
+		eternal="true"
+		overflowToDisk="true"
+		diskPersistent="false"
+		maxElementsInMemory="10"
+		maxElementsOnDisk="100000"
+		memoryStoreEvictionPolicy="LRU"		
+	 />
+	
+</ehcache>

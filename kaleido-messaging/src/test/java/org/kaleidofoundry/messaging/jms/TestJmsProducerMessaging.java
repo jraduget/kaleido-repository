@@ -64,7 +64,7 @@ public class TestJmsProducerMessaging {
 	// Reliable config test
 	// **********************
 	// search and load config
-	jmsConfig = ConfigurationFactory.provideConfiguration("jmsProducer", JmsConfigPath, new RuntimeContext<Configuration>());
+	jmsConfig = ConfigurationFactory.provides("jmsProducer", JmsConfigPath, new RuntimeContext<Configuration>());
 	jmsConfig.load();
 	// context config for producer
 	publisherContext = new ProducerMessagingContext(JmsProducerConfigKey, jmsConfig);

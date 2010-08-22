@@ -27,7 +27,7 @@ import javax.mail.internet.AddressException;
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.mail.MailException;
 import org.kaleidofoundry.mail.MailMessage;
 import org.kaleidofoundry.mail.sender.MailSenderFactory;
@@ -79,7 +79,7 @@ public class EjbMailSenderBean implements SessionBean {
 	   }
 
 	   // Recherche et chargement de la configuration
-	   config = ConfigurationFactory.provideConfiguration("ejbCreate", classpathRessource, new RuntimeContext<Configuration>());
+	   config = ConfigurationFactory.provides("ejbCreate", classpathRessource, new RuntimeContext<Configuration>());
 	   config.load();
 
 	   // Détail de la configuration
@@ -96,7 +96,7 @@ public class EjbMailSenderBean implements SessionBean {
 	} catch (final MailSessionException mse) {
 	   LOGGER.error(mse.getMessage(), mse);
 	   throw new CreateException(mse.getMessage());
-	} catch (final StoreException ce) {
+	} catch (final ResourceException ce) {
 	   LOGGER.error(ce.getMessage(), ce);
 	   throw new CreateException(ce.getMessage());
 	}

@@ -17,17 +17,16 @@ package org.kaleidofoundry.core.io;
 
 import java.io.IOException;
 
-import javax.activation.MimetypesFileTypeMap;
-
+import org.kaleidofoundry.core.lang.annotation.Review;
 import org.kaleidofoundry.core.lang.annotation.Tested;
 
 /**
  * MimeTypesDefaultService factory
- * TODO use {@link MimetypesFileTypeMap} instead {@link MimeTypesDefaultService} ?
  * 
  * @author Jerome RADUGET
  */
 @Tested
+@Review(comment = "use {@link MimetypesFileTypeMap} instead {@link MimeTypesDefaultService} ?")
 public abstract class MimeTypesFactory {
 
    /* default unique instance */

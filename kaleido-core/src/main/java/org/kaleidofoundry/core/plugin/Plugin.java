@@ -40,7 +40,6 @@ public class Plugin<T> implements Serializable, Comparator<Plugin<T>> {
    private final Class<? extends T> annotatedClass;
    private final String description;
    private final String version;
-   private final boolean singleton;
    private final boolean enable;
 
    // CONSTRUCTOR *****************************************************************************************************
@@ -53,28 +52,28 @@ public class Plugin<T> implements Serializable, Comparator<Plugin<T>> {
     * @param annotatedClass
     * @param description
     * @param version
-    * @param singleton
     * @param enable
     */
    public Plugin(final String name, final boolean standard, final Class<? extends T> annotatedClass, final String description, final String version,
-	   final boolean singleton, final boolean enable) {
+	   final boolean enable) {
 	this.name = name;
 	this.standard = standard;
 	this.annotatedClass = annotatedClass;
 	this.description = description;
 	this.version = version;
-	this.singleton = singleton;
 	this.enable = enable;
    }
 
    /**
+    * helper method, used to create a new plugin instance, using {@link Declare} annotation meta-data
+    * 
     * @param declarePlugin
     * @param annotatedClass
-    * @return
+    * @return new plugin instance
     */
    static <T> Plugin<T> create(final Declare declarePlugin, final Class<? extends T> annotatedClass) {
 	final Plugin<T> plugin = new Plugin<T>(declarePlugin.value(), annotatedClass.getPackage().getName().contains(PACKAGE_STANDARD), annotatedClass,
-		declarePlugin.description(), declarePlugin.version(), declarePlugin.singleton(), declarePlugin.enable());
+		declarePlugin.description(), declarePlugin.version(), declarePlugin.enable());
 
 	return plugin;
    }
@@ -135,13 +134,6 @@ public class Plugin<T> implements Serializable, Comparator<Plugin<T>> {
     */
    public String getVersion() {
 	return version;
-   }
-
-   /**
-    * @return does plugin implementation have to be provided as a unique instance
-    */
-   public boolean isSingleton() {
-	return singleton;
    }
 
    // EQUALS / HASHCODE / TOSTRING / COMPARE / CLONE... FOR POJO ******************************************************

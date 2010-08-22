@@ -21,14 +21,14 @@ import java.net.URI;
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.plugin.Declare;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.store.SingleResourceStore;
-import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.system.OsEnvironment;
 
 /**
  * Operating system environment variable configuration implementation (read only)<br/>
- * It will reference all operating system environment variable defined via set command
+ * It will reference all operating system environment variable defined via set OS command
  * 
  * @author Jerome RADUGET
  */
@@ -36,52 +36,52 @@ import org.kaleidofoundry.core.system.OsEnvironment;
 public class OsEnvConfiguration extends AbstractConfiguration implements Configuration {
 
    /**
-    * @param identifier
+    * @param name
     * @param resourceUri ignored
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public OsEnvConfiguration(final String identifier, final URI resourceUri, final RuntimeContext<Configuration> context) throws StoreException {
-	super(identifier, URI.create("memory:/internal/" + identifier + ".osenv"), context);
+   public OsEnvConfiguration(final String name, final URI resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
+	super(name, URI.create("memory:/internal/" + name + ".osenv"), context);
    }
 
    /**
-    * @param identifier
+    * @param name
     * @param resourceUri ignored
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public OsEnvConfiguration(final String identifier, final String resourceUri, final RuntimeContext<Configuration> context) throws StoreException {
-	super(identifier, "memory:/internal/" + identifier + ".osenv", context);
+   public OsEnvConfiguration(final String name, final String resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
+	super(name, "memory:/internal/" + name + ".osenv", context);
    }
 
    /**
-    * @param identifier
+    * @param name
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public OsEnvConfiguration(final String identifier, final RuntimeContext<Configuration> context) throws StoreException {
-	this(identifier, (String) null, context);
+   public OsEnvConfiguration(final String name, final RuntimeContext<Configuration> context) throws ResourceException {
+	this(name, (String) null, context);
    }
 
    @Override
-   protected Cache<String, String> loadProperties(final ResourceHandler resourceHandler, final Cache<String, String> properties) throws StoreException,
+   protected Cache<String, String> loadProperties(final ResourceHandler resourceHandler, final Cache<String, String> properties) throws ResourceException,
 	   ConfigurationException {
 	try {
-	   OsEnvironment environment = new OsEnvironment();
-	   for (String key : environment.stringPropertyNames()) {
-		String value = environment.getProperty(key);
+	   final OsEnvironment environment = new OsEnvironment();
+	   for (final String key : environment.stringPropertyNames()) {
+		final String value = environment.getProperty(key);
 		properties.put(key, value != null ? value : "");
 	   }
 	   return properties;
-	} catch (IOException ioe) {
-	   throw new StoreException(ioe);
+	} catch (final IOException ioe) {
+	   throw new ResourceException(ioe);
 	}
    }
 
    @Override
-   protected Cache<String, String> storeProperties(final Cache<String, String> cacheProperties, final SingleResourceStore resourceStore) throws StoreException,
-	   ConfigurationException {
+   protected Cache<String, String> storeProperties(final Cache<String, String> cacheProperties, final SingleResourceStore resourceStore)
+	   throws ResourceException, ConfigurationException {
 	return cacheProperties; // never called
    }
 

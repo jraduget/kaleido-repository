@@ -28,7 +28,7 @@ public class InfinispanManagerTest extends AbstractTestCacheManager {
 
    @Override
    protected String getAvailableConfiguration() {
-	return "cache/infinispan-local.xml";
+	return "classpath:/cache/infinispan-local.xml";
    }
 
    @Override
@@ -38,6 +38,6 @@ public class InfinispanManagerTest extends AbstractTestCacheManager {
 
    @Override
    protected RuntimeContext<CacheManager> getCacheManagerContext() {
-	return new RuntimeContext<CacheManager>();
+	return new RuntimeContext<CacheManager>(CacheManager.class);
    }
 }

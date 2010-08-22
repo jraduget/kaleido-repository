@@ -65,7 +65,6 @@ public enum ResourceStoreTypeEnum implements ResourceStoreType {
 
    private final static ConcurrentMap<String, ResourceStoreType> CustomTypes = new ConcurrentHashMap<String, ResourceStoreType>();
 
-
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.store.ResourceStoreType#isCustom()
@@ -93,8 +92,12 @@ public enum ResourceStoreTypeEnum implements ResourceStoreType {
     */
    @Nullable
    public static ResourceStoreType match(@NotNull final URI puri) {
+
+	// uri check
+	if (puri.getScheme() == null) { return null; }
+
 	// search in official schemes
-	for (ResourceStoreTypeEnum t : values()) {
+	for (final ResourceStoreTypeEnum t : values()) {
 	   if (t.name().equalsIgnoreCase(puri.getScheme())) { return t; }
 	}
 

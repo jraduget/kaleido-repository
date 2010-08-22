@@ -41,7 +41,7 @@ public class TailTest {
 
    @Before
    public void setUp() throws FileNotFoundException {
-	tailTool = new Tail(this.getClass().getClassLoader(), "org/kaleidofoundry/core/io/java_install.log");
+	tailTool = new Tail(this.getClass().getClassLoader(), "org/kaleidofoundry/core/io/java_install.txt");
    }
 
    /**

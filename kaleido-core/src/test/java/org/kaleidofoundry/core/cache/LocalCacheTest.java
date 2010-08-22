@@ -33,7 +33,7 @@ public class LocalCacheTest extends AbstractTestCache {
 
    @Before
    public void setup() {
-	cacheManager = CacheFactory.getCacheManager(DefaultCacheProviderEnum.localCache.name(), "cache/kaleido-local.xml", new RuntimeContext<CacheManager>());
+	cacheManager = CacheFactory.provides(DefaultCacheProviderEnum.local.name(), null, new RuntimeContext<CacheManager>(CacheManager.class));
 	cache = cacheManager.getCache(Person.class.getName());
    }
 

@@ -31,7 +31,7 @@ public class ClasspathResourceStoreTest extends AbstractResourceStoreTest {
 
 	super.setup();
 
-	resourceStore = new ClasspathResourceStore(new RuntimeContext<ResourceStore>());
+	resourceStore = new ClasspathResourceStore(new RuntimeContext<ResourceStore>(ResourceStore.class));
 
 	existingResources.put(new URI("classpath:/org/kaleidofoundry/core/store/foo.txt"), DEFAULT_RESOURCE_MOCK_TEST);
 	existingResources.put(new URI("classpath://org/kaleidofoundry/core/store/foo.txt"), DEFAULT_RESOURCE_MOCK_TEST);

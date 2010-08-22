@@ -25,7 +25,7 @@ import javax.mail.internet.MimeMessage;
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.mail.session.MailSessionContext;
 import org.kaleidofoundry.mail.session.MailSessionException;
 import org.kaleidofoundry.mail.session.MailSessionFactory;
@@ -51,7 +51,7 @@ public class MailSessionServiceTest {
 
 	try {
 	   // Recherche et chargement de la Configuration
-	   config = ConfigurationFactory.provideConfiguration("MailSessionServiceTest", MailTestConstants.CONFIG_RESOURCE, new RuntimeContext<Configuration>());
+	   config = ConfigurationFactory.provides("MailSessionServiceTest", MailTestConstants.CONFIG_RESOURCE, new RuntimeContext<Configuration>());
 	   config.load();
 
 	   // MailSessionContext, instanciation et chargement
@@ -81,7 +81,7 @@ public class MailSessionServiceTest {
 		LOGGER.error(mee.getMessage(), mee);
 	   }
 
-	} catch (final StoreException cfe) {
+	} catch (final ResourceException cfe) {
 	   LOGGER.error("configuration exception", cfe);
 	} catch (final MailSessionException mse) {
 	   LOGGER.error(mse.getMessage(), mse);

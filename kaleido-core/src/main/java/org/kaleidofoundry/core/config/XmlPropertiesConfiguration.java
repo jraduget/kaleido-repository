@@ -23,9 +23,9 @@ import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
 import org.kaleidofoundry.core.plugin.Declare;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.store.SingleResourceStore;
-import org.kaleidofoundry.core.store.StoreException;
 
 /**
  * Xml properties implementation
@@ -36,27 +36,27 @@ import org.kaleidofoundry.core.store.StoreException;
 public class XmlPropertiesConfiguration extends AbstractConfiguration implements Configuration {
 
    /**
-    * @param identifier
+    * @param name
     * @param resourceUri
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public XmlPropertiesConfiguration(final String identifier, final URI resourceUri, final RuntimeContext<Configuration> context) throws StoreException {
-	super(identifier, resourceUri, context);
+   public XmlPropertiesConfiguration(final String name, final URI resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
+	super(name, resourceUri, context);
    }
 
    /**
-    * @param identifier
+    * @param name
     * @param resourceUri
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public XmlPropertiesConfiguration(final String identifier, final String resourceUri, final RuntimeContext<Configuration> context) throws StoreException {
-	super(identifier, resourceUri, context);
+   public XmlPropertiesConfiguration(final String name, final String resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
+	super(name, resourceUri, context);
    }
 
    @Override
-   protected Cache<String, String> loadProperties(final ResourceHandler resourceHandler, final Cache<String, String> properties) throws StoreException,
+   protected Cache<String, String> loadProperties(final ResourceHandler resourceHandler, final Cache<String, String> properties) throws ResourceException,
 	   ConfigurationException {
 	try {
 
@@ -69,14 +69,14 @@ public class XmlPropertiesConfiguration extends AbstractConfiguration implements
 
 	   return properties;
 	} catch (IOException ioe) {
-	   throw new StoreException(ioe);
+	   throw new ResourceException(ioe);
 	}
    }
 
    @Override
    @NotYetImplemented
-   protected Cache<String, String> storeProperties(final Cache<String, String> cacheProperties, final SingleResourceStore resourceStore) throws StoreException,
-	   ConfigurationException {
+   protected Cache<String, String> storeProperties(final Cache<String, String> cacheProperties, final SingleResourceStore resourceStore)
+	   throws ResourceException, ConfigurationException {
 	// try {
 	// properties.storeToXML(os, comment, encoding);
 	// return properties;

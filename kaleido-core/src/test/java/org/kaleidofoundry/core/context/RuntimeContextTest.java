@@ -24,11 +24,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.ResourceStore;
+import org.kaleidofoundry.core.store.ResourceStoreConstants;
 
 /**
  * @author Jerome RADUGET
  */
+@Review(comment = "test parameters builder priority to configuration")
 public class RuntimeContextTest extends Assert {
 
    private static final String TomcatContextName = "tomcat";
@@ -37,16 +41,15 @@ public class RuntimeContextTest extends Assert {
    private Configuration configuration;
 
    @Before
-   public void setup() throws IOException, StoreException {
+   public void setup() throws IOException, ResourceException {
 
 	// runtimeContext create with Configuration
-	configuration = ConfigurationFactory.provideConfiguration("contextTest", "classpath:/org/kaleidofoundry/core/context/context.properties",
-		new RuntimeContext<Configuration>());
+	configuration = ConfigurationFactory.provides("contextTest", "classpath:/org/kaleidofoundry/core/context/context.properties");
 
    }
 
    @After
-   public void cleanup() throws StoreException {
+   public void cleanup() throws ResourceException {
 	if (configuration != null) {
 	   configuration.unload();
 	}
@@ -101,6 +104,15 @@ public class RuntimeContextTest extends Assert {
 	assertEquals(TomcatContextName, runtimeContext.getName());
 	assertNotNull(runtimeContext.getPrefixProperty());
 	assertEquals(ContextPrefix, runtimeContext.getPrefixProperty());
+   }
+
+   @Test
+   public void createNamedContextWithPlugin() {
+	final RuntimeContext<ResourceStore> runtimeContext = new RuntimeContext<ResourceStore>(TomcatContextName, ResourceStore.class);
+	assertNotNull(runtimeContext.getName());
+	assertEquals(TomcatContextName, runtimeContext.getName());
+	assertNotNull(runtimeContext.getPrefixProperty());
+	assertEquals(ResourceStoreConstants.ResourceStorePluginName, runtimeContext.getPrefixProperty());
    }
 
    @Test

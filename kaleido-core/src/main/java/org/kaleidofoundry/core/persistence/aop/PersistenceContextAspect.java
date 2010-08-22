@@ -46,10 +46,14 @@ public class PersistenceContextAspect {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(PersistenceContextAspect.class);
 
+   public PersistenceContextAspect() {
+	LOGGER.debug("@Aspect(PersistenceContextAspect) new instance");
+   }
+
    // no need to filter on field modifier here, otherwise you can use private || !public at first get argument
    @Pointcut("get(@javax.persistence.PersistenceContext javax.persistence.EntityManager *) && if()")
    public static boolean trackEntityManagerField(final JoinPoint jp, final JoinPoint.EnclosingStaticPart esjp) {
-	LOGGER.debug("@Pointcut PersistenceContextAspect - trackEntityManagerField match");
+	LOGGER.debug("@Pointcut(PersistenceContextAspect) - trackEntityManagerField match");
 	return true;
    }
 

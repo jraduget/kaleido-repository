@@ -19,7 +19,7 @@ import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.io.FileHelper;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +49,8 @@ public class JndiContextTest {
 	try {
 	   // Configuration instance and load
 	   logger.info("config.create(\"" + classpathRessource + "\")");
-	   config = ConfigurationFactory.provideConfiguration("jndiTest", "classpath:/" + classpathRessource, new RuntimeContext<Configuration>());
+	   config = ConfigurationFactory.provides("jndiTest", "classpath:/" + classpathRessource, new RuntimeContext<Configuration>(
+		   Configuration.class));
 	   logger.info("config.load()");
 	   config.load();
 	   logger.info("config.toString() : " + config.toString());
@@ -99,7 +100,7 @@ public class JndiContextTest {
 	   // logger.info("extractContext.toString() : " + extractContext.toString());
 	   // logger.info(lineSep);
 
-	} catch (final StoreException cfe) {
+	} catch (final ResourceException cfe) {
 	   logger.error("configuration error", cfe);
 	}
    }

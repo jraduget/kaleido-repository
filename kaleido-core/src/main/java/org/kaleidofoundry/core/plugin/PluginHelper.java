@@ -44,19 +44,29 @@ public abstract class PluginHelper {
    }
 
    /**
-    * @param classImplInstance plugin implementation class
+    * @param classImplInstance plugin implementation class instance
     * @return the plugin interface meta-data of the class implementation argument, null if it does not exist or if class implementation
     *         argument is not annotated @{@link Declare}
     */
    @Nullable
    public static Plugin<?> getInterfacePlugin(@NotNull final Object classImplInstance) {
-	if (classImplInstance.getClass().isAnnotationPresent(Declare.class)) {
-	   final Set<Class<?>> pluginInterface = ReflectionHelper.getAllInterfaces(classImplInstance.getClass());
-	   for (final Class<?> c : pluginInterface) {
+	return getInterfacePlugin(classImplInstance.getClass());
+   }
+
+   /**
+    * @param classImpl plugin implementation class
+    * @return the plugin interface meta-data of the class implementation argument, null if it does not exist or if class implementation
+    *         argument is not annotated @{@link Declare}
+    */
+   @Nullable
+   public static Plugin<?> getInterfacePlugin(@NotNull final Class<?> classImpl) {
+	if (classImpl.isAnnotationPresent(Declare.class)) {
+	   final Set<Class<?>> interfaces = ReflectionHelper.getAllInterfaces(classImpl);
+	   for (final Class<?> c : interfaces) {
 		if (c.isAnnotationPresent(Declare.class)) { return PluginFactory.getInterfaceRegistry().get(c.getAnnotation(Declare.class).value()); }
 	   }
 	}
 	return null;
-
    }
+
 }

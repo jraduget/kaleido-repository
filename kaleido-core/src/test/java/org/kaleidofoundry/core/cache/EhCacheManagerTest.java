@@ -15,6 +15,7 @@
  */
 package org.kaleidofoundry.core.cache;
 
+import org.junit.Test;
 import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.context.RuntimeContext;
 
@@ -28,7 +29,7 @@ public class EhCacheManagerTest extends AbstractTestCacheManager {
 
    @Override
    protected String getAvailableConfiguration() {
-	return "cache/ehcache-local.xml";
+	return "classpath:/cache/ehcache-local.xml";
    }
 
    @Override
@@ -38,7 +39,13 @@ public class EhCacheManagerTest extends AbstractTestCacheManager {
 
    @Override
    protected RuntimeContext<CacheManager> getCacheManagerContext() {
-	return new RuntimeContext<CacheManager>();
+	return new RuntimeContext<CacheManager>(CacheManager.class);
+   }
+
+   @Test(expected = CacheDefinitionNotFoundException.class)
+   @Override
+   public void defaultConfiguration() {
+	super.defaultConfiguration();
    }
 
 }

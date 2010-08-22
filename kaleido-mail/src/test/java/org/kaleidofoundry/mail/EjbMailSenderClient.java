@@ -33,7 +33,7 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.naming.JndiContext;
 import org.kaleidofoundry.core.naming.JndiResourceException;
 import org.kaleidofoundry.core.naming.JndiResourceLocator;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.mail.sender.MailSenderFactory;
 import org.kaleidofoundry.mail.sender.ejb.EjbMailSender;
 import org.kaleidofoundry.mail.sender.ejb.EjbMailSenderHome;
@@ -64,7 +64,7 @@ public class EjbMailSenderClient {
 
 	try {
 	   // Recherche et chargement de la Configuration
-	   config = ConfigurationFactory.provideConfiguration("ejbMailSender", CONFIG_RESOURCE, new RuntimeContext<Configuration>());
+	   config = ConfigurationFactory.provides("ejbMailSender", CONFIG_RESOURCE, new RuntimeContext<Configuration>());
 	   config.load();
 
 	   // Context de connection JNDI
@@ -92,7 +92,7 @@ public class EjbMailSenderClient {
 	   // Send
 	   sessionMailer.send(message);
 
-	} catch (final StoreException jndie) {
+	} catch (final ResourceException jndie) {
 	   LOGGER.error("store access problem", jndie);
 	} catch (final JndiResourceException jndie) {
 	   LOGGER.error("jndi access problem", jndie);

@@ -19,7 +19,7 @@ import java.net.URISyntaxException;
 
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.properties.ExtendedProperties;
 
 /**
@@ -27,12 +27,12 @@ import org.kaleidofoundry.core.util.properties.ExtendedProperties;
  */
 public class MainArgsConfigurationTest extends AbstractConfigurationTest {
 
-   public MainArgsConfigurationTest() throws StoreException, URISyntaxException {
+   public MainArgsConfigurationTest() throws ResourceException, URISyntaxException {
 	super();
    }
 
    @Override
-   protected Configuration newInstance() throws StoreException, URISyntaxException {
+   protected Configuration newInstance() throws ResourceException, URISyntaxException {
 
 	final String[] mainArgs = new String[] { "application.name=app", "application.description=description&nbsp;of&nbsp;the&nbsp;application...",
 		"application.date=2006-09-01T00:00:00", "application.version=1.0.0", "application.librairies=dom4j.jar|log4j.jar|mail.jar",
@@ -41,9 +41,9 @@ public class MainArgsConfigurationTest extends AbstractConfigurationTest {
 		"application.single.boolean=true", "application.single.bigdecimal=1.123456789",
 		"application.array.date=2009-01-02T00:00:00|2009-12-31T00:00:00|2012-05-15T00:00:00" };
 
-	final Configuration configuration = new MainArgsConfiguration("mainArgsConfig", new RuntimeContext<Configuration>());
+	final Configuration configuration = new MainArgsConfiguration("mainArgsConfig", new RuntimeContext<Configuration>(Configuration.class));
 	final ExtendedProperties properties = new ExtendedProperties();
-	properties.setMultiValueProperty(MainArgsConfiguration.ContextProperty.argsMainString.name(), mainArgs);
+	properties.setMultiValueProperty(ConfigurationContextBuilder.ArgsMainString, mainArgs);
 
 	for (final String propName : properties.stringPropertyNames()) {
 	   configuration.setProperty(propName, properties.getProperty(propName));
@@ -54,7 +54,7 @@ public class MainArgsConfigurationTest extends AbstractConfigurationTest {
 
    @Test(expected = IllegalStateException.class)
    @Override
-   public void store() throws StoreException {
+   public void store() throws ResourceException {
 	assertNotNull(configuration);
 	configuration.store();
    }

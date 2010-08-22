@@ -29,6 +29,7 @@ import javax.persistence.PersistenceContext;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.lang.annotation.Review;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.store.entity.ResourceStoreEntity;
 import org.kaleidofoundry.core.util.StringHelper;
@@ -39,7 +40,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * @author Jerome RADUGET
  */
 @Declare(ClobJpaStorePluginName)
-// TODO - Annotate it as @Stateless ejb to enable ejb exposition + injection - import right ejb 3.x library - problem : coupling it to ejb3
+@Review(comment = "Annotate it as @Stateless ejb to enable ejb exposition + injection - import right ejb 3.x library - problem : coupling it to ejb3")
 public class JpaResourceStore extends AbstractResourceStore implements ResourceStore {
 
    /**
@@ -97,7 +98,7 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doLoad(java.net.URI)
     */
    @Override
-   protected ResourceHandler doGet(final URI resourceUri) throws StoreException {
+   protected ResourceHandler doGet(final URI resourceUri) throws ResourceException {
 	ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.toString());
 	if (entity == null) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
@@ -112,7 +113,7 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doRemove(java.net.URI)
     */
    @Override
-   protected void doRemove(final URI resourceUri) throws StoreException {
+   protected void doRemove(final URI resourceUri) throws ResourceException {
 	ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.toString());
 	if (entity == null) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
@@ -126,7 +127,7 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doStore(java.net.URI, org.kaleidofoundry.core.store.ResourceHandler)
     */
    @Override
-   protected void doStore(final URI resourceUri, final ResourceHandler resource) throws StoreException {
+   protected void doStore(final URI resourceUri, final ResourceHandler resource) throws ResourceException {
 
 	ResourceStoreEntity storeEntity = newInstance();
 
@@ -147,7 +148,7 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
 		}
 		storeEntity.setContent(outputStream.toByteArray());
 	   } catch (IOException ioe) {
-		throw new StoreException(ioe);
+		throw new ResourceException(ioe);
 	   }
 	}
    }

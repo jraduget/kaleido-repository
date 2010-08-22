@@ -51,7 +51,7 @@ public class TestRdvTransportMessaging {
 	// Reliable config test
 	// **********************
 	// search and load config for reliable transport
-	reliableConfig = ConfigurationFactory.provideConfiguration("rdvReliableTransport", RdvReliabledConfigPath, new RuntimeContext<Configuration>());
+	reliableConfig = ConfigurationFactory.provides("rdvReliableTransport", RdvReliabledConfigPath, new RuntimeContext<Configuration>());
 	reliableConfig.load();
 	// context config for transport
 	reliableTransportContext = new TransportMessagingContext(RdvTransportReliableConfigKey, reliableConfig);
@@ -61,7 +61,7 @@ public class TestRdvTransportMessaging {
 	// Certified config test
 	// **********************
 	// search and load config for reliable transport
-	certifiedConfig = ConfigurationFactory.provideConfiguration("rdvCertifiedTransport", RdvCertifiedConfigPath, new RuntimeContext<Configuration>());
+	certifiedConfig = ConfigurationFactory.provides("rdvCertifiedTransport", RdvCertifiedConfigPath, new RuntimeContext<Configuration>());
 	certifiedConfig.load();
 	// context config for transport
 	certifiedTransportContext = new TransportMessagingContext(RdvTransportCertifiedConfigKey, certifiedConfig);

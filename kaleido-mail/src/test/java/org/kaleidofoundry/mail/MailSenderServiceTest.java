@@ -35,7 +35,7 @@ import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.naming.JndiContext;
 import org.kaleidofoundry.core.naming.JndiResourceException;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.mail.sender.MailSenderFactory;
 import org.kaleidofoundry.mail.sender.MailSenderService;
 import org.kaleidofoundry.mail.session.MailSessionContext;
@@ -96,7 +96,7 @@ public class MailSenderServiceTest {
 	   jmsSender(args, message);
 	   LOGGER.info("jmsSender : end");
 
-	} catch (final StoreException cfe) {
+	} catch (final ResourceException cfe) {
 	   LOGGER.error("configuration problem", cfe);
 	} catch (final MailException mse) {
 	   LOGGER.error("mail session problem", mse);
@@ -114,14 +114,14 @@ public class MailSenderServiceTest {
    }
 
    // Test sender via Ejb Service
-   public static void ejbSender(final String[] args, final MailMessage message) throws StoreException, MailException, MessagingException, RemoteException,
+   public static void ejbSender(final String[] args, final MailMessage message) throws ResourceException, MailException, MessagingException, RemoteException,
 	   CreateException, JndiResourceException {
 	Configuration config = null;
 	MailSenderService sender = null;
 	JndiContext context = null;
 
 	// Recherche et chargement de la Configuration
-	config = ConfigurationFactory.provideConfiguration("mailSenderService", CONFIG_RESOURCE, new RuntimeContext<Configuration>());
+	config = ConfigurationFactory.provides("mailSenderService", CONFIG_RESOURCE, new RuntimeContext<Configuration>());
 	config.load();
 
 	// Context de connection JNDI
@@ -134,13 +134,13 @@ public class MailSenderServiceTest {
    }
 
    // Test sender via session Service
-   public static void sessionSender(final String[] args, final MailMessage message) throws StoreException, MailException, MessagingException {
+   public static void sessionSender(final String[] args, final MailMessage message) throws ResourceException, MailException, MessagingException {
 	Configuration config = null;
 	MailSessionContext mailContext = null;
 	MailSenderService mailService = null;
 
 	// Recherche et chargement de la Configuration
-	config = ConfigurationFactory.provideConfiguration("sessionSender", CONFIG_RESOURCE, new RuntimeContext<Configuration>());
+	config = ConfigurationFactory.provides("sessionSender", CONFIG_RESOURCE, new RuntimeContext<Configuration>());
 	config.load();
 
 	// MailSessionContext, instanciation et chargement
@@ -154,13 +154,13 @@ public class MailSenderServiceTest {
    }
 
    // Test sender via Ejb Service
-   public static void jmsSender(final String[] args, final MailMessage message) throws StoreException, MailException, MessagingException, JndiResourceException {
+   public static void jmsSender(final String[] args, final MailMessage message) throws ResourceException, MailException, MessagingException, JndiResourceException {
 	Configuration config = null;
 	MailSenderService sender = null;
 	JndiContext context = null;
 
 	// Recherche et chargement de la Configuration
-	config = ConfigurationFactory.provideConfiguration("jmsSender", CONFIG_RESOURCE, new RuntimeContext<Configuration>());
+	config = ConfigurationFactory.provides("jmsSender", CONFIG_RESOURCE, new RuntimeContext<Configuration>());
 	config.load();
 
 	// Context de connection JNDI

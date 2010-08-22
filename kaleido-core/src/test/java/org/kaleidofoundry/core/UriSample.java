@@ -36,16 +36,20 @@ public class UriSample {
 
 	List<String> urisToTest = new ArrayList<String>();
 
+	urisToTest.add("classpath:/");
 	urisToTest.add("classpath:/context");
 	urisToTest.add("classpath:/localpath1/localpath2/context.xml");
 
 	urisToTest.add("classpath://context");
 	urisToTest.add("classpath://localpath1/localpath2/context.xml");
 
+	urisToTest.add("file:/");
 	urisToTest.add("file:/c:/localpath1/localpath2/context.xml");
 	urisToTest.add("file://c:/localpath1/localpath2/context.xml");
 	urisToTest.add("file:///c:/localpath1/localpath2/context.xml");
 
+	urisToTest.add("http:/");
+	// urisToTest.add("http://"); illegal
 	urisToTest.add("http://localhost:8080?id=1234");
 	urisToTest.add("http://localhost/resourcePath/resourceName");
 

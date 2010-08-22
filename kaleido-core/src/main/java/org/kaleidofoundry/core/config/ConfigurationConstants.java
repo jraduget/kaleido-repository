@@ -19,13 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Configuration Constants
+ * Configuration package constants
  * 
  * @author Jerome RADUGET
  */
 public interface ConfigurationConstants {
 
-   /** Logger */
+   /** Common configuration Logger */
    Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
 
    /**

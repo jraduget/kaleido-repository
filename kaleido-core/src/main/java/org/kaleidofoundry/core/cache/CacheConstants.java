@@ -36,7 +36,7 @@ public interface CacheConstants {
 	infinispan4x,
 	coherence3x,
 	gigaspace7x,
-	localCache;
+	local;
    }
 
    /** Java system environment variable to set default cache provider to use */
@@ -49,10 +49,10 @@ public interface CacheConstants {
    String CachePluginName = "cache";
 
    /** Default local cache manager implementation declare plugin name */
-   String DefaultLocalCacheManagerPluginName = "cacheManager.localCache";
+   String DefaultLocalCacheManagerPluginName = "cacheManager.local";
 
    /** Default local cache implementation declare plugin name */
-   String DefaultLocalCachePluginName = "cache.localCache";
+   String DefaultLocalCachePluginName = "cache.local";
 
    /** EhCache cache manager implementation declare plugin name */
    String EhCacheManagerPluginName = "cacheManager.ehCache1x";

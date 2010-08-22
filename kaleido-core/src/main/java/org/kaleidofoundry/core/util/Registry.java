@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 
 /**
@@ -70,6 +71,33 @@ public class Registry<K, T> extends ConcurrentHashMap<K, T> implements Concurren
    @Override
    public Collection<T> values() {
 	return Collections.unmodifiableCollection(super.values());
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see java.util.concurrent.ConcurrentHashMap#get(java.lang.Object)
+    */
+   @Override
+   public T get(@NotNull final Object key) {
+	return super.get(key);
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see java.util.concurrent.ConcurrentHashMap#put(java.lang.Object, java.lang.Object)
+    */
+   @Override
+   public T put(@NotNull final K key, @NotNull final T value) {
+	return super.put(key, value);
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see java.util.concurrent.ConcurrentHashMap#remove(java.lang.Object)
+    */
+   @Override
+   public T remove(@NotNull final Object key) {
+	return super.remove(key);
    }
 
 }

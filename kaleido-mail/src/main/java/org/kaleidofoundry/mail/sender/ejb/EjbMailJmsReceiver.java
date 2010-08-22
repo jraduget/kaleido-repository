@@ -40,7 +40,7 @@ import javax.rmi.PortableRemoteObject;
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.kaleidofoundry.mail.MailMessage;
 import org.kaleidofoundry.mail.session.MailSessionException;
@@ -105,9 +105,9 @@ public class EjbMailJmsReceiver implements MessageDrivenBean, MessageListener {
 
 	try {
 	   // Recherche et chargement de la configuration
-	   config = ConfigurationFactory.provideConfiguration("ejbMailJmsReceiver", ConfigurationName, new RuntimeContext<Configuration>());
+	   config = ConfigurationFactory.provides("ejbMailJmsReceiver", ConfigurationName, new RuntimeContext<Configuration>());
 	   config.load();
-	} catch (final StoreException cfe) {
+	} catch (final ResourceException cfe) {
 	   logger.warn(cfe.getMessage() + ". The default configuration will be used.");
 	}
 

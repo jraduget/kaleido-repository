@@ -27,7 +27,7 @@ public class CoherenceCacheManagerTest extends AbstractTestCacheManager {
 
    @Override
    protected String getAvailableConfiguration() {
-	return "cache/coherence-cache-config.xml";
+	return "classpath:/cache/coherence-cache-config.xml";
    }
 
    @Override
@@ -37,7 +37,7 @@ public class CoherenceCacheManagerTest extends AbstractTestCacheManager {
 
    @Override
    protected RuntimeContext<CacheManager> getCacheManagerContext() {
-	return new RuntimeContext<CacheManager>();
+	return new RuntimeContext<CacheManager>(CacheManager.class);
    }
 
 }

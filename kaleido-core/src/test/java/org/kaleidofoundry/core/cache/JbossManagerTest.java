@@ -28,7 +28,7 @@ public class JbossManagerTest extends AbstractTestCacheManager {
 
    @Override
    protected String getAvailableConfiguration() {
-	return "cache/jboss-local.xml";
+	return "classpath:/cache/jboss-local.xml";
    }
 
    @Override
@@ -38,6 +38,6 @@ public class JbossManagerTest extends AbstractTestCacheManager {
 
    @Override
    protected RuntimeContext<CacheManager> getCacheManagerContext() {
-	return new RuntimeContext<CacheManager>();
+	return new RuntimeContext<CacheManager>(CacheManager.class);
    }
 }

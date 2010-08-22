@@ -20,6 +20,7 @@ import static org.kaleidofoundry.core.store.ResourceStoreConstants.ResourceStore
 import java.net.URI;
 import java.net.URL;
 
+import org.kaleidofoundry.core.context.Provider;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Stateless;
 import org.kaleidofoundry.core.plugin.Declare;
@@ -45,6 +46,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  */
 @Stateless
 @Declare(ResourceStorePluginName)
+@Provider(ResourceStoreProvider.class)
 public interface ResourceStore extends Store<URI, ResourceHandler> {
 
    /**
@@ -53,11 +55,11 @@ public interface ResourceStore extends Store<URI, ResourceHandler> {
     * @param resourceUri resource binding informations to access the resource<br/>
     * @return resource input stream to get its content
     * @throws ResourceNotFoundException if resource can't be found, instead of returning null
-    * @throws StoreException other kind of error
+    * @throws ResourceException other kind of error
     */
    @Override
    @NotNull
-   ResourceHandler get(@NotNull URI resourceUri) throws StoreException;
+   ResourceHandler get(@NotNull URI resourceUri) throws ResourceException;
 
    /**
     * store updates on current R instance<br/>
@@ -66,11 +68,11 @@ public interface ResourceStore extends Store<URI, ResourceHandler> {
     * @param resource resource input stream to store
     * @return current instance of the store
     * @throws ResourceNotFoundException if resource can't be found, instead of returning null
-    * @throws StoreException other kind of error
+    * @throws ResourceException other kind of error
     */
    @Override
    @NotNull
-   ResourceStore store(@NotNull URI resourceUri, @NotNull ResourceHandler resource) throws StoreException;
+   ResourceStore store(@NotNull URI resourceUri, @NotNull ResourceHandler resource) throws ResourceException;
 
    /**
     * remove resource identify by its resource binding
@@ -78,29 +80,29 @@ public interface ResourceStore extends Store<URI, ResourceHandler> {
     * @param resourceUri resource binding which have to be removed
     * @return current instance of the store
     * @throws ResourceNotFoundException if resource can't be found for the uri
-    * @throws StoreException other kind of error
+    * @throws ResourceException other kind of error
     */
    @Override
    @NotNull
-   ResourceStore remove(@NotNull URI resourceUri) throws StoreException;
+   ResourceStore remove(@NotNull URI resourceUri) throws ResourceException;
 
    /**
     * @param resourceUri
     * @return does the resource exists <code>true / false</code>
-    * @throws StoreException other kind of error
+    * @throws ResourceException other kind of error
     */
    @Override
-   boolean exists(@NotNull URI resourceUri) throws StoreException;
+   boolean exists(@NotNull URI resourceUri) throws ResourceException;
 
    /**
     * @param origin uri of the original resource
     * @param destination uri of the destination resource
     * @return current instance of the store
     * @throws ResourceNotFoundException
-    * @throws StoreException
+    * @throws ResourceException
     */
    @NotNull
-   ResourceStore move(@NotNull URI origin, @NotNull URI destination) throws StoreException;
+   ResourceStore move(@NotNull URI origin, @NotNull URI destination) throws ResourceException;
 
    /**
     * check uri validity for the current store

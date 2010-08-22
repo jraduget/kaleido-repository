@@ -48,7 +48,7 @@ public class SingleResourceStore extends AbstractSingleStore<URI, ResourceHandle
     * @see org.kaleidofoundry.core.store.AbstractSingleStore#doLoad()
     */
    @Override
-   protected ResourceHandler doGet() throws StoreException {
+   protected ResourceHandler doGet() throws ResourceException {
 	resourceHandler = resourceStore.get(getResourceBinding());
 	return resourceHandler;
    }
@@ -58,7 +58,7 @@ public class SingleResourceStore extends AbstractSingleStore<URI, ResourceHandle
     * @see org.kaleidofoundry.core.store.AbstractSingleStore#doStore()
     */
    @Override
-   protected ResourceHandler doStore() throws StoreException {
+   protected ResourceHandler doStore() throws ResourceException {
 	resourceStore.store(getResourceBinding(), resourceHandler);
 	return resourceHandler;
    }
@@ -68,9 +68,11 @@ public class SingleResourceStore extends AbstractSingleStore<URI, ResourceHandle
     * @see org.kaleidofoundry.core.store.AbstractSingleStore#doUnload()
     */
    @Override
-   protected void doUnload() throws StoreException {
-	resourceHandler.release();
-	resourceHandler = null;
+   protected void doUnload() throws ResourceException {
+	if (resourceHandler != null) {
+	   resourceHandler.release();
+	   resourceHandler = null;
+	}
    }
 
    /*

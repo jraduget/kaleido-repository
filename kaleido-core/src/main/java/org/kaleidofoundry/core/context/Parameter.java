@@ -16,9 +16,11 @@
 package org.kaleidofoundry.core.context;
 
 /**
- * Static parameter that can be join to a {@link InjectContext}. <br/>
+ * Static parameter that can be join to a {@link InjectContext}, in order to inject it to {@link RuntimeContext} <br/>
  * <br/>
- * It represents a static parameter, that could no be changed at runtime, but which will be provide to the underling instance
+ * It represents a static parameter, that could no be changed after {@link RuntimeContext} injection. <br/>
+ * <br/>
+ * By this way underling instance using {@link RuntimeContext} will be able to use this static parameter
  * 
  * @author Jerome RADUGET
  */

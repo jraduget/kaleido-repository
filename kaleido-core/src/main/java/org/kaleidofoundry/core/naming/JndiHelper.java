@@ -24,6 +24,9 @@ import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
+import org.kaleidofoundry.core.lang.annotation.Reviews;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -74,8 +77,6 @@ public abstract class JndiHelper {
 	}
    }
 
-   // TODO lookup local ?
-
    /**
     * @param initialContext InitialContext à utiliser pour se connecter en Jndi
     * @param jndiName Nom jndi de l'objet distant
@@ -85,7 +86,8 @@ public abstract class JndiHelper {
     * @throws JndiResourceException
     */
    @SuppressWarnings("unchecked")
-   // TODO rename lookupRemote ! and replace Context by JndiContext
+   @Reviews(reviews = { @Review(comment = "rename lookupRemote ! and replace Context by JndiContext", category = ReviewCategoryEnum.Todo),
+	   @Review(comment = "create new method lookup local ?", category = ReviewCategoryEnum.Todo) })
    public static <T> T lookup(final @NotNull Context initialContext, final @NotNull String jndiName, final @NotNull Class<T> jndiRessourceClass)
 	   throws JndiResourceException {
 	Object obj = null;

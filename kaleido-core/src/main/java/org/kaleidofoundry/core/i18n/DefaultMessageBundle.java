@@ -61,14 +61,14 @@ public class DefaultMessageBundle extends ResourceBundle implements I18nMessages
    private final String resourceName;
    private ResourceBundle parent;
 
-   private final RuntimeContext<DefaultMessageBundle> context;
+   private final RuntimeContext<I18nMessages> context;
 
    /**
     * @param resourceName
     * @param properties
     */
    public DefaultMessageBundle(final String resourceName, final Properties properties) {
-	this(resourceName, properties, new RuntimeContext<DefaultMessageBundle>());
+	this(resourceName, properties, new RuntimeContext<I18nMessages>(I18nMessages.class));
    }
 
    /**
@@ -76,26 +76,26 @@ public class DefaultMessageBundle extends ResourceBundle implements I18nMessages
     * @param properties
     * @param runtimeContext
     */
-   public DefaultMessageBundle(final String resourceName, final Properties properties, final RuntimeContext<DefaultMessageBundle> runtimeContext) {
+   public DefaultMessageBundle(final String resourceName, final Properties properties, final RuntimeContext<I18nMessages> runtimeContext) {
 
 	this.context = runtimeContext;
 
 	// internal kaleidofoundry resource bundle, does not use internal cache
 	if (InternalBundleEnum.isInternalBundle(resourceName)) {
-	   LOGGER.debug("create message bundle (without cache) for '{}'", resourceName);
+	   LOGGER.debug("Create message bundle (without cache) for '{}'", resourceName);
 	   resourceBundleNoCache = properties;
 	   resourceBundleCache = null;
 	}
 	// user resource bundle, does use internal cache
 	else {
-	   LOGGER.debug("create message bundle (with cacheManager) for '{}'", resourceName);
+	   LOGGER.debug("Create message bundle (with cacheManager) for '{}'", resourceName);
 	   final CacheManager cacheManager;
 	   final String cacheManagerContextRef = context.getProperty(ContextProperty.cacheManagerRef.name());
 
 	   if (!StringHelper.isEmpty(cacheManagerContextRef)) {
-		cacheManager = CacheFactory.getCacheManager(new RuntimeContext<CacheManager>(cacheManagerContextRef, context));
+		cacheManager = CacheFactory.provides(new RuntimeContext<CacheManager>(cacheManagerContextRef, context));
 	   } else {
-		cacheManager = CacheFactory.getCacheManager();
+		cacheManager = CacheFactory.provides();
 	   }
 	   resourceBundleCache = cacheManager.getCache("kaleidofoundry/messageBundle/" + resourceName);
 	   resourceBundleNoCache = null;

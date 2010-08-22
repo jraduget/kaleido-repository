@@ -81,7 +81,7 @@ public class RegExpSample extends Assert {
 
 	   try {
 		MainUriPattern = Pattern.compile(mainUriRegExp());
-	   } catch (PatternSyntaxException pse) {
+	   } catch (final PatternSyntaxException pse) {
 		LOGGER.error("illegal main uri regExp: {}", mainUriRegExp());
 		throw pse;
 	   }
@@ -95,7 +95,6 @@ public class RegExpSample extends Assert {
 	ResourceUriEnum(final String regExp) {
 
 	   final Map<String, String> WORDS = new HashMap<String, String>();
-	   // TODO - legal word for a file or path / file / host ....
 	   WORDS.put("PATH", ".+");
 	   WORDS.put("FILENAME", ".+");
 	   WORDS.put("RESOURCEID", ".+");
@@ -103,7 +102,7 @@ public class RegExpSample extends Assert {
 
 	   String mergeRegExp = regExp;
 
-	   for (Entry<String, String> entry : WORDS.entrySet()) {
+	   for (final Entry<String, String> entry : WORDS.entrySet()) {
 		mergeRegExp = mergeRegExp.replace(entry.getKey(), WORDS.get(entry.getKey()));
 	   }
 
@@ -111,7 +110,7 @@ public class RegExpSample extends Assert {
 
 	   try {
 		pattern = Pattern.compile(mergeRegExp);
-	   } catch (PatternSyntaxException pse) {
+	   } catch (final PatternSyntaxException pse) {
 		LOGGER.error("illegal local uri regExp: {}", mergeRegExp);
 		throw pse;
 	   }
@@ -128,8 +127,8 @@ public class RegExpSample extends Assert {
 	 * @return main regExp used to identify the type (classpath,file,...) of an uri
 	 */
 	private static String mainUriRegExp() {
-	   StringBuilder str = new StringBuilder();
-	   ResourceUriEnum[] values = ResourceUriEnum.values();
+	   final StringBuilder str = new StringBuilder();
+	   final ResourceUriEnum[] values = ResourceUriEnum.values();
 	   str.append("(");
 	   for (int i = 0; i < values.length - 1; i++) {
 		str.append(values[i]).append("|");
@@ -149,18 +148,18 @@ public class RegExpSample extends Assert {
 
 	   if (StringHelper.isEmpty(uri)) { return null; }
 
-	   Matcher mainMatcher = MainUriPattern.matcher(uri);
+	   final Matcher mainMatcher = MainUriPattern.matcher(uri);
 
 	   LOGGER.debug("\nmatching uri: {} \nwith regExp: {}", new Object[] { uri, mainUriRegExp() });
 
 	   if (mainMatcher.find() && mainMatcher.groupCount() >= 2) {
 
-		String strType = mainMatcher.group(1); // extract bindind type
-		String localUri = mainMatcher.group(2); // extract the rest of the uri
+		final String strType = mainMatcher.group(1); // extract bindind type
+		final String localUri = mainMatcher.group(2); // extract the rest of the uri
 
 		ResourceBean bean = null;
-		ResourceUriEnum type = ResourceUriEnum.valueOf(strType);
-		Matcher localMatcher = type.getPattern().matcher(localUri); // create matcher for rest of uri
+		final ResourceUriEnum type = ResourceUriEnum.valueOf(strType);
+		final Matcher localMatcher = type.getPattern().matcher(localUri); // create matcher for rest of uri
 
 		if (localMatcher.find()) {
 		   if (LOGGER.isDebugEnabled()) {
@@ -266,7 +265,7 @@ public class RegExpSample extends Assert {
 	   if (this == obj) { return true; }
 	   if (obj == null) { return false; }
 	   if (!(obj instanceof ResourceBean)) { return false; }
-	   ResourceBean other = (ResourceBean) obj;
+	   final ResourceBean other = (ResourceBean) obj;
 	   if (name == null) {
 		if (other.name != null) { return false; }
 	   } else if (!name.equals(other.name)) { return false; }
@@ -284,7 +283,7 @@ public class RegExpSample extends Assert {
    // ** test part ****************************************************************************************************
    @Test
    public void parseIllegal() {
-	Map<String, ResourceBean> illegalTests = new LinkedHashMap<String, ResourceBean>();
+	final Map<String, ResourceBean> illegalTests = new LinkedHashMap<String, ResourceBean>();
 
 	illegalTests.put("unknown", null);
 	illegalTests.put("unknown:/", null);
@@ -295,7 +294,7 @@ public class RegExpSample extends Assert {
 
    @Test
    public void parseIllegalClasspath() {
-	Map<String, ResourceBean> illegalTests = new LinkedHashMap<String, ResourceBean>();
+	final Map<String, ResourceBean> illegalTests = new LinkedHashMap<String, ResourceBean>();
 
 	illegalTests.put("classpath", null);
 	illegalTests.put("classpath:/", null);
@@ -306,7 +305,7 @@ public class RegExpSample extends Assert {
 
    @Test
    public void parseLegalClasspath() {
-	Map<String, ResourceBean> legalTests = new LinkedHashMap<String, ResourceBean>();
+	final Map<String, ResourceBean> legalTests = new LinkedHashMap<String, ResourceBean>();
 
 	legalTests.put("classpath:/context", new ResourceBean(ResourceUriEnum.classpath, null, "context"));
 	legalTests.put("classpath:/context.xml", new ResourceBean(ResourceUriEnum.classpath, null, "context.xml"));
@@ -318,7 +317,7 @@ public class RegExpSample extends Assert {
 
    @Test
    public void parseLegalFile() {
-	Map<String, ResourceBean> legalTests = new LinkedHashMap<String, ResourceBean>();
+	final Map<String, ResourceBean> legalTests = new LinkedHashMap<String, ResourceBean>();
 
 	legalTests.put("file:/c:/context", new ResourceBean(ResourceUriEnum.file, "c:", "context"));
 	legalTests.put("file:/c:/context.xml", new ResourceBean(ResourceUriEnum.file, "c:", "context.xml"));
@@ -335,8 +334,8 @@ public class RegExpSample extends Assert {
     */
    void assertLegal(final Map<String, ResourceBean> legalTests) {
 
-	for (Entry<String, ResourceBean> entry : legalTests.entrySet()) {
-	   ResourceBean bean = ResourceBean.parse(entry.getKey());
+	for (final Entry<String, ResourceBean> entry : legalTests.entrySet()) {
+	   final ResourceBean bean = ResourceBean.parse(entry.getKey());
 	   assertNotNull("assertion error for: " + entry.getKey(), bean);
 	   assertEquals("assertion error for: " + entry.getKey(), entry.getValue(), bean);
 	   LOGGER.debug(StringHelper.replicate("*", 120));
@@ -350,8 +349,8 @@ public class RegExpSample extends Assert {
     */
    void assertIllegal(final Map<String, ResourceBean> illegalTests) {
 
-	for (Entry<String, ResourceBean> entry : illegalTests.entrySet()) {
-	   ResourceBean bean = ResourceBean.parse(entry.getKey());
+	for (final Entry<String, ResourceBean> entry : illegalTests.entrySet()) {
+	   final ResourceBean bean = ResourceBean.parse(entry.getKey());
 	   if (entry.getValue() == null) {
 		assertNull("assertion error for: " + entry.getKey(), bean);
 	   } else {

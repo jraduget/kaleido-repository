@@ -201,7 +201,7 @@ public abstract class AbstractTestCache extends Assert {
    }
 
    /**
-    * TODO for queryable cache
+    * for cache that could be query
     * 
     * @throws ParseException
     */
@@ -212,7 +212,7 @@ public abstract class AbstractTestCache extends Assert {
 	int idPerson = 1;
 	Adress mainAdress;
 	Person person;
-	DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+	final DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 
 	mainAdress = new Adress("2 RUE SAINT MARTIN", "ETAGE 3", "75008", "PARIS");
 	person = new Person(idPerson++, "Dupond", "Paul", df.parse("1958/06/28"), mainAdress).addAdress(mainAdress).addAdress(
@@ -275,7 +275,6 @@ public abstract class AbstractTestCache extends Assert {
 	 * org.infinispan.Cache infiniCache = ((Infinispan4xCacheImpl)cache).getInfinispanCache();
 	 * // The QueryHelper must be instantiated before putting objects into the cache.
 	 * //QueryHelper qh = new QueryHelper(this.cache, new Properties(), myClassToQuery.class);
-	 * // TODO
 	 * }
 	 */
    }

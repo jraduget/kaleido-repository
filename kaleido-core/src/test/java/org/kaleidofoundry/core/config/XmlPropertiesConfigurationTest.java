@@ -18,21 +18,21 @@ package org.kaleidofoundry.core.config;
 import java.net.URISyntaxException;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * @author Jerome RADUGET
  */
 public class XmlPropertiesConfigurationTest extends AbstractConfigurationTest {
 
-   public XmlPropertiesConfigurationTest() throws StoreException, URISyntaxException {
+   public XmlPropertiesConfigurationTest() throws ResourceException, URISyntaxException {
 	super();
    }
 
    @Override
-   protected Configuration newInstance() throws StoreException, URISyntaxException {
+   protected Configuration newInstance() throws ResourceException, URISyntaxException {
 	return new XmlPropertiesConfiguration("propXmlCpConfig", "classpath:/org/kaleidofoundry/core/config/test.properties.xml",
-		new RuntimeContext<org.kaleidofoundry.core.config.Configuration>());
+		new RuntimeContext<org.kaleidofoundry.core.config.Configuration>(Configuration.class));
    }
 
 }

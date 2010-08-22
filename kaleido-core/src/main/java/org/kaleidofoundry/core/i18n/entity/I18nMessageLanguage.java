@@ -36,6 +36,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.kaleidofoundry.core.i18n.entity.I18nMessageConstants.Query_MessagesByLocale;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.lang.annotation.Review;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -46,6 +47,7 @@ import org.kaleidofoundry.core.util.StringHelper;
 @Entity
 @Table(name = Table_I18nMessageLanguage, uniqueConstraints = { @UniqueConstraint(columnNames = { "MESSAGE_ID", "LOCALE" }) })
 @NamedQueries( { @NamedQuery(name = Query_MessagesByLocale.Name, query = Query_MessagesByLocale.Jql) })
+@Review(comment = "Audit information (locale zone for the date, user information...)")
 public class I18nMessageLanguage implements Serializable {
 
    private static final long serialVersionUID = -212656122786380270L;
@@ -64,8 +66,6 @@ public class I18nMessageLanguage implements Serializable {
    private Locale locale;
    private String isoLanguage;
    private String content;
-
-   // TODO Audit information (locale zone for the date, user information...)
 
    public I18nMessageLanguage() {
    }

@@ -34,11 +34,11 @@ public class FileSystemResourceStoreTest extends AbstractResourceStoreTest {
    @Override
    public void setup() throws Throwable {
 	super.setup();
-	resourceStore = new FileSystemResourceStore(new RuntimeContext<ResourceStore>());
+	resourceStore = new FileSystemResourceStore(new RuntimeContext<ResourceStore>(ResourceStore.class));
 
 	// create temp file to test
-	File tmpFile = File.createTempFile("kaleidofoundry-", ".test");
-	FileWriter fout = new FileWriter(tmpFile);
+	final File tmpFile = File.createTempFile("kaleidofoundry-", ".test");
+	final FileWriter fout = new FileWriter(tmpFile);
 	fout.append(DEFAULT_RESOURCE_MOCK_TEST);
 	fout.flush();
 

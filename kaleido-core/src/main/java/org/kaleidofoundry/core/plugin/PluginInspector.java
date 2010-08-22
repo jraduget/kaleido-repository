@@ -37,11 +37,15 @@ import org.kaleidofoundry.core.plugin.processor.PluginAnnotationProcessor;
 import org.kaleidofoundry.core.system.JavaSystemHelper;
 import org.kaleidofoundry.core.util.ReflectionHelper;
 import org.kaleidofoundry.core.util.StringHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jerome RADUGET
  */
 public class PluginInspector {
+
+   private static final Logger LOGGER = LoggerFactory.getLogger(PluginInspector.class);
 
    private final Set<Plugin<?>> pluginsSet;
    private final Set<Plugin<?>> pluginImplsSet;
@@ -237,11 +241,17 @@ public class PluginInspector {
 			line = buffReader.readLine();
 			while (line != null) {
 			   try {
-				echoMessages.add(PluginMessageBundle.getMessage("plugin.info.visitor.resource.processing", "class", line));
 				pluginImplsSet.add(inspectPluginImpl(Class.forName(line.trim())));
+				echoMessages.add(PluginMessageBundle.getMessage("plugin.info.visitor.resource.processing", "class", line));
 				line = buffReader.readLine();
 			   } catch (final ClassNotFoundException cnfe) {
 				throw new PluginRegistryException("plugin.error.load.classnotfound", cnfe, pluginImplementationMetaInfPath, line);
+			   } catch (final LinkageError ncfe) {
+				if (LOGGER.isDebugEnabled()) {
+				   echoMessages.add(PluginMessageBundle.getMessage("plugin.info.visitor.resource.linkageError", "class", line, ncfe.getMessage()));
+				}
+				// next plugin
+				line = buffReader.readLine();
 			   }
 			}
 		   } finally {
@@ -295,9 +305,9 @@ public class PluginInspector {
     * <ul>
     * <li>1. check that plugin annotated interface is right an interface and right {@link Declare} annotated
     * <li>2. check that plugin implementation is right an concrete class and right {@link Declare} annotated
-    * <li>3. check the uniqueness name for @DeclarePlugin("name") plugin interface usage</li>
-    * <li>4. check the uniqueness name for @DeclarePlugin("name") plugin implementation class usage</li>
-    * <li>5. implementation class annotated by @DeclarePlugin have to implements one interface @Declare annotated</li>
+    * <li>3. check the uniqueness name for {@link Declare}("name") plugin interface usage</li>
+    * <li>4. check the uniqueness name for {@link Declare}("name") plugin implementation class usage</li>
+    * <li>5. implementation class annotated by {@link Declare} have to implements one interface {@link Declare} annotated</li>
     * </ul>
     * 
     * @return set of errors (i18n exception instances, code + message)

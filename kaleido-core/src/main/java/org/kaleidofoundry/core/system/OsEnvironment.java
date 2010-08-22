@@ -107,7 +107,7 @@ public class OsEnvironment extends Properties {
     * @see java.util.Properties#getProperty(java.lang.String)
     */
    @Override
-   public String getProperty(final String key) {
+   public synchronized String getProperty(final String key) {
 	final String envVarName = key.replaceAll("[.]", "_").toUpperCase();
 	return super.getProperty(envVarName);
    }

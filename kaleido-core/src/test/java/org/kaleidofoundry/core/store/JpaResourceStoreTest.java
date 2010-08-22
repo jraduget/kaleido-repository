@@ -56,7 +56,7 @@ public class JpaResourceStoreTest extends AbstractResourceStoreTest {
 	   transaction.begin();
 
 	   // create mocked entity test
-	   ResourceStoreEntity entity = new ResourceStoreEntity();
+	   final ResourceStoreEntity entity = new ResourceStoreEntity();
 	   entity.setUri(new URI("jpa://tmp/foo.txt").toString());
 	   entity.setName("/tmp/foo.txt");
 	   entity.setPath("/tmp/foo.txt");
@@ -69,9 +69,9 @@ public class JpaResourceStoreTest extends AbstractResourceStoreTest {
 	   nonExistingResources.add(new URI("jpa:/foo"));
 
 	   // resource store creation
-	   resourceStore = new JpaResourceStore(new RuntimeContext<ResourceStore>());
+	   resourceStore = new JpaResourceStore(new RuntimeContext<ResourceStore>(ResourceStore.class));
 
-	} catch (RuntimeException rte) {
+	} catch (final RuntimeException rte) {
 	   LOGGER.error("setup error", rte);
 	   throw rte;
 	}

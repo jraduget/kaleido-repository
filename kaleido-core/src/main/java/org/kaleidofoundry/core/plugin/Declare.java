@@ -21,6 +21,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.kaleidofoundry.core.context.RuntimeContext;
+
 /**
  * Annotate your interface or implementation class with {@link Declare} if you want to registered it in plugin
  * repository. <br/>
@@ -38,24 +40,20 @@ import java.lang.annotation.Target;
 public @interface Declare {
 
    /**
-    * @return unique name of the declared "plugin"
+    * @return unique name of the declared plugin
+    * @see RuntimeContext#getPrefixProperty() plugin name will be used as a configuration prefix for runtime context
     */
    String value();
 
    /**
-    * @return use case description of the declared "plugin"
+    * @return use case description of the declared plugin
     */
    String description() default "";
 
    /**
-    * @return current version of the declared "plugin"
+    * @return current version of the declared plugin
     */
    String version() default "";
-
-   /**
-    * @return does plugin implementation have to be a singleton
-    */
-   boolean singleton() default false;
 
    /**
     * @return active or disable the plugin usage

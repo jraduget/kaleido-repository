@@ -55,7 +55,7 @@ public class WebappResourceStore extends AbstractResourceStore implements Resour
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doLoad(java.net.URI)
     */
    @Override
-   protected ResourceHandler doGet(final URI resourceUri) throws StoreException {
+   protected ResourceHandler doGet(final URI resourceUri) throws ResourceException {
 	String localName = FileHelper.buildCustomPath(resourceUri.getPath(), FileHelper.WEBAPP_SEPARATOR);
 	InputStream input = ServletContextProvider.getServletContext().getResourceAsStream(localName);
 
@@ -71,7 +71,7 @@ public class WebappResourceStore extends AbstractResourceStore implements Resour
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doRemove(java.net.URI)
     */
    @Override
-   protected void doRemove(final URI resourceUri) throws StoreException {
+   protected void doRemove(final URI resourceUri) throws ResourceException {
 	throw new IllegalStateException("Can't remove a resource from webapp classpath. WebappResourceStore is for a readonly use");
    }
 
@@ -81,7 +81,7 @@ public class WebappResourceStore extends AbstractResourceStore implements Resour
     * org.kaleidofoundry.core.store.ResourceHandler)
     */
    @Override
-   protected void doStore(final URI resourceUri, final ResourceHandler resource) throws StoreException {
+   protected void doStore(final URI resourceUri, final ResourceHandler resource) throws ResourceException {
 	throw new IllegalStateException("Can't store a resource from webapp classpath. WebappResourceStore is for a readonly use");
    }
 

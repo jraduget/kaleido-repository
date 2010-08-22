@@ -30,7 +30,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  java.naming.provider.url		localhost:1099
  java.naming.factory.url.pkgs	org.jboss.naming:org.jnp.interfaces
 
- JONAS (RMI OR DAVID)
+ JONAS 
  java.naming.factory.initial		com.sun.jndi.rmi.registry.RegistryContextFactory
  java.naming.provider.url		rmi://localhost:1099
  java.naming.factory.url.pkgs	org.objectweb.jonas.naming

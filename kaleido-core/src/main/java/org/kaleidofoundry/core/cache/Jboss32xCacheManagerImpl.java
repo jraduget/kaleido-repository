@@ -29,6 +29,8 @@ import org.jboss.cache.config.ConfigurationException;
 import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
@@ -40,7 +42,7 @@ import org.slf4j.LoggerFactory;
  * @see CacheFactory
  * @author Jerome RADUGET
  */
-@Declare(value = JbossCacheManagerPluginName, singleton = true)
+@Declare(value = JbossCacheManagerPluginName)
 class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheManager {
 
    /** internal logger */
@@ -64,7 +66,7 @@ class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCac
 	super(configuration, context);
 
 	// test if configuration is legal
-	String initTestCacheName = "__inittest__";
+	final String initTestCacheName = "__inittest__";
 	createCache(initTestCacheName, configuration);
 	destroy(initTestCacheName);
    }
@@ -125,20 +127,21 @@ class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCac
     */
    @Override
    public void destroyAll() {
+	super.destroyAll();
 	for (final String name : cachesByName.keySet()) {
-	   LOGGER.info("Destroying '{}' cache '{}' ...", JbossCacheManagerPluginName, name);
+	   LOGGER.info(CacheMessageBundle.getMessage("cache.destroy.info", getMetaInformations(), name));
 	   destroy(name);
 	}
-	org.kaleidofoundry.core.cache.CacheFactory.CACHEMANAGER_REGISTRY.remove(org.kaleidofoundry.core.cache.CacheFactory.getCacheManagerId(
-		DefaultCacheProviderEnum.jbossCache3x.name(), getCurrentConfiguration()));
+
+	// unregister cache manager instance
+	CacheManagerProvider.getRegistry()
+		.remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.jbossCache3x.name(), getCurrentConfiguration()));
    }
 
    /**
-    * @param cache name
-    * @param configurationUri url to the configuration file of the cache.<br/>
-    *           This file have to be in classpath or on extern file system. If null is specified, default / fail-safe
-    *           cache configuration implementation will be loaded
-    * @return
+    * @param name cache name
+    * @param configurationUri url to the configuration file of the cache.
+    * @return provider cache instance
     */
    protected <K, V> org.jboss.cache.Cache<K, V> createCache(final String name, final String configurationUri) {
 
@@ -174,8 +177,8 @@ class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCac
     * @see org.kaleidofoundry.core.cache.CacheFactory#clearStatistics(java.lang.String)
     */
    @Override
+   @Review(category = ReviewCategoryEnum.Todo)
    public void clearStatistics(final String cacheName) {
-	// TODO clearStatistics for jboss cache
    }
 
    /*
@@ -183,9 +186,8 @@ class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCac
     * @see org.kaleidofoundry.core.cache.CacheFactory#dumpStatistics(java.lang.String)
     */
    @Override
+   @Review(comment = "http://www.redhat.com/docs/manuals/jboss/jboss-eap-4.3/doc/cache/Tree_Cache_Guide/Management_Information-JBoss_Cache_Statistics.html", category = ReviewCategoryEnum.Todo)
    public Map<String, Object> dumpStatistics(final String cacheName) {
-	// TODO dumpStatistics for jboss
-	// http://www.redhat.com/docs/manuals/jboss/jboss-eap-4.3/doc/cache/Tree_Cache_Guide/Management_Information-JBoss_Cache_Statistics.html
 	return new LinkedHashMap<String, Object>();
    }
 

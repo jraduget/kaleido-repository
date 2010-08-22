@@ -31,9 +31,9 @@ import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
 import org.kaleidofoundry.core.plugin.Declare;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.store.SingleResourceStore;
-import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -70,37 +70,35 @@ import org.xml.sax.SAXException;
 @Declare(ConfigurationConstants.XmlConfigurationPluginName)
 public class XmlConfiguration extends AbstractConfiguration implements Configuration {
 
-   // private static final Logger LOGGER = LoggerFactory.getLogger(XmlConfiguration.class);
-
    /**
-    * @param identifier
+    * @param name
     * @param resourceUri
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public XmlConfiguration(final String identifier, final URI resourceUri, final RuntimeContext<Configuration> context) throws StoreException {
-	super(identifier, resourceUri, context);
+   public XmlConfiguration(final String name, final URI resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
+	super(name, resourceUri, context);
    }
 
    /**
-    * @param identifier
+    * @param name
     * @param resourceUri
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public XmlConfiguration(final String identifier, final String resourceUri, final RuntimeContext<Configuration> context) throws StoreException {
-	super(identifier, resourceUri, context);
+   public XmlConfiguration(final String name, final String resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
+	super(name, resourceUri, context);
    }
 
    @Override
-   protected Cache<String, String> loadProperties(final ResourceHandler resourceHandler, final Cache<String, String> properties) throws StoreException,
+   protected Cache<String, String> loadProperties(final ResourceHandler resourceHandler, final Cache<String, String> properties) throws ResourceException,
 	   ConfigurationException {
 
 	try {
-	   DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-	   DocumentBuilder documentBuilder = domFactory.newDocumentBuilder();
-	   Document document = documentBuilder.parse(resourceHandler.getInputStream());
-	   Element root = document.getDocumentElement();
+	   final DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+	   final DocumentBuilder documentBuilder = domFactory.newDocumentBuilder();
+	   final Document document = documentBuilder.parse(resourceHandler.getInputStream());
+	   final Element root = document.getDocumentElement();
 
 	   if (root != null) {
 		feedProperties(root.getChildNodes(), new StringBuilder(), properties);
@@ -108,19 +106,19 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
 
 	   return properties;
 
-	} catch (ParserConfigurationException pce) {
+	} catch (final ParserConfigurationException pce) {
 	   throw new ConfigurationException("config.load.xml.dom.error", pce);
-	} catch (SAXException sae) {
+	} catch (final SAXException sae) {
 	   throw new ConfigurationException("config.load.xml.parsing.error", sae, singleResourceStore.getResourceBinding().toString());
-	} catch (IOException ioe) {
-	   throw new StoreException(ioe);
+	} catch (final IOException ioe) {
+	   throw new ResourceException(ioe);
 	}
    }
 
    @Override
    @NotYetImplemented
-   protected Cache<String, String> storeProperties(final Cache<String, String> cacheProperties, final SingleResourceStore resourceStore) throws StoreException,
-	   ConfigurationException {
+   protected Cache<String, String> storeProperties(final Cache<String, String> cacheProperties, final SingleResourceStore resourceStore)
+	   throws ResourceException, ConfigurationException {
 	return null; // annotation @NotYetImplemented handle throw new NotYetImplementedException()...
    }
 
@@ -133,9 +131,9 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
     */
    protected void feedProperties(final NodeList nodeList, final StringBuilder keyName, final Cache<String, String> properties) {
 	for (int i = 0; i < nodeList.getLength(); i++) {
-	   Node node = nodeList.item(i);
+	   final Node node = nodeList.item(i);
 	   if (node.getNodeType() == Node.ELEMENT_NODE) {
-		StringBuilder newKeyName = new StringBuilder(keyName).append(keyName.length() > 0 ? KeyPropertiesSeparator : "").append(node.getNodeName());
+		final StringBuilder newKeyName = new StringBuilder(keyName).append(keyName.length() > 0 ? KeyPropertiesSeparator : "").append(node.getNodeName());
 		// node without element child, but which containing test
 		if (node.hasChildNodes() && node.getChildNodes().getLength() == 1 && node.getFirstChild().getNodeType() == Node.TEXT_NODE) {
 		   // LOGGER.debug("found key={} , value={}", newKeyName.toString(), node.getTextContent());
@@ -146,7 +144,7 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
 		   // LOGGER.debug("found key={} , value={}", newKeyName.toString(), "");
 		   properties.put(newKeyName.toString(), "");
 		} else {
-		   List<String> multipleValues = nodeMultipleValues(node.getChildNodes());
+		   final List<String> multipleValues = nodeMultipleValues(node.getChildNodes());
 		   // simple element, recursive call, on children nodes
 		   if (multipleValues == null) {
 			feedProperties(node.getChildNodes(), newKeyName, properties);
@@ -162,10 +160,14 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
 	}
    }
 
-   List<String> nodeMultipleValues(final NodeList nodeList) {
+   /**
+    * @param nodeList
+    * @return node multiple values
+    */
+   protected List<String> nodeMultipleValues(final NodeList nodeList) {
 	List<String> result = null;
 	for (int i = 0; i < nodeList.getLength(); i++) {
-	   Node node = nodeList.item(i);
+	   final Node node = nodeList.item(i);
 	   if (node.getNodeType() == Node.ELEMENT_NODE && "value".equals(node.getNodeName())) {
 		if (result == null) {
 		   result = new ArrayList<String>();
@@ -178,5 +180,4 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
 	return result;
    }
 
-   // boolean hasNode(final NodeList nodeList){}
 }

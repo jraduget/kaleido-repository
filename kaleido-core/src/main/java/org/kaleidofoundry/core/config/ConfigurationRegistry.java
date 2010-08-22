@@ -26,7 +26,7 @@ import org.kaleidofoundry.core.plugin.PluginImplementationRegistry;
 import org.kaleidofoundry.core.util.Registry;
 
 /**
- * Registery for all declared {@link Configuration}
+ * Registry for all declared {@link Configuration}
  * 
  * @author Jerome RADUGET
  */

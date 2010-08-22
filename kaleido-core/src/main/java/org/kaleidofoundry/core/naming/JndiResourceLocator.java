@@ -22,6 +22,8 @@ import java.util.Map;
 import javax.naming.Context;
 
 import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
+import org.kaleidofoundry.core.lang.annotation.Reviews;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -34,8 +36,8 @@ import org.kaleidofoundry.core.util.StringHelper;
  * @author Jerome RADUGET
  * @param <T>
  */
-@Review(comment = "Cache lookup resources (not needed from J2EE1.3 ? done server side ?")
-// TODO cache activeable ou non à partir du context jndi true / false :)
+@Reviews(reviews = { @Review(comment = "Cache lookup resources (not needed from J2EE1.3 ? done client side ?", category = ReviewCategoryEnum.Improvement),
+	@Review(comment = "cache activeable ou non ˆ partir du context jndi true / false :) ?", category = ReviewCategoryEnum.Improvement) })
 public class JndiResourceLocator<T> {
 
    private final JndiContext<T> jndiContext;

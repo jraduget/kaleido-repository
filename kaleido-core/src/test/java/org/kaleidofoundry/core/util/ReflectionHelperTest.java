@@ -31,7 +31,7 @@ import java.text.DateFormat;
 import java.util.Map;
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
+import javax.persistence.Column;
 
 import junit.framework.Assert;
 
@@ -140,7 +140,7 @@ public class ReflectionHelperTest extends Assert {
 	assertEquals(3, fields.size());
 
 	// ** 3. test with single modifiers + annotation ***************************
-	fields = getAllDeclaredFields(LocalSecondAncestor.class, NotNull.class, Modifier.PRIVATE);
+	fields = getAllDeclaredFields(LocalSecondAncestor.class, Column.class, Modifier.PRIVATE);
 	assertNotNull(fields);
 	assertEquals(3, fields.size());
    }
@@ -170,7 +170,7 @@ class LocalAncestor implements LocalInterface1, LocalInterface2 {
    private static final long serialVersionUID = 6056399394375997621L;
 
    @SuppressWarnings("unused")
-   @NotNull
+   @Column
    private String privateLocalAncestorField;
    protected String protectedLocalAncestorField;
    public String publicLocalAncestorField;
@@ -192,8 +192,8 @@ class LocalFirstAncestor extends LocalAncestor implements Serializable {
    private static final long serialVersionUID = 6056399394375997622L;
 
    @SuppressWarnings("unused")
-   // @NotNull a runtime annotation to test field filter
-   @NotNull
+   // @Column a runtime annotation to test field filter
+   @Column
    private String privateLocalFirstAncestorField;
    protected String protectedLocalFirstAncestorField;
    public String publicLocalFirstAncestorField;
@@ -213,7 +213,7 @@ class LocalSecondAncestor extends LocalFirstAncestor {
    private static final long serialVersionUID = -4618815239259030789L;
 
    @SuppressWarnings("unused")
-   @NotNull
+   @Column
    private String privateLocalSecondAncestorField;
    protected String protectedLocalSecondAncestorField;
    public String publicLocalSecondAncestorField;

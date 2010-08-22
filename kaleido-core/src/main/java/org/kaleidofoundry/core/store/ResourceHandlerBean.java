@@ -18,6 +18,7 @@ package org.kaleidofoundry.core.store;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 
@@ -57,8 +58,9 @@ public class ResourceHandlerBean implements ResourceHandler {
 	if (input != null) {
 	   try {
 		input.close();
-	   } catch (IOException ioe) {
-		throw new IllegalStateException("can't close inputstream: " + ioe.getMessage(), ioe);
+	   } catch (final IOException ioe) {
+		throw new IllegalStateException(InternalBundleHelper.ResourceStoreMessageBundle.getMessage("store.resource.inputstream.error", ioe.getMessage()),
+			ioe);
 	   }
 	}
    }

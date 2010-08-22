@@ -38,11 +38,14 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import org.kaleidofoundry.core.lang.annotation.Review;
+
 /**
  * @author Jerome RADUGET
  */
 @Entity
 @Table(name = Table_I18nMessage, uniqueConstraints = { @UniqueConstraint(columnNames = { "CODE", "GROUP_CODE" }) })
+@Review(comment = "Audit information (locale zone for the date, user information...)")
 public class I18nMessage implements Serializable {
 
    private static final long serialVersionUID = 1585648396936219771L;
@@ -64,8 +67,6 @@ public class I18nMessage implements Serializable {
    @Column(insertable = false, updatable = true, nullable = true)
    private Date lastUsed;
    private boolean enabled;
-
-   // TODO Audit information (locale zone for the date, user information...)
 
    public I18nMessage() {
 	this(null);

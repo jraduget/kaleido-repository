@@ -16,6 +16,7 @@
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.CoherenceCacheManagerPluginName;
+import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.Classloader;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.CacheMessageBundle;
 
 import java.io.IOException;
@@ -26,6 +27,8 @@ import java.util.Map;
 import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
@@ -45,7 +48,7 @@ import com.tangosol.util.WrapperException;
  * @see CacheFactory
  * @author Jerome RADUGET
  */
-@Declare(value = CoherenceCacheManagerPluginName, singleton = true)
+@Declare(value = CoherenceCacheManagerPluginName)
 class Coherence35xCacheManagerImpl extends AbstractCacheManager {
 
    /** internal logger */
@@ -79,7 +82,7 @@ class Coherence35xCacheManagerImpl extends AbstractCacheManager {
 
 	   try {
 		LOGGER.info(CacheMessageBundle.getMessage("cache.loading.custom", getMetaInformations(), configuration));
-		configurableCacheFactory = new DefaultConfigurableCacheFactory(configuration);
+		configurableCacheFactory = new DefaultConfigurableCacheFactory(singleResourceStore.getResourceBinding().getPath());
 		com.tangosol.net.CacheFactory.setConfigurableCacheFactory(configurableCacheFactory);
 
 	   } catch (final WrapperException wre) {
@@ -158,19 +161,23 @@ class Coherence35xCacheManagerImpl extends AbstractCacheManager {
     */
    @Override
    public void destroyAll() {
+
+	super.destroyAll();
+
 	for (final String name : cachesByName.keySet()) {
-	   LOGGER.info("Destroying '{}' cache '{}' ...", CoherenceCacheManagerPluginName, name);
+	   LOGGER.info(CacheMessageBundle.getMessage("cache.destroy.info", getMetaInformations(), name));
 	   destroy(name);
 	}
 	com.tangosol.net.CacheFactory.shutdown();
-	org.kaleidofoundry.core.cache.CacheFactory.CACHEMANAGER_REGISTRY.remove(org.kaleidofoundry.core.cache.CacheFactory.getCacheManagerId(
-		DefaultCacheProviderEnum.coherence3x.name(), getCurrentConfiguration()));
+
+	// unregister cacheManager
+	CacheManagerProvider.getRegistry().remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.coherence3x.name(), getCurrentConfiguration()));
    }
 
    /**
     * @param name
     * @param configuration
-    * @return
+    * @return cache provider
     */
    protected NamedCache createCache(final String name, final String configuration) {
 
@@ -178,11 +185,11 @@ class Coherence35xCacheManagerImpl extends AbstractCacheManager {
 
 	try {
 
-	   if (!StringHelper.isEmpty(context.getProperty(ContextProperty.classloader.name()))) {
+	   if (!StringHelper.isEmpty(context.getProperty(Classloader))) {
 		try {
-		   return CacheFactory.getCache(name, Class.forName(ContextProperty.classloader.name()).getClassLoader());
-		} catch (ClassNotFoundException cnfe) {
-		   throw new CacheConfigurationException("cache.classloader.notfound", cnfe, context.getProperty(ContextProperty.classloader.name()));
+		   return CacheFactory.getCache(name, Class.forName(Classloader).getClassLoader());
+		} catch (final ClassNotFoundException cnfe) {
+		   throw new CacheConfigurationException("cache.classloader.notfound", cnfe, context.getProperty(Classloader));
 		}
 	   } else {
 		return com.tangosol.net.CacheFactory.getCache(name);
@@ -198,8 +205,8 @@ class Coherence35xCacheManagerImpl extends AbstractCacheManager {
     * @see org.kaleidofoundry.core.cache.CacheFactory#clearStatistics(java.lang.String)
     */
    @Override
+   @Review(category = ReviewCategoryEnum.Todo)
    public void clearStatistics(final String cacheName) {
-	// TODO clearStatistics for coherence
    }
 
    /*
@@ -207,8 +214,8 @@ class Coherence35xCacheManagerImpl extends AbstractCacheManager {
     * @see org.kaleidofoundry.core.cache.CacheFactory#dumpStatistics(java.lang.String)
     */
    @Override
+   @Review(category = ReviewCategoryEnum.Todo)
    public Map<String, Object> dumpStatistics(final String cacheName) {
-	// TODO dumpStatistics for coherence
 	return new LinkedHashMap<String, Object>();
    }
 }

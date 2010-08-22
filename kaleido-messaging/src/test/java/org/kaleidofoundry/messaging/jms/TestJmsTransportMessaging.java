@@ -51,7 +51,7 @@ public class TestJmsTransportMessaging {
 	// Reliable config test
 	// **********************
 	// search and load config for reliable transport
-	jmsConfig = ConfigurationFactory.provideConfiguration("jmsTransport", JmsConfigPath, new RuntimeContext<Configuration>());
+	jmsConfig = ConfigurationFactory.provides("jmsTransport", JmsConfigPath, new RuntimeContext<Configuration>());
 	jmsConfig.load();
 	// context config for transport
 	jmsTransportContext = new TransportMessagingContext(JmsTransportConfigKey, jmsConfig);

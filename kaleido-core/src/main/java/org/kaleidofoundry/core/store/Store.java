@@ -28,10 +28,10 @@ import org.kaleidofoundry.core.lang.annotation.Stateless;
  * Resource store manager interface (stateless store), used to handle persistence R instances, identify by its
  * resourceBinding B :
  * <ul>
- * <li>load
- * <li>exists
- * <li>store
- * <li>remove
+ * <li>{@link #get(Object)}
+ * <li>{@link #exists(Object)}
+ * <li>{@link #store(Object, Object)}
+ * <li>{@link #remove(Object)}
  * </ul>
  * a given resource R, is identify by its resource binding (like a path)
  * 
@@ -53,9 +53,9 @@ public interface Store<B, R> {
     *           </p>
     * @return bind resource or null if not exists
     * @throws ResourceNotFoundException if resource can't be found
-    * @throws StoreException other kind of error
+    * @throws ResourceException other kind of error
     */
-   R get(B resourceBinding) throws StoreException;
+   R get(B resourceBinding) throws ResourceException;
 
    /**
     * store updates on current R instance<br/>
@@ -64,24 +64,24 @@ public interface Store<B, R> {
     * @param resource resource to store
     * @return current instance of the store
     * @throws ResourceNotFoundException if resource can't be found
-    * @throws StoreException other kind of error
+    * @throws ResourceException other kind of error
     */
-   Store<B, R> store(B resourceBinding, R resource) throws StoreException;
+   Store<B, R> store(B resourceBinding, R resource) throws ResourceException;
 
    /**
     * remove resource identify by its resource binding<br/>
     * 
     * @param resourceBinding resource binding which have to be removed
     * @return current instance of the store
-    * @throws StoreException if resource can't be found or for other kind of error
+    * @throws ResourceException if resource can't be found or for other kind of error
     */
-   Store<B, R> remove(B resourceBinding) throws StoreException;
+   Store<B, R> remove(B resourceBinding) throws ResourceException;
 
    /**
     * @param resourceBinding
     * @return does the resource exists <code>true / false</code>
-    * @throws StoreException other kind of error
+    * @throws ResourceException other kind of error
     */
-   boolean exists(B resourceBinding) throws StoreException;
+   boolean exists(B resourceBinding) throws ResourceException;
 
 }

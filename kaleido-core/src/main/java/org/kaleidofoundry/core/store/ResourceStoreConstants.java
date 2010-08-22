@@ -24,20 +24,20 @@ public interface ResourceStoreConstants {
    String ResourceStorePluginName = "resourceStore";
 
    /** classpath implementation store plugin name */
-   String ClasspathStorePluginName = "classpathStore";
+   String ClasspathStorePluginName = "resourceStore.classpath";
    /** file system implementation store plugin name */
-   String FileSystemStorePluginName = "fileStore";
+   String FileSystemStorePluginName = "resourceStore.file";
    /** http implementation store plugin name */
-   String HttpStorePluginName = "httpStore";
+   String HttpStorePluginName = "resourceStore.http";
    /** ftp implementation store plugin name */
-   String FtpStorePluginName = "ftpStore";
+   String FtpStorePluginName = "resourceStore.ftp";
    /** webapp implementation store plugin name */
-   String WebappStorePluginName = "webappStore";
+   String WebappStorePluginName = "resourceStore.webapp";
    /** jdbc implementation clob store plugin name */
-   String ClobJdbcStorePluginName = "jdbcStore";
+   String ClobJdbcStorePluginName = "resourceStore.jdbc";
    /** jpa implementation clob store plugin name */
-   String ClobJpaStorePluginName = "jpaStore";
+   String ClobJpaStorePluginName = "resourceStore.jpa";
    /** mocked in memory implementation plugin name */
-   String MemoryStorePluginName = "memoryStore";
+   String MemoryStorePluginName = "resourceStore.memory";
 
 }

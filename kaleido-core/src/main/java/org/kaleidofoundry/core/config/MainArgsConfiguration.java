@@ -15,6 +15,9 @@
  */
 package org.kaleidofoundry.core.config;
 
+import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.ArgsMainString;
+import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.ArgsSeparator;
+
 import java.net.URI;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,9 +25,9 @@ import java.util.Map.Entry;
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.plugin.Declare;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.store.SingleResourceStore;
-import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.util.ConverterHelper;
 import org.kaleidofoundry.core.util.StringHelper;
 
@@ -38,60 +41,52 @@ import org.kaleidofoundry.core.util.StringHelper;
 public class MainArgsConfiguration extends AbstractConfiguration implements Configuration {
 
    /**
-    * enumeration of local context property name
-    */
-   public static enum ContextProperty {
-	/** string representation of the main arguments array */
-	argsMainString,
-	/** arguments separator character */
-	argsSeparator;
-   }
-
-   /**
-    * @param identifier
+    * @param name
     * @param resourceUri ignored
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public MainArgsConfiguration(final String identifier, final URI resourceUri, final RuntimeContext<Configuration> context) throws StoreException {
-	super(identifier, URI.create("memory:/internal/" + identifier + ".mainargs"), context);
+   public MainArgsConfiguration(final String name, final URI resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
+	super(name, URI.create("memory:/internal/" + name + ".mainargs"), context);
    }
 
    /**
-    * @param identifier
+    * @param name
     * @param resourceUri
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public MainArgsConfiguration(final String identifier, final String resourceUri, final RuntimeContext<Configuration> context) throws StoreException {
-	super(identifier, "memory:/internal/" + identifier + ".mainargs", context);
+   public MainArgsConfiguration(final String name, final String resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
+	super(name, "memory:/internal/" + name + ".mainargs", context);
    }
 
    /**
-    * @param identifier
+    * @param name
     * @param runtimeContext
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public MainArgsConfiguration(final String identifier, final RuntimeContext<Configuration> runtimeContext) throws StoreException {
-	this(identifier, (String) null, runtimeContext);
+   public MainArgsConfiguration(final String name, final RuntimeContext<Configuration> runtimeContext) throws ResourceException {
+	this(name, (String) null, runtimeContext);
    }
 
    @Override
-   protected Cache<String, String> loadProperties(final ResourceHandler resourceHandler, final Cache<String, String> cacheProperties) throws StoreException,
+   protected Cache<String, String> loadProperties(final ResourceHandler resourceHandler, final Cache<String, String> cacheProperties) throws ResourceException,
 	   ConfigurationException {
 
-	String mainArgs = context.getProperty(ContextProperty.argsMainString.name());
-	String argsSeparator = context.getProperty(ContextProperty.argsSeparator.name());
+	String mainArgs = context.getProperty(ArgsMainString);
+	String argsSeparator = context.getProperty(ArgsSeparator);
 
 	final String[] args = ConverterHelper.stringToArray(mainArgs, argsSeparator != null ? argsSeparator : " ");
 	Map<String, String> argsMap = ConverterHelper.argsToMap(args);
 
-	for (Entry<String, String> entry : argsMap.entrySet()) {
-	   String rawArgValue = entry.getValue();
-	   if (rawArgValue != null && rawArgValue.contains("|")) {
-		cacheProperties.put(entry.getKey(), StringHelper.replaceAll(rawArgValue, "|", " "));
-	   } else {
-		cacheProperties.put(entry.getKey(), StringHelper.replaceAll(rawArgValue != null ? rawArgValue : "", "&nbsp;", " "));
+	if (argsMap != null) {
+	   for (Entry<String, String> entry : argsMap.entrySet()) {
+		String rawArgValue = entry.getValue();
+		if (rawArgValue != null && rawArgValue.contains("|")) {
+		   cacheProperties.put(entry.getKey(), StringHelper.replaceAll(rawArgValue, "|", " "));
+		} else {
+		   cacheProperties.put(entry.getKey(), StringHelper.replaceAll(rawArgValue != null ? rawArgValue : "", "&nbsp;", " "));
+		}
 	   }
 	}
 
@@ -99,8 +94,8 @@ public class MainArgsConfiguration extends AbstractConfiguration implements Conf
    }
 
    @Override
-   protected Cache<String, String> storeProperties(final Cache<String, String> cacheProperties, final SingleResourceStore resourceStore) throws StoreException,
-	   ConfigurationException {
+   protected Cache<String, String> storeProperties(final Cache<String, String> cacheProperties, final SingleResourceStore resourceStore)
+	   throws ResourceException, ConfigurationException {
 	return cacheProperties; // unused code because read only is set to true
    }
 

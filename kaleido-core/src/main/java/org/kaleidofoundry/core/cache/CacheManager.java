@@ -24,6 +24,7 @@ import java.io.Writer;
 import java.util.Map;
 import java.util.Set;
 
+import org.kaleidofoundry.core.context.Provider;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 
@@ -35,7 +36,8 @@ import org.kaleidofoundry.core.plugin.Declare;
  * 
  * @author Jerome RADUGET
  */
-@Declare(value = CacheManagerPluginName, singleton = true)
+@Declare(CacheManagerPluginName)
+@Provider(value = CacheManagerProvider.class, singletons = true)
 public interface CacheManager {
 
    /**

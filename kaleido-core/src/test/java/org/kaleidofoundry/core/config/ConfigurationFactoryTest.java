@@ -18,8 +18,7 @@ package org.kaleidofoundry.core.config;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * @author Jerome RADUGET
@@ -27,46 +26,46 @@ import org.kaleidofoundry.core.store.StoreException;
 public class ConfigurationFactoryTest extends Assert {
 
    @Test
-   public void providePropertiesConfiguration() throws StoreException {
+   public void providePropertiesConfiguration() throws ResourceException {
 
-	String configId = "propCpConfig";
-	String configResourceUri = "classpath:/org/kaleidofoundry/core/config/test.properties";
-	Configuration config = ConfigurationFactory.provideConfiguration(configId, configResourceUri, new RuntimeContext<Configuration>());
+	final String configId = "propCpConfig";
+	final String configResourceUri = "classpath:/org/kaleidofoundry/core/config/test.properties";
+	final Configuration config = ConfigurationFactory.provides(configId, configResourceUri);
 
 	assertNotNull(config);
 	assertEquals(PropertiesConfiguration.class, config.getClass());
-	assertSame(config, ConfigurationFactory.provideConfiguration(configId, configResourceUri, new RuntimeContext<Configuration>()));
+	assertSame(config, ConfigurationFactory.provides(configId, configResourceUri));
 	assertTrue(config.isLoaded());
    }
 
    @Test
-   public void provideXmlPropertiesConfiguration() throws StoreException {
+   public void provideXmlPropertiesConfiguration() throws ResourceException {
 
-	String configId = "propXmlCpConfig";
-	String configResourceUri = "classpath:/org/kaleidofoundry/core/config/test.properties.xml";
-	Configuration config = ConfigurationFactory.provideConfiguration(configId, configResourceUri, new RuntimeContext<Configuration>());
+	final String configId = "propXmlCpConfig";
+	final String configResourceUri = "classpath:/org/kaleidofoundry/core/config/test.properties.xml";
+	final Configuration config = ConfigurationFactory.provides(configId, configResourceUri);
 
 	assertNotNull(config);
 	assertEquals(XmlPropertiesConfiguration.class, config.getClass());
-	assertSame(config, ConfigurationFactory.provideConfiguration(configId, configResourceUri, new RuntimeContext<Configuration>()));
+	assertSame(config, ConfigurationFactory.provides(configId, configResourceUri));
 	assertTrue(config.isLoaded());
    }
 
    @Test
-   public void provideXmlConfiguration() throws StoreException {
+   public void provideXmlConfiguration() throws ResourceException {
 
-	String configId = "xmlCpConfig";
-	String configResourceUri = "classpath:/org/kaleidofoundry/core/config/test.xml";
-	Configuration config = ConfigurationFactory.provideConfiguration(configId, configResourceUri, new RuntimeContext<Configuration>());
+	final String configId = "xmlCpConfig";
+	final String configResourceUri = "classpath:/org/kaleidofoundry/core/config/test.xml";
+	final Configuration config = ConfigurationFactory.provides(configId, configResourceUri);
 
 	assertNotNull(config);
 	assertEquals(XmlConfiguration.class, config.getClass());
-	assertSame(config, ConfigurationFactory.provideConfiguration(configId, configResourceUri, new RuntimeContext<Configuration>()));
+	assertSame(config, ConfigurationFactory.provides(configId, configResourceUri));
 	assertTrue(config.isLoaded());
    }
 
    @Test
-   public void provideJavaSystemConfiguration() throws StoreException {
+   public void provideJavaSystemConfiguration() throws ResourceException {
 
 	System.getProperties().setProperty("application.name", "app");
 	System.getProperties().setProperty("application.description", "description of the application...");
@@ -83,13 +82,13 @@ public class ConfigurationFactoryTest extends Assert {
 	System.getProperties().setProperty("application.single.bigdecimal", "1.123456789");
 	System.getProperties().setProperty("application.array.date", "2009-01-02T00:00:00 2009-12-31T00:00:00 2012-05-15T00:00:00");
 
-	String configId = "javaSystemConfig";
-	String configResourceUri = "memory:/test.javasystem";
-	Configuration config = ConfigurationFactory.provideConfiguration(configId, configResourceUri, new RuntimeContext<Configuration>());
+	final String configId = "javaSystemConfig";
+	final String configResourceUri = "memory:/test.javasystem";
+	final Configuration config = ConfigurationFactory.provides(configId, configResourceUri);
 
 	assertNotNull(config);
 	assertEquals(JavaSystemConfiguration.class, config.getClass());
-	assertSame(config, ConfigurationFactory.provideConfiguration(configId, configResourceUri, new RuntimeContext<Configuration>()));
+	assertSame(config, ConfigurationFactory.provides(configId, configResourceUri));
 	assertTrue(config.isLoaded());
    }
 }

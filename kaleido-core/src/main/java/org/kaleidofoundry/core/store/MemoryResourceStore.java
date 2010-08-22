@@ -45,7 +45,7 @@ public class MemoryResourceStore extends AbstractResourceStore {
    }
 
    @Override
-   protected ResourceHandler doGet(final URI resourceUri) throws StoreException {
+   protected ResourceHandler doGet(final URI resourceUri) throws ResourceException {
 	ResourceHandler rh = memoryResources.get(resourceUri);
 	if (rh == null) {
 	   rh = new ResourceHandlerBean(new ByteArrayInputStream(new byte[0]));
@@ -56,12 +56,12 @@ public class MemoryResourceStore extends AbstractResourceStore {
    }
 
    @Override
-   protected void doRemove(final URI resourceUri) throws StoreException {
+   protected void doRemove(final URI resourceUri) throws ResourceException {
 	memoryResources.remove(resourceUri);
    }
 
    @Override
-   protected void doStore(final URI resourceUri, final ResourceHandler resource) throws StoreException {
+   protected void doStore(final URI resourceUri, final ResourceHandler resource) throws ResourceException {
 	memoryResources.put(resourceUri, resource);
 
    }

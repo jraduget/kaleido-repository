@@ -31,6 +31,8 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.kaleidofoundry.core.lang.annotation.Review;
+
 /**
  * Default ResourceStore entity to store a resource in a blob / clob ...<br/>
  * You can extend it and override default mapping on getter / setter, to custom it to your need, otherwise you can have your own
@@ -39,6 +41,7 @@ import javax.persistence.TemporalType;
  * @author Jerome RADUGET
  */
 @Entity
+@Review(comment = "Audit information (locale zone for the date, user information...)")
 public class ResourceStoreEntity implements Serializable {
 
    private static final long serialVersionUID = 6158960255569565876L;
@@ -57,8 +60,6 @@ public class ResourceStoreEntity implements Serializable {
    @Temporal(TemporalType.TIMESTAMP)
    @Column(insertable = false, updatable = true, nullable = true)
    private Date updatedDate;
-
-   // TODO Audit information (locale zone for the date, user information...)
 
    @PreUpdate
    protected void preUpdate() {

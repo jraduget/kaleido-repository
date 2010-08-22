@@ -75,27 +75,27 @@ public abstract class AbstractSingleStore<B, R> implements SingleStore<B, R> {
     * load it<br/>
     * no need to handle synchronized here, it is done done earlier
     */
-   protected abstract R doGet() throws StoreException;
+   protected abstract R doGet() throws ResourceException;
 
    /**
     * unload it<br/>
     * no need to handle synchronized here, it is done done earlier
     */
-   protected abstract void doUnload() throws StoreException;
+   protected abstract void doUnload() throws ResourceException;
 
    /**
     * persists current resource instance
     * 
     * @return current resource instance
     */
-   protected abstract R doStore() throws StoreException;
+   protected abstract R doStore() throws ResourceException;
 
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Store#load()
     */
    @Override
-   public synchronized R get() throws StoreException {
+   public synchronized R get() throws ResourceException {
 	R content = doGet();
 	loaded = true;
 	return content;
@@ -106,7 +106,7 @@ public abstract class AbstractSingleStore<B, R> implements SingleStore<B, R> {
     * @see org.kaleidofoundry.core.config.Store#unload()
     */
    @Override
-   public synchronized void unload() throws StoreException {
+   public synchronized void unload() throws ResourceException {
 	doUnload();
 	loaded = false;
    }
@@ -116,7 +116,7 @@ public abstract class AbstractSingleStore<B, R> implements SingleStore<B, R> {
     * @see org.kaleidofoundry.core.config.Store#reload()
     */
    @Override
-   public synchronized R reload() throws StoreException {
+   public synchronized R reload() throws ResourceException {
 	unload();
 	R content = get();
 	return content;
@@ -127,7 +127,7 @@ public abstract class AbstractSingleStore<B, R> implements SingleStore<B, R> {
     * @see org.kaleidofoundry.core.lang.pattern.SingleStore#store()
     */
    @Override
-   public synchronized R store() throws StoreException {
+   public synchronized R store() throws ResourceException {
 	return doStore();
    }
 

@@ -20,7 +20,6 @@ import java.io.IOException;
 import org.junit.After;
 import org.junit.Before;
 import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
-import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
  * Test Jboss Ininispan (c) Cache Manager
@@ -33,8 +32,7 @@ public class InfinispanCacheTest extends AbstractTestCache {
 
    @Before
    public void setup() {
-	cacheManager = CacheFactory.getCacheManager(DefaultCacheProviderEnum.infinispan4x.name(), "cache/infinispan-local.xml",
-		new RuntimeContext<CacheManager>());
+	cacheManager = CacheFactory.provides(DefaultCacheProviderEnum.infinispan4x.name(), "classpath:/cache/infinispan-local.xml");
 	cache = cacheManager.getCache(Person.class.getName());
    }
 

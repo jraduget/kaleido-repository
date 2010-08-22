@@ -42,7 +42,7 @@ public class Coherence35xCacheImpl<K extends Serializable, V extends Serializabl
 
    /**
     * @param c class of the cache
-    * @param coherence cache instantiate via factory
+    * @param cache coherence cache instantiate via factory
     */
    Coherence35xCacheImpl(@NotNull final Class<V> c, @NotNull final NamedCache cache) {
 	this(c.getName(), cache);
@@ -50,7 +50,7 @@ public class Coherence35xCacheImpl<K extends Serializable, V extends Serializabl
 
    /**
     * @param name name of the cache
-    * @param coherence cache instantiate via factory
+    * @param cache coherence cache instantiate via factory
     */
    Coherence35xCacheImpl(@NotNull final String name, @NotNull final NamedCache cache) {
 	this.namedCache = cache;

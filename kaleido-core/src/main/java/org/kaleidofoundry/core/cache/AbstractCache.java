@@ -38,7 +38,7 @@ public abstract class AbstractCache<K extends Serializable, V extends Serializab
     * consistency checking of arguments is done retrospectively
     * 
     * @param key
-    * @return
+    * @return cache value
     */
    protected abstract V doGet(@NotNull K key);
 

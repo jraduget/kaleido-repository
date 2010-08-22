@@ -35,14 +35,15 @@ import org.slf4j.LoggerFactory;
 
 /**
  * EhCache factory implementation <br/>
- * <br/> {@link}http://ehcache.org/documentation/configuration.html <br/>
+ * <br/>
+ * http://ehcache.org/documentation/configuration.html <br/>
  * Cache statistics are disabled in this version for performance reason (prior to 1.7.x) <br/>
  * With EhCache 2.x you can disable statistics cache by configuration :)
  * 
  * @see CacheFactory
  * @author Jerome RADUGET
  */
-@Declare(value = EhCacheManagerPluginName, singleton = true)
+@Declare(value = EhCacheManagerPluginName)
 class EhCache1xManagerImpl extends AbstractCacheManager {
 
    /** internal logger */
@@ -70,7 +71,7 @@ class EhCache1xManagerImpl extends AbstractCacheManager {
    public EhCache1xManagerImpl(final String configuration, final RuntimeContext<org.kaleidofoundry.core.cache.CacheManager> context) {
 	super(configuration, context);
 
-	String configurationUri = getCurrentConfiguration();
+	final String configurationUri = getCurrentConfiguration();
 
 	try {
 	   if (StringHelper.isEmpty(configurationUri)) {
@@ -112,7 +113,7 @@ class EhCache1xManagerImpl extends AbstractCacheManager {
     */
    @Override
    public String getMetaInformations() {
-	return "ehcache-1.x - [1.2.x -> 1.7.x]";
+	return "ehcache-1.x - [1.2.x -> 2.1.x]";
    }
 
    /*
@@ -155,9 +156,11 @@ class EhCache1xManagerImpl extends AbstractCacheManager {
    @Override
    public void destroyAll() {
 
+	super.destroyAll();
+
 	// destroy all cache instances
 	for (final String name : cachesByName.keySet()) {
-	   LOGGER.info("Destroying '{}' cache '{}' ...", EhCacheManagerPluginName, name);
+	   LOGGER.info(CacheMessageBundle.getMessage("cache.destroy.info", getMetaInformations(), name));
 	   destroy(name);
 	}
 
@@ -166,12 +169,13 @@ class EhCache1xManagerImpl extends AbstractCacheManager {
 	   cacheManager.shutdown();
 	}
 
-	CacheFactory.CACHEMANAGER_REGISTRY.remove(CacheFactory.getCacheManagerId(DefaultCacheProviderEnum.ehCache1x.name(), getCurrentConfiguration()));
+	// unregister cacheManager
+	CacheManagerProvider.getRegistry().remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.ehCache1x.name(), getCurrentConfiguration()));
    }
 
    /**
     * @param name
-    * @return
+    * @return cache provider
     */
    protected net.sf.ehcache.Cache createCache(final String name) {
 
@@ -197,7 +201,7 @@ class EhCache1xManagerImpl extends AbstractCacheManager {
    /**
     * @param code
     * @param args
-    * @return
+    * @return cache provider exception converter
     */
    static CacheConfigurationException newCacheException(final String code, final String... args) {
 	return newCacheConfigurationException(code, null, args);
@@ -207,7 +211,7 @@ class EhCache1xManagerImpl extends AbstractCacheManager {
     * @param code
     * @param th
     * @param args
-    * @return
+    * @return cache provider exception converter
     */
    static CacheConfigurationException newCacheConfigurationException(final String code, final Throwable th, final String... args) {
 	if (th == null) {

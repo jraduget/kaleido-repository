@@ -33,7 +33,9 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.lang.NotNullException;
 import org.kaleidofoundry.core.lang.NotYetImplementedException;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * @author Jerome RADUGET
@@ -46,11 +48,11 @@ public abstract class AbstractConfigurationTest extends Assert {
     * create configuration instance calling abstract method {@link #newInstance()}<br/>
     * and load it after creation
     * 
-    * @throws StoreException
+    * @throws ResourceException
     * @throws URISyntaxException
     */
    @Before
-   public void setup() throws StoreException, URISyntaxException {
+   public void setup() throws ResourceException, URISyntaxException {
 	// disable i18n message bundle control to speed up test (no need of a local derby instance startup)
 	I18nMessagesFactory.disableJpaControl();
 	// create and load instance
@@ -63,10 +65,10 @@ public abstract class AbstractConfigurationTest extends Assert {
    /**
     * unload and cleanup internal configuration cache
     * 
-    * @throws StoreException
+    * @throws ResourceException
     */
    @After
-   public void cleanup() throws StoreException {
+   public void cleanup() throws ResourceException {
 	if (configuration != null) {
 	   configuration.unload();
 	}
@@ -75,13 +77,11 @@ public abstract class AbstractConfigurationTest extends Assert {
    }
 
    /**
-    * the configuration manager to load and test
-    * 
-    * @return
-    * @throws StoreException
+    * @return the configuration manager to load and test
+    * @throws ResourceException
     * @throws URISyntaxException
     */
-   protected abstract Configuration newInstance() throws StoreException, URISyntaxException;
+   protected abstract Configuration newInstance() throws ResourceException, URISyntaxException;
 
    @Test
    public void isLoaded() {
@@ -90,8 +90,8 @@ public abstract class AbstractConfigurationTest extends Assert {
    }
 
    @Test
-   public void load() throws StoreException, URISyntaxException {
-	Configuration configuration = newInstance();
+   public void load() throws ResourceException, URISyntaxException {
+	final Configuration configuration = newInstance();
 	assertNotNull(configuration);
 	assertFalse(configuration.isLoaded());
 	configuration.load();
@@ -99,8 +99,8 @@ public abstract class AbstractConfigurationTest extends Assert {
    }
 
    @Test
-   public void unload() throws StoreException, URISyntaxException {
-	Configuration configuration = newInstance();
+   public void unload() throws ResourceException, URISyntaxException {
+	final Configuration configuration = newInstance();
 	assertNotNull(configuration);
 	assertFalse(configuration.isLoaded());
 	configuration.load();
@@ -111,36 +111,36 @@ public abstract class AbstractConfigurationTest extends Assert {
 
    @Test
    @Ignore
-   public void store() throws StoreException {
+   @Review(comment = "configuration.store();", category = ReviewCategoryEnum.ImplementIt)
+   public void store() throws ResourceException {
 	assertNotNull(configuration);
-	// TODO configuration.store();
 	throw new NotYetImplementedException();
    }
 
    @Test
    public void getProperty() {
 	assertNotNull(configuration);
-	assertEquals("app", configuration.getRawProperty("//application/name"));
-	assertEquals("1.0.0", configuration.getRawProperty("//application/version"));
-	assertEquals("description of the application...", configuration.getRawProperty("//application/description"));
+	assertEquals("app", configuration.getProperty("//application/name"));
+	assertEquals("1.0.0", configuration.getProperty("//application/version"));
+	assertEquals("description of the application...", configuration.getProperty("//application/description"));
 	// test unknown key
-	assertNull(configuration.getRawProperty("foo"));
+	assertNull(configuration.getProperty("foo"));
    }
 
    @Test
    public void setProperty() {
 	assertNotNull(configuration);
-	assertEquals("app", configuration.getRawProperty("//application/name"));
+	assertEquals("app", configuration.getProperty("//application/name"));
 	configuration.setProperty("//application/name", "foo");
-	assertEquals("foo", configuration.getRawProperty("//application/name"));
+	assertEquals("foo", configuration.getProperty("//application/name"));
    }
 
    @Test
    public void removeProperty() {
 	assertNotNull(configuration);
-	assertEquals("app", configuration.getRawProperty("//application/name"));
+	assertEquals("app", configuration.getProperty("//application/name"));
 	configuration.removeProperty("//application/name");
-	assertNull(configuration.getRawProperty("//application/name"));
+	assertNull(configuration.getProperty("//application/name"));
    }
 
    @Test
@@ -172,7 +172,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 	final Date mockDate = df.parse("2006-09-01");
 	assertNotNull(configuration);
 	// test raw property
-	assertEquals("2006-09-01T00:00:00", configuration.getRawProperty("//application/date"));
+	assertEquals("2006-09-01T00:00:00", configuration.getProperty("//application/date"));
 	assertEquals(mockDate, configuration.getDate("//application/date"));
 	// test unknown key
 	assertNull(configuration.getDate("foo"));
@@ -184,7 +184,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 	final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	assertNotNull(configuration);
 	// test raw property
-	assertEquals("2009-01-02T00:00:00 2009-12-31T00:00:00 2012-05-15T00:00:00", configuration.getRawProperty("//application/array/date"));
+	assertEquals("2009-01-02T00:00:00 2009-12-31T00:00:00 2012-05-15T00:00:00", configuration.getProperty("//application/array/date"));
 	assertNotNull(configuration.getDateList("//application/array/date"));
 	assertEquals(3, configuration.getDateList("//application/array/date").size());
 	assertEquals(df.parse("2009-01-02"), configuration.getDateList("//application/array/date").get(0));
@@ -198,7 +198,7 @@ public abstract class AbstractConfigurationTest extends Assert {
    public void getBigDecimal() {
 	assertNotNull(configuration);
 	// test raw property
-	assertEquals("1.123456789", configuration.getRawProperty("//application/single/bigdecimal"));
+	assertEquals("1.123456789", configuration.getProperty("//application/single/bigdecimal"));
 	assertEquals(new BigDecimal("1.123456789"), configuration.getBigDecimal("//application/single/bigdecimal"));
 	// test unknown key
 	assertNull(configuration.getBigDecimal("foo"));
@@ -208,7 +208,7 @@ public abstract class AbstractConfigurationTest extends Assert {
    public void getBigDecimalList() {
 	assertNotNull(configuration);
 	// test raw property
-	assertEquals("987.5 1.123456789", configuration.getRawProperty("//application/array/bigdecimal"));
+	assertEquals("987.5 1.123456789", configuration.getProperty("//application/array/bigdecimal"));
 	assertEquals(2, configuration.getBigDecimalList("//application/array/bigdecimal").size());
 	assertEquals(new BigDecimal("987.5"), configuration.getBigDecimalList("//application/array/bigdecimal").get(0));
 	assertEquals(new BigDecimal("1.123456789"), configuration.getBigDecimalList("//application/array/bigdecimal").get(1));
@@ -220,7 +220,7 @@ public abstract class AbstractConfigurationTest extends Assert {
    public void getBoolean() {
 	assertNotNull(configuration);
 	// test raw property
-	assertEquals("true", configuration.getRawProperty("//application/single/boolean"));
+	assertEquals("true", configuration.getProperty("//application/single/boolean"));
 	assertTrue(configuration.getBoolean("//application/single/boolean"));
 	// test unknown key
 	assertNull(configuration.getBoolean("foo"));
@@ -230,7 +230,7 @@ public abstract class AbstractConfigurationTest extends Assert {
    public void getBooleanList() {
 	assertNotNull(configuration);
 	// test raw property
-	assertEquals("false true", configuration.getRawProperty("//application/array/boolean"));
+	assertEquals("false true", configuration.getProperty("//application/array/boolean"));
 	assertEquals(2, configuration.getBooleanList("//application/array/boolean").size());
 	assertTrue(!configuration.getBooleanList("//application/array/boolean").get(0));
 	assertTrue(configuration.getBooleanList("//application/array/boolean").get(1));
@@ -257,7 +257,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 	try {
 	   configuration.keySet(null);
 	   fail("null prefix is not allowed");
-	} catch (NotNullException nae) {
+	} catch (final NotNullException nae) {
 	}
    }
 
@@ -269,7 +269,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 	try {
 	   configuration.containsKey("//application/modules/marketing", null);
 	   fail("null prefix is not allowed");
-	} catch (NotNullException nae) {
+	} catch (final NotNullException nae) {
 	}
    }
 
@@ -299,20 +299,20 @@ public abstract class AbstractConfigurationTest extends Assert {
 	try {
 	   configuration.containsRoot("foo", null);
 	   fail("null prefix is not allowed");
-	} catch (NotNullException nae) {
+	} catch (final NotNullException nae) {
 	}
    }
 
    @Test
-   public void addConfiguration() throws StoreException, URISyntaxException {
+   public void addConfiguration() throws ResourceException, URISyntaxException {
 	assertNotNull(configuration);
 	assertTrue(configuration.isLoaded());
 
 	assertNotNull(configuration.roots());
 	assertNotNull(configuration.keySet());
 
-	int roots = configuration.roots().size();
-	int keys = configuration.keySet().size();
+	final int roots = configuration.roots().size();
+	final int keys = configuration.keySet().size();
 
 	// assertions before adding new configuration content
 	assertTrue(configuration.containsRoot("application", ""));
@@ -321,8 +321,8 @@ public abstract class AbstractConfigurationTest extends Assert {
 	assertEquals("", configuration.getString("//application/modules/netbusiness/name"));
 
 	// configuration to add
-	Configuration configurationToAdd = new PropertiesConfiguration("app2Config", "classpath:/org/kaleidofoundry/core/config/addTest.properties",
-		new RuntimeContext<org.kaleidofoundry.core.config.Configuration>());
+	final Configuration configurationToAdd = new PropertiesConfiguration("app2Config", "classpath:/org/kaleidofoundry/core/config/addTest.properties",
+		new RuntimeContext<Configuration>(Configuration.class));
 	configurationToAdd.load();
 
 	configuration.addConfiguration(configurationToAdd);
@@ -339,13 +339,13 @@ public abstract class AbstractConfigurationTest extends Assert {
    }
 
    @Test
-   public void extractConfiguration() throws StoreException, URISyntaxException {
+   public void extractConfiguration() throws ResourceException, URISyntaxException {
 	assertNotNull(configuration);
 	assertTrue(configuration.isLoaded());
 
 	// configuration to add
-	Configuration emptyConfiguration = new PropertiesConfiguration("empty", "classpath:/org/kaleidofoundry/core/config/empty.properties",
-		new RuntimeContext<org.kaleidofoundry.core.config.Configuration>());
+	final Configuration emptyConfiguration = new PropertiesConfiguration("empty", "classpath:/org/kaleidofoundry/core/config/empty.properties",
+		new RuntimeContext<Configuration>(Configuration.class));
 
 	assertNotNull(emptyConfiguration);
 

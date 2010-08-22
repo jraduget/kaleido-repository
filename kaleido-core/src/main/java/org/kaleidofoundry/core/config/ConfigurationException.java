@@ -25,8 +25,8 @@ import org.kaleidofoundry.core.i18n.InternalBundleEnum;
  * Configuration exception is class ancestor for configuration package
  * </p>
  * <p>
- * Warning: this class extends I18nCodedRuntimeException and so RuntimeException. <br/>
- * Any ConfigurationException will therefore not be trapped by default (directly propagated).<br/>
+ * Warning: this class extends {@link I18nRuntimeException} and so {@link RuntimeException}. <br/>
+ * Any {@link ConfigurationException} will therefore not be trapped by default (directly propagated).<br/>
  * If you want trap explicit configuration errors :
  * </p>
  * 
@@ -124,7 +124,7 @@ public class ConfigurationException extends I18nRuntimeException {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.exception.I18nCodedRuntimeException#getI18nBundleName()
+    * @see org.kaleidofoundry.core.i18n.I18nRuntimeException#getI18nBundleName()
     */
    @Override
    public String getI18nBundleName() {

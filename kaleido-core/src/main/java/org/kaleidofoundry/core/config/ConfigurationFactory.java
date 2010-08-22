@@ -15,71 +15,60 @@
  */
 package org.kaleidofoundry.core.config;
 
-import static org.kaleidofoundry.core.config.ConfigurationConstants.ConfigurationPluginName;
 import static org.kaleidofoundry.core.config.ConfigurationConstants.JavaEnvProperties;
 import static org.kaleidofoundry.core.config.ConfigurationConstants.JavaEnvPropertiesSeparator;
 import static org.kaleidofoundry.core.config.ConfigurationConstants.JavaEnvPropertiesValueSeparator;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.kaleidofoundry.core.config.ConfigurationConstants.Extension;
+import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.plugin.Plugin;
-import org.kaleidofoundry.core.plugin.PluginFactory;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.StringHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Configuration factory provider
+ * <p>
+ * <b>How to declare the configuration to load ?</b> <br/>
+ * <br/>
+ * Define the following java environment variable {@link ConfigurationConstants#JavaEnvProperties} like this :
+ * <p>
+ * <code>
+ * -Dkaleido.configurations=configurationName01:configurationUri01;configurationName02:configurationUri02;...
+ * </code>
+ * </p>
+ * <p>
+ * <b>Example :</b> <br/>
+ * <code>
+ * 	java -Dkaleido.configurations=datasource:classpath:/datasource.properties;otherResource:http:/host/path/otherResource;...  ...
+ * </code>
+ * </p>
+ * </p>
  * 
  * @author Jerome RADUGET
+ * @see ConfigurationProvider delegate configuration creation & registry
  */
 public abstract class ConfigurationFactory {
 
-   private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationFactory.class);
-
+   // does default initConfigurations() have occurred
    private static boolean INIT_LOADED = false;
 
-   /**
-    * configuration registry instance
-    */
-   private static final ConfigurationRegistry REGISTRY = new ConfigurationRegistry();
-
-   /**
-    * @return Main configuration registry
-    */
-   public static final ConfigurationRegistry getRegistry() {
-	return REGISTRY;
-   }
+   // configuration provider used by the factory
+   private static final ConfigurationProvider CONFIGURATION_PROVIDER = new ConfigurationProvider(Configuration.class);
 
    /**
     * Create / Load / Register all configurations, that have been declared via java system environment <br/>
     * <br/>
     * If load have already be called, it does nothing more.
-    * <p>
-    * <b>How to declare the configuration to load ?</b> <br/>
-    * use the java env variable {@link ConfigurationConstants#JavaEnvProperties} <br/>
-    * -Dkaleido.configurations=configurationId01:configurationUri01;configurationId02:configurationUri02;...
     * 
-    * <pre>
-    * 	java -Dkaleido.configurations=datasource:classpath:/datasource.properties;otherResource:http:/host/path/otherResource;...  ...
-    * </pre>
-    * 
-    * </p>
-    * 
-    * @throws StoreException
+    * @throws ResourceException
     * @see ConfigurationConstants#JavaEnvProperties
     */
-   public static final void initConfigurations() throws StoreException {
+   public static final void init() throws ResourceException {
 
 	if (!INIT_LOADED) {
 	   synchronized (ConfigurationFactory.class) {
@@ -89,11 +78,11 @@ public abstract class ConfigurationFactory {
 		   final String[] configItem = StringHelper.split(strConfigToken.nextToken(), JavaEnvPropertiesValueSeparator);
 		   // named declaration
 		   if (configItem.length == 2) {
-			provideConfiguration(configItem[0], configItem[1]);
+			provides(configItem[0], configItem[1]);
 		   }
 		   // anonymous declaration
 		   else if (configItem.length == 1) {
-			provideConfiguration(configItem[0], configItem[0]);
+			provides(configItem[0], configItem[0]);
 		   }
 		}
 		INIT_LOADED = true;
@@ -104,9 +93,9 @@ public abstract class ConfigurationFactory {
    /**
     * Unload / Unregister / Destroy all registered configurations
     * 
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public static final void destroyConfigurations() throws StoreException {
+   public static final void destroyAll() throws ResourceException {
 
 	if (INIT_LOADED) {
 	   synchronized (ConfigurationFactory.class) {
@@ -122,139 +111,213 @@ public abstract class ConfigurationFactory {
    }
 
    /**
-    * Provide a new configuration instance, by scanning resource uri type extension :
-    * <ul>
-    * <li>.properties,</li>
-    * <li>.xml,</li>
-    * <li>.xmlproperties,</li>
-    * <li>.javasystem,</li>
-    * <li>...</li>
-    * </ul>
-    * <br/>
-    * enumeration of handle extension can be found at {@link Extension}<br/>
-    * <br/>
-    * <b>Configuration is loaded before to be provided.</b> <br/>
+    * Unload / Unregister / Destroy given configuration
     * 
-    * @param identifier
-    * @param resourceURI
-    * @return configuration instance (loaded) which map to the resourceURI
-    * @throws StoreException
+    * @param configName
+    * @throws ResourceException
     */
-   public static Configuration provideConfiguration(@NotNull final String identifier, @NotNull final String resourceURI) throws StoreException {
-	return provideConfiguration(identifier, resourceURI, new RuntimeContext<Configuration>());
-   }
+   public static final void destroy(@NotNull final String configName) throws ResourceException {
 
-   /**
-    * Provide a new configuration instance, by scanning resource uri type extension :
-    * <ul>
-    * <li>.properties,</li>
-    * <li>.xml,</li>
-    * <li>.xmlproperties,</li>
-    * <li>.javasystem,</li>
-    * <li>...</li>
-    * </ul>
-    * <br/>
-    * enumeration of handle extension can be found at {@link Extension}<br/>
-    * <br/>
-    * <b>Configuration is loaded before to be provided.</b> <br/>
-    * 
-    * @param identifier
-    * @param resourceURI
-    * @param runtimeContext
-    * @return configuration instance (loaded) which map to the resourceURI
-    * @throws StoreException
-    */
-   public static Configuration provideConfiguration(@NotNull final String identifier, @NotNull final String resourceURI,
-	   @NotNull final RuntimeContext<Configuration> runtimeContext) throws StoreException {
-	return provideConfiguration(identifier, resourceURI != null ? URI.create(resourceURI) : null, runtimeContext);
-   }
+	Configuration configToDestroy = getRegistry().get(configName);
 
-   /**
-    * Provide a new configuration instance, by scanning resource uri type extension :
-    * <ul>
-    * <li>.properties,</li>
-    * <li>.xml,</li>
-    * <li>.xmlproperties,</li>
-    * <li>.javasystem,</li>
-    * <li>...</li>
-    * </ul>
-    * <br/>
-    * enumeration of handle extension can be found at {@link Extension}<br/>
-    * <br/>
-    * <b>Configuration is loaded before to be provided.</b> <br/>
-    * 
-    * @param identifier
-    * @param resourceURI resource identifier
-    * @param runtimeContext
-    * @return configuration instance (loaded) which map to the resourceURI
-    * @throws StoreException
-    */
-   public static Configuration provideConfiguration(@NotNull final String identifier, @NotNull final URI resourceURI,
-	   @NotNull final RuntimeContext<Configuration> runtimeContext) throws StoreException {
-
-	final Configuration configuration = REGISTRY.get(identifier);
-
-	if (configuration == null) {
-	   Configuration newInstance;
-	   // create it
-	   newInstance = createConfiguration(identifier, resourceURI, runtimeContext);
-	   // load it
-	   newInstance.load();
-	   // register it
-	   REGISTRY.put(identifier, newInstance);
-	   // info
-	   LOGGER.info(InternalBundleHelper.ConfigurationMessageBundle.getMessage("config.load.info", identifier, resourceURI.toString()));
-	   // result
-	   return newInstance;
-	} else {
-	   if (!configuration.isLoaded()) {
-		configuration.load();
-	   }
-	   // re-check uri coherence ?
-	   return configuration;
+	if (configToDestroy != null) {
+	   configToDestroy.unload();
+	   getRegistry().remove(configName);
 	}
-
    }
 
    /**
-    * @param identifier
-    * @param resourceURI
-    * @param runtimeContext
-    * @return new configuration instance which map to the resourceURI
-    * @throws StoreException
+    * @return shortcut to main configuration registry stored in {@link ConfigurationProvider}
     */
-   private static Configuration createConfiguration(@NotNull final String identifier, @NotNull final URI resourceURI,
-	   @NotNull final RuntimeContext<Configuration> runtimeContext) throws StoreException {
+   public static final ConfigurationRegistry getRegistry() {
+	return ConfigurationProvider.getRegistry();
+   }
 
-	final Set<Plugin<Configuration>> pluginImpls = PluginFactory.getImplementationRegistry().findByInterface(Configuration.class);
+   /**
+    * Provides a new configuration instance
+    * <p>
+    * To known what is the configuration format, it scans the resource path URI extension :
+    * <ul>
+    * <li>.properties,</li>
+    * <li>.xmlproperties,</li>
+    * <li>.xml,</li>
+    * <li>.javasystem,</li>
+    * <li>.mainargs,</li>
+    * <li>.osenv,</li>
+    * <li>...</li>
+    * </ul>
+    * <br/>
+    * a default enumeration of the handle extensions can be found at {@link Extension}<br/>
+    * </p>
+    * <br/>
+    * <p>
+    * To known the configuration store to use, it scans the scheme of the URI :
+    * <ul>
+    * <li>file:/,</li>
+    * <li>http://,</li>
+    * <li>ftp://,</li>
+    * <li>classpath:/,</li>
+    * <li>webapp:/,</li>
+    * <li>jpa://,</li>
+    * <li>jdbc://,</li>
+    * </ul>
+    * </p>
+    * <br/>
+    * <b>Configuration is loaded before to be provided.</b> <br/>
+    * 
+    * @param runtimeContext see {@link ConfigurationContextBuilder} informations for common context properties, and specific implementation
+    *           class
+    *           if needed
+    * @return configuration instance (loaded) which map to the resourceURI
+    * @throws ResourceException if configuration resource store throws error
+    * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
+    *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
+    * @see Configuration
+    */
+   public static Configuration provides(final RuntimeContext<Configuration> runtimeContext) throws ResourceException {
+	return CONFIGURATION_PROVIDER.provides(runtimeContext);
+   }
 
-	// scan each @Declare resource store implementation, to get one which handle the uri scheme
-	for (final Plugin<Configuration> pi : pluginImpls) {
-	   final Class<? extends Configuration> impl = pi.getAnnotatedClass();
-	   try {
+   /**
+    * Provides a new configuration instance
+    * <p>
+    * To known what is the configuration format, it scans the resource path URI extension :
+    * <ul>
+    * <li>.properties,</li>
+    * <li>.xmlproperties,</li>
+    * <li>.xml,</li>
+    * <li>.javasystem,</li>
+    * <li>.mainargs,</li>
+    * <li>.osenv,</li>
+    * <li>...</li>
+    * </ul>
+    * <br/>
+    * a default enumeration of the handle extensions can be found at {@link Extension}<br/>
+    * </p>
+    * <br/>
+    * <p>
+    * To known the configuration store to use, it scans the scheme of the URI :
+    * <ul>
+    * <li>file:/,</li>
+    * <li>http://,</li>
+    * <li>ftp://,</li>
+    * <li>classpath:/,</li>
+    * <li>webapp:/,</li>
+    * <li>jpa://,</li>
+    * <li>jdbc://,</li>
+    * </ul>
+    * </p>
+    * <br/>
+    * <b>Configuration is loaded before to be provided.</b> <br/>
+    * 
+    * @param name configuration name (unique identifier)
+    * @param resourceURI
+    * @return configuration instance (loaded) which map to the resourceURI
+    * @throws ResourceException if configuration resource store throws error
+    * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
+    *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
+    * @see Configuration
+    */
+   public static Configuration provides(@NotNull final String name, @NotNull final String resourceURI) throws ResourceException {
+	return CONFIGURATION_PROVIDER.provides(name, resourceURI);
+   }
 
-		final Declare declarePlugin = impl.getAnnotation(Declare.class);
+   /**
+    * Provides a new configuration instance
+    * <p>
+    * To known what is the configuration format, it scans the resource path URI extension :
+    * <ul>
+    * <li>.properties,</li>
+    * <li>.xmlproperties,</li>
+    * <li>.xml,</li>
+    * <li>.javasystem,</li>
+    * <li>.mainargs,</li>
+    * <li>.osenv,</li>
+    * <li>...</li>
+    * </ul>
+    * <br/>
+    * a default enumeration of the handle extensions can be found at {@link Extension}<br/>
+    * </p>
+    * <br/>
+    * <p>
+    * To known the configuration store to use, it scans the scheme of the URI :
+    * <ul>
+    * <li>file:/,</li>
+    * <li>http://,</li>
+    * <li>ftp://,</li>
+    * <li>classpath:/,</li>
+    * <li>webapp:/,</li>
+    * <li>jpa://,</li>
+    * <li>jdbc://,</li>
+    * </ul>
+    * </p>
+    * <br/>
+    * <b>Configuration is loaded before to be provided.</b> <br/>
+    * 
+    * @param name configuration name (unique identifier)
+    * @param resourceURI configuration resource URI
+    * @param runtimeContext see {@link ConfigurationContextBuilder} informations for common context properties, and specific implementation
+    *           class
+    *           if needed
+    * @return configuration instance (loaded) which map to the resourceURI
+    * @throws ResourceException if configuration resource store throws error
+    * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
+    *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
+    * @see Configuration
+    */
+   public static Configuration provides(@NotNull final String name, @NotNull final String resourceURI,
+	   @NotNull final RuntimeContext<Configuration> runtimeContext) throws ResourceException {
+	return CONFIGURATION_PROVIDER.provides(name, resourceURI, runtimeContext);
+   }
 
-		final String uriPath = resourceURI.getPath().toLowerCase();
-		final String pluginConfigExtention = declarePlugin.value().replace(ConfigurationPluginName, "").toLowerCase();
+   /**
+    * Provides a new configuration instance
+    * <p>
+    * To known what is the configuration format, it scans the resource path URI extension :
+    * <ul>
+    * <li>.properties,</li>
+    * <li>.xmlproperties,</li>
+    * <li>.xml,</li>
+    * <li>.javasystem,</li>
+    * <li>.mainargs,</li>
+    * <li>.osenv,</li>
+    * <li>...</li>
+    * </ul>
+    * <br/>
+    * a default enumeration of the handle extensions can be found at {@link Extension}<br/>
+    * </p>
+    * <br/>
+    * <p>
+    * To known the configuration store to use, it scans the scheme of the URI :
+    * <ul>
+    * <li>file:/,</li>
+    * <li>http://,</li>
+    * <li>ftp://,</li>
+    * <li>classpath:/,</li>
+    * <li>webapp:/,</li>
+    * <li>jpa://,</li>
+    * <li>jdbc://,</li>
+    * </ul>
+    * </p>
+    * <br/>
+    * <b>Configuration is loaded before to be provided.</b> <br/>
+    * 
+    * @param name configuration name (unique identifier)
+    * @param resourceURI configuration resource URI
+    * @param runtimeContext see {@link ConfigurationContextBuilder} informations for common context properties, and specific implementation
+    *           class
+    *           if needed
+    * @return configuration instance (loaded) which map to the resourceURI
+    * @throws ResourceException if configuration resource store throws error
+    * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
+    *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
+    * @see Configuration
+    */
+   public static Configuration provides(@NotNull final String name, @NotNull final URI resourceURI, @NotNull final RuntimeContext<Configuration> runtimeContext)
+	   throws ResourceException {
 
-		if (uriPath.endsWith(pluginConfigExtention)) {
-		   final Constructor<? extends Configuration> constructor = impl.getConstructor(String.class, URI.class, RuntimeContext.class);
-		   return constructor.newInstance(identifier, resourceURI, runtimeContext);
-		}
+	return CONFIGURATION_PROVIDER.provides(name, resourceURI, runtimeContext);
 
-	   } catch (final NoSuchMethodException e) {
-		throw new StoreException("store.resource.factory.create.NoSuchMethodException", impl.getName());
-	   } catch (final InstantiationException e) {
-		throw new StoreException("store.resource.factory.create.InstantiationException", impl.getName(), e.getMessage());
-	   } catch (final IllegalAccessException e) {
-		throw new StoreException("store.resource.factory.create.IllegalAccessException=ResourceStore", impl.getName());
-	   } catch (final InvocationTargetException e) {
-		throw new StoreException("store.resource.factory.create.InvocationTargetException", e.getCause(), impl.getName(), e.getMessage());
-	   }
-	}
-
-	throw new StoreException("store.resource.uri.custom.notmanaged", resourceURI.getScheme());
    }
 
 }

@@ -27,20 +27,21 @@ import java.lang.annotation.Target;
  * @author Jerome RADUGET
  */
 @Documented
-@Target( { ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.ANNOTATION_TYPE,
-	ElementType.PACKAGE, ElementType.PARAMETER, ElementType.FIELD, ElementType.LOCAL_VARIABLE })
+@Target( { ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.ANNOTATION_TYPE, ElementType.PACKAGE, ElementType.PARAMETER,
+	ElementType.FIELD, ElementType.LOCAL_VARIABLE })
 @Retention(RetentionPolicy.SOURCE)
 public @interface Review {
 
-   /**
-    * @return comment of the code review
-    */
+   /** @return comment of the code review */
    String comment() default "";
 
    /** @return author of the review comment */
    String author() default "";
 
-   /** @return assignee developper for the review */
+   /** @return assignee developer for the review */
    String assignee() default "";
+
+   /** @return review category */
+   ReviewCategoryEnum category() default ReviewCategoryEnum.Todo;
 
 }

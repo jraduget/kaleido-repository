@@ -28,10 +28,10 @@ import org.kaleidofoundry.core.lang.annotation.Stateful;
 /**
  * Resource store manager interface (stateful store), used to handle persistence of a single instance :
  * <ul>
- * <li>load
- * <li>unload
- * <li>reload
- * <li>store
+ * <li>{@link #get()}
+ * <li>{@link #unload()}
+ * <li>{@link #reload()}
+ * <li>{@link #store()}
  * </ul>
  * a given resource, identify by its resource binding (like a path)
  * 
@@ -66,36 +66,36 @@ public interface SingleStore<B, R> {
     * multi-thread access,it have to be synchronized
     * 
     * @return current instance
-    * @throws StoreException
+    * @throws ResourceException
     */
    @NotNull
-   R get() throws StoreException;
+   R get() throws ResourceException;
 
    /**
     * unload it <br/>
     * multi-thread access,it have to be synchronized
     * 
-    * @throws StoreException
+    * @throws ResourceException
     */
-   void unload() throws StoreException;
+   void unload() throws ResourceException;
 
    /**
     * reload it <br/>
     * multi-thread access,it have to be synchronized
     * 
     * @return current instance
-    * @throws StoreException
+    * @throws ResourceException
     */
    @NotNull
-   R reload() throws StoreException;
+   R reload() throws ResourceException;
 
    /**
     * store updates on current R instance<br/>
     * multi-thread access,it have to be synchronized
     * 
     * @return current instance
-    * @throws StoreException
+    * @throws ResourceException
     */
    @NotNull
-   R store() throws StoreException;
+   R store() throws ResourceException;
 }

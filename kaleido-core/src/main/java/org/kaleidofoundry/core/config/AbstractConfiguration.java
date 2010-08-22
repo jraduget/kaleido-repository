@@ -22,6 +22,9 @@ import static org.kaleidofoundry.core.config.ConfigurationConstants.KeySeparator
 import static org.kaleidofoundry.core.config.ConfigurationConstants.LOGGER;
 import static org.kaleidofoundry.core.config.ConfigurationConstants.MultiValDefaultSeparator;
 import static org.kaleidofoundry.core.config.ConfigurationConstants.StrDateFormat;
+import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.CacheManagerRef;
+import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.Readonly;
+import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.ResourceStoreRef;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ConfigurationMessageBundle;
 
 import java.math.BigDecimal;
@@ -46,48 +49,33 @@ import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.store.ResourceStore;
 import org.kaleidofoundry.core.store.ResourceStoreFactory;
 import org.kaleidofoundry.core.store.SingleResourceStore;
-import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.util.ConverterHelper;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * <p>
- * Abstract class, implementing the basic functionality of the interface configuration. <br/>
- * It will be the ancestor of all implementations of Configuration <br/>
- * </p>
- * Use internally a Properties instance (thread safe)<br/>
- * <p>
- * Internally a bridge is implemented between the in memory property,<br>
- * and its storage {@link ResourceStore}
+ * Abstract ancestor class of all implementations of Configuration, <br/>
+ * It implements the basic and commons functionalities of the interface configuration. <br/>
+ * It uses internally a {@link Cache} instance (thread safe) to handle key / property items<br/>
  * </p>
  * 
  * @author Jerome RADUGET
  */
 @Immutable
 @ThreadSafe
+@Review(comment = "bootstrap load for classpath or file uri configuration which can defined a cacheManagerRef or resourceStoreRef, ... which is not yet loaded at build time", category = ReviewCategoryEnum.Fixme)
 public abstract class AbstractConfiguration implements Configuration {
 
-   /**
-    * enumeration of local context property name
-    */
-   public static enum ContextProperty {
-	/** read-only usage */
-	readonly,
-	/** resource store {@link URI} to accessed the configuration file */
-	resourceUri,
-	/** resource store used to access the resourceUri */
-	resourceStoreRef,
-	/** cache manager context name to use */
-	cacheManagerRef;
-   }
-
-   // configuration identifier
-   protected final String identifier;
+   // configuration name identifier
+   protected final String name;
 
    // internal properties cache
    protected final Cache<String, String> cacheProperties;
@@ -99,49 +87,49 @@ public abstract class AbstractConfiguration implements Configuration {
    protected final RuntimeContext<Configuration> context;
 
    /**
-    * @param identifier
+    * @param name
     * @param resourceUri
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     * @throws IllegalArgumentException if resourceUri is illegal ({@link URISyntaxException})
     */
-   protected AbstractConfiguration(@NotNull final String identifier, @NotNull final String resourceUri, @NotNull final RuntimeContext<Configuration> context)
-	   throws StoreException {
-	this(identifier, URI.create(resourceUri), context);
+   protected AbstractConfiguration(@NotNull final String name, @NotNull final String resourceUri, @NotNull final RuntimeContext<Configuration> context)
+	   throws ResourceException {
+	this(name, URI.create(resourceUri), context);
    }
 
    /**
-    * @param identifier
+    * @param name
     * @param resourceUri
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   protected AbstractConfiguration(@NotNull final String identifier, @NotNull final URI resourceUri, @NotNull final RuntimeContext<Configuration> context)
-	   throws StoreException {
-	this.identifier = identifier.toString();
+   protected AbstractConfiguration(@NotNull final String name, @NotNull final URI resourceUri, @NotNull final RuntimeContext<Configuration> context)
+	   throws ResourceException {
+	this.name = name.toString();
 	this.context = context;
 
 	// internal resource store instantiation
-	final String resourceStoreRef = context.getProperty(ContextProperty.resourceStoreRef.name());
+	final String resourceStoreRef = context.getProperty(ResourceStoreRef);
 	final ResourceStore resourceStore;
 
 	if (!StringHelper.isEmpty(resourceStoreRef)) {
-	   resourceStore = ResourceStoreFactory.createResourceStore(resourceUri, new RuntimeContext<ResourceStore>(resourceStoreRef, context));
+	   resourceStore = ResourceStoreFactory.provides(resourceUri, new RuntimeContext<ResourceStore>(resourceStoreRef, context));
 	} else {
-	   resourceStore = ResourceStoreFactory.createResourceStore(resourceUri);
+	   resourceStore = ResourceStoreFactory.provides(resourceUri);
 	}
 	singleResourceStore = new SingleResourceStore(resourceUri, resourceStore);
 
 	// internal cache key / value instantiation
 	final CacheManager cacheManager;
-	final String cacheManagerContextRef = context.getProperty(ContextProperty.cacheManagerRef.name());
+	final String cacheManagerContextRef = context.getProperty(CacheManagerRef);
 
 	if (!StringHelper.isEmpty(cacheManagerContextRef)) {
-	   cacheManager = CacheFactory.getCacheManager(new RuntimeContext<CacheManager>(cacheManagerContextRef, context));
+	   cacheManager = CacheFactory.provides(new RuntimeContext<CacheManager>(cacheManagerContextRef, context));
 	} else {
-	   cacheManager = CacheFactory.getCacheManager();
+	   cacheManager = CacheFactory.provides();
 	}
-	cacheProperties = cacheManager.getCache("kaleidofoundry/configuration/" + identifier);
+	cacheProperties = cacheManager.getCache("kaleidofoundry/configuration/" + name);
    }
 
    /**
@@ -149,11 +137,11 @@ public abstract class AbstractConfiguration implements Configuration {
     * 
     * @param resourceHandler
     * @param properties
-    * @return
-    * @throws StoreException
+    * @return internal cache instance
+    * @throws ResourceException
     * @throws ConfigurationException
     */
-   protected abstract Cache<String, String> loadProperties(ResourceHandler resourceHandler, Cache<String, String> properties) throws StoreException,
+   protected abstract Cache<String, String> loadProperties(ResourceHandler resourceHandler, Cache<String, String> properties) throws ResourceException,
 	   ConfigurationException;
 
    /**
@@ -161,11 +149,11 @@ public abstract class AbstractConfiguration implements Configuration {
     * 
     * @param resourceStore
     * @param properties
-    * @return
-    * @throws StoreException
+    * @return internal cache instance
+    * @throws ResourceException
     * @throws ConfigurationException
     */
-   protected abstract Cache<String, String> storeProperties(Cache<String, String> properties, SingleResourceStore resourceStore) throws StoreException,
+   protected abstract Cache<String, String> storeProperties(Cache<String, String> properties, SingleResourceStore resourceStore) throws ResourceException,
 	   ConfigurationException;
 
    /**
@@ -183,10 +171,10 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#isReadOnly()
     */
    public boolean isReadOnly() {
-	if (StringHelper.isEmpty(context.getProperty(ContextProperty.readonly.name()))) {
+	if (StringHelper.isEmpty(context.getProperty(Readonly))) {
 	   return false;
 	} else {
-	   return Boolean.valueOf(context.getProperty(ContextProperty.readonly.name()));
+	   return Boolean.valueOf(context.getProperty(Readonly));
 	}
    }
 
@@ -195,8 +183,8 @@ public abstract class AbstractConfiguration implements Configuration {
    // **************************************************************************
 
    @Override
-   public final void load() throws StoreException, ConfigurationException {
-	if (isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal01", identifier)); }
+   public final void load() throws ResourceException, ConfigurationException {
+	if (isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal01", name)); }
 
 	final ResourceHandler resourceHandler = singleResourceStore.get();
 	try {
@@ -208,23 +196,23 @@ public abstract class AbstractConfiguration implements Configuration {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.Configuration#getIdentifier()
+    * @see org.kaleidofoundry.core.config.Configuration#getName()
     */
-   public String getIdentifier() {
-	return identifier;
+   public String getName() {
+	return name;
    }
 
    @Override
-   public final void store() throws StoreException, ConfigurationException {
-	if (!isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal02", identifier)); }
-	if (isReadOnly()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal03", identifier)); }
+   public final void store() throws ResourceException, ConfigurationException {
+	if (!isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal02", name)); }
+	if (isReadOnly()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal03", name)); }
 
 	singleResourceStore.store();
    }
 
    @Override
-   public final void unload() throws StoreException {
-	if (!isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal02", identifier)); }
+   public final void unload() throws ResourceException {
+	if (!isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal02", name)); }
 	// cleanup cache entries
 	cacheProperties.removeAll();
 	// unload store
@@ -375,7 +363,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.Configuration#getProperty(java.lang.String)
     */
    @Override
-   public String getRawProperty(final String key) {
+   public String getProperty(final String key) {
 	return cacheProperties.get(getValidKey(key));
    }
 
@@ -385,7 +373,7 @@ public abstract class AbstractConfiguration implements Configuration {
     */
    @Override
    public String getString(final String key) {
-	return getRawProperty(getValidKey(key));
+	return getProperty(getValidKey(key));
    }
 
    /*
@@ -394,7 +382,7 @@ public abstract class AbstractConfiguration implements Configuration {
     */
    @Override
    public List<String> getStringList(final String key) {
-	final String rawValues = getRawProperty(key);
+	final String rawValues = getProperty(key);
 	final String[] values = rawValues != null ? StringHelper.split(rawValues, MultiValDefaultSeparator) : null;
 
 	if (values == null) {
@@ -410,6 +398,7 @@ public abstract class AbstractConfiguration implements Configuration {
     */
    @Override
    public void setProperty(@NotNull final String key, @NotNull final Object value) {
+	if (isReadOnly()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal03", name)); }
 	cacheProperties.put(getValidKey(key), objectToString(value));
    }
 
@@ -419,6 +408,7 @@ public abstract class AbstractConfiguration implements Configuration {
     */
    @Override
    public void removeProperty(@NotNull final String key) {
+	if (isReadOnly()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal03", name)); }
 	cacheProperties.remove(getValidKey(key));
    }
 
@@ -426,7 +416,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * get a valid / normalize property key
     * 
     * @param key
-    * @return
+    * @return valid / normalize property key
     */
    protected String getValidKey(@NotNull String key) {
 	key = key.replaceAll(KeyRoot, KeyPropertiesRoot);
@@ -443,7 +433,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getBigDecimal(java .lang.String)
     */
    public BigDecimal getBigDecimal(final String key) {
-	return valueOf(getString(key), BigDecimal.class);
+	return valueOf(getProperty(key), BigDecimal.class);
    }
 
    /*
@@ -460,7 +450,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getBigDecimalList (java.lang.String)
     */
    public List<BigDecimal> getBigDecimalList(final String key) {
-	return valuesOf(getRawProperty(key), BigDecimal.class);
+	return valuesOf(getProperty(key), BigDecimal.class);
    }
 
    /*
@@ -468,7 +458,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getBigInteger(java .lang.String)
     */
    public BigInteger getBigInteger(final String key) {
-	return valueOf(getString(key), BigInteger.class);
+	return valueOf(getProperty(key), BigInteger.class);
    }
 
    /*
@@ -485,7 +475,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getBigIntegerList (java.lang.String)
     */
    public List<BigInteger> getBigIntegerList(final String key) {
-	return valuesOf(getRawProperty(key), BigInteger.class);
+	return valuesOf(getProperty(key), BigInteger.class);
    }
 
    /*
@@ -493,7 +483,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getBoolean(java. lang.String)
     */
    public Boolean getBoolean(final String key) {
-	final String value = getString(key);
+	final String value = getProperty(key);
 	return StringHelper.isEmpty(value) ? null : Boolean.valueOf(value);
    }
 
@@ -511,7 +501,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getBooleanList( java.lang.String)
     */
    public List<Boolean> getBooleanList(final String key) {
-	return valuesOf(getRawProperty(key), Boolean.class);
+	return valuesOf(getProperty(key), Boolean.class);
    }
 
    /*
@@ -519,7 +509,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getByte(java.lang .String)
     */
    public Byte getByte(final String key) {
-	final String value = getString(key);
+	final String value = getProperty(key);
 	return StringHelper.isEmpty(value) ? null : Byte.valueOf(value.getBytes()[0]);
    }
 
@@ -537,7 +527,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getByteList(java .lang.String)
     */
    public List<Byte> getByteList(final String key) {
-	return valuesOf(getRawProperty(key), Byte.class);
+	return valuesOf(getProperty(key), Byte.class);
    }
 
    /*
@@ -545,7 +535,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getDouble(java.lang .String)
     */
    public Double getDouble(final String key) {
-	return valueOf(getString(key), Double.class);
+	return valueOf(getProperty(key), Double.class);
    }
 
    /*
@@ -562,7 +552,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getDoubleList(java .lang.String)
     */
    public List<Double> getDoubleList(final String key) {
-	return valuesOf(getRawProperty(key), Double.class);
+	return valuesOf(getProperty(key), Double.class);
    }
 
    /*
@@ -570,7 +560,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getFloat(java.lang .String)
     */
    public Float getFloat(final String key) {
-	return valueOf(getString(key), Float.class);
+	return valueOf(getProperty(key), Float.class);
    }
 
    /*
@@ -587,7 +577,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getFloatList(java .lang.String)
     */
    public List<Float> getFloatList(final String key) {
-	return valuesOf(getRawProperty(key), Float.class);
+	return valuesOf(getProperty(key), Float.class);
    }
 
    /*
@@ -595,7 +585,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getInt(java.lang .String)
     */
    public Integer getInteger(final String key) {
-	return valueOf(getString(key), Integer.class);
+	return valueOf(getProperty(key), Integer.class);
    }
 
    /*
@@ -612,7 +602,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getIntList(java .lang.String)
     */
    public List<Integer> getIntegerList(final String key) {
-	return valuesOf(getRawProperty(key), Integer.class);
+	return valuesOf(getProperty(key), Integer.class);
    }
 
    /*
@@ -620,7 +610,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getLong(java.lang .String)
     */
    public Long getLong(final String key) {
-	return valueOf(getString(key), Long.class);
+	return valueOf(getProperty(key), Long.class);
    }
 
    /*
@@ -637,7 +627,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getLongList(java .lang.String)
     */
    public List<Long> getLongList(final String key) {
-	return valuesOf(getRawProperty(key), Long.class);
+	return valuesOf(getProperty(key), Long.class);
    }
 
    /*
@@ -645,7 +635,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getShort(java.lang .String)
     */
    public Short getShort(final String key) {
-	return valueOf(getString(key), Short.class);
+	return valueOf(getProperty(key), Short.class);
    }
 
    /*
@@ -662,7 +652,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getShortList(java .lang.String)
     */
    public List<Short> getShortList(final String key) {
-	return valuesOf(getRawProperty(key), Short.class);
+	return valuesOf(getProperty(key), Short.class);
    }
 
    /*
@@ -670,7 +660,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getDate(java.lang .String)
     */
    public Date getDate(final String key) {
-	return valueOf(getString(key), Date.class);
+	return valueOf(getProperty(key), Date.class);
    }
 
    /*
@@ -678,7 +668,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.Configuration#getDateList(java.lang.String)
     */
    public List<Date> getDateList(final String key) {
-	return valuesOf(getRawProperty(key), Date.class);
+	return valuesOf(getProperty(key), Date.class);
    }
 
    /*
@@ -701,7 +691,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
 	for (final String string : roots) {
 	   String propPath = string;
-	   final String propValue = getString(propPath);
+	   final String propValue = getProperty(propPath);
 	   final List<String> propValues = getStringList(propPath);
 
 	   propPath = StringHelper.replaceAll(propPath, KeyRoot, "");
@@ -726,16 +716,17 @@ public abstract class AbstractConfiguration implements Configuration {
    }
 
    /**
-    * String to Objet Converter
+    * String to Object Converter
     * 
     * @param strValue string value representation
     * @param cl Target class
-    * @return Requested convertion of the string argument. If {@link NumberFormatException} or date {@link ParseException}, silent exception
+    * @return Requested conversion of the string argument. If {@link NumberFormatException} or date {@link ParseException}, silent exception
     *         will be logged, and null return
     * @throws IllegalStateException for date or number parse error
     */
    @SuppressWarnings("unchecked")
-   protected <T> T valueOf(final String strValue, final Class<T> cl) throws IllegalStateException {
+   @Review(comment = "use SimpleDateFormat has a thread local", category = ReviewCategoryEnum.Improvement)
+   public static <T> T valueOf(final String strValue, final Class<T> cl) throws IllegalStateException {
 
 	if (StringHelper.isEmpty(strValue)) { return null; }
 
@@ -759,7 +750,6 @@ public abstract class AbstractConfiguration implements Configuration {
 
 	if (cl.isAssignableFrom(Date.class)) {
 	   try {
-		// TODO use SimpleDateFormat has a thread local
 		return (T) new SimpleDateFormat(StrDateFormat).parse(strValue);
 	   } catch (final ParseException pe) {
 		LOGGER.error(ConfigurationMessageBundle.getMessage("config.date.format", strValue, StrDateFormat));
@@ -774,11 +764,11 @@ public abstract class AbstractConfiguration implements Configuration {
 
    /**
     * @param <T>
-    * @param strValue
+    * @param strValue multiple value separate by {@link ConfigurationConstants#MultiValDefaultSeparator}
     * @param cl
-    * @return
+    * @return multiple value
     */
-   protected <T> List<T> valuesOf(final String strValue, final Class<T> cl) {
+   public static <T> List<T> valuesOf(final String strValue, final Class<T> cl) {
 	final List<T> result = new LinkedList<T>();
 	if (!StringHelper.isEmpty(strValue)) {
 	   final StringTokenizer strToken = new StringTokenizer(strValue, MultiValDefaultSeparator);
@@ -795,6 +785,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @param value instance to convert
     * @return String convertion of the requested objet
     */
+   @Review(comment = "use SimpleDateFormat has a thread local", category = ReviewCategoryEnum.Improvement)
    protected String objectToString(final Object value) {
 
 	if (value != null) {
@@ -825,7 +816,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
 	if (config != null) {
 	   for (final String propName : config.keySet()) {
-		final String propValue = config.getString(propName);
+		final String propValue = config.getProperty(propName);
 		if (propValue != null) {
 		   setProperty(propName, propValue);
 		}
@@ -844,7 +835,7 @@ public abstract class AbstractConfiguration implements Configuration {
 	prefix = keyPath(prefix);
 
 	for (final String propName : keySet()) {
-	   final String propValue = getString(propName);
+	   final String propValue = getProperty(propName);
 
 	   if (StringHelper.isEmpty(prefix)) {
 		outConfiguration.setProperty(propName, propValue);
@@ -869,7 +860,7 @@ public abstract class AbstractConfiguration implements Configuration {
 	final StringBuilder str = new StringBuilder("{");
 	for (final Iterator<String> it = keysIterator(); it.hasNext();) {
 	   final String key = it.next();
-	   final String value = getString(key);
+	   final String value = getProperty(key);
 	   final List<String> values = getStringList(key);
 
 	   if (values != null && values.size() <= 1) {

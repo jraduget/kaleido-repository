@@ -17,6 +17,9 @@ package org.kaleidofoundry.core.web;
 
 import javax.servlet.ServletContext;
 
+import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
+
 /**
  * Provides to user the current {@link ServletContext} class<br/>
  * <br>
@@ -32,20 +35,18 @@ public abstract class ServletContextProvider {
 
    private static ServletContext ServletContext;
 
-   static synchronized void init(ServletContext context) {
+   static synchronized void init(final ServletContext context) {
 	ServletContext = context;
    }
 
    /**
     * @return the current servletContext
     */
+   @Review(comment = "I18n messages startup & error", category = ReviewCategoryEnum.Improvement)
    public static ServletContext getServletContext() {
 
-	if (ServletContext == null) {
-	   // TODO I18n messages startup & error
-	   throw new IllegalStateException(
-		   "webapp servlet context have not be initialized. please check that you have declared kaleido startup filter");
-	}
+	if (ServletContext == null) { throw new IllegalStateException(
+		"webapp servlet context have not be initialized. please check that you have declared kaleido startup filter"); }
 	return ServletContext;
    }
 

@@ -2,3 +2,5 @@ jerome
 registry
 kaleidofoundry
 kaleido
+javadoc
+plugin

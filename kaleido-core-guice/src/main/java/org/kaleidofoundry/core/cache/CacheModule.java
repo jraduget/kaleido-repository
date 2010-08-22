@@ -19,7 +19,7 @@ import org.kaleidofoundry.core.cache.annotation.CoherenceCache;
 import org.kaleidofoundry.core.cache.annotation.EhCache;
 import org.kaleidofoundry.core.cache.annotation.InfinispanCache;
 import org.kaleidofoundry.core.cache.annotation.JbossCache;
-import org.kaleidofoundry.core.ioc.AbstractModule;
+import org.kaleidofoundry.core.context.AbstractModule;
 
 /**
  * Guice cache factory

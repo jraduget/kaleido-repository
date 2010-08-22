@@ -32,6 +32,8 @@ import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.io.IOHelper;
 import org.kaleidofoundry.core.lang.NotNullException;
 import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
+import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
 
 /**
  * @author Jerome RADUGET
@@ -77,11 +79,11 @@ public abstract class AbstractResourceStoreTest extends Assert {
    }
 
    @Test
-   public void load() throws StoreException, IOException {
+   public void get() throws ResourceException, IOException {
 
 	ResourceHandler resource = null;
 
-	for (URI uriToTest : existingResources.keySet()) {
+	for (final URI uriToTest : existingResources.keySet()) {
 	   try {
 		resource = resourceStore.get(uriToTest);
 		assertNotNull(resource);
@@ -96,42 +98,47 @@ public abstract class AbstractResourceStoreTest extends Assert {
    }
 
    @Test
-   public void loadNotFound() throws StoreException {
+   public void loadNotFound() throws ResourceException {
+
+	assertNotNull(resourceStore);
 
 	// null argument not allowed
 	try {
 	   resourceStore.get(null);
 	   fail("NullArgumentException expected");
-	} catch (NotNullException nae) {
+	} catch (final NotNullException nae) {
 	}
 
 	// load not existing resource, throws ResourceNotFoundException
-	for (URI uriToTest : nonExistingResources) {
+	for (final URI uriToTest : nonExistingResources) {
 	   try {
 		resourceStore.get(uriToTest);
 		fail("uri <" + uriToTest + "> must throws ResourceNotFoundException");
-	   } catch (ResourceNotFoundException rnfe) {
+	   } catch (final ResourceNotFoundException rnfe) {
 	   }
 	}
    }
 
    @Test
-   public void exists() throws StoreException {
-	for (URI uriToTest : existingResources.keySet()) {
+   public void exists() throws ResourceException {
+	for (final URI uriToTest : existingResources.keySet()) {
 	   assertTrue(resourceStore.exists(uriToTest));
 	}
    }
 
    @Test
-   public void notExists() throws StoreException {
+   public void notExists() throws ResourceException {
+
+	assertNotNull(resourceStore);
+
 	// null argument not allowed
 	try {
 	   resourceStore.exists(null);
 	   fail("NullArgumentException expected");
-	} catch (NotNullException nae) {
+	} catch (final NotNullException nae) {
 	}
 	// test a non existing resource, throws ResourceNotFoundException
-	for (URI uriToTest : nonExistingResources) {
+	for (final URI uriToTest : nonExistingResources) {
 	   assertFalse(resourceStore.exists(uriToTest));
 	}
    }
@@ -139,24 +146,24 @@ public abstract class AbstractResourceStoreTest extends Assert {
    @Test
    @Ignore
    @NotYetImplemented
-   public void store() throws StoreException {
-	// TODO store implementation test
+   @Review(comment = "store implementation test", category = ReviewCategoryEnum.ImplementIt)
+   public void store() throws ResourceException {
 	return; // annotation @NotYetImplemented handle throw new NotYetImplementedException()...
    }
 
    @Test
    @Ignore
    @NotYetImplemented
-   public void move() throws StoreException {
-	// TODO move implementation test
+   @Review(comment = "move implementation test", category = ReviewCategoryEnum.ImplementIt)
+   public void move() throws ResourceException {
 	return; // annotation @NotYetImplemented handle throw new NotYetImplementedException()...
    }
 
    @Test
    @Ignore
    @NotYetImplemented
-   public void remove() throws StoreException {
-	// TODO remove implementation test
+   @Review(comment = "remove implementation test", category = ReviewCategoryEnum.ImplementIt)
+   public void remove() throws ResourceException {
 	return; // annotation @NotYetImplemented handle throw new NotYetImplementedException()...
    }
 }

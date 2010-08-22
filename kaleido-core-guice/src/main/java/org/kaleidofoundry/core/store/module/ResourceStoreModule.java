@@ -15,7 +15,7 @@
  */
 package org.kaleidofoundry.core.store.module;
 
-import org.kaleidofoundry.core.ioc.AbstractModule;
+import org.kaleidofoundry.core.context.AbstractModule;
 import org.kaleidofoundry.core.store.FileSystemResourceStore;
 import org.kaleidofoundry.core.store.GuiceClasspathResourceStore;
 import org.kaleidofoundry.core.store.GuiceFileSystemResourceStore;

@@ -29,6 +29,8 @@ import java.util.ResourceBundle.Control;
 
 import org.kaleidofoundry.core.i18n.entity.I18nMessageLanguage;
 import org.kaleidofoundry.core.i18n.entity.I18nMessageService;
+import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,11 +79,12 @@ public class MessageBundleControl extends Control {
     * @param format
     * @param loader
     * @param reload
-    * @return
+    * @return resource bundle
     * @throws IllegalAccessException
     * @throws InstantiationException
     * @throws IOException
     */
+   @Review(comment = "MessageBundleControl {@link Plugin} compatible for plugin extention ?  do a MessageLoader interface -> with implementation prop, xml, jpa... ?", category = ReviewCategoryEnum.Improvement)
    ResourceBundle newInputStreamBundle(final String baseName, final Locale locale, final MessageBundleControlFormat format, final ClassLoader loader,
 	   final boolean reload) throws IllegalAccessException, InstantiationException, IOException {
 
@@ -128,7 +131,7 @@ public class MessageBundleControl extends Control {
 	   // jpa entity datas
 	   if (format == MessageBundleControlFormat.JPA_ENTITY_PROPERTIES && I18nMessagesFactory.JpaIsEnabled) {
 
-		// TODO create a service injector (local / guice / spring / ejb3 local or remote...)
+		@Review(comment = "create a service injector (local / guice / spring / ejb3 local or remote...)")
 		final I18nMessageService messageService = new I18nMessageService();
 		final List<I18nMessageLanguage> messagesLanguage = messageService.findMessagesByLocale(baseName, locale);
 
@@ -139,11 +142,6 @@ public class MessageBundleControl extends Control {
 		   foundResource = true;
 		}
 	   }
-
-	   // ...
-	   // TODO - MessageBundleControl {@link Plugin} compatible for extention
-	   // ? do a MessageLoader interface -> with implementation prop, xml, jpa... ?
-	   // ...
 
 	} catch (final RuntimeException rie) {
 	   // usefull for jpa entity manager error
@@ -173,7 +171,7 @@ public class MessageBundleControl extends Control {
     * @param loader
     * @param resourceName
     * @param reload
-    * @return
+    * @return resource input stream
     * @throws IOException
     */
    InputStream newUrlInputStream(final ClassLoader loader, final String resourceName, final boolean reload) throws IOException {

@@ -28,9 +28,17 @@ import java.lang.annotation.Target;
 import org.kaleidofoundry.core.config.Configuration;
 
 /**
- * Annotation used to provide a configuration context to a field, an argument, ... <br/>
- * It will use {@link Configuration} registry, to map the configurations data to the {@link RuntimeContext} class<br/>
- * This context is named, and will be registered when you use it.
+ * This annotation is used to provide / inject (via aspectj, guice, spring) a {@link RuntimeContext} configuration instance to a field,
+ * an argument, ... <br/>
+ * It provides some static meta datas, like runtime context name, an optionally set of configuration ids, ...<br/>
+ * It will use {@link Configuration} registry, to bind the underlying configurations data to the {@link RuntimeContext} instance<br/>
+ * <br/> {@link InjectContext} annotation can be used on a field, an argument, a constructor :
+ * <ul>
+ * <li>the annotated field is a {@link RuntimeContext} class,</li>
+ * <li>the annotated field class have an accessible {@link RuntimeContext} field (aggregation),</li>
+ * </ul>
+ * In both case, the given field will automatically create and feed, using annotation meta parameters.
+ * </p>
  * 
  * @author Jerome RADUGET
  */
@@ -57,7 +65,14 @@ public @interface InjectContext {
    When when() default When.LazyGet;
 
    /**
-    * @return static parameters, that could no be changed at runtime, but which will be provide to the underling instance
+    * allow dynamics changes from configuration changes
+    */
+   boolean dynamics() default false;
+
+   /**
+    * @return static parameters, that could no be changed at runtime, but which will be provide to the underling instance <br/>
+    *         if parameter is set, it will have prior to the configurations items with same name
     */
    Parameter[] parameters() default {};
+
 }

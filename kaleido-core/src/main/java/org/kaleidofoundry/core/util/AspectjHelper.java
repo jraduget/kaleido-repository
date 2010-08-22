@@ -43,7 +43,7 @@ public abstract class AspectjHelper {
 
 	   if (jp.getSignature() instanceof FieldSignature) {
 		FieldSignature fs = (FieldSignature) jp.getSignature();
-		logger.debug("\t<joinpoint.field >\t\tname = {} ; class = {}", fs.getField().getName(), fs.getDeclaringType().getName());
+		logger.debug("\t<joinpoint.field>\t\tname = {} ; class = {}", fs.getField().getName(), fs.getDeclaringType().getName());
 	   }
 
 	   String[] parametersName = null;
