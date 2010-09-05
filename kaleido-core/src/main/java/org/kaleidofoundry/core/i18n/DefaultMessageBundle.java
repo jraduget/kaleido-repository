@@ -26,8 +26,8 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.kaleidofoundry.core.cache.Cache;
-import org.kaleidofoundry.core.cache.CacheFactory;
 import org.kaleidofoundry.core.cache.CacheManager;
+import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
@@ -43,15 +43,6 @@ import org.slf4j.LoggerFactory;
 public class DefaultMessageBundle extends ResourceBundle implements I18nMessages {
 
    static final Logger LOGGER = LoggerFactory.getLogger(DefaultMessageBundle.class);
-
-   /**
-    * enumeration of local context property name
-    */
-   public static enum ContextProperty {
-
-	/** cache manager context name to use */
-	cacheManagerRef;
-   }
 
    // used for user resource bundle data
    private final Cache<String, String> resourceBundleCache;
@@ -90,14 +81,14 @@ public class DefaultMessageBundle extends ResourceBundle implements I18nMessages
 	else {
 	   LOGGER.debug("Create message bundle (with cacheManager) for '{}'", resourceName);
 	   final CacheManager cacheManager;
-	   final String cacheManagerContextRef = context.getProperty(ContextProperty.cacheManagerRef.name());
+	   final String cacheManagerContextRef = context.getProperty(I18nContextBuilder.CacheManagerRef);
 
 	   if (!StringHelper.isEmpty(cacheManagerContextRef)) {
-		cacheManager = CacheFactory.provides(new RuntimeContext<CacheManager>(cacheManagerContextRef, context));
+		cacheManager = CacheManagerFactory.provides(new RuntimeContext<CacheManager>(cacheManagerContextRef, CacheManager.class, context));
 	   } else {
-		cacheManager = CacheFactory.provides();
+		cacheManager = CacheManagerFactory.provides();
 	   }
-	   resourceBundleCache = cacheManager.getCache("kaleidofoundry/messageBundle/" + resourceName);
+	   resourceBundleCache = cacheManager.getCache("kaleidofoundry/i18n/" + resourceName);
 	   resourceBundleNoCache = null;
 	   // copy common properties to internal Cache<String,String> storage
 	   for (final String propName : properties.stringPropertyNames()) {
@@ -106,7 +97,6 @@ public class DefaultMessageBundle extends ResourceBundle implements I18nMessages
 	}
 
 	this.resourceName = resourceName;
-
    }
 
    /*
@@ -134,15 +124,15 @@ public class DefaultMessageBundle extends ResourceBundle implements I18nMessages
     */
    @Override
    public String getMessage(final String key) throws MissingResourceException {
-	return getMessage(key, (String[]) null);
+	return getMessage(key, (Object[]) null);
    }
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.i18n.I18nMessages#getMessage(java.lang.String, java.lang.String[])
+    * @see org.kaleidofoundry.core.i18n.I18nMessages#getMessage(java.lang.String, java.lang.Object[])
     */
    @Override
-   public String getMessage(final String key, final String... array) throws MissingResourceException {
+   public String getMessage(final String key, final Object... array) throws MissingResourceException {
 	String msg = null;
 
 	msg = getString(key);
@@ -152,7 +142,9 @@ public class DefaultMessageBundle extends ResourceBundle implements I18nMessages
 	   throw new MissingResourceException("Cannot find message key '" + key + "' in resource '" + resourceName + "'", String.class.getName(), key);
 	}
 
-	return MessageFormat.format(msg, (Object[]) array);
+	// with locale specifics
+	return (new MessageFormat(msg, getLocale())).format(array, new StringBuffer(), null).toString();
+	// return MessageFormat.format(msg, array);
    }
 
    /*

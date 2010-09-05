@@ -21,6 +21,7 @@ import java.util.MissingResourceException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import org.kaleidofoundry.core.lang.NotNullException;
 
 /**
  * Test {@link I18nMessages} and {@link DefaultMessageBundle}
@@ -42,57 +43,57 @@ public abstract class AbstractI18nMessagesTest extends Assert {
 	I18nMessagesFactory.clearCache();
    }
 
-   @Test(expected = NullPointerException.class)
+   @Test(expected = NotNullException.class)
    public void noParent_nullBasename() {
-	I18nMessagesFactory.getMessages(null, Locale.ROOT);
+	I18nMessagesFactory.provides(null, Locale.ROOT);
    }
 
-   @Test(expected = NullPointerException.class)
+   @Test(expected = NotNullException.class)
    public void noParent_nullLocale() {
-	I18nMessagesFactory.getMessages(getResourceRoot() + "root", (Locale) null);
+	I18nMessagesFactory.provides(getResourceRoot() + "root", (Locale) null);
    }
 
    @Test(expected = MissingResourceException.class)
    public void noResourceFile() {
-	I18nMessagesFactory.getMessages(getResourceRoot() + "nofile");
+	I18nMessagesFactory.provides(getResourceRoot() + "nofile");
    }
 
    @Test(expected = MissingResourceException.class)
    public void noResourceKey() {
-	final I18nMessages messages = I18nMessagesFactory.getMessages(getResourceRoot() + "root", Locale.FRENCH);
+	final I18nMessages messages = I18nMessagesFactory.provides(getResourceRoot() + "root", Locale.FRENCH);
 	messages.getMessage("noKey");
    }
 
    @Test
    public void noParent_rootLocale() {
-	final I18nMessages messages = I18nMessagesFactory.getMessages(getResourceRoot() + "root", Locale.ROOT);
+	final I18nMessages messages = I18nMessagesFactory.provides(getResourceRoot() + "root", Locale.ROOT);
 	assertValues(messages, null);
    }
 
    @Test
    public void noParent_French() {
 	final Locale locale = Locale.FRENCH;
-	final I18nMessages messages = I18nMessagesFactory.getMessages(getResourceRoot() + "root", locale);
+	final I18nMessages messages = I18nMessagesFactory.provides(getResourceRoot() + "root", locale);
 	assertValues(messages, locale);
    }
 
    @Test
    public void noParent_English() {
 	final Locale locale = Locale.ENGLISH;
-	final I18nMessages messages = I18nMessagesFactory.getMessages(getResourceRoot() + "root", locale);
+	final I18nMessages messages = I18nMessagesFactory.provides(getResourceRoot() + "root", locale);
 	assertValues(messages, locale);
    }
 
    @Test
    public void noParent_German() {
 	final Locale locale = Locale.GERMAN;
-	final I18nMessages messages = I18nMessagesFactory.getMessages(getResourceRoot() + "root", locale);
+	final I18nMessages messages = I18nMessagesFactory.provides(getResourceRoot() + "root", locale);
 	assertValues(messages, locale);
    }
 
    @Test
    public void noParent_unknownLocale() {
-	final I18nMessages messages = I18nMessagesFactory.getMessages(getResourceRoot() + "root", Locale.TRADITIONAL_CHINESE);
+	final I18nMessages messages = I18nMessagesFactory.provides(getResourceRoot() + "root", Locale.TRADITIONAL_CHINESE);
 	assertValues(messages, null);
    }
 
@@ -104,8 +105,8 @@ public abstract class AbstractI18nMessagesTest extends Assert {
    @Test
    public void withParent_French() {
 	final Locale locale = Locale.FRENCH;
-	final I18nMessages parent = I18nMessagesFactory.getMessages(getResourceRoot() + "root", locale);
-	final I18nMessages messages = I18nMessagesFactory.getMessages(getResourceRoot() + "child", Locale.FRENCH, parent);
+	final I18nMessages parent = I18nMessagesFactory.provides(getResourceRoot() + "root", locale);
+	final I18nMessages messages = I18nMessagesFactory.provides(getResourceRoot() + "child", Locale.FRENCH, parent);
 	final String localePrefix = locale != null ? locale.getLanguage() + " " : "";
 	assertEquals(localePrefix + "test override parent label", messages.getMessage("label.simple.test")); // override default value
 	assertEquals(localePrefix + "test label 01", messages.getMessage("label.array.test", "01")); // parent item value
@@ -119,7 +120,7 @@ public abstract class AbstractI18nMessagesTest extends Assert {
    @Test(expected = MissingResourceException.class)
    public void withParent_noResourceKey() throws Throwable {
 	final Locale locale = Locale.FRENCH;
-	final I18nMessages messages = I18nMessagesFactory.getMessages(getResourceRoot() + "child", locale);
+	final I18nMessages messages = I18nMessagesFactory.provides(getResourceRoot() + "child", locale);
 	messages.getMessage("label.array.test");
    }
 

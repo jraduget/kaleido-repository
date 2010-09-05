@@ -33,9 +33,8 @@ public class FtpResourceStoreTest extends AbstractResourceStoreTest {
 
 	// anonymous account : ftp://hostname/resourcepath
 	// account : ftp://username:password@hostname/resourcepath
-	existingResources.put(new URI("ftp://localhost/foo.txt"), DEFAULT_RESOURCE_MOCK_TEST);
-
-	nonExistingResources.add(new URI("ftp://localhost/foo"));
+	existingResources.put(new URI("ftp://localhost/kaleidofoundry/it/store/foo.txt"), DEFAULT_RESOURCE_MOCK_TEST);
+	nonExistingResources.add(new URI("ftp://localhost/kaleidofoundry/it/store/foo"));
    }
 
 }

@@ -105,15 +105,21 @@ import org.kaleidofoundry.core.store.ResourceStore;
  * <p>
  * Sample of configuration <b>key</b> identifiers:
  * <ul>
- * <li><code>//application/name	- configuration.getString("//application/name") -> "app"</code></li>
- * <li><code>//application/version  - configuration.getString("//application/version") -> "1.0.0"</code></li>
- * <li>
- * <code>//application/libraries  - configuration.getStringList("//application/libraries") -> {"dom4j.jar","log4j.jar","mail.jar"}</code></li>
+ * <li><code>configuration.getString("//application/name") -> "app"</code></li>
+ * <li><code>configuration.getString("//application/version") -> "1.0.0"</code></li>
+ * <li><code>configuration.getStringList("//application/libraries") -> {"dom4j.jar","log4j.jar","mail.jar"}</code></li>
  * </ul>
  * Informations :
  * <ul>
  * <li>-><code>'//'</code> represents the root</li>
  * <li>-><code>'/'</code> represents the key separator</li>
+ * </ul>
+ * You can also used standard java properties format :
+ * <ul>
+ * <li><code>configuration.getString("application.name") -> "app"</code></li>
+ * <li><code>configuration.getString("application.version") -> "1.0.0"</code></li>
+ * <li><code>configuration.getStringList("application.libraries") -> {"dom4j.jar","log4j.jar","mail.jar"}</code></li>
+ * </ul>
  * </ul>
  * </p>
  * 

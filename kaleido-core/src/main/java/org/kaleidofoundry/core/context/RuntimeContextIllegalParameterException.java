@@ -25,11 +25,22 @@ public class RuntimeContextIllegalParameterException extends RuntimeContextExcep
    private static final long serialVersionUID = -7106275164578192921L;
 
    /**
+    * following context parameter have causes error
+    * @param parameter
+    * @param parameterValue
+    * @param context
+    * @param error
+    */
+   public RuntimeContextIllegalParameterException(String parameter, String parameterValue, RuntimeContext<?> context, Throwable error ) {
+	super("context.parameter.causes.error", parameter, parameterValue, context.getName(), error.getMessage());
+   }
+   
+   /**
     * @param code
     * @param locale
     * @param args
     */
-   public RuntimeContextIllegalParameterException(final String code, final Locale locale, final String... args) {
+   RuntimeContextIllegalParameterException(final String code, final Locale locale, final String... args) {
 	super(code, locale, args);
    }
 
@@ -37,7 +48,7 @@ public class RuntimeContextIllegalParameterException extends RuntimeContextExcep
     * @param code
     * @param locale
     */
-   public RuntimeContextIllegalParameterException(final String code, final Locale locale) {
+    RuntimeContextIllegalParameterException(final String code, final Locale locale) {
 	super(code, locale);
    }
 
@@ -45,7 +56,7 @@ public class RuntimeContextIllegalParameterException extends RuntimeContextExcep
     * @param code
     * @param args
     */
-   public RuntimeContextIllegalParameterException(final String code, final String... args) {
+    RuntimeContextIllegalParameterException(final String code, final String... args) {
 	super(code, args);
    }
 
@@ -55,7 +66,7 @@ public class RuntimeContextIllegalParameterException extends RuntimeContextExcep
     * @param locale
     * @param args
     */
-   public RuntimeContextIllegalParameterException(final String code, final Throwable cause, final Locale locale, final String... args) {
+    RuntimeContextIllegalParameterException(final String code, final Throwable cause, final Locale locale, final String... args) {
 	super(code, cause, locale, args);
    }
 
@@ -64,7 +75,7 @@ public class RuntimeContextIllegalParameterException extends RuntimeContextExcep
     * @param cause
     * @param locale
     */
-   public RuntimeContextIllegalParameterException(final String code, final Throwable cause, final Locale locale) {
+    RuntimeContextIllegalParameterException(final String code, final Throwable cause, final Locale locale) {
 	super(code, cause, locale);
    }
 
@@ -73,7 +84,7 @@ public class RuntimeContextIllegalParameterException extends RuntimeContextExcep
     * @param cause
     * @param args
     */
-   public RuntimeContextIllegalParameterException(final String code, final Throwable cause, final String... args) {
+    RuntimeContextIllegalParameterException(final String code, final Throwable cause, final String... args) {
 	super(code, cause, args);
    }
 
@@ -81,15 +92,16 @@ public class RuntimeContextIllegalParameterException extends RuntimeContextExcep
     * @param code
     * @param cause
     */
-   public RuntimeContextIllegalParameterException(final String code, final Throwable cause) {
+    RuntimeContextIllegalParameterException(final String code, final Throwable cause) {
 	super(code, cause);
    }
 
    /**
     * @param code
     */
-   public RuntimeContextIllegalParameterException(final String code) {
+    RuntimeContextIllegalParameterException(final String code) {
 	super(code);
    }
 
+    
 }

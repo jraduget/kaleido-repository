@@ -99,7 +99,7 @@ public abstract class AbstractCacheManager implements CacheManager {
 
 	   try {
 		if (!StringHelper.isEmpty(resourceStoreRef)) {
-		   resourceStore = ResourceStoreFactory.provides(configuration, new RuntimeContext<ResourceStore>(resourceStoreRef, context));
+		   resourceStore = ResourceStoreFactory.provides(configuration, new RuntimeContext<ResourceStore>(resourceStoreRef, ResourceStore.class, context));
 		} else {
 		   resourceStore = ResourceStoreFactory.provides(configuration);
 		}

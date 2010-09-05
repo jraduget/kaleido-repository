@@ -66,7 +66,7 @@ public abstract class AbstractTestCacheManager extends Assert {
 
    @Before
    public void setup() {
-	cacheManager = CacheFactory.provides(getCacheImplementationCode(), getAvailableConfiguration(), getCacheManagerContext());
+	cacheManager = CacheManagerFactory.provides(getCacheImplementationCode(), getAvailableConfiguration(), getCacheManagerContext());
    }
 
    /**
@@ -83,18 +83,32 @@ public abstract class AbstractTestCacheManager extends Assert {
 
    @Test
    public void defaultConfiguration() {
-	_testCacheFactory(CacheFactory.provides(getCacheImplementationCode(), null, getCacheManagerContext()));
+	CacheManager defaultCacheManager = CacheManagerFactory.provides(getCacheImplementationCode(), null, getCacheManagerContext());
+	
+	_testCacheFactory(defaultCacheManager);
+	
+	// same instance have to be provided the second / third / ... times
+	assertSame(defaultCacheManager, CacheManagerFactory.provides(getCacheImplementationCode(), null, getCacheManagerContext()));
+	assertSame(defaultCacheManager, CacheManagerFactory.provides(getCacheImplementationCode(), null, getCacheManagerContext()));
+	assertSame(defaultCacheManager, CacheManagerFactory.provides(getCacheImplementationCode(), null, getCacheManagerContext()));
+	
+	// not same instance as default instance 
+	assertNotSame(defaultCacheManager, cacheManager);
    }
 
    @Test
    public void legalConfiguration() {
 	_testCacheFactory(cacheManager);
+	// same instance have to be provided the second / third / ... times
+	assertSame(cacheManager, CacheManagerFactory.provides(getCacheImplementationCode(), getAvailableConfiguration(), getCacheManagerContext()));
+	assertSame(cacheManager, CacheManagerFactory.provides(getCacheImplementationCode(), getAvailableConfiguration(), getCacheManagerContext()));
+	assertSame(cacheManager, CacheManagerFactory.provides(getCacheImplementationCode(), getAvailableConfiguration(), getCacheManagerContext()));
    }
 
    @Test(expected = CacheConfigurationException.class)
    public void illegalConfiguration() {
 	try {
-	   CacheFactory.provides(getCacheImplementationCode(), "classpath:/cache/illegal-configuration.txt", getCacheManagerContext());
+	   CacheManagerFactory.provides(getCacheImplementationCode(), "classpath:/cache/illegal-configuration.txt", getCacheManagerContext());
 	} catch (final CacheConfigurationNotFoundException cnfe) {
 	   fail("except CacheConfigurationException not CacheConfigurationNotFoundException");
 	}
@@ -103,7 +117,7 @@ public abstract class AbstractTestCacheManager extends Assert {
    @Test(expected = CacheConfigurationException.class)
    public void invalidConfiguration() {
 	try {
-	   CacheFactory.provides(getCacheImplementationCode(), "classpath:/cache/invalid-configuration.xml", getCacheManagerContext());
+	   CacheManagerFactory.provides(getCacheImplementationCode(), "classpath:/cache/invalid-configuration.xml", getCacheManagerContext());
 	} catch (final CacheConfigurationNotFoundException cnfe) {
 	   fail("except CacheConfigurationException not CacheConfigurationNotFoundException");
 	}
@@ -111,7 +125,7 @@ public abstract class AbstractTestCacheManager extends Assert {
 
    @Test(expected = CacheConfigurationNotFoundException.class)
    public void configurationNotFoundException() {
-	CacheFactory.provides(getCacheImplementationCode(), "classpath:/cache/unknown.xml", getCacheManagerContext());
+	CacheManagerFactory.provides(getCacheImplementationCode(), "classpath:/cache/unknown.xml", getCacheManagerContext());
    }
 
    @Ignore
@@ -125,7 +139,8 @@ public abstract class AbstractTestCacheManager extends Assert {
     */
    protected static void _testCacheFactory(final CacheManager cacheManager) {
 	assertNotNull(cacheManager);
-
+	
+	// some cache basic test
 	final Cache<Integer, Person> cache = cacheManager.getCache(Person.class);
 
 	assertNotNull(cache);

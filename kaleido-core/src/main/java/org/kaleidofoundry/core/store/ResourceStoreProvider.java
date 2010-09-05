@@ -23,9 +23,11 @@ import java.util.Set;
 import org.kaleidofoundry.core.context.AbstractProviderService;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.context.RuntimeContextEmptyParameterException;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginFactory;
+import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * ResourceStore Provider
@@ -46,8 +48,14 @@ public class ResourceStoreProvider extends AbstractProviderService<ResourceStore
     * @see org.kaleidofoundry.core.context.Provider#provides(org.kaleidofoundry.core.context.RuntimeContext)
     */
    @Override
-   public ResourceStore provides(final RuntimeContext<ResourceStore> context) throws ProviderException, ResourceException {
-	return provides(context.getProperty(ResourceContextBuilder.uriScheme), new RuntimeContext<ResourceStore>(ResourceStore.class));
+   public ResourceStore provides(@NotNull final RuntimeContext<ResourceStore> context) throws ProviderException, ResourceException {
+	String uriScheme = context.getProperty(ResourceContextBuilder.uriScheme);
+	
+	if (StringHelper.isEmpty(uriScheme)) {
+	   throw new RuntimeContextEmptyParameterException(ResourceContextBuilder.uriScheme, context);
+	}
+	
+	return provides(uriScheme, new RuntimeContext<ResourceStore>(ResourceStore.class));
    }
 
    /**
@@ -60,7 +68,7 @@ public class ResourceStoreProvider extends AbstractProviderService<ResourceStore
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
-   public ResourceStore provides(final URI resourceUri) throws ProviderException, ResourceException {
+   public ResourceStore provides(@NotNull final URI resourceUri) throws ProviderException, ResourceException {
 	return provides(resourceUri, new RuntimeContext<ResourceStore>(ResourceStore.class));
    }
 
@@ -152,7 +160,7 @@ public class ResourceStoreProvider extends AbstractProviderService<ResourceStore
    }
 
    // use to resolve uri although pUri contains only the uri scheme like ftp|http|classpath...
-   private static URI createURI(final String pUri) {
+   private static URI createURI(@NotNull final String pUri) {
 
 	if (!pUri.contains(":") && !pUri.contains("/")) {
 	   return URI.create(pUri + ":/");

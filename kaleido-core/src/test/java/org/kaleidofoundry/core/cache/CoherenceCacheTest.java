@@ -32,7 +32,7 @@ public class CoherenceCacheTest extends AbstractTestCache {
 
    @Before
    public void setup() {
-	cacheManager = CacheFactory.provides(DefaultCacheProviderEnum.coherence3x.name(), "classpath:/cache/coherence-cache-config.xml");
+	cacheManager = CacheManagerFactory.provides(DefaultCacheProviderEnum.coherence3x.name(), "classpath:/cache/coherence-cache-config.xml");
 	cache = cacheManager.getCache(Person.class.getName());
    }
 

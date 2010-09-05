@@ -44,7 +44,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.kaleidofoundry.core.cache.Cache;
-import org.kaleidofoundry.core.cache.CacheFactory;
+import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
@@ -71,7 +71,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  */
 @Immutable
 @ThreadSafe
-@Review(comment = "bootstrap load for classpath or file uri configuration which can defined a cacheManagerRef or resourceStoreRef, ... which is not yet loaded at build time", category = ReviewCategoryEnum.Fixme)
+@Review(comment = "bootstrap load for classpath or file uri configuration which can defined a specific cacheManagerRef or resourceStoreRef, ... which is not yet loaded at build time", category = ReviewCategoryEnum.Fixme)
 public abstract class AbstractConfiguration implements Configuration {
 
    // configuration name identifier
@@ -114,7 +114,7 @@ public abstract class AbstractConfiguration implements Configuration {
 	final ResourceStore resourceStore;
 
 	if (!StringHelper.isEmpty(resourceStoreRef)) {
-	   resourceStore = ResourceStoreFactory.provides(resourceUri, new RuntimeContext<ResourceStore>(resourceStoreRef, context));
+	   resourceStore = ResourceStoreFactory.provides(resourceUri, new RuntimeContext<ResourceStore>(resourceStoreRef, ResourceStore.class, context));
 	} else {
 	   resourceStore = ResourceStoreFactory.provides(resourceUri);
 	}
@@ -125,9 +125,9 @@ public abstract class AbstractConfiguration implements Configuration {
 	final String cacheManagerContextRef = context.getProperty(CacheManagerRef);
 
 	if (!StringHelper.isEmpty(cacheManagerContextRef)) {
-	   cacheManager = CacheFactory.provides(new RuntimeContext<CacheManager>(cacheManagerContextRef, context));
+	   cacheManager = CacheManagerFactory.provides(new RuntimeContext<CacheManager>(cacheManagerContextRef, CacheManager.class, context));
 	} else {
-	   cacheManager = CacheFactory.provides();
+	   cacheManager = CacheManagerFactory.provides();
 	}
 	cacheProperties = cacheManager.getCache("kaleidofoundry/configuration/" + name);
    }
@@ -717,6 +717,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
    /**
     * String to Object Converter
+    * @param <T> 
     * 
     * @param strValue string value representation
     * @param cl Target class

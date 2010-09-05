@@ -30,7 +30,7 @@ public class LocalCacheManagerTest extends AbstractTestCacheManager {
 
    @Override
    protected String getAvailableConfiguration() {
-	return null;
+	return "classpath:/noneed";
    }
 
    @Override

@@ -17,7 +17,7 @@ package org.kaleidofoundry.core.config;
 
 import java.net.URI;
 
-import org.kaleidofoundry.core.cache.CacheFactory;
+import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
 import org.kaleidofoundry.core.context.RuntimeContext;
 
@@ -49,7 +49,7 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * </tr>
  * <tr>
  * <td>cacheManagerRef</td>
- * <td>cache manager context name to use, if not specify default will be used (see {@link CacheFactory})</td>
+ * <td>cache manager context name to use, if not specify default will be used (see {@link CacheManagerFactory})</td>
  * </tr>
  * </table>
  * </p>

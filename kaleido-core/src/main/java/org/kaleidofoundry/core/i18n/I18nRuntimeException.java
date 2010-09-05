@@ -132,10 +132,10 @@ public abstract class I18nRuntimeException extends CodedRuntimeException {
    protected I18nMessages getMessages() {
 	// specified locale in exception
 	if (getLocale() != null) {
-	   return I18nMessagesFactory.getMessages(getI18nBundleName(), getLocale());
+	   return I18nMessagesFactory.provides(getI18nBundleName(), getLocale());
 	   // default user / server locale compute by I18nMessagesFactory
 	} else {
-	   return I18nMessagesFactory.getMessages(getI18nBundleName());
+	   return I18nMessagesFactory.provides(getI18nBundleName());
 	}
    }
 
@@ -153,7 +153,7 @@ public abstract class I18nRuntimeException extends CodedRuntimeException {
 	final I18nMessages msgB = getMessages();
 	if (msgB != null) {
 	   if (getArgs() != null) {
-		return msgB.getMessage(getCode(), getArgs());
+		return msgB.getMessage(getCode(), (Object[]) getArgs());
 	   } else {
 		return msgB.getMessage(getCode());
 	   }

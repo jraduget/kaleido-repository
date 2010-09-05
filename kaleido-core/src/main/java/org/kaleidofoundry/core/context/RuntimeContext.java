@@ -276,10 +276,11 @@ public class RuntimeContext<T> {
 
    /**
     * @param name context name
+    * @param pluginInterface 
     * @param context
     */
-   public RuntimeContext(final String name, @NotNull final RuntimeContext<?> context) {
-	this(name, (String) null, false, context.getConfigurations());
+   public RuntimeContext(final String name, final Class<T> pluginInterface, @NotNull final RuntimeContext<?> context) {
+	this(name, pluginInterface, false, context.getConfigurations());
    }
 
    /**
@@ -320,24 +321,35 @@ public class RuntimeContext<T> {
     * @param injectContext
     * @param pluginInterface
     * @return new runtime context instance, build from given annotation
-    * @throws RuntimeContextException if one of {@link InjectContext#configurations()} is not registered
+    * @throws RuntimeContextIllegalParameterException if one of {@link InjectContext#configurations()} is not registered
     */
    static <T> RuntimeContext<T> createFrom(@NotNull final InjectContext injectContext, final Class<T> pluginInterface) {
 
 	if (StringHelper.isEmpty(injectContext.value())) { throw new RuntimeContextIllegalParameterException("context.annotation.value.empty"); }
 
+	final RuntimeContext<T> rc;
+	
+	// handle configurations to used in the runtime context
 	final String[] configIds = injectContext.configurations();
 	final Configuration[] configs = new Configuration[configIds != null ? configIds.length : 0];
 	for (int i = 0; i < configs.length; i++) {
 	   configs[i] = ConfigurationFactory.getRegistry().get(configIds[i]);
-	   if (configs[i] == null) { throw new RuntimeContextException("context.annotation.illegalconfig.simple", injectContext.value(), configIds[i]); }
+	   if (configs[i] == null) { throw new RuntimeContextIllegalParameterException("context.annotation.illegalconfig.simple", injectContext.value(), configIds[i]); }
 	}
 
+	// create runtimeContext instance
 	if (pluginInterface != null) {
-	   return new RuntimeContext<T>(injectContext.value(), pluginInterface, true, configs);
+	   rc = new RuntimeContext<T>(injectContext.value(), pluginInterface, true, configs);
 	} else {
-	   return new RuntimeContext<T>(injectContext.value(), (String) null, true, configs);
+	   rc = new RuntimeContext<T>(injectContext.value(), (String) null, true, configs);
 	}
+	
+	// handle and copy static annotation parameters
+	for (Parameter p : injectContext.parameters()) {
+	   rc.parameters.put(p.name(), p.value());	   
+	}
+	 
+	return rc;	
    }
 
    /**
@@ -503,8 +515,10 @@ public class RuntimeContext<T> {
 	final Set<String> keys = new LinkedHashSet<String>();
 	final Set<String> result = new LinkedHashSet<String>();
 
-	for (final String key : parameters.keySet()) {
-	   keys.add(parameters.get(key));
+	if (parameters != null && !parameters.isEmpty()) {
+	   for (final String key : parameters.keySet()) {
+		keys.add(parameters.get(key));
+	   }
 	}
 
 	for (final Configuration config : getConfigurations()) {

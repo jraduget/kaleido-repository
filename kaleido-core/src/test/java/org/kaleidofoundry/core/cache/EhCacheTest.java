@@ -32,7 +32,7 @@ public class EhCacheTest extends AbstractTestCache {
 
    @Before
    public void setup() {
-	cacheManager = CacheFactory.provides(DefaultCacheProviderEnum.ehCache1x.name(), "classpath:/cache/ehcache-local.xml");
+	cacheManager = CacheManagerFactory.provides(DefaultCacheProviderEnum.ehCache1x.name(), "classpath:/cache/ehcache-local.xml");
 	cache = cacheManager.getCache(Person.class.getName());
    }
 

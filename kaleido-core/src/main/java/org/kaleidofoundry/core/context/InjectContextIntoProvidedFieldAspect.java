@@ -63,13 +63,13 @@ public class InjectContextIntoProvidedFieldAspect {
    private final ConcurrentMap<Field, Boolean> _$injectedFieldMap = new ConcurrentHashMap<Field, Boolean>();
 
    public InjectContextIntoProvidedFieldAspect() {
-	LOGGER.debug("@Aspect(InjectContextAgregatedAspect) new instance");
+	LOGGER.debug("@Aspect(InjectContextIntoProvidedFieldAspect) new instance");
    }
 
    // no need to filter on field modifier here, otherwise you can use private || !public at first get argument
    @Pointcut("get(@org.kaleidofoundry.core.context.InjectContext !org.kaleidofoundry.core.context.RuntimeContext *) && if()")
    public static boolean trackAgregatedRuntimeContextField(final JoinPoint jp, final JoinPoint.EnclosingStaticPart esjp) {
-	LOGGER.debug("@Pointcut(InjectAgregatedContextAspect) trackAgregatedRuntimeContextField match");
+	LOGGER.debug("@Pointcut(InjectContextIntoProvidedFieldAspect) trackAgregatedRuntimeContextField match");
 	return true;
    }
 
@@ -88,7 +88,7 @@ public class InjectContextIntoProvidedFieldAspect {
 	   final Field annotatedField = annotatedFieldSignature.getField();
 	   final Boolean annotatedFieldInjected = _$injectedFieldMap.get(annotatedField);
 
-	   LOGGER.debug("\t<field \"{}\" injected>\t{}", annotatedField.getName(), annotatedFieldInjected == null ? Boolean.FALSE : annotatedFieldInjected
+	   LOGGER.debug("\t<joinpoint.field.{}.injected>\t{}", annotatedField.getName(), annotatedFieldInjected == null ? Boolean.FALSE : annotatedFieldInjected
 		   .booleanValue());
 
 	   // does the field to inject have already been injected
@@ -116,7 +116,7 @@ public class InjectContextIntoProvidedFieldAspect {
 			   fieldToInjectInstance = providesMethod.invoke(fieldProviderInstance, annotation, annotatedField.getType());
 			} catch (InvocationTargetException ite) {
 			   // direct runtime exception like RuntimeContextException...
-			   throw ite.getCause();
+			   throw ite.getCause() != null ? ite.getCause() : (ite.getTargetException() != null ? ite.getTargetException() : ite) ;
 			}
 			// set the field that was not yet injected
 			annotatedField.set(targetInstance, fieldToInjectInstance);

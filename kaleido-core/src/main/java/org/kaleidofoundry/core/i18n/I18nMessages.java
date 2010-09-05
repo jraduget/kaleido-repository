@@ -17,18 +17,26 @@ package org.kaleidofoundry.core.i18n;
 
 import static org.kaleidofoundry.core.i18n.I18nConstants.I18nMessageBundlePluginName;
 
+import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.kaleidofoundry.core.context.Provider;
+import org.kaleidofoundry.core.lang.annotation.Review;
 import org.kaleidofoundry.core.plugin.Declare;
 
 /**
- * Simple read only interface to handle MessageBundle
+ * Interface to handle resource bundles containing, locale-specific objects
  * 
+ * @see ResourceBundle
+ * @see MessageFormat
+ * @see DefaultMessageBundle
  * @author Jerome RADUGET
  */
 @Declare(I18nMessageBundlePluginName)
+@Provider(value = I18nMessagesProvider.class, singletons = false)
+@Review(comment = "javadoc description & samples")
 public interface I18nMessages {
 
    /**
@@ -44,7 +52,7 @@ public interface I18nMessages {
 
    /**
     * @param key message code
-    * @return the i18n message mapping to key parameter
+    * @return the i18n message, mapping to key parameter
     * @throws MissingResourceException
     */
    String getMessage(final String key) throws MissingResourceException;
@@ -54,14 +62,29 @@ public interface I18nMessages {
     * Gets a string message from the resource bundle for the given key. The message may contain variables that will be substituted with the
     * given arguments. Variables have the format:
     * </p>
-    * <code> This message has two variables: {0} and {1} </code>
+    * Example :
+    * 
+    * <pre>
+    * # my i18n message properties
+    * myMessage.code=Hello Sir {0}, you win {1,number,#.##}$ !
+    * </pre>
+    * 
+    * Java program :
+    * 
+    * <pre>
+    * I18nMessages myMessageBundle = ...;
+    * ...
+    * System.out.println(myMessageBundle.getMessage("myMessage.code", "foo", 123.45));
+    * ...
+    * </pre>
     * 
     * @param key The resource key
     * @param array An array of objects to place in corresponding variables
     * @return the i18n message mapping to key parameter
     * @throws MissingResourceException
+    * @see MessageFormat
     */
-   String getMessage(final String key, final String... array) throws MissingResourceException;
+   String getMessage(final String key, final Object... array) throws MissingResourceException;
 
    /**
     * @return parent resource bundle

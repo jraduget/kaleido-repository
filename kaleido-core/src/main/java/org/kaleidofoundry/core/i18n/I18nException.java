@@ -25,8 +25,8 @@ import org.kaleidofoundry.core.lang.CodedException;
  * (fault code...)
  * </p>
  * <p>
- * Message of the exception is computed by an {@link DefaultMessageBundle}, using context user {@link Locale} (or default locale is user have no
- * context)
+ * Message of the exception is computed by an {@link DefaultMessageBundle}, using context user {@link Locale} (or default locale is user
+ * have no context)
  * </p>
  * 
  * @author Jerome RADUGET
@@ -138,10 +138,10 @@ public abstract class I18nException extends CodedException {
    protected I18nMessages getMessages() {
 	// specified locale in exception
 	if (getLocale() != null) {
-	   return I18nMessagesFactory.getMessages(getI18nBundleName(), getLocale());
+	   return I18nMessagesFactory.provides(getI18nBundleName(), getLocale());
 	   // default user / server locale compute by I18nMessagesFactory
 	} else {
-	   return I18nMessagesFactory.getMessages(getI18nBundleName());
+	   return I18nMessagesFactory.provides(getI18nBundleName());
 	}
    }
 
@@ -159,7 +159,7 @@ public abstract class I18nException extends CodedException {
 	final I18nMessages msgB = getMessages();
 	if (msgB != null) {
 	   if (getArgs() != null) {
-		return msgB.getMessage(getCode(), getArgs());
+		return msgB.getMessage(getCode(), (Object[]) getArgs());
 	   } else {
 		return msgB.getMessage(getCode());
 	   }

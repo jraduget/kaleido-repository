@@ -92,7 +92,7 @@ class MailSenderServiceSessionImpl implements MailSenderService {
 
 	// Si From / Emetteur, non renseigné, erreur
 	if (message.getFromAdress() == null) {
-	   final I18nMessages messages = I18nMessagesFactory.getMessages(I18nRessource);
+	   final I18nMessages messages = I18nMessagesFactory.provides(I18nRessource);
 	   throw new AddressException(messages.getMessage("mail.service.fromadress.none"));
 	}
 
@@ -183,7 +183,7 @@ class MailSenderServiceSessionImpl implements MailSenderService {
 		 * }
 		 * }
 		 */else {
-		   final I18nMessages messages = I18nMessagesFactory.getMessages(I18nRessource);
+		   final I18nMessages messages = I18nMessagesFactory.provides(I18nRessource);
 		   throw new MessagingException(messages.getMessage("mail.service.attach.content.invalid"));
 		}
 
@@ -197,13 +197,13 @@ class MailSenderServiceSessionImpl implements MailSenderService {
 	if (hasAdress == true) {
 	   Transport.send(mimeMessage);
 	} else {
-	   final I18nMessages messages = I18nMessagesFactory.getMessages(I18nRessource);
+	   final I18nMessages messages = I18nMessagesFactory.provides(I18nRessource);
 	   throw new MessagingException(messages.getMessage("mail.service.adress.none"));
 	}
 
 	// Après envoie, si erreur d'adresse présente, on propage quand même l'exception
 	if (hasIncorrectAddress) {
-	   final I18nMessages messages = I18nMessagesFactory.getMessages(I18nRessource);
+	   final I18nMessages messages = I18nMessagesFactory.provides(I18nRessource);
 	   throw new AddressException(messages.getMessage("mail.service.adress.invalid"));
 	}
 

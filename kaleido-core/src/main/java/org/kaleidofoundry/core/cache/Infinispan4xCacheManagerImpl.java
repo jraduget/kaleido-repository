@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Jboss3x factory implementation
  * 
- * @see CacheFactory
+ * @see CacheManagerFactory
  * @author Jerome RADUGET
  */
 @Declare(value = InfinispanCacheManagerPluginName)

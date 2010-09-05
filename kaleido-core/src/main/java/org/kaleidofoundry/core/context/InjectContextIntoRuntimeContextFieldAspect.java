@@ -50,10 +50,14 @@ public class InjectContextIntoRuntimeContextFieldAspect {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(InjectContextIntoRuntimeContextFieldAspect.class);
 
+   public InjectContextIntoRuntimeContextFieldAspect() {	
+	LOGGER.debug("@Aspect(InjectContextIntoRuntimeContextFieldAspect) new instance");
+   }
+   
    // no need to filter on field modifier here, otherwise you can use private || !public at first get argument
    @Pointcut("get(@org.kaleidofoundry.core.context.InjectContext org.kaleidofoundry.core.context.RuntimeContext *) && if()")
    public static boolean trackRuntimeContextField(final JoinPoint jp, final JoinPoint.EnclosingStaticPart esjp) {
-	LOGGER.debug("@Pointcut InjectSimpleContextAspect - trackRuntimeContextField match");
+	LOGGER.debug("@Pointcut(InjectContextIntoRuntimeContextFieldAspect) trackRuntimeContextField match");
 	return true;
    }
 

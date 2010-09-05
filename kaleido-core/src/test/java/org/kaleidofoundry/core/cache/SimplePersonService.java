@@ -40,7 +40,7 @@ public class SimplePersonService {
 	// -Dcache.provider=infinispan4x
 	// or manually call factory with (hard coded...)
 	// CacheManager cacheManager = CacheFactory.getCacheManager("ehCache1x");
-	final CacheManager cacheManager = CacheFactory.provides();
+	final CacheManager cacheManager = CacheManagerFactory.provides();
 
 	// instantiate your person cache :
 	personCache = cacheManager.getCache(Person.class);

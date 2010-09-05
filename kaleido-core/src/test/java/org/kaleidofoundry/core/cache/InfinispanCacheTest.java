@@ -32,7 +32,7 @@ public class InfinispanCacheTest extends AbstractTestCache {
 
    @Before
    public void setup() {
-	cacheManager = CacheFactory.provides(DefaultCacheProviderEnum.infinispan4x.name(), "classpath:/cache/infinispan-local.xml");
+	cacheManager = CacheManagerFactory.provides(DefaultCacheProviderEnum.infinispan4x.name(), "classpath:/cache/infinispan-local.xml");
 	cache = cacheManager.getCache(Person.class.getName());
    }
 

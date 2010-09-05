@@ -27,10 +27,12 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.ResourceBundle.Control;
 
+import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.entity.I18nMessageLanguage;
 import org.kaleidofoundry.core.i18n.entity.I18nMessageService;
 import org.kaleidofoundry.core.lang.annotation.Review;
 import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
+import org.kaleidofoundry.core.lang.annotation.Reviews;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +44,15 @@ import org.slf4j.LoggerFactory;
 public class MessageBundleControl extends Control {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(MessageBundleControl.class);
+
+   private final RuntimeContext<I18nMessages> context;
+
+   /**
+    * @param context
+    */
+   public MessageBundleControl(RuntimeContext<I18nMessages> context) {
+	this.context = context;
+   }
 
    /*
     * (non-Javadoc)
@@ -84,7 +95,9 @@ public class MessageBundleControl extends Control {
     * @throws InstantiationException
     * @throws IOException
     */
-   @Review(comment = "MessageBundleControl {@link Plugin} compatible for plugin extention ?  do a MessageLoader interface -> with implementation prop, xml, jpa... ?", category = ReviewCategoryEnum.Improvement)
+   @Reviews(reviews = {
+	   @Review(comment = "Make messageBundleControl extensible via {@link Plugin} extention. Load can be done via xml, jpa... ?", category = ReviewCategoryEnum.Improvement),
+	   @Review(comment = "Use resourceStore to load bundle resource", category = ReviewCategoryEnum.Improvement) })
    ResourceBundle newInputStreamBundle(final String baseName, final Locale locale, final MessageBundleControlFormat format, final ClassLoader loader,
 	   final boolean reload) throws IllegalAccessException, InstantiationException, IOException {
 
@@ -129,7 +142,7 @@ public class MessageBundleControl extends Control {
 	   }
 
 	   // jpa entity datas
-	   if (format == MessageBundleControlFormat.JPA_ENTITY_PROPERTIES && I18nMessagesFactory.JpaIsEnabled) {
+	   if (format == MessageBundleControlFormat.JPA_ENTITY_PROPERTIES && I18nMessagesProvider.JpaIsEnabled) {
 
 		@Review(comment = "create a service injector (local / guice / spring / ejb3 local or remote...)")
 		final I18nMessageService messageService = new I18nMessageService();
@@ -156,7 +169,7 @@ public class MessageBundleControl extends Control {
 	}
 
 	if (foundResource) {
-	   messageBundle = new DefaultMessageBundle(resourceName, properties);
+	   messageBundle = new DefaultMessageBundle(resourceName, properties, context);
 	   LOGGER.debug("\t-> resource found !");
 	} else {
 	   LOGGER.debug("\t-> resource not found...");

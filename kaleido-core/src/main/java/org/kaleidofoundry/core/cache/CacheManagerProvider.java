@@ -34,15 +34,16 @@ import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginFactory;
 import org.kaleidofoundry.core.util.Registry;
+import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Registry & provider of {@link CacheManager} instances.
- * Please see {@link CacheFactory} javadoc for more details.
+ * Please see {@link CacheManagerFactory} javadoc for more details.
  * 
  * @author Jerome RADUGET
- * @see CacheFactory
+ * @see CacheManagerFactory
  */
 @ThreadSafe
 public class CacheManagerProvider extends AbstractProviderService<CacheManager> {
@@ -122,7 +123,13 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
    @NotNull
    @Override
    public CacheManager provides(final RuntimeContext<CacheManager> context) throws CacheConfigurationException, ProviderException {
-	return provides(DEFAULT_CACHE_PROVIDER, null, context);
+	String providerCode = context.getProperty(CacheManagerContextBuilder.ProviderCode);
+	String providerConfiguration = context.getProperty(CacheManagerContextBuilder.ResourceUri);
+	
+	if (StringHelper.isEmpty(providerCode)) {
+	   providerCode = DEFAULT_CACHE_PROVIDER;
+	}
+	return provides(providerCode, providerConfiguration, context);
    }
 
    /**
@@ -135,14 +142,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
     */
    @NotNull
    public CacheManager provides(@NotNull final String providerCode, final String configuration) throws CacheConfigurationException, ProviderException {
-
-	CacheManager cacheManager = REGISTRY.get(getCacheManagerId(providerCode, configuration));
-
-	if (cacheManager == null) {
-	   cacheManager = create(providerCode, configuration, new RuntimeContext<CacheManager>(CacheManager.class));
-	}
-
-	return cacheManager;
+	return provides(providerCode, configuration, new RuntimeContext<CacheManager>(CacheManager.class));	
    }
 
    /**
@@ -158,10 +158,12 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
    public CacheManager provides(@NotNull final String providerCode, final String configuration, @NotNull final RuntimeContext<CacheManager> context)
 	   throws CacheConfigurationException, ProviderException {
 
-	CacheManager cacheManager = REGISTRY.get(getCacheManagerId(providerCode, configuration));
+	Integer cacheManagerId = getCacheManagerId(providerCode, configuration);
+	CacheManager cacheManager = REGISTRY.get(cacheManagerId);
 
 	if (cacheManager == null) {
 	   cacheManager = create(providerCode, configuration, context);
+	   REGISTRY.put(cacheManagerId, cacheManager);
 	}
 
 	return cacheManager;
@@ -187,7 +189,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
     * @param configuration
     * @return unique cache manager identifier
     */
-   static Integer getCacheManagerId(@NotNull final String providerCode, final String configuration) {
+   public static Integer getCacheManagerId(@NotNull final String providerCode, final String configuration) {
 	return (providerCode.hashCode() * 128) + (configuration != null ? configuration.hashCode() : 0);
 
    }
@@ -207,7 +209,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 	// only for optimization reasons
 	if (providerCode.equalsIgnoreCase(DefaultCacheProviderEnum.local.name())) { return new LocalCacheManagerImpl(configuration, context); }
 	if (providerCode.equalsIgnoreCase(DefaultCacheProviderEnum.ehCache1x.name())) { return new EhCache1xManagerImpl(configuration, context); }
-	if (providerCode.equalsIgnoreCase(DefaultCacheProviderEnum.coherence3x.name())) { return new Coherence35xCacheManagerImpl(configuration, context); }
+	if (providerCode.equalsIgnoreCase(DefaultCacheProviderEnum.coherence3x.name())) { return new Coherence3xCacheManagerImpl(configuration, context); }
 	if (providerCode.equalsIgnoreCase(DefaultCacheProviderEnum.infinispan4x.name())) { return new Infinispan4xCacheManagerImpl(configuration, context); }
 	if (providerCode.equalsIgnoreCase(DefaultCacheProviderEnum.jbossCache3x.name())) { return new Jboss32xCacheManagerImpl(configuration, context); }
 	// if (providerCode.equalsIgnoreCase(DefaultCacheEnum.gigaspace7x.name())) { return new GigaSpaceManager7xImpl(configuration,

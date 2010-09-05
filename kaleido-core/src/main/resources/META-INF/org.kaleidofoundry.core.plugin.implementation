@@ -1,5 +1,5 @@
-org.kaleidofoundry.core.cache.Coherence35xCacheImpl
-org.kaleidofoundry.core.cache.Coherence35xCacheManagerImpl
+org.kaleidofoundry.core.cache.Coherence3xCacheImpl
+org.kaleidofoundry.core.cache.Coherence3xCacheManagerImpl
 org.kaleidofoundry.core.cache.EhCache1xImpl
 org.kaleidofoundry.core.cache.EhCache1xManagerImpl
 org.kaleidofoundry.core.cache.Infinispan4xCacheImpl

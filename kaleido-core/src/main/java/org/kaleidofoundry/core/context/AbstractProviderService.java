@@ -24,6 +24,7 @@ import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
  * Base implementation if {@link ProviderService}
  * 
  * @author Jerome RADUGET
+ * @param <T> 
  */
 @ThreadSafe
 @Reviews(reviews = {

@@ -6,6 +6,8 @@ derby.log
 .settings/
 .svn/
 .DS_Store
+kaleido-mail
+kaleido-messaging
 kaleido-miscellaneous
 kaleido-model
 kaleido-persistence

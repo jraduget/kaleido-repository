@@ -169,15 +169,15 @@ public class I18nJpaEntityMessagesTest extends AbstractI18nMessagesTest {
    @Test
    public void testResourceBundleCache() {
 
-	I18nMessages messageBundle = I18nMessagesFactory.getMessages(ResourceRoot + "root", Locale.FRENCH);
+	I18nMessages messageBundle = I18nMessagesFactory.provides(ResourceRoot + "root", Locale.FRENCH);
 	LOGGER.debug(messageBundle.getMessage("label.array.test", "1"));
 	LOGGER.debug(messageBundle.getMessage("label.array.test", "2"));
-	messageBundle = I18nMessagesFactory.getMessages(ResourceRoot + "root", Locale.FRENCH);
+	messageBundle = I18nMessagesFactory.provides(ResourceRoot + "root", Locale.FRENCH);
 	LOGGER.debug(messageBundle.getMessage("label.array.test", "3"));
 	LOGGER.debug(messageBundle.getMessage("label.array.test", "4"));
 	LOGGER.debug("clear bundle cache");
 	I18nMessagesFactory.clearCache();
-	messageBundle = I18nMessagesFactory.getMessages(ResourceRoot + "root", Locale.FRENCH);
+	messageBundle = I18nMessagesFactory.provides(ResourceRoot + "root", Locale.FRENCH);
 	LOGGER.debug(messageBundle.getMessage("label.array.test", "1"));
 	LOGGER.debug(messageBundle.getMessage("label.array.test", "2"));
 	LOGGER.debug(messageBundle.getMessage("label.array.test", "3"));

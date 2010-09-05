@@ -23,12 +23,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import org.kaleidofoundry.core.cache.Cache;
-import org.kaleidofoundry.core.cache.Coherence35xCacheImpl;
+import org.kaleidofoundry.core.cache.Coherence3xCacheImpl;
 
 import com.google.inject.BindingAnnotation;
 
 /**
- * Guice binding annotation for binding a {@link Cache} to {@link Coherence35xCacheImpl}
+ * Guice binding annotation for binding a {@link Cache} to {@link Coherence3xCacheImpl}
  * 
  * @author Jerome RADUGET
  */

@@ -37,7 +37,7 @@ public class CacheFactoryDefaultTest extends Assert {
    @Test
    public void defaultCacheFactoryImplementation() {
 
-	final CacheManager cacheFactory = CacheFactory.provides();
+	final CacheManager cacheFactory = CacheManagerFactory.provides();
 	assertNotNull(cacheFactory);
 	assertTrue(cacheFactory instanceof LocalCacheManagerImpl);
 

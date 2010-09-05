@@ -76,7 +76,7 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
     * @see org.kaleidofoundry.core.context.Provider#provides(org.kaleidofoundry.core.context.RuntimeContext)
     */
    @Override
-   public Configuration provides(final RuntimeContext<Configuration> runtimeContext) throws ProviderException, ResourceException {
+   public Configuration provides(@NotNull final RuntimeContext<Configuration> runtimeContext) throws ProviderException, ResourceException {
 	String name = runtimeContext.getProperty(Name);
 	String resourceUri = runtimeContext.getProperty(ResourceUri);
 

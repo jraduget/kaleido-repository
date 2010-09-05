@@ -32,7 +32,7 @@ public class JbossCacheTest extends AbstractTestCache {
 
    @Before
    public void setup() {
-	cacheManager = CacheFactory.provides(DefaultCacheProviderEnum.jbossCache3x.name(), "classpath:/cache/jboss-local.xml");
+	cacheManager = CacheManagerFactory.provides(DefaultCacheProviderEnum.jbossCache3x.name(), "classpath:/cache/jboss-local.xml");
 	cache = cacheManager.getCache(Person.class.getName());
    }
 

@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * Cache statistics are disabled in this version for performance reason (prior to 1.7.x) <br/>
  * With EhCache 2.x you can disable statistics cache by configuration :)
  * 
- * @see CacheFactory
+ * @see CacheManagerFactory
  * @author Jerome RADUGET
  */
 @Declare(value = EhCacheManagerPluginName)

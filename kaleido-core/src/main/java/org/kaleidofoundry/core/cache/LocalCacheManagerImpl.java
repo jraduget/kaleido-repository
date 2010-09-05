@@ -70,7 +70,7 @@ class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheM
     */
    @Override
    public String getMetaInformations() {
-	return "kaleido-local - [1.0.x -> 1.0.x]";
+	return "kaleido-local - [1.0.x]";
    }
 
    /*
@@ -145,7 +145,7 @@ class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheM
     * @return provider cache instance
     */
    protected <K extends Serializable, V extends Serializable> LocalCacheImpl<K, V> createCache(final String name, final String configurationUri) {
-	LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration(), name));
+	LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration() != null ? getCurrentConfiguration() : "", name));
 	return new LocalCacheImpl<K, V>(name);
    }
 }

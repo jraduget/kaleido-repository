@@ -30,6 +30,7 @@ public interface ProviderService<T> {
     * @param context runtime context
     * @return the new instance that will be created using {@link RuntimeContext} information
     * @throws ProviderException
+    * @throws Throwable 
     */
    T provides(RuntimeContext<T> context) throws ProviderException, Throwable;
 
@@ -38,6 +39,7 @@ public interface ProviderService<T> {
     * @param genericClassInterface class of the interface for which this provider will create instance
     * @return the new instance
     * @throws ProviderException
+    * @throws Throwable 
     */
    T provides(InjectContext injectContext, Class<T> genericClassInterface) throws ProviderException, Throwable;
 }
