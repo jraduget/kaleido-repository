@@ -1,0 +1,53 @@
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
+
+	<bannerLeft>
+		<name>KaleidoFoundry</name>
+		<src>http://maven.apache.org/images/apache-maven-project.png</src>
+		<href>http://maven.apache.org/</href>
+	</bannerLeft>
+	<bannerRight>
+		<src>http://maven.apache.org/images/maven-small.gif</src>
+	</bannerRight>
+
+	<version position="right" />
+	<publishDate position="right" />
+
+	<skin>
+		<groupId>org.apache.maven.skins</groupId>
+		<artifactId>maven-stylus-skin</artifactId><!-- maven-application-skin maven-classic-skin maven-default-skin maven-stylus-skin -->		 
+		<version>1.0</version>
+	</skin>
+	
+	<body>
+
+		<menu name="Overview">
+			<item name="Introduction" href="index.html" />
+			<item name="Goals" href="plugin-info.html" />
+			<item name="Usage" href="usage.html" />
+			<item name="FAQ" href="faq.html" />
+			<item name="Migrate" href="migrate.html" />
+		</menu>
+		<menu name="Configuration">
+			<item name="Internationalization" href="i18n.html" />
+		</menu>
+
+		<menu name="Examples">
+			<item name="Creating Content" href="/examples/creating-content.html" />
+			<item name="Configuring the Site Descriptor" href="/examples/sitedescriptor.html" />
+			<item name="Configuring Reports" href="/examples/configuring-reports.html" />
+			<item name="Configuring Site Run" href="/examples/siterun.html" />
+			<item name="Changing the Template File" href="/examples/templatefile.html" />
+			<item name="Creating Skins" href="/examples/creatingskins.html" />
+			<item name="Excluding Document Formats" href="/examples/moduleexcludes.html" />
+			<item name="Deploying to sourceforge.net" href="/examples/site-deploy-to-sourceforge.net.html" />
+		</menu>
+		
+		<menu ref="summary" />
+		<menu ref="info" />
+		<menu ref="reports" />
+
+	</body>
+
+</project>

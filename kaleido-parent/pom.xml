@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.kaleidofoundry</groupId>
 	<artifactId>kaleido-parent</artifactId>
@@ -21,6 +22,10 @@
 		<name>KaleidoFoundry</name>
 		<url>http://www.kaleidofoundry.org</url>
 	</organization>
+
+	<prerequisites>
+		<maven>2.2.0</maven>
+	</prerequisites>
 
 	<developers>
 		<developer>
@@ -60,6 +65,9 @@
 		<log4j.version>1.2.16</log4j.version>
 		<junit.version>4.8.1</junit.version>
 
+		<!-- sonar properties -->
+		<sonar.host.url>http://localhost:8080/sonar</sonar.host.url>
+
 		<!-- source encoding options  -->
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 	</properties>
@@ -70,17 +78,16 @@
 		<module>../kaleido-core-spring</module>
 		<module>../kaleido-core-integration</module>
 
-		<!-- to refactor  
-		<module>../kaleido-mail</module>
-		<module>../kaleido-messaging</module>
+		<!--
+			to refactor <module>../kaleido-mail</module>
+			<module>../kaleido-messaging</module>
 		-->
-		
-		<!-- to refactor & remove 
-		<module>../kaleido-model</module> 
-		<module>../kaleido-persistence</module> 
-		<module>../kaleido-report</module> 
-		<module>../kaleido-rules</module> 
-		<module>../kaleido-web</module>
+
+		<!--
+			to refactor & remove <module>../kaleido-model</module>
+			<module>../kaleido-persistence</module>
+			<module>../kaleido-report</module> <module>../kaleido-rules</module>
+			<module>../kaleido-web</module>
 		-->
 	</modules>
 
@@ -119,7 +126,7 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 	</dependencies>
 
 	<repositories>
@@ -184,6 +191,7 @@
 		</pluginRepository>
 	</pluginRepositories>
 
+	<!-- 
 	<scm>
 		<connection>scm:svn:http://localhost/svn/${project.name}</connection>
 		<developerConnection>scm:svn:http://localhost/svn/${project.name}</developerConnection>
@@ -195,7 +203,7 @@
 		<system>google-code</system>
 		<url>http://code.google.com/p/kaleidofoundry/issues/list</url>
 	</issueManagement>
-
+ -->
 	<ciManagement>
 		<system>hudson</system>
 		<url>http://localhost/hudson/</url>
@@ -220,6 +228,11 @@
 			<name>Kaleido Snapshot Repository</name>
 			<url>dav:https://snapshots.kaleidofoundry.org/maven2</url>
 		</snapshotRepository>
+		<site>
+			<id>maven.kaleidofoundry.site.org</id>
+			<name>Kaleido maven site</name>
+			<url>${kaleido.staging.siteURL}/maven/${kaleido-version}</url>
+		</site>
 	</distributionManagement>
 
 	<build>
@@ -228,7 +241,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3</version>
+				<version>2.3.1</version>
 				<configuration>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
@@ -269,7 +282,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3</version>
+				<version>2.3.1</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -295,21 +308,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-scm-plugin</artifactId>
-				<version>1.1</version>
+				<version>1.4</version>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.1.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
@@ -405,14 +406,100 @@
 				<configuration>
 					<links>
 						<link>http://java.sun.com/javase/6/docs/api/</link>
+						<link>http://download.oracle.com/javaee/6/api/</link>
+						<link>http://java.sun.com/javaee/5/docs/api/</link>
+						<link>http://junit.sourceforge.net/javadoc/</link>
+						<link>http://www.slf4j.org/api/</link>
 					</links>
 					<source>${jdk.version}</source>
-					<minmemory>128m</minmemory>
-					<maxmemory>512m</maxmemory>
-					<sourcepath>${project.basedir}/src/main/javadoc;${project.basedir}/src/main/java</sourcepath>
+					<maxmemory>768m</maxmemory>
 					<docfilessubdirs>true</docfilessubdirs>
+					<linksource>true</linksource>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<id>non-aggregate</id>
+						<configuration>
+						</configuration>
+						<reports>
+							<report>javadoc</report>
+						</reports>
+					</reportSet>
+					<reportSet>
+						<id>aggregate</id>
+						<configuration>
+						</configuration>
+						<reports>
+							<report>aggregate</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-project-info-reports-plugin</artifactId>
+        		<version>2.2</version>
+      		</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>2.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.6</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clover-plugin</artifactId>
+				<configuration>
+					<jdk>${jdk.version}</jdk>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<targetJdk>${jdk.version}</targetJdk>
+					<rulesets>
+						<ruleset>/rulesets/braces.xml</ruleset>
+						<ruleset>/rulesets/naming.xml</ruleset>
+					</rulesets>
+					<format>xml</format>
+					<linkXref>true</linkXref>
+					<sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+					<minimumTokens>100</minimumTokens>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-changes-plugin</artifactId>
+				<version>2.3</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>changes-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-changelog-plugin</artifactId>
+				<version>2.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.sonar-plugins</groupId>
+				<artifactId>maven-report</artifactId>
+			</plugin>
+
 		</plugins>
 	</reporting>
 
@@ -439,7 +526,7 @@
 					<groupId>org.eclipse.persistence</groupId>
 					<artifactId>javax.persistence</artifactId>
 					<version>2.0.0</version>
-					<scope>test</scope>					
+					<scope>test</scope>
 				</dependency>
 				<dependency>
 					<groupId>javax</groupId>
@@ -471,8 +558,8 @@
 					<groupId>org.eclipse.persistence</groupId>
 					<artifactId>javax.persistence</artifactId>
 					<version>1.1.3</version>
-					<scope>test</scope>					
-				</dependency>				
+					<scope>test</scope>
+				</dependency>
 				<dependency>
 					<groupId>javaee</groupId>
 					<artifactId>javaee-api</artifactId>
@@ -482,5 +569,41 @@
 			</dependencies>
 		</profile>
 
+		<!-- Deploy profile (attach javadoc, sources,...)  -->
+		<profile>
+			<id>deploy</id>
+			<build>
+				<defaultGoal>deploy</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.1.2</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.7</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
+
 </project>
