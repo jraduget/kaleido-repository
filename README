@@ -1,3 +1,34 @@
-Welcome !
+Welcome to KaleidoFoundry project !
+
+Project description
+-------------------
 
 Kaleidofoundry is a java / jee extensible framework, based on jdk 6 and jee 5 / 6 APIs. It is a technical base for handling : configuration, caching, file resource store, i18n labels & exception messages, jndi resource, mail, messaging... It has been designed to be easily integrated to your current java stack & environment (could be clustered or not, with replicated or distributed caching).
+
+Requirements
+------------
+  * Java >= 1.6 (OpenJDK and Sun have been tested)
+
+Modules
+-------
+  * kaleido-parent	KaleidoFoundry parent  
+  * kaleido-core	KaleidoFoundry core module
+	. ResourceStore api (file resource store api, http, ftp, classpath, webapp, jpa clob, ...
+	. Caching api (local, ehcache, jboss cache, jboss infinispan, oracle coherence, gygaspace implementation) 
+	. Configuration api (based on cache and resource store
+	. I18n api for label & exceptions (resource bundle extention, based on cache and resource store)
+	. Jndi naming api (lookup ejb, jms queue / topic, datasource, ...)
+	. Context injection api (@InjectContext enable runtime context injection, to core modules)
+	. Other thinks like @NotNull, @NotYetImplemented, @PersistenceContext in unmanaged env...
+  * kaleido-core-guice	KaleidoFoundry guice integration module (for context injection)
+  * kaledo-core-spring	KaleidoFoundry spring integration module (for context injection)
+
+Incoming 
+--------
+  * kaleido-mail        KaleidoFoundry mailling module
+  * kaleido-messaging   KaleidoFoundry messaging (asynchronous) module
+  * kaleido-webadmin	KaleidoFoundry web admin (i18n, configuration, log, cache informations, ...)
+  * kaleido-rules
+  * kaleido-seurity
+  * kaleido-report
+

@@ -191,19 +191,17 @@
 		</pluginRepository>
 	</pluginRepositories>
 
-	<!-- 
 	<scm>
-		<connection>scm:svn:http://localhost/svn/${project.name}</connection>
-		<developerConnection>scm:svn:http://localhost/svn/${project.name}</developerConnection>
-		<tag>HEAD</tag>
-		<url>http://localhost/svn/${project.name}</url>
+		<connection>scm:git:https://kaleidofoundry@github.com/kaleidofoundry/kaleido-repository.git</connection>
+		<developerConnection>scm:git:https://kaleidofoundry@github.com/kaleidofoundry/kaleido-repository.git</developerConnection>
+		<url>http://github.com/kaleidofoundry/kaleido-repository</url>
 	</scm>
 
 	<issueManagement>
 		<system>google-code</system>
 		<url>http://code.google.com/p/kaleidofoundry/issues/list</url>
 	</issueManagement>
- -->
+
 	<ciManagement>
 		<system>hudson</system>
 		<url>http://localhost/hudson/</url>
