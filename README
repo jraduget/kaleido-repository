@@ -23,7 +23,7 @@ Modules
   * kaleido-core-guice	KaleidoFoundry guice integration module (for context injection)
   * kaledo-core-spring	KaleidoFoundry spring integration module (for context injection)
 
-Incoming 
+Upcoming 
 --------
   * kaleido-mail        KaleidoFoundry mailling module
   * kaleido-messaging   KaleidoFoundry messaging (asynchronous) module

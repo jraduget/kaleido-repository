@@ -42,7 +42,7 @@ public class OsEnvironmentTest extends Assert {
 
    @Test
    public void testGetProperty() throws IOException {
-	String os = environment.getProperty("OS");
+	String os = environment.getProperty("PATH");
 	LOGGER.info(os);
 	assertNotNull(os);
 	assertFalse("".equals(os));

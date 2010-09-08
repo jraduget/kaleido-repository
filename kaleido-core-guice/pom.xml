@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>kaleido-core-guice</artifactId>
-	<name>Kaleido foundry core extension for guice</name>
+	<name>Kaleido foundry core for guice</name>
 	<packaging>jar</packaging>
 	
 	<dependencies>

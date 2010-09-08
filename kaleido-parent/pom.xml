@@ -29,7 +29,7 @@
 
 	<developers>
 		<developer>
-			<id>jrad</id>
+			<id>jraduget</id>
 			<name>Jerome RADUGET</name>
 			<email>jerome.raduget@gmail.com</email>
 			<timezone>FR</timezone>
@@ -65,8 +65,9 @@
 		<log4j.version>1.2.16</log4j.version>
 		<junit.version>4.8.1</junit.version>
 
-		<!-- sonar properties -->
+		<!-- integration url properties -->
 		<sonar.host.url>http://localhost:8080/sonar</sonar.host.url>
+		<hudson.host.url>http://localhost:8080/hudson</hudson.host.url>
 
 		<!-- source encoding options  -->
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
@@ -78,10 +79,9 @@
 		<module>../kaleido-core-spring</module>
 		<module>../kaleido-core-integration</module>
 
-		<!--
-			to refactor <module>../kaleido-mail</module>
-			<module>../kaleido-messaging</module>
-		-->
+		<!--to refactor -->
+		<module>../kaleido-mail</module>
+		<module>../kaleido-messaging</module>
 
 		<!--
 			to refactor & remove <module>../kaleido-model</module>
@@ -159,7 +159,11 @@
 		<!-- JPA eclipse link provider -->
 		<repository>
 			<id>EclipseLink Repo</id>
-			<url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
+			<!--
+				official eclipse, but redirection works bad with maven
+				<url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
+			-->
+			<url>http://eclipse.ialto.org/rt/eclipselink/maven.repo/</url>
 			<layout>default</layout>
 		</repository>
 	</repositories>
@@ -204,7 +208,7 @@
 
 	<ciManagement>
 		<system>hudson</system>
-		<url>http://localhost/hudson/</url>
+		<url>${hudson.host.url}</url>
 		<notifiers>
 			<notifier>
 				<type>mail</type>
@@ -369,7 +373,7 @@
 
 			<!--
 				Run annotation processors on src/test/java sources 
-				-->
+			-->
 			<plugin>
 				<groupId>org.bsc.maven</groupId>
 				<artifactId>maven-processor-plugin</artifactId>
@@ -413,6 +417,18 @@
 					<maxmemory>768m</maxmemory>
 					<docfilessubdirs>true</docfilessubdirs>
 					<linksource>true</linksource>
+					<!--
+						doclava test, ko on macosx
+						<bootclasspath>/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/rt.jar</bootclasspath>
+						<docletPath>/Users/jraduget/Developments/workspaces/eclipse/kaleidofoundry/kaleido-parent/lib/doclava.jar</docletPath>
+						<doclet>com.google.doclava.Doclava</doclet> <additionalparam>
+						-quiet -federate JDK
+						http://download.oracle.com/javase/6/docs/api/index.html?
+						-federationxml JDK
+						http://doclava.googlecode.com/svn/static/api/openjdk-6.xml -hdf
+						project.name "KaleidoFoundry" </additionalparam>
+						<useStandardDocletOptions>false</useStandardDocletOptions>
+					-->
 				</configuration>
 				<reportSets>
 					<reportSet>
@@ -434,10 +450,10 @@
 				</reportSets>
 			</plugin>
 			<plugin>
-        		<groupId>org.apache.maven.plugins</groupId>
-        		<artifactId>maven-project-info-reports-plugin</artifactId>
-        		<version>2.2</version>
-      		</plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.2</version>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
@@ -514,6 +530,10 @@
 				</property>
 			</activation>
 			<dependencies>
+				<!--
+					persistence api - used only for testing (have to be before
+					javaee-api in classpath)
+				-->
 				<dependency>
 					<groupId>org.eclipse.persistence</groupId>
 					<artifactId>eclipselink</artifactId>
@@ -526,12 +546,18 @@
 					<version>2.0.0</version>
 					<scope>test</scope>
 				</dependency>
+				<!-- full javaee 6 profile -->
 				<dependency>
 					<groupId>javax</groupId>
 					<artifactId>javaee-api</artifactId>
 					<version>6.0</version>
 					<scope>provided</scope>
 				</dependency>
+				<!--
+					javaee6 web profile <dependency> <groupId>javax</groupId>
+					<artifactId>javaee-web-api</artifactId> <version>6.0</version>
+					<scope>provided</scope> </dependency>
+				-->
 			</dependencies>
 		</profile>
 
@@ -546,22 +572,47 @@
 				</property>
 			</activation>
 			<dependencies>
+				<!--
+					persistence api - used only for testing (have to be before
+					javax.persistence in classpath)
+				-->
 				<dependency>
 					<groupId>org.eclipse.persistence</groupId>
 					<artifactId>eclipselink</artifactId>
-					<version>1.1.3</version>
+					<version>1.2.0</version>
 					<scope>test</scope>
 				</dependency>
 				<dependency>
 					<groupId>org.eclipse.persistence</groupId>
 					<artifactId>javax.persistence</artifactId>
-					<version>1.1.3</version>
+					<version>1.2.0</version>
 					<scope>test</scope>
 				</dependency>
 				<dependency>
-					<groupId>javaee</groupId>
-					<artifactId>javaee-api</artifactId>
-					<version>5</version>
+					<groupId>javax.persistence</groupId>
+					<artifactId>persistence-api</artifactId>
+					<version>1.0</version>
+					<scope>provided</scope>
+				</dependency>
+				<!-- web api -->
+				<dependency>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+					<version>2.5</version>
+					<scope>provided</scope>
+				</dependency>
+				<!-- ejb api -->
+				<dependency>
+					<groupId>javax.ejb</groupId>
+					<artifactId>ejb-api</artifactId>
+					<version>3.0</version>
+					<scope>provided</scope>
+				</dependency>
+				<!-- jms api -->
+				<dependency>
+					<groupId>javax.jms</groupId>
+					<artifactId>jms</artifactId>
+					<version>1.1</version>
 					<scope>provided</scope>
 				</dependency>
 			</dependencies>

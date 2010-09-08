@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>kaleido-core-spring</artifactId>
-	<name>Kaleido foundry core extension for spring core</name>
+	<name>Kaleido foundry core for spring core</name>
 	<packaging>jar</packaging>
 	
 	<dependencies>

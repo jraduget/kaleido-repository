@@ -4,11 +4,11 @@
 
 	<bannerLeft>
 		<name>KaleidoFoundry</name>
-		<src>http://maven.apache.org/images/apache-maven-project.png</src>
-		<href>http://maven.apache.org/</href>
+		<!-- <src>http://maven.apache.org/images/apache-maven-project.png</src>  -->
+		<href>http://www.kaleidofoundry.org/</href>
 	</bannerLeft>
 	<bannerRight>
-		<src>http://maven.apache.org/images/maven-small.gif</src>
+		<!-- <src>http://maven.apache.org/images/maven-small.gif</src>  -->
 	</bannerRight>
 
 	<version position="right" />
@@ -29,10 +29,7 @@
 			<item name="FAQ" href="faq.html" />
 			<item name="Migrate" href="migrate.html" />
 		</menu>
-		<menu name="Configuration">
-			<item name="Internationalization" href="i18n.html" />
-		</menu>
-
+		
 		<menu name="Examples">
 			<item name="Creating Content" href="/examples/creating-content.html" />
 			<item name="Configuring the Site Descriptor" href="/examples/sitedescriptor.html" />

@@ -69,8 +69,8 @@ public class OsEnvConfigurationTest extends Assert {
    @Test
    public void getProperty() {
 	assertNotNull(configuration);
-	assertNotNull(configuration.getString("OS"));
-	assertFalse(configuration.getString("OS").isEmpty());
+	assertNotNull(configuration.getString("PATH"));
+	assertFalse(configuration.getString("PATH").isEmpty());
 	// test unknown key
 	assertNull(configuration.getProperty("foo"));
    }

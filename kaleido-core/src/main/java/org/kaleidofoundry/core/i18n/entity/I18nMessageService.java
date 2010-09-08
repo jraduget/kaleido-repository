@@ -75,7 +75,9 @@ public class I18nMessageService {
 	// query.setParameter(Query_MessagesByLocale.Parameter_Locale, locale.toString());
 
 	// JPA 1.x for jee5 compatibility
-	Query query = getEntityManager().createNativeQuery(Query_MessagesByLocale.Name, I18nMessageLanguage.class);
+	Query query = getEntityManager().createNamedQuery(Query_MessagesByLocale.Name);
+
+	// Query query = getEntityManager().createNativeQuery(Query_MessagesByLocale.Name, I18nMessageLanguage.class);
 	query.setParameter(Query_MessagesByLocale.Parameter_ResourceName, resourceName);
 	query.setParameter(Query_MessagesByLocale.Parameter_Locale, locale.toString());
 
