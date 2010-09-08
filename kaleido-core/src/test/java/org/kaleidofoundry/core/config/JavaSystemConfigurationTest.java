@@ -61,7 +61,7 @@ public class JavaSystemConfigurationTest extends AbstractConfigurationTest {
    @Test
    public void isReadonly() {
 	assertNotNull(configuration);
-	assertTrue(configuration.isReadOnly());
+	assertFalse(configuration.isReadOnly());
    }
 
    @Override

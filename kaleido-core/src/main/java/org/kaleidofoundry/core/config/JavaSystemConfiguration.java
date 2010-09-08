@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.core.config;
 
+import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ConfigurationMessageBundle;
+
 import java.net.URI;
 import java.util.Properties;
 
@@ -81,15 +83,20 @@ public class JavaSystemConfiguration extends AbstractConfiguration implements Co
 	return cacheProperties;
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfiguration#setProperty(java.lang.String, java.lang.Object)
+    */
    @Override
-   protected Cache<String, String> storeProperties(final Cache<String, String> properties, final SingleResourceStore resourceStore) throws ResourceException,
-	   ConfigurationException {
-	return properties; // never called
+   public void setProperty(final String key, final Object value) {
+	super.setProperty(key, value);
+	System.getProperties().put(key, value);
    }
 
    @Override
-   public boolean isReadOnly() {
-	return true;
+   protected Cache<String, String> storeProperties(final Cache<String, String> properties, final SingleResourceStore resourceStore) throws ResourceException,
+	   ConfigurationException {
+	throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal03", name));
    }
 
 }

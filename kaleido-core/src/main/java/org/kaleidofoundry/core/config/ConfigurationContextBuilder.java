@@ -221,4 +221,22 @@ public class ConfigurationContextBuilder extends AbstractRuntimeContextBuilder<C
 	return this;
    }
 
+   /**
+    * @param args
+    * @return set main args context parameter
+    */
+   public ConfigurationContextBuilder withMainArgsString(final String args) {
+	getContextParameters().put(ArgsMainString, args);
+	return this;
+   }
+
+   /**
+    * @param separator
+    * @return set main args separator context parameter
+    */
+   public ConfigurationContextBuilder withMainArgsSeparator(final String separator) {
+	getContextParameters().put(ArgsSeparator, separator);
+	return this;
+   }
+
 }

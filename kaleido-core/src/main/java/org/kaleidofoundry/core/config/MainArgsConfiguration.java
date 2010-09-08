@@ -17,6 +17,7 @@ package org.kaleidofoundry.core.config;
 
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.ArgsMainString;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.ArgsSeparator;
+import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ConfigurationMessageBundle;
 
 import java.net.URI;
 import java.util.Map;
@@ -96,12 +97,7 @@ public class MainArgsConfiguration extends AbstractConfiguration implements Conf
    @Override
    protected Cache<String, String> storeProperties(final Cache<String, String> cacheProperties, final SingleResourceStore resourceStore)
 	   throws ResourceException, ConfigurationException {
-	return cacheProperties; // unused code because read only is set to true
-   }
-
-   @Override
-   public boolean isReadOnly() {
-	return true;
+	throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal03", name));
    }
 
 }

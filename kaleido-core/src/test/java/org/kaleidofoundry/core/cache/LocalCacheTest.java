@@ -33,7 +33,8 @@ public class LocalCacheTest extends AbstractTestCache {
 
    @Before
    public void setup() {
-	cacheManager = CacheManagerFactory.provides(DefaultCacheProviderEnum.local.name(), null, new RuntimeContext<CacheManager>(CacheManager.class));
+	cacheManager = CacheManagerFactory.provides(DefaultCacheProviderEnum.local.name(), "classpath:/noneed", new RuntimeContext<CacheManager>(
+		CacheManager.class));
 	cache = cacheManager.getCache(Person.class.getName());
    }
 

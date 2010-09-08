@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.store.ResourceException;
-import org.kaleidofoundry.core.util.properties.ExtendedProperties;
+import org.kaleidofoundry.core.util.ConverterHelper;
 
 /**
  * @author Jerome RADUGET
@@ -41,14 +41,10 @@ public class MainArgsConfigurationTest extends AbstractConfigurationTest {
 		"application.single.boolean=true", "application.single.bigdecimal=1.123456789",
 		"application.array.date=2009-01-02T00:00:00|2009-12-31T00:00:00|2012-05-15T00:00:00" };
 
-	final Configuration configuration = new MainArgsConfiguration("mainArgsConfig", new RuntimeContext<Configuration>(Configuration.class));
-	final ExtendedProperties properties = new ExtendedProperties();
-	properties.setMultiValueProperty(ConfigurationContextBuilder.ArgsMainString, mainArgs);
+	RuntimeContext<Configuration> context = new ConfigurationContextBuilder().withMainArgsString(ConverterHelper.arrayToString(mainArgs, "#"))
+		.withMainArgsSeparator("#").build();
 
-	for (final String propName : properties.stringPropertyNames()) {
-	   configuration.setProperty(propName, properties.getProperty(propName));
-	}
-	return configuration;
+	return new MainArgsConfiguration("mainArgsConfig", context);
 
    }
 
@@ -62,6 +58,6 @@ public class MainArgsConfigurationTest extends AbstractConfigurationTest {
    @Test
    public void isReadonly() {
 	assertNotNull(configuration);
-	assertTrue(configuration.isReadOnly());
+	assertFalse(configuration.isReadOnly());
    }
 }
