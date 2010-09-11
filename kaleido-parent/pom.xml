@@ -79,10 +79,11 @@
 		<module>../kaleido-core-spring</module>
 		<module>../kaleido-core-integration</module>
 
-		<!--to refactor -->
+		<!--to refactor 
 		<module>../kaleido-mail</module>
 		<module>../kaleido-messaging</module>
-
+		-->
+		
 		<!--
 			to refactor & remove <module>../kaleido-model</module>
 			<module>../kaleido-persistence</module>
