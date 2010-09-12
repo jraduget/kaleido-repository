@@ -18,12 +18,14 @@ package org.kaleidofoundry.core.store;
 import java.net.URI;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
  * @author Jerome RADUGET
  */
+@Ignore
 public class HttpResourceStoreWithProxyTest extends AbstractResourceStoreTest {
 
    @Before

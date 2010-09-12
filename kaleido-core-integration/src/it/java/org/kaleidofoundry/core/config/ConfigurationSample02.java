@@ -32,7 +32,7 @@ public class ConfigurationSample02 {
 
    @InjectContext(value="mySimpleConfig",
 	   parameters={
-	   @Parameter(name=ConfigurationContextBuilder.Readonly, value="false"),
+	   @Parameter(name=ConfigurationContextBuilder.StorageAllowed, value="false"),
 	   @Parameter(name=ConfigurationContextBuilder.ResourceUri, value="http://localhost/kaleidofoundry/it/config/myHttpConfig.properties"),
 	   @Parameter(name=ConfigurationContextBuilder.CacheManagerRef, value="myCacheManager"),
 	   @Parameter(name=ConfigurationContextBuilder.ResourceStoreRef, value="myConfigStore")

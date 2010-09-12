@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.kaleidofoundry.core.lang.annotation.Nullable;
 import org.kaleidofoundry.core.lang.annotation.Tested;
 
 /**
@@ -46,6 +47,7 @@ public abstract class ConverterHelper {
     *         return null if args is null
     */
    @Tested
+   @Nullable
    public static Map<String, String> argsToMap(final String[] args) {
 	return argsToMap(args, "=");
    }
@@ -62,6 +64,7 @@ public abstract class ConverterHelper {
     *         return null if args or valueDelimiter is null
     */
    @Tested
+   @Nullable
    public static Map<String, String> argsToMap(final String[] args, final String valueDelimiter) {
 	if (args == null || valueDelimiter == null) { return null; }
 
@@ -91,9 +94,10 @@ public abstract class ConverterHelper {
     * @param values Table of values that we want a string representation
     * @param delimiter Separator value to use
     * @return Converting a String array representation with delemiteur value given in argument <br/>
-    *         return null if args or delimiter is null
+    *         return null if args values is null
     */
    @Tested
+   @Nullable
    public static String arrayToString(final String[] values, final String delimiter) {
 	if (values == null) { return null; }
 
@@ -112,9 +116,10 @@ public abstract class ConverterHelper {
     * @param delimiter Separator value to use
     * @return Converting a collection of elements into a String representation delemiteur with the value given in argument <br/>
     *         use toString() for having element string representation <br/>
-    *         return null if args or delimiter is null
+    *         return null if args values is null
     */
    @Tested
+   @Nullable
    public static String collectionToString(final Collection<?> values, final String delimiter) {
 	if (values == null) { return null; }
 
@@ -137,6 +142,7 @@ public abstract class ConverterHelper {
     *         return null if args or delimiter is null
     */
    @Tested
+   @Nullable
    public static String[] stringToArray(final String values, final String delimiter) {
 	if (values == null || delimiter == null) { return null; }
 
@@ -157,6 +163,7 @@ public abstract class ConverterHelper {
     *         return null if args or delimiter is null
     */
    @Tested
+   @Nullable
    public static List<String> stringToCollection(final String values, final String delimiter) {
 	if (values == null || delimiter == null) { return null; }
 
@@ -177,6 +184,7 @@ public abstract class ConverterHelper {
     *         return null if args or delimiter is null
     */
    @Tested
+   @Nullable
    public static Set<String> stringToSet(final String values, final String delimiter) {
 	if (values == null || delimiter == null) { return null; }
 

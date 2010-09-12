@@ -59,7 +59,7 @@ public class ConfigurationJunitLauncher {
 	ConfigurationSample01 confSample = new ConfigurationSample01();
 	confSample.echo();
 	assertions(confSample.getConfiguration());
-	assertTrue(confSample.getConfiguration().isReadOnly());
+	assertTrue(confSample.getConfiguration().isStorageAllowed());
 	assertNull(confSample.getConfiguration().getBoolean("myapp.sample.http"));
    }
 
@@ -68,7 +68,7 @@ public class ConfigurationJunitLauncher {
 	ConfigurationSample02 confSample = new ConfigurationSample02();
 	confSample.echo();
 	assertions(confSample.getConfiguration());
-	assertFalse(confSample.getConfiguration().isReadOnly());
+	assertFalse(confSample.getConfiguration().isStorageAllowed());
 	assertEquals(Boolean.TRUE, confSample.getConfiguration().getBoolean("myapp.sample.http"));
 
 	// assert that ehcache instance are right been created and feeded
@@ -95,7 +95,7 @@ public class ConfigurationJunitLauncher {
 	ConfigurationSample03 confSample = new ConfigurationSample03();
 	confSample.echo();
 	assertions(confSample.getConfiguration());
-	assertFalse(confSample.getConfiguration().isReadOnly());
+	assertFalse(confSample.getConfiguration().isStorageAllowed());
 	assertEquals(Boolean.TRUE, confSample.getConfiguration().getBoolean("myapp.sample.http"));
    }
 

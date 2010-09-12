@@ -17,7 +17,6 @@ package org.kaleidofoundry.core.config;
 
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.ArgsMainString;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.ArgsSeparator;
-import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ConfigurationMessageBundle;
 
 import java.net.URI;
 import java.util.Map;
@@ -94,10 +93,24 @@ public class MainArgsConfiguration extends AbstractConfiguration implements Conf
 	return cacheProperties;
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfiguration#storeProperties(org.kaleidofoundry.core.cache.Cache,
+    * org.kaleidofoundry.core.store.SingleResourceStore)
+    */
    @Override
-   protected Cache<String, String> storeProperties(final Cache<String, String> cacheProperties, final SingleResourceStore resourceStore)
-	   throws ResourceException, ConfigurationException {
-	throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal03", name));
+   protected Cache<String, String> storeProperties(final Cache<String, String> properties, final SingleResourceStore resourceStore) throws ResourceException,
+	   ConfigurationException {
+	return properties; // never called
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfiguration#isStorageAllowed()
+    */
+   @Override
+   public boolean isStorageAllowed() {
+	return false;
    }
 
 }

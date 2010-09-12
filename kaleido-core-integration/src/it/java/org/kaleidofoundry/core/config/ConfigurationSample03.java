@@ -36,7 +36,7 @@ public class ConfigurationSample03 {
    public ConfigurationSample03() throws ResourceException {
 
 	RuntimeContext<Configuration> context = new ConfigurationContextBuilder("mySimpleConfig", Configuration.class)
-	.withReadonly("false")
+	.withStorageAllowed(false)
 	.withResourceUri("http://localhost/kaleidofoundry/it/config/myHttpConfig.properties")
 	.withCacheManagerRef("myCacheManager")
 	.withResourceStoreRef("myConfigStore")

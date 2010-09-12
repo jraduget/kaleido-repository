@@ -35,8 +35,12 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td>unique name identifier of the configuration</td>
  * </tr>
  * <tr>
- * <td>readonly</td>
- * <td><code>true|false</code> , active or not readonly usage of the configuration</td>
+ * <td>storageAllowed</td>
+ * <td><code>true|false</code> , active or not readonly usage (for storage) of the configuration</td>
+ * </tr>
+ * <tr>
+ * <td>updateAllowed</td>
+ * <td><code>true|false</code> , active or not readonly usage (no updates) of the configuration</td>
  * </tr>
  * <tr>
  * <td>resourceUri</td>
@@ -81,8 +85,10 @@ public class ConfigurationContextBuilder extends AbstractRuntimeContextBuilder<C
     * @see Configuration#getName()
     */
    public static final String Name = "name";
-   /** common configuration context property - read-only usage <code>true|false</code> value */
-   public static final String Readonly = "readonly";
+   /** common configuration context property - read-only storage usage <code>true|false</code> value */
+   public static final String StorageAllowed = "storageAllowed";
+   /** common configuration context property - read-only update usage <code>true|false</code> value */
+   public static final String UpdateAllowed = "updateAllowed";
    /** common configuration context property - resource store {@link URI} to accessed the configuration file */
    public static final String ResourceUri = "resourceUri";
    /** common configuration context property - resource store context name that will be used to access the resourceUri */
@@ -186,11 +192,20 @@ public class ConfigurationContextBuilder extends AbstractRuntimeContextBuilder<C
    }
 
    /**
-    * @param readonly
-    * @return set readonly context parameter
+    * @param allowStorage
+    * @return set allow storage context parameter
     */
-   public ConfigurationContextBuilder withReadonly(final String readonly) {
-	getContextParameters().put(Readonly, readonly);
+   public ConfigurationContextBuilder withStorageAllowed(final boolean allowStorage) {
+	getContextParameters().put(StorageAllowed, Boolean.valueOf(allowStorage).toString());
+	return this;
+   }
+
+   /**
+    * @param allowUpdate
+    * @return set allow update context parameter
+    */
+   public ConfigurationContextBuilder withUpdateAllowed(final String allowUpdate) {
+	getContextParameters().put(UpdateAllowed, allowUpdate);
 	return this;
    }
 

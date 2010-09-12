@@ -90,13 +90,13 @@ class Coherence3xCacheManagerImpl extends AbstractCacheManager {
 		if (wre.getCause() != null && wre.getCause() instanceof IOException) {
 		   final String wrappedMsg = wre.getCause().getMessage();
 
-		   if (wrappedMsg.contains("Configuration is missing")) { throw new CacheConfigurationNotFoundException("cache.configuration.notfound",
+		   if (wrappedMsg.contains("onfiguration is missing")) { throw new CacheConfigurationNotFoundException("cache.configuration.notfound",
 			   CoherenceCacheManagerPluginName, configuration); }
 		}
 
 		if (wre.getCause().getCause() != null && wre.getCause().getCause() instanceof IOException) {
 		   final String wrappedMsg = wre.getCause().getCause().getMessage();
-		   if (wrappedMsg.contains("Configuration is missing")) { throw new CacheConfigurationNotFoundException("cache.configuration.notfound",
+		   if (wrappedMsg.contains("onfiguration is missing")) { throw new CacheConfigurationNotFoundException("cache.configuration.notfound",
 			   CoherenceCacheManagerPluginName, configuration); }
 		}
 

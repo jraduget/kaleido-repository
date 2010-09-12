@@ -432,9 +432,14 @@ public interface Configuration {
    void store() throws ResourceException, ConfigurationException;
 
    /**
-    * @return is configuration is for read only use
+    * @return does configuration allowed the storage
     */
-   boolean isReadOnly();
+   boolean isStorageAllowed();
+
+   /**
+    * @return does configuration allowed item updates
+    */
+   boolean isUpdateAllowed();
 
    // **************************************************************************
    // -> Property value accessors

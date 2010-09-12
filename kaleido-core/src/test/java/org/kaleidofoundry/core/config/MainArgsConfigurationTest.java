@@ -56,8 +56,8 @@ public class MainArgsConfigurationTest extends AbstractConfigurationTest {
    }
 
    @Test
-   public void isReadonly() {
+   public void isStorageAllowed() {
 	assertNotNull(configuration);
-	assertFalse(configuration.isReadOnly());
+	assertFalse(configuration.isStorageAllowed());
    }
 }

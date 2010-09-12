@@ -23,8 +23,9 @@ import static org.kaleidofoundry.core.config.ConfigurationConstants.LOGGER;
 import static org.kaleidofoundry.core.config.ConfigurationConstants.MultiValDefaultSeparator;
 import static org.kaleidofoundry.core.config.ConfigurationConstants.StrDateFormat;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.CacheManagerRef;
-import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.Readonly;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.ResourceStoreRef;
+import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.StorageAllowed;
+import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.UpdateAllowed;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ConfigurationMessageBundle;
 
 import java.math.BigDecimal;
@@ -44,8 +45,8 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.kaleidofoundry.core.cache.Cache;
-import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.cache.CacheManager;
+import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
@@ -168,13 +169,25 @@ public abstract class AbstractConfiguration implements Configuration {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.ConfigurationManager#isReadOnly()
+    * @see org.kaleidofoundry.core.config.Configuration#isStorageAllowed()
     */
-   public boolean isReadOnly() {
-	if (StringHelper.isEmpty(context.getProperty(Readonly))) {
-	   return false;
+   public boolean isStorageAllowed() {
+	if (StringHelper.isEmpty(context.getProperty(StorageAllowed))) {
+	   return true;
 	} else {
-	   return Boolean.valueOf(context.getProperty(Readonly));
+	   return Boolean.valueOf(context.getProperty(StorageAllowed));
+	}
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.Configuration#isUpdateAllowed()
+    */
+   public boolean isUpdateAllowed() {
+	if (StringHelper.isEmpty(context.getProperty(UpdateAllowed))) {
+	   return true;
+	} else {
+	   return Boolean.valueOf(context.getProperty(UpdateAllowed));
 	}
    }
 
@@ -184,7 +197,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
    @Override
    public final void load() throws ResourceException, ConfigurationException {
-	if (isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal01", name)); }
+	if (isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.already", name)); }
 
 	final ResourceHandler resourceHandler = singleResourceStore.get();
 	try {
@@ -204,15 +217,15 @@ public abstract class AbstractConfiguration implements Configuration {
 
    @Override
    public final void store() throws ResourceException, ConfigurationException {
-	if (!isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal02", name)); }
-	if (isReadOnly()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal03", name)); }
+	if (!isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.notloaded", name)); }
+	if (!isStorageAllowed()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.readonly.store", name)); }
 
 	singleResourceStore.store();
    }
 
    @Override
    public final void unload() throws ResourceException {
-	if (!isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal02", name)); }
+	if (!isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.notloaded", name)); }
 	// cleanup cache entries
 	cacheProperties.removeAll();
 	// unload store
@@ -398,7 +411,7 @@ public abstract class AbstractConfiguration implements Configuration {
     */
    @Override
    public void setProperty(@NotNull final String key, @NotNull final Object value) {
-	if (isReadOnly()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal03", name)); }
+	if (!isUpdateAllowed()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.readonly.update", name)); }
 	cacheProperties.put(getValidKey(key), objectToString(value));
    }
 
@@ -408,7 +421,7 @@ public abstract class AbstractConfiguration implements Configuration {
     */
    @Override
    public void removeProperty(@NotNull final String key) {
-	if (isReadOnly()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.illegal03", name)); }
+	if (!isUpdateAllowed()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.readonly.update", name)); }
 	cacheProperties.remove(getValidKey(key));
    }
 
@@ -687,20 +700,20 @@ public abstract class AbstractConfiguration implements Configuration {
    public Properties toProperties(final String rootPrefix) {
 
 	final Properties prop = new Properties();
-	final Set<String> roots = keySet(rootPrefix);
+	final Set<String> keys = keySet(rootPrefix);
 
-	for (final String string : roots) {
+	for (final String string : keys) {
 	   String propPath = string;
-	   final String propValue = getProperty(propPath);
+	   final String propValue = getString(propPath);
 	   final List<String> propValues = getStringList(propPath);
 
 	   propPath = StringHelper.replaceAll(propPath, KeyRoot, "");
 	   propPath = StringHelper.replaceAll(propPath, KeySeparator, KeyPropertiesSeparator);
 
-	   if (!StringHelper.isEmpty(propValue)) {
-		prop.put(propPath, propValue);
-	   } else {
+	   if (propValues != null) {
 		prop.put(propPath, ConverterHelper.collectionToString(propValues, MultiValDefaultSeparator));
+	   } else if (propValue != null) {
+		prop.put(propPath, propValue);
 	   }
 	}
 
@@ -717,8 +730,8 @@ public abstract class AbstractConfiguration implements Configuration {
 
    /**
     * String to Object Converter
-    * @param <T> 
     * 
+    * @param <T>
     * @param strValue string value representation
     * @param cl Target class
     * @return Requested conversion of the string argument. If {@link NumberFormatException} or date {@link ParseException}, silent exception

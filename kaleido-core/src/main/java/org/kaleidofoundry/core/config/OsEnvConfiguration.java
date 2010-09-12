@@ -86,8 +86,8 @@ public class OsEnvConfiguration extends AbstractConfiguration implements Configu
    }
 
    @Override
-   public boolean isReadOnly() {
-	return true;
+   public boolean isStorageAllowed() {
+	return false;
    }
 
 }

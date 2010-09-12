@@ -17,24 +17,49 @@ package org.kaleidofoundry.core.store;
 
 import java.net.URI;
 
+import org.junit.After;
 import org.junit.Before;
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.mockftpserver.fake.FakeFtpServer;
+import org.mockftpserver.fake.UserAccount;
+import org.mockftpserver.fake.filesystem.FileEntry;
+import org.mockftpserver.fake.filesystem.FileSystem;
+import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 
 /**
  * @author Jerome RADUGET
  */
 public class FtpResourceStoreTest extends AbstractResourceStoreTest {
 
+   private FakeFtpServer fakeFtpServer;
+
    @Before
    @Override
    public void setup() throws Throwable {
 	super.setup();
+
+	// ftp mock setup
+	fakeFtpServer = new FakeFtpServer();
+	fakeFtpServer.setServerControlPort(43120);
+	FileSystem fileSystem = new UnixFakeFileSystem();
+	fileSystem.add(new FileEntry("/kaleidofoundry/it/store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST));
+	fakeFtpServer.setFileSystem(fileSystem);
+	fakeFtpServer.addUserAccount(new UserAccount("anonymous", "anonymous", "/"));
+	fakeFtpServer.start();
+	// end ftp mock setip
+
 	resourceStore = new FtpResourceStore(new RuntimeContext<ResourceStore>(ResourceStore.class));
 
 	// anonymous account : ftp://hostname/resourcepath
 	// account : ftp://username:password@hostname/resourcepath
-	existingResources.put(new URI("ftp://localhost/kaleidofoundry/it/store/foo.txt"), DEFAULT_RESOURCE_MOCK_TEST);
-	nonExistingResources.add(new URI("ftp://localhost/kaleidofoundry/it/store/foo"));
+	existingResources.put(new URI("ftp://anonymous:anonymous@localhost:43120/kaleidofoundry/it/store/foo.txt"), DEFAULT_RESOURCE_MOCK_TEST);
+	nonExistingResources.add(new URI("ftp://anonymous:anonymous@localhost:43120/kaleidofoundry/it/store/foo"));
    }
 
+   @After
+   @Override
+   public void cleanup() throws Throwable {
+	super.cleanup();
+	fakeFtpServer.stop();
+   }
 }
