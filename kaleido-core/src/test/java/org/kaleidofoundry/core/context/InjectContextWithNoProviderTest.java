@@ -20,7 +20,6 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.kaleidofoundry.core.config.ConfigurationConstants;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.context.service_with_no_provider.MyServiceInterface;
 import org.kaleidofoundry.core.context.service_with_no_provider.MyServiceWithFinalNullRuntimeContext;
@@ -70,11 +69,8 @@ public class InjectContextWithNoProviderTest extends Assert {
 	// Disable i18n jpa message bundle control
 	I18nMessagesFactory.disableJpaControl();
 	// Register configurations used for testing
-	System
-		.getProperties()
-		.put(ConfigurationConstants.JavaEnvProperties,
-			"myConf=classpath:/org/kaleidofoundry/core/context/application.properties;anotherConf=classpath:/org/kaleidofoundry/core/context/module.properties");
-	ConfigurationFactory.init();
+	ConfigurationFactory.provides("myConf", "classpath:/org/kaleidofoundry/core/context/application.properties");
+	ConfigurationFactory.provides("anotherConf", "classpath:/org/kaleidofoundry/core/context/module.properties");
 
 	// Services to test
 	myServiceWithRuntimeContext = new MyServiceWithRuntimeContext();
@@ -92,9 +88,8 @@ public class InjectContextWithNoProviderTest extends Assert {
    @After
    public void cleanup() throws ResourceException {
 	// Remove all configurations
-	ConfigurationFactory.destroyAll();
-	// Remove configurations env variables used for testing
-	System.getProperties().remove(ConfigurationConstants.JavaEnvProperties);
+	ConfigurationFactory.destroy("myConf");
+	ConfigurationFactory.destroy("anotherConf");
 	// re-enable i18n jpa message bundle control
 	I18nMessagesFactory.enableJpaControl();
    }
