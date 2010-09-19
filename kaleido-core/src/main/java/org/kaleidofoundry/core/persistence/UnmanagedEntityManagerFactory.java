@@ -67,16 +67,17 @@ public abstract class UnmanagedEntityManagerFactory {
 
    /**
     * @return default kaleido entity manager of the current user (thread local)<br/>
-    *         it will create the EntityManager if needed
+    *         it will create the EntityManager if needed. If previous entity manager thread was closed, a new one is created.
     */
    @NotNull
    public static final EntityManager currentEntityManager() {
-	if (DefaultEm.get() == null) {
+	EntityManager em = DefaultEm.get();
+	if (em == null || !em.isOpen()) {
 	   EntityManager lem = getEntityManagerFactory().createEntityManager();
 	   DefaultEm.set(lem);
 	   return lem;
 	} else {
-	   return DefaultEm.get();
+	   return em;
 	}
    }
 
