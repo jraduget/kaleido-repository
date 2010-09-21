@@ -96,7 +96,7 @@ public abstract class UnmanagedEntityManagerFactory {
 	   EntityManager em;
 	   ThreadLocal<EntityManager> lem = CustomEmRegistry.get(persistenceUnitName);
 
-	   if (lem == null || lem.get() == null) {
+	   if (lem == null || lem.get() == null || !lem.get().isOpen()) {
 		em = getEntityManagerFactory(persistenceUnitName).createEntityManager();
 		lem = lem == null ? new ThreadLocal<EntityManager>() : lem;
 		lem.set(em);

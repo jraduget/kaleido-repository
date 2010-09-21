@@ -15,9 +15,6 @@
  */
 package org.kaleidofoundry.core.cache;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -25,7 +22,6 @@ import java.util.Date;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.lang.NotNullException;
@@ -199,84 +195,4 @@ public abstract class AbstractTestCache extends Assert {
 	cache.removeAll();
 	assertEquals(0, cache.size());
    }
-
-   /**
-    * for cache that could be query
-    * 
-    * @throws ParseException
-    */
-   @Test
-   @Ignore
-   public void filterCacheByName() throws ParseException {
-
-	int idPerson = 1;
-	Adress mainAdress;
-	Person person;
-	final DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
-
-	mainAdress = new Adress("2 RUE SAINT MARTIN", "ETAGE 3", "75008", "PARIS");
-	person = new Person(idPerson++, "Dupond", "Paul", df.parse("1958/06/28"), mainAdress).addAdress(mainAdress).addAdress(
-		new Adress("22 RUE LA CANEBIERE", null, "13001", "MARSEILLE"));
-	cache.put(person.getId(), person);
-
-	mainAdress = new Adress("10 RUE DE RIVOLI", "ETAGE 3", "13006", "MARSEILLE");
-	person = new Person(idPerson++, "DUPONT", "Jacques", df.parse("1978/10/28"), mainAdress).addAdress(mainAdress).addAdress(
-		new Adress("ALLEE de RIVOLI", null, "33150", "CENON")).addAdress(new Adress("56 RUE LA CANEBIERE", null, "13001", "MARSEILLE"));
-
-	cache.put(person.getId(), person);
-
-	person = new Person(idPerson++, "X", "Pierre", df.parse("1980/01/05"), null);
-	cache.put(person.getId(), person);
-
-	person = new Person(idPerson++, "Y", "Paul", df.parse("1960/05/09"), null);
-	cache.put(person.getId(), person);
-
-	assertEquals(4, cache.size());
-
-	/*
-	 * if (cache instanceof Coherence35xCacheImpl) {
-	 * NamedCache namedCache = ((Coherence35xCacheImpl)cache).getNamedCache();
-	 * com.tangosol.util.Filter filter;
-	 * // simple filter on person lastName
-	 * filter = new EqualsFilter("getLastName", "DUPONT");
-	 * assertNotNull(namedCache.entrySet(filter));
-	 * assertEquals(1, namedCache.entrySet(filter).size());
-	 * // simple filter on person lastName length
-	 * filter = new GreaterEqualsFilter(new ChainedExtractor("getLastName.trim.length"), 5);
-	 * assertNotNull(namedCache.entrySet(filter));
-	 * assertEquals(2, namedCache.entrySet(filter).size());
-	 * // simple filter on person lastName
-	 * filter = new LikeFilter("getLastName", "DUPON%", true);
-	 * assertNotNull(namedCache.entrySet(filter));
-	 * assertEquals(2, namedCache.entrySet(filter).size());
-	 * // simple filter on person city adress
-	 * filter = new EqualsFilter("getMainAdress.getCity", "MARSEILLE");
-	 * assertNotNull(namedCache.entrySet(filter));
-	 * assertEquals(1, namedCache.entrySet(filter).size());
-	 * // filter on person mainAdress
-	 * filter = new AndFilter(new EqualsFilter("getMainAdress.getCity", "MARSEILLE"), new IsNotNullFilter("getLastName"));
-	 * assertNotNull(namedCache.entrySet(filter));
-	 * assertEquals(1, namedCache.entrySet(filter).size());
-	 * // filter on person adresses
-	 * filter = new ContainsFilter("getAdresses", new Adress("10 RUE DE RIVOLI", "ETAGE 3", "13006", "MARSEILLE"));
-	 * assertNotNull(namedCache.entrySet(filter));
-	 * assertEquals(1, namedCache.entrySet(filter).size());
-	 * // filter on person adresses count (not work for Collections.unmodifiableList(list))
-	 * filter = new GreaterEqualsFilter(new ChainedExtractor("getAdresses.size"), 2);
-	 * assertNotNull(namedCache.entrySet(filter));
-	 * assertEquals(2, namedCache.entrySet(filter).size());
-	 * // filter on person adresses
-	 * filter = new ContainsFilter(new ListElementAttributeExtractor(new ReflectionExtractor("getAdresses"),new
-	 * ReflectionExtractor("getCity")) , "MARSEILLE");
-	 * assertNotNull(namedCache.entrySet(filter));
-	 * assertEquals(2, namedCache.entrySet(filter).size());
-	 * }
-	 * if (cache instanceof Infinispan4xCacheImpl) {
-	 * org.infinispan.Cache infiniCache = ((Infinispan4xCacheImpl)cache).getInfinispanCache();
-	 * // The QueryHelper must be instantiated before putting objects into the cache.
-	 * //QueryHelper qh = new QueryHelper(this.cache, new Properties(), myClassToQuery.class);
-	 * }
-	 */
-   }
-
 }

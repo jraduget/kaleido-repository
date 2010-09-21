@@ -67,14 +67,13 @@
 
 		<!-- ** Testing part **************************************************************** -->
 
-		<!-- EJB 
+		<!-- EJB -->
 		<dependency>
 			<groupId>org.apache.openejb</groupId>
 			<artifactId>openejb-core</artifactId>
 			<version>3.1.2</version>
 		</dependency>
-		-->
-		
+				
 		<!-- Derby database -->
 		<dependency>
 			<groupId>org.apache.derby</groupId>
@@ -89,14 +88,6 @@
 			<scope>test</scope>
 		</dependency>
 		
-		<!-- Oracle Database -->
-		<!--		
-			<dependency> <groupId>com.oracle</groupId>
-			<artifactId>ojdbc6</artifactId>
-			<version>11.1.0.7.0-Production</version> <scope>test</scope>
-			</dependency>
-		-->
-
 	</dependencies>
 
 </project>
