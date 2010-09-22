@@ -15,6 +15,7 @@
  */
 package org.kaleidofoundry.core.config;
 
+import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -162,6 +163,20 @@ public interface Configuration {
     * @throws IllegalStateException if configuration is for read-only use
     */
    void removeProperty(@NotNull String key);
+
+   /**
+    * add a configuration changes listener
+    * 
+    * @param listener
+    */
+   void addConfigurationChangeListener(PropertyChangeListener listener);
+
+   /**
+    * remove a configuration changes listener
+    * 
+    * @param listener
+    */
+   void removeConfigurationChangeListener(PropertyChangeListener listener);
 
    // **************************************************************************
    // -> Keys management

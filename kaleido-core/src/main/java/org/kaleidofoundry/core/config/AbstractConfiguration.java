@@ -28,6 +28,8 @@ import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.Storage
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.UpdateAllowed;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ConfigurationMessageBundle;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
@@ -87,6 +89,9 @@ public abstract class AbstractConfiguration implements Configuration {
    // internal runtime context
    protected final RuntimeContext<Configuration> context;
 
+   // configuration changes support (via event)
+   private final PropertyChangeSupport propertyChangeSupport;
+
    /**
     * @param name
     * @param resourceUri
@@ -110,6 +115,9 @@ public abstract class AbstractConfiguration implements Configuration {
 	this.name = name.toString();
 	this.context = context;
 
+	// property change support for used to propagate configuration changes
+	propertyChangeSupport = new PropertyChangeSupport(this);
+
 	// internal resource store instantiation
 	final String resourceStoreRef = context.getProperty(ResourceStoreRef);
 	final ResourceStore resourceStore;
@@ -131,6 +139,7 @@ public abstract class AbstractConfiguration implements Configuration {
 	   cacheManager = CacheManagerFactory.provides();
 	}
 	cacheProperties = cacheManager.getCache("kaleidofoundry/configuration/" + name);
+
    }
 
    /**
@@ -238,6 +247,26 @@ public abstract class AbstractConfiguration implements Configuration {
     */
    public boolean isLoaded() {
 	return singleResourceStore.isLoaded();
+   }
+
+   // ***************************************************************************
+   // -> listener used for configuration changes management
+   // ***************************************************************************
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.Configuration#addConfigurationChangeListener(java.beans.PropertyChangeListener)
+    */
+   public void addConfigurationChangeListener(final PropertyChangeListener listener) {
+	this.propertyChangeSupport.addPropertyChangeListener(listener);
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.Configuration#removeConfigurationChangeListener(java.beans.PropertyChangeListener)
+    */
+   public void removeConfigurationChangeListener(final PropertyChangeListener listener) {
+	this.propertyChangeSupport.removePropertyChangeListener(listener);
    }
 
    // ***************************************************************************
