@@ -17,23 +17,60 @@ package org.kaleidofoundry.core.store;
 
 import java.net.URI;
 
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.bio.SocketConnector;
+import org.eclipse.jetty.webapp.WebAppContext;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 
 /**
  * @author Jerome RADUGET
  */
 public class HttpResourceStoreTest extends AbstractResourceStoreTest {
 
+   private static Server server;
+
+   @BeforeClass
+   public static void setupStatic() throws Exception {
+	// disable i18n jpa for test performance
+	I18nMessagesFactory.disableJpaControl();
+
+	// jetty http server start
+	final SocketConnector connector = new SocketConnector();
+	connector.setPort(9090);
+	server = new Server();
+	server.setConnectors(new Connector[] { connector });
+	final WebAppContext context = new WebAppContext();
+	context.setServer(server);
+	context.setContextPath("/test");
+	context.setWar("src/test/webapp");
+	server.setHandler(context);
+	server.start();
+   }
+
+   @AfterClass
+   public static void cleanupStatic() throws Exception {
+	// re-enable i18n jpa
+	I18nMessagesFactory.enableJpaControl();
+	// jetty http server stop
+	server.stop();
+	server.destroy();
+   }
+
    @Before
    @Override
    public void setup() throws Throwable {
 	super.setup();
-	// no-proxy settings for this test ;-)
+
+	// be-careful, there is no-proxy settings for this test ;-)
 	resourceStore = new HttpResourceStore(new RuntimeContext<ResourceStore>(ResourceStore.class));
 
-	existingResources.put(new URI("http://localhost/kaleidofoundry/it/store/foo.txt"), DEFAULT_RESOURCE_MOCK_TEST);
-	nonExistingResources.add(new URI("http://localhost/kaleidofoundry/it/store/foo"));
+	existingResources.put(new URI("http://localhost:9090/test/kaleidofoundry/it/store/foo.txt"), DEFAULT_RESOURCE_MOCK_TEST);
+	nonExistingResources.add(new URI("http://localhost:9090/test/kaleidofoundry/it/store/foo"));
    }
 
 }

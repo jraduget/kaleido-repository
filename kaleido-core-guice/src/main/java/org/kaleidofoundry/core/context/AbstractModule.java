@@ -86,17 +86,17 @@ public abstract class AbstractModule<T> extends com.google.inject.AbstractModule
 	bind(annotatedInterface).to(getUnnamedImplementation()).in(scope(getUnnamedImplementation()));
 
 	// 2. bind standard kaleido implementation first
-	Set<Class<? extends T>> standardImpls = implementations(true);
+	final Set<Class<? extends T>> standardImpls = implementations(true);
 
 	// bind with Names.named("...")
-	for (Class<? extends T> standard : standardImpls) {
+	for (final Class<? extends T> standard : standardImpls) {
 	   bind(annotatedInterface).annotatedWith(Names.named(getPluginName(standard))).to(standard).in(scope(standard));
 	}
 
 	// 3. bind custom non kaleido implementation after
-	Set<Class<? extends T>> customImpls = implementations(false);
+	final Set<Class<? extends T>> customImpls = implementations(false);
 
-	for (Class<? extends T> custom : customImpls) {
+	for (final Class<? extends T> custom : customImpls) {
 	   bind(annotatedInterface).annotatedWith(Names.named(getPluginName(custom))).to(custom).in(scope(custom));
 	}
 
@@ -112,7 +112,7 @@ public abstract class AbstractModule<T> extends com.google.inject.AbstractModule
 	// -> doesn't exists we use TypeListener (ContextTypeListener) instead
 
 	// interceptor for methods ****
-	MethodInterceptor methodContextInterceptor = new ContextInjectionMethodInterceptor();
+	final MethodInterceptor methodContextInterceptor = new ContextInjectionMethodInterceptor();
 	requestInjection(methodContextInterceptor);
 	bindInterceptor(Matchers.any(), Matchers.annotatedWith(Inject.class), methodContextInterceptor);
 
@@ -130,11 +130,11 @@ public abstract class AbstractModule<T> extends com.google.inject.AbstractModule
 
    public Set<Class<? extends T>> implementations(final boolean standard) {
 
-	PluginImplementationRegistry pluginImplRegistry = PluginFactory.getImplementationRegistry();
-	Set<Plugin<T>> storePluginImpls = pluginImplRegistry.findByInterface(annotatedInterface);
-	Set<Class<? extends T>> result = new LinkedHashSet<Class<? extends T>>();
+	final PluginImplementationRegistry pluginImplRegistry = PluginFactory.getImplementationRegistry();
+	final Set<Plugin<T>> storePluginImpls = pluginImplRegistry.findByInterface(annotatedInterface);
+	final Set<Class<? extends T>> result = new LinkedHashSet<Class<? extends T>>();
 
-	for (Plugin<T> pi : storePluginImpls) {
+	for (final Plugin<T> pi : storePluginImpls) {
 	   if (pi.isStandard() == standard) {
 		result.add(pi.getAnnotatedClass());
 	   }
@@ -144,12 +144,12 @@ public abstract class AbstractModule<T> extends com.google.inject.AbstractModule
 
    /**
     * @param c
-    * @return if class argument annotated with {@link Declare}, return the guice {@link Scope} that maps {@link Declare#singletons()} <br/>
+    * @return if class argument annotated with {@link Declare}, return the guice {@link Scope} that maps {@link Provider#singletons()} <br/>
     *         otherwise return {@link Scopes#NO_SCOPE}
     */
    public Scope scope(final Class<? extends T> c) {
 
-	Provider declarePlugin = c.getAnnotation(Provider.class);
+	final Provider declarePlugin = c.getAnnotation(Provider.class);
 
 	if (declarePlugin != null) {
 	   return declarePlugin.singletons() ? Scopes.SINGLETON : Scopes.NO_SCOPE;

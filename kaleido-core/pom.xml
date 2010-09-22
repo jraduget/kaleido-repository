@@ -72,8 +72,8 @@
 			<groupId>org.apache.openejb</groupId>
 			<artifactId>openejb-core</artifactId>
 			<version>3.1.2</version>
+			<scope>test</scope>
 		</dependency>
-				
 		<!-- Derby database -->
 		<dependency>
 			<groupId>org.apache.derby</groupId>
@@ -85,6 +85,20 @@
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derby</artifactId>
 			<version>10.6.1.0</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- HTTP embedded Server -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<version>7.1.4.v20100610</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- FTP embedded Server -->
+		<dependency>
+			<groupId>org.mockftpserver</groupId>
+			<artifactId>MockFtpServer</artifactId>
+			<version>2.2</version>
 			<scope>test</scope>
 		</dependency>
 		

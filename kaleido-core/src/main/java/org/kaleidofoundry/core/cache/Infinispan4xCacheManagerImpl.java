@@ -113,7 +113,7 @@ class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheFactory#getCache(java.lang.String, java.lang.String)
     */
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings({ "unchecked", "rawtypes" })
    @Override
    public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name) {
 

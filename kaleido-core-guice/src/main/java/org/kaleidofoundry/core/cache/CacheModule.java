@@ -26,7 +26,7 @@ import org.kaleidofoundry.core.context.AbstractModule;
  * 
  * @author Jerome RADUGET
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("rawtypes")
 public class CacheModule extends AbstractModule<Cache> {
 
    /*

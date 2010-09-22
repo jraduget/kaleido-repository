@@ -69,7 +69,7 @@ public abstract class AbstractCacheManager implements CacheManager {
    protected final SingleResourceStore singleResourceStore;
 
    /** Local cache instances */
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings("rawtypes")
    protected final transient Registry<String, Cache> cachesByName;
 
    /**
@@ -84,7 +84,7 @@ public abstract class AbstractCacheManager implements CacheManager {
     * @param context
     * @throws CacheConfigurationException cache configuration resource exception
     */
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings("rawtypes")
    public AbstractCacheManager(final String configuration, @NotNull final RuntimeContext<CacheManager> context) {
 	super();
 

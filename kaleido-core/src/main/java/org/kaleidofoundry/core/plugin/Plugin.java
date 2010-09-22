@@ -170,13 +170,13 @@ public class Plugin<T> implements Serializable, Comparator<Plugin<T>> {
     * (non-Javadoc)
     * @see java.lang.Object#equals(java.lang.Object)
     */
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings("rawtypes")
    @Override
    public boolean equals(final Object obj) {
 	if (this == obj) { return true; }
 	if (obj == null) { return false; }
 	if (!(obj instanceof Plugin)) { return false; }
-	Plugin other = (Plugin) obj;
+	final Plugin other = (Plugin) obj;
 	if (annotatedClass == null) {
 	   if (other.annotatedClass != null) { return false; }
 	} else if (!annotatedClass.equals(other.annotatedClass)) { return false; }

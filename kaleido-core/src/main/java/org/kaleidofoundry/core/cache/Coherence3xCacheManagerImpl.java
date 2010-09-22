@@ -127,7 +127,8 @@ class Coherence3xCacheManagerImpl extends AbstractCacheManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheFactory#getCache(java.lang.String, java.lang.String)
     */
-   @SuppressWarnings("unchecked")
+
+   @SuppressWarnings({ "unchecked", "rawtypes" })
    @Override
    public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name) {
 
@@ -145,7 +146,7 @@ class Coherence3xCacheManagerImpl extends AbstractCacheManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheFactory#destroy(java.lang.String)
     */
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings({ "rawtypes" })
    @Override
    public void destroy(final String cacheName) {
 	final Coherence3xCacheImpl<?, ?> cache = (Coherence3xCacheImpl) cachesByName.get(cacheName);

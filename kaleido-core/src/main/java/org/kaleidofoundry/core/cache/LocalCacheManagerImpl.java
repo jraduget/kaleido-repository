@@ -95,7 +95,7 @@ class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheM
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheFactory#destroy(java.lang.String)
     */
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings({ "rawtypes" })
    @Override
    public void destroy(final String cacheName) {
 	final Cache<?, ?> cache = cachesByName.get(cacheName);
@@ -145,7 +145,8 @@ class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheM
     * @return provider cache instance
     */
    protected <K extends Serializable, V extends Serializable> LocalCacheImpl<K, V> createCache(final String name, final String configurationUri) {
-	LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration() != null ? getCurrentConfiguration() : "", name));
+	LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration() != null ? getCurrentConfiguration()
+		: "", name));
 	return new LocalCacheImpl<K, V>(name);
    }
 }

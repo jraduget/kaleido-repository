@@ -80,7 +80,7 @@ public class OsEnvironment extends Properties {
 	   br = new BufferedReader(new InputStreamReader(p.getInputStream()));
 	   for (String line = ""; (line = br.readLine()) != null;) {
 		if (!StringHelper.isEmpty(line.trim())) {
-		   setProperty(line.substring(0, line.indexOf("=")), line.substring(line.indexOf("=") + 1));
+		   setProperty(line.substring(0, line.indexOf("=")).toUpperCase(), line.substring(line.indexOf("=") + 1));
 		}
 	   }
 	} finally {
