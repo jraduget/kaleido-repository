@@ -32,8 +32,8 @@ public class PropertiesConfigurationTest extends AbstractConfigurationTest {
    @Override
    protected Configuration newInstance() throws ResourceException, URISyntaxException {
 
-	return new PropertiesConfiguration("propCpConfig", "classpath:/org/kaleidofoundry/core/config/test.properties",
-		new RuntimeContext<org.kaleidofoundry.core.config.Configuration>(Configuration.class));
+	return new PropertiesConfiguration("propCpConfig", "classpath:/config/test.properties", new RuntimeContext<org.kaleidofoundry.core.config.Configuration>(
+		Configuration.class));
    }
 
 }

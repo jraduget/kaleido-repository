@@ -16,6 +16,7 @@
 package org.kaleidofoundry.core.config;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URI;
 
 import org.kaleidofoundry.core.cache.Cache;
@@ -64,14 +65,19 @@ public class OsEnvConfiguration extends AbstractConfiguration implements Configu
 	this(name, (String) null, context);
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfiguration#loadProperties(org.kaleidofoundry.core.store.ResourceHandler,
+    * org.kaleidofoundry.core.cache.Cache)
+    */
    @Override
-   protected Cache<String, String> loadProperties(final ResourceHandler resourceHandler, final Cache<String, String> properties) throws ResourceException,
-	   ConfigurationException {
+   protected Cache<String, Serializable> loadProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> properties)
+	   throws ResourceException, ConfigurationException {
 	try {
 	   final OsEnvironment environment = new OsEnvironment();
 	   for (final String key : environment.stringPropertyNames()) {
 		final String value = environment.getProperty(key);
-		properties.put(key, value != null ? value : "");
+		properties.put(normalizeKey(key), value != null ? value : "");
 	   }
 	   return properties;
 	} catch (final IOException ioe) {
@@ -79,8 +85,13 @@ public class OsEnvConfiguration extends AbstractConfiguration implements Configu
 	}
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfiguration#storeProperties(org.kaleidofoundry.core.cache.Cache,
+    * org.kaleidofoundry.core.store.SingleResourceStore)
+    */
    @Override
-   protected Cache<String, String> storeProperties(final Cache<String, String> cacheProperties, final SingleResourceStore resourceStore)
+   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> cacheProperties, final SingleResourceStore resourceStore)
 	   throws ResourceException, ConfigurationException {
 	return cacheProperties; // never called
    }

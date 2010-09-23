@@ -31,7 +31,7 @@ public class XmlConfigurationTest extends AbstractConfigurationTest {
 
    @Override
    protected Configuration newInstance() throws ResourceException, URISyntaxException {
-	return new org.kaleidofoundry.core.config.XmlConfiguration("xmlCpConfig", "classpath:/org/kaleidofoundry/core/config/test.xml",
+	return new org.kaleidofoundry.core.config.XmlConfiguration("xmlCpConfig", "classpath:/config/test.xml",
 		new RuntimeContext<org.kaleidofoundry.core.config.Configuration>(Configuration.class));
    }
 

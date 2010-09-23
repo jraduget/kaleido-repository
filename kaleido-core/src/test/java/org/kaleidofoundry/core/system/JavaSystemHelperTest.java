@@ -33,7 +33,7 @@ import org.kaleidofoundry.core.lang.NotNullException;
 public class JavaSystemHelperTest extends Assert {
 
    public static final String UNKNOWN_FOO_RESOURCE = "foo/unkwnown";
-   public static final String FOO_RESOURCE = "org/kaleidofoundry/core/system/foo.txt";
+   public static final String FOO_RESOURCE = "system/foo.txt";
    public static final String META_INF_JAR_RESOURCE = "META-INF/MANIFEST.MF";
 
    @Test

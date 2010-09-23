@@ -29,7 +29,7 @@ public class ConfigurationFactoryTest extends Assert {
    public void providePropertiesConfiguration() throws ResourceException {
 
 	final String configId = "propCpConfig";
-	final String configResourceUri = "classpath:/org/kaleidofoundry/core/config/test.properties";
+	final String configResourceUri = "classpath:/config/test.properties";
 	final Configuration config = ConfigurationFactory.provides(configId, configResourceUri);
 
 	assertNotNull(config);
@@ -42,7 +42,7 @@ public class ConfigurationFactoryTest extends Assert {
    public void provideXmlPropertiesConfiguration() throws ResourceException {
 
 	final String configId = "propXmlCpConfig";
-	final String configResourceUri = "classpath:/org/kaleidofoundry/core/config/test.properties.xml";
+	final String configResourceUri = "classpath:/config/test.properties.xml";
 	final Configuration config = ConfigurationFactory.provides(configId, configResourceUri);
 
 	assertNotNull(config);
@@ -55,7 +55,7 @@ public class ConfigurationFactoryTest extends Assert {
    public void provideXmlConfiguration() throws ResourceException {
 
 	final String configId = "xmlCpConfig";
-	final String configResourceUri = "classpath:/org/kaleidofoundry/core/config/test.xml";
+	final String configResourceUri = "classpath:/config/test.xml";
 	final Configuration config = ConfigurationFactory.provides(configId, configResourceUri);
 
 	assertNotNull(config);

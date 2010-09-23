@@ -34,7 +34,7 @@ public class InjectContextDirectTest extends Assert {
    @Before
    public void setup() throws IOException, ResourceException {
 	// register & load given configuration
-	ConfigurationFactory.provides("contextTest", "classpath:/org/kaleidofoundry/core/context/context.properties");
+	ConfigurationFactory.provides("contextTest", "classpath:/context/context.properties");
    }
 
    @After

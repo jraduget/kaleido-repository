@@ -33,10 +33,10 @@ public class ClasspathResourceStoreTest extends AbstractResourceStoreTest {
 
 	resourceStore = new ClasspathResourceStore(new RuntimeContext<ResourceStore>(ResourceStore.class));
 
-	existingResources.put(new URI("classpath:/org/kaleidofoundry/core/store/foo.txt"), DEFAULT_RESOURCE_MOCK_TEST);
-	existingResources.put(new URI("classpath://org/kaleidofoundry/core/store/foo.txt"), DEFAULT_RESOURCE_MOCK_TEST);
+	existingResources.put(new URI("classpath:/store/foo.txt"), DEFAULT_RESOURCE_MOCK_TEST);
+	existingResources.put(new URI("classpath://store/foo.txt"), DEFAULT_RESOURCE_MOCK_TEST);
 
-	nonExistingResources.add(new URI("classpath:/org/kaleidofoundry/core/store/foo"));
+	nonExistingResources.add(new URI("classpath:/store/foo"));
    }
 
 }

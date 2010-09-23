@@ -16,6 +16,7 @@
 package org.kaleidofoundry.core.config;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Properties;
 
@@ -55,16 +56,21 @@ public class XmlPropertiesConfiguration extends AbstractConfiguration implements
 	super(name, resourceUri, context);
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfiguration#loadProperties(org.kaleidofoundry.core.store.ResourceHandler,
+    * org.kaleidofoundry.core.cache.Cache)
+    */
    @Override
-   protected Cache<String, String> loadProperties(final ResourceHandler resourceHandler, final Cache<String, String> properties) throws ResourceException,
-	   ConfigurationException {
+   protected Cache<String, Serializable> loadProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> properties)
+	   throws ResourceException, ConfigurationException {
 	try {
 
 	   Properties lprops = new Properties();
 	   lprops.loadFromXML(resourceHandler.getInputStream());
 
 	   for (String propName : lprops.stringPropertyNames()) {
-		properties.put(propName, lprops.getProperty(propName));
+		properties.put(normalizeKey(propName), lprops.getProperty(propName));
 	   }
 
 	   return properties;
@@ -73,9 +79,14 @@ public class XmlPropertiesConfiguration extends AbstractConfiguration implements
 	}
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfiguration#storeProperties(org.kaleidofoundry.core.cache.Cache,
+    * org.kaleidofoundry.core.store.SingleResourceStore)
+    */
    @Override
    @NotYetImplemented
-   protected Cache<String, String> storeProperties(final Cache<String, String> cacheProperties, final SingleResourceStore resourceStore)
+   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> cacheProperties, final SingleResourceStore resourceStore)
 	   throws ResourceException, ConfigurationException {
 	// try {
 	// properties.storeToXML(os, comment, encoding);

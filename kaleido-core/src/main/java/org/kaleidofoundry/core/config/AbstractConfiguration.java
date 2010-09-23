@@ -30,13 +30,13 @@ import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ConfigurationMes
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -50,6 +50,7 @@ import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.lang.NotYetImplementedException;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Review;
@@ -81,7 +82,7 @@ public abstract class AbstractConfiguration implements Configuration {
    protected final String name;
 
    // internal properties cache
-   protected final Cache<String, String> cacheProperties;
+   protected final Cache<String, Serializable> cacheProperties;
 
    // external persistent singleStore
    protected final SingleResourceStore singleResourceStore;
@@ -151,8 +152,8 @@ public abstract class AbstractConfiguration implements Configuration {
     * @throws ResourceException
     * @throws ConfigurationException
     */
-   protected abstract Cache<String, String> loadProperties(ResourceHandler resourceHandler, Cache<String, String> properties) throws ResourceException,
-	   ConfigurationException;
+   protected abstract Cache<String, Serializable> loadProperties(ResourceHandler resourceHandler, Cache<String, Serializable> properties)
+	   throws ResourceException, ConfigurationException;
 
    /**
     * you don't need to release resourceHandler argument, it is done by agregator
@@ -163,17 +164,23 @@ public abstract class AbstractConfiguration implements Configuration {
     * @throws ResourceException
     * @throws ConfigurationException
     */
-   protected abstract Cache<String, String> storeProperties(Cache<String, String> properties, SingleResourceStore resourceStore) throws ResourceException,
-	   ConfigurationException;
+   protected abstract Cache<String, Serializable> storeProperties(Cache<String, Serializable> properties, SingleResourceStore resourceStore)
+	   throws ResourceException, ConfigurationException;
 
    /**
-    * Processing on requested property key path
+    * Normalize property path from argument. If standard property key is used like "application.name", it will be internally convert to
+    * "//application/name"
     * 
-    * @param propPath
-    * @return Normalize property path from argument
+    * @param propertyPath
+    * @return Normalize propertyPath argument
     */
-   protected String keyPath(final String propPath) {
-	return StringHelper.replaceAll(propPath, ".", KeySeparator);
+   protected String normalizeKey(@NotNull final String propertyPath) {
+	StringBuilder normalizeKey = new StringBuilder();
+	if (!propertyPath.startsWith(KeyRoot)) {
+	   normalizeKey.append(KeyRoot);
+	}
+	normalizeKey.append(StringHelper.replaceAll(propertyPath, KeyPropertiesSeparator, KeySeparator));
+	return normalizeKey.toString();
    }
 
    /*
@@ -287,14 +294,14 @@ public abstract class AbstractConfiguration implements Configuration {
     */
    public Set<String> roots(final String prefix) {
 
-	final String fullKey = getValidKey(prefix);
+	final String fullKey = normalizeKey(prefix);
 	final Set<String> roots = new LinkedHashSet<String>();
 
 	for (String pKey : cacheProperties.keys()) {
 	   if (pKey.startsWith(fullKey)) {
 
 		pKey = pKey.substring(fullKey.length());
-		final StringTokenizer st = new StringTokenizer(pKey, KeyPropertiesSeparator);
+		final StringTokenizer st = new StringTokenizer(pKey, KeySeparator);
 
 		if (st.hasMoreTokens()) {
 		   final String root = st.nextToken();
@@ -351,13 +358,12 @@ public abstract class AbstractConfiguration implements Configuration {
     */
    @Override
    public Set<String> keySet(final String prefix) {
-	final String fullKey = getValidKey(prefix);
+	final String fullKey = normalizeKey(prefix);
 	final Set<String> keys = new LinkedHashSet<String>();
 
 	for (String pKey : cacheProperties.keys()) {
 	   if (pKey.startsWith(fullKey)) {
-		pKey = StringHelper.replaceAll(pKey, KeyPropertiesSeparator, KeySeparator);
-		keys.add(ConfigurationConstants.KeyRoot + pKey);
+		keys.add(pKey);
 	   }
 	}
 	return keys;
@@ -405,43 +411,23 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.Configuration#getProperty(java.lang.String)
     */
    @Override
-   public String getProperty(final String key) {
-	return cacheProperties.get(getValidKey(key));
+   public Serializable getProperty(final String key) {
+	return cacheProperties.get(normalizeKey(key));
    }
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.Configuration#getString(java.lang.String)
+    * @see org.kaleidofoundry.core.config.Configuration#setProperty(java.lang.String, java.io.Serializable)
     */
    @Override
-   public String getString(final String key) {
-	return getProperty(getValidKey(key));
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.Configuration#getStringList(java.lang.String)
-    */
-   @Override
-   public List<String> getStringList(final String key) {
-	final String rawValues = getProperty(key);
-	final String[] values = rawValues != null ? StringHelper.split(rawValues, MultiValDefaultSeparator) : null;
-
-	if (values == null) {
-	   return null;
-	} else {
-	   return Arrays.asList(values);
-	}
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.Configuration#setProperty(java.lang.String, java.lang.Object)
-    */
-   @Override
-   public void setProperty(@NotNull final String key, @NotNull final Object value) {
+   public void setProperty(@NotNull final String key, @NotNull final Serializable newValue) {
 	if (!isUpdateAllowed()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.readonly.update", name)); }
-	cacheProperties.put(getValidKey(key), objectToString(value));
+	// normalize the given key
+	String fullKey = normalizeKey(key);
+	// update cache data
+	cacheProperties.put(fullKey, newValue);
+	// fire change event
+	propertyChangeSupport.firePropertyChange(fullKey, cacheProperties.get(fullKey), newValue);
    }
 
    /*
@@ -451,24 +437,29 @@ public abstract class AbstractConfiguration implements Configuration {
    @Override
    public void removeProperty(@NotNull final String key) {
 	if (!isUpdateAllowed()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.readonly.update", name)); }
-	cacheProperties.remove(getValidKey(key));
-   }
-
-   /**
-    * get a valid / normalize property key
-    * 
-    * @param key
-    * @return valid / normalize property key
-    */
-   protected String getValidKey(@NotNull String key) {
-	key = key.replaceAll(KeyRoot, KeyPropertiesRoot);
-	key = key.replaceAll(KeySeparator, KeyPropertiesSeparator);
-	return key;
+	cacheProperties.remove(normalizeKey(key));
    }
 
    // ***************************************************************************
    // -> Typed property value accessors
    // ***************************************************************************
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.Configuration#getString(java.lang.String)
+    */
+   @Override
+   public String getString(final String key) {
+	return valueOf(getProperty(key), String.class);
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.Configuration#getStringList(java.lang.String)
+    */
+   @Override
+   public List<String> getStringList(final String key) {
+	return valuesOf(getProperty(key), String.class);
+   }
 
    /*
     * (non-Javadoc)
@@ -525,8 +516,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getBoolean(java. lang.String)
     */
    public Boolean getBoolean(final String key) {
-	final String value = getProperty(key);
-	return StringHelper.isEmpty(value) ? null : Boolean.valueOf(value);
+	return valueOf(getProperty(key), Boolean.class);
    }
 
    /*
@@ -551,8 +541,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.config.Configuration#getByte(java.lang .String)
     */
    public Byte getByte(final String key) {
-	final String value = getProperty(key);
-	return StringHelper.isEmpty(value) ? null : Byte.valueOf(value.getBytes()[0]);
+	return valueOf(getProperty(key), Byte.class);
    }
 
    /*
@@ -736,7 +725,7 @@ public abstract class AbstractConfiguration implements Configuration {
 	   final String propValue = getString(propPath);
 	   final List<String> propValues = getStringList(propPath);
 
-	   propPath = StringHelper.replaceAll(propPath, KeyRoot, "");
+	   propPath = StringHelper.replaceAll(propPath, KeyRoot, KeyPropertiesRoot);
 	   propPath = StringHelper.replaceAll(propPath, KeySeparator, KeyPropertiesSeparator);
 
 	   if (propValues != null) {
@@ -761,7 +750,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * String to Object Converter
     * 
     * @param <T>
-    * @param strValue string value representation
+    * @param value
     * @param cl Target class
     * @return Requested conversion of the string argument. If {@link NumberFormatException} or date {@link ParseException}, silent exception
     *         will be logged, and null return
@@ -769,67 +758,88 @@ public abstract class AbstractConfiguration implements Configuration {
     */
    @SuppressWarnings("unchecked")
    @Review(comment = "use SimpleDateFormat has a thread local", category = ReviewCategoryEnum.Improvement)
-   public static <T> T valueOf(final String strValue, final Class<T> cl) throws IllegalStateException {
+   public static <T> T valueOf(final Serializable value, final Class<T> cl) throws IllegalStateException {
 
-	if (StringHelper.isEmpty(strValue)) { return null; }
+	if (value == null) { return null; }
 
-	if (Boolean.class.isAssignableFrom(cl)) { return (T) Boolean.valueOf(strValue); }
+	if (value instanceof String) {
 
-	if (Number.class.isAssignableFrom(cl)) {
-	   try {
-		if (Byte.class == cl) { return (T) Byte.valueOf(strValue); }
-		if (Short.class == cl) { return (T) Short.valueOf(strValue); }
-		if (Integer.class == cl) { return (T) Integer.valueOf(strValue); }
-		if (Long.class == cl) { return (T) Long.valueOf(strValue); }
-		if (Float.class == cl) { return (T) Float.valueOf(strValue); }
-		if (Double.class == cl) { return (T) Double.valueOf(strValue); }
-		if (BigInteger.class == cl) { return (T) new BigInteger(strValue); }
-		if (BigDecimal.class == cl) { return (T) new BigDecimal(strValue); }
-	   } catch (final NumberFormatException nfe) {
-		LOGGER.error(ConfigurationMessageBundle.getMessage("config.number.format", strValue));
-		throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.number.format", strValue), nfe);
+	   String strValue = (String) value;
+
+	   if (Boolean.class.isAssignableFrom(cl)) { return (T) Boolean.valueOf(strValue); }
+
+	   if (Number.class.isAssignableFrom(cl)) {
+		try {
+		   if (Byte.class == cl) { return (T) Byte.valueOf(strValue); }
+		   if (Short.class == cl) { return (T) Short.valueOf(strValue); }
+		   if (Integer.class == cl) { return (T) Integer.valueOf(strValue); }
+		   if (Long.class == cl) { return (T) Long.valueOf(strValue); }
+		   if (Float.class == cl) { return (T) Float.valueOf(strValue); }
+		   if (Double.class == cl) { return (T) Double.valueOf(strValue); }
+		   if (BigInteger.class == cl) { return (T) new BigInteger(strValue); }
+		   if (BigDecimal.class == cl) { return (T) new BigDecimal(strValue); }
+		} catch (final NumberFormatException nfe) {
+		   LOGGER.error(ConfigurationMessageBundle.getMessage("config.number.format", strValue));
+		   throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.number.format", strValue), nfe);
+		}
 	   }
-	}
 
-	if (cl.isAssignableFrom(Date.class)) {
-	   try {
-		return (T) new SimpleDateFormat(StrDateFormat).parse(strValue);
-	   } catch (final ParseException pe) {
-		LOGGER.error(ConfigurationMessageBundle.getMessage("config.date.format", strValue, StrDateFormat));
-		throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.date.format", strValue, StrDateFormat), pe);
+	   if (Date.class.isAssignableFrom(cl)) {
+		try {
+		   return (T) new SimpleDateFormat(StrDateFormat).parse(strValue);
+		} catch (final ParseException pe) {
+		   LOGGER.error(ConfigurationMessageBundle.getMessage("config.date.format", strValue, StrDateFormat));
+		   throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.date.format", strValue, StrDateFormat), pe);
+		}
 	   }
-	}
 
-	if (cl.isAssignableFrom(String.class)) { return (T) (StringHelper.isEmpty(strValue) ? "" : strValue); }
+	   if (String.class.isAssignableFrom(cl)) { return (T) (StringHelper.isEmpty(strValue) ? "" : strValue); }
+
+	   throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.property.illegal.class"));
+
+	} else if (value instanceof Number) {
+	   throw new NotYetImplementedException();
+	} else if (value instanceof Boolean) {
+	   throw new NotYetImplementedException();
+	} else if (value instanceof Date) { throw new NotYetImplementedException(); }
 
 	return null;
    }
 
    /**
     * @param <T>
-    * @param strValue multiple value separate by {@link ConfigurationConstants#MultiValDefaultSeparator}
+    * @param values can be a String with multiple values separate by {@link ConfigurationConstants#MultiValDefaultSeparator}, or
     * @param cl
     * @return multiple value
     */
-   public static <T> List<T> valuesOf(final String strValue, final Class<T> cl) {
-	final List<T> result = new LinkedList<T>();
-	if (!StringHelper.isEmpty(strValue)) {
-	   final StringTokenizer strToken = new StringTokenizer(strValue, MultiValDefaultSeparator);
-	   while (strToken.hasMoreTokens()) {
-		result.add(valueOf(strToken.nextToken(), cl));
+   public static <T> List<T> valuesOf(final Serializable values, final Class<T> cl) {
+
+	if (values == null) { return null; }
+
+	List<T> result = null;
+	if (values instanceof String) {
+	   String strValue = (String) values;
+	   if (!StringHelper.isEmpty(strValue)) {
+		result = new LinkedList<T>();
+		final StringTokenizer strToken = new StringTokenizer(strValue, MultiValDefaultSeparator);
+		while (strToken.hasMoreTokens()) {
+		   result.add(valueOf(strToken.nextToken(), cl));
+		}
 	   }
+	} else {
+	   throw new NotYetImplementedException();
 	}
 	return result;
    }
 
    /**
-    * Object to String Converter
+    * {@link Serializable} to String Converter
     * 
     * @param value instance to convert
-    * @return String convertion of the requested objet
+    * @return String conversion of the requested object
     */
    @Review(comment = "use SimpleDateFormat has a thread local", category = ReviewCategoryEnum.Improvement)
-   protected String objectToString(final Object value) {
+   protected String serializableToString(final Serializable value) {
 
 	if (value != null) {
 
@@ -859,7 +869,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
 	if (config != null) {
 	   for (final String propName : config.keySet()) {
-		final String propValue = config.getProperty(propName);
+		final Serializable propValue = config.getProperty(propName);
 		if (propValue != null) {
 		   setProperty(propName, propValue);
 		}
@@ -875,10 +885,10 @@ public abstract class AbstractConfiguration implements Configuration {
     */
    public Configuration extractConfiguration(@NotNull String prefix, @NotNull final Configuration outConfiguration) {
 
-	prefix = keyPath(prefix);
+	prefix = normalizeKey(prefix);
 
 	for (final String propName : keySet()) {
-	   final String propValue = getProperty(propName);
+	   final Serializable propValue = getProperty(propName);
 
 	   if (StringHelper.isEmpty(prefix)) {
 		outConfiguration.setProperty(propName, propValue);
@@ -903,7 +913,7 @@ public abstract class AbstractConfiguration implements Configuration {
 	final StringBuilder str = new StringBuilder("{");
 	for (final Iterator<String> it = keysIterator(); it.hasNext();) {
 	   final String key = it.next();
-	   final String value = getProperty(key);
+	   final String value = getString(key);
 	   final List<String> values = getStringList(key);
 
 	   if (values != null && values.size() <= 1) {

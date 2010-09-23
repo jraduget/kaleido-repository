@@ -43,7 +43,7 @@ public class I18nJpaEntityMessagesTest extends AbstractI18nMessagesTest {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(I18nJpaEntityMessagesTest.class);
 
-   private static final String ResourceRoot = "org/kaleidofoundry/core/i18n/jpa-entity/";
+   private static final String ResourceRoot = "i18n/jpa-entity/";
 
    private static EntityManagerFactory emf;
 

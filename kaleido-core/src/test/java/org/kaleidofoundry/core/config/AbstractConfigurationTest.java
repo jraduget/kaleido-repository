@@ -123,6 +123,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 	assertEquals("app", configuration.getProperty("//application/name"));
 	assertEquals("1.0.0", configuration.getProperty("//application/version"));
 	assertEquals("description of the application...", configuration.getProperty("//application/description"));
+	assertEquals("", configuration.getProperty("//application/modules/netbusiness/name"));
 	// test unknown key
 	assertNull(configuration.getProperty("foo"));
    }
@@ -133,6 +134,8 @@ public abstract class AbstractConfigurationTest extends Assert {
 	assertEquals("app", configuration.getProperty("//application/name"));
 	configuration.setProperty("//application/name", "foo");
 	assertEquals("foo", configuration.getProperty("//application/name"));
+	// restore right value
+	configuration.setProperty("//application/name", "app");
    }
 
    @Test
@@ -149,8 +152,10 @@ public abstract class AbstractConfigurationTest extends Assert {
 	assertEquals("app", configuration.getString("//application/name"));
 	assertEquals("1.0.0", configuration.getString("//application/version"));
 	assertEquals("description of the application...", configuration.getString("//application/description"));
+	assertEquals("", configuration.getString("//application/modules/netbusiness/name"));
 	// test unknown key
 	assertNull(configuration.getString("foo"));
+	assertEquals("eheh", configuration.getString("foo", "eheh"));
    }
 
    @Test
@@ -191,7 +196,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 	assertEquals(df.parse("2009-12-31"), configuration.getDateList("//application/array/date").get(1));
 	assertEquals(df.parse("2012-05-15"), configuration.getDateList("//application/array/date").get(2));
 	// test unknown key
-	assertTrue(configuration.getDateList("foo").isEmpty());
+	assertNull(configuration.getDateList("foo"));
    }
 
    @Test
@@ -202,6 +207,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 	assertEquals(new BigDecimal("1.123456789"), configuration.getBigDecimal("//application/single/bigdecimal"));
 	// test unknown key
 	assertNull(configuration.getBigDecimal("foo"));
+	assertEquals(new BigDecimal(1.123456789), configuration.getBigDecimal("foo", new BigDecimal(1.123456789)));
    }
 
    @Test
@@ -213,7 +219,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 	assertEquals(new BigDecimal("987.5"), configuration.getBigDecimalList("//application/array/bigdecimal").get(0));
 	assertEquals(new BigDecimal("1.123456789"), configuration.getBigDecimalList("//application/array/bigdecimal").get(1));
 	// test unknown key
-	assertTrue(configuration.getBigDecimalList("foo").isEmpty());
+	assertNull(configuration.getBigDecimalList("foo"));
    }
 
    @Test
@@ -224,6 +230,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 	assertTrue(configuration.getBoolean("//application/single/boolean"));
 	// test unknown key
 	assertNull(configuration.getBoolean("foo"));
+	assertEquals(Boolean.TRUE, configuration.getBoolean("foo", Boolean.TRUE));
    }
 
    @Test
@@ -235,7 +242,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 	assertTrue(!configuration.getBooleanList("//application/array/boolean").get(0));
 	assertTrue(configuration.getBooleanList("//application/array/boolean").get(1));
 	// test unknown key
-	assertTrue(configuration.getBooleanList("foo").isEmpty());
+	assertNull(configuration.getBooleanList("foo"));
    }
 
    @Test
@@ -321,7 +328,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 	assertEquals("", configuration.getString("//application/modules/netbusiness/name"));
 
 	// configuration to add
-	final Configuration configurationToAdd = new PropertiesConfiguration("app2Config", "classpath:/org/kaleidofoundry/core/config/addTest.properties",
+	final Configuration configurationToAdd = new PropertiesConfiguration("app2Config", "classpath:/config/addTest.properties",
 		new RuntimeContext<Configuration>(Configuration.class));
 	configurationToAdd.load();
 
@@ -335,6 +342,8 @@ public abstract class AbstractConfigurationTest extends Assert {
 	assertTrue(configuration.containsKey("//application2/name", ""));
 	// test override
 	assertEquals("Netbusi.", configuration.getString("//application/modules/netbusiness/name"));
+	// restore original value
+	configuration.setProperty("//application/modules/netbusiness/name", "");
 
    }
 
@@ -344,8 +353,8 @@ public abstract class AbstractConfigurationTest extends Assert {
 	assertTrue(configuration.isLoaded());
 
 	// configuration to add
-	final Configuration emptyConfiguration = new PropertiesConfiguration("empty", "classpath:/org/kaleidofoundry/core/config/empty.properties",
-		new RuntimeContext<Configuration>(Configuration.class));
+	final Configuration emptyConfiguration = new PropertiesConfiguration("empty", "classpath:/config/empty.properties", new RuntimeContext<Configuration>(
+		Configuration.class));
 
 	assertNotNull(emptyConfiguration);
 
@@ -395,7 +404,7 @@ public abstract class AbstractConfigurationTest extends Assert {
    }
 
    @Test
-   public void toPropertiesWithPreifx() {
+   public void toPropertiesWithPrefix() {
 
 	assertNotNull(configuration);
 	assertTrue(configuration.isLoaded());

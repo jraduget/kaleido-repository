@@ -18,6 +18,7 @@ package org.kaleidofoundry.core.config;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.ArgsMainString;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.ArgsSeparator;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -69,9 +70,14 @@ public class MainArgsConfiguration extends AbstractConfiguration implements Conf
 	this(name, (String) null, runtimeContext);
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfiguration#loadProperties(org.kaleidofoundry.core.store.ResourceHandler,
+    * org.kaleidofoundry.core.cache.Cache)
+    */
    @Override
-   protected Cache<String, String> loadProperties(final ResourceHandler resourceHandler, final Cache<String, String> cacheProperties) throws ResourceException,
-	   ConfigurationException {
+   protected Cache<String, Serializable> loadProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> cacheProperties)
+	   throws ResourceException, ConfigurationException {
 
 	String mainArgs = context.getProperty(ArgsMainString);
 	String argsSeparator = context.getProperty(ArgsSeparator);
@@ -83,9 +89,9 @@ public class MainArgsConfiguration extends AbstractConfiguration implements Conf
 	   for (Entry<String, String> entry : argsMap.entrySet()) {
 		String rawArgValue = entry.getValue();
 		if (rawArgValue != null && rawArgValue.contains("|")) {
-		   cacheProperties.put(entry.getKey(), StringHelper.replaceAll(rawArgValue, "|", " "));
+		   cacheProperties.put(normalizeKey(entry.getKey()), StringHelper.replaceAll(rawArgValue, "|", " "));
 		} else {
-		   cacheProperties.put(entry.getKey(), StringHelper.replaceAll(rawArgValue != null ? rawArgValue : "", "&nbsp;", " "));
+		   cacheProperties.put(normalizeKey(entry.getKey()), StringHelper.replaceAll(rawArgValue != null ? rawArgValue : "", "&nbsp;", " "));
 		}
 	   }
 	}
@@ -99,8 +105,8 @@ public class MainArgsConfiguration extends AbstractConfiguration implements Conf
     * org.kaleidofoundry.core.store.SingleResourceStore)
     */
    @Override
-   protected Cache<String, String> storeProperties(final Cache<String, String> properties, final SingleResourceStore resourceStore) throws ResourceException,
-	   ConfigurationException {
+   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> properties, final SingleResourceStore resourceStore)
+	   throws ResourceException, ConfigurationException {
 	return properties; // never called
    }
 

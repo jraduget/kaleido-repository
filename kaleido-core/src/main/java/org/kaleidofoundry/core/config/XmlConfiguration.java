@@ -19,6 +19,7 @@ import static org.kaleidofoundry.core.config.ConfigurationConstants.KeyPropertie
 import static org.kaleidofoundry.core.config.ConfigurationConstants.MultiValDefaultSeparator;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,9 +91,14 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
 	super(name, resourceUri, context);
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfiguration#loadProperties(org.kaleidofoundry.core.store.ResourceHandler,
+    * org.kaleidofoundry.core.cache.Cache)
+    */
    @Override
-   protected Cache<String, String> loadProperties(final ResourceHandler resourceHandler, final Cache<String, String> properties) throws ResourceException,
-	   ConfigurationException {
+   protected Cache<String, Serializable> loadProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> properties)
+	   throws ResourceException, ConfigurationException {
 
 	try {
 	   final DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
@@ -115,9 +121,14 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
 	}
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfiguration#storeProperties(org.kaleidofoundry.core.cache.Cache,
+    * org.kaleidofoundry.core.store.SingleResourceStore)
+    */
    @Override
    @NotYetImplemented
-   protected Cache<String, String> storeProperties(final Cache<String, String> cacheProperties, final SingleResourceStore resourceStore)
+   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> cacheProperties, final SingleResourceStore resourceStore)
 	   throws ResourceException, ConfigurationException {
 	return null; // annotation @NotYetImplemented handle throw new NotYetImplementedException()...
    }
@@ -129,7 +140,7 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
     * @param keyName
     * @param properties
     */
-   protected void feedProperties(final NodeList nodeList, final StringBuilder keyName, final Cache<String, String> properties) {
+   protected void feedProperties(final NodeList nodeList, final StringBuilder keyName, final Cache<String, Serializable> properties) {
 	for (int i = 0; i < nodeList.getLength(); i++) {
 	   final Node node = nodeList.item(i);
 	   if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -137,12 +148,12 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
 		// node without element child, but which containing test
 		if (node.hasChildNodes() && node.getChildNodes().getLength() == 1 && node.getFirstChild().getNodeType() == Node.TEXT_NODE) {
 		   // LOGGER.debug("found key={} , value={}", newKeyName.toString(), node.getTextContent());
-		   properties.put(newKeyName.toString(), node.getTextContent());
+		   properties.put(normalizeKey(newKeyName.toString()), node.getTextContent());
 		}
 		// node without element child, but which containing test
 		else if (!node.hasChildNodes()) {
 		   // LOGGER.debug("found key={} , value={}", newKeyName.toString(), "");
-		   properties.put(newKeyName.toString(), "");
+		   properties.put(normalizeKey(newKeyName.toString()), "");
 		} else {
 		   final List<String> multipleValues = nodeMultipleValues(node.getChildNodes());
 		   // simple element, recursive call, on children nodes
@@ -151,7 +162,7 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
 		   }
 		   // multiple value have been detected
 		   else {
-			properties.put(newKeyName.toString(), StringHelper.unsplit(MultiValDefaultSeparator, multipleValues
+			properties.put(normalizeKey(newKeyName.toString()), StringHelper.unsplit(MultiValDefaultSeparator, multipleValues
 				.toArray(new String[multipleValues.size()])));
 			// properties.setMultiValueProperty(newKeyName.toString(), multipleValues.toArray(new String[multipleValues.size()]));
 		   }

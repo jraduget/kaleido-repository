@@ -15,15 +15,21 @@
  */
 package org.kaleidofoundry.core.config;
 
+import static org.kaleidofoundry.core.config.ConfigurationConstants.KeyPropertiesRoot;
+import static org.kaleidofoundry.core.config.ConfigurationConstants.KeyRoot;
+
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Properties;
 
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.store.SingleResourceStore;
+import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * Java environment variable configuration implementation (read only)<br/>
@@ -69,13 +75,13 @@ public class JavaSystemConfiguration extends AbstractConfiguration implements Co
    }
 
    @Override
-   protected Cache<String, String> loadProperties(final ResourceHandler resourceHandler, final Cache<String, String> cacheProperties) throws ResourceException,
-	   ConfigurationException {
+   protected Cache<String, Serializable> loadProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> cacheProperties)
+	   throws ResourceException, ConfigurationException {
 
 	Properties javaEnvVariables = System.getProperties();
 
 	for (String key : javaEnvVariables.stringPropertyNames()) {
-	   cacheProperties.put(key, javaEnvVariables.getProperty(key));
+	   setProperty(key, javaEnvVariables.getProperty(key));
 	}
 
 	return cacheProperties;
@@ -83,12 +89,12 @@ public class JavaSystemConfiguration extends AbstractConfiguration implements Co
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.AbstractConfiguration#setProperty(java.lang.String, java.lang.Object)
+    * @see org.kaleidofoundry.core.config.AbstractConfiguration#setProperty(java.lang.String, java.io.Serializable)
     */
    @Override
-   public void setProperty(final String key, final Object value) {
+   public void setProperty(@NotNull final String key, final Serializable value) {
 	super.setProperty(key, value);
-	System.getProperties().put(key, value);
+	System.getProperties().put(StringHelper.replaceAll(key, KeyRoot, KeyPropertiesRoot), value);
    }
 
    /*
@@ -97,8 +103,8 @@ public class JavaSystemConfiguration extends AbstractConfiguration implements Co
     * org.kaleidofoundry.core.store.SingleResourceStore)
     */
    @Override
-   protected Cache<String, String> storeProperties(final Cache<String, String> properties, final SingleResourceStore resourceStore) throws ResourceException,
-	   ConfigurationException {
+   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> properties, final SingleResourceStore resourceStore)
+	   throws ResourceException, ConfigurationException {
 	return properties; // never called
    }
 

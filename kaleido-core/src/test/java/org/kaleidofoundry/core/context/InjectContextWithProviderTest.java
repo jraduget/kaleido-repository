@@ -68,8 +68,8 @@ public class InjectContextWithProviderTest extends Assert {
 	// Disable i18n jpa message bundle control
 	I18nMessagesFactory.disableJpaControl();
 	// Register configurations used for testing
-	ConfigurationFactory.provides("myConf", "classpath:/org/kaleidofoundry/core/context/application.properties");
-	ConfigurationFactory.provides("anotherConf", "classpath:/org/kaleidofoundry/core/context/module.properties");
+	ConfigurationFactory.provides("myConf", "classpath:/context/application.properties");
+	ConfigurationFactory.provides("anotherConf", "classpath:/context/module.properties");
    }
 
    @After

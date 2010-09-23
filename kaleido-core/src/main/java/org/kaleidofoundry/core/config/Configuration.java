@@ -16,6 +16,7 @@
 package org.kaleidofoundry.core.config;
 
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -79,7 +80,7 @@ import org.kaleidofoundry.core.store.ResourceStore;
  * <br/>
  * <b>Its values can be accessible locally or via a cache cluster (see {@link ConfigurationContextBuilder}) </b> <br/>
  * Each functionalities {@link #load()}, {@link #store()}, {@link #unload()}, {@link #getProperty(String)},
- * {@link #setProperty(String, Object)} can use caches functionalities
+ * {@link #setProperty(String, Serializable)} can use caches functionalities
  * </p>
  * <p>
  * <a href="package-summary.html"/>Package description</a>
@@ -145,7 +146,7 @@ public interface Configuration {
     * @param key key identifier (unique)
     * @return get the raw property value <br>
     */
-   String getProperty(@NotNull String key);
+   Serializable getProperty(@NotNull String key);
 
    /**
     * add or update property value
@@ -154,7 +155,7 @@ public interface Configuration {
     * @param value property value to set
     * @throws IllegalStateException if configuration is for read-only use
     */
-   void setProperty(@NotNull String key, @NotNull Object value);
+   void setProperty(@NotNull String key, @NotNull Serializable value);
 
    /**
     * Remove given property
@@ -163,6 +164,10 @@ public interface Configuration {
     * @throws IllegalStateException if configuration is for read-only use
     */
    void removeProperty(@NotNull String key);
+
+   // **************************************************************************
+   // -> changes listener
+   // **************************************************************************
 
    /**
     * add a configuration changes listener

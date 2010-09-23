@@ -25,7 +25,7 @@ public class I18nPropertiesMessagesTest extends AbstractI18nMessagesTest {
 
    @Override
    String getResourceRoot() {
-	return "org/kaleidofoundry/core/i18n/properties/";
+	return "i18n/properties/";
    }
 
    @Before

@@ -44,7 +44,7 @@ public class RuntimeContextTest extends Assert {
    public void setup() throws IOException, ResourceException {
 
 	// runtimeContext create with Configuration
-	configuration = ConfigurationFactory.provides("contextTest", "classpath:/org/kaleidofoundry/core/context/context.properties");
+	configuration = ConfigurationFactory.provides("contextTest", "classpath:/context/context.properties");
 
    }
 

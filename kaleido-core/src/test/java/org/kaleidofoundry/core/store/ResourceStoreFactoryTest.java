@@ -28,7 +28,7 @@ public class ResourceStoreFactoryTest extends Assert {
 
    @Test
    public void newClasspathResourceStore() throws ResourceException {
-	URI resourceUri = URI.create("classpath:/org/kaleidofoundry/core/store/foo.txt");
+	URI resourceUri = URI.create("classpath:/store/foo.txt");
 	ResourceStore resourceStore = ResourceStoreFactory.provides(resourceUri);
 	assertNotNull(resourceStore);
 	assertEquals(ClasspathResourceStore.class, resourceStore.getClass());
@@ -38,7 +38,7 @@ public class ResourceStoreFactoryTest extends Assert {
    @Test
    public void newFileSystemResourceStore() throws ResourceException {
 	URI resourceUri = URI
-		.create("file:/F:/Developments/workspaces/eclipse/jappy/kaleido-core/src/test/resources/org/kaleidofoundry/core/store/foo.txt");
+		.create("file:/F:/Developments/workspaces/eclipse/jappy/kaleido-core/src/test/resources/store/foo.txt");
 	ResourceStore resourceStore = ResourceStoreFactory.provides(resourceUri);
 	assertNotNull(resourceStore);
 	assertEquals(FileSystemResourceStore.class, resourceStore.getClass());

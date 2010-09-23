@@ -73,6 +73,17 @@
 			<artifactId>openejb-core</artifactId>
 			<version>3.1.2</version>
 			<scope>test</scope>
+			<exclusions>
+				<!-- due to infinispan conflict between jdk6 jaxb impl & open ejb jaxb impl -->
+			 	<exclusion>
+			 		<groupId>org.apache.openejb</groupId>
+			 		<artifactId>javaee-api</artifactId>
+			 	</exclusion>
+			 	<exclusion>
+			 	  <groupId>com.sun.xml.bind</groupId>
+				  <artifactId>jaxb-impl</artifactId>
+			 	</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- Derby database -->
 		<dependency>

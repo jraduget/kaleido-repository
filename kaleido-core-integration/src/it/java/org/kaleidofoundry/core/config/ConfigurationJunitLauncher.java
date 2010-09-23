@@ -83,11 +83,11 @@ public class ConfigurationJunitLauncher {
 
 	assertNotNull(ehCacheConfInstance);
 	assertEquals(6, ehCacheConfInstance.getSize());
-	assertEquals("my new application", ehCacheConfInstance.get("myapp.name").getObjectValue());
-	assertEquals("myadmin@mysociete.com", ehCacheConfInstance.get("myapp.admin.email").getObjectValue());
-	assertEquals("2010-12-01T02:45:30", ehCacheConfInstance.get("myapp.sample.date").getObjectValue());
-	assertEquals("123.45", ehCacheConfInstance.get("myapp.sample.float").getObjectValue());
-	assertEquals("false", ehCacheConfInstance.get("myapp.sample.boolean").getObjectValue());
+	assertEquals("my new application", ehCacheConfInstance.get("//myapp/name").getObjectValue());
+	assertEquals("myadmin@mysociete.com", ehCacheConfInstance.get("//myapp/admin/email").getObjectValue());
+	assertEquals("2010-12-01T02:45:30", ehCacheConfInstance.get("//myapp/sample/date").getObjectValue());
+	assertEquals("123.45", ehCacheConfInstance.get("//myapp/sample/float").getObjectValue());
+	assertEquals("false", ehCacheConfInstance.get("//myapp/sample/boolean").getObjectValue());
    }
 
    @Test
