@@ -4,3 +4,4 @@ kaleidofoundry
 kaleido
 javadoc
 plugin
+apache
