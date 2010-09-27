@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.core.persistence;
 
+import java.util.Map.Entry;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -63,7 +65,7 @@ public abstract class UnmanagedEntityManagerFactory {
    private static final Registry<String, EntityManagerFactory> CustomEmfRegistry = new Registry<String, EntityManagerFactory>();
 
    // registry of custom entityManager factory
-   private static final Registry<String, ThreadLocal<EntityManager>> CustomEmRegistry = new Registry<String, ThreadLocal<EntityManager>>();
+   private static final ThreadLocal<Registry<String, EntityManager>> CustomEmRegistry = new ThreadLocal<Registry<String, EntityManager>>();
 
    /**
     * @return default kaleido entity manager of the current user (thread local)<br/>
@@ -93,17 +95,21 @@ public abstract class UnmanagedEntityManagerFactory {
 	if (KaleidoPersistentContextUnitName.equals(persistenceUnitName)) {
 	   return currentEntityManager();
 	} else {
-	   EntityManager em;
-	   ThreadLocal<EntityManager> lem = CustomEmRegistry.get(persistenceUnitName);
-
-	   if (lem == null || lem.get() == null || !lem.get().isOpen()) {
-		em = getEntityManagerFactory(persistenceUnitName).createEntityManager();
-		lem = lem == null ? new ThreadLocal<EntityManager>() : lem;
-		lem.set(em);
-		CustomEmRegistry.put(persistenceUnitName, lem);
-	   } else {
-		em = lem.get();
+	   
+	   // if none registry have been created yet 
+	   if (CustomEmRegistry.get() == null) {
+		CustomEmRegistry.set(new Registry<String, EntityManager>());
 	   }
+	   
+	   // get current entityManager thread
+	   EntityManager em = CustomEmRegistry.get().get(persistenceUnitName);
+
+	   // create entityManager if needed (if null or closed)
+	   if (em == null || !em.isOpen()) {
+		em = getEntityManagerFactory(persistenceUnitName).createEntityManager();		
+		CustomEmRegistry.get().put(persistenceUnitName, em);
+	   } 
+
 	   return em;
 	}
    }
@@ -158,10 +164,10 @@ public abstract class UnmanagedEntityManagerFactory {
 	// browse custom threadlocal em to find it
 	else {
 	   boolean foundEm = false;
-	   for (ThreadLocal<EntityManager> tlem : CustomEmRegistry.values()) {
-		if (tlem.get() == em) {
+	   for (Entry<String, EntityManager> entry: CustomEmRegistry.get().entrySet()) {
+		if (entry.getValue() == em) {
 		   em.close();
-		   tlem.remove();
+		   CustomEmRegistry.get().remove(entry.getKey());
 		   foundEm = true;
 		   return;
 		}

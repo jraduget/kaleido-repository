@@ -26,8 +26,9 @@ import org.kaleidofoundry.core.lang.annotation.Stateless;
 import org.kaleidofoundry.core.plugin.Declare;
 
 /**
- * Store for resource like file properties, xml datas, binary content (pdf report, email...) that need to be persit on a
- * file storage. The storage will be determining by the uri schem
+ * It provides a file store interface to handle resource file like properties, xml datas, binary content (pdf report, email...) that need to
+ * be persist on a
+ * file storage. The storage type will be determining by the scheme of the URI
  * <p>
  * The {@link URI} (Uniform Resource Identifier) allow to bind different kind of resource :<br/>
  * You can use classic {@link URL} like :
@@ -35,8 +36,10 @@ import org.kaleidofoundry.core.plugin.Declare;
  * <li>http://
  * <li>ftp://
  * <li>file://
- * <li>webapp:/
  * <li>classpath:/
+ * <li>webapp:/
+ * <li>jpa:/
+ * <li>memory:/
  * </ul>
  * <p>
  * More you can extends it, using other kind of "custom user" protocol (classpath://, jpa://, jdbc://, ...)
