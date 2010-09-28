@@ -27,7 +27,7 @@ public class NamingNotFoundException extends NamingServiceException {
    /**
     * @param resourceName jndi resource name
     */
-   public <R> NamingNotFoundException(final String resourceName, final RuntimeContext<NamingService<R>> context) {
+   public NamingNotFoundException(final String resourceName, final RuntimeContext<NamingService> context) {
 	super("naming.jndi.error.initialContext.lookup.notfound", resourceName, context.toString("\n"));
    }
 

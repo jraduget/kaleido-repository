@@ -20,14 +20,20 @@ import static org.kaleidofoundry.core.naming.NamingConstants.NamingPluginName;
 import org.kaleidofoundry.core.plugin.Declare;
 
 /**
+ * NamingService is a service locator interface<br/>
+ * 
  * @author Jerome RADUGET
  */
 @Declare(value = NamingPluginName, description = "naming service plugin interface")
-public interface NamingService<R> {
+public interface NamingService {
 
    /**
+    * @param <R>
+    * @param resourceName
+    * @param ressourceClass
     * @return resourceName name of the resource like jndiName
+    * @throws NamingServiceException
     */
-   R lookup(final String resourceName, final Class<R> ressourceClass) throws NamingServiceException;
+   <R> R locate(final String resourceName, final Class<R> ressourceClass) throws NamingServiceException;
 
 }

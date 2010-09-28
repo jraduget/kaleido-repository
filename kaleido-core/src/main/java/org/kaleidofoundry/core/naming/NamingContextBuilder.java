@@ -105,7 +105,7 @@ import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
  * 
  * @author Jerome RADUGET
  */
-public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingService<?>> {
+public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingService> {
 
    /** jndi optional prefix name for resource name (no need with jee6) */
    public static String EnvPrefixName = "java.naming.env.prefix";
@@ -170,14 +170,14 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
     * @param pluginInterface
     * @param configurations
     */
-   public NamingContextBuilder(final Class<NamingService<?>> pluginInterface, final Configuration... configurations) {
+   public NamingContextBuilder(final Class<NamingService> pluginInterface, final Configuration... configurations) {
 	super(pluginInterface, configurations);
    }
 
    /**
     * @param pluginInterface
     */
-   public NamingContextBuilder(final Class<NamingService<?>> pluginInterface) {
+   public NamingContextBuilder(final Class<NamingService> pluginInterface) {
 	super(pluginInterface);
    }
 
@@ -193,7 +193,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
     * @param pluginInterface
     * @param configurations
     */
-   public NamingContextBuilder(final String name, final Class<NamingService<?>> pluginInterface, final Configuration... configurations) {
+   public NamingContextBuilder(final String name, final Class<NamingService> pluginInterface, final Configuration... configurations) {
 	super(name, pluginInterface, configurations);
    }
 
@@ -230,7 +230,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
    }
 
    /**
-    * @param envprefixname the envprefixname to set
+    * @param envprefixname the env prefix name to set
     */
    public NamingContextBuilder withEnvprefixname(final String envprefixname) {
 	getContextParameters().put(EnvPrefixName, envprefixname);
@@ -238,7 +238,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
    }
 
    /**
-    * @param providerurl the providerurl to set
+    * @param providerurl the provider url to set
     */
    public NamingContextBuilder withProviderUrl(final String providerurl) {
 	getContextParameters().put(ProviderUrl, providerurl);
@@ -246,7 +246,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
    }
 
    /**
-    * @param initialcontextfactory the initialcontextfactory to set
+    * @param initialcontextfactory the initial context factory to set
     */
    public NamingContextBuilder withInitialContextFactory(final String initialcontextfactory) {
 	getContextParameters().put(InitialContextFactory, initialcontextfactory);
@@ -302,7 +302,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
    }
 
    /**
-    * @param securityauthentication the securityauthentication to set
+    * @param securityauthentication the security authentication to set
     */
    public NamingContextBuilder withSecurityAuthentication(final String securityauthentication) {
 	getContextParameters().put(SecurityAuthentication, securityauthentication);
@@ -310,7 +310,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
    }
 
    /**
-    * @param securitycredentials the securitycredentials to set
+    * @param securitycredentials the security credentials to set
     */
    public NamingContextBuilder withSecuritycredentials(final String securitycredentials) {
 	getContextParameters().put(SecurityCredentials, securitycredentials);
@@ -318,7 +318,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
    }
 
    /**
-    * @param securityprincipal the securityprincipal to set
+    * @param securityprincipal the security principal to set
     */
    public NamingContextBuilder withSecurityPrincipal(final String securityprincipal) {
 	getContextParameters().put(SecurityPrincipal, securityprincipal);
@@ -326,7 +326,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
    }
 
    /**
-    * @param securityprotocol the securityprotocol to set
+    * @param securityprotocol the security protocol to set
     */
    public NamingContextBuilder withSecurityProtocol(final String securityprotocol) {
 	getContextParameters().put(SecurityProtocol, securityprotocol);

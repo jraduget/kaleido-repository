@@ -2,4 +2,5 @@ org.kaleidofoundry.core.cache.Cache
 org.kaleidofoundry.core.cache.CacheManager
 org.kaleidofoundry.core.config.Configuration
 org.kaleidofoundry.core.i18n.I18nMessages
+org.kaleidofoundry.core.naming.NamingService
 org.kaleidofoundry.core.store.ResourceStore

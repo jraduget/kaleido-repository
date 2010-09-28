@@ -15,6 +15,7 @@
  */
 package org.kaleidofoundry.core.naming;
 
+import static org.kaleidofoundry.core.naming.NamingConstants.JndiNamingPluginName;
 import static org.kaleidofoundry.core.naming.NamingContextBuilder.EnvPrefixName;
 
 import javax.naming.Context;
@@ -22,38 +23,44 @@ import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
+import javax.validation.constraints.NotNull;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
+import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
+import org.kaleidofoundry.core.lang.annotation.Reviews;
+import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
+ * Jndi naming service implementation
+ * 
  * @author Jerome RADUGET
  */
-public class JndiNamingService<R> implements NamingService<R> {
+@Declare(value = JndiNamingPluginName, description = "jndi naming service plugin implementation")
+@Reviews(reviews = { @Review(category = ReviewCategoryEnum.Improvement, comment = "fail over on client side with context property : failover.enabled ; failover.waiting ; failover.maxretry  ") })
+public class JndiNamingService implements NamingService {
 
-   private final RuntimeContext<NamingService<R>> context;
-   private final Context intialContext;
+   private final RuntimeContext<NamingService> context;
 
-   public JndiNamingService(final RuntimeContext<NamingService<R>> context) throws NamingServiceException {
+   /**
+    * @param context
+    * @throws NamingServiceException
+    */
+   public JndiNamingService(final RuntimeContext<NamingService> context) throws NamingServiceException {
 	this.context = context;
-	try {
-	   this.intialContext = new InitialContext();
-	} catch (NamingException ne) {
-	   throw handleNamingException(ne, null);
-	}
    }
 
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.naming.NamingService#lookup(java.lang.String, java.lang.Class)
     */
-   @SuppressWarnings("unchecked")
    @Override
-   public R lookup(final String resourceName, final Class<R> ressourceClass) throws NamingServiceException {
+   public <R> R locate(@NotNull final String resourceName, @NotNull final Class<R> ressourceClass) throws NamingServiceException {
 
-	String jndiEnvNamePrefix = context.getProperty(EnvPrefixName); // optional java comp env prefix
-	StringBuilder fullResourceName = new StringBuilder(); // full resource name
+	final String jndiEnvNamePrefix = context.getProperty(EnvPrefixName); // optional java comp env prefix
+	final StringBuilder fullResourceName = new StringBuilder(); // full resource name
 
 	// we prefix resource name if needed
 	if (!StringHelper.isEmpty(jndiEnvNamePrefix) && !resourceName.startsWith(jndiEnvNamePrefix)) {
@@ -64,22 +71,35 @@ public class JndiNamingService<R> implements NamingService<R> {
 	}
 	fullResourceName.append(resourceName);
 
-	// lookup the resource
-	Object resource;
+	// lookup & check cast
+	Context intialContext = null;
+	final Object resource;
+
 	try {
+	   // lookup the resource
+	   intialContext = new InitialContext();
 	   resource = intialContext.lookup(fullResourceName.toString());
+
+	   // cast check of the result object (remote or local)
+	   try {
+		return ressourceClass.cast(PortableRemoteObject.narrow(resource, ressourceClass));
+	   } catch (final ClassCastException cce) {
+		throw new NamingServiceException("naming.jndi.error.initialContext.lookup.classcast", fullResourceName.toString(), ressourceClass.getName(),
+			resource.getClass().getName());
+	   }
 	} catch (final NamingException nae) {
 	   throw handleNamingException(nae, fullResourceName.toString());
-	}
+	} finally {
 
-	// cast check
-	try {
-	   return (R) PortableRemoteObject.narrow(resource, ressourceClass);
-	} catch (final ClassCastException cce) {
-	   throw new NamingServiceException("naming.jndi.error.initialContext.lookup.classcast", fullResourceName.toString(), ressourceClass.getName(), resource
-		   .getClass().getName());
+	   // free initial context
+	   try {
+		if (intialContext != null) {
+		   intialContext.close();
+		}
+	   } catch (final NamingException ne) {
+		throw new NamingServiceException("naming.jndi.error.initialContext.close", ne, fullResourceName.toString(), ressourceClass.getName());
+	   }
 	}
-
    }
 
    /**
@@ -104,10 +124,10 @@ public class JndiNamingService<R> implements NamingService<R> {
     * @return context instance build using runtime context properties
     * @throws NamingException
     */
-   protected static <R> Context createInitialContext(final RuntimeContext<NamingService<R>> context) throws NamingException {
-	Context initialContext = new InitialContext();
-	for (String propertyName : context.keySet()) {
-	   String propertyValue = context.getProperty(propertyName);
+   protected static <R> Context createInitialContext(final RuntimeContext<NamingService> context) throws NamingException {
+	final Context initialContext = new InitialContext();
+	for (final String propertyName : context.keySet()) {
+	   final String propertyValue = context.getProperty(propertyName);
 	   if (propertyValue != null) {
 		initialContext.addToEnvironment(propertyName, propertyValue);
 	   }
