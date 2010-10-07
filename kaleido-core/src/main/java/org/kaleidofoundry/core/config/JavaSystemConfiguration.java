@@ -74,14 +74,19 @@ public class JavaSystemConfiguration extends AbstractConfiguration implements Co
 	this(name, (String) null, context);
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfiguration#loadProperties(org.kaleidofoundry.core.store.ResourceHandler,
+    * org.kaleidofoundry.core.cache.Cache)
+    */
    @Override
    protected Cache<String, Serializable> loadProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> cacheProperties)
 	   throws ResourceException, ConfigurationException {
 
-	Properties javaEnvVariables = System.getProperties();
+	final Properties javaEnvVariables = System.getProperties();
 
-	for (String key : javaEnvVariables.stringPropertyNames()) {
-	   setProperty(key, javaEnvVariables.getProperty(key));
+	for (final String key : javaEnvVariables.stringPropertyNames()) {
+	   cacheProperties.put(key, javaEnvVariables.getProperty(key));
 	}
 
 	return cacheProperties;

@@ -15,7 +15,6 @@
  */
 package org.kaleidofoundry.core.config;
 
-import java.beans.PropertyChangeListener;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -41,12 +40,12 @@ import org.kaleidofoundry.core.store.ResourceStore;
 
 /**
  * <p>
- * Interface to access runtime configuration data from your application (this data could be this data could be technical / environmental /
- * application / ...). <br/>
- * A {@link Configuration} is like a set of key identifier / value(s) (as {@link Properties}) but with more functionalities ({@link Cache},
- * ...).<br/>
+ * Interface used to access <b>runtime configuration data</b> from your application (this data could be this data could be technical /
+ * environmental / application / ...). A {@link Configuration} is like a set of key identifier / value(s) (as {@link Properties}) but with
+ * more functionalities ({@link Cache}, ...).<br/>
  * <br/>
- * The goal of these interface, is to have unique and uniform to access and managed runtime configuration.<br/>
+ * The goal of these interface, is to <b>the goal is to provide an unique and uniform way to manage for the runtime configuration of your
+ * application.</b><br/>
  * Multiple format implementation are provided by default, an configuration "instance" could be :
  * <ul>
  * <li>Classic java properties file - {@link PropertiesConfiguration},</li>
@@ -58,8 +57,8 @@ import org.kaleidofoundry.core.store.ResourceStore;
  * <li>...</li>
  * </ul>
  * <br/>
- * The configuration resource file could be accessed through different way, using URI (the type of the uri will determine the sub
- * {@link ResourceStore} to use):
+ * <b>The configuration resource content (usually file)</b> could be accessed through different way, using URI : <br/>
+ * <br/>
  * <ul>
  * <li>File system - {@link FileSystemResourceStore},</li>
  * <li>Java classpath - {@link ClasspathResourceStore},</li>
@@ -68,9 +67,9 @@ import org.kaleidofoundry.core.store.ResourceStore;
  * <li>Jpa custom url - {@link JpaResourceStore},</li>
  * <li>...</li>
  * </ul>
- * <br/>
+ * The type of the uri will determine the sub {@link ResourceStore} to use <br/>
  * <p>
- * With your configuration instance, you can managed :
+ * <b>With your configuration instance, you can managed :</b>
  * <ul>
  * <li>load configuration store</li>
  * <li>unload configuration store</li>
@@ -78,10 +77,22 @@ import org.kaleidofoundry.core.store.ResourceStore;
  * </ul>
  * </p>
  * <br/>
- * <b>Its values can be accessible locally or via a cache cluster (see {@link ConfigurationContextBuilder}) </b> <br/>
+ * <b>Configuration properties can be accessible locally or via a cache cluster (see {@link ConfigurationContextBuilder}) </b> <br/>
  * Each functionalities {@link #load()}, {@link #store()}, {@link #unload()}, {@link #getProperty(String)},
  * {@link #setProperty(String, Serializable)} can use caches functionalities
  * </p>
+ * <p>
+ * <b>Configuration listener :</b> {@link ConfigurationListener} <br/>
+ * To use configuration listener, you can register your own using : {@link #addConfigurationListener(ConfigurationListener)} <br/>
+ * This listener enables to trap :
+ * <ul>
+ * <li>{@link ConfigurationListener#propertyCreate(ConfigurationChangeEvent)}</li>
+ * <li>{@link ConfigurationListener#propertyUpdate(ConfigurationChangeEvent)}</li>
+ * <li>{@link ConfigurationListener#propertyRemove(ConfigurationChangeEvent)}</li>
+ * <li>{@link ConfigurationListener#configurationUnload(Configuration)}</li>
+ * </ul>
+ * </p>
+ * <br/>
  * <p>
  * <a href="package-summary.html"/>Package description</a>
  * </p>
@@ -154,6 +165,7 @@ public interface Configuration {
     * @param key key identifier (unique)
     * @param value property value to set
     * @throws IllegalStateException if configuration is for read-only use
+    * @see #addConfigurationListener(ConfigurationListener) to register a listener on change
     */
    void setProperty(@NotNull String key, @NotNull Serializable value);
 
@@ -162,6 +174,7 @@ public interface Configuration {
     * 
     * @param key key identifier (unique)
     * @throws IllegalStateException if configuration is for read-only use
+    * @see #addConfigurationListener(ConfigurationListener) to register a listener on remove
     */
    void removeProperty(@NotNull String key);
 
@@ -174,14 +187,20 @@ public interface Configuration {
     * 
     * @param listener
     */
-   void addConfigurationChangeListener(PropertyChangeListener listener);
+   void addConfigurationListener(ConfigurationListener listener);
 
    /**
     * remove a configuration changes listener
     * 
     * @param listener
     */
-   void removeConfigurationChangeListener(PropertyChangeListener listener);
+   void removeConfigurationListener(ConfigurationListener listener);
+
+   /**
+    * fire all configuration changes events (update, remove) since the last call<br/>
+    * events are fired in the order of creation
+    */
+   void fireConfigurationChangesEvents();
 
    // **************************************************************************
    // -> Keys management
@@ -435,8 +454,16 @@ public interface Configuration {
     * unload configuration content
     * 
     * @throws ResourceException
+    * @see #addConfigurationListener(ConfigurationListener) to register a listener on unload
     */
    void unload() throws ResourceException;
+
+   /**
+    * reload all configuration content
+    * 
+    * @see #addConfigurationListener(ConfigurationListener) to register a listener for changed values
+    */
+   void reload() throws ResourceException, ConfigurationException;
 
    /**
     * @return Configuration have been loaded ? <code>true/false</code>

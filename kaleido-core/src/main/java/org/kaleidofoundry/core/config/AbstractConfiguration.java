@@ -28,8 +28,6 @@ import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.Storage
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.UpdateAllowed;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ConfigurationMessageBundle;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -38,17 +36,24 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import javax.swing.event.EventListenerList;
 
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
+import org.kaleidofoundry.core.config.ConfigurationChangeEvent.ConfigurationChangeType;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.NotYetImplementedException;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
@@ -90,8 +95,11 @@ public abstract class AbstractConfiguration implements Configuration {
    // internal runtime context
    protected final RuntimeContext<Configuration> context;
 
-   // configuration changes support (via event)
-   private final PropertyChangeSupport propertyChangeSupport;
+   // configuration listeners support
+   protected final EventListenerList listeners;
+
+   // ordered & thread safe queue of the changes applied on the configuration properties
+   private final LinkedBlockingQueue<ConfigurationChangeEvent> changesEvents;
 
    /**
     * @param name
@@ -116,9 +124,6 @@ public abstract class AbstractConfiguration implements Configuration {
 	this.name = name.toString();
 	this.context = context;
 
-	// property change support for used to propagate configuration changes
-	propertyChangeSupport = new PropertyChangeSupport(this);
-
 	// internal resource store instantiation
 	final String resourceStoreRef = context.getProperty(ResourceStoreRef);
 	final ResourceStore resourceStore;
@@ -141,10 +146,16 @@ public abstract class AbstractConfiguration implements Configuration {
 	}
 	cacheProperties = cacheManager.getCache("kaleidofoundry/configuration/" + name);
 
+	// events listeners
+	listeners = new EventListenerList();
+	changesEvents = new LinkedBlockingQueue<ConfigurationChangeEvent>();
+
    }
 
    /**
-    * you don't need to release resourceHandler argument, it is done by agregator
+    * you don't need to release resourceHandler argument, it is done by agregator <br/>
+    * <b>be careful, if you use {@link #setProperty(String, Serializable)}, event will be fired...</b> a prefered way, use
+    * properties.put(key, value)
     * 
     * @param resourceHandler
     * @param properties
@@ -175,12 +186,20 @@ public abstract class AbstractConfiguration implements Configuration {
     * @return Normalize propertyPath argument
     */
    protected String normalizeKey(@NotNull final String propertyPath) {
-	StringBuilder normalizeKey = new StringBuilder();
+	final StringBuilder normalizeKey = new StringBuilder();
 	if (!propertyPath.startsWith(KeyRoot)) {
 	   normalizeKey.append(KeyRoot);
 	}
 	normalizeKey.append(StringHelper.replaceAll(propertyPath, KeyPropertiesSeparator, KeySeparator));
 	return normalizeKey.toString();
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.Configuration#getName()
+    */
+   public String getName() {
+	return name;
    }
 
    /*
@@ -211,8 +230,20 @@ public abstract class AbstractConfiguration implements Configuration {
    // -> Load / singleResourceStore management
    // **************************************************************************
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.Configuration#isLoaded()
+    */
+   public boolean isLoaded() {
+	return singleResourceStore.isLoaded();
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.Configuration#load()
+    */
    @Override
-   public final void load() throws ResourceException, ConfigurationException {
+   public final synchronized void load() throws ResourceException, ConfigurationException {
 	if (isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.already", name)); }
 
 	final ResourceHandler resourceHandler = singleResourceStore.get();
@@ -225,35 +256,68 @@ public abstract class AbstractConfiguration implements Configuration {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.Configuration#getName()
+    * @see org.kaleidofoundry.core.config.Configuration#store()
     */
-   public String getName() {
-	return name;
-   }
-
    @Override
-   public final void store() throws ResourceException, ConfigurationException {
+   public final synchronized void store() throws ResourceException, ConfigurationException {
 	if (!isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.notloaded", name)); }
 	if (!isStorageAllowed()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.readonly.store", name)); }
 
 	singleResourceStore.store();
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.Configuration#unload()
+    */
    @Override
-   public final void unload() throws ResourceException {
+   public final synchronized void unload() throws ResourceException {
 	if (!isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.notloaded", name)); }
 	// cleanup cache entries
 	cacheProperties.removeAll();
 	// unload store
 	singleResourceStore.unload();
+	// fire unload event
+	fireUnload();
    }
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.Configuration#isLoaded()
+    * @see org.kaleidofoundry.core.config.Configuration#reload()
     */
-   public boolean isLoaded() {
-	return singleResourceStore.isLoaded();
+   @Override
+   public final synchronized void reload() throws ResourceException, ConfigurationException {
+	if (!isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.notloaded", name)); }
+	// backup old entries
+	final Map<String, Serializable> oldItems = new HashMap<String, Serializable>();
+	for (final String oldPropName : cacheProperties.keys()) {
+	   oldItems.put(oldPropName, cacheProperties.get(oldPropName));
+	}
+	// cleanup cache entries
+	cacheProperties.removeAll();
+	// unload store
+	singleResourceStore.unload();
+	// load it
+	load();
+
+	// compare each property - if there are different : fire appropriate event
+	for (final Entry<String, Serializable> entry : oldItems.entrySet()) {
+
+	   // a property have been removed
+	   if (!cacheProperties.keys().contains(entry.getKey())) {
+		firePropertyRemove(entry.getKey(), entry.getValue());
+		continue;
+	   }
+
+	   // a property have been changed
+	   final Serializable oldValue = oldItems.get(entry.getKey());
+	   final Serializable newValue = cacheProperties.get(entry.getKey());
+
+	   if (oldValue != null && oldValue.equals(newValue)) {
+		firePropertyUpdate(entry.getKey(), entry.getValue(), cacheProperties.get(entry.getKey()));
+		continue;
+	   }
+	}
    }
 
    // ***************************************************************************
@@ -264,16 +328,92 @@ public abstract class AbstractConfiguration implements Configuration {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#addConfigurationChangeListener(java.beans.PropertyChangeListener)
     */
-   public void addConfigurationChangeListener(final PropertyChangeListener listener) {
-	this.propertyChangeSupport.addPropertyChangeListener(listener);
+   public void addConfigurationListener(final ConfigurationListener listener) {
+	this.listeners.add(ConfigurationListener.class, listener);
    }
 
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#removeConfigurationChangeListener(java.beans.PropertyChangeListener)
     */
-   public void removeConfigurationChangeListener(final PropertyChangeListener listener) {
-	this.propertyChangeSupport.removePropertyChangeListener(listener);
+   public void removeConfigurationListener(final ConfigurationListener listener) {
+	this.listeners.remove(ConfigurationListener.class, listener);
+   }
+
+   /**
+    * @param propertyName
+    * @param newValue
+    */
+   protected void firePropertyCreate(final String propertyName, final Serializable newValue) {
+
+	final ConfigurationChangeEvent event = ConfigurationChangeEvent.newCreateEvent(this, propertyName, newValue);
+	changesEvents.add(event);
+
+	for (final ConfigurationListener listener : listeners.getListeners(ConfigurationListener.class)) {
+	   listener.propertyCreate(event);
+	}
+   }
+
+   /**
+    * @param propertyName
+    * @param oldValue
+    * @param newValue
+    */
+   protected void firePropertyUpdate(final String propertyName, final Serializable oldValue, final Serializable newValue) {
+
+	final ConfigurationChangeEvent event = ConfigurationChangeEvent.newUpdateEvent(this, propertyName, oldValue, newValue);
+	changesEvents.add(event);
+
+	for (final ConfigurationListener listener : listeners.getListeners(ConfigurationListener.class)) {
+	   listener.propertyUpdate(event);
+	}
+   }
+
+   /**
+    * @param propertyName
+    * @param newValue
+    */
+   protected void firePropertyRemove(final String propertyName, final Serializable oldValue) {
+
+	final ConfigurationChangeEvent event = ConfigurationChangeEvent.newRemoveEvent(this, propertyName, oldValue);
+	changesEvents.add(event);
+
+	for (final ConfigurationListener listener : listeners.getListeners(ConfigurationListener.class)) {
+	   listener.propertyRemove(event);
+	}
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.Configuration#fireConfigurationChangesEvents()
+    */
+   public void fireConfigurationChangesEvents() {
+
+	for (final ConfigurationListener listener : listeners.getListeners(ConfigurationListener.class)) {
+
+	   for (final ConfigurationChangeEvent event : changesEvents) {
+		if (event.getConfigurationChangeType() == ConfigurationChangeType.CREATE) {
+		   listener.propertyCreate(event);
+		}
+		if (event.getConfigurationChangeType() == ConfigurationChangeType.UPDATE) {
+		   listener.propertyUpdate(event);
+		}
+		if (event.getConfigurationChangeType() == ConfigurationChangeType.REMOVE) {
+		   listener.propertyRemove(event);
+		}
+	   }
+	}
+
+	// clear past fire events
+	changesEvents.clear();
+   }
+
+   /**
+    */
+   protected void fireUnload() {
+	for (final ConfigurationListener listener : listeners.getListeners(ConfigurationListener.class)) {
+	   listener.configurationUnload(this);
+	}
    }
 
    // ***************************************************************************
@@ -361,7 +501,7 @@ public abstract class AbstractConfiguration implements Configuration {
 	final String fullKey = normalizeKey(prefix);
 	final Set<String> keys = new LinkedHashSet<String>();
 
-	for (String pKey : cacheProperties.keys()) {
+	for (final String pKey : cacheProperties.keys()) {
 	   if (pKey.startsWith(fullKey)) {
 		keys.add(pKey);
 	   }
@@ -423,11 +563,19 @@ public abstract class AbstractConfiguration implements Configuration {
    public void setProperty(@NotNull final String key, @NotNull final Serializable newValue) {
 	if (!isUpdateAllowed()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.readonly.update", name)); }
 	// normalize the given key
-	String fullKey = normalizeKey(key);
+	final String fullKey = normalizeKey(key);
+	// is it a new property ?
+	final boolean newProperty = !cacheProperties.keys().contains(fullKey);
+	// memorize old value for fire event
+	final Serializable oldValue = cacheProperties.get(fullKey);
 	// update cache data
 	cacheProperties.put(fullKey, newValue);
 	// fire change event
-	propertyChangeSupport.firePropertyChange(fullKey, cacheProperties.get(fullKey), newValue);
+	if (newProperty) {
+	   firePropertyCreate(fullKey, newValue);
+	} else {
+	   firePropertyUpdate(fullKey, oldValue, newValue);
+	}
    }
 
    /*
@@ -437,7 +585,14 @@ public abstract class AbstractConfiguration implements Configuration {
    @Override
    public void removeProperty(@NotNull final String key) {
 	if (!isUpdateAllowed()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.readonly.update", name)); }
-	cacheProperties.remove(normalizeKey(key));
+	// normalize the given key
+	final String fullKey = normalizeKey(key);
+	// memorize old value for fire event
+	final Serializable oldValue = cacheProperties.get(fullKey);
+	// remove it from cache
+	cacheProperties.remove(fullKey);
+	// fire change event
+	firePropertyRemove(fullKey, oldValue);
    }
 
    // ***************************************************************************
@@ -764,7 +919,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
 	if (value instanceof String) {
 
-	   String strValue = (String) value;
+	   final String strValue = (String) value;
 
 	   if (Boolean.class.isAssignableFrom(cl)) { return (T) Boolean.valueOf(strValue); }
 
@@ -818,7 +973,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
 	List<T> result = null;
 	if (values instanceof String) {
-	   String strValue = (String) values;
+	   final String strValue = (String) values;
 	   if (!StringHelper.isEmpty(strValue)) {
 		result = new LinkedList<T>();
 		final StringTokenizer strToken = new StringTokenizer(strValue, MultiValDefaultSeparator);
