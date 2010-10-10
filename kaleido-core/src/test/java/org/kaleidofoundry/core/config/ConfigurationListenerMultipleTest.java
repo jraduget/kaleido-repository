@@ -13,25 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core.plugin;
-
-import org.kaleidofoundry.core.util.Registry;
+package org.kaleidofoundry.core.config;
 
 /**
- * Registry of all "enable" plugin interface<br/>
- * An enable plugin is an interface annotation by {@link Declare} with enable attribute set to true
- * 
  * @author Jerome RADUGET
  */
-public class PluginRegistry extends Registry<String, Plugin<?>> {
+public class ConfigurationListenerMultipleTest extends AbstractConfigurationListenerTest {
 
-   private static final long serialVersionUID = -3817010482113243944L;
-
-   /**
-    * Constructor with package access in order to avoid direct instantiation. <br/>
-    * Please use {@link PluginFactory} to get current instance.
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfigurationListenerTest#getListenerCount()
     */
-   PluginRegistry() {
+   @Override
+   protected int getListenerCount() {
+	return 5;
    }
 
 }
