@@ -30,12 +30,25 @@ import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
  * <th>java.naming.provider.url</th>
  * <th>java.naming.factory.url.pkgs</th>
  * <th>env prefix</th>
+ * <th>other properties</th>
  * <tr>
  * <td>TOMCAT 5/6</td>
  * <td>org.apache.naming.java.javaURLContextFactory</td>
  * <td></td>
  * <td></td>
  * <td>java:comp/env</td>
+ * <td></td>
+ * </tr>
+ * </tr>
+ * <tr>
+ * <td>GLASSFISH 3</td>
+ * <td>com.sun.enterprise.naming.SerialInitContextFactory</td>
+ * <td></td>
+ * <td>com.sun.enterprise.naming</td>
+ * <td>java:comp/env</td>
+ * <td>java.naming.factory.state=com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl<br/>
+ * org.omg.CORBA.ORBInitialHost=127.0.0.1<br/>
+ * org.omg.CORBA.ORBInitialPort=3700</td>
  * </tr>
  * </tr>
  * <tr>
@@ -44,12 +57,14 @@ import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
  * <td>localhost:1099</td>
  * <td>org.jboss.naming:org.jnp.interfaces</td>
  * <td></td>
+ * <td></td>
  * </tr>
  * <tr>
  * <td>JONAS</td>
  * <td>com.sun.jndi.rmi.registry.RegistryContextFactory</td>
  * <td>rmi://localhost:1099</td>
  * <td>org.objectweb.jonas.naming</td>
+ * <td></td>
  * <td></td>
  * </tr>
  * <tr>
@@ -58,6 +73,7 @@ import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
  * <td>iiop://localhost:2809</td>
  * <td></td>
  * <td>java:comp/env</td>
+ * <td></td>
  * </tr>
  * <tr>
  * <td>WEBSPHERE 6</td>
@@ -72,6 +88,7 @@ import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
  * <td>t3://localhost:7001</td>
  * <td></td>
  * <td></td>
+ * <td></td>
  * </tr>
  * <tr>
  * <td>CORBA SUN</td>
@@ -79,10 +96,12 @@ import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
  * <td>iiop://localhost:2001</td>
  * <td></td>
  * <td></td>
+ * <td></td>
  * </tr>
  * <tr>
  * <td>DNS SUN</td>
  * <td>com.sun.jndi.dns.DnsContextFactory</td>
+ * <td></td>
  * <td></td>
  * <td></td>
  * <td></td>
@@ -93,10 +112,12 @@ import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
  * <td></td>
  * <td></td>
  * <td></td>
+ * <td></td>
  * </tr>
  * <tr>
  * <td>RMI SUN</td>
  * <td>com.sun.jndi.rmi.registry.RegistryContextFactory</td>
+ * <td></td>
  * <td></td>
  * <td></td>
  * <td></td>
@@ -158,6 +179,18 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
     * @see Context#SECURITY_PROTOCOL
     */
    public static String SecurityProtocol = Context.SECURITY_PROTOCOL;
+   /**
+    * @see Context#STATE_FACTORIES
+    */
+   public static String StateFactories = Context.STATE_FACTORIES;
+   /**
+    * 
+    */
+   public static String CorbaORBInitialHost = "org.omg.CORBA.ORBInitialHost";
+   /**
+    * 
+    */
+   public static String CorbaORBInitialPort = "org.omg.CORBA.ORBInitialPort";
 
    /**
     * 
@@ -330,6 +363,30 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
     */
    public NamingContextBuilder withSecurityProtocol(final String securityprotocol) {
 	getContextParameters().put(SecurityProtocol, securityprotocol);
+	return this;
+   }
+
+   /**
+    * @param stateFactories the state factories to set
+    */
+   public NamingContextBuilder withStateFactories(final String stateFactories) {
+	getContextParameters().put(StateFactories, stateFactories);
+	return this;
+   }
+
+   /**
+    * @param corbaORBInitialHost
+    */
+   public NamingContextBuilder withCorbaORBInitialHost(final String corbaORBInitialHost) {
+	getContextParameters().put(CorbaORBInitialHost, corbaORBInitialHost);
+	return this;
+   }
+
+   /**
+    * @param corbaORBInitialPort
+    */
+   public NamingContextBuilder withCorbaORBInitialPort(final String corbaORBInitialPort) {
+	getContextParameters().put(CorbaORBInitialPort, corbaORBInitialPort);
 	return this;
    }
 

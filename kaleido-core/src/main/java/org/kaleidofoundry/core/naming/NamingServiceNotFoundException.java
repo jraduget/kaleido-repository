@@ -20,14 +20,14 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 /**
  * @author Jerome RADUGET
  */
-public class NamingNotFoundException extends NamingServiceException {
+public class NamingServiceNotFoundException extends NamingServiceException {
 
    private static final long serialVersionUID = 3986757398779544518L;
 
    /**
     * @param resourceName jndi resource name
     */
-   public NamingNotFoundException(final String resourceName, final RuntimeContext<NamingService> context) {
+   public NamingServiceNotFoundException(final String resourceName, final RuntimeContext<NamingService> context) {
 	super("naming.jndi.error.initialContext.lookup.notfound", resourceName, context.toString("\n"));
    }
 

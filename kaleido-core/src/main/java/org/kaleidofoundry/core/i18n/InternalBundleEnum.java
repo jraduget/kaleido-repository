@@ -36,7 +36,7 @@ public enum InternalBundleEnum {
    ResourceStore(true, "i18n/resourcestore/messages"),
    Configuration(true, "i18n/configuration/messages"),
    Runtimecontext(true, "i18n/runtimecontext/messages"),
-   Jndi(true, "i18n/jndi/messages");
+   Naming(true, "i18n/naming/messages");
 
    private static Set<String> CustomReservedBundle = Collections.synchronizedSet(new HashSet<String>());
 

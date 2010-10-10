@@ -276,7 +276,7 @@ public class RuntimeContext<T> {
 
    /**
     * @param name context name
-    * @param pluginInterface 
+    * @param pluginInterface
     * @param context
     */
    public RuntimeContext(final String name, final Class<T> pluginInterface, @NotNull final RuntimeContext<?> context) {
@@ -328,13 +328,14 @@ public class RuntimeContext<T> {
 	if (StringHelper.isEmpty(injectContext.value())) { throw new RuntimeContextIllegalParameterException("context.annotation.value.empty"); }
 
 	final RuntimeContext<T> rc;
-	
+
 	// handle configurations to used in the runtime context
 	final String[] configIds = injectContext.configurations();
 	final Configuration[] configs = new Configuration[configIds != null ? configIds.length : 0];
 	for (int i = 0; i < configs.length; i++) {
 	   configs[i] = ConfigurationFactory.getRegistry().get(configIds[i]);
-	   if (configs[i] == null) { throw new RuntimeContextIllegalParameterException("context.annotation.illegalconfig.simple", injectContext.value(), configIds[i]); }
+	   if (configs[i] == null) { throw new RuntimeContextIllegalParameterException("context.annotation.illegalconfig.simple", injectContext.value(),
+		   configIds[i]); }
 	}
 
 	// create runtimeContext instance
@@ -343,13 +344,13 @@ public class RuntimeContext<T> {
 	} else {
 	   rc = new RuntimeContext<T>(injectContext.value(), (String) null, true, configs);
 	}
-	
+
 	// handle and copy static annotation parameters
 	for (Parameter p : injectContext.parameters()) {
-	   rc.parameters.put(p.name(), p.value());	   
+	   rc.parameters.put(p.name(), p.value());
 	}
-	 
-	return rc;	
+
+	return rc;
    }
 
    /**
@@ -516,9 +517,7 @@ public class RuntimeContext<T> {
 	final Set<String> result = new LinkedHashSet<String>();
 
 	if (parameters != null && !parameters.isEmpty()) {
-	   for (final String key : parameters.keySet()) {
-		keys.add(parameters.get(key));
-	   }
+	   keys.addAll(parameters.keySet());
 	}
 
 	for (final Configuration config : getConfigurations()) {

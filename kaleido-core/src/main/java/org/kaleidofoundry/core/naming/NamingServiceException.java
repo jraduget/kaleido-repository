@@ -18,6 +18,7 @@ package org.kaleidofoundry.core.naming;
 import java.util.Locale;
 
 import org.kaleidofoundry.core.i18n.I18nRuntimeException;
+import org.kaleidofoundry.core.i18n.InternalBundleEnum;
 
 /**
  * @author Jerome RADUGET
@@ -100,7 +101,7 @@ public class NamingServiceException extends I18nRuntimeException {
     */
    @Override
    public String getI18nBundleName() {
-	return "i18n/naming";
+	return InternalBundleEnum.Naming.getResourceName();
    }
 
 }

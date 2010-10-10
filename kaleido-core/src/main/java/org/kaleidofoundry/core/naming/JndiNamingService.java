@@ -26,7 +26,6 @@ import javax.rmi.PortableRemoteObject;
 import javax.validation.constraints.NotNull;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
 import org.kaleidofoundry.core.lang.annotation.Review;
 import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
 import org.kaleidofoundry.core.lang.annotation.Reviews;
@@ -39,7 +38,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * @author Jerome RADUGET
  */
 @Declare(value = JndiNamingPluginName, description = "jndi naming service plugin implementation")
-@Reviews(reviews = { @Review(category = ReviewCategoryEnum.Improvement, comment = "fail over on client side with context property : failover.enabled ; failover.waiting ; failover.maxretry  ") })
+@Reviews(reviews = { @Review(category = ReviewCategoryEnum.Improvement, comment = "fail over on client side with context property : failover.enabled ; failover.waiting ; failover.maxretry ; home cache ") })
 public class JndiNamingService implements NamingService {
 
    private final RuntimeContext<NamingService> context;
@@ -76,8 +75,9 @@ public class JndiNamingService implements NamingService {
 	final Object resource;
 
 	try {
+	   // feed init context properties (can be empty)
+	   intialContext = new InitialContext(context.toProperties());
 	   // lookup the resource
-	   intialContext = new InitialContext();
 	   resource = intialContext.lookup(fullResourceName.toString());
 
 	   // cast check of the result object (remote or local)
@@ -107,15 +107,17 @@ public class JndiNamingService implements NamingService {
     * @param resourceName
     * @return i18n exception conversion from NamingException parameter
     */
-   @NotYetImplemented
    protected NamingServiceException handleNamingException(final NamingException ne, final String resourceName) {
 
-	if (ne instanceof NameNotFoundException) { return new NamingNotFoundException(resourceName, context); }
+	// direct not found resource
+	if (ne instanceof NameNotFoundException) { return new NamingServiceNotFoundException(resourceName, context); }
 
-	if (ne instanceof NamingException) { return new NamingServiceException("naming.jndi.error.initialContext.lookup", ne, resourceName, ne.getMessage(),
-		ne.getMessage()); }
+	// cause is not found resource
+	if (ne instanceof NamingException && ne.getCause() != null && ne.getCause() instanceof NameNotFoundException) { return new NamingServiceNotFoundException(
+		resourceName, context); }
 
-	return null;
+	// otherwise ...
+	return new NamingServiceException("naming.jndi.error.initialContext.lookup", ne, resourceName, ne.getMessage(), ne.getMessage());
    }
 
    /**
