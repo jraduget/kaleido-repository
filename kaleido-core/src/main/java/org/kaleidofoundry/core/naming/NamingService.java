@@ -17,14 +17,25 @@ package org.kaleidofoundry.core.naming;
 
 import static org.kaleidofoundry.core.naming.NamingConstants.NamingPluginName;
 
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.sql.DataSource;
+
+import org.kaleidofoundry.core.context.Provider;
 import org.kaleidofoundry.core.plugin.Declare;
 
 /**
  * NamingService is a service locator interface<br/>
+ * It could be use when you are client of
+ * <ul>
+ * <li>a jndi resource like {@link DataSource}, {@link ConnectionFactory}, {@link Destination}, EJB, ...,</li>
+ * <li>...</li>
+ * </ul>
  * 
  * @author Jerome RADUGET
  */
 @Declare(value = NamingPluginName, description = "naming service plugin interface")
+@Provider(value = NamingServiceProvider.class, singletons = false)
 public interface NamingService {
 
    /**

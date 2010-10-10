@@ -20,12 +20,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 
-import org.kaleidofoundry.core.context.InjectContext;
+import org.kaleidofoundry.core.context.Context;
 
 /**
  * <p>
  * <h3>Simple resource store usage</h3>
- * This example will inject  {@link ResourceStore} context and instance using {@link InjectContext} annotation without parameters
+ * This example will inject  {@link ResourceStore} context and instance using {@link Context} annotation without parameters
  * </p>
  * The following java env. variable have been set :
  * 
@@ -52,7 +52,7 @@ import org.kaleidofoundry.core.context.InjectContext;
  */
 public class ResourceStoreSample01 {
 
-   @InjectContext("myHttp")
+   @Context("myHttp")
    protected ResourceStore resourceStore;
 
    /**

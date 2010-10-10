@@ -32,7 +32,7 @@ import org.kaleidofoundry.core.config.Configuration;
  * an argument, ... <br/>
  * It provides some static meta datas, like runtime context name, an optionally set of configuration ids, ...<br/>
  * It will use {@link Configuration} registry, to bind the underlying configurations data to the {@link RuntimeContext} instance<br/>
- * <br/> {@link InjectContext} annotation can be used on a field, an argument, a constructor :
+ * <br/> {@link Context} annotation can be used on a field, an argument, a constructor :
  * <ul>
  * <li>the annotated field is a {@link RuntimeContext} class,</li>
  * <li>the annotated field class have an accessible {@link RuntimeContext} field (aggregation),</li>
@@ -45,7 +45,7 @@ import org.kaleidofoundry.core.config.Configuration;
 @Documented
 @Target( { CONSTRUCTOR, METHOD, FIELD, PARAMETER })
 @Retention(RUNTIME)
-public @interface InjectContext {
+public @interface Context {
 
    /**
     * @return context name identifier (must be unique for the annotated class)<br/>

@@ -20,11 +20,11 @@ import static junit.framework.Assert.assertNotNull;
 
 import java.util.GregorianCalendar;
 
-import org.kaleidofoundry.core.context.InjectContext;
+import org.kaleidofoundry.core.context.Context;
 
 /**
  * <p>
- * <h3>Simple cache manager usage</h3> Inject {@link CacheManager} context and instance using {@link InjectContext} annotation without
+ * <h3>Simple cache manager usage</h3> Inject {@link CacheManager} context and instance using {@link Context} annotation without
  * parameters, but using external configuration
  * </p>
  * <br/>
@@ -56,7 +56,7 @@ import org.kaleidofoundry.core.context.InjectContext;
  */
 public class CacheManagerSample02 {
 
-   @InjectContext("myCacheManagerCtx")
+   @Context("myCacheManagerCtx")
    protected CacheManager myCacheManager;
 
    protected Cache<String, YourBean> myCache;

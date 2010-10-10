@@ -45,31 +45,31 @@ import org.slf4j.LoggerFactory;
 /**
  * Context : <br/>
  * <ol>
- * <li>A class instance field is annotated {@link InjectContext},</li>
- * <li>The class of the field have a {@link RuntimeContext} field to be created (it is not annotated {@link InjectContext}),</li>
- * <li>This aspect have to init this field, using {@link InjectContext} annotation meta data,</li>
- * <li>When to init the field ? see {@link InjectContext#when()}</li>
+ * <li>A class instance field is annotated {@link Context},</li>
+ * <li>The class of the field have a {@link RuntimeContext} field to be created (it is not annotated {@link Context}),</li>
+ * <li>This aspect have to init this field, using {@link Context} annotation meta data,</li>
+ * <li>When to init the field ? see {@link Context#when()}</li>
  * </ol>
- * This class is used in another class field, annotated @{@link InjectContext} *
+ * This class is used in another class field, annotated @{@link Context} *
  * 
  * @author Jerome RADUGET
  */
 @Aspect
-public class InjectContextIntoProvidedFieldAspect {
+public class RuntimeContextProvidedFieldInjectorAspect {
 
-   private static final Logger LOGGER = LoggerFactory.getLogger(InjectContextIntoProvidedFieldAspect.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(RuntimeContextProvidedFieldInjectorAspect.class);
 
-   // map of @InjectContext field injected state
+   // map of @Context field injected state
    private final ConcurrentMap<Field, Boolean> _$injectedFieldMap = new ConcurrentHashMap<Field, Boolean>();
 
-   public InjectContextIntoProvidedFieldAspect() {
-	LOGGER.debug("@Aspect(InjectContextIntoProvidedFieldAspect) new instance");
+   public RuntimeContextProvidedFieldInjectorAspect() {
+	LOGGER.debug("@Aspect(RuntimeContextProvidedFieldInjectorAspect) new instance");
    }
 
    // no need to filter on field modifier here, otherwise you can use private || !public at first get argument
-   @Pointcut("get(@org.kaleidofoundry.core.context.InjectContext !org.kaleidofoundry.core.context.RuntimeContext *) && if()")
+   @Pointcut("get(@org.kaleidofoundry.core.context.Context !org.kaleidofoundry.core.context.RuntimeContext *) && if()")
    public static boolean trackAgregatedRuntimeContextField(final JoinPoint jp, final JoinPoint.EnclosingStaticPart esjp) {
-	LOGGER.debug("@Pointcut(InjectContextIntoProvidedFieldAspect) trackAgregatedRuntimeContextField match");
+	LOGGER.debug("@Pointcut(RuntimeContextProvidedFieldInjectorAspect) trackAgregatedRuntimeContextField match");
 	return true;
    }
 
@@ -79,7 +79,7 @@ public class InjectContextIntoProvidedFieldAspect {
 	   @Review(comment = "check and handle reflection exception ", category = ReviewCategoryEnum.Improvement),
 	   @Review(comment = "for provider reflection part, add static method to AbstractProvider with following code ", category = ReviewCategoryEnum.Improvement) })
    public Object trackAgregatedRuntimeContextFieldToInject(final JoinPoint jp, final JoinPoint.EnclosingStaticPart esjp,
-	   final ProceedingJoinPoint thisJoinPoint, final InjectContext annotation) throws Throwable {
+	   final ProceedingJoinPoint thisJoinPoint, final Context annotation) throws Throwable {
 
 	debugJoinPoint(LOGGER, jp);
 
@@ -88,8 +88,8 @@ public class InjectContextIntoProvidedFieldAspect {
 	   final Field annotatedField = annotatedFieldSignature.getField();
 	   final Boolean annotatedFieldInjected = _$injectedFieldMap.get(annotatedField);
 
-	   LOGGER.debug("\t<joinpoint.field.{}.injected>\t{}", annotatedField.getName(), annotatedFieldInjected == null ? Boolean.FALSE : annotatedFieldInjected
-		   .booleanValue());
+	   LOGGER.debug("\t<joinpoint.field.{}.injected>\t{}", annotatedField.getName(),
+		   annotatedFieldInjected == null ? Boolean.FALSE : annotatedFieldInjected.booleanValue());
 
 	   // does the field to inject have already been injected
 	   if (annotatedFieldInjected == null || !annotatedFieldInjected.booleanValue()) {
@@ -109,14 +109,14 @@ public class InjectContextIntoProvidedFieldAspect {
 			Constructor<? extends ProviderService<?>> providerConstructor = provideInfo.value().getConstructor(Class.class);
 			ProviderService<?> fieldProviderInstance = providerConstructor.newInstance(annotatedField.getType());
 
-			// invoke provides method with InjectContext annotation meta-informations
-			Method providesMethod = provideInfo.value().getMethod("provides", InjectContext.class, Class.class);
+			// invoke provides method with Context annotation meta-informations
+			Method providesMethod = provideInfo.value().getMethod("provides", Context.class, Class.class);
 
 			try {
 			   fieldToInjectInstance = providesMethod.invoke(fieldProviderInstance, annotation, annotatedField.getType());
 			} catch (InvocationTargetException ite) {
 			   // direct runtime exception like RuntimeContextException...
-			   throw ite.getCause() != null ? ite.getCause() : (ite.getTargetException() != null ? ite.getTargetException() : ite) ;
+			   throw ite.getCause() != null ? ite.getCause() : (ite.getTargetException() != null ? ite.getTargetException() : ite);
 			}
 			// set the field that was not yet injected
 			annotatedField.set(targetInstance, fieldToInjectInstance);
@@ -138,10 +138,10 @@ public class InjectContextIntoProvidedFieldAspect {
 		   // add other accessible field (protected, public...)
 		   contextFields.addAll(ReflectionHelper.getAllDeclaredFields(fieldToInjectInstance.getClass(), Modifier.PROTECTED, Modifier.PUBLIC));
 
-		   // for each RuntimeContext field, that are not annotated by @InjectContext (to skip direct injection aspect)
+		   // for each RuntimeContext field, that are not annotated by @Context (to skip direct injection aspect)
 		   for (final Field cfield : contextFields) {
 
-			if (cfield.getType().isAssignableFrom(RuntimeContext.class) && !cfield.isAnnotationPresent(InjectContext.class)) {
+			if (cfield.getType().isAssignableFrom(RuntimeContext.class) && !cfield.isAnnotationPresent(Context.class)) {
 
 			   RuntimeContext<?> currentRuntimeContext = null;
 			   targetRuntimeContextFieldFound = true;
@@ -156,8 +156,8 @@ public class InjectContextIntoProvidedFieldAspect {
 				final Plugin<?> interfacePlugin = PluginHelper.getInterfacePlugin(fieldToInjectInstance);
 
 				// create a new instance of RuntimeContext<?>, using annotation information
-				final RuntimeContext<?> newRuntimeContext = RuntimeContext.createFrom(annotation, interfacePlugin != null ? interfacePlugin
-					.getAnnotatedClass() : null);
+				final RuntimeContext<?> newRuntimeContext = RuntimeContext.createFrom(annotation,
+					interfacePlugin != null ? interfacePlugin.getAnnotatedClass() : null);
 
 				// inject new RuntimeContext<?> field instance to the target instance
 				if (!Modifier.isFinal(cfield.getModifiers())) {
@@ -181,7 +181,7 @@ public class InjectContextIntoProvidedFieldAspect {
 
 		   // coherence checks
 		   if (!targetRuntimeContextFieldFound) { throw new RuntimeContextException("context.annotation.illegaluse.noRuntimeContextField",
-			   annotatedFieldSignature.getFieldType().getName() + "#" + annotatedField.getName(), InjectContext.class.getName()); }
+			   annotatedFieldSignature.getFieldType().getName() + "#" + annotatedField.getName(), Context.class.getName()); }
 
 		}
 	   }

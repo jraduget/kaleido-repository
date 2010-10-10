@@ -58,7 +58,7 @@ public class ConfigurationChangeEvent extends PropertyChangeEvent {
     * @param source
     * @param propertyName
     * @param newValue
-    * @return
+    * @return new configuration change event
     */
    public static ConfigurationChangeEvent newCreateEvent(final Configuration source, final String propertyName, final Serializable newValue) {
 	return new ConfigurationChangeEvent(source, propertyName, null, newValue, ConfigurationChangeType.CREATE);
@@ -69,7 +69,7 @@ public class ConfigurationChangeEvent extends PropertyChangeEvent {
     * @param propertyName
     * @param oldValue
     * @param newValue
-    * @return
+    * @return update configuration change event
     */
    public static ConfigurationChangeEvent newUpdateEvent(final Configuration source, final String propertyName, final Serializable oldValue,
 	   final Serializable newValue) {
@@ -80,8 +80,7 @@ public class ConfigurationChangeEvent extends PropertyChangeEvent {
     * @param source
     * @param propertyName
     * @param oldValue
-    * @param newValue
-    * @return
+    * @return remove configuration change event
     */
    public static ConfigurationChangeEvent newRemoveEvent(final Configuration source, final String propertyName, final Serializable oldValue) {
 	return new ConfigurationChangeEvent(source, propertyName, oldValue, null, ConfigurationChangeType.REMOVE);

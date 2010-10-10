@@ -29,7 +29,7 @@ import org.kaleidofoundry.core.store.ResourceException;
 /**
  * @author Jerome RADUGET
  */
-public class InjectContextDirectTest extends Assert {
+public class RuntimeContextFieldInjectorTest extends Assert {
 
    @Before
    public void setup() throws IOException, ResourceException {

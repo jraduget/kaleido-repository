@@ -21,10 +21,10 @@ import org.kaleidofoundry.core.lang.annotation.Reviews;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 
 /**
- * Base implementation if {@link ProviderService}
+ * Base implementation for {@link ProviderService}
  * 
  * @author Jerome RADUGET
- * @param <T> 
+ * @param <T>
  */
 @ThreadSafe
 @Reviews(reviews = {
@@ -43,11 +43,11 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.Provider#provides(org.kaleidofoundry.core.context.InjectContext, java.lang.Class)
+    * @see org.kaleidofoundry.core.context.Provider#provides(org.kaleidofoundry.core.context.Context, java.lang.Class)
     */
    @Override
-   public T provides(final InjectContext injectContext, final Class<T> genericClassInterface) throws ProviderException, Throwable {
-	return provides(RuntimeContext.createFrom(injectContext, genericClassInterface));
+   public T provides(final Context context, final Class<T> genericClassInterface) throws ProviderException, Throwable {
+	return provides(RuntimeContext.createFrom(context, genericClassInterface));
    }
 
 }

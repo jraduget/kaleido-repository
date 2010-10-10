@@ -25,7 +25,7 @@ import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 
 /**
- * Guice {@link TypeListener} used for listening and injecting {@link RuntimeContext} to the annotated {@link InjectContext} property /
+ * Guice {@link TypeListener} used for listening and injecting {@link RuntimeContext} to the annotated {@link Context} property /
  * method /
  * ...
  * 
@@ -41,7 +41,7 @@ public class ContextTypeListener implements TypeListener {
 	for (Field field : typeLiteral.getRawType().getDeclaredFields()) {
 
 	   // scan RuntimeContext typed fields, annotated with @Context
-	   if (field.getType() == RuntimeContext.class && field.isAnnotationPresent(InjectContext.class)) {
+	   if (field.getType() == RuntimeContext.class && field.isAnnotationPresent(Context.class)) {
 		typeEncounter.register(new ContextMembersInjector<T>(field));
 	   }
 	}

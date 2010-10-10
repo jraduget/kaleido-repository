@@ -15,18 +15,25 @@
  */
 package org.kaleidofoundry.core.naming;
 
-import javax.ejb.Local;
-import javax.ejb.Remote;
+import org.kaleidofoundry.core.context.ProviderException;
+import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.lang.annotation.NotNull;
 
 /**
- * 
  * @author Jerome RADUGET
- *
  */
-@Remote
-@Local
-public interface Foo {
+public class NamingServiceFactory {
 
-   String echo(String message);
+   private static final NamingServiceProvider NAMING_SERVICE_PROVIDER = new NamingServiceProvider(NamingService.class);
+
+   /**
+    * @param context
+    * @return new naming service instance
+    * @throws NamingServiceException
+    * @throws ProviderException
+    */
+   public static NamingService provides(@NotNull final RuntimeContext<NamingService> context) throws NamingServiceException, ProviderException {
+	return NAMING_SERVICE_PROVIDER.provides(context);
+   }
 
 }

@@ -19,7 +19,7 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.kaleidofoundry.core.context.InjectContext;
+import org.kaleidofoundry.core.context.Context;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.store.ResourceStore;
 
@@ -93,7 +93,7 @@ public class ContextualResourceModuleTest extends Assert {
  */
 class SampleWithContext {
 
-   @InjectContext("property-injection-name")
+   @Context("property-injection-name")
    private RuntimeContext<ResourceStore> runtimeContextInjectedByField;
 
    private final RuntimeContext<ResourceStore> runtimeContextInjectedByConstructor;
@@ -103,18 +103,18 @@ class SampleWithContext {
 
    // contextual injection using guice aop methodInterceptor
    @Inject
-   SampleWithContext(@InjectContext("constructor-injection-name") final RuntimeContext<ResourceStore> runtimeContext) {
+   SampleWithContext(@Context("constructor-injection-name") final RuntimeContext<ResourceStore> runtimeContext) {
 	runtimeContextInjectedByConstructor = runtimeContext;
    }
 
    @Inject
-   @InjectContext("method-injection-name")
+   @Context("method-injection-name")
    public void injectResourceStoreByMethod(final RuntimeContext<ResourceStore> runtimeContext) {
 	runtimeContextInjectedByMethod = runtimeContext;
    }
 
    @Inject
-   public void injectResourceStoreByMethodArg(@InjectContext("method-arg-injection-name") final RuntimeContext<ResourceStore> runtimeContext) {
+   public void injectResourceStoreByMethodArg(@Context("method-arg-injection-name") final RuntimeContext<ResourceStore> runtimeContext) {
 	runtimeContextInjectedByMethodArg = runtimeContext;
    }
 

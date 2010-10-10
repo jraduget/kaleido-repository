@@ -371,7 +371,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
    /**
     * @param propertyName
-    * @param newValue
+    * @param oldValue
     */
    protected void firePropertyRemove(final String propertyName, final Serializable oldValue) {
 

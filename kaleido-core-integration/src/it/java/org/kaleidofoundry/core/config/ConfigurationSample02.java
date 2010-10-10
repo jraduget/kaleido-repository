@@ -15,13 +15,13 @@
  */
 package org.kaleidofoundry.core.config;
 
-import org.kaleidofoundry.core.context.InjectContext;
+import org.kaleidofoundry.core.context.Context;
 import org.kaleidofoundry.core.context.Parameter;
 
 /**
  * <p>
  * <h3>Simple configuration usage</h3>
- * Inject {@link Configuration} context and instance using {@link InjectContext} annotation with parameters which overrides configuration file
+ * Inject {@link Configuration} context and instance using {@link Context} annotation with parameters which overrides configuration file
  * </p>
  * 
  * @see ConfigurationSample01
@@ -30,7 +30,7 @@ import org.kaleidofoundry.core.context.Parameter;
  */
 public class ConfigurationSample02 {
 
-   @InjectContext(value="mySimpleConfig",
+   @Context(value="mySimpleConfig",
 	   parameters={
 	   @Parameter(name=ConfigurationContextBuilder.StorageAllowed, value="false"),
 	   @Parameter(name=ConfigurationContextBuilder.ResourceUri, value="http://localhost/kaleidofoundry/it/config/myHttpConfig.properties"),

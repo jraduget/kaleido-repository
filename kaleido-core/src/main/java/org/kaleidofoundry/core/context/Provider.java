@@ -26,7 +26,7 @@ import org.kaleidofoundry.core.plugin.Declare;
 /**
  * Annotation used on plugin interface ({@link Declare}) <br/>
  * It is used to specify the {@link ProviderService} class implementation that will create and inject the right instance, given a
- * {@link RuntimeContext} or {@link InjectContext}
+ * {@link RuntimeContext} or {@link Context}
  * 
  * @author Jerome RADUGET
  * @see ProviderService

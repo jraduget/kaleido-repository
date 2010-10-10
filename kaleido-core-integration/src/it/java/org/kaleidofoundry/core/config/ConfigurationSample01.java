@@ -15,11 +15,11 @@
  */
 package org.kaleidofoundry.core.config;
 
-import org.kaleidofoundry.core.context.InjectContext;
+import org.kaleidofoundry.core.context.Context;
 
 /**
  * <p>
- * <h3>Simple configuration usage</h3> Inject {@link Configuration} context and instance using {@link InjectContext} annotation without
+ * <h3>Simple configuration usage</h3> Inject {@link Configuration} context and instance using {@link Context} annotation without
  * parameters
  * </p>
  * <p>
@@ -82,7 +82,7 @@ import org.kaleidofoundry.core.context.InjectContext;
  */
 public class ConfigurationSample01 {
 
-   @InjectContext("mySimpleConfig")
+   @Context("mySimpleConfig")
    private Configuration configuration;
 
    /**

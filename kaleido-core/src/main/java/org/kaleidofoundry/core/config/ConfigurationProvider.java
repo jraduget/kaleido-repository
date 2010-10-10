@@ -26,7 +26,7 @@ import java.net.URI;
 import java.util.Set;
 
 import org.kaleidofoundry.core.context.AbstractProviderService;
-import org.kaleidofoundry.core.context.InjectContext;
+import org.kaleidofoundry.core.context.Context;
 import org.kaleidofoundry.core.context.ProviderService;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
@@ -44,7 +44,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * <ul>
  * <li>It can be manually used by developer via {@link ConfigurationFactory}</li>
  * <li>or</li>
- * <li>It will be used automatically by annotation processor (AOP AspectJ, Guice, Spring) which will handle {@link InjectContext} annotation
+ * <li>It will be used automatically by annotation processor (AOP AspectJ, Guice, Spring) which will handle {@link Context} annotation
  * at runtime</li>
  * </ul>
  * 

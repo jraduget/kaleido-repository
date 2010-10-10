@@ -305,6 +305,7 @@ public abstract class AbstractCacheManager implements CacheManager {
 		fconf = new File(uri);
 	   } catch (final URISyntaxException use) {
 	   } catch (final IllegalArgumentException iae) {
+	   } finally {
 	   }
 
 	   // 2. if file exist on file system

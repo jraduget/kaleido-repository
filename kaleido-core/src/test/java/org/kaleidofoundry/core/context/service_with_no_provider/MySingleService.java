@@ -15,7 +15,7 @@
  */
 package org.kaleidofoundry.core.context.service_with_no_provider;
 
-import org.kaleidofoundry.core.context.InjectContext;
+import org.kaleidofoundry.core.context.Context;
 import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
@@ -23,10 +23,10 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  */
 public class MySingleService {
 
-   @InjectContext("jndi.context.jboss")
+   @Context("jndi.context.jboss")
    private RuntimeContext<?> unTypedRuntimeContext;
 
-   @InjectContext("jndi.context.jboss")
+   @Context("jndi.context.jboss")
    private RuntimeContext<MySingleService> typedRuntimeContext;
 
    public MySingleService() {

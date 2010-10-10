@@ -30,37 +30,37 @@ import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.store.ResourceException;
 
 /**
- * Test {@link RuntimeContext} injection using @{@link InjectContext} <br/>
+ * Test {@link RuntimeContext} injection using @{@link Context} <br/>
  * A provider is defined on {@link MyServiceInterface}, so the services instance have no need to be instantiate into {@link #setup()} <br/>
  * Provider is tested here
  * 
  * @author Jerome RADUGET
  */
-public class InjectContextWithProviderTest extends Assert {
+public class RuntimeContextProvidedFieldInjectorTest extends Assert {
 
    // **** RuntimeContext is an instance variable of the following fields
-   @InjectContext("myProvidedContext")
+   @Context("myProvidedContext")
    protected MyServiceInterface myServiceWithRuntimeContext;
-   @InjectContext("myProvidedFinalContext")
+   @Context("myProvidedFinalContext")
    protected MyServiceInterface myServiceWithFinalRuntimeContext;
-   @InjectContext("myProvidedFinalNullContext")
+   @Context("myProvidedFinalNullContext")
    protected MyServiceInterface myServiceWithFinalNullRuntimeContext;
 
-   @InjectContext("myProvidedContext")
+   @Context("myProvidedContext")
    protected MyServiceInterface myNullServiceWithRuntimeContext;
 
    // **** RuntimeContext is an static variable of the following fields
-   @InjectContext("myProvidedStaticContext")
+   @Context("myProvidedStaticContext")
    private MyServiceInterface myServiceWithStaticRuntimeContext;
-   @InjectContext("myProvidedStaticFinalContext")
+   @Context("myProvidedStaticFinalContext")
    private MyServiceInterface myServiceWithStaticFinalRuntimeContext;
 
    // **** RuntimeContext is an instance variable of the following fields, using only specific configurations
-   @InjectContext(value = "myProvidedContext", configurations = { "myConf" })
+   @Context(value = "myProvidedContext", configurations = { "myConf" })
    protected MyServiceInterface myServiceWithRuntimeContextFromSpecificConf;
-   @InjectContext(value = "myProvidedContext", configurations = { "illegalConf" })
+   @Context(value = "myProvidedContext", configurations = { "illegalConf" })
    protected MyServiceInterface myServiceWithRuntimeContextFromIllegalConf;
-   @InjectContext(value = "myProvidedContext", configurations = { "anotherConf" })
+   @Context(value = "myProvidedContext", configurations = { "anotherConf" })
    protected MyServiceInterface myServiceWithRuntimeContextFromWrongConf;
 
    @Before

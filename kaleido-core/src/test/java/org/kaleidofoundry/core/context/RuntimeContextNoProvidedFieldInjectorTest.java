@@ -32,36 +32,36 @@ import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.store.ResourceException;
 
 /**
- * Test {@link RuntimeContext} injection using @{@link InjectContext} <br/>
+ * Test {@link RuntimeContext} injection using @{@link Context} <br/>
  * No provider is defined on {@link MyServiceInterface}, so the service have to be instantiate into {@link #setup()} <br/>
  * Provider is not tested here
  * 
  * @author Jerome RADUGET
  */
-public class InjectContextWithNoProviderTest extends Assert {
+public class RuntimeContextNoProvidedFieldInjectorTest extends Assert {
 
    // **** RuntimeContext is an instance variable of the following fields
-   @InjectContext("myContext")
+   @Context("myContext")
    private MyServiceInterface myServiceWithRuntimeContext;
-   @InjectContext("myContext")
+   @Context("myContext")
    private MyServiceInterface myServiceWithFinalRuntimeContext;
-   @InjectContext("myContext")
+   @Context("myContext")
    private MyServiceInterface myServiceWithFinalNullRuntimeContext;
-   @InjectContext("myContext")
+   @Context("myContext")
    private MyServiceWithIllegalRuntimeContext myServiceWithIllegalRuntimeContext;
 
    // **** RuntimeContext is an static variable of the following fields
-   @InjectContext("myContext")
+   @Context("myContext")
    private MyServiceInterface myServiceWithStaticRuntimeContext;
-   @InjectContext("myContext")
+   @Context("myContext")
    private MyServiceInterface myServiceWithStaticFinalRuntimeContext;
 
    // **** RuntimeContext is an instance variable of the following fields, using only specific configurations
-   @InjectContext(value = "myContext", configurations = { "myConf" })
+   @Context(value = "myContext", configurations = { "myConf" })
    private MyServiceInterface myServiceWithRuntimeContextFromSpecificConf;
-   @InjectContext(value = "myContext", configurations = { "illegalConf" })
+   @Context(value = "myContext", configurations = { "illegalConf" })
    private MyServiceInterface myServiceWithRuntimeContextFromIllegalConf;
-   @InjectContext(value = "myContext", configurations = { "anotherConf" })
+   @Context(value = "myContext", configurations = { "anotherConf" })
    private MyServiceInterface myServiceWithRuntimeContextFromWrongConf;
 
    @Before
@@ -71,7 +71,6 @@ public class InjectContextWithNoProviderTest extends Assert {
 	// Register configurations used for testing
 	ConfigurationFactory.provides("myConf", "classpath:/context/application.properties");
 	ConfigurationFactory.provides("anotherConf", "classpath:/context/module.properties");
-
 	// Services to test
 	myServiceWithRuntimeContext = new MyServiceWithRuntimeContext();
 	myServiceWithFinalRuntimeContext = new MyServiceWithFinalRuntimeContext();
@@ -82,7 +81,6 @@ public class InjectContextWithNoProviderTest extends Assert {
 	myServiceWithRuntimeContextFromSpecificConf = new MyServiceWithRuntimeContext();
 	myServiceWithRuntimeContextFromIllegalConf = new MyServiceWithRuntimeContext();
 	myServiceWithRuntimeContextFromWrongConf = new MyServiceWithRuntimeContext();
-
    }
 
    @After

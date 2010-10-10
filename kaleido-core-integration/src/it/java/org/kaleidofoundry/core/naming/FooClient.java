@@ -15,7 +15,7 @@
  */
 package org.kaleidofoundry.core.naming;
 
-import org.kaleidofoundry.core.context.InjectContext;
+import org.kaleidofoundry.core.context.Context;
 
 /**
  * 
@@ -24,7 +24,7 @@ import org.kaleidofoundry.core.context.InjectContext;
  */
 public class FooClient {
 
-   @InjectContext(value="namingContext")
+   @Context("namingContext")
    private NamingService namingService;
 
    public void echo() {

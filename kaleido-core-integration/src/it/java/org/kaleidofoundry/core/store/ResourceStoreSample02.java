@@ -20,13 +20,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 
-import org.kaleidofoundry.core.context.InjectContext;
+import org.kaleidofoundry.core.context.Context;
 import org.kaleidofoundry.core.context.Parameter;
 
 /**
  * <p>
  * <h3>Simple resource store usage</h3>
- * Inject {@link ResourceStore} context and instance using {@link InjectContext} annotation with parameters which overrides configuration file
+ * Inject {@link ResourceStore} context and instance using {@link Context} annotation with parameters which overrides configuration file
  * </p>
  * 
  * @see ResourceStoreSample01
@@ -36,7 +36,7 @@ import org.kaleidofoundry.core.context.Parameter;
 public class ResourceStoreSample02 {
 
    // @Parameter overrides myHttp configuration setting
-   @InjectContext(value = "myHttp",
+   @Context(value = "myHttp",
 	   parameters = {
 	   @Parameter(name = ResourceContextBuilder.readonly, value = "true", type = Boolean.class),
 	   @Parameter(name = ResourceContextBuilder.connectTimeout, value = "0", type = Integer.class),

@@ -90,8 +90,8 @@ public class ProxySample extends Assert {
 
 	@SuppressWarnings("unchecked")
 	public static <R> R create(final R pTargetInstance) {
-	   return (R) java.lang.reflect.Proxy.newProxyInstance(pTargetInstance.getClass().getClassLoader(),
-		   pTargetInstance.getClass().getInterfaces(), new DynamicProxy<R>(pTargetInstance));
+	   return (R) java.lang.reflect.Proxy.newProxyInstance(pTargetInstance.getClass().getClassLoader(), pTargetInstance.getClass().getInterfaces(),
+		   new DynamicProxy<R>(pTargetInstance));
 	}
 
    }
@@ -111,13 +111,11 @@ public class ProxySample extends Assert {
    @Test
    public void createProxyService() {
 	assertNotNull(proxyService);
-	assertTrue(proxyService instanceof Service);
    }
 
    @Test
    public void createAndInvokedProxyService() {
 	assertNotNull(proxyService);
-	assertTrue(proxyService instanceof Service);
 	proxyService.methodReturningVoid();
 	System.out.println(proxyService.methodReturningString("foo"));
    }

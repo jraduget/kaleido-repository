@@ -20,12 +20,12 @@ import static junit.framework.Assert.assertNotNull;
 
 import java.util.GregorianCalendar;
 
-import org.kaleidofoundry.core.context.InjectContext;
+import org.kaleidofoundry.core.context.Context;
 import org.kaleidofoundry.core.context.Parameter;
 
 /**
  * <p>
- * <h3>Simple cache manager usage</h3> Inject {@link CacheManager} context and instance using {@link InjectContext} annotation mixing the
+ * <h3>Simple cache manager usage</h3> Inject {@link CacheManager} context and instance using {@link Context} annotation mixing the
  * use of parameters and external configuration <br/>
  * Parameters have priority to the external configuration
  * </p>
@@ -58,7 +58,7 @@ import org.kaleidofoundry.core.context.Parameter;
  */
 public class CacheManagerSample03 {
 
-   @InjectContext(value = "myCacheManagerCtx",
+   @Context(value = "myCacheManagerCtx",
 	   parameters = {
 	   @Parameter(name = CacheManagerContextBuilder.ProviderCode, value = "local"),
 	   @Parameter(name = CacheManagerContextBuilder.ResourceUri, value = "")

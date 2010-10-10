@@ -68,10 +68,10 @@ import org.kaleidofoundry.core.util.StringHelper;
  * <li> {@link RuntimeContext#RuntimeContext(Class, Configuration...)}</li>
  * <li> {@link RuntimeContext#RuntimeContext(String, Class, Configuration...)}</li>
  * </ul>
- * The last way to build it using {@link InjectContext} annotation, with static constructors :
+ * The last way to build it using {@link Context} annotation, with static constructors :
  * <ul>
  * <li>{@link #createFrom(Field)}</li>
- * <li>{@link #createFrom(InjectContext, Class)}</li>
+ * <li>{@link #createFrom(Context, Class)}</li>
  * <li></li>
  * </ul>
  * </p>
@@ -145,17 +145,17 @@ import org.kaleidofoundry.core.util.StringHelper;
  * @param <T> service interface / implementation class to use with this context
  * @author Jerome RADUGET
  * @see Declare declaration of a new plugin interface or implemetation class
- * @see InjectContext inject {@link RuntimeContext} to a class field, method argument...
+ * @see Context inject {@link RuntimeContext} to a class field, method argument...
  */
 @Reviews(reviews = {
 	@Review(comment = "review interaction between configuration and runtime context... use case, creation, event handling... have to be thread safe...", category = ReviewCategoryEnum.Todo),
 	@Review(comment = "create or RuntimeContext interface & hierarchy (DefaultRuntimeContext, PluginRuntimeContext)", category = ReviewCategoryEnum.Refactor) })
-@Immutable(comment = "instance which have been injected using @InjectContext are immutable after injection")
+@Immutable(comment = "instance which have been injected using @Context are immutable after injection")
 public class RuntimeContext<T> {
 
    /*
     * Even if the field are not final, the class stay immutable.
-    * a class instance which have been injected with @InjectContext, can't be modifiable
+    * a class instance which have been injected with @Context, can't be modifiable
     * -> see #copyFrom(...) methods
     */
    private String name;
@@ -318,35 +318,34 @@ public class RuntimeContext<T> {
 
    /**
     * @param <T>
-    * @param injectContext
+    * @param context
     * @param pluginInterface
     * @return new runtime context instance, build from given annotation
-    * @throws RuntimeContextIllegalParameterException if one of {@link InjectContext#configurations()} is not registered
+    * @throws RuntimeContextIllegalParameterException if one of {@link Context#configurations()} is not registered
     */
-   static <T> RuntimeContext<T> createFrom(@NotNull final InjectContext injectContext, final Class<T> pluginInterface) {
+   static <T> RuntimeContext<T> createFrom(@NotNull final Context context, final Class<T> pluginInterface) {
 
-	if (StringHelper.isEmpty(injectContext.value())) { throw new RuntimeContextIllegalParameterException("context.annotation.value.empty"); }
+	if (StringHelper.isEmpty(context.value())) { throw new RuntimeContextIllegalParameterException("context.annotation.value.empty"); }
 
 	final RuntimeContext<T> rc;
 
 	// handle configurations to used in the runtime context
-	final String[] configIds = injectContext.configurations();
+	final String[] configIds = context.configurations();
 	final Configuration[] configs = new Configuration[configIds != null ? configIds.length : 0];
 	for (int i = 0; i < configs.length; i++) {
 	   configs[i] = ConfigurationFactory.getRegistry().get(configIds[i]);
-	   if (configs[i] == null) { throw new RuntimeContextIllegalParameterException("context.annotation.illegalconfig.simple", injectContext.value(),
-		   configIds[i]); }
+	   if (configs[i] == null) { throw new RuntimeContextIllegalParameterException("context.annotation.illegalconfig.simple", context.value(), configIds[i]); }
 	}
 
 	// create runtimeContext instance
 	if (pluginInterface != null) {
-	   rc = new RuntimeContext<T>(injectContext.value(), pluginInterface, true, configs);
+	   rc = new RuntimeContext<T>(context.value(), pluginInterface, true, configs);
 	} else {
-	   rc = new RuntimeContext<T>(injectContext.value(), (String) null, true, configs);
+	   rc = new RuntimeContext<T>(context.value(), (String) null, true, configs);
 	}
 
 	// handle and copy static annotation parameters
-	for (Parameter p : injectContext.parameters()) {
+	for (Parameter p : context.parameters()) {
 	   rc.parameters.put(p.name(), p.value());
 	}
 
@@ -356,19 +355,19 @@ public class RuntimeContext<T> {
    /**
     * @param annotatedField
     * @return new runtime context instance, build from given field
-    * @throws IllegalArgumentException is the given field is not annotated {@link InjectContext}
-    * @throws RuntimeContextException if one of {@link InjectContext#configurations()} is not registered
+    * @throws IllegalArgumentException is the given field is not annotated {@link Context}
+    * @throws RuntimeContextException if one of {@link Context#configurations()} is not registered
     */
    static RuntimeContext<?> createFrom(@NotNull final Field annotatedField) {
 
-	final InjectContext injectContext = annotatedField.getAnnotation(InjectContext.class);
+	final Context context = annotatedField.getAnnotation(Context.class);
 
-	if (injectContext == null) { throw new IllegalArgumentException(RuntimeContextMessageBundle.getMessage("context.annotation.field.illegal",
-		InjectContext.class.getName())); }
+	if (context == null) { throw new IllegalArgumentException(RuntimeContextMessageBundle.getMessage("context.annotation.field.illegal",
+		Context.class.getName())); }
 
 	Plugin<?> plugin = PluginHelper.getInterfacePlugin(annotatedField.getDeclaringClass());
 
-	return createFrom(injectContext, plugin != null ? plugin.getAnnotatedClass() : null);
+	return createFrom(context, plugin != null ? plugin.getAnnotatedClass() : null);
 
    }
 
@@ -376,11 +375,11 @@ public class RuntimeContext<T> {
     * feed given context, with annotation meta-data
     * 
     * @param <T>
-    * @param injectContext
+    * @param context
     * @param contextTarget
     */
-   static <T> void createFrom(@NotNull final InjectContext injectContext, @NotNull final RuntimeContext<T> contextTarget) {
-	RuntimeContext<T> newOne = createFrom(injectContext, contextTarget.getPluginInterface());
+   static <T> void createFrom(@NotNull final Context context, @NotNull final RuntimeContext<T> contextTarget) {
+	RuntimeContext<T> newOne = createFrom(context, contextTarget.getPluginInterface());
 	copyFrom(newOne, contextTarget);
 	contextTarget.hasBeenInjectedByAnnotationProcessing = true;
    }
@@ -466,7 +465,7 @@ public class RuntimeContext<T> {
    }
 
    /**
-    * @return does the current instance have been injected via @{@link InjectContext} aop processing
+    * @return does the current instance have been injected via @{@link Context} aop processing
     */
    public boolean hasBeenInjectedByAnnotationProcessing() {
 	return hasBeenInjectedByAnnotationProcessing;

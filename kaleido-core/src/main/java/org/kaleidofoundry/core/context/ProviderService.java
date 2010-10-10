@@ -18,7 +18,7 @@ package org.kaleidofoundry.core.context;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 
 /**
- * Provider service interface that will create instance, given a {@link RuntimeContext} or {@link InjectContext}
+ * Provider service interface that will create instance, given a {@link RuntimeContext} or {@link Context}
  * 
  * @author Jerome RADUGET
  * @param <T>
@@ -35,11 +35,11 @@ public interface ProviderService<T> {
    T provides(RuntimeContext<T> context) throws ProviderException, Throwable;
 
    /**
-    * @param injectContext inject context annotation
+    * @param context inject context annotation
     * @param genericClassInterface class of the interface for which this provider will create instance
     * @return the new instance
     * @throws ProviderException
     * @throws Throwable 
     */
-   T provides(InjectContext injectContext, Class<T> genericClassInterface) throws ProviderException, Throwable;
+   T provides(Context context, Class<T> genericClassInterface) throws ProviderException, Throwable;
 }

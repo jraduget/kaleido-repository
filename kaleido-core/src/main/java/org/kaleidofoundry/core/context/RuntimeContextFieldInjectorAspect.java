@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Aspect used to inject RuntimeContext<?> field that is annotated {@link InjectContext}(...) <br/>
+ * Aspect used to inject RuntimeContext<?> field that is annotated {@link Context}(...) <br/>
  * 
  * <pre>
  * class YourClass {
@@ -46,18 +46,18 @@ import org.slf4j.LoggerFactory;
  * @author Jerome RADUGET
  */
 @Aspect
-public class InjectContextIntoRuntimeContextFieldAspect {
+public class RuntimeContextFieldInjectorAspect {
 
-   private static final Logger LOGGER = LoggerFactory.getLogger(InjectContextIntoRuntimeContextFieldAspect.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(RuntimeContextFieldInjectorAspect.class);
 
-   public InjectContextIntoRuntimeContextFieldAspect() {	
-	LOGGER.debug("@Aspect(InjectContextIntoRuntimeContextFieldAspect) new instance");
+   public RuntimeContextFieldInjectorAspect() {
+	LOGGER.debug("@Aspect(RuntimeContextFieldInjectorAspect) new instance");
    }
-   
+
    // no need to filter on field modifier here, otherwise you can use private || !public at first get argument
-   @Pointcut("get(@org.kaleidofoundry.core.context.InjectContext org.kaleidofoundry.core.context.RuntimeContext *) && if()")
+   @Pointcut("get(@org.kaleidofoundry.core.context.Context org.kaleidofoundry.core.context.RuntimeContext *) && if()")
    public static boolean trackRuntimeContextField(final JoinPoint jp, final JoinPoint.EnclosingStaticPart esjp) {
-	LOGGER.debug("@Pointcut(InjectContextIntoRuntimeContextFieldAspect) trackRuntimeContextField match");
+	LOGGER.debug("@Pointcut(RuntimeContextFieldInjectorAspect) trackRuntimeContextField match");
 	return true;
    }
 
@@ -65,26 +65,14 @@ public class InjectContextIntoRuntimeContextFieldAspect {
    @SuppressWarnings("unchecked")
    @Around("trackRuntimeContextField(jp, esjp) && @annotation(annotation)")
    public Object trackRuntimeContextFieldToInject(final JoinPoint jp, final JoinPoint.EnclosingStaticPart esjp, final ProceedingJoinPoint thisJoinPoint,
-	   final InjectContext annotation) throws Throwable {
+	   final Context annotation) throws Throwable {
 	if (thisJoinPoint.getSignature() instanceof FieldSignature) {
 	   final FieldSignature fs = (FieldSignature) thisJoinPoint.getSignature();
 	   final Object target = thisJoinPoint.getTarget();
 	   final Field field = fs.getField();
 	   field.setAccessible(true);
 	   final Object currentValue = field.get(target);
-
 	   if (currentValue == null) {
-		/*
-		 * final String[] configIds = annotation.configurations();
-		 * final Configuration[] configs = new Configuration[configIds != null ? configIds.length : 0];
-		 * for (int i = 0; i < configs.length; i++) {
-		 * configs[i] = ConfigurationFactory.getRegistry().get(configIds[i]);
-		 * }
-		 * final Constructor<?> runtimeContextConstructor = fs.getFieldType().getConstructor(String.class, Class.class,
-		 * Configuration[].class);
-		 * final RuntimeContext<?> runtimeContext = (RuntimeContext<?>) runtimeContextConstructor.newInstance(annotation.value(),
-		 * fs.getFieldType(), configs);
-		 */
 		final RuntimeContext<?> runtimeContext = RuntimeContext.createFrom(annotation, fs.getFieldType());
 		field.set(target, runtimeContext);
 		return runtimeContext;
