@@ -8,7 +8,7 @@
 		<relativePath>../kaleido-parent/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>kaleido-core-sample</artifactId>
+	<artifactId>kaleido-core-integration</artifactId>
 	<name>Kaleido foundry core integration tests and samples</name>
 	<packaging>jar</packaging>
 
