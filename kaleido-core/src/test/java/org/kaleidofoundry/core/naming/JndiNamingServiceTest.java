@@ -180,4 +180,5 @@ public class JndiNamingServiceTest extends Assert {
 	assertNotNull(datasource2);
 	assertNotNull(datasource2.getConnection());
    }
+
 }
