@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
 
+import org.kaleidofoundry.core.context.Provider;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 
@@ -32,6 +33,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  * @param <V> Type of cache values
  */
 @Declare(CachePluginName)
+@Provider(value = CacheProvider.class, singletons = true)
 public interface Cache<K extends Serializable, V extends Serializable> {
 
    /**
