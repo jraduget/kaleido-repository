@@ -15,9 +15,6 @@
  */
 package org.kaleidofoundry.core.cache;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-
 import java.util.GregorianCalendar;
 
 import org.kaleidofoundry.core.context.Context;
@@ -54,20 +51,19 @@ import org.kaleidofoundry.core.context.Context;
  * 
  * @author Jerome RADUGET
  */
-public class CacheManagerSample02 {
+public class CacheManagerSample01 {
 
    @Context("myCacheManagerCtx")
-   protected CacheManager myCacheManager;
+   private CacheManager myCacheManager;
 
-   protected Cache<String, YourBean> myCache;
+   private final Cache<String, YourBean> myCache;
 
-   public CacheManagerSample02() {
+   public CacheManagerSample01() {
 
 	myCache = myCacheManager.getCache(YourBean.class);
 
-	// feed cache with somes bean entries
-	myCache.put("bean1", new YourBean("name1", GregorianCalendar.getInstance(), true, 2));
-	myCache.put("bean2", new YourBean("name2", GregorianCalendar.getInstance(), false, 15));
+	// feed cache with some bean entries
+	feedCache(myCache);
    }
 
    /**
@@ -81,20 +77,22 @@ public class CacheManagerSample02 {
    }
 
    /**
-    * junit assertions, used for simple integration tests
+    * Feed cache with some datas
+    * @param myCache
     */
-   void assertions() {
-	assertNotNull(myCache);
-	assertEquals(2, myCache.size());
-
-	assertNotNull(myCache.get("bean1"));
-	assertEquals("name1", myCache.get("bean1").getName());
-	assertEquals(Boolean.TRUE, Boolean.valueOf(myCache.get("bean1").isEnabled()));
-	assertEquals(2, myCache.get("bean1").getFlag());
-
-	assertNotNull(myCache.get("bean2"));
-	assertEquals("name2", myCache.get("bean2").getName());
-	assertEquals(Boolean.FALSE, Boolean.valueOf(myCache.get("bean2").isEnabled()));
-	assertEquals(15, myCache.get("bean2").getFlag());
+   static void feedCache(final Cache<String, YourBean> myCache) {
+	// feed cache with somes bean entries
+	myCache.put("bean1", new YourBean("name1", GregorianCalendar.getInstance(), true, 2));
+	myCache.put("bean2", new YourBean("name2", GregorianCalendar.getInstance(), false, 15));
    }
+
+   /**
+    * used only for junit assertions
+    * 
+    * @return current cache instance
+    */
+   Cache<String, YourBean> getMyCache() {
+	return myCache;
+   }
+
 }

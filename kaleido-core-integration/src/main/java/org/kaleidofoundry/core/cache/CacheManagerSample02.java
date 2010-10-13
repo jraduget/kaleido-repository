@@ -15,10 +15,7 @@
  */
 package org.kaleidofoundry.core.cache;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-
-import java.util.GregorianCalendar;
+import static org.kaleidofoundry.core.cache.CacheManagerSample01.feedCache;
 
 import org.kaleidofoundry.core.context.Context;
 import org.kaleidofoundry.core.context.Parameter;
@@ -31,24 +28,24 @@ import org.kaleidofoundry.core.context.Parameter;
  * 
  * @author Jerome RADUGET
  */
-public class CacheManagerSample01 {
+public class CacheManagerSample02 {
 
    @Context(value="myCacheManagerCtx",
 	   parameters = {
 	   @Parameter(name = CacheManagerContextBuilder.ProviderCode, value = "ehCache1x"),
 	   @Parameter(name = CacheManagerContextBuilder.ResourceUri, value = "classpath:/cache/ehcache.xml")   }
    )
-   protected CacheManager myCacheManager;
+   private CacheManager myCacheManager;
 
-   protected Cache<String, YourBean> myCache;
+   private final Cache<String, YourBean> myCache;
 
-   public CacheManagerSample01() {
+   public CacheManagerSample02() {
 
+	// get your cache instance
 	myCache = myCacheManager.getCache(YourBean.class);
 
-	// feed cache with somes bean entries
-	myCache.put("bean1", new YourBean("name1", GregorianCalendar.getInstance(), true, 2));
-	myCache.put("bean2", new YourBean("name2", GregorianCalendar.getInstance(), false, 15));
+	// feed cache with some bean entries
+	feedCache(myCache);
    }
 
    /**
@@ -61,21 +58,13 @@ public class CacheManagerSample01 {
 	System.out.printf("cache entry[%s]: %s\n", "bean2", myCache.get("bean2").toString());
    }
 
+
    /**
-    * junit assertions, used for simple integration tests
+    * used only for junit assertions
+    * 
+    * @return current cache instance
     */
-   void assertions() {
-	assertNotNull(myCache);
-	assertEquals(2, myCache.size());
-
-	assertNotNull(myCache.get("bean1"));
-	assertEquals("name1", myCache.get("bean1").getName());
-	assertEquals(Boolean.TRUE, Boolean.valueOf(myCache.get("bean1").isEnabled()));
-	assertEquals(2, myCache.get("bean1").getFlag());
-
-	assertNotNull(myCache.get("bean2"));
-	assertEquals("name2", myCache.get("bean2").getName());
-	assertEquals(Boolean.FALSE, Boolean.valueOf(myCache.get("bean2").isEnabled()));
-	assertEquals(15, myCache.get("bean2").getFlag());
+   Cache<String, YourBean> getMyCache() {
+	return myCache;
    }
 }

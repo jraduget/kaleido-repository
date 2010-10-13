@@ -15,19 +15,13 @@
  */
 package org.kaleidofoundry.core.cache;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-
-import java.util.GregorianCalendar;
+import static org.kaleidofoundry.core.cache.CacheManagerSample01.feedCache;
 
 import org.kaleidofoundry.core.context.Context;
-import org.kaleidofoundry.core.context.Parameter;
-
 /**
  * <p>
- * <h3>Simple cache manager usage</h3> Inject {@link CacheManager} context and instance using {@link Context} annotation mixing the
- * use of parameters and external configuration <br/>
- * Parameters have priority to the external configuration
+ * <h3>Simple cache usage</h3> Inject {@link Cache} context and instance using {@link Context} annotation without
+ * parameters, but using external configuration
  * </p>
  * <br/>
  * <b>Precondition :</b> The following java env. variable have been set
@@ -39,6 +33,9 @@ import org.kaleidofoundry.core.context.Parameter;
  * Resource file : "classpath:/cache/myContext.properties" contains :
  * 
  * <pre>
+ * cache.myCacheCtx.cacheName=org.kaleidofoundry.core.cache.YourBean
+ * cache.myCacheCtx.cacheManagerRef=myCacheManager
+ * 
  * cacheManager.myCacheManager.providerCode=ehCache1x
  * cacheManager.myCacheManager.resourceUri=classpath:/cache/ehcache.xml
  * 
@@ -56,24 +53,14 @@ import org.kaleidofoundry.core.context.Parameter;
  * 
  * @author Jerome RADUGET
  */
-public class CacheManagerSample03 {
+public class CacheSample01 {
 
-   @Context(value = "myCacheManagerCtx",
-	   parameters = {
-	   @Parameter(name = CacheManagerContextBuilder.ProviderCode, value = "local"),
-	   @Parameter(name = CacheManagerContextBuilder.ResourceUri, value = "")
-   })
-   protected CacheManager myCacheManager;
+   @Context("myCacheCtx")
+   private Cache<String, YourBean> myCache;
 
-   protected final Cache<String, YourBean> myCache;
-
-   public CacheManagerSample03() {
-
-	myCache = myCacheManager.getCache(YourBean.class);
-
-	// feed cache with somes bean entries
-	myCache.put("bean1", new YourBean("name1", GregorianCalendar.getInstance(), true, 2));
-	myCache.put("bean2", new YourBean("name2", GregorianCalendar.getInstance(), false, 15));
+   public CacheSample01() {
+	// feed cache with some bean entries
+	feedCache(myCache);
    }
 
    /**
@@ -87,21 +74,12 @@ public class CacheManagerSample03 {
    }
 
    /**
-    * junit assertions, used for simple integration tests
+    * used only for junit assertions
+    * 
+    * @return current cache instance
     */
-   void assertions() {
-	assertNotNull(myCache);
-	assertEquals(2, myCache.size());
-
-	assertNotNull(myCache.get("bean1"));
-	assertEquals("name1", myCache.get("bean1").getName());
-	assertEquals(Boolean.TRUE, Boolean.valueOf(myCache.get("bean1").isEnabled()));
-	assertEquals(2, myCache.get("bean1").getFlag());
-
-	assertNotNull(myCache.get("bean2"));
-	assertEquals("name2", myCache.get("bean2").getName());
-	assertEquals(Boolean.FALSE, Boolean.valueOf(myCache.get("bean2").isEnabled()));
-	assertEquals(15, myCache.get("bean2").getFlag());
+   Cache<String, YourBean> getMyCache() {
+	return myCache;
    }
 
 }

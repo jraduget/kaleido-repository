@@ -13,15 +13,6 @@
 	<packaging>jar</packaging>
 
 	<build>
-	
-		<!-- source are used as sample / integration test -->
-		<testSourceDirectory>src/it/java</testSourceDirectory>
-		<testResources>
-			<testResource>
-				<directory>src/it/resources</directory>
-			</testResource>
-		</testResources>
-
 		<plugins>
 			<!-- Enable aspectJ AOP for @NotNull, @InjectContext, ...-->
 			<plugin>

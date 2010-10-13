@@ -16,17 +16,12 @@
 package org.kaleidofoundry.core.naming;
 
 import javax.ejb.Local;
-import javax.ejb.Remote;
 
 /**
- * 
+ * Bean local interface
  * @author Jerome RADUGET
- *
  */
-@Remote
 @Local
-public interface Foo {
-
-   String echo(String message);
+public interface MyLocalBean extends MyRemoteBean {
 
 }

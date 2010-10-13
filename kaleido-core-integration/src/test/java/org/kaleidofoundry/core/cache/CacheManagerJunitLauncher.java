@@ -15,12 +15,12 @@
  */
 package org.kaleidofoundry.core.cache;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.kaleidofoundry.core.config.ConfigurationConstants;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.store.ResourceException;
 
@@ -31,31 +31,30 @@ public class CacheManagerJunitLauncher {
 
    @BeforeClass
    public static void setupClass() throws ResourceException {
-	// -Dkaleido.configurations=myConfig=classpath:/cache/myContext.properties
-	System.getProperties().put(ConfigurationConstants.JavaEnvProperties, "myConfig=classpath:/cache/myContext.properties");
-	// load given configurations
-	ConfigurationFactory.init();
+	// load and register given configuration
+	// another way to to this, set following java env variable : -Dkaleido.configurations=myConfig=classpath:/cache/myContext.properties
+	ConfigurationFactory.provides("myConfig", "classpath:/cache/myContext.properties");
    }
 
    @AfterClass
    public static void cleanupClass() throws ResourceException {
-	ConfigurationFactory.destroyAll();
+	ConfigurationFactory.destroy("myConfig");
    }
 
    @Test
    public void testCacheManagerSample01() {
-	CacheManagerSample01 cacheManager = new CacheManagerSample01();
+	CacheManagerSample02 cacheManager = new CacheManagerSample02();
 	assertNotNull(cacheManager);
 	cacheManager.echo();
-	cacheManager.assertions();
+	assertions(cacheManager.getMyCache());
    }
 
    @Test
    public void testCacheManagerSample02() {
-	CacheManagerSample02 cacheManager = new CacheManagerSample02();
+	CacheManagerSample01 cacheManager = new CacheManagerSample01();
 	assertNotNull(cacheManager);
 	cacheManager.echo();
-	cacheManager.assertions();
+	assertions(cacheManager.getMyCache());
    }
 
    @Test
@@ -63,7 +62,7 @@ public class CacheManagerJunitLauncher {
 	CacheManagerSample03 cacheManager = new CacheManagerSample03();
 	assertNotNull(cacheManager);
 	cacheManager.echo();
-	cacheManager.assertions();
+	assertions(cacheManager.getMyCache());
    }
 
    @Test
@@ -71,6 +70,24 @@ public class CacheManagerJunitLauncher {
 	CacheManagerSample04 cacheManager = new CacheManagerSample04();
 	assertNotNull(cacheManager);
 	cacheManager.echo();
-	cacheManager.assertions();
+	assertions(cacheManager.getMyCache());
+   }
+
+   /**
+    * junit assertions, used for simple integration tests
+    */
+   static void assertions(final Cache<String, YourBean> myCache) {
+	assertNotNull(myCache);
+	assertEquals(2, myCache.size());
+
+	assertNotNull(myCache.get("bean1"));
+	assertEquals("name1", myCache.get("bean1").getName());
+	assertEquals(Boolean.TRUE, Boolean.valueOf(myCache.get("bean1").isEnabled()));
+	assertEquals(2, myCache.get("bean1").getFlag());
+
+	assertNotNull(myCache.get("bean2"));
+	assertEquals("name2", myCache.get("bean2").getName());
+	assertEquals(Boolean.FALSE, Boolean.valueOf(myCache.get("bean2").isEnabled()));
+	assertEquals(15, myCache.get("bean2").getFlag());
    }
 }

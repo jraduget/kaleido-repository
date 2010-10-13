@@ -32,20 +32,19 @@ public class CacheManagerMainLauncher {
    public static void main(final String[] args) throws ResourceException, IOException {
 
 	try {
-	   // -Dkaleido.configurations=myConfig=classpath:/cache/myContext.properties
-	   System.getProperties().put(ConfigurationConstants.JavaEnvProperties, "myConfig=classpath:/cache/myContext.properties");
-	   // load given configurations
-	   ConfigurationFactory.init();
+	   // load and register given configuration
+	   // another way to to this, set following java env variable : -Dkaleido.configurations=myConfig=classpath:/cache/myContext.properties
+	   ConfigurationFactory.provides("myConfig", "classpath:/cache/myContext.properties");
 
 	   try {
-		System.out.println("Testing CacheManager context & instance injection, using annotation without external configuration :");
+		System.out.println("\nTesting CacheManager context & instance injection, using annotation with external configuration :");
 		new CacheManagerSample01().echo();
 	   } catch (Throwable th) {
 		th.printStackTrace();
 	   }
 
 	   try {
-		System.out.println("\nTesting CacheManager context & instance injection, using annotation with external configuration :");
+		System.out.println("Testing CacheManager context & instance injection, using annotation without external configuration :");
 		new CacheManagerSample02().echo();
 	   } catch (Throwable th) {
 		th.printStackTrace();
@@ -67,7 +66,7 @@ public class CacheManagerMainLauncher {
 
 	} finally {
 	   // free configuration resources
-	   ConfigurationFactory.destroyAll();
+	   ConfigurationFactory.destroy("myConfig");
 	}
    }
 }
