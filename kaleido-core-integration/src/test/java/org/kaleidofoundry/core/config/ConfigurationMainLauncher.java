@@ -30,11 +30,9 @@ public class ConfigurationMainLauncher {
    public static void main(final String[] args) throws ResourceException, IOException {
 
 	try {
-	   // register context configuration, equivalent to  -Dkaleido.configurations=mySimpleConfig=classpath:/config/myContext.properties
-	   System.getProperties().put(ConfigurationConstants.JavaEnvProperties, "myContext=classpath:/config/myContext.properties");
-	   // load given configurations
-	   ConfigurationFactory.init();
-
+	   // load and register given configuration
+	   // another way to to this, set following java env variable : -Dkaleido.configurations=myContext=classpath:/config/myContext.properties
+	   ConfigurationFactory.provides("myContext", "classpath:/config/myContext.properties");
 
 	   try {
 		System.out.println("Testing Configuration context & instance injection, using annotation :");
@@ -59,7 +57,7 @@ public class ConfigurationMainLauncher {
 
 	} finally {
 	   // free configuration resources
-	   ConfigurationFactory.destroyAll();
+	   ConfigurationFactory.destroy("myContext");
 	}
    }
 

@@ -109,7 +109,7 @@ public class ConfigurationSample01 {
    /**
     * used only for junit assertions
     * 
-    * @return
+    * @return current configuration instance
     */
    Configuration getConfiguration() {
 	return configuration;

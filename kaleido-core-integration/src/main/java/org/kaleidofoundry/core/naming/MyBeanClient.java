@@ -15,20 +15,25 @@
  */
 package org.kaleidofoundry.core.naming;
 
-import javax.ejb.Stateless;
+import org.kaleidofoundry.core.context.Context;
 
 /**
  * 
  * @author Jerome RADUGET
  *
  */
-@Stateless
-public class FooBean implements Foo {
+public class MyBeanClient {
 
-   @Override
-   public String echo(final String message) {
-	return message;
+   @Context("namingContext")
+   private NamingService namingService;
+
+   public void echo() {
+
+	// get ejb client service
+	MyRemoteBean myRemoteBean = namingService.locate("ejb/myBean", MyRemoteBean.class);
+
+	// call it
+	myRemoteBean.echo("hello wolrd");
    }
-
 
 }

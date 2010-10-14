@@ -25,15 +25,15 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kaleidofoundry.core.cache.Cache;
+import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.cache.CacheManagerProvider;
 import org.kaleidofoundry.core.cache.EhCache1xImpl;
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.store.ResourceException;
 
 /**
@@ -41,17 +41,16 @@ import org.kaleidofoundry.core.store.ResourceException;
  */
 public class ConfigurationJunitLauncher {
 
-   @Before
-   public void setup() throws ResourceException {
-	// register context configuration, equivalent to  -Dkaleido.configurations=mySimpleConfig=classpath:/config/myContext.properties
-	System.getProperties().put(ConfigurationConstants.JavaEnvProperties, "myContext=classpath:/config/myContext.properties");
-	// load given configurations
-	ConfigurationFactory.init();
+   @BeforeClass
+   public static void setupStatic() throws ResourceException {
+	// load and register given configuration
+	// another way to to this, set following java env variable : -Dkaleido.configurations=myContext=classpath:/config/myContext.properties
+	ConfigurationFactory.provides("myContext", "classpath:/config/myContext.properties");
    }
 
-   @After
-   public void cleanup() throws ResourceException {
-	ConfigurationFactory.destroyAll();
+   @AfterClass
+   public static void cleanupStatic() throws ResourceException {
+	ConfigurationFactory.destroy("myContext");
    }
 
    @Test
