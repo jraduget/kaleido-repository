@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.kaleidofoundry.core.context.Provider;
+import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 
@@ -51,10 +52,28 @@ public interface CacheManager {
    /**
     * @param <K> type of the cache keys
     * @param <V> type of the cache values
+    * @param name name of the cache you want
+    * @param context
+    * @return cache instance, whose the name is the name in argument
+    */
+   <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name, @NotNull final RuntimeContext<Cache<K, V>> context);
+
+   /**
+    * @param <K> type of the cache keys
+    * @param <V> type of the cache values
     * @param cl class
     * @return cache instance, whose the name is the name of the class in argument
     */
    <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final Class<V> cl);
+
+   /**
+    * @param <K> type of the cache keys
+    * @param <V> type of the cache values
+    * @param cl class
+    * @param context
+    * @return cache instance, whose the name is the name of the class in argument
+    */
+   <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final Class<V> cl, @NotNull final RuntimeContext<Cache<K, V>> context);
 
    /**
     * @return cache manager current cache configuration

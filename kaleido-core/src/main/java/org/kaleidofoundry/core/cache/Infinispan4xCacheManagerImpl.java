@@ -111,17 +111,17 @@ class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.cache.CacheFactory#getCache(java.lang.String, java.lang.String)
+    * @see org.kaleidofoundry.core.cache.CacheManager#getCache(java.lang.String, org.kaleidofoundry.core.context.RuntimeContext)
     */
    @SuppressWarnings({ "unchecked", "rawtypes" })
    @Override
-   public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name) {
+   public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
 
 	Cache<K, V> cache = cachesByName.get(name);
 
 	if (cache == null) {
 	   final org.infinispan.Cache<?, ?> jbossCache = createCache(name);
-	   cache = new Infinispan4xCacheImpl(name, jbossCache);
+	   cache = new Infinispan4xCacheImpl(name, context, jbossCache);
 	   cachesByName.put(name, cache);
 	}
 

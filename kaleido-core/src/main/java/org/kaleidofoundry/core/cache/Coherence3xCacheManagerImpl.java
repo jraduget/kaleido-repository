@@ -125,18 +125,17 @@ class Coherence3xCacheManagerImpl extends AbstractCacheManager {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.cache.CacheFactory#getCache(java.lang.String, java.lang.String)
+    * @see org.kaleidofoundry.core.cache.CacheManager#getCache(java.lang.String, org.kaleidofoundry.core.context.RuntimeContext)
     */
-
    @SuppressWarnings({ "unchecked", "rawtypes" })
    @Override
-   public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name) {
+   public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
 
 	Cache<K, V> cache = cachesByName.get(name);
 
 	if (cache == null) {
 	   final NamedCache coherenceCache = createCache(name, getCurrentConfiguration());
-	   cache = new Coherence3xCacheImpl(name, coherenceCache);
+	   cache = new Coherence3xCacheImpl(name, context, coherenceCache);
 	   cachesByName.put(name, cache);
 	}
 	return cache;

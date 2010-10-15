@@ -75,16 +75,16 @@ class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheM
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.cache.CacheFactory#getCache(java.lang.String, java.lang.String)
+    * @see org.kaleidofoundry.core.cache.CacheManager#getCache(java.lang.String, org.kaleidofoundry.core.context.RuntimeContext)
     */
    @SuppressWarnings("unchecked")
    @Override
-   public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name) {
+   public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
 
 	Cache<K, V> cache = cachesByName.get(name);
 
 	if (cache == null) {
-	   cache = createCache(name, getCurrentConfiguration());
+	   cache = createCache(name, getCurrentConfiguration(), context);
 	   cachesByName.put(name, cache);
 	}
 
@@ -144,9 +144,10 @@ class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheM
     * @param configurationUri
     * @return provider cache instance
     */
-   protected <K extends Serializable, V extends Serializable> LocalCacheImpl<K, V> createCache(final String name, final String configurationUri) {
+   protected <K extends Serializable, V extends Serializable> LocalCacheImpl<K, V> createCache(final String name, final String configurationUri,
+	   final RuntimeContext<Cache<K, V>> context) {
 	LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration() != null ? getCurrentConfiguration()
 		: "", name));
-	return new LocalCacheImpl<K, V>(name);
+	return new LocalCacheImpl<K, V>(name, context);
    }
 }

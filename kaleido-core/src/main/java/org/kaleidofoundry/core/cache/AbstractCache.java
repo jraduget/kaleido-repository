@@ -17,7 +17,10 @@ package org.kaleidofoundry.core.cache;
 
 import java.io.Serializable;
 
+import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.context.RuntimeContextEmptyParameterException;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * Abstract cache implementation
@@ -28,11 +31,45 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
  */
 public abstract class AbstractCache<K extends Serializable, V extends Serializable> implements Cache<K, V> {
 
+   /** cache runtime context */
+   protected final RuntimeContext<Cache<K, V>> context;
+
+   /** cache name */
+   protected final String name;
+
    /**
     * <code>true</code> if cache have been destroyed, <code>false</code> otherwise <br/>
     * Can be useful when cache instance is stored in a class field...
     */
    boolean hasBeenDestroy = false;
+
+   /**
+    * @param context
+    * @param name
+    */
+   public AbstractCache(@NotNull final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
+	this.name = name;
+	this.context = context;
+   }
+
+   /**
+    * @param context
+    * @param name
+    */
+   public AbstractCache(@NotNull final Class<?> cl, @NotNull final RuntimeContext<Cache<K, V>> context) {
+	this(cl.getName(), context);
+   }
+
+   /**
+    * @param context
+    */
+   public AbstractCache(@NotNull final RuntimeContext<Cache<K, V>> context) {
+
+	this.name = context.getProperty(CacheContextBuilder.CacheName);
+	this.context = context;
+
+	if (StringHelper.isEmpty(name)) { throw new RuntimeContextEmptyParameterException(CacheContextBuilder.CacheName, context); }
+   }
 
    /**
     * consistency checking of arguments is done retrospectively
@@ -56,6 +93,15 @@ public abstract class AbstractCache<K extends Serializable, V extends Serializab
     * @return <code>true</code> if found and removed, <code>false</code> otherwise
     */
    protected abstract boolean doRemove(@NotNull K key);
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.Cache#getName()
+    */
+   @Override
+   public String getName() {
+	return name;
+   }
 
    /*
     * (non-Javadoc)

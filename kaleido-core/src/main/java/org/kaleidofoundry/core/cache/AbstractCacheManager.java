@@ -120,8 +120,27 @@ public abstract class AbstractCacheManager implements CacheManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheManager#getCache(java.lang.Class)
     */
+   @Override
    public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final Class<V> cl) {
-	return getCache(cl.getName());
+	return getCache(cl, new RuntimeContext<Cache<K, V>>());
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.CacheManager#getCache(java.lang.Class, org.kaleidofoundry.core.context.RuntimeContext)
+    */
+   @Override
+   public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(final Class<V> cl, final RuntimeContext<Cache<K, V>> context) {
+	return getCache(cl.getName(), context);
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.CacheManager#getCache(java.lang.String)
+    */
+   @Override
+   public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(final String name) {
+	return getCache(name, new RuntimeContext<Cache<K, V>>());
    }
 
    /*

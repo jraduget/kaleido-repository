@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
 
+import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 
@@ -37,33 +38,34 @@ import com.tangosol.util.Filter;
 @Declare(CoherenceCachePluginName)
 public class Coherence3xCacheImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> implements Cache<K, V> {
 
-   private final String name;
    private final NamedCache namedCache;
 
    /**
-    * @param c class of the cache
-    * @param cache coherence cache instantiate via factory
+    * @param context
+    * @param cache
     */
-   Coherence3xCacheImpl(@NotNull final Class<V> c, @NotNull final NamedCache cache) {
-	this(c.getName(), cache);
+   Coherence3xCacheImpl(@NotNull final RuntimeContext<Cache<K, V>> context, @NotNull final NamedCache cache) {
+	super(context);
+	this.namedCache = cache;
    }
 
    /**
-    * @param name name of the cache
+    * @param c
+    * @param context
     * @param cache coherence cache instantiate via factory
     */
-   Coherence3xCacheImpl(@NotNull final String name, @NotNull final NamedCache cache) {
-	this.namedCache = cache;
-	this.name = name;
+   Coherence3xCacheImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<Cache<K, V>> context, @NotNull final NamedCache cache) {
+	this(c.getName(), context, cache);
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.cache.Cache#getName()
+   /**
+    * @param name
+    * @param context
+    * @param cache coherence cache instantiate via factory
     */
-   @Override
-   public String getName() {
-	return name;
+   Coherence3xCacheImpl(@NotNull final String name, @NotNull final RuntimeContext<Cache<K, V>> context, @NotNull final NamedCache cache) {
+	super(name, context);
+	this.namedCache = cache;
    }
 
    /*

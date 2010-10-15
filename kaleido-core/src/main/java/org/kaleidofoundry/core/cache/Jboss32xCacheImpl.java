@@ -24,6 +24,7 @@ import java.util.Set;
 import org.jboss.cache.Cache;
 import org.jboss.cache.Fqn;
 import org.jboss.cache.Node;
+import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.slf4j.Logger;
@@ -41,43 +42,57 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
 
    private static final Logger LOGGER = LoggerFactory.getLogger(Jboss32xCacheImpl.class);
 
-   private final String name;
    private final Cache<K, V> cache;
    private final Node<K, V> root;
 
    /**
-    * @param c class of the cache
-    * @param cache jboss cache instantiate via factory
+    * @param context
+    * @param cache
     */
-   Jboss32xCacheImpl(@NotNull final Class<V> c, @NotNull final Cache<K, V> cache) {
-	this(c.getName(), cache);
+   Jboss32xCacheImpl(@NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context, @NotNull final Cache<K, V> cache) {
+	super(context);
+	this.cache = cache;
+	this.root = createAndStartIt();
    }
 
    /**
-    * @param name name of the cache
+    * @param c
+    * @param context
+    * @param cache jboss cache instantiate via factory
     */
-   Jboss32xCacheImpl(@NotNull final String name, @NotNull final Cache<K, V> cache) {
+   Jboss32xCacheImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context,
+	   @NotNull final Cache<K, V> cache) {
+	this(c.getName(), context, cache);
+   }
 
-	final String cacheName = "/" + name.replaceAll("[.]", "/");
+   /**
+    * @param name
+    * @param context
+    * @param cache jboss cache instantiate via factory
+    */
+   Jboss32xCacheImpl(@NotNull final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context,
+	   @NotNull final Cache<K, V> cache) {
 
+	super(name, context);
 	this.cache = cache;
-	this.name = name;
-	this.root = cache.getRoot().addChild(Fqn.fromString(cacheName));
+	this.root = createAndStartIt();
+   }
+
+   /**
+    * @param cache
+    * @return
+    */
+   protected Node<K, V> createAndStartIt() {
+	final String cacheName = "/" + name.replaceAll("[.]", "/");
+	final Node<K, V> root = cache.getRoot().addChild(Fqn.fromString(cacheName));
 
 	// create and start cache
 	LOGGER.info("Starts JBoss Cache root name: {}", cacheName);
 
 	cache.create();
 	cache.start();
-   }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.cache.Cache#getName()
-    */
-   @Override
-   public String getName() {
-	return name;
+	return root;
    }
 
    /*

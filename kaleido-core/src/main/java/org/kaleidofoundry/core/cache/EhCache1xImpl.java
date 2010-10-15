@@ -26,6 +26,7 @@ import java.util.Set;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 
+import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 
@@ -41,23 +42,33 @@ import org.kaleidofoundry.core.plugin.Declare;
 @Declare(EhCachePluginName)
 public class EhCache1xImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> implements org.kaleidofoundry.core.cache.Cache<K, V> {
 
-   private final String name;
    private final Cache cache;
 
    /**
-    * @param c class of the cache
+    * @param context
     * @param cache
     */
-   EhCache1xImpl(@NotNull final Class<V> c, @NotNull final Cache cache) {
-	this(c.getName(), cache);
+   EhCache1xImpl(@NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context, @NotNull final Cache cache) {
+	super(context);
+	this.cache = cache;
    }
 
    /**
-    * @param name name of the cache
+    * @param c
+    * @param context
     * @param cache
     */
-   EhCache1xImpl(@NotNull final String name, @NotNull final Cache cache) {
-	this.name = name;
+   EhCache1xImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context, @NotNull final Cache cache) {
+	this(c.getName(), context, cache);
+   }
+
+   /**
+    * @param name
+    * @context
+    * @param cache
+    */
+   EhCache1xImpl(@NotNull final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context, @NotNull final Cache cache) {
+	super(name, context);
 	this.cache = cache;
    }
 
@@ -92,15 +103,6 @@ public class EhCache1xImpl<K extends Serializable, V extends Serializable> exten
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.cache.Cache#getName()
-    */
-   @Override
-   public String getName() {
-	return name;
-   }
-
-   /*
-    * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.Cache#keys()
     */
    @SuppressWarnings("unchecked")
@@ -117,9 +119,9 @@ public class EhCache1xImpl<K extends Serializable, V extends Serializable> exten
    @Override
    public Collection<V> values() {
 
-	Collection<V> result = new ArrayList<V>();
+	final Collection<V> result = new ArrayList<V>();
 	V value;
-	for (Object key : cache.getKeys()) {
+	for (final Object key : cache.getKeys()) {
 	   value = get((K) key);
 	   if (value != null) {
 		result.add(value);

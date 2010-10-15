@@ -91,17 +91,17 @@ class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCac
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.cache.CacheFactory#getCache(java.lang.String, java.lang.String)
+    * @see org.kaleidofoundry.core.cache.CacheManager#getCache(java.lang.String, org.kaleidofoundry.core.context.RuntimeContext)
     */
    @SuppressWarnings("unchecked")
    @Override
-   public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name) {
+   public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
 
 	Cache<K, V> cache = cachesByName.get(name);
 
 	if (cache == null) {
 	   final org.jboss.cache.Cache<K, V> jbossCache = createCache(name, getCurrentConfiguration());
-	   cache = new Jboss32xCacheImpl<K, V>(name, jbossCache);
+	   cache = new Jboss32xCacheImpl<K, V>(name, context, jbossCache);
 	   cachesByName.put(name, cache);
 	}
 

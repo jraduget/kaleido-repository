@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 
@@ -39,14 +40,27 @@ public class LocalCacheImpl<K extends Serializable, V extends Serializable> exte
 
    private final ConcurrentMap<K, V> CacheableMap = new ConcurrentHashMap<K, V>();
 
-   private final String name;
+   /**
+    * @param name
+    * @param context
+    */
+   public LocalCacheImpl(@NotNull final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+	super(name, context);
+   }
 
    /**
-    * @param name cache name
+    * @param cl
+    * @param context
     */
-   public LocalCacheImpl(@NotNull final String name) {
-	super();
-	this.name = name;
+   public LocalCacheImpl(final Class<?> cl, final RuntimeContext<Cache<K, V>> context) {
+	super(cl, context);
+   }
+
+   /**
+    * @param context
+    */
+   public LocalCacheImpl(final RuntimeContext<Cache<K, V>> context) {
+	super(context);
    }
 
    /*
@@ -78,15 +92,6 @@ public class LocalCacheImpl<K extends Serializable, V extends Serializable> exte
 	   CacheableMap.remove(key);
 	}
 	return present;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.cache.Cache#getName()
-    */
-   @Override
-   public String getName() {
-	return name;
    }
 
    /*

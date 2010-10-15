@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.infinispan.Cache;
+import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 
@@ -34,31 +35,36 @@ import org.kaleidofoundry.core.plugin.Declare;
 public class Infinispan4xCacheImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> implements
 	org.kaleidofoundry.core.cache.Cache<K, V> {
 
-   private final String name;
    private final Cache<K, V> cache;
 
    /**
-    * @param c class of the cache
-    * @param cache infinispan cache instantiate via factory
+    * @param context
+    * @param cache
     */
-   Infinispan4xCacheImpl(@NotNull final Class<V> c, @NotNull final Cache<K, V> cache) {
-	this(c.getName(), cache);
+   Infinispan4xCacheImpl(@NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context, @NotNull final Cache<K, V> cache) {
+	super(context);
+	this.cache = cache;
    }
 
    /**
-    * @param name name of the cache
+    * @param c
+    * @param context
+    * @param cache infinispan cache instantiate via factory
     */
-   Infinispan4xCacheImpl(@NotNull final String name, @NotNull final Cache<K, V> cache) {
-	this.cache = cache;
-	this.name = name;
+   Infinispan4xCacheImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context,
+	   @NotNull final Cache<K, V> cache) {
+	this(c.getName(), context, cache);
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.cache.Cache#getName()
+   /**
+    * @param name
+    * @param context
+    * @param cache infinispan cache instantiate via factory
     */
-   public String getName() {
-	return name;
+   Infinispan4xCacheImpl(@NotNull final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context,
+	   @NotNull final Cache<K, V> cache) {
+	super(name, context);
+	this.cache = cache;
    }
 
    /*

@@ -28,6 +28,7 @@ import net.sf.ehcache.CacheManager;
 
 import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
@@ -122,13 +123,13 @@ class EhCache1xManagerImpl extends AbstractCacheManager {
     */
    @SuppressWarnings("unchecked")
    @Override
-   public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(final String name) {
+   public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
 
 	Cache<K, V> cache = cachesByName.get(name);
 
 	if (cache == null) {
 	   final net.sf.ehcache.Cache ehCache = createCache(name);
-	   cache = new EhCache1xImpl<K, V>(name, ehCache);
+	   cache = new EhCache1xImpl<K, V>(name, context, ehCache);
 	   cachesByName.put(name, cache);
 	}
 
