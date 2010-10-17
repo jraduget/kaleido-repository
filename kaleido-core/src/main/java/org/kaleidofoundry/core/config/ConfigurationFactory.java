@@ -121,7 +121,9 @@ public abstract class ConfigurationFactory {
 	Configuration configToDestroy = getRegistry().get(configName);
 
 	if (configToDestroy != null) {
-	   configToDestroy.unload();
+	   if (configToDestroy.isLoaded()) {
+		configToDestroy.unload();
+	   }
 	   getRegistry().remove(configName);
 	}
    }

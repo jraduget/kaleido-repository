@@ -18,6 +18,7 @@ package org.kaleidofoundry.core.naming;
 import java.io.File;
 import java.sql.SQLException;
 
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -93,13 +94,17 @@ public class JndiNamingServiceTest extends Assert {
 	// deployer = server.getDeployer();
 	// deployer.deploy(fileToDeploye, new DeployCommandParameters());
 
+	// other way for ejb :
+	// http://old.nabble.com/Embedded-GlassFish---No-EJBContainer-available-with-multiple-JUnit-tests-td29816681.html
+	// Map<String, Object> properties = new HashMap<String, Object>();
+	// properties.put(EJBContainer.MODULES, new File("target/classes"));
+	// ec = EJBContainer.createEJBContainer(properties); <---- This is where is breaks
+	// ctx = ec.getContext();
+
    }
 
    @AfterClass
    public static void cleanupStatic() throws LifecycleException {
-
-	// re-enable i18n jpa message bundle control
-	I18nMessagesFactory.enableJpaControl();
 
 	if (deployer != null) {
 	   deployer.undeployAll();
@@ -107,6 +112,10 @@ public class JndiNamingServiceTest extends Assert {
 	if (server != null) {
 	   server.stop();
 	}
+
+	// re-enable i18n jpa message bundle control
+	I18nMessagesFactory.enableJpaControl();
+
    }
 
    @Test(expected = NamingServiceException.class)
@@ -163,9 +172,14 @@ public class JndiNamingServiceTest extends Assert {
 	   ic.addToEnvironment("java.naming.factory.state", "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
 	   ic.addToEnvironment("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
 	   ic.addToEnvironment("org.omg.CORBA.ORBInitialPort", "3700");
+	   ic.addToEnvironment(Context.SECURITY_PRINCIPAL, "admin");
+	   ic.addToEnvironment(Context.SECURITY_CREDENTIALS, "admin");
 	   datasource = (DataSource) ic.lookup(DataSourceJndiName);
 	   assertNotNull(datasource);
 	   assertNotNull(datasource.getConnection());
+	} catch (Throwable th) {
+	   th.printStackTrace();
+	   fail(th.getClass().getName() + " : " + th.getMessage());
 	} finally {
 	   if (ic != null) {
 		ic.close();
@@ -174,7 +188,7 @@ public class JndiNamingServiceTest extends Assert {
 	// test naming service connection
 	RuntimeContext<NamingService> context = new NamingContextBuilder().withInitialContextFactory("com.sun.enterprise.naming.SerialInitContextFactory")
 		.withUrlpkgPrefixes("com.sun.enterprise.naming").withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl")
-		.withCorbaORBInitialHost("127.0.0.1").withCorbaORBInitialPort("3700").build();
+		.withCorbaORBInitialHost("127.0.0.1").withCorbaORBInitialPort("3700").withSecurityPrincipal("admin").withSecuritycredentials("admin").build();
 	NamingService namingService = new JndiNamingService(context);
 	DataSource datasource2 = namingService.locate(DataSourceJndiName, DataSource.class);
 	assertNotNull(datasource2);

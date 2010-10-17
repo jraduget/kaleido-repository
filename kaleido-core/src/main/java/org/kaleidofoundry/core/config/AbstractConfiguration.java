@@ -154,8 +154,8 @@ public abstract class AbstractConfiguration implements Configuration {
 
    /**
     * you don't need to release resourceHandler argument, it is done by agregator <br/>
-    * <b>be careful, if you use {@link #setProperty(String, Serializable)}, event will be fired...</b> a prefered way, use
-    * properties.put(key, value)
+    * <b>be careful, if you use {@link #setProperty(String, Serializable)}, event will be fired...</b> a preferred way is to use
+    * properties.put(normalizeKey(key), value)
     * 
     * @param resourceHandler
     * @param properties

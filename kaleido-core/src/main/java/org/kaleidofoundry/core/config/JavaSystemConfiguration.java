@@ -86,7 +86,7 @@ public class JavaSystemConfiguration extends AbstractConfiguration implements Co
 	final Properties javaEnvVariables = System.getProperties();
 
 	for (final String key : javaEnvVariables.stringPropertyNames()) {
-	   cacheProperties.put(key, javaEnvVariables.getProperty(key));
+	   cacheProperties.put(normalizeKey(key), javaEnvVariables.getProperty(key));
 	}
 
 	return cacheProperties;

@@ -110,13 +110,6 @@
 			<scope>test</scope>
 		</dependency>
 		
-		<dependency>
-		    <groupId>org.mockftpserver</groupId>
-		    <artifactId>MockFtpServer</artifactId>
-		    <version>2.2</version>
-		    <scope>test</scope>
-		 </dependency>
-		  
 	</dependencies>
 
 	<repositories>

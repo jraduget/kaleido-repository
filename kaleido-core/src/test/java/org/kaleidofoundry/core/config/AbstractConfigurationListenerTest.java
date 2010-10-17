@@ -92,9 +92,7 @@ public abstract class AbstractConfigurationListenerTest extends Assert {
    @After
    public void cleanup() throws ResourceException {
 	// unregister configuration
-	if (configuration != null && configuration.isLoaded()) {
-	   ConfigurationFactory.destroy(configuration.getName());
-	}
+	ConfigurationFactory.destroy("myConf");
 	// re enable jpa i18n control
 	I18nMessagesFactory.enableJpaControl();
    }

@@ -74,6 +74,13 @@
 			<version>11.1.0.7.0-Production</version> <scope>test</scope>
 			</dependency>
 		-->		
+		<!-- EJB embedded Server -->
+		<dependency>
+			<groupId>org.glassfish.extras</groupId>
+			<artifactId>glassfish-embedded-all</artifactId>
+			<version>3.1-b24</version>
+			<scope>test</scope>
+		</dependency>		
 
 	</dependencies>
 
