@@ -15,10 +15,12 @@
  */
 package org.kaleidofoundry.core.cache;
 
-import static junit.framework.Assert.assertNotNull;
 import static org.kaleidofoundry.core.cache.CacheManagerJunitLauncher.assertions;
 
+import java.util.Map;
+
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
@@ -27,7 +29,7 @@ import org.kaleidofoundry.core.store.ResourceException;
 /**
  * @author Jerome RADUGET
  */
-public class CacheJunitLauncher {
+public class CacheJunitLauncher extends Assert {
 
    @BeforeClass
    public static void setupClass() throws ResourceException {
@@ -46,7 +48,45 @@ public class CacheJunitLauncher {
 	CacheSample01 cache = new CacheSample01();
 	assertNotNull(cache);
 	cache.echo();
+	assertSame(cache.getMyCache(),cache.getMyCache());
 	assertions(cache.getMyCache());
+	assertEquals("CacheSample01", cache.getMyCache().getName());
+	assertTrue(cache.getMyCache().getDelegate() instanceof net.sf.ehcache.Cache);
    }
 
+   @Test
+   public void testSample02() {
+	CacheSample02 cache = new CacheSample02();
+	assertNotNull(cache);
+	cache.echo();
+	assertSame(cache.getMyCache(),cache.getMyCache());
+	assertions(cache.getMyCache());
+	assertEquals("CacheSample02", cache.getMyCache().getName());
+	System.out.println(cache.getMyCache().getDelegate().getClass().getName());
+	assertTrue(cache.getMyCache().getDelegate() instanceof Map<?, ?>);
+   }
+
+   @Test
+   public void testSample03() {
+	CacheSample03 cache = new CacheSample03();
+	assertNotNull(cache);
+	cache.echo();
+	assertSame(cache.getMyCache(),cache.getMyCache());
+	assertions(cache.getMyCache());
+	assertEquals("CacheSample03", cache.getMyCache().getName());
+	System.out.println(cache.getMyCache().getDelegate().getClass().getName());
+	assertTrue(cache.getMyCache().getDelegate() instanceof net.sf.ehcache.Cache);
+   }
+
+   @Test
+   public void testSample04() {
+	CacheSample04 cache = new CacheSample04();
+	assertNotNull(cache);
+	cache.echo();
+	assertSame(cache.getMyCache(),cache.getMyCache());
+	assertions(cache.getMyCache());
+	assertEquals("CacheSample04", cache.getMyCache().getName());
+	System.out.println(cache.getMyCache().getDelegate().getClass().getName());
+	assertTrue(cache.getMyCache().getDelegate() instanceof net.sf.ehcache.Cache);
+   }
 }

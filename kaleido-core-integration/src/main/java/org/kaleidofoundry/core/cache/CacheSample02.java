@@ -15,8 +15,7 @@
  */
 package org.kaleidofoundry.core.cache;
 
-import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ProviderCode;
-import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ResourceUri;
+import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
 import static org.kaleidofoundry.core.cache.CacheManagerSample01.feedCache;
 
 import org.kaleidofoundry.core.context.Context;
@@ -24,28 +23,30 @@ import org.kaleidofoundry.core.context.Parameter;
 
 /**
  * <p>
- * <h3>Simple cache manager usage</h3>
- * Inject {@link CacheManager} context and instance using {@link Context} annotation with parameters, and without external configuration
+ * <h3>Simple cache usage</h3> Inject {@link Cache} context and instance using {@link Context} annotation with parameters, and without
+ * external configuration
+ * </p>
+ * <p>
+ * Default cache manager will be used in this example: see {@link CacheManagerFactory}<br/>
+ * <br/>
+ * If you want to use another {@link CacheManager} context, you can use context parameter {@link CacheContextBuilder#CacheName}, like :
+ * 
+ * <pre>
+ * &#064;Context(value = &quot;myCacheCtx02&quot;, parameters = { @Parameter(name = CacheContextBuilder.CacheName, value = &quot;org.kaleidofoundry.core.cache.YourBean&quot;),
+ * 	&#064;Parameter(name = CacheContextBuilder.CacheManagerRef, value = &quot;myCacheManager&quot;) })
+ * private Cache&lt;String, YourBean&gt; myCache;
+ * </pre>
+ * 
  * </p>
  * 
  * @author Jerome RADUGET
  */
-public class CacheManagerSample02 {
+public class CacheSample02 {
 
-   @Context(value="myCacheManagerCtx",
-	   parameters = {
-	   @Parameter(name = ProviderCode, value = "ehCache1x"),
-	   @Parameter(name = ResourceUri, value = "classpath:/cache/ehcache.xml")   }
-   )
-   private CacheManager myCacheManager;
+   @Context(value = "myCacheCtx02", parameters = { @Parameter(name = CacheName, value = "CacheSample02") })
+   private Cache<String, YourBean> myCache;
 
-   private final Cache<String, YourBean> myCache;
-
-   public CacheManagerSample02() {
-
-	// get your cache instance
-	myCache = myCacheManager.getCache("CacheSample01");
-
+   public CacheSample02() {
 	// feed cache with some bean entries
 	feedCache(myCache);
    }
@@ -60,7 +61,6 @@ public class CacheManagerSample02 {
 	System.out.printf("cache entry[%s]: %s\n", "bean2", myCache.get("bean2").toString());
    }
 
-
    /**
     * used only for junit assertions
     * 
@@ -69,4 +69,5 @@ public class CacheManagerSample02 {
    Cache<String, YourBean> getMyCache() {
 	return myCache;
    }
+
 }

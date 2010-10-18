@@ -15,36 +15,30 @@
  */
 package org.kaleidofoundry.core.cache;
 
-import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ProviderCode;
-import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ResourceUri;
 import static org.kaleidofoundry.core.cache.CacheManagerSample01.feedCache;
 
-import org.kaleidofoundry.core.context.Context;
-import org.kaleidofoundry.core.context.Parameter;
+import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
  * <p>
- * <h3>Simple cache manager usage</h3>
- * Inject {@link CacheManager} context and instance using {@link Context} annotation with parameters, and without external configuration
+ * <h3>Simple cache usage</h3> Build {@link Cache} context and instance manually by coding, using context builder
  * </p>
+ * <br/>
  * 
  * @author Jerome RADUGET
  */
-public class CacheManagerSample02 {
-
-   @Context(value="myCacheManagerCtx",
-	   parameters = {
-	   @Parameter(name = ProviderCode, value = "ehCache1x"),
-	   @Parameter(name = ResourceUri, value = "classpath:/cache/ehcache.xml")   }
-   )
-   private CacheManager myCacheManager;
+public class CacheSample04 {
 
    private final Cache<String, YourBean> myCache;
 
-   public CacheManagerSample02() {
+   public CacheSample04() {
 
-	// get your cache instance
-	myCache = myCacheManager.getCache("CacheSample01");
+	RuntimeContext<Cache> context = new CacheContextBuilder("myCacheCtx", Cache.class)
+	.withCacheName("CacheSample04")
+	.withCacheManagerRef("myCacheManager")
+	.build();
+
+	myCache = CacheFactory.provides(context);
 
 	// feed cache with some bean entries
 	feedCache(myCache);
@@ -59,7 +53,6 @@ public class CacheManagerSample02 {
 	System.out.printf("cache entry[%s]: %s\n", "bean1", myCache.get("bean1").toString());
 	System.out.printf("cache entry[%s]: %s\n", "bean2", myCache.get("bean2").toString());
    }
-
 
    /**
     * used only for junit assertions

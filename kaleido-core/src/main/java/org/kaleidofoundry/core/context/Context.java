@@ -25,37 +25,60 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import org.kaleidofoundry.core.config.Configuration;
+import org.infinispan.config.ConfigurationRegistry;
+import org.kaleidofoundry.core.config.ConfigurationFactory;
 
 /**
- * This annotation is used to provide / inject (via aspectj, guice, spring) a {@link RuntimeContext} configuration instance to a field,
- * an argument, ... <br/>
- * It provides some static meta datas, like runtime context name, an optionally set of configuration ids, ...<br/>
- * It will use {@link Configuration} registry, to bind the underlying configurations data to the {@link RuntimeContext} instance<br/>
- * <br/> {@link Context} annotation can be used on a field, an argument, a constructor :
+ * {@link Context} annotation can be used on a class field in order to provide / inject a {@link RuntimeContext} configuration instance to
+ * this field<br/>
  * <ul>
+ * <ol>
  * <li>the annotated field is a {@link RuntimeContext} class,</li>
- * <li>the annotated field class have an accessible {@link RuntimeContext} field (aggregation),</li>
+ * <li>the annotated field class have an <b>accessible</b> {@link RuntimeContext} field (aggregation),</li>
+ * </ol>
  * </ul>
- * In both case, the given field will automatically create and feed, using annotation meta parameters.
+ * In both case, the given field will be automatically created and feeded, using annotation meta parameters.
+ * </p> <br/>
+ * <hr/>
+ * <p>
+ * A {@link Context} annotation provides some static meta datas, like :
+ * <ul>
+ * <li>the context name ({@link #value()}) which is the configuration context identifier,</li>
+ * <li>an optionally set of configuration ids ({@link #configurations()}), used to filter where the current runtime context can get its
+ * properties</li>
+ * <li>a array of {@link #parameters()}, which is a static context configuration stored in the class code (no need of external
+ * configuration)</li>
+ * </ul>
+ * <br/>
+ * <b>Be careful : {@link #parameters()} have priority to {@link #configurations()} (the external configuration ids)</b>
+ * <p>
+ * <hr/>
+ * <p>
+ * Several aop implementations will be provided :
+ * <ul>
+ * <li>aspectj (default) - {@link RuntimeContextFieldInjectorAspect} & {@link RuntimeContextProvidedFieldInjectorAspect}</li>
+ * <li>spring - incoming</li>
+ * <li>guice - incoming</li>
+ * </ul>
  * </p>
  * 
  * @author Jerome RADUGET
  */
 @Documented
-@Target( { CONSTRUCTOR, METHOD, FIELD, PARAMETER })
+@Target({ CONSTRUCTOR, METHOD, FIELD, PARAMETER })
 @Retention(RUNTIME)
 public @interface Context {
 
    /**
-    * @return context name identifier (must be unique for the annotated class)<br/>
-    *         it will be used to register the given context
+    * @return context name identifier (used in external configuration)
     */
    String value();
 
    /**
-    * @return configuration identifiers, where to find the context name<br/>
-    *         it is optional, and if empty : then context name will be search in all registered configuration<br/>
+    * @return configuration identifiers, where to find the context name and properties <br/>
+    *         it is optional. if empty : then context name will be search in all registered configuration<br/>
+    * @see ConfigurationFactory
+    * @see {@link ConfigurationRegistry}
     */
    String[] configurations() default {};
 
@@ -65,13 +88,13 @@ public @interface Context {
    When when() default When.LazyGet;
 
    /**
-    * allow dynamics changes from configuration changes
+    * does you allow dynamics {@link RuntimeContext} changes from configuration changes ?
     */
    boolean dynamics() default false;
 
    /**
-    * @return static parameters, that could no be changed at runtime, but which will be provide to the underling instance <br/>
-    *         if parameter is set, it will have prior to the configurations items with same name
+    * @return define here your static configuration parameters, that could no be changed at runtime<br/>
+    *         if some parameter are set, they will be prior to the configurations items with same name
     */
    Parameter[] parameters() default {};
 

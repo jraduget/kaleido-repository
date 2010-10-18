@@ -44,7 +44,7 @@ public class CacheManagerSample04 {
 	myCacheManager = CacheManagerFactory.provides(context);
 
 	// get your cache instance
-	myCache = myCacheManager.getCache(YourBean.class);
+	myCache = myCacheManager.getCache("CacheSample04");
 
 	// feed cache with some bean entries
 	feedCache(myCache);

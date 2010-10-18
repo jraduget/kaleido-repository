@@ -12,7 +12,7 @@
 		eternal="false"
 		overflowToDisk="true"
 		diskPersistent="false"
-		maxElementsInMemory="10"
+		maxElementsInMemory="100"
 		maxElementsOnDisk="100000"
 		timeToIdleSeconds="120"
 		timeToLiveSeconds="0"
@@ -20,13 +20,39 @@
 		memoryStoreEvictionPolicy="LRU" />
 
 	<!-- READ_WRITE -->
-	<cache name="org.kaleidofoundry.core.cache.YourBean"
+	<cache name="CacheSample01"
 		eternal="true"
 		overflowToDisk="true"
 		diskPersistent="false"
-		maxElementsInMemory="10"
+		maxElementsInMemory="1000"
 		maxElementsOnDisk="100000"
 		memoryStoreEvictionPolicy="LRU"		
 	 />
 	
+	<cache name="CacheSample02"
+		eternal="true"
+		overflowToDisk="true"
+		diskPersistent="false"
+		maxElementsInMemory="100"
+		maxElementsOnDisk="100000"
+		memoryStoreEvictionPolicy="LRU"		
+	 />
+	 	
+	<cache name="CacheSample03"
+		eternal="true"
+		overflowToDisk="true"
+		diskPersistent="false"
+		maxElementsInMemory="100"
+		maxElementsOnDisk="100000"
+		memoryStoreEvictionPolicy="LRU"		
+	 />	 
+	 
+	 <cache name="CacheSample04"
+		eternal="true"
+		overflowToDisk="true"
+		diskPersistent="false"
+		maxElementsInMemory="100"
+		maxElementsOnDisk="100000"
+		memoryStoreEvictionPolicy="LRU"		
+	 />	
 </ehcache>

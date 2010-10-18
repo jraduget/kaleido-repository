@@ -43,8 +43,8 @@ public class CacheProvider extends AbstractProviderService<Cache> {
     * @see org.kaleidofoundry.core.context.ProviderService#provides(org.kaleidofoundry.core.context.RuntimeContext)
     */
    @Override
-   public Cache provides(@NotNull final RuntimeContext<Cache> context) throws ProviderException, Throwable {
-	String cacheName = context.getProperty(CacheName);
+   public Cache provides(@NotNull final RuntimeContext<Cache> context) throws ProviderException {
+	final String cacheName = context.getProperty(CacheName);
 	if (StringHelper.isEmpty(cacheName)) { throw new RuntimeContextEmptyParameterException(CacheName, context); }
 	return provides(cacheName, context);
    }
@@ -56,7 +56,7 @@ public class CacheProvider extends AbstractProviderService<Cache> {
     * @throws ProviderException
     * @throws Throwable
     */
-   public Cache provides(@NotNull final String cacheName, @NotNull final RuntimeContext<Cache> context) throws ProviderException, Throwable {
+   public Cache provides(@NotNull final String cacheName, @NotNull final RuntimeContext<Cache> context) throws ProviderException {
 	final String cacheManagerRef = context.getProperty(CacheManagerRef);
 	final RuntimeContext<CacheManager> cacheManagerContext;
 

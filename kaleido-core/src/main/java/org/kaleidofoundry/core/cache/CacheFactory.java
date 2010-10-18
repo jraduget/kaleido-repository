@@ -33,7 +33,7 @@ public class CacheFactory {
     * @see org.kaleidofoundry.core.cache.CacheProvider#provides(org.kaleidofoundry.core.context.RuntimeContext)
     */
    @SuppressWarnings("rawtypes")
-   public Cache provides(final RuntimeContext<Cache> context) throws ProviderException, Throwable {
+   public static Cache provides(final RuntimeContext<Cache> context) throws ProviderException {
 	return CACHE_PROVIDER.provides(context);
    }
 
@@ -46,7 +46,7 @@ public class CacheFactory {
     * @see org.kaleidofoundry.core.cache.CacheProvider#provides(java.lang.String, org.kaleidofoundry.core.context.RuntimeContext)
     */
    @SuppressWarnings("rawtypes")
-   public Cache provides(final String cacheName, final RuntimeContext<Cache> context) throws ProviderException, Throwable {
+   public static Cache provides(final String cacheName, final RuntimeContext<Cache> context) throws ProviderException {
 	return CACHE_PROVIDER.provides(cacheName, context);
    }
 

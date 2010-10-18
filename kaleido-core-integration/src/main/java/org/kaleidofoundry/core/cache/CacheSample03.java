@@ -15,13 +15,15 @@
  */
 package org.kaleidofoundry.core.cache;
 
+import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
 import static org.kaleidofoundry.core.cache.CacheManagerSample01.feedCache;
 
 import org.kaleidofoundry.core.context.Context;
+import org.kaleidofoundry.core.context.Parameter;
 /**
  * <p>
- * <h3>Simple cache usage</h3> Inject {@link Cache} context and instance using {@link Context} annotation without
- * parameters, but using external configuration
+ * <h3>Simple cache usage</h3> Inject {@link Cache} context and instance using {@link Context} annotation mixing the
+ * use of parameters and external configuration (Parameters have priority to the external configuration)
  * </p>
  * <br/>
  * <b>Precondition :</b> The following java env. variable have been set
@@ -53,12 +55,12 @@ import org.kaleidofoundry.core.context.Context;
  * 
  * @author Jerome RADUGET
  */
-public class CacheSample01 {
+public class CacheSample03 {
 
-   @Context("myCacheCtx")
+   @Context(value = "myCacheCtx", parameters = { @Parameter(name = CacheName, value = "CacheSample03") })
    private Cache<String, YourBean> myCache;
 
-   public CacheSample01() {
+   public CacheSample03() {
 	// feed cache with some bean entries
 	feedCache(myCache);
    }

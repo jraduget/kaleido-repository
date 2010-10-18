@@ -17,6 +17,7 @@ package org.kaleidofoundry.core.cache;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertSame;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -40,10 +41,9 @@ public class CacheManagerJunitLauncher {
    public static void cleanupClass() throws ResourceException {
 	ConfigurationFactory.destroy("myConfig");
    }
-
    @Test
    public void testCacheManagerSample01() {
-	CacheManagerSample02 cacheManager = new CacheManagerSample02();
+	CacheManagerSample01 cacheManager = new CacheManagerSample01();
 	assertNotNull(cacheManager);
 	cacheManager.echo();
 	assertions(cacheManager.getMyCache());
@@ -51,7 +51,7 @@ public class CacheManagerJunitLauncher {
 
    @Test
    public void testCacheManagerSample02() {
-	CacheManagerSample01 cacheManager = new CacheManagerSample01();
+	CacheManagerSample02 cacheManager = new CacheManagerSample02();
 	assertNotNull(cacheManager);
 	cacheManager.echo();
 	assertions(cacheManager.getMyCache());
@@ -89,5 +89,7 @@ public class CacheManagerJunitLauncher {
 	assertEquals("name2", myCache.get("bean2").getName());
 	assertEquals(Boolean.FALSE, Boolean.valueOf(myCache.get("bean2").isEnabled()));
 	assertEquals(15, myCache.get("bean2").getFlag());
+
+	assertSame(myCache.getDelegate(), myCache.getDelegate());
    }
 }

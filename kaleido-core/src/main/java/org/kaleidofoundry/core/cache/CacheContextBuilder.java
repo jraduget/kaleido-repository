@@ -41,7 +41,8 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * @author Jerome RADUGET
  * @see CacheManagerContextBuilder
  */
-public class CacheContextBuilder extends AbstractRuntimeContextBuilder<CacheManager> {
+@SuppressWarnings("rawtypes")
+public class CacheContextBuilder extends AbstractRuntimeContextBuilder<Cache> {
 
    /** the cache name (unique for a cache provider instance) */
    public static final String CacheName = "cacheName";
@@ -59,14 +60,14 @@ public class CacheContextBuilder extends AbstractRuntimeContextBuilder<CacheMana
     * @param pluginInterface
     * @param configurations
     */
-   public CacheContextBuilder(final Class<CacheManager> pluginInterface, final Configuration... configurations) {
+   public CacheContextBuilder(final Class<Cache> pluginInterface, final Configuration... configurations) {
 	super(pluginInterface, configurations);
    }
 
    /**
     * @param pluginInterface
     */
-   public CacheContextBuilder(final Class<CacheManager> pluginInterface) {
+   public CacheContextBuilder(final Class<Cache> pluginInterface) {
 	super(pluginInterface);
    }
 
@@ -82,7 +83,7 @@ public class CacheContextBuilder extends AbstractRuntimeContextBuilder<CacheMana
     * @param pluginInterface
     * @param configurations
     */
-   public CacheContextBuilder(final String name, final Class<CacheManager> pluginInterface, final Configuration... configurations) {
+   public CacheContextBuilder(final String name, final Class<Cache> pluginInterface, final Configuration... configurations) {
 	super(name, pluginInterface, configurations);
    }
 

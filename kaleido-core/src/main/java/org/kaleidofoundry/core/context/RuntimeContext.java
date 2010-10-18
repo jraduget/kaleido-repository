@@ -48,7 +48,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * A runtime context represents a subset a {@link Configuration} runtime / environment properties, specific to the
  * generic class argument T. It can be used by an instance of class T, which need to access and handle configuration properties changes<br/>
  * <ul>
- * <li>it encapsulates access to runtime environment informations,
+ * <li>it encapsulates access to runtime configuration or environment informations,
  * <li>it is bind to one or more {@link Configuration}, so configurations changes can be managed at runtime,
  * <li>it can be a subset of this {@link Configuration} (the prefixProperty is done for that),
  * <li>it has read only access to the {@link Configuration}
@@ -345,7 +345,7 @@ public class RuntimeContext<T> {
 	}
 
 	// handle and copy static annotation parameters
-	for (Parameter p : context.parameters()) {
+	for (final Parameter p : context.parameters()) {
 	   rc.parameters.put(p.name(), p.value());
 	}
 
@@ -365,7 +365,7 @@ public class RuntimeContext<T> {
 	if (context == null) { throw new IllegalArgumentException(RuntimeContextMessageBundle.getMessage("context.annotation.field.illegal",
 		Context.class.getName())); }
 
-	Plugin<?> plugin = PluginHelper.getInterfacePlugin(annotatedField.getDeclaringClass());
+	final Plugin<?> plugin = PluginHelper.getInterfacePlugin(annotatedField.getDeclaringClass());
 
 	return createFrom(context, plugin != null ? plugin.getAnnotatedClass() : null);
 
@@ -379,7 +379,7 @@ public class RuntimeContext<T> {
     * @param contextTarget
     */
    static <T> void createFrom(@NotNull final Context context, @NotNull final RuntimeContext<T> contextTarget) {
-	RuntimeContext<T> newOne = createFrom(context, contextTarget.getPluginInterface());
+	final RuntimeContext<T> newOne = createFrom(context, contextTarget.getPluginInterface());
 	copyFrom(newOne, contextTarget);
 	contextTarget.hasBeenInjectedByAnnotationProcessing = true;
    }
@@ -398,7 +398,7 @@ public class RuntimeContext<T> {
 	   target.configurations = origin.configurations;
 	   target.hasBeenInjectedByAnnotationProcessing = false;
 	   target.hasBeenBuildByContextBuilder = false;
-	   for (String key : origin.parameters.keySet()) {
+	   for (final String key : origin.parameters.keySet()) {
 		// if parameter is already set, we keep original value
 		if (target.parameters.get(key) == null) {
 		   target.parameters.put(key, origin.parameters.get(key));
