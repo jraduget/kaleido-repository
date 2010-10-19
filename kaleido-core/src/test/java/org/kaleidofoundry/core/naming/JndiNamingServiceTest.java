@@ -118,17 +118,6 @@ public class JndiNamingServiceTest extends Assert {
 
    }
 
-   @Test(expected = NamingServiceException.class)
-   public void namingErrorTest() {
-	// test naming service connection
-	RuntimeContext<NamingService> context = new NamingContextBuilder().withInitialContextFactory("com.sun.enterprise.naming.SerialInitContextFactory")
-		.withUrlpkgPrefixes("com.sun.enterprise.naming").withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl")
-		.withCorbaORBInitialHost("127.0.0.1").withCorbaORBInitialPort("9999").build();
-	NamingService namingService = new JndiNamingService(context);
-	namingService.locate(DataSourceJndiName, DataSource.class);
-	fail("expected NamingServiceException");
-   }
-
    @Test(expected = NamingServiceNotFoundException.class)
    public void noResourceFoundTest() {
 	RuntimeContext<NamingService> context = new NamingContextBuilder().build();
@@ -147,6 +136,9 @@ public class JndiNamingServiceTest extends Assert {
 	   datasource = (DataSource) ic.lookup(DataSourceJndiName);
 	   assertNotNull(datasource);
 	   assertNotNull(datasource.getConnection());
+	} catch (Throwable th) {
+	   th.printStackTrace();
+	   fail(th.getClass().getName() + " : " + th.getMessage());
 	} finally {
 	   if (ic != null) {
 		ic.close();
@@ -167,9 +159,9 @@ public class JndiNamingServiceTest extends Assert {
 	DataSource datasource;
 	try {
 	   ic = new InitialContext();
-	   ic.addToEnvironment("java.naming.factory.initial", "com.sun.enterprise.naming.SerialInitContextFactory");
-	   ic.addToEnvironment("java.naming.factory.url.pkgs", "com.sun.enterprise.naming");
-	   ic.addToEnvironment("java.naming.factory.state", "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
+	   ic.addToEnvironment(Context.INITIAL_CONTEXT_FACTORY, "com.sun.enterprise.naming.SerialInitContextFactory");
+	   ic.addToEnvironment(Context.URL_PKG_PREFIXES, "com.sun.enterprise.naming");
+	   ic.addToEnvironment(Context.STATE_FACTORIES, "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
 	   ic.addToEnvironment("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
 	   ic.addToEnvironment("org.omg.CORBA.ORBInitialPort", "3700");
 	   ic.addToEnvironment(Context.SECURITY_PRINCIPAL, "admin");
@@ -193,6 +185,17 @@ public class JndiNamingServiceTest extends Assert {
 	DataSource datasource2 = namingService.locate(DataSourceJndiName, DataSource.class);
 	assertNotNull(datasource2);
 	assertNotNull(datasource2.getConnection());
+   }
+
+   @Test(expected = NamingServiceException.class)
+   public void namingErrorTest() {
+	// test naming service connection
+	RuntimeContext<NamingService> context = new NamingContextBuilder().withInitialContextFactory("com.sun.enterprise.naming.SerialInitContextFactory")
+		.withUrlpkgPrefixes("com.sun.enterprise.naming").withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl")
+		.withCorbaORBInitialHost("127.0.0.1").withCorbaORBInitialPort("9999").build();
+	NamingService namingService = new JndiNamingService(context);
+	namingService.locate(DataSourceJndiName, DataSource.class);
+	fail("expected NamingServiceException");
    }
 
 }
