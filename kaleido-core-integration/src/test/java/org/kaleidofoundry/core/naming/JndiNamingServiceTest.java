@@ -18,8 +18,6 @@ package org.kaleidofoundry.core.naming;
 import java.io.File;
 import java.sql.SQLException;
 
-import javax.jms.Destination;
-import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -32,9 +30,9 @@ import org.glassfish.api.embedded.EmbeddedDeployer;
 import org.glassfish.api.embedded.EmbeddedFileSystem;
 import org.glassfish.api.embedded.LifecycleException;
 import org.glassfish.api.embedded.Server;
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
@@ -44,13 +42,13 @@ import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
  */
 public class JndiNamingServiceTest extends Assert {
 
-   public Server server;
-   private EmbeddedDeployer deployer;
+   public static Server server;
+   private static EmbeddedDeployer deployer;
 
    private static final String DataSourceJndiName = "jdbc/myDatasource";
 
-   @Before
-   public void setup() throws LifecycleException {
+   @BeforeClass
+   public static void setupStatic() throws LifecycleException {
 
 	// disable i18n message bundle control to speed up test (no need of a local derby instance startup)
 	I18nMessagesFactory.disableJpaControl();
@@ -59,7 +57,7 @@ public class JndiNamingServiceTest extends Assert {
 	String serverInstance = "jndiNamingServerTest";
 	Server.Builder builder = new Server.Builder(serverInstance);
 	EmbeddedFileSystem.Builder efsb = new EmbeddedFileSystem.Builder().installRoot(new File("target/glassfish/" + serverInstance + "/installroot"))
-		.instanceRoot(new File("target/glassfish/" + serverInstance + "/instanceroot")).autoDelete(true);
+	.instanceRoot(new File("target/glassfish/" + serverInstance + "/instanceroot")).autoDelete(true);
 	EmbeddedFileSystem efs = efsb.build();
 	builder.embeddedFileSystem(efs);
 
@@ -99,54 +97,39 @@ public class JndiNamingServiceTest extends Assert {
 	// http://old.nabble.com/Embedded-GlassFish---No-EJBContainer-available-with-multiple-JUnit-tests-td29816681.html
 	// Map<String, Object> properties = new HashMap<String, Object>();
 	// properties.put(EJBContainer.MODULES, new File("target/classes"));
-	// ec = EJBContainer.createEJBContainer(properties); <---- This is where is breaks
+	// ec = EJBContainer.createEJBContainer(properties);
 	// ctx = ec.getContext();
+
    }
 
-   @After
-   public void cleanup() throws LifecycleException {
+   @AfterClass
+   public static void cleanupStatic() throws LifecycleException {
+
 	if (deployer != null) {
 	   deployer.undeployAll();
 	}
 	if (server != null) {
 	   server.stop();
 	}
+
 	// re-enable i18n jpa message bundle control
 	I18nMessagesFactory.enableJpaControl();
+
    }
 
-   @Test
-   public void localLegacyResourceTest() throws NamingException, SQLException {
-	// test standard jndi lookup
-	InitialContext ic = null;
-	DataSource datasource;
-	try {
-	   ic = new InitialContext();
-	   datasource = (DataSource) ic.lookup(DataSourceJndiName);
-	   assertNotNull(datasource);
-	   assertNotNull(datasource.getConnection());
-	} catch (Throwable th) {
-	   th.printStackTrace();
-	   fail(th.getClass().getName() + " : " + th.getMessage());
-	} finally {
-	   if (ic != null) {
-		ic.close();
-	   }
-	}
-   }
-
-   @Test
-   public void localResourceTest() throws SQLException {
+   @Test(expected = NamingServiceException.class)
+   public void namingErrorTest() {
 	// test naming service connection
-	RuntimeContext<NamingService> context = new NamingContextBuilder().build();
+	RuntimeContext<NamingService> context = new NamingContextBuilder().withInitialContextFactory("com.sun.enterprise.naming.SerialInitContextFactory")
+	.withUrlpkgPrefixes("com.sun.enterprise.naming").withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl")
+	.withCorbaORBInitialHost("127.0.0.1").withCorbaORBInitialPort("9999").build();
 	NamingService namingService = new JndiNamingService(context);
-	DataSource datasource2 = namingService.locate(DataSourceJndiName, DataSource.class);
-	assertNotNull(datasource2);
-	assertNotNull(datasource2.getConnection());
+	namingService.locate(DataSourceJndiName, DataSource.class);
+	fail("expected NamingServiceException");
    }
 
    @Test(expected = NamingServiceNotFoundException.class)
-   public void localNoResourceFoundTest() {
+   public void noResourceFoundTest() {
 	RuntimeContext<NamingService> context = new NamingContextBuilder().build();
 	NamingService namingService = new JndiNamingService(context);
 	namingService.locate("jdbc/noresource", DataSource.class);
@@ -154,78 +137,56 @@ public class JndiNamingServiceTest extends Assert {
    }
 
    @Test
-   public void remoteLegacyResourceTest() throws NamingException, SQLException {
+   public void localResourceTest() throws NamingException, SQLException {
 	// test standard jndi lookup
 	InitialContext ic = null;
 	DataSource datasource;
 	try {
 	   ic = new InitialContext();
-	   ic.addToEnvironment(Context.INITIAL_CONTEXT_FACTORY, "com.sun.enterprise.naming.SerialInitContextFactory");
-	   ic.addToEnvironment(Context.URL_PKG_PREFIXES, "com.sun.enterprise.naming");
-	   ic.addToEnvironment(Context.STATE_FACTORIES, "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
-	   // ic.addToEnvironment("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
-	   // ic.addToEnvironment("org.omg.CORBA.ORBInitialPort", "3700");
-	   // ic.addToEnvironment(Context.SECURITY_PRINCIPAL, "admin");
-	   // ic.addToEnvironment(Context.SECURITY_CREDENTIALS, "admin");
 	   datasource = (DataSource) ic.lookup(DataSourceJndiName);
 	   assertNotNull(datasource);
 	   assertNotNull(datasource.getConnection());
-	} catch (Throwable th) {
-	   th.printStackTrace();
-	   fail(th.getClass().getName() + " : " + th.getMessage());
 	} finally {
 	   if (ic != null) {
 		ic.close();
 	   }
 	}
-   }
-
-   @Test
-   public void remoteResourceTest() throws SQLException {
 	// test naming service connection
-	RuntimeContext<NamingService> context = new NamingContextBuilder().withInitialContextFactory("com.sun.enterprise.naming.SerialInitContextFactory")
-		.withUrlpkgPrefixes("com.sun.enterprise.naming").withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl").build();
-	// .withCorbaORBInitialHost("127.0.0.1").withCorbaORBInitialPort("3700").withSecurityPrincipal("admin").withSecuritycredentials("admin").build();
+	RuntimeContext<NamingService> context = new NamingContextBuilder().build();
 	NamingService namingService = new JndiNamingService(context);
 	DataSource datasource2 = namingService.locate(DataSourceJndiName, DataSource.class);
 	assertNotNull(datasource2);
 	assertNotNull(datasource2.getConnection());
    }
 
-   @Test(expected = NamingServiceNotFoundException.class)
-   public void remoteNoResourceFoundTest() throws SQLException {
+   @Test
+   public void remoteResourceTest() throws NamingException, SQLException {
+	// test standard jndi lookup
+	InitialContext ic = null;
+	DataSource datasource;
+	try {
+	   ic = new InitialContext();
+	   ic.addToEnvironment("java.naming.factory.initial", "com.sun.enterprise.naming.SerialInitContextFactory");
+	   ic.addToEnvironment("java.naming.factory.url.pkgs", "com.sun.enterprise.naming");
+	   ic.addToEnvironment("java.naming.factory.state", "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
+	   ic.addToEnvironment("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
+	   ic.addToEnvironment("org.omg.CORBA.ORBInitialPort", "3700");
+	   datasource = (DataSource) ic.lookup(DataSourceJndiName);
+	   assertNotNull(datasource);
+	   assertNotNull(datasource.getConnection());
+	} finally {
+	   if (ic != null) {
+		ic.close();
+	   }
+	}
 	// test naming service connection
 	RuntimeContext<NamingService> context = new NamingContextBuilder().withInitialContextFactory("com.sun.enterprise.naming.SerialInitContextFactory")
-		.withUrlpkgPrefixes("com.sun.enterprise.naming").withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl").build();
-	// .withCorbaORBInitialHost("127.0.0.1").withCorbaORBInitialPort("3700").withSecurityPrincipal("admin").withSecuritycredentials("admin").build();
+	.withUrlpkgPrefixes("com.sun.enterprise.naming").withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl")
+	.withCorbaORBInitialHost("127.0.0.1").withCorbaORBInitialPort("3700").build();
 	NamingService namingService = new JndiNamingService(context);
-	DataSource datasource2 = namingService.locate("jdbc/noresource", DataSource.class);
+	DataSource datasource2 = namingService.locate(DataSourceJndiName, DataSource.class);
 	assertNotNull(datasource2);
 	assertNotNull(datasource2.getConnection());
-   }
-
-   @Test(expected = NamingServiceException.class)
-   public void remoteWithIllegalIntialContextFactoryTest() {
-	// test naming service connection
-	RuntimeContext<NamingService> context = new NamingContextBuilder().withInitialContextFactory("!com.sun.enterprise.naming.SerialInitContextFactory!")
-		.withUrlpkgPrefixes("com.sun.enterprise.naming").withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl").build();
-	NamingService namingService = new JndiNamingService(context);
-	namingService.locate(DataSourceJndiName, DataSource.class);
-	fail("expected NamingServiceException");
-   }
-
-   @Test
-   public void remoteWithResourceClassCastErrorTest() {
-	// test naming service connection
-	RuntimeContext<NamingService> context = new NamingContextBuilder().withInitialContextFactory("com.sun.enterprise.naming.SerialInitContextFactory")
-		.withUrlpkgPrefixes("com.sun.enterprise.naming").withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl").build();
-	NamingService namingService = new JndiNamingService(context);
-	try {
-	   namingService.locate(DataSourceJndiName, Destination.class);
-	   fail("expected NamingServiceException classcast error");
-	} catch (NamingServiceException nse) {
-	   assertEquals("naming.jndi.error.initialContext.lookup.classcast", nse.getCode());
-	}
    }
 
 }

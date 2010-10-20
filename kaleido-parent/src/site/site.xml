@@ -8,6 +8,7 @@
 		<href>http://www.kaleidofoundry.org/</href>
 	</bannerLeft>
 	<bannerRight>
+		<name></name>
 		<!-- <src>http://maven.apache.org/images/maven-small.gif</src>  -->
 	</bannerRight>
 
@@ -21,27 +22,13 @@
 	</skin>
 	
 	<body>
-
+	
 		<menu name="Overview">
+			<menu ref="summary" />
 			<item name="Introduction" href="index.html" />
-			<item name="Goals" href="plugin-info.html" />
-			<item name="Usage" href="usage.html" />
-			<item name="FAQ" href="faq.html" />
-			<item name="Migrate" href="migrate.html" />
+			<item name="JavaDocs" href="apidocs/index.html" />
 		</menu>
 		
-		<menu name="Examples">
-			<item name="Creating Content" href="/examples/creating-content.html" />
-			<item name="Configuring the Site Descriptor" href="/examples/sitedescriptor.html" />
-			<item name="Configuring Reports" href="/examples/configuring-reports.html" />
-			<item name="Configuring Site Run" href="/examples/siterun.html" />
-			<item name="Changing the Template File" href="/examples/templatefile.html" />
-			<item name="Creating Skins" href="/examples/creatingskins.html" />
-			<item name="Excluding Document Formats" href="/examples/moduleexcludes.html" />
-			<item name="Deploying to sourceforge.net" href="/examples/site-deploy-to-sourceforge.net.html" />
-		</menu>
-		
-		<menu ref="summary" />
 		<menu ref="info" />
 		<menu ref="reports" />
 

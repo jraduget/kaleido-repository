@@ -76,7 +76,7 @@ public class JndiNamingService implements NamingService {
 
 	try {
 	   // feed init context properties (can be empty)
-	   intialContext = new InitialContext();
+	   intialContext = new InitialContext(context.toProperties());
 	   for (String property : context.keySet()) {
 		intialContext.addToEnvironment(property, context.getProperty(property));
 	   }
@@ -120,7 +120,7 @@ public class JndiNamingService implements NamingService {
 		resourceName, context); }
 
 	// otherwise ...
-	return new NamingServiceException("naming.jndi.error.initialContext.lookup", ne, resourceName, ne.getMessage(), ne.getMessage());
+	return new NamingServiceException("naming.jndi.error.initialContext.lookup", ne, resourceName, ne.getMessage(), context.toString());
    }
 
    /**
