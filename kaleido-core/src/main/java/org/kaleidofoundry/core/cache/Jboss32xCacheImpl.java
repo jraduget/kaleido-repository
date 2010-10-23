@@ -79,8 +79,7 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
    }
 
    /**
-    * @param cache
-    * @return
+    * @return new jboss started cache instance
     */
    protected Node<K, V> createAndStartIt() {
 	final String cacheName = "/" + name.replaceAll("[.]", "/");

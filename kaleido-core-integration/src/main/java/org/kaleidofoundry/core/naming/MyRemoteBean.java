@@ -22,8 +22,5 @@ import javax.ejb.Remote;
  * @author Jerome RADUGET
  */
 @Remote
-public interface MyRemoteBean {
-
-   String echo(String message);
-
+public interface MyRemoteBean extends MyLocalBean {
 }

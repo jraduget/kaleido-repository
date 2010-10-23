@@ -24,11 +24,11 @@
 	<body>
 	
 		<menu name="Overview">
-			<menu ref="summary" />
 			<item name="Introduction" href="index.html" />
 			<item name="JavaDocs" href="apidocs/index.html" />
 		</menu>
 		
+		<menu ref="summary" />
 		<menu ref="info" />
 		<menu ref="reports" />
 

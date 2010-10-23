@@ -345,7 +345,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
    /**
     * @param securitycredentials the security credentials to set
     */
-   public NamingContextBuilder withSecuritycredentials(final String securitycredentials) {
+   public NamingContextBuilder withSecurityCredentials(final String securitycredentials) {
 	getContextParameters().put(SecurityCredentials, securitycredentials);
 	return this;
    }

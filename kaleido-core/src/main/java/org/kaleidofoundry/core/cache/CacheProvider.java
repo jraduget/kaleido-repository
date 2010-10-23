@@ -54,7 +54,6 @@ public class CacheProvider extends AbstractProviderService<Cache> {
     * @param context
     * @return cache current instance
     * @throws ProviderException
-    * @throws Throwable
     */
    public Cache provides(@NotNull final String cacheName, @NotNull final RuntimeContext<Cache> context) throws ProviderException {
 	final String cacheManagerRef = context.getProperty(CacheManagerRef);

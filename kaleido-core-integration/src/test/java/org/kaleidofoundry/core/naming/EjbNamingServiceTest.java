@@ -33,7 +33,7 @@ import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 /**
  * @author Jerome RADUGET
  */
-public class JndiNamingRemoteServiceTest extends Assert {
+public class EjbNamingServiceTest extends Assert {
 
    @Before
    public void setup() {

@@ -28,7 +28,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  * NamingService is a service locator interface<br/>
  * It could be use when you are client of
  * <ul>
- * <li>a jndi resource like {@link DataSource}, {@link ConnectionFactory}, {@link Destination}, EJB, ...,</li>
+ * <li>a jndi resource like {@link DataSource}, {@link ConnectionFactory}, {@link Destination}, remote or local EJB, ...,</li>
  * <li>...</li>
  * </ul>
  * 

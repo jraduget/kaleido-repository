@@ -74,13 +74,12 @@
 			<version>11.1.0.7.0-Production</version> <scope>test</scope>
 			</dependency>
 		-->		
-		<!-- EJB embedded Server -->
+		<!-- Glassfish client -->
 		<dependency>
-			<groupId>org.glassfish.extras</groupId>
-			<artifactId>glassfish-embedded-all</artifactId>
-			<version>3.1-b23</version>
-			<scope>test</scope>
-		</dependency>		
+		  <groupId>org.glassfish.appclient</groupId>
+		  <artifactId>gf-client-module</artifactId>
+		  <version>3.0.1</version>
+		</dependency>	
 
 	</dependencies>
 
