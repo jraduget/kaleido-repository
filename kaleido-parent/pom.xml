@@ -74,22 +74,23 @@
 	</properties>
 
 	<modules>
+		<!--  core modules -->
 		<module>../kaleido-core</module>
 		<module>../kaleido-core-guice</module>
 		<module>../kaleido-core-spring</module>
-		<module>../kaleido-core-integration</module>
-
+		
+		<!-- integration test modules  -->
+		<module>../kaleido-integration-client</module>
+		<module>../kaleido-integration-ejb</module>
+		<module>../kaleido-integration-war</module>
+		<module>../kaleido-integration-ear</module>
+		
 		<!--to refactor 
-		<module>../kaleido-mail</module>
+		<module>../kaleido-mailing</module>
 		<module>../kaleido-messaging</module>
+		<module>../kaleido-reporting</module>
 		-->
 		
-		<!--
-			to refactor & remove <module>../kaleido-model</module>
-			<module>../kaleido-persistence</module>
-			<module>../kaleido-report</module> <module>../kaleido-rules</module>
-			<module>../kaleido-web</module>
-		-->
 	</modules>
 
 	<dependencies>
