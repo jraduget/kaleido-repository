@@ -33,7 +33,9 @@ import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 /**
  * @author Jerome RADUGET
  */
-public class JndiNamingRemoteServiceTest extends Assert {
+public class JndiNamingServiceTest extends Assert {
+
+   private static final String datasourceJndiName = "jdbc/sonar";
 
    @Before
    public void setup() {
@@ -48,22 +50,19 @@ public class JndiNamingRemoteServiceTest extends Assert {
    }
 
    @Test
-   public void remoteResourceTest() throws NamingException, SQLException {
-
-	final String datasourceJndiName = "jdbc/sonar";
-
+   public void remoteLegacyDatasourceTest() throws NamingException, SQLException {
 	// test standard jndi lookup
 	InitialContext ic = null;
 	DataSource datasource;
 	try {
 	   ic = new InitialContext();
-	   ic.addToEnvironment("java.naming.factory.initial", "com.sun.enterprise.naming.SerialInitContextFactory");
-	   ic.addToEnvironment("java.naming.factory.url.pkgs", "com.sun.enterprise.naming");
-	   ic.addToEnvironment("java.naming.factory.state", "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
-	   ic.addToEnvironment("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
-	   ic.addToEnvironment("org.omg.CORBA.ORBInitialPort", "3820");
-	   ic.addToEnvironment(Context.SECURITY_PRINCIPAL, "admin");
-	   ic.addToEnvironment(Context.SECURITY_CREDENTIALS, "kaleidoadmin");
+	   ic.addToEnvironment(Context.INITIAL_CONTEXT_FACTORY, "com.sun.enterprise.naming.SerialInitContextFactory");
+	   ic.addToEnvironment(Context.URL_PKG_PREFIXES, "com.sun.enterprise.naming");
+	   ic.addToEnvironment(Context.STATE_FACTORIES, "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
+//	   ic.addToEnvironment("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
+//	   ic.addToEnvironment("org.omg.CORBA.ORBInitialPort", "3700");
+//	   ic.addToEnvironment(Context.SECURITY_PRINCIPAL, "admin");
+//	   ic.addToEnvironment(Context.SECURITY_CREDENTIALS, "admin");
 	   Object remoteObj = ic.lookup(datasourceJndiName);
 	   datasource = DataSource.class.cast(PortableRemoteObject.narrow(remoteObj, DataSource.class));
 	   assertNotNull(datasource);
@@ -76,15 +75,24 @@ public class JndiNamingRemoteServiceTest extends Assert {
 		ic.close();
 	   }
 	}
+   }
 
+   @Test
+   public void remoteDatasourceTest() throws NamingException, SQLException {
 	// test naming service connection
-	RuntimeContext<NamingService> context = new NamingContextBuilder().withInitialContextFactory("com.sun.enterprise.naming.SerialInitContextFactory")
-	.withUrlpkgPrefixes("com.sun.enterprise.naming").withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl")
-	.withCorbaORBInitialHost("127.0.0.1").withCorbaORBInitialPort("3700").build();
+	RuntimeContext<NamingService> context = new NamingContextBuilder()
+		.withInitialContextFactory("com.sun.enterprise.naming.SerialInitContextFactory")
+		.withUrlpkgPrefixes("com.sun.enterprise.naming")
+		.withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl")
+//		.withCorbaORBInitialHost("127.0.0.1")
+//		.withCorbaORBInitialPort("3700")
+//		.withSecurityPrincipal("admin")
+//		.withSecurityCredentials("admin")
+		.build();
 	NamingService namingService = new JndiNamingService(context);
-	DataSource datasource2 = namingService.locate(datasourceJndiName, DataSource.class);
-	assertNotNull(datasource2);
-	assertNotNull(datasource2.getConnection());
+	DataSource datasource = namingService.locate(datasourceJndiName, DataSource.class);
+	assertNotNull(datasource);
+	assertNotNull(datasource.getConnection());
    }
 
 }

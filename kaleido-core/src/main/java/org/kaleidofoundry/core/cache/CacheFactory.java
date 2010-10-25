@@ -29,7 +29,6 @@ public class CacheFactory {
     * @param context
     * @return cache instance
     * @throws ProviderException
-    * @throws Throwable
     * @see org.kaleidofoundry.core.cache.CacheProvider#provides(org.kaleidofoundry.core.context.RuntimeContext)
     */
    @SuppressWarnings("rawtypes")
@@ -42,7 +41,6 @@ public class CacheFactory {
     * @param context
     * @return cache instance
     * @throws ProviderException
-    * @throws Throwable
     * @see org.kaleidofoundry.core.cache.CacheProvider#provides(java.lang.String, org.kaleidofoundry.core.context.RuntimeContext)
     */
    @SuppressWarnings("rawtypes")

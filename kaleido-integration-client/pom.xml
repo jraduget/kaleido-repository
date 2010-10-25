@@ -8,8 +8,8 @@
 		<relativePath>../kaleido-parent/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>kaleido-core-integration</artifactId>
-	<name>Kaleido foundry core integration tests and samples</name>
+	<artifactId>kaleido-integration</artifactId>
+	<name>Kaleido foundry integration tests client</name>
 	<packaging>jar</packaging>
 
 	<build>
@@ -48,6 +48,12 @@
 			<version>${project.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.kaleidofoundry</groupId>
+			<artifactId>kaleido-integration-ejb</artifactId>
+			<version>${project.version}</version>
+		</dependency>		
+		
 		<!-- Cache implementations we want to test -->
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
@@ -66,21 +72,22 @@
 			<artifactId>log4j</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
-		
-		<!-- Oracle Database -->
-		<!--		
-			<dependency> <groupId>com.oracle</groupId>
-			<artifactId>ojdbc6</artifactId>
-			<version>11.1.0.7.0-Production</version> <scope>test</scope>
-			</dependency>
-		-->		
-		<!-- EJB embedded Server -->
+			
+		<!-- Mysql Database -->
 		<dependency>
-			<groupId>org.glassfish.extras</groupId>
-			<artifactId>glassfish-embedded-all</artifactId>
-			<version>3.1-b23</version>
-			<scope>test</scope>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.13</version>
 		</dependency>		
+		
+		<!-- Glassfish client -->
+		<dependency>
+		  <groupId>org.glassfish.appclient</groupId>
+		  <artifactId>gf-client</artifactId>
+		  <version>3.0.1</version>
+		  <scope>system</scope>
+		  <systemPath>/Users/jraduget/Developments/appserver/glassfishv3/glassfish/modules/gf-client.jar</systemPath>
+		</dependency>	
 
 	</dependencies>
 

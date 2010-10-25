@@ -41,8 +41,8 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.AbstractElementVisitor6;
-import javax.tools.StandardLocation;
 import javax.tools.Diagnostic.Kind;
+import javax.tools.StandardLocation;
 
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.plugin.PluginInspector;
@@ -67,7 +67,7 @@ import org.kaleidofoundry.core.plugin.PluginRegistryException;
  * @see Declare
  * @author Jerome RADUGET
  */
-@SupportedAnnotationTypes( { "org.kaleidofoundry.core.plugin.*" })
+@SupportedAnnotationTypes({ "org.kaleidofoundry.core.plugin.*" })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 // @SupportedOptions( { "outputFile" })
 public class PluginAnnotationProcessor extends AbstractProcessor {
@@ -107,8 +107,8 @@ public class PluginAnnotationProcessor extends AbstractProcessor {
 		final PluginInspector pluginInspector = new PluginInspector();
 
 		// if all is right, create interface & class file
-		createOutputFile(registryVisitor.getPluginsSet(), SOURCE_OUTPUT, META_PLUGIN_PATH, META_PLUGIN_FILE, PluginMessageBundle.getMessage(
-			"plugin.info.processor.load.createOutputFilePlugin", pluginInspector.getPluginMetaInfPath()));
+		createOutputFile(registryVisitor.getPluginsSet(), SOURCE_OUTPUT, META_PLUGIN_PATH, META_PLUGIN_FILE,
+			PluginMessageBundle.getMessage("plugin.info.processor.load.createOutputFilePlugin", pluginInspector.getPluginMetaInfPath()));
 
 		createOutputFile(registryVisitor.getPluginsImplementationsSet(), SOURCE_OUTPUT, META_PLUGIN_PATH, META_PLUGIN_IMPLEMENTATION_FILE,
 			PluginMessageBundle.getMessage("plugin.info.processor.load.createOutputFilePluginImpl", pluginInspector.getPluginImplementationMetaInfPath()));
@@ -295,7 +295,7 @@ public class PluginAnnotationProcessor extends AbstractProcessor {
 	/**
 	 * process handler for DeclarePluginImplementation annotated implementation class
 	 * 
-	 * @param decl
+	 * @param classDeclaration
 	 * @param declarePluginImplementation
 	 */
 	void handleDeclarePluginImplementation(final TypeElement classDeclaration, final Declare declarePluginImplementation) {

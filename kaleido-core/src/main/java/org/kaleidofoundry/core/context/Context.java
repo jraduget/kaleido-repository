@@ -78,7 +78,7 @@ public @interface Context {
     * @return configuration identifiers, where to find the context name and properties <br/>
     *         it is optional. if empty : then context name will be search in all registered configuration<br/>
     * @see ConfigurationFactory
-    * @see {@link ConfigurationRegistry}
+    * @see ConfigurationRegistry
     */
    String[] configurations() default {};
 

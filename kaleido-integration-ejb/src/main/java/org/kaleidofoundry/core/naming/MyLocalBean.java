@@ -22,6 +22,7 @@ import javax.ejb.Local;
  * @author Jerome RADUGET
  */
 @Local
-public interface MyLocalBean extends MyRemoteBean {
+public interface MyLocalBean {
 
+   String echo(String message);
 }
