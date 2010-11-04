@@ -24,7 +24,7 @@ import org.kaleidofoundry.core.context.Context;
 
 /**
  * <p>
- * <h3>Simple resource store usage</h3>
+ * <h3>First simple resource store usage</h3>
  * This example will inject  {@link ResourceStore} context and instance using {@link Context} annotation without parameters
  * </p>
  * The following java env. variable have been set :
