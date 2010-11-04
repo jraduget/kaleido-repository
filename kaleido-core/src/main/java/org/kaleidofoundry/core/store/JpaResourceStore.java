@@ -38,22 +38,11 @@ import org.kaleidofoundry.core.util.StringHelper;
  * JPA resource store. Resource will be stored in clob or / blob database<br/>
  * 
  * @author Jerome RADUGET
+ * @see {@link ResourceContextBuilder} enum of context configuration properties available
  */
 @Declare(ClobJpaStorePluginName)
 @Review(comment = "Annotate it as @Stateless ejb to enable ejb exposition + injection - import right ejb 3.x library - problem : coupling it to ejb3")
 public class JpaResourceStore extends AbstractResourceStore implements ResourceStore {
-
-   /**
-    * enumeration of local context property name
-    */
-   public static enum ContextProperty {
-
-	/** class name of a custom resource store entity */
-	customResourceStoreEntity,
-
-	/** buffer size for reading input stream data */
-	bufferSize;
-   }
 
    @PersistenceContext(unitName = KaleidoPersistentContextUnitName)
    private EntityManager em;
@@ -99,11 +88,11 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
     */
    @Override
    protected ResourceHandler doGet(final URI resourceUri) throws ResourceException {
-	ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.toString());
+	final ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.toString());
 	if (entity == null) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
 	} else {
-	   ResourceHandler resourceHandler = new ResourceHandlerBean(new ByteArrayInputStream(entity.getContent()));
+	   final ResourceHandler resourceHandler = new ResourceHandlerBean(new ByteArrayInputStream(entity.getContent()));
 	   return resourceHandler;
 	}
    }
@@ -114,7 +103,7 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
     */
    @Override
    protected void doRemove(final URI resourceUri) throws ResourceException {
-	ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.toString());
+	final ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.toString());
 	if (entity == null) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
 	} else {
@@ -129,7 +118,7 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
    @Override
    protected void doStore(final URI resourceUri, final ResourceHandler resource) throws ResourceException {
 
-	ResourceStoreEntity storeEntity = newInstance();
+	final ResourceStoreEntity storeEntity = newInstance();
 
 	storeEntity.setUri(resourceUri.toString());
 	storeEntity.setName(resourceUri.getPath());
@@ -137,17 +126,17 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
 
 	if (resource.getInputStream() != null) {
 
-	   int buffSize = StringHelper.isEmpty(context.getProperty(ContextProperty.bufferSize.name())) ? Integer.valueOf(context
-		   .getProperty(ContextProperty.bufferSize.name())) : 128;
-	   byte[] buffer = new byte[buffSize];
-	   ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+	   final int buffSize = StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.bufferSize)) ? Integer.valueOf(context
+		   .getProperty(ResourceContextBuilder.bufferSize)) : 128;
+	   final byte[] buffer = new byte[buffSize];
+	   final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
 	   try {
 		while (resource.getInputStream().read(buffer) >= 0) {
 		   outputStream.write(buffer);
 		}
 		storeEntity.setContent(outputStream.toByteArray());
-	   } catch (IOException ioe) {
+	   } catch (final IOException ioe) {
 		throw new ResourceException(ioe);
 	   }
 	}
@@ -158,32 +147,32 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
     */
    private ResourceStoreEntity newInstance() {
 
-	String customResourceStoreEntityClass = context.getProperty(ContextProperty.customResourceStoreEntity.name());
+	final String customResourceStoreEntityClass = context.getProperty(ResourceContextBuilder.customResourceStoreEntity);
 
 	if (StringHelper.isEmpty(customResourceStoreEntityClass)) {
 	   return new ResourceStoreEntity();
 	} else {
 	   try {
-		Class<?> customClass = Class.forName(customResourceStoreEntityClass);
-		Object instance = customClass.newInstance();
+		final Class<?> customClass = Class.forName(customResourceStoreEntityClass);
+		final Object instance = customClass.newInstance();
 
 		if (instance instanceof ResourceStoreEntity) {
 		   return (ResourceStoreEntity) instance;
 		} else {
-		   throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.context.customentity.illegaltype", context.getName(), context
-			   .getProperty(ContextProperty.customResourceStoreEntity.name()), ContextProperty.customResourceStoreEntity.name()));
+		   throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.context.customentity.illegaltype", context.getName(),
+			   context.getProperty(ResourceContextBuilder.customResourceStoreEntity), ResourceContextBuilder.customResourceStoreEntity));
 		}
 
-	   } catch (ClassNotFoundException cnfe) {
-		throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.context.customentity.notfound", context.getName(), context
-			.getProperty(ContextProperty.customResourceStoreEntity.name()), ContextProperty.customResourceStoreEntity.name()));
-	   } catch (IllegalAccessException iae) {
+	   } catch (final ClassNotFoundException cnfe) {
+		throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.context.customentity.notfound", context.getName(),
+			context.getProperty(ResourceContextBuilder.customResourceStoreEntity), ResourceContextBuilder.customResourceStoreEntity));
+	   } catch (final IllegalAccessException iae) {
 		throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.context.customentity.illegalconstructor",
 			customResourceStoreEntityClass, iae.getMessage()));
 
-	   } catch (InstantiationException ie) {
-		throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.context.customentity.cantcreate", customResourceStoreEntityClass, ie
-			.getMessage()));
+	   } catch (final InstantiationException ie) {
+		throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.context.customentity.cantcreate", customResourceStoreEntityClass,
+			ie.getMessage()));
 	   }
 	}
    }

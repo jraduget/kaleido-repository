@@ -39,9 +39,10 @@ import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
- * ftp & sftp resource store implementation
+ * ftp resource store implementation
  * 
  * @author Jerome RADUGET
+ * @see {@link ResourceContextBuilder} enum of context configuration properties available
  */
 @Immutable
 @Declare(FtpStorePluginName)

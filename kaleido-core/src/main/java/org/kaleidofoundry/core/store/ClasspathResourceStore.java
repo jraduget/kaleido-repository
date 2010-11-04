@@ -31,20 +31,11 @@ import org.kaleidofoundry.core.system.JavaSystemHelper;
  * readonly use: the store, remove, move methods will throw {@link IllegalStateException}
  * 
  * @author Jerome RADUGET
+ * @see {@link ResourceContextBuilder} enum of context configuration properties available
  */
 @Immutable
 @Declare(ClasspathStorePluginName)
 public class ClasspathResourceStore extends AbstractResourceStore implements ResourceStore {
-
-   /**
-    * enumeration of local context property name
-    */
-   public static enum ContextProperty {
-	/** property name for setting the class name, to get the class loader to use */
-	classloader;
-   }
-
-   // PRIVATE VARIABLES INSTANCES *************************************************************************************
 
    private final ClassLoader classLoader;
 
@@ -53,14 +44,14 @@ public class ClasspathResourceStore extends AbstractResourceStore implements Res
     */
    public ClasspathResourceStore(@NotNull final RuntimeContext<ResourceStore> context) {
 	super(context);
-	String strClass = context.getProperty(ContextProperty.classloader.name());
+	final String strClass = context.getProperty(ResourceContextBuilder.classloader);
 
 	if (strClass == null) {
 	   classLoader = Thread.currentThread().getContextClassLoader();
 	} else {
 	   try {
 		classLoader = Class.forName(strClass).getClassLoader();
-	   } catch (ClassNotFoundException cnfe) {
+	   } catch (final ClassNotFoundException cnfe) {
 		throw new IllegalStateException("illegal context property 'classloader=" + strClass + "'", cnfe);
 	   }
 	}
@@ -89,7 +80,7 @@ public class ClasspathResourceStore extends AbstractResourceStore implements Res
     */
    @Override
    protected ResourceHandler doGet(final URI resourceBinding) throws ResourceException {
-	StringBuilder localPath = new StringBuilder();
+	final StringBuilder localPath = new StringBuilder();
 
 	if (resourceBinding.getHost() != null) {
 	   localPath.append(resourceBinding.getHost()).append("/");
@@ -97,14 +88,14 @@ public class ClasspathResourceStore extends AbstractResourceStore implements Res
 	localPath.append(resourceBinding.getPath());
 
 	if (localPath.charAt(0) == '/') {
-	   InputStream in = JavaSystemHelper.getResourceAsStream(getClassLoader(), localPath.substring(1));
+	   final InputStream in = JavaSystemHelper.getResourceAsStream(getClassLoader(), localPath.substring(1));
 	   if (in != null) {
 		return new ResourceHandlerBean(in);
 	   } else {
 		throw new ResourceNotFoundException(localPath.substring(1));
 	   }
 	} else {
-	   InputStream in = JavaSystemHelper.getResourceAsStream(getClassLoader(), localPath.toString());
+	   final InputStream in = JavaSystemHelper.getResourceAsStream(getClassLoader(), localPath.toString());
 	   if (in != null) {
 		return new ResourceHandlerBean(in);
 	   } else {
