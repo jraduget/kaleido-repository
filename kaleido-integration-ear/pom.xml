@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>kaleido-integration-ear</artifactId>
-	<name>Kaleido foundry integration tests ear</name>
+	<name>KaleidoFoundry integration tests ear</name>
 	<packaging>ear</packaging>
 
 	<build>	

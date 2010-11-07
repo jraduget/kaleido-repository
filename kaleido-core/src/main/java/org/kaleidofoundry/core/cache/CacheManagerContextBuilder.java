@@ -40,11 +40,11 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * </tr>
  * <tr>
  * <td>resourceUri</td>
- * <td>uri of the configuration file to use</td>
+ * <td>uri of the external cache configuration file to use</td>
  * </tr>
  * <tr>
  * <td>resourceStoreRef</td>
- * <td>name of the resource store context to use, in order to load configuration</td>
+ * <td>name of the resource store context to use, in order to load the external cache configuration</td>
  * </tr>
  * </table>
  * </p>

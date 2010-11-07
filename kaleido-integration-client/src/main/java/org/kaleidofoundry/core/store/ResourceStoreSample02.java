@@ -23,6 +23,8 @@ import java.net.URI;
 import org.kaleidofoundry.core.context.Context;
 import org.kaleidofoundry.core.context.Parameter;
 
+import static org.kaleidofoundry.core.store.ResourceContextBuilder.*;
+
 /**
  * <p>
  * <h3>Simple resource store usage</h3>
@@ -35,19 +37,19 @@ import org.kaleidofoundry.core.context.Parameter;
  */
 public class ResourceStoreSample02 {
 
-   // @Parameter overrides myHttp configuration setting
-   @Context(value = "myHttp",
+   // @Parameter overrides myResourceCtx configuration setting
+   @Context(value = "myResourceCtx",
 	   parameters = {
-	   @Parameter(name = ResourceContextBuilder.readonly, value = "true", type = Boolean.class),
-	   @Parameter(name = ResourceContextBuilder.connectTimeout, value = "0", type = Integer.class),
-	   @Parameter(name = ResourceContextBuilder.readTimeout, value = "0", type = Integer.class)
+	   @Parameter(name = readonly, value = "true"),
+	   @Parameter(name = connectTimeout, value = "0"),
+	   @Parameter(name = readTimeout, value = "0")
    }
    )
    protected ResourceStore resourceStore;
 
    /**
     * method example that use the injected store
-    * @return the content of the resource "http://localhost/foo.txt"
+    * @return the content of the resource "http://localhost/kaleidofoundry/it/store/foo.txt"
     * @throws ResourceException
     * @throws IOException
     */

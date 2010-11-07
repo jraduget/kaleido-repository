@@ -24,41 +24,43 @@ import org.kaleidofoundry.core.context.Context;
 
 /**
  * <p>
- * <h3>Simple resource store usage</h3>
- * This example will inject  {@link ResourceStore} context and instance using {@link Context} annotation without parameters
+ * <h3>Simple resource store usage</h3> This example will inject {@link ResourceStore} context and instance using {@link Context} annotation
+ * without parameters
  * </p>
  * The following java env. variable have been set :
  * 
  * <pre>
- * -Dkaleido.configurations=myHttpConfig=classpath:/store/myHttpConfig.properties
+ * -Dkaleido.configurations=myContext=classpath:/store/myContext.properties
  * </pre>
  * 
- * Resource file, "classpath:/store/myHttpConfig.properties" contains :
+ * Resource file, "classpath:/store/myContext.properties" contains :
  * 
  * <pre>
  * # configuration http context properties
- * resourceStore.myHttp.readonly=false
- * resourceStore.myHttp.proxySet=false
- * resourceStore.myHttp.connectTimeout=1500
- * resourceStore.myHttp.readTimeout=10000
+ * resourceStore.myResourceCtx.uriScheme=http
+ * resourceStore.myResourceCtx.readonly=false
+ * resourceStore.myResourceCtx.connectTimeout=1500
+ * resourceStore.myResourceCtx.readTimeout=10000
+ * 
  * # if you need proxy settings, uncomment and configure followings :
- * #resourceStore.myHttp.proxySet=true
- * #resourceStore.myHttp.proxyHost=yourProxyHost
- * #resourceStore.myHttp.proxyUser=yourProxyUser
- * #resourceStore.myHttp.proxyPassword=proxyUserPassword
+ * #resourceStore.myResourceCtx.proxySet=true
+ * #resourceStore.myResourceCtx.proxyHost=yourProxyHost
+ * #resourceStore.myResourceCtx.proxyUser=yourProxyUser
+ * #resourceStore.myResourceCtx.proxyPassword=proxyUserPassword
+ * 
  * </pre>
  * 
  * @author Jerome RADUGET
  */
 public class ResourceStoreSample01 {
 
-   @Context("myHttp")
+   @Context("myResourceCtx")
    protected ResourceStore resourceStore;
 
    /**
     * method example that use the injected store
-    * @return the content of the resource "http://localhost/foo.txt"
     * 
+    * @return the content of the resource "http://localhost/kaleidofoundry/it/store/foo.txt"
     * @throws ResourceException
     * @throws IOException
     */

@@ -198,7 +198,7 @@ public class PluginAnnotationProcessor extends AbstractProcessor {
     * 
     * @author Jerome RADUGET
     */
-   static class RegistryPluginVisitor extends AbstractElementVisitor6<Void, Void> {
+   public static class RegistryPluginVisitor extends AbstractElementVisitor6<Void, Void> {
 
 	final Set<String> pluginsSet;
 	final Set<String> pluginsImplementationsSet;

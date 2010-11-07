@@ -28,12 +28,13 @@ import org.kaleidofoundry.core.context.Context;
  * <b>Precondition :</b> The following java env. variable have been set
  * 
  * <pre>
- * -Dkaleido.configurations=classpath:/cache/myContext.properties
+ * -Dkaleido.configurations=myConfig=classpath:/cache/myContext.properties
  * </pre>
  * 
  * Resource file : "classpath:/cache/myContext.properties" contains :
  * 
  * <pre>
+ * # cache provider code, and cache configuration file uri
  * cacheManager.myCacheManager.providerCode=ehCache1x
  * cacheManager.myCacheManager.resourceUri=classpath:/cache/ehcache.xml
  * 
@@ -81,7 +82,6 @@ public class CacheManagerSample01 {
     * @param myCache
     */
    static void feedCache(final Cache<String, YourBean> myCache) {
-	// feed cache with somes bean entries
 	myCache.put("bean1", new YourBean("name1", GregorianCalendar.getInstance(), true, 2));
 	myCache.put("bean2", new YourBean("name2", GregorianCalendar.getInstance(), false, 15));
    }
