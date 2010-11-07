@@ -27,12 +27,9 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <b>{@link Configuration} commons context properties</b> : <br/>
  * <table border="1">
  * <tr>
- * <th>
- * <td>Property name</td></th>
- * <th>
- * <td>Perimeter</td></th>
- * <th>
- * <td>Property description</td></th>
+ * <td><b>Property name</b></td>
+ * <td><b>Perimeter</b></td>
+ * <td><b>Property description</b></td>
  * </tr>
  * <tr>
  * <td>name</td>
@@ -66,12 +63,9 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td>cache manager context name to use, if not specify default will be used (see {@link CacheManagerFactory})</td>
  * </tr>
  * <tr>
- * <th>
- * <td>Property name</td></th>
- * <th>
- * <td>Perimeter</td></th>
- * <th>
- * <td>Property description</td></th>
+ * <td><b>Property name</b></td>
+ * <td><b>Perimeter</b></td>
+ * <td><b>Property description</b></td>
  * </tr>
  * <tr>
  * <td>argsMainString</td>
