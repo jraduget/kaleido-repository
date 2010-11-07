@@ -33,10 +33,11 @@ import org.kaleidofoundry.core.plugin.Declare;
 /**
  * File system resource store implementation (windows, linux, ...) <br/>
  * This implementation is only for read only use<br/>
- * You can extends it and override {@link #doRemove(URI)} and {@link #doStore(URI, ResourceHandler)} to your need, and {@link Declare}
- * your implementation to use it
+ * You can extends it and override {@link #doRemove(URI)} and {@link #doStore(URI, ResourceHandler)} to your need, and {@link Declare} your
+ * implementation to use it
  * 
  * @author Jerome RADUGET
+ * @see {@link ResourceContextBuilder} enum of context configuration properties available
  */
 @Immutable
 @Declare(FileSystemStorePluginName)
@@ -57,7 +58,7 @@ public class FileSystemResourceStore extends AbstractResourceStore implements Re
    protected ResourceHandler doGet(final URI resourceUri) throws ResourceException {
 	try {
 	   return new ResourceHandlerBean(new FileInputStream(new File(resourceUri)));
-	} catch (FileNotFoundException fnfe) {
+	} catch (final FileNotFoundException fnfe) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
 	}
    }
@@ -69,7 +70,7 @@ public class FileSystemResourceStore extends AbstractResourceStore implements Re
    @Override
    protected void doRemove(final URI resourceUri) throws ResourceException {
 
-	File file = new File(resourceUri);
+	final File file = new File(resourceUri);
 	if (file.isDirectory()) {
 	   throw new ResourceException("store.resource.remove.directory", resourceUri.toString());
 	} else {
@@ -93,18 +94,18 @@ public class FileSystemResourceStore extends AbstractResourceStore implements Re
 	   file = new File(resourceUri);
 	   out = new FileOutputStream(file, false);
 
-	   byte[] buff = new byte[128];
+	   final byte[] buff = new byte[128];
 	   while (resource.getInputStream().read(buff) != -1) {
 		out.write(buff);
 	   }
 
-	} catch (IOException ioe) {
+	} catch (final IOException ioe) {
 	   throw new ResourceException(ioe);
 	} finally {
 	   if (out != null) {
 		try {
 		   out.close();
-		} catch (IOException ioe) {
+		} catch (final IOException ioe) {
 		   throw new IllegalStateException("error closing outputstream", ioe);
 		}
 	   }

@@ -30,6 +30,7 @@ import org.kaleidofoundry.core.web.ServletContextProvider;
  * Webapp resource store
  * 
  * @author Jerome RADUGET
+ * @see {@link ResourceContextBuilder} enum of context configuration properties available
  */
 @Declare(WebappStorePluginName)
 public class WebappResourceStore extends AbstractResourceStore implements ResourceStore {
@@ -56,8 +57,8 @@ public class WebappResourceStore extends AbstractResourceStore implements Resour
     */
    @Override
    protected ResourceHandler doGet(final URI resourceUri) throws ResourceException {
-	String localName = FileHelper.buildCustomPath(resourceUri.getPath(), FileHelper.WEBAPP_SEPARATOR);
-	InputStream input = ServletContextProvider.getServletContext().getResourceAsStream(localName);
+	final String localName = FileHelper.buildCustomPath(resourceUri.getPath(), FileHelper.WEBAPP_SEPARATOR);
+	final InputStream input = ServletContextProvider.getServletContext().getResourceAsStream(localName);
 
 	if (input == null) {
 	   throw new ResourceNotFoundException(resourceUri.toString());

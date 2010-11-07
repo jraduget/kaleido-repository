@@ -28,84 +28,122 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <table border="1">
  * <tr>
  * <th>Property name</th>
- * <th>Property description</th>
+ * <th>Perimeter</th>
+ * <th>Description</th>
  * </tr>
  * <tr>
  * <td>uriScheme</td>
+ * <td>all</td>
  * <td>resource store uri scheme <code>http|https|ftp|file|classpath|webapp|...</code></td>
  * </tr>
  * <tr>
  * <td>readonly</td>
+ * <td>all</td>
  * <td>resource store read-only usage <code>true|false</code></td>
  * </tr>
  * <tr>
- * <td>user</td>
- * <td>the connection user when resource store needs authentication</td>
- * </tr>
- * <tr>
- * <td>password</td>
- * <td>the connection password when resource store needs authentication</td>
- * </tr>
- * </table>
- * </p>
- * <p>
- * <b>Http / Ftp / ... - UrlConnection ResourceStore context properties</b> : <br/>
- * <table border="1">
- * <tr>
- * <th>Property name</th>
- * <th>Property description</th>
- * </tr>
- * <tr>
- * <td>useCaches</td>
- * <td>Enable or not the cache use - see {@link URLConnection#setUseCaches(boolean)}</td>
- * </tr>
- * <tr>
- * <td>connectTimeout</td>
- * <td>connection timeout settings - see {@link URLConnection#setConnectTimeout(int) }</td>
- * </tr>
- * <tr>
- * <td>readTimeout</td>
- * <td>read timeout settings - - see {@link URLConnection#setReadTimeout(int)}</td>
- * </tr>
  * <tr>
  * <td>connectionRetryCount</td>
+ * <td>all</td>
  * <td>retry count settings for establish the connection</td>
  * </tr>
  * <tr>
  * <td>readRetryCount</td>
+ * <td>all</td>
  * <td>retry count settings for reading a resource</td>
  * </tr>
- * </table>
- * </p>
- * <p>
- * <b>ResourceStore common proxy context properties (for Http / Ftp / ... - UrlConnection)</b> : <br/>
- * <table border="1">
+ * <tr>
+ * <td>classloader</td>
+ * <td>classpath</td>
+ * <td>the class name, to get the class loader to use</td>
+ * </tr>
+ * <tr>
+ * <tr>
+ * <td>customResourceStoreEntity</td>
+ * <td>jpa</td>
+ * <td>class name of a custom resource store entity (if you want to persist your own bean)</td>
+ * </tr>
+ * <tr>
+ * <tr>
+ * <td>bufferSize</td>
+ * <td>jpa</td>
+ * <td>buffer size for reading input stream data</td>
+ * </tr>
  * <tr>
  * <th>Property name</th>
- * <th>Property description</th>
+ * <th>Perimeter</th>
+ * <th>Description</th>
+ * </tr>
+ * <tr>
+ * <td>user</td>
+ * <td>http|https|ftp</td>
+ * <td>the connection user when resource store needs authentication</td>
+ * </tr>
+ * <tr>
+ * <td>password</td>
+ * <td>http|https|ftp</td>
+ * <td>the connection password when resource store needs authentication</td>
+ * </tr>
+ * <tr>
+ * <td>useCaches</td>
+ * <td>http|https|ftp</td>
+ * <td>Enable or not the cache use - see {@link URLConnection#setUseCaches(boolean)}</td>
+ * </tr>
+ * <tr>
+ * <td>connectTimeout</td>
+ * <td>http|https|ftp</td>
+ * <td>connection timeout settings - see {@link URLConnection#setConnectTimeout(int) }</td>
+ * </tr>
+ * <tr>
+ * <td>readTimeout</td>
+ * <td>http|https|ftp</td>
+ * <td>read timeout settings - - see {@link URLConnection#setReadTimeout(int)}</td>
+ * </tr>
+ * <tr>
+ * <tr>
+ * <td>method</td>
+ * <td>http|https</td>
+ * <td>method to get content (POST / GET)</td>
+ * </tr>
+ * <tr>
+ * <tr>
+ * <td>contentType</td>
+ * <td>http|https</td>
+ * <td>the http response mime type</td>
+ * </tr>
+ * <tr>
+ * <th>Property name</th>
+ * <th>Perimeter</th>
+ * <th>Description</th>
  * </tr>
  * <tr>
  * <td>proxySet</td>
+ * <td>http|https|ftp</td>
  * <td>does proxy is enabled - usage <code>true|false</code> value</td>
  * </tr>
  * <tr>
  * <td>proxyHost</td>
+ * <td>http|https|ftp</td>
  * <td>proxy host - ignored is proxySet is set to <code>false</code></td>
  * </tr>
  * <tr>
  * <td>nonProxyHosts</td>
+ * <td>http|https|ftp</td>
  * <td>non proxy hosts list, separators is comma - ignored is proxySet is set to <code>false</code></td>
  * </tr>
  * <tr>
  * <td>proxyPort</td>
+ * <td>http|https|ftp</td>
  * <td>proxy port</td>
  * </tr>
  * <tr>
  * <td>proxyUser</td>
+ * <td>http|https|ftp</td>
  * <td>proxy user</td>
  * </tr>
  * <tr>
  * <td>proxyPassword</td>
+ * <td>http|https|ftp</td>
  * <td>proxy password</td>
  * </tr>
  * </table>
@@ -121,13 +159,25 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
 
    /** resource store read-only usage <code>true|false</code> */
    public static final String readonly = "readonly";
+   /** retry count settings for establish the connection */
+   public static final String connectionRetryCount = "connectionRetryCount";
+   /** retry count settings for reading a resource */
+   public static final String readRetryCount = "readRetryCount";
+   /** property name for setting the class name, to get the class loader to use */
+   public static final String classloader = "classloader";
+
+   // * jpa settings property name ****************
+   /** class name of a custom resource store entity */
+   public static final String customResourceStoreEntity = "customResourceStoreEntity";
+   /** buffer size for reading input stream data */
+   public static final String bufferSize = "bufferSize";
+
+   // * connection settings for ftp, http ... if needed ******************
+
    /** the connection user when resource store needs authentication */
    public static final String user = "user";
    /** the connection password when resource store needs authentication */
    public static final String password = "password";
-
-   // * connection settings for ftp, http ... if needed ******************
-
    /** Enable or not the cache use - see {@link URLConnection#setUseCaches(boolean)} */
    public static final String useCaches = "useCaches";
    /** connection timeout settings - see {@link URLConnection#setConnectTimeout(int) } */
@@ -135,13 +185,12 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    /** read timeout settings - - see {@link URLConnection#setReadTimeout(int)} */
    public static final String readTimeout = "readTimeout";
 
-   /** retry count settings for establish the connection */
-   public static final String connectionRetryCount = "connectionRetryCount";
-   /** retry count settings for reading a resource */
-   public static final String readRetryCount = "readRetryCount";
+   /** Http method to get file content : GET, POST */
+   public static final String method = "method";
+   /** Http response mime type */
+   public static final String contentType = "contentType";
 
    // * proxy settings if needed ******************
-
    /** does proxy is enabled - usage <code>true|false</code> value */
    public static final String proxySet = "proxySet";
    /** proxy host - ignored is proxySet is set to <code>false</code> */
@@ -338,4 +387,55 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
 	getContextParameters().put(ResourceContextBuilder.proxyPassword, proxyPassword);
 	return this;
    }
+
+   /**
+    * @param classloader
+    * @return current builder instance
+    * @see ResourceContextBuilder#classloader
+    */
+   public ResourceContextBuilder withClassloader(final String classloader) {
+	getContextParameters().put(ResourceContextBuilder.classloader, classloader);
+	return this;
+   }
+
+   /**
+    * @param method
+    * @return current builder instance
+    * @see ResourceContextBuilder#method
+    */
+   public ResourceContextBuilder withMethod(final String method) {
+	getContextParameters().put(ResourceContextBuilder.method, method);
+	return this;
+   }
+
+   /**
+    * @param contentType
+    * @return current builder instance
+    * @see ResourceContextBuilder#classloader
+    */
+   public ResourceContextBuilder withContentType(final String contentType) {
+	getContextParameters().put(ResourceContextBuilder.contentType, contentType);
+	return this;
+   }
+
+   /**
+    * @param customResourceStoreEntity
+    * @return current builder instance
+    * @see ResourceContextBuilder#customResourceStoreEntity
+    */
+   public ResourceContextBuilder withCustomResourceStoreEntity(final String customResourceStoreEntity) {
+	getContextParameters().put(ResourceContextBuilder.customResourceStoreEntity, customResourceStoreEntity);
+	return this;
+   }
+
+   /**
+    * @param bufferSize
+    * @return current builder instance
+    * @see ResourceContextBuilder#bufferSize
+    */
+   public ResourceContextBuilder withBufferSize(final String bufferSize) {
+	getContextParameters().put(ResourceContextBuilder.bufferSize, bufferSize);
+	return this;
+   }
+
 }
