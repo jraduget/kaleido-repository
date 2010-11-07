@@ -21,13 +21,15 @@ import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
 import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
- * {@link CacheManager} base {@link RuntimeContext} builder & properties
- * <p>
+ * {@link CacheManager} base {@link RuntimeContext} builder & properties.<br/>
  * <b>{@link CacheManager} commons context properties</b> : <br/>
+ * <p>
  * <table border="1">
  * <tr>
- * <th>Property name</th>
- * <th>Property description</th>
+ * <th>
+ * <td>Property name</td></th>
+ * <th>
+ * <td>Property description</td></th>
  * </tr>
  * <tr>
  * <td>providerCode</td>
@@ -48,7 +50,6 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * </tr>
  * </table>
  * </p>
- * <p>
  * 
  * @author Jerome RADUGET
  */

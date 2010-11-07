@@ -31,7 +31,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  * {@link ByteArrayInputStream} in argument to use it. By this way, your binary data will be kept in memory
  * 
  * @author Jerome RADUGET
- * @see {@link ResourceContextBuilder} enum of context configuration properties available
+ * @see ResourceContextBuilder enum of context configuration properties available
  */
 @Declare(MemoryStorePluginName)
 public class MemoryResourceStore extends AbstractResourceStore {

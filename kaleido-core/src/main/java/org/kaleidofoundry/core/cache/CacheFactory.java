@@ -19,6 +19,8 @@ import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
+ * Abstract cache factory.
+ * 
  * @author Jerome RADUGET
  */
 public class CacheFactory {

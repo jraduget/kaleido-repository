@@ -27,7 +27,7 @@ import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.kaleidofoundry.core.util.Registry;
 
 /**
- * Abstract cache factory which allow to use different cache implementation with a common interface and behaviors<br/>
+ * Abstract cache manager factory which allow to use different cache implementation with a common interface and behaviors.<br/>
  * <br/>
  * Default cache implementation when you call {@link #provides()} will use {@link LocalCacheManagerImpl} (it use an
  * {@link ConcurrentHashMap} internally)<br/>
