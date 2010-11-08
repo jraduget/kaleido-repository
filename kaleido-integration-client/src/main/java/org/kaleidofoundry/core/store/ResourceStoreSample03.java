@@ -38,7 +38,7 @@ public class ResourceStoreSample03 {
    public ResourceStoreSample03() throws ResourceException {
 
 	RuntimeContext<ResourceStore> context =
-	   new ResourceContextBuilder("myHttp", ResourceStore.class)
+	   new ResourceContextBuilder("myResourceCtx", ResourceStore.class)
 	.withUriScheme("http")
 	.withReadonly(true)
 	.withConnectTimeout(0)
@@ -53,7 +53,7 @@ public class ResourceStoreSample03 {
    /**
     * method example that use the injected store
     * 
-    * @return the content of the resource "http://localhost/foo.txt"
+    * @return the content of the resource "http://localhost/kaleidofoundry/it/store/foo.txt"
     * @throws ResourceException
     * @throws IOException
     */

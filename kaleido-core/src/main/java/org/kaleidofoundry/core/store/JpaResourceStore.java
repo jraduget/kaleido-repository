@@ -38,7 +38,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * JPA resource store. Resource will be stored in clob or / blob database<br/>
  * 
  * @author Jerome RADUGET
- * @see {@link ResourceContextBuilder} enum of context configuration properties available
+ * @see ResourceContextBuilder enum of context configuration properties available
  */
 @Declare(ClobJpaStorePluginName)
 @Review(comment = "Annotate it as @Stateless ejb to enable ejb exposition + injection - import right ejb 3.x library - problem : coupling it to ejb3")

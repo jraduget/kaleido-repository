@@ -1,5 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>org.kaleidofoundry</groupId>
@@ -9,18 +10,18 @@
 	</parent>
 
 	<artifactId>kaleido-core-spring</artifactId>
-	<name>Kaleido foundry core for spring core</name>
+	<name>KaleidoFoundry core for spring core</name>
 	<packaging>jar</packaging>
-	
+
 	<dependencies>
 
 		<!-- Core -->
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
 			<artifactId>kaleido-core</artifactId>
-			 <version>${project.version}</version>
+			<version>${project.version}</version>
 		</dependency>
-		
+
 		<!-- IOC Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -29,6 +30,34 @@
 			<scope>compile</scope>
 		</dependency>
 
-	</dependencies>	
-	
+	</dependencies>
+
+	<build>
+		<!-- skip mvn javadoc for this module-->
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<reporting>
+		<!-- skip mvn site javadoc for this module-->
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+
 </project>

@@ -22,54 +22,59 @@ import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
 import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
- * {@link Configuration} base {@link RuntimeContext} builder & properties
+ * {@link Configuration} base {@link RuntimeContext} builder & properties.<br/>
  * <p>
  * <b>{@link Configuration} commons context properties</b> : <br/>
  * <table border="1">
  * <tr>
- * <th>Property name</th>
- * <th>Property description</th>
+ * <td><b>Property name</b></td>
+ * <td><b>Perimeter</b></td>
+ * <td><b>Property description</b></td>
  * </tr>
  * <tr>
  * <td>name</td>
+ * <td>all</td>
  * <td>unique name identifier of the configuration</td>
  * </tr>
  * <tr>
  * <td>storageAllowed</td>
+ * <td>all</td>
  * <td><code>true|false</code> , active or not readonly usage (for storage) of the configuration</td>
  * </tr>
  * <tr>
  * <td>updateAllowed</td>
+ * <td>all</td>
  * <td><code>true|false</code> , active or not readonly usage (no updates) of the configuration</td>
  * </tr>
  * <tr>
  * <td>resourceUri</td>
+ * <td>all</td>
  * <td>cache configuration resource uri</td>
  * </tr>
  * <tr>
  * <td>resourceStoreRef</td>
+ * <td>all</td>
  * <td>resource store context name that will be used to access the resourceUri (if configuration resource uri need a specific resource store
  * for authentication, or other needs..)</td>
  * </tr>
  * <tr>
  * <td>cacheManagerRef</td>
+ * <td>all</td>
  * <td>cache manager context name to use, if not specify default will be used (see {@link CacheManagerFactory})</td>
  * </tr>
- * </table>
- * </p>
- * <p>
- * <b>{@link MainArgsConfiguration} context properties</b> : <br/>
- * <table border="1">
  * <tr>
- * <th>Property name</th>
- * <th>Property description</th>
+ * <td><b>Property name</b></td>
+ * <td><b>Perimeter</b></td>
+ * <td><b>Property description</b></td>
  * </tr>
  * <tr>
  * <td>argsMainString</td>
+ * <td>mainArgs</td>
  * <td>string representation parameters of the main arguments array</td>
  * </tr>
  * <tr>
  * <td>argsSeparator</td>
+ * <td>mainArgs</td>
  * <td>string arguments separator character</td>
  * </tr>
  * </table>

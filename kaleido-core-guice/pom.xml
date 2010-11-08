@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>kaleido-core-guice</artifactId>
-	<name>Kaleido foundry core for guice</name>
+	<name>KaleidoFoundry core for guice</name>
 	<packaging>jar</packaging>
 	
 	<dependencies>
@@ -36,9 +36,36 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${slf4j.version}</version>
 			<scope>test</scope>
-		</dependency>
-		
+		</dependency>		
 		
 	</dependencies>	
+	
+	<build>
+		<!-- skip mvn javadoc for this module-->
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<reporting>
+		<!-- skip mvn site javadoc for this module-->
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 	
 </project>

@@ -32,7 +32,7 @@ import org.kaleidofoundry.core.context.Parameter;
  */
 public class CacheManagerSample02 {
 
-   @Context(value="myCacheManagerCtx",
+   @Context(value="myCacheManagerCtx02",
 	   parameters = {
 	   @Parameter(name = ProviderCode, value = "ehCache1x"),
 	   @Parameter(name = ResourceUri, value = "classpath:/cache/ehcache.xml")   }

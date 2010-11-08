@@ -21,13 +21,15 @@ import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
 import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
- * {@link CacheManager} base {@link RuntimeContext} builder & properties
- * <p>
+ * {@link CacheManager} base {@link RuntimeContext} builder & properties.<br/>
  * <b>{@link CacheManager} commons context properties</b> : <br/>
+ * <p>
  * <table border="1">
  * <tr>
- * <th>Property name</th>
- * <th>Property description</th>
+ * <th>
+ * <td>Property name</td></th>
+ * <th>
+ * <td>Property description</td></th>
  * </tr>
  * <tr>
  * <td>providerCode</td>
@@ -40,15 +42,14 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * </tr>
  * <tr>
  * <td>resourceUri</td>
- * <td>uri of the configuration file to use</td>
+ * <td>uri of the external cache configuration file to use</td>
  * </tr>
  * <tr>
  * <td>resourceStoreRef</td>
- * <td>name of the resource store context to use, in order to load configuration</td>
+ * <td>name of the resource store context to use, in order to load the external cache configuration</td>
  * </tr>
  * </table>
  * </p>
- * <p>
  * 
  * @author Jerome RADUGET
  */

@@ -32,7 +32,7 @@ public class ConfigurationChangeEvent extends PropertyChangeEvent {
    /**
     * @author Jerome RADUGET
     */
-   static enum ConfigurationChangeType {
+   public static enum ConfigurationChangeType {
 	CREATE,
 	UPDATE,
 	REMOVE

@@ -31,7 +31,7 @@ import org.kaleidofoundry.core.system.JavaSystemHelper;
  * readonly use: the store, remove, move methods will throw {@link IllegalStateException}
  * 
  * @author Jerome RADUGET
- * @see {@link ResourceContextBuilder} enum of context configuration properties available
+ * @see ResourceContextBuilder enum of context configuration properties available
  */
 @Immutable
 @Declare(ClasspathStorePluginName)

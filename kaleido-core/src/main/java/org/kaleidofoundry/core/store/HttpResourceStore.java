@@ -42,7 +42,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * implementation to use it
  * 
  * @author Jerome RADUGET
- * @see {@link ResourceContextBuilder} enum of context configuration properties available
+ * @see ResourceContextBuilder enum of context configuration properties available
  */
 @Declare(HttpStorePluginName)
 public class HttpResourceStore extends AbstractResourceStore implements ResourceStore {

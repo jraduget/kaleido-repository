@@ -42,7 +42,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * ftp resource store implementation
  * 
  * @author Jerome RADUGET
- * @see {@link ResourceContextBuilder} enum of context configuration properties available
+ * @see ResourceContextBuilder enum of context configuration properties available
  */
 @Immutable
 @Declare(FtpStorePluginName)

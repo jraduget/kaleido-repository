@@ -22,7 +22,7 @@ import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
 import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
- * Resource store base {@link RuntimeContext} builder & properties
+ * Resource store base {@link RuntimeContext} builder & properties. <br/>
  * <p>
  * <b>ResourceStore commons context properties</b> : <br/>
  * <table border="1">
@@ -42,7 +42,6 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td>resource store read-only usage <code>true|false</code></td>
  * </tr>
  * <tr>
- * <tr>
  * <td>connectionRetryCount</td>
  * <td>all</td>
  * <td>retry count settings for establish the connection</td>
@@ -58,12 +57,10 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td>the class name, to get the class loader to use</td>
  * </tr>
  * <tr>
- * <tr>
  * <td>customResourceStoreEntity</td>
  * <td>jpa</td>
  * <td>class name of a custom resource store entity (if you want to persist your own bean)</td>
  * </tr>
- * <tr>
  * <tr>
  * <td>bufferSize</td>
  * <td>jpa</td>
@@ -100,12 +97,10 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td>read timeout settings - - see {@link URLConnection#setReadTimeout(int)}</td>
  * </tr>
  * <tr>
- * <tr>
  * <td>method</td>
  * <td>http|https</td>
  * <td>method to get content (POST / GET)</td>
  * </tr>
- * <tr>
  * <tr>
  * <td>contentType</td>
  * <td>http|https</td>

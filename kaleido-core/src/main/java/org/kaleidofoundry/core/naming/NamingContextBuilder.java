@@ -21,16 +21,18 @@ import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
 
 /**
- * <h2>Some jndi configuration</h2>
- * <hr/>
- * <table>
+ * Naming service context builder properties.<br/>
+ * Some jndi configuration :
+ * <p>
+ * <table border="1" width="100%">
  * <tr>
- * <th>Target</th>
- * <th>java.naming.factory.initial</th>
- * <th>java.naming.provider.url</th>
- * <th>java.naming.factory.url.pkgs</th>
- * <th>env prefix</th>
- * <th>other properties</th>
+ * <td><b>Application server</b></td>
+ * <td><b>Initial factory - java.naming.factory.initial</b></td>
+ * <td><b>Url - java.naming.provider.url</b></td>
+ * <td><b>Packages prefix - java.naming.factory.url.pkgs</b></td>
+ * <td><b>Env resource prefix</b></td>
+ * <td><b>Other properties</b></td>
+ * </tr>
  * <tr>
  * <td>TOMCAT 5/6</td>
  * <td>org.apache.naming.java.javaURLContextFactory</td>
@@ -38,7 +40,6 @@ import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
  * <td></td>
  * <td>java:comp/env</td>
  * <td></td>
- * </tr>
  * </tr>
  * <tr>
  * <td>GLASSFISH 3</td>
@@ -49,7 +50,6 @@ import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
  * <td>java.naming.factory.state=com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl<br/>
  * org.omg.CORBA.ORBInitialHost=127.0.0.1<br/>
  * org.omg.CORBA.ORBInitialPort=3700</td>
- * </tr>
  * </tr>
  * <tr>
  * <td>JBOSS</td>
@@ -123,6 +123,7 @@ import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
  * <td></td>
  * </tr>
  * </table>
+ * </p>
  * 
  * @author Jerome RADUGET
  */

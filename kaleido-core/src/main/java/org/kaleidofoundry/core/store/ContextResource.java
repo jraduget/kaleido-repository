@@ -62,7 +62,7 @@ import org.kaleidofoundry.core.i18n.I18nMessages;
 @Documented
 @Target( { FIELD, PARAMETER })
 @Retention(RUNTIME)
-public @interface InjectResource {
+public @interface ContextResource {
 
    /**
     * @return {@link URI} template of an the resource (configuration file, ...), it will be used by the underlying context injection<br/>

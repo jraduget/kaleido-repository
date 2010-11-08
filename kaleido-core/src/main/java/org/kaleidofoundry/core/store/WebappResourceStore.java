@@ -30,7 +30,7 @@ import org.kaleidofoundry.core.web.ServletContextProvider;
  * Webapp resource store
  * 
  * @author Jerome RADUGET
- * @see {@link ResourceContextBuilder} enum of context configuration properties available
+ * @see ResourceContextBuilder enum of context configuration properties available
  */
 @Declare(WebappStorePluginName)
 public class WebappResourceStore extends AbstractResourceStore implements ResourceStore {

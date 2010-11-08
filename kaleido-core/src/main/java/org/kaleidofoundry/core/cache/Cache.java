@@ -31,6 +31,8 @@ import org.kaleidofoundry.core.plugin.Declare;
  * @author Jerome RADUGET
  * @param <K> Type of cache keys
  * @param <V> Type of cache values
+ * @see CacheFactory
+ * @see CacheContextBuilder
  */
 @Declare(CachePluginName)
 @Provider(value = CacheProvider.class, singletons = true)

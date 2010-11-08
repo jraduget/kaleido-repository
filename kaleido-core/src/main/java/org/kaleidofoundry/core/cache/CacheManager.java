@@ -36,6 +36,8 @@ import org.kaleidofoundry.core.plugin.Declare;
  * <br/>
  * 
  * @author Jerome RADUGET
+ * @see CacheManagerFactory
+ * @see CacheManagerContextBuilder
  */
 @Declare(CacheManagerPluginName)
 @Provider(value = CacheManagerProvider.class, singletons = true)

@@ -37,7 +37,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  * implementation to use it
  * 
  * @author Jerome RADUGET
- * @see {@link ResourceContextBuilder} enum of context configuration properties available
+ * @see ResourceContextBuilder enum of context configuration properties available
  */
 @Immutable
 @Declare(FileSystemStorePluginName)

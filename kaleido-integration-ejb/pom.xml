@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>kaleido-integration-ejb</artifactId>
-	<name>Kaleido foundry integration tests ejb</name>
+	<name>KaleidoFoundry integration tests ejb</name>
 	<packaging>ejb</packaging>
 
 	<build>
