@@ -69,33 +69,23 @@
 		<sonar.host.url>http://localhost:8080/sonar</sonar.host.url>
 		<hudson.host.url>http://localhost:8080/hudson</hudson.host.url>
 
-		<!-- source encoding options  -->
+		<!-- source encoding options -->
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 	</properties>
 
 	<modules>
-		<!--  core modules -->
+		<!-- core modules -->
 		<module>../kaleido-core</module>
 		<module>../kaleido-core-guice</module>
 		<module>../kaleido-core-spring</module>
-		
-		<!-- integration test modules  -->
-		<module>../kaleido-integration-client</module>
-		<module>../kaleido-integration-ejb</module>
-		<module>../kaleido-integration-war</module>
-		<module>../kaleido-integration-ear</module>
-		
-		<!--to refactor 
-		<module>../kaleido-mailing</module>
-		<module>../kaleido-messaging</module>
-		<module>../kaleido-reporting</module>
-		-->
-		
+
+		<!--to refactor <module>../kaleido-mailing</module> <module>../kaleido-messaging</module> 
+			<module>../kaleido-reporting</module> -->
 	</modules>
 
 	<dependencies>
 
-		<!-- Framework for Logging  -->
+		<!-- Framework for Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -110,7 +100,7 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 	</dependencies>
 
 	<repositories>
@@ -133,13 +123,13 @@
 			<url>http://download.java.net/maven/2/</url>
 			<layout>default</layout>
 		</repository>
-		<!--  Glassfish -->
+		<!-- Glassfish -->
 		<repository>
 			<id>maven2-glassfish-repository.dev.java.net</id>
 			<name>Java.net Repository for Maven</name>
 			<url>http://download.java.net/maven/glassfish/</url>
 			<layout>default</layout>
-		</repository>			
+		</repository>
 		<!-- RichFaces, Seam, ... -->
 		<repository>
 			<id>jboss.maven2</id>
@@ -150,17 +140,14 @@
 		<!-- JPA eclipse link provider -->
 		<repository>
 			<id>EclipseLink Repo</id>
-			<!--
-				official eclipse, but redirection works bad with maven
-				<url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
-			-->
+			<!-- official eclipse, but redirection works bad with maven <url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url> -->
 			<url>http://eclipse.ialto.org/rt/eclipselink/maven.repo/</url>
 			<layout>default</layout>
 		</repository>
 	</repositories>
 
 	<pluginRepositories>
-		<!-- Maven central  -->
+		<!-- Maven central -->
 		<pluginRepository>
 			<id>central</id>
 			<name>Maven Plugin Repository</name>
@@ -172,7 +159,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</pluginRepository>
-		<!-- Java.net  -->
+		<!-- Java.net -->
 		<pluginRepository>
 			<id>maven2-repository.dev.java.net</id>
 			<name>Maven Plugin Repository</name>
@@ -238,15 +225,13 @@
 				<configuration>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
-					<!-- <optimize>true</optimize>  -->
-					<!--
-						disable annotation processors during normal compilation, use
-						maven-processor-plugin, waiting maven compiler plugin handle it
-					-->
+					<!-- <optimize>true</optimize> -->
+					<!-- disable annotation processors during normal compilation, use maven-processor-plugin, 
+						waiting maven compiler plugin handle it -->
 					<compilerArgument>-proc:none</compilerArgument>
 				</configuration>
 			</plugin>
-			<!-- compilation resouces-->
+			<!-- compilation resouces -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -323,8 +308,8 @@
 				<artifactId>maven-site-plugin</artifactId>
 				<version>2.1</version>
 				<configuration>
-					<outputDirectory>../kaleido-site/site</outputDirectory>				
-					<locales>en,fr</locales>
+					<outputDirectory>../kaleido-site/site/</outputDirectory>
+					<locales>en</locales>
 				</configuration>
 			</plugin>
 
@@ -338,9 +323,7 @@
 			<!-- ******************** -->
 
 			<!-- Annotation processor jdk 6 -->
-			<!--
-				http://maven-annotation-plugin.googlecode.com/svn/docs/usage.html
-			-->
+			<!-- http://maven-annotation-plugin.googlecode.com/svn/docs/usage.html -->
 			<plugin>
 				<groupId>org.bsc.maven</groupId>
 				<artifactId>maven-processor-plugin</artifactId>
@@ -363,9 +346,7 @@
 				<dependencies />
 			</plugin>
 
-			<!--
-				Run annotation processors on src/test/java sources 
-			-->
+			<!-- Run annotation processors on src/test/java sources -->
 			<plugin>
 				<groupId>org.bsc.maven</groupId>
 				<artifactId>maven-processor-plugin</artifactId>
@@ -399,92 +380,80 @@
 				<version>2.7</version>
 				<configuration>
 					<links>
-						<link>http://java.sun.com/javase/6/docs/api/</link>
+						<link>http://download.oracle.com/javase/6/docs/api/</link>
 						<link>http://download.oracle.com/javaee/6/api/</link>
-						<link>http://java.sun.com/javaee/5/docs/api/</link>
+						<!-- <link>http://download.oracle.com/javaee/5/api/</link> -->
 						<link>http://junit.sourceforge.net/javadoc/</link>
 						<link>http://www.slf4j.org/api/</link>
 					</links>
 					<source>${jdk.version}</source>
 					<minmemory>128m</minmemory>
-          			<maxmemory>1024m</maxmemory>
+					<maxmemory>512m</maxmemory>
 					<docfilessubdirs>true</docfilessubdirs>
 					<linksource>true</linksource>
+					
+					<aggregate>true</aggregate>
 					<outputDirectory>../kaleido-site/site/apidocs</outputDirectory>
 					<reportOutputDirectory>../kaleido-site/site/apidocs</reportOutputDirectory>
-					<!--
-						doclava test, ko on macosx
-						<bootclasspath>/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/rt.jar</bootclasspath>
-						<docletPath>/Users/jraduget/Developments/workspaces/eclipse/kaleidofoundry/kaleido-parent/lib/doclava.jar</docletPath>
-						<doclet>com.google.doclava.Doclava</doclet> <additionalparam>
-						-quiet -federate JDK
-						http://download.oracle.com/javase/6/docs/api/index.html?
-						-federationxml JDK
-						http://doclava.googlecode.com/svn/static/api/openjdk-6.xml -hdf
-						project.name "KaleidoFoundry" </additionalparam>
-						<useStandardDocletOptions>false</useStandardDocletOptions>
+					
+					<!-- doclava test, ko on macosx and windows 
+					<bootclasspath>${java.home}/lib/rt.jar</bootclasspath>
+					<docletPath>/Users/jraduget/Developments/workspaces/eclipse/kaleidofoundry/kaleido-parent/lib/doclava.jar</docletPath>
+					<doclet>com.google.doclava.Doclava</doclet>
+					<additionalparam>
+						-quiet 
+						-federate JDK http://download.oracle.com/javase/6/docs/api/index.html?
+						-federationxml JDK http://doclava.googlecode.com/svn/static/api/openjdk-6.xml 
+						-hdf project.name "KaleidoFoundry" 
+					</additionalparam>
+					<useStandardDocletOptions>false</useStandardDocletOptions>
 					-->
-				</configuration>
-				<reportSets>
-					<reportSet>
-						<id>non-aggregate</id>
-						<configuration>
-						</configuration>
-						<reports>
-							<report>javadoc</report>
-						</reports>
-					</reportSet>
-					<reportSet>
-						<id>aggregate</id>
-						<configuration>
-						</configuration>
-						<reports>
-							<report>aggregate</report>
-						</reports>
-					</reportSet>
-				</reportSets>
+				</configuration>				
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
 				<version>2.2</version>
-			</plugin>
+				<inherited>false</inherited>	
+			</plugin>			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
 				<version>2.2</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.6</version>
-			</plugin>
-			<!-- maven annotation processor  incompatibles
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.4</version>
-			</plugin>
-			 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-clover-plugin</artifactId>
 				<configuration>
-					<jdk>${jdk.version}</jdk>
-				</configuration>
+					<aggregate>true</aggregate>
+				</configuration>				
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-surefire-report-plugin</artifactId>
+		        <version>2.6</version>
+				<inherited>false</inherited>				
+		        <configuration>
+					<outputDirectory>../kaleido-site/site/</outputDirectory>
+		        	<aggregate>true</aggregate>		          
+		        </configuration>
+			</plugin>			
+			<!-- maven annotation processor incompatibles 
+				<plugin> 
+					<groupId>org.codehaus.mojo</groupId> 
+					<artifactId>cobertura-maven-plugin</artifactId> 
+					<version>2.4</version> 
+				</plugin> 
+			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<version>2.5</version>
 				<configuration>
+					<aggregate>true</aggregate>				
 					<targetJdk>${jdk.version}</targetJdk>
 					<rulesets>
 						<ruleset>/rulesets/braces.xml</ruleset>
 						<ruleset>/rulesets/naming.xml</ruleset>
 					</rulesets>
 					<format>xml</format>
-					<linkXref>true</linkXref>
+					<linkXref>true</linkXref>										
 					<sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
 					<minimumTokens>100</minimumTokens>
 				</configuration>
@@ -502,11 +471,6 @@
 				</reportSets>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-changelog-plugin</artifactId>
-				<version>2.2</version>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.sonar-plugins</groupId>
 				<artifactId>maven-report</artifactId>
 			</plugin>
@@ -516,7 +480,7 @@
 
 	<profiles>
 
-		<!-- JavaEE 6 profile - Ejb 3.1, JPA 2.x, ...  -->
+		<!-- JavaEE 6 profile - Ejb 3.1, JPA 2.x, ... -->
 		<profile>
 			<id>javaee6</id>
 			<activation>
@@ -527,10 +491,8 @@
 				</property>
 			</activation>
 			<dependencies>
-				<!--
-					persistence api - used only for testing (have to be before
-					javaee-api in classpath)
-				-->
+				<!-- persistence api - used only for testing (have to be before javaee-api 
+					in classpath) -->
 				<dependency>
 					<groupId>org.eclipse.persistence</groupId>
 					<artifactId>eclipselink</artifactId>
@@ -550,15 +512,12 @@
 					<version>6.0</version>
 					<scope>provided</scope>
 				</dependency>
-				<!--
-					javaee6 web profile <dependency> <groupId>javax</groupId>
-					<artifactId>javaee-web-api</artifactId> <version>6.0</version>
-					<scope>provided</scope> </dependency>
-				-->
+				<!-- javaee6 web profile <dependency> <groupId>javax</groupId> <artifactId>javaee-web-api</artifactId> 
+					<version>6.0</version> <scope>provided</scope> </dependency> -->
 			</dependencies>
 		</profile>
 
-		<!-- JavaEE 5 profile - Ejb 3.0, JPA 1.x, ...  -->
+		<!-- JavaEE 5 profile - Ejb 3.0, JPA 1.x, ... -->
 		<profile>
 			<id>javaee5</id>
 			<activation>
@@ -569,10 +528,8 @@
 				</property>
 			</activation>
 			<dependencies>
-				<!--
-					persistence api - used only for testing (have to be before
-					javax.persistence in classpath)
-				-->
+				<!-- persistence api - used only for testing (have to be before javax.persistence 
+					in classpath) -->
 				<dependency>
 					<groupId>org.eclipse.persistence</groupId>
 					<artifactId>eclipselink</artifactId>
@@ -615,7 +572,7 @@
 			</dependencies>
 		</profile>
 
-		<!-- Deploy profile (attach javadoc, sources,...)  -->
+		<!-- Deploy profile (attach javadoc, sources,...) -->
 		<profile>
 			<id>deploy</id>
 			<build>

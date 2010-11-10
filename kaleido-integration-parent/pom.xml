@@ -1,0 +1,26 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>org.kaleidofoundry</groupId>
+		<artifactId>kaleido-parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../kaleido-parent/pom.xml</relativePath>
+	</parent>
+	
+	<artifactId>kaleido-integration-parent</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+
+	<name>KaleidoFoundry integration parent POM</name>
+	<description>Parent POM for all kaleido-foundry integration tests projects.</description>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>../kaleido-integration-core</module>
+		<module>../kaleido-integration-ejb</module>
+		<module>../kaleido-integration-war</module>
+		<module>../kaleido-integration-ear</module>
+	</modules>
+	
+</project>
