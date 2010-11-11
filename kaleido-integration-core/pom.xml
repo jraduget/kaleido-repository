@@ -96,7 +96,7 @@
 			<artifactId>gf-client</artifactId>
 			<version>3.0.1</version>
 			<scope>system</scope>
-			<systemPath>C:\SG\development\servers\glassfishv3\glassfish\modules\gf-client.jar</systemPath>
+			<systemPath>/Users/jraduget/Developments/appserver/glassfishv3/glassfish/modules/gf-client.jar</systemPath>
 		</dependency>
 
 	</dependencies>

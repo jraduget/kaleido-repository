@@ -7,7 +7,7 @@
 
 	<name>KaleidoFoundry parent POM</name>
 	<url>http://code.google.com/p/kaleidofoundry/</url>
-	<description>Parent POM for all kaleido-foundry projects. Provides default project build configuration.</description>
+	<description>Parent POM for all kaleido-foundry projects. It provide the default project build configuration.</description>
 	<packaging>pom</packaging>
 
 	<licenses>
@@ -24,7 +24,7 @@
 	</organization>
 
 	<prerequisites>
-		<maven>2.2.0</maven>
+		<maven>2.2.1</maven>
 	</prerequisites>
 
 	<developers>
@@ -36,20 +36,20 @@
 			<organization>Consultant</organization>
 			<roles>
 				<role>Project Lead</role>
-				<role>Project Architect</role>
-				<role>Project Developer</role>
+				<role>Architect</role>
+				<role>Developer</role>
 			</roles>
 		</developer>
 	</developers>
 
 	<mailingLists>
 		<mailingList>
-			<name>kaleidofoundry-user</name>
-			<post>kaleidofoundry@googlegroups.com</post>
+			<name>kaleido-user</name>
+			<post>kaleido@googlegroups.com</post>
 		</mailingList>
 		<mailingList>
-			<name>kaleidofoundry-dev</name>
-			<post>kaleidofoundry-dev@googlegroups.com</post>
+			<name>kaleido-dev</name>
+			<post>kaleido-dev@googlegroups.com</post>
 		</mailingList>
 	</mailingLists>
 
@@ -79,8 +79,11 @@
 		<module>../kaleido-core-guice</module>
 		<module>../kaleido-core-spring</module>
 
-		<!--to refactor <module>../kaleido-mailing</module> <module>../kaleido-messaging</module> 
-			<module>../kaleido-reporting</module> -->
+		<!--to refactor 
+		<module>../kaleido-mailing</module> 
+		<module>../kaleido-messaging</module> 
+		<module>../kaleido-reporting</module> 
+		-->
 	</modules>
 
 	<dependencies>
@@ -306,9 +309,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
-				<version>2.1</version>
+				<version>2.1.1</version>
 				<configuration>
-					<outputDirectory>../kaleido-site/site/</outputDirectory>
+					<!--  <outputDirectory>../kaleido-site/site/</outputDirectory> -->
 					<locales>en</locales>
 				</configuration>
 			</plugin>
@@ -390,12 +393,12 @@
 					<minmemory>128m</minmemory>
 					<maxmemory>512m</maxmemory>
 					<docfilessubdirs>true</docfilessubdirs>
-					<linksource>true</linksource>
-					
+					<linksource>true</linksource>					
 					<aggregate>true</aggregate>
+					<!-- 
 					<outputDirectory>../kaleido-site/site/apidocs</outputDirectory>
 					<reportOutputDirectory>../kaleido-site/site/apidocs</reportOutputDirectory>
-					
+					 -->
 					<!-- doclava test, ko on macosx and windows 
 					<bootclasspath>${java.home}/lib/rt.jar</bootclasspath>
 					<docletPath>/Users/jraduget/Developments/workspaces/eclipse/kaleidofoundry/kaleido-parent/lib/doclava.jar</docletPath>
@@ -413,8 +416,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.2</version>
-				<inherited>false</inherited>	
+				<version>2.2</version>			
+				 <configuration>
+				 	<!-- 
+				 	<outputDirectory>../kaleido-site/site</outputDirectory>
+				 	 -->
+				 </configuration>
 			</plugin>			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -428,9 +435,9 @@
 				<groupId>org.apache.maven.plugins</groupId>
 		        <artifactId>maven-surefire-report-plugin</artifactId>
 		        <version>2.6</version>
-				<inherited>false</inherited>				
+				<inherited>true</inherited>				
 		        <configuration>
-					<outputDirectory>../kaleido-site/site/</outputDirectory>
+					<!-- <outputDirectory>../kaleido-site/site/</outputDirectory>  -->
 		        	<aggregate>true</aggregate>		          
 		        </configuration>
 			</plugin>			
