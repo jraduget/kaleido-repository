@@ -17,8 +17,42 @@ package org.kaleidofoundry.core.i18n;
 
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
+import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
+ * {@link I18nMessages} base {@link RuntimeContext} builder & properties.<br/>
+ * <b>{@link I18nMessages} commons context properties</b> : <br/>
+ * <p>
+ * <table border="1">
+ * <tr>
+ * <th>
+ * <td>Property name</td></th>
+ * <th>
+ * <td>Property description</td></th>
+ * </tr>
+ * <tr>
+ * <td>baseName</td>
+ * <td>resource name of the bundle (with no resource extension)</td>
+ * </tr>
+ * <tr>
+ * <td>locale.lang</td>
+ * <td>used to fix the {@link java.util.Locale} language of the resource bundle</td>
+ * </tr>
+ * <tr>
+ * <td>locale.country</td>
+ * <td>used to fix the {@link java.util.Locale} country of the resource bundle</td>
+ * </tr>
+ * <tr>
+ * <td>cacheManagerRef</td>
+ * <td>cache manager context name to use</td>
+ * </tr>
+ * <tr>
+ * <td>classLoaderClass</td>
+ * <td>specific class name to get the {@link ClassLoader} to used</td>
+ * </tr>
+ * </table>
+ * </p>
+ * 
  * @author Jerome RADUGET
  */
 public class I18nContextBuilder extends AbstractRuntimeContextBuilder<I18nMessages> {
@@ -37,7 +71,7 @@ public class I18nContextBuilder extends AbstractRuntimeContextBuilder<I18nMessag
     * used to fix the {@link java.util.Locale} country of the resource bundle
     */
    public static final String LocaleCountry = "locale.country";
-   
+
    /**
     * cache manager context name to use
     */
@@ -48,40 +82,39 @@ public class I18nContextBuilder extends AbstractRuntimeContextBuilder<I18nMessag
     */
    public static final String ClassLoaderClass = "classLoaderClass";
 
-   
    public I18nContextBuilder() {
 	super();
    }
 
-   public I18nContextBuilder(Class<I18nMessages> pluginInterface, Configuration... configurations) {
+   public I18nContextBuilder(final Class<I18nMessages> pluginInterface, final Configuration... configurations) {
 	super(pluginInterface, configurations);
    }
 
-   public I18nContextBuilder(Class<I18nMessages> pluginInterface) {
+   public I18nContextBuilder(final Class<I18nMessages> pluginInterface) {
 	super(pluginInterface);
    }
 
-   public I18nContextBuilder(Configuration... configurations) {
+   public I18nContextBuilder(final Configuration... configurations) {
 	super(configurations);
    }
 
-   public I18nContextBuilder(String name, Class<I18nMessages> pluginInterface, Configuration... configurations) {
+   public I18nContextBuilder(final String name, final Class<I18nMessages> pluginInterface, final Configuration... configurations) {
 	super(name, pluginInterface, configurations);
    }
 
-   public I18nContextBuilder(String name, Configuration... configurations) {
+   public I18nContextBuilder(final String name, final Configuration... configurations) {
 	super(name, configurations);
    }
 
-   public I18nContextBuilder(String name, String prefixProperty, Configuration... configurations) {
+   public I18nContextBuilder(final String name, final String prefixProperty, final Configuration... configurations) {
 	super(name, prefixProperty, configurations);
    }
 
-   public I18nContextBuilder(String name, String prefix) {
+   public I18nContextBuilder(final String name, final String prefix) {
 	super(name, prefix);
    }
 
-   public I18nContextBuilder(String name) {
+   public I18nContextBuilder(final String name) {
 	super(name);
    }
 
@@ -104,7 +137,7 @@ public class I18nContextBuilder extends AbstractRuntimeContextBuilder<I18nMessag
 	getContextParameters().put(LocaleLanguage, localeLanguage);
 	return this;
    }
-   
+
    /**
     * @param localeCountry
     * @return set {@link java.util.Locale} country context parameter
@@ -113,7 +146,7 @@ public class I18nContextBuilder extends AbstractRuntimeContextBuilder<I18nMessag
    public I18nContextBuilder withLocaleCountry(final String localeCountry) {
 	getContextParameters().put(LocaleCountry, localeCountry);
 	return this;
-   }   
+   }
 
    /**
     * @param cacheManagerRef
