@@ -72,7 +72,7 @@
 <node COLOR="#000000" CREATED="1262523811000" ID="Freemind_Link_38240458" MODIFIED="1275479177058" POSITION="right" TEXT="i18n">
 <font BOLD="true" NAME="Dialog" SIZE="14"/>
 <node CREATED="1265977798567" ID="Freemind_Link_844258424" MODIFIED="1274170041130" TEXT="objectives">
-<node CREATED="1265977808380" ID="Freemind_Link_30103298" MODIFIED="1277125043577" STYLE="bubble" TEXT="to handle i18n messages with tokens, extending standard resource bundle"/>
+<node CREATED="1265977808380" ID="Freemind_Link_30103298" MODIFIED="1289658080374" STYLE="bubble" TEXT="to handle i18n messages with tokens, extending standard jdk resource bundle"/>
 <node CREATED="1265977857365" ID="Freemind_Link_1571835055" MODIFIED="1277119504285" STYLE="bubble" TEXT="to expose and manage configuration via jmx, web, web service"/>
 <node CREATED="1277119466972" ID="ID_1145627297" LINK="#Freemind_Link_38802849" MODIFIED="1279693140623" STYLE="bubble" TEXT="to allow transparent use in a cluster (it uses cache stack, define your own cache policies)"/>
 <node CREATED="1265977874131" ID="Freemind_Link_1998347829" LINK="#Freemind_Link_38815464" MODIFIED="1277133398274" STYLE="bubble" TEXT="It is based on resource store (file://, http://, ftp://, jpa:/ ...) to access properties datas"/>
@@ -99,14 +99,15 @@
 <node COLOR="#338800" CREATED="1277119862938" ID="ID_1867161318" MODIFIED="1279693326579" TEXT="by default, kaleido uses aspectJ to inject classes runtime context">
 <font NAME="SansSerif" SIZE="12"/>
 </node>
-<node COLOR="#ff0000" CREATED="1277119892360" ID="ID_90170490" MODIFIED="1277132261687" TEXT="a kaleido guice ioc extension will be provided for runtime context injection"/>
-<node COLOR="#ff0000" CREATED="1277120155905" ID="ID_1654330359" MODIFIED="1277132262437" TEXT="a kaleido spring ioc extension will be provided for runtime context injection "/>
+<node COLOR="#ff0000" CREATED="1277119892360" ID="ID_90170490" MODIFIED="1289658135711" TEXT="a guice ioc extension will be provided for runtime context injection"/>
+<node COLOR="#ff0000" CREATED="1277120155905" ID="ID_1654330359" MODIFIED="1289658143410" TEXT="a spring ioc extension will be provided for runtime context injection "/>
+<node COLOR="#ff0000" CREATED="1289658106259" ID="ID_216978226" MODIFIED="1289658151132" TEXT="a  jee6 @Inject extension will be provided for runtime context injection"/>
 </node>
 </node>
 <node COLOR="#000000" CREATED="1262523984000" ID="Freemind_Link_38240499" MODIFIED="1274174785788" POSITION="right" TEXT="plugin">
 <font BOLD="true" NAME="Dialog" SIZE="14"/>
 <node CREATED="1274174788491" ID="ID_1324424775" MODIFIED="1274174791085" TEXT="objectives">
-<node COLOR="#000000" CREATED="1262524574000" ID="Freemind_Link_38240772" MODIFIED="1277131183272" STYLE="bubble" TEXT="to provide user, an extensible plugin registry (interface &amp; implementation)">
+<node COLOR="#000000" CREATED="1262524574000" ID="Freemind_Link_38240772" MODIFIED="1289658240906" STYLE="bubble" TEXT="to provide user, an extensible plugin registry (interface &amp; implementation), that allow to register yours">
 <font NAME="Dialog" SIZE="12"/>
 </node>
 <node CREATED="1277120760151" ID="ID_983704314" MODIFIED="1279693358939" STYLE="bubble" TEXT="kaleido internaly use this plugin (for resource store, cache, configuration, i18n, ...)"/>

@@ -6,7 +6,7 @@
 	<version>1.0.0-SNAPSHOT</version>
 
 	<name>KaleidoFoundry parent POM</name>
-	<url>http://code.google.com/p/kaleidofoundry/</url>
+	<url>http://code.google.com/p/kaleido-foundry/</url>
 	<description>Parent POM for all kaleido-foundry projects. It provide the default project build configuration.</description>
 	<packaging>pom</packaging>
 
@@ -184,7 +184,7 @@
 
 	<issueManagement>
 		<system>google-code</system>
-		<url>http://code.google.com/p/kaleidofoundry/issues/list</url>
+		<url>http://code.google.com/p/kaleido-foundry/issues/list</url>
 	</issueManagement>
 
 	<ciManagement>

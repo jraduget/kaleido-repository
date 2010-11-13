@@ -22,6 +22,6 @@
 </node>
 </node>
 <node CREATED="1274175645027" ID="ID_432630255" MODIFIED="1277132297062" POSITION="left" TEXT="mailler (local, jndi, ejb mdb, jms) with injection of runtime context"/>
-<node CREATED="1274175631746" ID="ID_394427967" MODIFIED="1277132293578" POSITION="left" TEXT="messaging (jms, rdv, jmx...) with injection of runtime context"/>
+<node CREATED="1274175631746" ID="ID_394427967" MODIFIED="1289659160336" POSITION="left" TEXT="messaging (jms, rdv, jmx, gae xmpp ...) with injection of runtime context"/>
 </node>
 </map>
