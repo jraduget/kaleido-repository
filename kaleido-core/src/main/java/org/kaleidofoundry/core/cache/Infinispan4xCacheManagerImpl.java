@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
  * @author Jerome RADUGET
  */
 @Declare(value = InfinispanCacheManagerPluginName)
-class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheManager {
+public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheManager {
 
    /** internal logger */
    private static final Logger LOGGER = LoggerFactory.getLogger(Infinispan4xCacheManagerImpl.class);

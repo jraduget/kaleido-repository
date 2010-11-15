@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  * @author Jerome RADUGET
  */
 @Declare(value = EhCacheManagerPluginName)
-class EhCache1xManagerImpl extends AbstractCacheManager {
+public class EhCache1xManagerImpl extends AbstractCacheManager {
 
    /** internal logger */
    private static final Logger LOGGER = LoggerFactory.getLogger(EhCache1xManagerImpl.class);
