@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * @author Jerome RADUGET
  */
 @Declare(value = DefaultLocalCacheManagerPluginName)
-class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheManager {
+public class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheManager {
 
    /** internal logger */
    private static final Logger LOGGER = LoggerFactory.getLogger(LocalCacheManagerImpl.class);

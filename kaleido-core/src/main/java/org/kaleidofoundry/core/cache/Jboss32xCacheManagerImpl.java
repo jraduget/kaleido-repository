@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * @author Jerome RADUGET
  */
 @Declare(value = JbossCacheManagerPluginName)
-class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheManager {
+public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheManager {
 
    /** internal logger */
    private static final Logger LOGGER = LoggerFactory.getLogger(Jboss32xCacheManagerImpl.class);

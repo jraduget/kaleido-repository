@@ -49,7 +49,7 @@ import com.tangosol.util.WrapperException;
  * @author Jerome RADUGET
  */
 @Declare(value = CoherenceCacheManagerPluginName)
-class Coherence3xCacheManagerImpl extends AbstractCacheManager {
+public class Coherence3xCacheManagerImpl extends AbstractCacheManager {
 
    /** internal logger */
    private static final Logger LOGGER = LoggerFactory.getLogger(Coherence3xCacheManagerImpl.class);
