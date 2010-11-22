@@ -19,10 +19,96 @@ import javax.naming.Context;
 
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
+import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
- * Naming service context builder properties.<br/>
- * Some jndi configuration :
+ * Naming service base {@link RuntimeContext} builder & properties. <br/>
+ * <p>
+ * <table border="1">
+ * <tr>
+ * <th>Prefix</th>
+ * <th>Property</th>
+ * <th>Description</th>
+ * </tr>
+ * <tr>
+ * <td>naming.jndi</td>
+ * <td>java.naming.env.prefix</td>
+ * <td>jndi optional prefix name for resource name like java:comp/env for tomcat (no more need with jee6)</td>
+ * </tr>
+ * <tr>
+ * <td>naming.jndi</td>
+ * <td>java.naming.factory.initial</td>
+ * <td>see {@link Context#INITIAL_CONTEXT_FACTORY}</td>
+ * </tr>
+ * <tr>
+ * <td>naming.jndi</td>
+ * <td>java.naming.factory.state</td>
+ * <td>see {@link Context#STATE_FACTORIES}</td>
+ * </tr>
+ * <tr>
+ * <td>naming.jndi</td>
+ * <td>java.naming.factory.url.pkgs</td>
+ * <td>see {@link Context#URL_PKG_PREFIXES}</td>
+ * </tr>
+ * <tr>
+ * <td>naming.jndi</td>
+ * <td>java.naming.provider.url</td>
+ * <td>see {@link Context#PROVIDER_URL}</td>
+ * </tr>
+ * <tr>
+ * <td>naming.jndi</td>
+ * <td>java.naming.dns.url</td>
+ * <td>see {@link Context#DNS_URL}</td>
+ * </tr>
+ * <tr>
+ * <td>naming.jndi</td>
+ * <td>java.naming.authoritative</td>
+ * <td>see {@link Context#AUTHORITATIVE}</td>
+ * </tr>
+ * <tr>
+ * <td>naming.jndi</td>
+ * <td>java.naming.security.authentication</td>
+ * <td>see {@link Context#SECURITY_AUTHENTICATION}</td>
+ * </tr>
+ * <tr>
+ * <td>naming.jndi</td>
+ * <td>java.naming.security.principal</td>
+ * <td>see {@link Context#SECURITY_PRINCIPAL}</td>
+ * </tr>
+ * <tr>
+ * <td>naming.jndi</td>
+ * <td>java.naming.security.credentials</td>
+ * <td>see {@link Context#SECURITY_CREDENTIALS}</td>
+ * </tr>
+ * <tr>
+ * <td>naming.jndi</td>
+ * <td>java.naming.language</td>
+ * <td>see {@link Context#LANGUAGE}</td>
+ * </tr>
+ * <tr>
+ * <td>naming.jndi</td>
+ * <td>java.naming.batchsize</td>
+ * <td>see {@link Context#BATCHSIZE}</td>
+ * </tr>
+ * <tr>
+ * <td>naming.jndi</td>
+ * <td>java.naming.security.protocol</td>
+ * <td>see {@link Context#SECURITY_PROTOCOL}</td>
+ * </tr>
+ * <tr>
+ * <td>naming.jndi</td>
+ * <td>org.omg.CORBA.ORBInitialHost</td>
+ * <td></td>
+ * </tr>
+ * <tr>
+ * <td>naming.jndi</td>
+ * <td>org.omg.CORBA.ORBInitialPort</td>
+ * <td></td>
+ * </tr>
+ * </table>
+ * <br/>
+ * <br/>
+ * Some JNDI application server configurations :
  * <p>
  * <table border="1" width="100%">
  * <tr>
