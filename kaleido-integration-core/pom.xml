@@ -97,8 +97,9 @@
 			<version>3.0.1</version>
 			<scope>system</scope>
 			<systemPath>/Users/jraduget/Developments/appserver/glassfishv3/glassfish/modules/gf-client.jar</systemPath>
+			<optional>true</optional>
 		</dependency>
-
+		
 	</dependencies>
 
 	<reporting>

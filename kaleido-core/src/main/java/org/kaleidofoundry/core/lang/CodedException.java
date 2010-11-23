@@ -37,7 +37,7 @@ public class CodedException extends Exception {
 
    /**
     * @param code error code
-    * @param message Détail
+    * @param message
     */
    public CodedException(final String code, final String message) {
 	super(message != null ? message : code);
@@ -46,7 +46,7 @@ public class CodedException extends Exception {
 
    /**
     * @param code error code
-    * @param message Détail
+    * @param message
     * @param cause
     */
    public CodedException(final String code, final String message, final Throwable cause) {
