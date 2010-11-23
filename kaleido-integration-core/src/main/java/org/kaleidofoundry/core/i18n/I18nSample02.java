@@ -15,46 +15,36 @@
  */
 package org.kaleidofoundry.core.i18n;
 
+import static org.kaleidofoundry.core.i18n.I18nContextBuilder.BaseName;
+import static org.kaleidofoundry.core.i18n.I18nContextBuilder.LocaleLanguage;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import org.kaleidofoundry.core.context.Context;
+import org.kaleidofoundry.core.context.Parameter;
 
 /**
  * <p>
- * <h3>Simple i18n usage</h3> Inject {@link I18nMessages} context and instance using {@link Context} annotation without parameters, but
- * using external configuration
+ * <h3>Simple i18n usage</h3> Inject {@link I18nMessages} context and instance using {@link Context} annotation with parameters, and without
+ * external configuration
  * </p>
  * <br/>
- * <b>Precondition :</b> The following java env. variable have been set
+ * Message file : "classpath:/i18n/messages_en.properties" contains :
  * 
  * <pre>
- * -Dkaleido.configurations=classpath:/i18n/myContext.properties
- * </pre>
- * 
- * Resource file : "classpath:/i18n/myContext.properties" contains :
- * 
- * <pre>
- * i18n.myBundleCtx.baseName=i18n/messages
- * i18n.myBundleCtx.locale.lang=fr
- * i18n.myBundleCtx.locale.country=FR
- * </pre>
- * 
- * Message file : "classpath:/i18n/messages_fr.properties" contains :
- * 
- * <pre>
- * label.hello=Bonjour tout le monde!
- * label.hello.who=Bonjour M. {0}
- * label.hello.when=Bonjour M. {0}, votre dernière connexion a été le {1,date,dd/MM/yyyy}
- * label.hello.how=Bonjour M. {0}, votre dernière connexion a été le {1,date,dd/MM/yyyy} et vous avez gagné {2,number,#.##euros}
+ * label.hello=Hello world!
+ * label.hello.who=Hello Mr {0}
+ * label.hello.when=Hello Mr {0}, your last connection was the {1,date,yyyy-MM-dd}
+ * label.hello.how=Hello Mr {0}, your last connection was the {1,date,yyyy-MM-dd} and you have win {2,number,#.##$}
  * </pre>
  * 
  * @author Jerome RADUGET
  */
-public class I18nSample01 {
+public class I18nSample02 {
 
-   @Context("myBundleCtx")
+   @Context(value = "myBundleCtx2", parameters = { @Parameter(name = BaseName, value = "i18n/messages"), @Parameter(name = LocaleLanguage, value = "en") })
    private I18nMessages messages;
 
    public void echo() throws ParseException {

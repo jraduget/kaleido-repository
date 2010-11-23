@@ -25,17 +25,17 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <p>
  * <table border="1">
  * <tr>
- * <th>
- * <td>Property name</td></th>
- * <th>
- * <td>Property description</td></th>
+ * <td><b>Property name</b></td>
+ * <td><b>Property description</b></td>
  * </tr>
  * <tr>
  * <td>cacheName</td>
  * <td>the cache name (unique for a cache provider instance)</td>
  * </tr>
+ * <tr>
  * <td>cacheManagerRef</td>
- * <td>reference name of the cache manager context to use</td> </tr>
+ * <td>reference name of the cache manager context to use</td>
+ * </tr>
  * </table>
  * </p>
  * 
