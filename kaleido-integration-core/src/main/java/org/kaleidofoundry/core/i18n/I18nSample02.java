@@ -36,24 +36,36 @@ import org.kaleidofoundry.core.context.Parameter;
  * <pre>
  * label.hello=Bonjour tout le monde!
  * label.hello.who=Bonjour M. {0}
- * label.hello.when=Bonjour M. {0}, votre derniËre connexion a ÈtÈ le {1,date,dd/MM/yyyy}
- * label.hello.how=Bonjour M. {0}, votre derniËre connexion a ÈtÈ le {1,date,dd/MM/yyyy} et vous avez gagnÈ {2,number,#.##euros}
+ * label.hello.when=Bonjour M. {0}, votre dernière connexion a été le {1,date,dd/MM/yyyy}
+ * label.hello.how=Bonjour M. {0}, votre dernière connexion a été le {1,date,dd/MM/yyyy} et vous avez gagné {2,number,#.##euros}
  * </pre>
  * 
  * @author Jerome RADUGET
  */
 public class I18nSample02 {
 
-   @Context(value = "myBundleCtx2", parameters = { 
-	   @Parameter(name = BaseName, value = "i18n/messages"), 
-	   @Parameter(name = LocaleLanguage, value = "fr") 
+   @Context(value = "myBundleCtx2", parameters = {
+	   @Parameter(name = BaseName, value = "i18n/messages"),
+	   @Parameter(name = LocaleLanguage, value = "fr")
    })
    private I18nMessages messages;
 
+   /**
+    * Stdout :
+    * 
+    * <pre>
+    * Bonjour tout le monde!
+    * Bonjour M. Smith
+    * Bonjour M. Smith, votre dernière connexion a été le 21/10/2010
+    * Bonjour M. Smith, votre dernière connexion a été le 21/10/2010 et vous avez gagné 1234,56euros
+    * </pre>
+    * 
+    * @throws ParseException
+    */
    public void echo() throws ParseException {
 	DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 	System.out.printf("%s\n", messages.getMessage("label.hello"));
-	System.out.printf("%s\n", messages.getMessage("label.hello.who"), "Smith");
+	System.out.printf("%s\n", messages.getMessage("label.hello.who", "Smith"));
 	System.out.printf("%s\n", messages.getMessage("label.hello.when", "Smith", df.parse("2010/10/21")));
 	System.out.printf("%s\n", messages.getMessage("label.hello.how", "Smith", df.parse("2010/10/21"), 1234.56));
    }

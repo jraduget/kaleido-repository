@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,9 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 public class I18nSample04 {
 
    private final I18nMessages messages;
-   
+
    public I18nSample04() {
-	
+
 	RuntimeContext<I18nMessages> context = new I18nContextBuilder("myI18nCtx", I18nMessages.class)
 	.withBaseName("i18n/messages")
 	.withLocaleLanguage("fr")
@@ -40,11 +40,23 @@ public class I18nSample04 {
 
 	messages = I18nMessagesFactory.provides(context);
    }
-   
+
+   /**
+    * Stdout :
+    * 
+    * <pre>
+    * Bonjour tout le monde!
+    * Bonjour M. Smith
+    * Bonjour M. Smith, votre dernière connexion a été le 21/10/2010
+    * Bonjour M. Smith, votre dernière connexion a été le 21/10/2010 et vous avez gagné 1234,56euros
+    * </pre>
+    * 
+    * @throws ParseException
+    */
    public void echo() throws ParseException {
 	DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 	System.out.printf("%s\n", messages.getMessage("label.hello"));
-	System.out.printf("%s\n", messages.getMessage("label.hello.who"), "Smith");
+	System.out.printf("%s\n", messages.getMessage("label.hello.who", "Smith"));
 	System.out.printf("%s\n", messages.getMessage("label.hello.when", "Smith", df.parse("2010/10/21")));
 	System.out.printf("%s\n", messages.getMessage("label.hello.how", "Smith", df.parse("2010/10/21"), 1234.56));
    }
@@ -56,5 +68,5 @@ public class I18nSample04 {
     */
    I18nMessages getMessages() {
 	return messages;
-   }   
+   }
 }

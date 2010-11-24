@@ -41,13 +41,13 @@ import org.kaleidofoundry.core.context.Context;
  * i18n.myBundleCtx.locale.country=GB
  * </pre>
  * 
- * Message file : "classpath:/i18n/messages_fr.properties" contains :
+ * Message file : "classpath:/i18n/messages_en_gb.properties" contains :
  * 
  * <pre>
  * label.hello=Hello world!
  * label.hello.who=Hello Mr {0}
  * label.hello.when=Hello Mr {0}, your last connection was the {1,date,yyyy-MM-dd}
- * label.hello.how=Hello Mr {0}, your last connection was the {1,date,yyyy-MM-dd} and you have win {2,number,#.##$} 
+ * label.hello.how=Hello Mr {0}, your last connection was the {1,date,yyyy-MM-dd} and you have win {2,number,#.##£}
  * </pre>
  * 
  * @author Jerome RADUGET
@@ -57,10 +57,22 @@ public class I18nSample01 {
    @Context("myBundleCtx")
    private I18nMessages messages;
 
+   /**
+    * Stdout :
+    * 
+    * <pre>
+    * Hello world!
+    * Hello Mr Smith
+    * Hello Mr Smith, your last connection was the 2010-10-21
+    * Hello Mr Smith, your last connection was the 2010-10-21 and you have win 1234.56£
+    * </pre>
+    * 
+    * @throws ParseException
+    */
    public void echo() throws ParseException {
 	DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 	System.out.printf("%s\n", messages.getMessage("label.hello"));
-	System.out.printf("%s\n", messages.getMessage("label.hello.who"), "Smith");
+	System.out.printf("%s\n", messages.getMessage("label.hello.who", "Smith"));
 	System.out.printf("%s\n", messages.getMessage("label.hello.when", "Smith", df.parse("2010/10/21")));
 	System.out.printf("%s\n", messages.getMessage("label.hello.how", "Smith", df.parse("2010/10/21"), 1234.56));
    }
