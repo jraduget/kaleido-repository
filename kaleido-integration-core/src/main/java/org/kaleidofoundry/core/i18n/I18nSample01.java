@@ -37,17 +37,17 @@ import org.kaleidofoundry.core.context.Context;
  * 
  * <pre>
  * i18n.myBundleCtx.baseName=i18n/messages
- * i18n.myBundleCtx.locale.lang=fr
- * i18n.myBundleCtx.locale.country=FR
+ * i18n.myBundleCtx.locale.lang=en
+ * i18n.myBundleCtx.locale.country=GB
  * </pre>
  * 
  * Message file : "classpath:/i18n/messages_fr.properties" contains :
  * 
  * <pre>
- * label.hello=Bonjour tout le monde!
- * label.hello.who=Bonjour M. {0}
- * label.hello.when=Bonjour M. {0}, votre dernière connexion a été le {1,date,dd/MM/yyyy}
- * label.hello.how=Bonjour M. {0}, votre dernière connexion a été le {1,date,dd/MM/yyyy} et vous avez gagné {2,number,#.##euros}
+ * label.hello=Hello world!
+ * label.hello.who=Hello Mr {0}
+ * label.hello.when=Hello Mr {0}, your last connection was the {1,date,yyyy-MM-dd}
+ * label.hello.how=Hello Mr {0}, your last connection was the {1,date,yyyy-MM-dd} and you have win {2,number,#.##$} 
  * </pre>
  * 
  * @author Jerome RADUGET

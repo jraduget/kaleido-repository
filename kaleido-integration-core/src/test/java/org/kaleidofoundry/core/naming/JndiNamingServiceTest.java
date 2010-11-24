@@ -59,8 +59,15 @@ public class JndiNamingServiceTest extends Assert {
 	   ic.addToEnvironment(Context.INITIAL_CONTEXT_FACTORY, "com.sun.enterprise.naming.SerialInitContextFactory");
 	   ic.addToEnvironment(Context.URL_PKG_PREFIXES, "com.sun.enterprise.naming");
 	   ic.addToEnvironment(Context.STATE_FACTORIES, "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
-//	   ic.addToEnvironment("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
-//	   ic.addToEnvironment("org.omg.CORBA.ORBInitialPort", "3700");
+	   ic.addToEnvironment("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
+	   ic.addToEnvironment("org.omg.CORBA.ORBInitialPort", "3700");
+	   
+	   // timeout test settings ko
+	   ic.addToEnvironment("com.sun.corba.ee.transport.ORBTCPConnectTimeouts" , "100:50000:20");
+	   ic.addToEnvironment("com.sun.corba.ee.transport.ORBTCPTimeouts" , "100:50000:20");	   
+	   ic.addToEnvironment("com.sun.CORBA.transport.ORBTCPReadTimeouts" , "100:50000:20");
+	   ic.addToEnvironment("com.sun.corba.ee.transport.ORBWaitForResponseTimeout" , "1");
+	   
 //	   ic.addToEnvironment(Context.SECURITY_PRINCIPAL, "admin");
 //	   ic.addToEnvironment(Context.SECURITY_CREDENTIALS, "admin");
 	   Object remoteObj = ic.lookup(datasourceJndiName);

@@ -96,10 +96,19 @@
 			<artifactId>gf-client</artifactId>
 			<version>3.0.1</version>
 			<scope>system</scope>
-			<systemPath>/Users/jraduget/Developments/appserver/glassfishv3/glassfish/modules/gf-client.jar</systemPath>
+			<systemPath>/Users/jraduget/Developments/appserver/glassfishv3/glassfish/modules/gf-client.jar</systemPath>			
 			<optional>true</optional>
 		</dependency>
-		
+
+		<!-- 
+		<dependency>
+			<groupId>org.glassfish.appclient</groupId>
+			<artifactId>gf-client</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+ 		-->
+ 		
 	</dependencies>
 
 	<reporting>

@@ -45,13 +45,14 @@ public class DefaultMessageBundle extends ResourceBundle implements I18nMessages
    static final Logger LOGGER = LoggerFactory.getLogger(DefaultMessageBundle.class);
 
    // used for user resource bundle data
-   private final Cache<String, String> resourceBundleCache;
+   final Cache<String, String> resourceBundleCache;
    // used internally for kaleidofoundry internal resource bundle data
-   private final Properties resourceBundleNoCache;
+   final Properties resourceBundleNoCache;
 
-   private final String resourceName;
+   final String resourceName;
    private ResourceBundle parent;
 
+   // internal runtime context
    private final RuntimeContext<I18nMessages> context;
 
    /**

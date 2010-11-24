@@ -16,7 +16,7 @@
 package org.kaleidofoundry.core.i18n;
 
 import static org.kaleidofoundry.core.i18n.I18nContextBuilder.BaseName;
-import static org.kaleidofoundry.core.i18n.I18nContextBuilder.LocaleLanguage;
+import static org.kaleidofoundry.core.i18n.I18nContextBuilder.CacheManagerRef;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -27,26 +27,44 @@ import org.kaleidofoundry.core.context.Parameter;
 
 /**
  * <p>
- * <h3>Simple i18n usage</h3> Inject {@link I18nMessages} context and instance using {@link Context} annotation with parameters, and without
- * external configuration
+ * <h3>Simple i18n usage</h3> Inject {@link I18nMessages} context and instance using {@link Context} annotation mixing the
+ * use of parameters and external configuration (Parameters have priority to the external configuration)
  * </p>
  * <br/>
- * Message file : "classpath:/i18n/messages_en.properties" contains :
+ * <b>Precondition :</b> The following java env. variable have been set
  * 
  * <pre>
- * label.hello=Bonjour tout le monde!
- * label.hello.who=Bonjour M. {0}
- * label.hello.when=Bonjour M. {0}, votre dernière connexion a été le {1,date,dd/MM/yyyy}
- * label.hello.how=Bonjour M. {0}, votre dernière connexion a été le {1,date,dd/MM/yyyy} et vous avez gagné {2,number,#.##euros}
+ * -Dkaleido.configurations=classpath:/i18n/myContext.properties
+ * </pre>
+ * 
+ * Resource file : "classpath:/i18n/myContext.properties" contains :
+ * 
+ * <pre>
+ * i18n.myBundleCtx.baseName=i18n/messages
+ * i18n.myBundleCtx.locale.lang=en
+ * i18n.myBundleCtx.locale.country=GB
+ * #i18n.myBundleCtx.cacheManagerRef=myCacheManager
+ * 
+ * cacheManager.myCacheManager.providerCode=ehCache1x
+ * cacheManager.myCacheManager.resourceUri=classpath:/i18n/ehcache.xml
+ * </pre>
+ * 
+ * Message file : "classpath:/i18n/messages_fr.properties" contains :
+ * 
+ * <pre>
+ * label.hello=Hello world!
+ * label.hello.who=Hello Mr {0}
+ * label.hello.when=Hello Mr {0}, your last connection was the {1,date,yyyy-MM-dd}
+ * label.hello.how=Hello Mr {0}, your last connection was the {1,date,yyyy-MM-dd} and you have win {2,number,#.##$} 
  * </pre>
  * 
  * @author Jerome RADUGET
  */
-public class I18nSample02 {
+public class I18nSample03 {
 
-   @Context(value = "myBundleCtx2", parameters = { 
+   @Context(value="myBundleCtx", parameters = { 
 	   @Parameter(name = BaseName, value = "i18n/messages"), 
-	   @Parameter(name = LocaleLanguage, value = "fr") 
+	   @Parameter(name = CacheManagerRef, value = "myCacheManager") 
    })
    private I18nMessages messages;
 

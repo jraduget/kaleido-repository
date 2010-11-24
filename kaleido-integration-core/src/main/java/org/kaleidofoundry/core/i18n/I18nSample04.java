@@ -1,5 +1,5 @@
-/*
- * Copyright 2008-2010 the original author or authors
+/*  
+ * Copyright 2008-2010 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,41 +15,32 @@
  */
 package org.kaleidofoundry.core.i18n;
 
-import static org.kaleidofoundry.core.i18n.I18nContextBuilder.BaseName;
-import static org.kaleidofoundry.core.i18n.I18nContextBuilder.LocaleLanguage;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import org.kaleidofoundry.core.context.Context;
-import org.kaleidofoundry.core.context.Parameter;
+import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
  * <p>
- * <h3>Simple i18n usage</h3> Inject {@link I18nMessages} context and instance using {@link Context} annotation with parameters, and without
- * external configuration
+ * <h3>Simple i18n usage</h3> Build {@link I18nMessages} context and instance manually by coding, using context builder
  * </p>
  * <br/>
- * Message file : "classpath:/i18n/messages_en.properties" contains :
- * 
- * <pre>
- * label.hello=Bonjour tout le monde!
- * label.hello.who=Bonjour M. {0}
- * label.hello.when=Bonjour M. {0}, votre dernière connexion a été le {1,date,dd/MM/yyyy}
- * label.hello.how=Bonjour M. {0}, votre dernière connexion a été le {1,date,dd/MM/yyyy} et vous avez gagné {2,number,#.##euros}
- * </pre>
- * 
- * @author Jerome RADUGET
  */
-public class I18nSample02 {
+public class I18nSample04 {
 
-   @Context(value = "myBundleCtx2", parameters = { 
-	   @Parameter(name = BaseName, value = "i18n/messages"), 
-	   @Parameter(name = LocaleLanguage, value = "fr") 
-   })
-   private I18nMessages messages;
+   private final I18nMessages messages;
+   
+   public I18nSample04() {
+	
+	RuntimeContext<I18nMessages> context = new I18nContextBuilder("myI18nCtx", I18nMessages.class)
+	.withBaseName("i18n/messages")
+	.withLocaleLanguage("fr")
+	.build();
 
+	messages = I18nMessagesFactory.provides(context);
+   }
+   
    public void echo() throws ParseException {
 	DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 	System.out.printf("%s\n", messages.getMessage("label.hello"));
@@ -65,6 +56,5 @@ public class I18nSample02 {
     */
    I18nMessages getMessages() {
 	return messages;
-   }
-
+   }   
 }
