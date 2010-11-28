@@ -14,6 +14,8 @@
 	<packaging>ear</packaging>
 
 	<build>	
+		<finalName>kaleido-integration-ear</finalName>
+		
 		<plugins>
 			<plugin>
 				<artifactId>maven-ear-plugin</artifactId>
@@ -31,7 +33,7 @@
 						<webModule>
 							<groupId>org.kaleidofoundry</groupId>
 							<artifactId>kaleido-integration-war</artifactId>
-							<contextRoot>kaleido</contextRoot>
+							<contextRoot>kaleido-integration</contextRoot>
 						</webModule>
 					</modules>
 				</configuration>

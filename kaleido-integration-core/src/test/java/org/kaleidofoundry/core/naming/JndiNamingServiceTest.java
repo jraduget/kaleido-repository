@@ -61,15 +61,15 @@ public class JndiNamingServiceTest extends Assert {
 	   ic.addToEnvironment(Context.STATE_FACTORIES, "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
 	   ic.addToEnvironment("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
 	   ic.addToEnvironment("org.omg.CORBA.ORBInitialPort", "3700");
-	   
+	   //ic.addToEnvironment(Context.SECURITY_PRINCIPAL, "admin");
+	   //ic.addToEnvironment(Context.SECURITY_CREDENTIALS, "admin");
+
 	   // timeout test settings ko
-	   ic.addToEnvironment("com.sun.corba.ee.transport.ORBTCPConnectTimeouts" , "100:50000:20");
-	   ic.addToEnvironment("com.sun.corba.ee.transport.ORBTCPTimeouts" , "100:50000:20");	   
-	   ic.addToEnvironment("com.sun.CORBA.transport.ORBTCPReadTimeouts" , "100:50000:20");
-	   ic.addToEnvironment("com.sun.corba.ee.transport.ORBWaitForResponseTimeout" , "1");
-	   
-//	   ic.addToEnvironment(Context.SECURITY_PRINCIPAL, "admin");
-//	   ic.addToEnvironment(Context.SECURITY_CREDENTIALS, "admin");
+	   //	   ic.addToEnvironment("com.sun.corba.ee.transport.ORBTCPConnectTimeouts" , "100:50000:20");
+	   //	   ic.addToEnvironment("com.sun.corba.ee.transport.ORBTCPTimeouts" , "100:50000:20");
+	   //	   ic.addToEnvironment("com.sun.CORBA.transport.ORBTCPReadTimeouts" , "100:50000:20");
+	   //	   ic.addToEnvironment("com.sun.corba.ee.transport.ORBWaitForResponseTimeout" , "1");
+
 	   Object remoteObj = ic.lookup(datasourceJndiName);
 	   datasource = DataSource.class.cast(PortableRemoteObject.narrow(remoteObj, DataSource.class));
 	   assertNotNull(datasource);
@@ -88,14 +88,14 @@ public class JndiNamingServiceTest extends Assert {
    public void remoteDatasourceTest() throws NamingException, SQLException {
 	// test naming service connection
 	RuntimeContext<NamingService> context = new NamingContextBuilder()
-		.withInitialContextFactory("com.sun.enterprise.naming.SerialInitContextFactory")
-		.withUrlpkgPrefixes("com.sun.enterprise.naming")
-		.withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl")
-//		.withCorbaORBInitialHost("127.0.0.1")
-//		.withCorbaORBInitialPort("3700")
-//		.withSecurityPrincipal("admin")
-//		.withSecurityCredentials("admin")
-		.build();
+	.withInitialContextFactory("com.sun.enterprise.naming.SerialInitContextFactory")
+	.withUrlpkgPrefixes("com.sun.enterprise.naming")
+	.withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl")
+	.withCorbaORBInitialHost("127.0.0.1")
+	.withCorbaORBInitialPort("3700")
+	//		.withSecurityPrincipal("admin")
+	//		.withSecurityCredentials("admin")
+	.build();
 	NamingService namingService = new JndiNamingService(context);
 	DataSource datasource = namingService.locate(datasourceJndiName, DataSource.class);
 	assertNotNull(datasource);

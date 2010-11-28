@@ -102,34 +102,6 @@
 			<version>2.2</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- EJB embedded Server -->
-		<dependency>
-			<groupId>org.glassfish.extras</groupId>
-			<artifactId>glassfish-embedded-all</artifactId>
-			<version>3.1-b23</version>
-			<scope>test</scope>
-		</dependency>
-
-		<!-- EJB 
-		<dependency>
-			<groupId>org.apache.openejb</groupId>
-			<artifactId>openejb-core</artifactId>
-			<version>3.1.2</version>
-			<scope>test</scope>
-			<exclusions>
-				 due to infinispan conflict between jdk6 jaxb impl & open ejb jaxb impl
-			 	<exclusion>
-			 		<groupId>org.apache.openejb</groupId>
-			 		<artifactId>javaee-api</artifactId>
-			 	</exclusion>
-			 	<exclusion>
-			 	  <groupId>com.sun.xml.bind</groupId>
-				  <artifactId>jaxb-impl</artifactId>
-			 	</exclusion>
-			</exclusions>
-		</dependency>
-		-->
-		
 		
 	</dependencies>
 

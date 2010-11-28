@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.core.naming;
 
+import javax.naming.NameNotFoundException;
+
 import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
@@ -29,6 +31,15 @@ public class NamingServiceNotFoundException extends NamingServiceException {
     */
    public NamingServiceNotFoundException(final String resourceName, final RuntimeContext<NamingService> context) {
 	super("naming.jndi.error.initialContext.lookup.notfound", resourceName, context.toString("\n"));
+   }
+
+   /**
+    * @param resourceName jndi resource name
+    * @param nnfe
+    * @param context
+    */
+   public NamingServiceNotFoundException(final String resourceName, final NameNotFoundException nnfe, final RuntimeContext<NamingService> context) {
+	super("naming.jndi.error.initialContext.lookup.notfound", nnfe, resourceName, context.toString("\n"));
    }
 
 }

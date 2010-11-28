@@ -6,14 +6,15 @@
 		<groupId>org.kaleidofoundry</groupId>
 		<artifactId>kaleido-parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
-		<relativePath>../kaleido-parent/pom.xml</relativePath>
+		<relativePath>../kaleido-integration-parent/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>kaleido-integration-war</artifactId>
 	<name>KaleidoFoundry integration tests webapp</name>
 	<packaging>war</packaging>
 
-	<build>
+	<build>		
+		<finalName>kaleido-integration</finalName>
 		<plugins>
 			<!-- Enable aspectJ AOP for @NotNull, @InjectContext, ... -->
 			<plugin>

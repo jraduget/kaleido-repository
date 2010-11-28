@@ -90,16 +90,15 @@
 			<version>5.1.13</version>
 		</dependency>
 
-		<!-- Glassfish client -->
+		<!-- Glassfish client - need system path in order to work (glassfish install)-->
 		<dependency>
 			<groupId>org.glassfish.appclient</groupId>
 			<artifactId>gf-client</artifactId>
 			<version>3.0.1</version>
 			<scope>system</scope>
-			<systemPath>/Users/jraduget/Developments/appserver/glassfishv3/glassfish/modules/gf-client.jar</systemPath>			
+			<systemPath>${glassfishv3.home}/glassfish/modules/gf-client.jar</systemPath>			
 			<optional>true</optional>
 		</dependency>
-
 		<!-- 
 		<dependency>
 			<groupId>org.glassfish.appclient</groupId>

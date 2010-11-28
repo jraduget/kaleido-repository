@@ -18,22 +18,37 @@ package org.kaleidofoundry.core.naming;
 import org.kaleidofoundry.core.context.Context;
 
 /**
+ * <p>
+ * <h3>Simple naming service usage</h3> Inject {@link NamingService} context and instance using {@link Context} annotation without
+ * parameters, but using if needed external configuration
+ * </p>
+ * <br/>
  * 
  * @author Jerome RADUGET
- *
  */
-public class MyBeanClient {
+public class LocalEjbSample01 {
 
-   @Context("namingContext")
+   @Context("myLocalCtx")
    private NamingService namingService;
 
-   public void echo() {
+   /**
+    * Stdout for echo("hello world")":
+    * 
+    * <pre>
+    * hello world
+    * </pre>
+    * 
+    * @param message
+    * @return input message
+    * @throws NamingServiceException
+    */
+   public String echo(final String message) {
 
-	// get ejb client service
-	MyRemoteBean myRemoteBean = namingService.locate("ejb/myBean", MyRemoteBean.class);
+	// get ejb client service (remote)
+	MyLocalBean myLocalBean = namingService.locate("ejb/myBean", MyLocalBean.class);
 
 	// call it
-	myRemoteBean.echo("hello wolrd");
+	return myLocalBean.echo(message);
    }
 
 }

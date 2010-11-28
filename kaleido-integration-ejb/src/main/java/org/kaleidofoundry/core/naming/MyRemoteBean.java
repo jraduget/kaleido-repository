@@ -19,6 +19,7 @@ import javax.ejb.Remote;
 
 /**
  * Bean remote interface
+ * 
  * @author Jerome RADUGET
  */
 @Remote

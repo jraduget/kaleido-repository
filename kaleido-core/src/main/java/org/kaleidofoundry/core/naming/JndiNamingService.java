@@ -113,11 +113,11 @@ public class JndiNamingService implements NamingService {
    protected NamingServiceException handleNamingException(final NamingException ne, final String resourceName) {
 
 	// direct not found resource
-	if (ne instanceof NameNotFoundException) { return new NamingServiceNotFoundException(resourceName, context); }
+	if (ne instanceof NameNotFoundException) { return new NamingServiceNotFoundException(resourceName, (NameNotFoundException) ne, context); }
 
 	// cause is not found resource
 	if (ne instanceof NamingException && ne.getCause() != null && ne.getCause() instanceof NameNotFoundException) { return new NamingServiceNotFoundException(
-		resourceName, context); }
+		resourceName, (NameNotFoundException) ne.getCause(), context); }
 
 	// otherwise ...
 	return new NamingServiceException("naming.jndi.error.initialContext.lookup", ne, resourceName, ne.getMessage(), context.toString());
