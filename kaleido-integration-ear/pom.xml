@@ -14,8 +14,6 @@
 	<packaging>ear</packaging>
 
 	<build>	
-		<finalName>kaleido-integration-ear</finalName>
-		
 		<plugins>
 			<plugin>
 				<artifactId>maven-ear-plugin</artifactId>

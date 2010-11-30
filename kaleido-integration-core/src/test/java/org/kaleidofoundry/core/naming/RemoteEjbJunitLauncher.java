@@ -45,10 +45,11 @@ public class RemoteEjbJunitLauncher extends Assert {
 
    @Test
    public void testRemoteEjb01() {
-	RemoteEjbSample01 remoteEjbSample = new RemoteEjbSample01();
+	RemoteEjbSample01 remoteEjbSample = new RemoteEjbSample01();	
 	assertEquals("hello world", remoteEjbSample.echo("hello world"));
 	assertEquals("hello world2", remoteEjbSample.echo("hello world2"));
-	assertEquals("hello world3", remoteEjbSample.echo("hello world3"));
+	assertEquals("hello world3", remoteEjbSample.echo("hello world3"));	
+	assertFalse("foo?".equals(remoteEjbSample.echo("foo")));
    }
 
 }
