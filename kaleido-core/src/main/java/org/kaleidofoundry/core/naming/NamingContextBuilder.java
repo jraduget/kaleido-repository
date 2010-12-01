@@ -37,62 +37,108 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <tr>
  * <td>jndi</td>
  * <td>java.naming.factory.initial</td>
- * <td>see {@link Context#INITIAL_CONTEXT_FACTORY}</td>
+ * <td>Constant that holds the name of the environment property for specifying the initial context factory to use. The value of the property
+ * should be the fully qualified class name of the factory class that will create an initial context. This property may be specified in the
+ * environment parameter passed to the initial context constructor, an applet parameter, a system property, or an application resource file.
+ * If it is not specified in any of these sources, NoInitialContextException is thrown when an initial context is required to complete an
+ * operation. The value of this constant is "java.naming.factory.initial". <br/>
+ * see {@link Context#INITIAL_CONTEXT_FACTORY}</td>
  * </tr>
  * <tr>
  * <td>jndi</td>
  * <td>java.naming.factory.state</td>
- * <td>see {@link Context#STATE_FACTORIES}</td>
+ * <td>Constant that holds the name of the environment property for specifying the list of state factories to use. The value of the property
+ * should be a colon-separated list of the fully qualified class names of state factory classes that will be used to get an object's state
+ * given the object itself. This property may be specified in the environment, an applet parameter, a system property, or one or more
+ * resource files. The value of this constant is "java.naming.factory.state". <br/>
+ * see {@link Context#STATE_FACTORIES}</td>
  * </tr>
  * <tr>
  * <td>jndi</td>
  * <td>java.naming.factory.url.pkgs</td>
- * <td>see {@link Context#URL_PKG_PREFIXES}</td>
+ * <td>Constant that holds the name of the environment property for specifying the list of package prefixes to use when loading in URL
+ * context factories. The value of the property should be a colon-separated list of package prefixes for the class name of the factory class
+ * that will create a URL context factory. This property may be specified in the environment, an applet parameter, a system property, or one
+ * or more resource files. The prefix com.sun.jndi.url is always appended to the possibly empty list of package prefixes. The value of this
+ * constant is "java.naming.factory.url.pkgs". <br/>
+ * see {@link Context#URL_PKG_PREFIXES}</td>
  * </tr>
  * <tr>
  * <td>jndi</td>
  * <td>java.naming.provider.url</td>
- * <td>see {@link Context#PROVIDER_URL}</td>
+ * <td>Constant that holds the name of the environment property for specifying configuration information for the service provider to use.
+ * The value of the property should contain a URL string (e.g. "ldap://somehost:389"). This property may be specified in the environment, an
+ * applet parameter, a system property, or a resource file. If it is not specified in any of these sources, the default configuration is
+ * determined by the service provider. The value of this constant is "java.naming.provider.url". <br/>
+ * see {@link Context#PROVIDER_URL}</td>
  * </tr>
  * <tr>
  * <td>jndi</td>
  * <td>java.naming.dns.url</td>
- * <td>see {@link Context#DNS_URL}</td>
+ * <td>Constant that holds the name of the environment property for specifying the DNS host and domain names to use for the JNDI URL context
+ * (for example, "dns://somehost/wiz.com"). This property may be specified in the environment, an applet parameter, a system property, or a
+ * resource file. If it is not specified in any of these sources and the program attempts to use a JNDI URL containing a DNS name, a
+ * ConfigurationException will be thrown. The value of this constant is "java.naming.dns.url". <br/>
+ * see {@link Context#DNS_URL}</td>
  * </tr>
  * <tr>
  * <td>jndi</td>
  * <td>java.naming.authoritative</td>
- * <td>see {@link Context#AUTHORITATIVE}</td>
+ * <td>Constant that holds the name of the environment property for specifying the authoritativeness of the service requested. If the value
+ * of the property is the string "true", it means that the access is to the most authoritative source (i.e. bypass any cache or replicas).
+ * If the value is anything else, the source need not be (but may be) authoritative. If unspecified, the value defaults to "false". The
+ * value of this constant is "java.naming.authoritative". <br/>
+ * see {@link Context#AUTHORITATIVE}</td>
  * </tr>
  * <tr>
  * <td>jndi</td>
  * <td>java.naming.security.authentication</td>
- * <td>see {@link Context#SECURITY_AUTHENTICATION}</td>
+ * <td>Constant that holds the name of the environment property for specifying the security level to use. Its value is one of the following
+ * strings: "none", "simple", "strong". If this property is unspecified, the behaviour is determined by the service provider. The value of
+ * this constant is "java.naming.security.authentication". <br/>
+ * see {@link Context#SECURITY_AUTHENTICATION}</td>
  * </tr>
  * <tr>
  * <td>jndi</td>
  * <td>java.naming.security.principal</td>
- * <td>see {@link Context#SECURITY_PRINCIPAL}</td>
+ * <td>Constant that holds the name of the environment property for specifying the identity of the principal for authenticating the caller
+ * to the service. The format of the principal depends on the authentication scheme. If this property is unspecified, the behaviour is
+ * determined by the service provider. The value of this constant is "java.naming.security.principal". <br/>
+ * see {@link Context#SECURITY_PRINCIPAL}</td>
  * </tr>
  * <tr>
  * <td>jndi</td>
  * <td>java.naming.security.credentials</td>
- * <td>see {@link Context#SECURITY_CREDENTIALS}</td>
+ * <td>Constant that holds the name of the environment property for specifying the credentials of the principal for authenticating the
+ * caller to the service. The value of the property depends on the authentication scheme. For example, it could be a hashed password,
+ * clear-text password, key, certificate, and so on. If this property is unspecified, the behaviour is determined by the service provider.
+ * The value of this constant is "java.naming.security.credentials". <br/>
+ * see {@link Context#SECURITY_CREDENTIALS}</td>
  * </tr>
  * <tr>
  * <td>jndi</td>
  * <td>java.naming.language</td>
- * <td>see {@link Context#LANGUAGE}</td>
+ * <td>Constant that holds the name of the environment property for specifying the preferred language to use with the service. The value of
+ * the property is a colon-separated list of language tags as defined in RFC 1766. If this property is unspecified, the language preference
+ * is determined by the service provider. The value of this constant is "java.naming.language".<br/>
+ * see {@link Context#LANGUAGE}</td>
  * </tr>
  * <tr>
  * <td>jndi</td>
  * <td>java.naming.batchsize</td>
- * <td>see {@link Context#BATCHSIZE}</td>
+ * <td>Constant that holds the name of the environment property for specifying the batch size to use when returning data via the service's
+ * protocol. This is a hint to the provider to return the results of operations in batches of the specified size, so the provider can
+ * optimize its performance and usage of resources. The value of the property is the string representation of an integer. If unspecified,
+ * the batch size is determined by the service provider. The value of this constant is "java.naming.batchsize".<br/>
+ * see {@link Context#BATCHSIZE}</td>
  * </tr>
  * <tr>
  * <td>jndi</td>
  * <td>java.naming.security.protocol</td>
- * <td>see {@link Context#SECURITY_PROTOCOL}</td>
+ * <td>Constant that holds the name of the environment property for specifying the security protocol to use. Its value is a string
+ * determined by the service provider (e.g. "ssl"). If this property is unspecified, the behaviour is determined by the service provider.
+ * The value of this constant is "java.naming.security.protocol".<br/>
+ * see {@link Context#SECURITY_PROTOCOL}</td>
  * </tr>
  * <tr>
  * <td>jndi</td>
@@ -119,28 +165,28 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td>caching</td>
  * <td>
  * <p>
- * This feature allow you to cache your resource lookup (like initial context or ejb home). Be careful, in a clustered environment, your
+ * This feature allow you to cache the lookup resource (like initial context or ejb home). Be careful, in a clustered environment, your
  * resource can be bound to a specific server. Failover policies might be implemented in the EJB homes... So it depends on the vendor's
  * implementation. However, if your application server and your environment allows it, you will have great benefit to cache it. For example,
  * for weblogic, weblogic-ejb-jar.xml descriptor allow you to specify home-is-clusterable for your ejb home, and it is activated by default.
- * If caching is enabled, when a lookup failed on a cached resource, throwing {@link NamingException}, {@link CommunicationException}...
- * Resource will be remove from cache, and a new one will be lookup.
+ * If caching is enabled, when a lookup failed on a cached resource, throwing {@link NamingException}, {@link CommunicationException}... the
+ * resource will be remove from cache, and a new one will be lookup.
  * </p>
  * <ul>
  * <li><code>none</code> -> no caching resource (default usage)</li>
  * <li><code>context</code> -> caching {@link InitialContext}</li>
  * <li><code>home</code> -> caching {@link EJBHome}</li>
- * <li><code>all</code> -> caching all</li>
+ * <li><code>all</code> -> caching both</li>
  * </ul>
  * Values : <code>none |  all | context | home</code></td>
  * </tr>
  * <tr>
  * <td>jndi</td>
  * <td>caching.strategy</td>
- * <td>if {@link #Caching} property is enabled, you can define your resource cache lookup policy :
+ * <td>If {@link #Caching} property is enabled, you can define your caching policy :<br/>
  * <ul>
- * <li><code>thread-local</code> -> resource cache in thread local</li>
- * <li><code>global</code> -> resource cache static way in a Concurrent HashMap</li>
+ * <li><code>thread-local</code> -> resource is cached in thread local</li>
+ * <li><code>global</code> -> resource is cached static way in a Concurrent HashMap</li>
  * </ul>
  * Values : <code>threadlocal | global</code></td>
  * </tr>
@@ -149,8 +195,8 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td>failover.enabled</td>
  * <td>Use it if you want to enable <b>failover</b> for resource context creation or resource lookup.<br/>
  * <br/>
- * The following exceptions will be handled :
- * <table>
+ * The following exceptions will be handled by the failover processing:
+ * <table border="1">
  * <tr>
  * <td><b>naming type</b></td>
  * <td><b>context</b></td>
@@ -177,20 +223,19 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <br/>
  * <b>Values :</b> <code>true|false</code></td>
  * </tr>
- * </table>
- * </td> </tr>
  * <tr>
  * <td>jndi</td>
  * <td>failover.wait</td>
- * <td>if failover is enabled ({@link #FailoverEnabled}), it defines the time in <b>millisecond</b> to sleep after the last fail. It could
- * be set to 0 in order to not sleep</td>
+ * <td>if failover is enabled ({@link #FailoverEnabled}), this property defines the time in <b>millisecond</b> to sleep after the last fail.
+ * It could be set to 0 in order to not sleep</td>
  * </tr>
  * <tr>
  * <td>jndi</td>
  * <td>failover.maxretry</td>
- * <td>if failover is enabled ({@link #FailoverEnabled}), it defines the maximum number of time to attempt a retry</td>
+ * <td>if failover is enabled ({@link #FailoverEnabled}), this property defines the maximum number of time to attempt a retry</td>
  * </tr>
- * </table> <br/>
+ * </table>
+ * <br/>
  * <br/>
  * Some JNDI application server configurations :
  * <p>
@@ -365,84 +410,37 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    // kaleido custom properties ************************************************************************************************************
 
-   /** jndi optional prefix name for resource name (no need with jee6) */
+   /**
+    * see {@link NamingContextBuilder}
+    */
    public static String EnvPrefixName = "java.naming.env.prefix";
 
    /**
-    * <p>
-    * This feature allow you to cache your resource lookup (like initial context or ejb home). Be careful, in a clustered environment, your
-    * resource can be bound to a specific server. Failover policies might be implemented in the EJB homes... So it depends on the vendor's
-    * implementation. However, if your application server and your environment allows it, you will have great benefit to cache it. For
-    * example, for weblogic, weblogic-ejb-jar.xml descriptor allow you to specify home-is-clusterable for your ejb home, and it is activated
-    * by default. If caching is enabled, when a lookup failed on a cached resource, throwing {@link NamingException},
-    * {@link CommunicationException}... Resource will be remove from cache, and a new one will be lookup.
-    * </p>
-    * <ul>
-    * <li><code>none</code> -> no caching resource (default usage)</li>
-    * <li><code>context</code> -> caching {@link InitialContext}</li>
-    * <li><code>home</code> -> caching {@link EJBHome}</li>
-    * <li><code>all</code> -> caching all</li>
-    * </ul>
-    * Values : <code>none |  all | context | home</code>
+    * see {@link NamingContextBuilder}
     * 
     * @see #CachingStrategy
     */
    public static String Caching = "caching";
 
    /**
-    * if {@link #Caching} property is enabled, you can define your resource cache lookup policy :
-    * <ul>
-    * <li><code>thread-local</code> -> resource cache in thread local</li>
-    * <li><code>global</code> -> resource cache static way in a Concurrent HashMap</li>
-    * </ul>
-    * Values : <code>threadlocal | global</code>
+    * see {@link NamingContextBuilder}
     * 
     * @see #Caching
     */
    public static String CachingStrategy = "caching.strategy";
 
    /**
-    * Use it if you want to enable <b>failover</b> for resource context creation or resource lookup.<br/>
-    * <br/>
-    * The following exceptions will be handled :
-    * <table border="1">
-    * <tr>
-    * <td><b>naming type</b></td>
-    * <td><b>context</b></td>
-    * <td><b>handle exceptions</b></td>
-    * </tr>
-    * <tr>
-    * <td>jndi</td>
-    * <td>initial context creation</td>
-    * <td>javax.naming.NamingException<br/>
-    * javax.naming.CommunicationException</td>
-    * </tr>
-    * <tr>
-    * <td>jndi</td>
-    * <td>lookup and remote call</td>
-    * <td>java.rmi.RemoteException<br/>
-    * <- java.rmi.ConnectException<br/>
-    * <- java.rmi.NoSuchObjectException<br/>
-    * <- java.rmi.AccessException<br/>
-    * <- java.rmi.ConnectIOException<br/>
-    * <- java.rmi.UnknownHostException<br/>
-    * <- java.rmi.UnmarshalException</td>
-    * </tr>
-    * </table>
-    * <br/>
-    * <b>Values :</b> <code>true|false</code>
+    * see {@link NamingContextBuilder}
     */
    public static String FailoverEnabled = "failover.enabled";
 
    /**
-    * if failover is enabled ({@link #FailoverEnabled}), it defines the
-    * time in <b>millisecond</b> to sleep after the last fail. It could be set to 0 in order to not sleep
+    * see {@link NamingContextBuilder}
     */
    public static String FailoverWaitBeforeRetry = "failover.wait";
 
    /**
-    * if failover is enabled ({@link #FailoverEnabled}), it defines the
-    * maximum number of time to attempt a retry
+    * see {@link NamingContextBuilder}
     */
    public static String FailoverMaxRetry = "failover.maxretry";
 
