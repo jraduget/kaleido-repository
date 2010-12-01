@@ -15,7 +15,11 @@
  */
 package org.kaleidofoundry.core.naming;
 
+import javax.ejb.EJBHome;
+import javax.naming.CommunicationException;
 import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
@@ -26,87 +30,167 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <p>
  * <table border="1">
  * <tr>
- * <th>Prefix</th>
+ * <th>Type</th>
  * <th>Property</th>
  * <th>Description</th>
  * </tr>
  * <tr>
- * <td>naming.jndi</td>
- * <td>java.naming.env.prefix</td>
- * <td>jndi optional prefix name for resource name like java:comp/env for tomcat (no more need with jee6)</td>
- * </tr>
- * <tr>
- * <td>naming.jndi</td>
+ * <td>jndi</td>
  * <td>java.naming.factory.initial</td>
  * <td>see {@link Context#INITIAL_CONTEXT_FACTORY}</td>
  * </tr>
  * <tr>
- * <td>naming.jndi</td>
+ * <td>jndi</td>
  * <td>java.naming.factory.state</td>
  * <td>see {@link Context#STATE_FACTORIES}</td>
  * </tr>
  * <tr>
- * <td>naming.jndi</td>
+ * <td>jndi</td>
  * <td>java.naming.factory.url.pkgs</td>
  * <td>see {@link Context#URL_PKG_PREFIXES}</td>
  * </tr>
  * <tr>
- * <td>naming.jndi</td>
+ * <td>jndi</td>
  * <td>java.naming.provider.url</td>
  * <td>see {@link Context#PROVIDER_URL}</td>
  * </tr>
  * <tr>
- * <td>naming.jndi</td>
+ * <td>jndi</td>
  * <td>java.naming.dns.url</td>
  * <td>see {@link Context#DNS_URL}</td>
  * </tr>
  * <tr>
- * <td>naming.jndi</td>
+ * <td>jndi</td>
  * <td>java.naming.authoritative</td>
  * <td>see {@link Context#AUTHORITATIVE}</td>
  * </tr>
  * <tr>
- * <td>naming.jndi</td>
+ * <td>jndi</td>
  * <td>java.naming.security.authentication</td>
  * <td>see {@link Context#SECURITY_AUTHENTICATION}</td>
  * </tr>
  * <tr>
- * <td>naming.jndi</td>
+ * <td>jndi</td>
  * <td>java.naming.security.principal</td>
  * <td>see {@link Context#SECURITY_PRINCIPAL}</td>
  * </tr>
  * <tr>
- * <td>naming.jndi</td>
+ * <td>jndi</td>
  * <td>java.naming.security.credentials</td>
  * <td>see {@link Context#SECURITY_CREDENTIALS}</td>
  * </tr>
  * <tr>
- * <td>naming.jndi</td>
+ * <td>jndi</td>
  * <td>java.naming.language</td>
  * <td>see {@link Context#LANGUAGE}</td>
  * </tr>
  * <tr>
- * <td>naming.jndi</td>
+ * <td>jndi</td>
  * <td>java.naming.batchsize</td>
  * <td>see {@link Context#BATCHSIZE}</td>
  * </tr>
  * <tr>
- * <td>naming.jndi</td>
+ * <td>jndi</td>
  * <td>java.naming.security.protocol</td>
  * <td>see {@link Context#SECURITY_PROTOCOL}</td>
  * </tr>
  * <tr>
- * <td>naming.jndi</td>
+ * <td>jndi</td>
  * <td>org.omg.CORBA.ORBInitialHost</td>
- * <td></td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
- * <td>naming.jndi</td>
+ * <td>jndi</td>
  * <td>org.omg.CORBA.ORBInitialPort</td>
- * <td></td>
+ * <td>&nbsp;</td>
+ * </tr>
+ * <tr>
+ * <th>Type</th>
+ * <th>Property</th>
+ * <th>Description</th>
+ * </tr>
+ * <tr>
+ * <td>jndi</td>
+ * <td>java.naming.env.prefix</td>
+ * <td>jndi optional prefix name for resource name like java:comp/env for tomcat (no more need with jee6)</td>
+ * </tr>
+ * <tr>
+ * <td>jndi</td>
+ * <td>caching</td>
+ * <td>
+ * <p>
+ * This feature allow you to cache your resource lookup (like initial context or ejb home). Be careful, in a clustered environment, your
+ * resource can be bound to a specific server. Failover policies might be implemented in the EJB homes... So it depends on the vendor's
+ * implementation. However, if your application server and your environment allows it, you will have great benefit to cache it. For example,
+ * for weblogic, weblogic-ejb-jar.xml descriptor allow you to specify home-is-clusterable for your ejb home, and it is activated by default.
+ * If caching is enabled, when a lookup failed on a cached resource, throwing {@link NamingException}, {@link CommunicationException}...
+ * Resource will be remove from cache, and a new one will be lookup.
+ * </p>
+ * <ul>
+ * <li><code>none</code> -> no caching resource (default usage)</li>
+ * <li><code>context</code> -> caching {@link InitialContext}</li>
+ * <li><code>home</code> -> caching {@link EJBHome}</li>
+ * <li><code>all</code> -> caching all</li>
+ * </ul>
+ * Values : <code>none |  all | context | home</code></td>
+ * </tr>
+ * <tr>
+ * <td>jndi</td>
+ * <td>caching.strategy</td>
+ * <td>if {@link #Caching} property is enabled, you can define your resource cache lookup policy :
+ * <ul>
+ * <li><code>thread-local</code> -> resource cache in thread local</li>
+ * <li><code>global</code> -> resource cache static way in a Concurrent HashMap</li>
+ * </ul>
+ * Values : <code>threadlocal | global</code></td>
+ * </tr>
+ * <tr>
+ * <td>jndi</td>
+ * <td>failover.enabled</td>
+ * <td>Use it if you want to enable <b>failover</b> for resource context creation or resource lookup.<br/>
+ * <br/>
+ * The following exceptions will be handled :
+ * <table>
+ * <tr>
+ * <td><b>naming type</b></td>
+ * <td><b>context</b></td>
+ * <td><b>handle exceptions</b></td>
+ * </tr>
+ * <tr>
+ * <td>jndi</td>
+ * <td>initial context creation</td>
+ * <td>javax.naming.NamingException<br/>
+ * javax.naming.CommunicationException</td>
+ * </tr>
+ * <tr>
+ * <td>jndi</td>
+ * <td>lookup and remote call</td>
+ * <td>java.rmi.RemoteException<br/>
+ * <- java.rmi.ConnectException<br/>
+ * <- java.rmi.NoSuchObjectException<br/>
+ * <- java.rmi.AccessException<br/>
+ * <- java.rmi.ConnectIOException<br/>
+ * <- java.rmi.UnknownHostException<br/>
+ * <- java.rmi.UnmarshalException</td>
  * </tr>
  * </table>
  * <br/>
+ * <b>Values :</b> <code>true|false</code></td>
+ * </tr>
+ * </table>
+ * </td> </tr>
+ * <tr>
+ * <td>jndi</td>
+ * <td>failover.wait</td>
+ * <td>if failover is enabled ({@link #FailoverEnabled}), it defines the time in <b>millisecond</b> to sleep after the last fail. It could
+ * be set to 0 in order to not sleep</td>
+ * </tr>
+ * <tr>
+ * <td>jndi</td>
+ * <td>failover.maxretry</td>
+ * <td>if failover is enabled ({@link #FailoverEnabled}), it defines the maximum number of time to attempt a retry</td>
+ * </tr>
+ * </table> <br/>
  * <br/>
  * Some JNDI application server configurations :
  * <p>
@@ -122,15 +206,15 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <tr>
  * <td>TOMCAT 5/6</td>
  * <td>org.apache.naming.java.javaURLContextFactory</td>
- * <td></td>
- * <td></td>
+ * <td>&nbsp;</td>
+ * <td>&nbsp;</td>
  * <td>java:comp/env</td>
- * <td></td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>GLASSFISH 3</td>
  * <td>com.sun.enterprise.naming.SerialInitContextFactory</td>
- * <td></td>
+ * <td>&nbsp;</td>
  * <td>com.sun.enterprise.naming</td>
  * <td>java:comp/env</td>
  * <td>java.naming.factory.state=com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl<br/>
@@ -142,24 +226,24 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td>org.jnp.interfaces.NamingContextFactory</td>
  * <td>localhost:1099</td>
  * <td>org.jboss.naming:org.jnp.interfaces</td>
- * <td></td>
- * <td></td>
+ * <td>&nbsp;</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>JONAS</td>
  * <td>com.sun.jndi.rmi.registry.RegistryContextFactory</td>
  * <td>rmi://localhost:1099</td>
  * <td>org.objectweb.jonas.naming</td>
- * <td></td>
- * <td></td>
+ * <td>&nbsp;</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>WEBSPHERE 5</td>
  * <td>com.ibm.ejs.ns.jndi.CNInitialContextFactory</td>
  * <td>iiop://localhost:2809</td>
- * <td></td>
+ * <td>&nbsp;</td>
  * <td>java:comp/env</td>
- * <td></td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>WEBSPHERE 6</td>
@@ -167,46 +251,47 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td>iiop://localhost:900</td>
  * <td>com.ibm.ws.naming</td>
  * <td>java:comp/env</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>WEBLOGIC 8 / 9 / 10</td>
  * <td>weblogic.jndi.WLInitialContextFactory</td>
  * <td>t3://localhost:7001</td>
- * <td></td>
- * <td></td>
- * <td></td>
+ * <td>&nbsp;</td>
+ * <td>&nbsp;</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>CORBA SUN</td>
  * <td>com.sun.jndi.cosnaming.CNCtxFactory</td>
  * <td>iiop://localhost:2001</td>
- * <td></td>
- * <td></td>
- * <td></td>
+ * <td>&nbsp;</td>
+ * <td>&nbsp;</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>DNS SUN</td>
  * <td>com.sun.jndi.dns.DnsContextFactory</td>
- * <td></td>
- * <td></td>
- * <td></td>
- * <td></td>
+ * <td>&nbsp;</td>
+ * <td>&nbsp;</td>
+ * <td>&nbsp;</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>LDAP SUN</td>
  * <td>com.sun.jndi.ldap.LdapCtxFactory</td>
- * <td></td>
- * <td></td>
- * <td></td>
- * <td></td>
+ * <td>&nbsp;</td>
+ * <td>&nbsp;</td>
+ * <td>&nbsp;</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>RMI SUN</td>
  * <td>com.sun.jndi.rmi.registry.RegistryContextFactory</td>
- * <td></td>
- * <td></td>
- * <td></td>
- * <td></td>
+ * <td>&nbsp;</td>
+ * <td>&nbsp;</td>
+ * <td>&nbsp;</td>
+ * <td>&nbsp;</td>
  * </tr>
  * </table>
  * </p>
@@ -215,8 +300,7 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  */
 public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingService> {
 
-   /** jndi optional prefix name for resource name (no need with jee6) */
-   public static String EnvPrefixName = "java.naming.env.prefix";
+   // standard initial context properties **************************************************************************************************
 
    /**
     * @see Context#PROVIDER_URL
@@ -278,6 +362,89 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
     * 
     */
    public static String CorbaORBInitialPort = "org.omg.CORBA.ORBInitialPort";
+
+   // kaleido custom properties ************************************************************************************************************
+
+   /** jndi optional prefix name for resource name (no need with jee6) */
+   public static String EnvPrefixName = "java.naming.env.prefix";
+
+   /**
+    * <p>
+    * This feature allow you to cache your resource lookup (like initial context or ejb home). Be careful, in a clustered environment, your
+    * resource can be bound to a specific server. Failover policies might be implemented in the EJB homes... So it depends on the vendor's
+    * implementation. However, if your application server and your environment allows it, you will have great benefit to cache it. For
+    * example, for weblogic, weblogic-ejb-jar.xml descriptor allow you to specify home-is-clusterable for your ejb home, and it is activated
+    * by default. If caching is enabled, when a lookup failed on a cached resource, throwing {@link NamingException},
+    * {@link CommunicationException}... Resource will be remove from cache, and a new one will be lookup.
+    * </p>
+    * <ul>
+    * <li><code>none</code> -> no caching resource (default usage)</li>
+    * <li><code>context</code> -> caching {@link InitialContext}</li>
+    * <li><code>home</code> -> caching {@link EJBHome}</li>
+    * <li><code>all</code> -> caching all</li>
+    * </ul>
+    * Values : <code>none |  all | context | home</code>
+    * 
+    * @see #CachingStrategy
+    */
+   public static String Caching = "caching";
+
+   /**
+    * if {@link #Caching} property is enabled, you can define your resource cache lookup policy :
+    * <ul>
+    * <li><code>thread-local</code> -> resource cache in thread local</li>
+    * <li><code>global</code> -> resource cache static way in a Concurrent HashMap</li>
+    * </ul>
+    * Values : <code>threadlocal | global</code>
+    * 
+    * @see #Caching
+    */
+   public static String CachingStrategy = "caching.strategy";
+
+   /**
+    * Use it if you want to enable <b>failover</b> for resource context creation or resource lookup.<br/>
+    * <br/>
+    * The following exceptions will be handled :
+    * <table border="1">
+    * <tr>
+    * <td><b>naming type</b></td>
+    * <td><b>context</b></td>
+    * <td><b>handle exceptions</b></td>
+    * </tr>
+    * <tr>
+    * <td>jndi</td>
+    * <td>initial context creation</td>
+    * <td>javax.naming.NamingException<br/>
+    * javax.naming.CommunicationException</td>
+    * </tr>
+    * <tr>
+    * <td>jndi</td>
+    * <td>lookup and remote call</td>
+    * <td>java.rmi.RemoteException<br/>
+    * <- java.rmi.ConnectException<br/>
+    * <- java.rmi.NoSuchObjectException<br/>
+    * <- java.rmi.AccessException<br/>
+    * <- java.rmi.ConnectIOException<br/>
+    * <- java.rmi.UnknownHostException<br/>
+    * <- java.rmi.UnmarshalException</td>
+    * </tr>
+    * </table>
+    * <br/>
+    * <b>Values :</b> <code>true|false</code>
+    */
+   public static String FailoverEnabled = "failover.enabled";
+
+   /**
+    * if failover is enabled ({@link #FailoverEnabled}), it defines the
+    * time in <b>millisecond</b> to sleep after the last fail. It could be set to 0 in order to not sleep
+    */
+   public static String FailoverWaitBeforeRetry = "failover.wait";
+
+   /**
+    * if failover is enabled ({@link #FailoverEnabled}), it defines the
+    * maximum number of time to attempt a retry
+    */
+   public static String FailoverMaxRetry = "failover.maxretry";
 
    /**
     * 
@@ -351,6 +518,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    /**
     * @param envprefixname the env prefix name to set
+    * @see #EnvPrefixName
     */
    public NamingContextBuilder withEnvprefixname(final String envprefixname) {
 	getContextParameters().put(EnvPrefixName, envprefixname);
@@ -359,6 +527,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    /**
     * @param providerurl the provider url to set
+    * @see #ProviderUrl
     */
    public NamingContextBuilder withProviderUrl(final String providerurl) {
 	getContextParameters().put(ProviderUrl, providerurl);
@@ -367,6 +536,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    /**
     * @param initialcontextfactory the initial context factory to set
+    * @see #InitialContextFactory
     */
    public NamingContextBuilder withInitialContextFactory(final String initialcontextfactory) {
 	getContextParameters().put(InitialContextFactory, initialcontextfactory);
@@ -375,6 +545,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    /**
     * @param urlpkgprefixes the urlpkgprefixes to set
+    * @see #UrlPkgPrefixes
     */
    public NamingContextBuilder withUrlpkgPrefixes(final String urlpkgprefixes) {
 	getContextParameters().put(UrlPkgPrefixes, urlpkgprefixes);
@@ -383,6 +554,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    /**
     * @param dnsurl the dnsurl to set
+    * @see #DnsUrl
     */
    public NamingContextBuilder withDnsUrl(final String dnsurl) {
 	getContextParameters().put(DnsUrl, dnsurl);
@@ -391,6 +563,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    /**
     * @param authoritative the authoritative to set
+    * @see #Authoritative
     */
    public NamingContextBuilder withAuthoritative(final String authoritative) {
 	getContextParameters().put(Authoritative, authoritative);
@@ -399,6 +572,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    /**
     * @param batchsize the batchsize to set
+    * @see #BatchSize
     */
    public NamingContextBuilder withBatchSize(final String batchsize) {
 	getContextParameters().put(BatchSize, batchsize);
@@ -407,6 +581,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    /**
     * @param language the language to set
+    * @see #Language
     */
    public NamingContextBuilder withLanguage(final String language) {
 	getContextParameters().put(Language, language);
@@ -415,6 +590,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    /**
     * @param referral the referral to set
+    * @see #Referral
     */
    public NamingContextBuilder withReferral(final String referral) {
 	getContextParameters().put(Referral, referral);
@@ -423,6 +599,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    /**
     * @param securityauthentication the security authentication to set
+    * @see #SecurityAuthentication
     */
    public NamingContextBuilder withSecurityAuthentication(final String securityauthentication) {
 	getContextParameters().put(SecurityAuthentication, securityauthentication);
@@ -431,6 +608,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    /**
     * @param securitycredentials the security credentials to set
+    * @see #SecurityCredentials
     */
    public NamingContextBuilder withSecurityCredentials(final String securitycredentials) {
 	getContextParameters().put(SecurityCredentials, securitycredentials);
@@ -439,6 +617,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    /**
     * @param securityprincipal the security principal to set
+    * @see #SecurityPrincipal
     */
    public NamingContextBuilder withSecurityPrincipal(final String securityprincipal) {
 	getContextParameters().put(SecurityPrincipal, securityprincipal);
@@ -447,6 +626,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    /**
     * @param securityprotocol the security protocol to set
+    * @see #SecurityProtocol
     */
    public NamingContextBuilder withSecurityProtocol(final String securityprotocol) {
 	getContextParameters().put(SecurityProtocol, securityprotocol);
@@ -455,6 +635,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    /**
     * @param stateFactories the state factories to set
+    * @see #StateFactories
     */
    public NamingContextBuilder withStateFactories(final String stateFactories) {
 	getContextParameters().put(StateFactories, stateFactories);
@@ -463,6 +644,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    /**
     * @param corbaORBInitialHost
+    * @see #CorbaORBInitialHost
     */
    public NamingContextBuilder withCorbaORBInitialHost(final String corbaORBInitialHost) {
 	getContextParameters().put(CorbaORBInitialHost, corbaORBInitialHost);
@@ -471,10 +653,55 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    /**
     * @param corbaORBInitialPort
+    * @see #CorbaORBInitialPort
     */
    public NamingContextBuilder withCorbaORBInitialPort(final String corbaORBInitialPort) {
 	getContextParameters().put(CorbaORBInitialPort, corbaORBInitialPort);
 	return this;
    }
 
+   /**
+    * @param failoverEnabled
+    * @see #FailoverEnabled
+    */
+   public NamingContextBuilder withFailoverEnabled(final String failoverEnabled) {
+	getContextParameters().put(FailoverEnabled, failoverEnabled);
+	return this;
+   }
+
+   /**
+    * @param failoverMaxRetry
+    * @see #FailoverMaxRetry
+    */
+   public NamingContextBuilder withFailoverMaxRetry(final String failoverMaxRetry) {
+	getContextParameters().put(FailoverMaxRetry, failoverMaxRetry);
+	return this;
+   }
+
+   /**
+    * @param failoverWaitBeforeRetry
+    * @see #FailoverWaitBeforeRetry
+    */
+   public NamingContextBuilder withFailoverWaitBeforeRetry(final String failoverWaitBeforeRetry) {
+	getContextParameters().put(FailoverWaitBeforeRetry, failoverWaitBeforeRetry);
+	return this;
+   }
+
+   /**
+    * @param caching
+    * @see #Caching
+    */
+   public NamingContextBuilder withCaching(final String caching) {
+	getContextParameters().put(Caching, caching);
+	return this;
+   }
+
+   /**
+    * @param cachingStrategy
+    * @see #CachingStrategy
+    */
+   public NamingContextBuilder withCachingStrategy(final String cachingStrategy) {
+	getContextParameters().put(CachingStrategy, cachingStrategy);
+	return this;
+   }
 }
