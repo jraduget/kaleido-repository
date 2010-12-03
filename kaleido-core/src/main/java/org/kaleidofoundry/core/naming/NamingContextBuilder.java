@@ -165,12 +165,12 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td>caching</td>
  * <td>
  * <p>
- * This feature allow you to cache the lookup resource (like initial context or ejb home). Be careful, in a clustered environment, your
- * resource can be bound to a specific server. Failover policies might be implemented in the EJB homes... So it depends on the vendor's
- * implementation. However, if your application server and your environment allows it, you will have great benefit to cache it. For example,
- * for weblogic, weblogic-ejb-jar.xml descriptor allow you to specify home-is-clusterable for your ejb home, and it is activated by default.
- * If caching is enabled, when a lookup failed on a cached resource, throwing {@link NamingException}, {@link CommunicationException}... the
- * resource will be remove from cache, and a new one will be lookup.
+ * This feature enable caching of the sought resource. Be careful, in a clustered environment, your resource can be bound to a specific
+ * server. For example, failover policies might be implemented in the EJB homes... It depends on the vendor's implementation. However, if
+ * your application server and your environment allows it, you will have great benefit to cache it. For example, for weblogic,
+ * weblogic-ejb-jar.xml descriptor allow you to specify home-is-clusterable for your ejb home, and it is activated by default. If caching is
+ * enabled, when a lookup failed on a cached resource, throwing {@link NamingException}, {@link CommunicationException}... the resource will
+ * be remove from cache, and a new one will be lookup.
  * </p>
  * <ul>
  * <li><code>none</code> -> no caching resource (default usage)</li>
@@ -193,46 +193,39 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <tr>
  * <td>jndi</td>
  * <td>failover.enabled</td>
- * <td>Use it if you want to enable <b>failover</b> for resource context creation or resource lookup.<br/>
+ * <td>Use it if you want <b>to enable failover</b> for resource context creation or resource lookup.<br/>
  * <br/>
- * The following exceptions will be handled by the failover processing:
- * <table border="1">
- * <tr>
- * <td><b>naming type</b></td>
- * <td><b>context</b></td>
- * <td><b>handle exceptions</b></td>
- * </tr>
- * <tr>
- * <td>jndi</td>
- * <td>initial context creation</td>
- * <td>javax.naming.NamingException<br/>
- * javax.naming.CommunicationException</td>
- * </tr>
- * <tr>
- * <td>jndi</td>
- * <td>lookup and remote call</td>
- * <td>java.rmi.RemoteException<br/>
- * <- java.rmi.ConnectException<br/>
- * <- java.rmi.NoSuchObjectException<br/>
- * <- java.rmi.AccessException<br/>
- * <- java.rmi.ConnectIOException<br/>
- * <- java.rmi.UnknownHostException<br/>
- * <- java.rmi.UnmarshalException</td>
- * </tr>
- * </table>
+ * The following exceptions will be handled by the failover processing : <br/>
+ * <br/>
+ * <b>for initial context creation :</b>
+ * <ul>
+ * <li>javax.naming.NamingException</li>
+ * <li>javax.naming.CommunicationException</li>
+ * </ul>
+ * <b>for lookup process :</b>
+ * <ul>
+ * <li>java.rmi.RemoteException</li>
+ * <li><- java.rmi.ConnectException</li>
+ * <li><- java.rmi.NoSuchObjectException</li>
+ * <li><- java.rmi.AccessException</li>
+ * <li><- java.rmi.ConnectIOException</li>
+ * <li><- java.rmi.UnknownHostException</li>
+ * <li><- java.rmi.UnmarshalException</li>
+ * </ul>
  * <br/>
  * <b>Values :</b> <code>true|false</code></td>
  * </tr>
  * <tr>
  * <td>jndi</td>
  * <td>failover.wait</td>
- * <td>if failover is enabled ({@link #FailoverEnabled}), this property defines the time in <b>millisecond</b> to sleep after the last fail.
- * It could be set to 0 in order to not sleep</td>
+ * <td>If <b>failover is enabled</b> ({@link #FailoverEnabled}), this property defines the time in <b>millisecond</b> to sleep after the
+ * last fail. It could be set to 0 in order to retry processing without sleeping</td>
  * </tr>
  * <tr>
  * <td>jndi</td>
  * <td>failover.maxretry</td>
- * <td>if failover is enabled ({@link #FailoverEnabled}), this property defines the maximum number of time to attempt a retry</td>
+ * <td>If <b>failover is enabled</b> ({@link #FailoverEnabled}), this property defines the maximum number of time to attempt a retry after a
+ * fail</td>
  * </tr>
  * </table>
  * <br/>

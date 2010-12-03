@@ -45,7 +45,7 @@ public class LocalDatasourceSample01 {
    public Connection getConnection(final String message) throws SQLException {
 
 	// get local datasource
-	DataSource myDatasource = namingService.locate("jdbc/sonar", DataSource.class);
+	DataSource myDatasource = namingService.locate("jdbc/kaleido", DataSource.class);
 
 	// return a connection from the pool
 	return myDatasource.getConnection();

@@ -30,7 +30,7 @@ public class RemoteEjbSample02 {
 
    public RemoteEjbSample02() {
 
-	RuntimeContext<NamingService> context = new NamingContextBuilder("myI18nCtx", NamingService.class)
+	RuntimeContext<NamingService> context = new NamingContextBuilder("myManualNamingCtx", NamingService.class)
 	.withInitialContextFactory("com.sun.enterprise.naming.SerialInitContextFactory")
 	.withUrlpkgPrefixes("com.sun.enterprise.naming")
 	.withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl")

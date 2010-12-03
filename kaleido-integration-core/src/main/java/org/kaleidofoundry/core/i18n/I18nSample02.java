@@ -36,8 +36,8 @@ import org.kaleidofoundry.core.context.Parameter;
  * <pre>
  * label.hello=Bonjour tout le monde!
  * label.hello.who=Bonjour M. {0}
- * label.hello.when=Bonjour M. {0}, votre dernière connexion a été le {1,date,dd/MM/yyyy}
- * label.hello.how=Bonjour M. {0}, votre dernière connexion a été le {1,date,dd/MM/yyyy} et vous avez gagné {2,number,#.##euros}
+ * label.hello.when=Bonjour M. {0}, votre derni√®re connexion a √©t√© le {1,date,dd/MM/yyyy}
+ * label.hello.how=Bonjour M. {0}, votre derni√®re connexion a √©t√© le {1,date,dd/MM/yyyy} et vous avez gagn√© {2,number,#.##euros}
  * </pre>
  * 
  * @author Jerome RADUGET
@@ -56,8 +56,8 @@ public class I18nSample02 {
     * <pre>
     * Bonjour tout le monde!
     * Bonjour M. Smith
-    * Bonjour M. Smith, votre dernière connexion a été le 21/10/2010
-    * Bonjour M. Smith, votre dernière connexion a été le 21/10/2010 et vous avez gagné 1234,56euros
+    * Bonjour M. Smith, votre derniÔøΩre connexion a ≈Ωt≈Ω le 21/10/2010
+    * Bonjour M. Smith, votre derniÔøΩre connexion a ≈Ωt≈Ω le 21/10/2010 et vous avez gagn≈Ω 1234,56euros
     * </pre>
     * 
     * @throws ParseException

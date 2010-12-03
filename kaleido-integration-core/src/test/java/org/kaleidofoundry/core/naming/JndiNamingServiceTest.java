@@ -35,7 +35,7 @@ import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
  */
 public class JndiNamingServiceTest extends Assert {
 
-   private static final String datasourceJndiName = "jdbc/sonar";
+   private static final String datasourceJndiName = "jdbc/kaleido";
 
    @Before
    public void setup() {
@@ -93,13 +93,12 @@ public class JndiNamingServiceTest extends Assert {
 	.withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl")
 	.withCorbaORBInitialHost("127.0.0.1")
 	.withCorbaORBInitialPort("3700")
-	//		.withSecurityPrincipal("admin")
-	//		.withSecurityCredentials("admin")
 	.build();
+	
 	NamingService namingService = new JndiNamingService(context);
 	DataSource datasource = namingService.locate(datasourceJndiName, DataSource.class);
 	assertNotNull(datasource);
 	assertNotNull(datasource.getConnection());
    }
-
+   
 }

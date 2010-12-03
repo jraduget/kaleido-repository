@@ -31,37 +31,42 @@ import org.kaleidofoundry.core.context.Context;
  * <b>Precondition :</b> The following java env. variable have been set
  * 
  * <pre>
- * -Dkaleido.configurations=classpath:/naming/myRemoteContext.properties
+ * -Dkaleido.configurations=classpath:/naming/myContext.properties
  * </pre>
  * 
- * Resource file : "classpath:/naming/myRemoteContext.properties" contains :
+ * Resource file : "classpath:/naming/myContext.properties" contains :
  * 
  * <pre>
- * # naming service remote context (glassfish v3 server)
- * naming.jndi.myNamingCtx.java.naming.factory.initial=com.sun.enterprise.naming.SerialInitContextFactory
- * naming.jndi.myNamingCtx.java.naming.factory.url.pkgs=com.sun.enterprise.naming
- * naming.jndi.myNamingCtx.java.naming.factory.state=com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl
- * naming.jndi.myNamingCtx.org.omg.CORBA.ORBInitialHost=127.0.0.1
- * naming.jndi.myNamingCtx.org.omg.CORBA.ORBInitialPort=3700
+ * # naming service for glassfish v3 server
+ * naming.myRemoteCtx.java.naming.factory.initial=com.sun.enterprise.naming.SerialInitContextFactory
+ * naming.myRemoteCtx.java.naming.factory.url.pkgs=com.sun.enterprise.naming
+ * naming.myRemoteCtx.java.naming.factory.state=com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl
+ * naming.myRemoteCtx.org.omg.CORBA.ORBInitialHost=127.0.0.1
+ * naming.myRemoteCtx.org.omg.CORBA.ORBInitialPort=3700
+ * # caching and failover policies in a remote context
+ * naming.myRemoteCtx.caching=all
+ * naming.myRemoteCtx.caching.strategy=global
+ * naming.myRemoteCtx.failover.enabled=true
+ * naming.myRemoteCtx.failover.wait=2000
+ * naming.myRemoteCtx.failover.maxretry=5
  * </pre>
  * 
  * @author Jerome RADUGET
  */
 public class RemoteDatasourceSample01 {
 
-   @Context("myNamingCtx")
+   @Context("myRemoteCtx")
    private NamingService namingService;
 
    /**
-    * @param message
-    * @return input message
+    * @return
     * @throws SQLException
     * @throws NamingServiceException
     */
-   public Connection getConnection(final String message) throws SQLException {
+   public Connection getConnection() throws SQLException {
 
 	// get remote datasource
-	DataSource myDatasource = namingService.locate("jdbc/sonar", DataSource.class);
+	DataSource myDatasource = namingService.locate("jdbc/kaleido", DataSource.class);
 
 	// return a connection from the pool
 	return myDatasource.getConnection();

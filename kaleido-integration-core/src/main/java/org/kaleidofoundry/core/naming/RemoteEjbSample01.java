@@ -23,28 +23,16 @@ import org.kaleidofoundry.core.context.Context;
  * parameters, but using external configuration
  * </p>
  * <br/>
- * <b>Precondition :</b> The following java env. variable have been set
  * 
- * <pre>
- * -Dkaleido.configurations=classpath:/naming/myRemoteContext.properties
- * </pre>
- * 
- * Resource file : "classpath:/naming/myRemoteContext.properties" contains :
- * 
- * <pre>
- * # naming service remote context (glassfish v3 server)
- * naming.jndi.myNamingCtx.java.naming.factory.initial=com.sun.enterprise.naming.SerialInitContextFactory
- * naming.jndi.myNamingCtx.java.naming.factory.url.pkgs=com.sun.enterprise.naming
- * naming.jndi.myNamingCtx.java.naming.factory.state=com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl
- * naming.jndi.myNamingCtx.org.omg.CORBA.ORBInitialHost=127.0.0.1
- * naming.jndi.myNamingCtx.org.omg.CORBA.ORBInitialPort=3700
- * </pre>
+ * <b>
+ * For configuration detail please see {@link RemoteDatasourceSample01}
+ * </b>
  * 
  * @author Jerome RADUGET
  */
 public class RemoteEjbSample01 {
 
-   @Context("myNamingCtx")
+   @Context("myRemoteCtx")
    private NamingService namingService;
 
    /**
