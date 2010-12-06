@@ -15,21 +15,31 @@
  */
 package org.kaleidofoundry.core.naming;
 
-import org.kaleidofoundry.core.context.Context;
+import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
  * <p>
- * <h3>Simple naming service usage</h3> Inject {@link NamingService} context and instance using {@link Context} annotation without
- * parameters, but using if needed external configuration
+ * <h3>Simple naming service usage</h3> Inject {@link NamingService} context and instance manually by coding, using context builder
  * </p>
- * <br/>
  * 
  * @author Jerome RADUGET
  */
-public class LocalEjbSample01 {
+public class RemoteJndiSample04 {
 
-   @Context("myLocalCtx")
-   private NamingService namingService;
+   private final NamingService namingService;
+
+   public RemoteJndiSample04() {
+
+	RuntimeContext<NamingService> context = new NamingContextBuilder("myManualNamingCtx", NamingService.class)
+	.withInitialContextFactory("com.sun.enterprise.naming.SerialInitContextFactory")
+	.withUrlpkgPrefixes("com.sun.enterprise.naming")
+	.withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl")
+	.withCorbaORBInitialHost("127.0.0.1")
+	.withCorbaORBInitialPort("3700")
+	.build();
+
+	namingService = NamingServiceFactory.provides(context);
+   }
 
    /**
     * Stdout for echo("hello world")":
@@ -45,10 +55,10 @@ public class LocalEjbSample01 {
    public String echo(final String message) {
 
 	// get ejb client service (remote)
-	MyLocalBean myLocalBean = namingService.locate("ejb/myBean", MyLocalBean.class);
+	MyRemoteBean myRemoteBean = namingService.locate("java:global/kaleido-integration-ear/kaleido-integration-ejb/MyBean", MyRemoteBean.class);
 
 	// call it
-	return myLocalBean.echo(message);
+	return myRemoteBean.echo(message);
    }
 
 }

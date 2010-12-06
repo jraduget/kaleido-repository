@@ -15,13 +15,10 @@
  */
 package org.kaleidofoundry.core.naming;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.jms.JMSException;
-import javax.jms.Queue;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.Topic;
+import javax.jms.TextMessage;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -51,40 +48,28 @@ public class RemoteJunitLauncher extends Assert {
 
    @Test
    public void testDatasource01() throws SQLException {
-	RemoteDatasourceSample01 remoteDatasourceSample = new RemoteDatasourceSample01();
-	Connection connection = remoteDatasourceSample.getConnection();
-	assertNotNull(connection);
-	assertNotSame(connection, remoteDatasourceSample.getConnection());
+	final String message = "hello world !";
+	RemoteJndiSample01 remoteJndiSample = new RemoteJndiSample01();
+	assertNotNull(remoteJndiSample.echoFromDatabase(message));
+	assertEquals(message, remoteJndiSample.echoFromDatabase(message));	
    }
 
    @Test
    public void testJms01() throws JMSException {
-	RemoteJmsSample01 remoteQueueSample = new RemoteJmsSample01();
-
-	// get a jms queue connection factory
-	QueueConnectionFactory queueConFactory = remoteQueueSample.getQueueConnectionFactory();
-	assertNotNull(queueConFactory);
-	assertSame(queueConFactory, queueConFactory);
-
-	// get a jms queue
-	Queue queue = remoteQueueSample.getQueue();
-	assertNotNull(queue);
-	assertSame(queue, queue);
-	assertEquals("kaleidoQueue", queue.getQueueName());
-
-	// get a topic queue
-	Topic topic = remoteQueueSample.getTopic();
-	assertNotNull(topic);
-	assertSame(topic, topic);
-	assertEquals("kaleido.topic.destination", topic.getTopicName());
+	final String message = "hello world !";
+	RemoteJndiSample01 remoteJndiSample = new RemoteJndiSample01();
+	TextMessage jmsMessage = remoteJndiSample.echoFromJMS(message);
+	assertNotNull(jmsMessage);
+	assertEquals(message, jmsMessage.getText());
+	assertNotNull(jmsMessage.getJMSMessageID());
    }
    
    @Test
    public void testEjb01() {
-	RemoteEjbSample01 remoteEjbSample = new RemoteEjbSample01();
-	assertEquals("hello world", remoteEjbSample.echo("hello world"));
-	assertEquals("hello world2", remoteEjbSample.echo("hello world2"));
-	assertEquals("hello world3", remoteEjbSample.echo("hello world3"));
-	assertFalse("foo?".equals(remoteEjbSample.echo("foo")));
+	RemoteJndiSample01 remoteJndiSample = new RemoteJndiSample01();
+	assertEquals("hello world", remoteJndiSample.echoFromEJB("hello world"));
+	assertEquals("hello world2", remoteJndiSample.echoFromEJB("hello world2"));
+	assertEquals("hello world3", remoteJndiSample.echoFromEJB("hello world3"));
+	assertFalse("foo?".equals(remoteJndiSample.echoFromEJB("foo")));
    }   
 }

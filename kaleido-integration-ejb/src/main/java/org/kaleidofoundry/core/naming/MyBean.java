@@ -22,7 +22,7 @@ import javax.ejb.Stateless;
  * @author Jerome RADUGET
  *
  */
-@Stateless
+@Stateless()
 public class MyBean implements MyRemoteBean {
 
    @Override
