@@ -150,54 +150,54 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
 
    // * commons settings property name ****************
    /** resource store uri scheme <code>http|https|ftp|file|classpath|webapp|...</code> */
-   public static final String uriScheme = "uriScheme";
+   public static final String UriScheme = "uriScheme";
 
    /** resource store read-only usage <code>true|false</code> */
-   public static final String readonly = "readonly";
+   public static final String Readonly = "readonly";
    /** retry count settings for establish the connection */
-   public static final String connectionRetryCount = "connectionRetryCount";
+   public static final String ConnectionRetryCount = "connectionRetryCount";
    /** retry count settings for reading a resource */
-   public static final String readRetryCount = "readRetryCount";
+   public static final String ReadRetryCount = "readRetryCount";
    /** property name for setting the class name, to get the class loader to use */
-   public static final String classloader = "classloader";
+   public static final String Classloader = "classloader";
 
    // * jpa settings property name ****************
    /** class name of a custom resource store entity */
-   public static final String customResourceStoreEntity = "customResourceStoreEntity";
+   public static final String CustomResourceStoreEntity = "customResourceStoreEntity";
    /** buffer size for reading input stream data */
-   public static final String bufferSize = "bufferSize";
+   public static final String BufferSize = "bufferSize";
 
    // * connection settings for ftp, http ... if needed ******************
 
    /** the connection user when resource store needs authentication */
-   public static final String user = "user";
+   public static final String User = "user";
    /** the connection password when resource store needs authentication */
-   public static final String password = "password";
+   public static final String Password = "password";
    /** Enable or not the cache use - see {@link URLConnection#setUseCaches(boolean)} */
-   public static final String useCaches = "useCaches";
+   public static final String UseCaches = "useCaches";
    /** connection timeout settings - see {@link URLConnection#setConnectTimeout(int) } */
-   public static final String connectTimeout = "connectTimeout";
-   /** read timeout settings - - see {@link URLConnection#setReadTimeout(int)} */
-   public static final String readTimeout = "readTimeout";
+   public static final String ConnectTimeout = "connectTimeout";
+   /** read timeout settings - see {@link URLConnection#setReadTimeout(int)} */
+   public static final String ReadTimeout = "readTimeout";
 
    /** Http method to get file content : GET, POST */
-   public static final String method = "method";
+   public static final String Method = "method";
    /** Http response mime type */
-   public static final String contentType = "contentType";
+   public static final String ContentType = "contentType";
 
    // * proxy settings if needed ******************
    /** does proxy is enabled - usage <code>true|false</code> value */
-   public static final String proxySet = "proxySet";
+   public static final String ProxySet = "proxySet";
    /** proxy host - ignored is proxySet is set to <code>false</code> */
-   public static final String proxyHost = "proxyHost";
+   public static final String ProxyHost = "proxyHost";
    /** non proxy hosts list, separators is comma - ignored is proxySet is set to <code>false</code> */
-   public static final String nonProxyHosts = "nonProxyHosts";
+   public static final String NonProxyHosts = "nonProxyHosts";
    /** proxy port */
-   public static final String proxyPort = "proxyPort";
+   public static final String ProxyPort = "proxyPort";
    /** proxy user */
-   public static final String proxyUser = "proxyUser";
+   public static final String ProxyUser = "proxyUser";
    /** proxy password */
-   public static final String proxyPassword = "proxyPassword";
+   public static final String ProxyPassword = "proxyPassword";
 
    /**
     * @param pluginInterface
@@ -270,7 +270,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     * @see ResourceContextBuilder#readonly
     */
    public ResourceContextBuilder withUriScheme(final String uriScheme) {
-	getContextParameters().put(ResourceContextBuilder.uriScheme, uriScheme);
+	getContextParameters().put(UriScheme, uriScheme);
 	return this;
    }
 
@@ -280,7 +280,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     * @see ResourceContextBuilder#readonly
     */
    public ResourceContextBuilder withReadonly(final boolean readonly) {
-	getContextParameters().put(ResourceContextBuilder.readonly, String.valueOf(readonly));
+	getContextParameters().put(Readonly, String.valueOf(readonly));
 	return this;
    }
 
@@ -290,7 +290,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     * @see ResourceContextBuilder#user
     */
    public ResourceContextBuilder withUser(final String username) {
-	getContextParameters().put(ResourceContextBuilder.user, username);
+	getContextParameters().put(User, username);
 	return this;
    }
 
@@ -300,7 +300,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     * @see ResourceContextBuilder#password
     */
    public ResourceContextBuilder withPassword(final String password) {
-	getContextParameters().put(ResourceContextBuilder.password, password);
+	getContextParameters().put(Password, password);
 	return this;
    }
 
@@ -310,7 +310,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     * @see ResourceContextBuilder#connectTimeout
     */
    public ResourceContextBuilder withConnectTimeout(final int connectTimeout) {
-	getContextParameters().put(ResourceContextBuilder.connectTimeout, String.valueOf(connectTimeout));
+	getContextParameters().put(ConnectTimeout, String.valueOf(connectTimeout));
 	return this;
    }
 
@@ -320,7 +320,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     * @see ResourceContextBuilder#readTimeout
     */
    public ResourceContextBuilder withReadTimeout(final int readTimeout) {
-	getContextParameters().put(ResourceContextBuilder.readTimeout, String.valueOf(readTimeout));
+	getContextParameters().put(ReadTimeout, String.valueOf(readTimeout));
 	return this;
    }
 
@@ -330,7 +330,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     * @see ResourceContextBuilder#proxySet
     */
    public ResourceContextBuilder withProxySet(final boolean proxySet) {
-	getContextParameters().put(ResourceContextBuilder.proxySet, String.valueOf(proxySet));
+	getContextParameters().put(ProxySet, String.valueOf(proxySet));
 	return this;
    }
 
@@ -339,7 +339,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     * @return current builder instance
     */
    public ResourceContextBuilder withProxyHost(final String proxyHost) {
-	getContextParameters().put(ResourceContextBuilder.proxyHost, proxyHost);
+	getContextParameters().put(ProxyHost, proxyHost);
 	return this;
    }
 
@@ -349,7 +349,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     * @see ResourceContextBuilder#nonProxyHosts
     */
    public ResourceContextBuilder withNonProxyHosts(final String nonProxyHosts) {
-	getContextParameters().put(ResourceContextBuilder.nonProxyHosts, nonProxyHosts);
+	getContextParameters().put(NonProxyHosts, nonProxyHosts);
 	return this;
    }
 
@@ -359,7 +359,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     * @see ResourceContextBuilder#proxyPort
     */
    public ResourceContextBuilder withProxyPort(final int proxyPort) {
-	getContextParameters().put(ResourceContextBuilder.proxyPort, String.valueOf(proxyPort));
+	getContextParameters().put(ProxyPort, String.valueOf(proxyPort));
 	return this;
    }
 
@@ -369,7 +369,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     * @see ResourceContextBuilder#proxyUser
     */
    public ResourceContextBuilder withProxyUser(final String proxyUser) {
-	getContextParameters().put(ResourceContextBuilder.proxyUser, proxyUser);
+	getContextParameters().put(ProxyUser, proxyUser);
 	return this;
    }
 
@@ -379,7 +379,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     * @see ResourceContextBuilder#proxyPassword
     */
    public ResourceContextBuilder withProxyPassword(final String proxyPassword) {
-	getContextParameters().put(ResourceContextBuilder.proxyPassword, proxyPassword);
+	getContextParameters().put(ProxyPassword, proxyPassword);
 	return this;
    }
 
@@ -389,7 +389,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     * @see ResourceContextBuilder#classloader
     */
    public ResourceContextBuilder withClassloader(final String classloader) {
-	getContextParameters().put(ResourceContextBuilder.classloader, classloader);
+	getContextParameters().put(Classloader, classloader);
 	return this;
    }
 
@@ -399,7 +399,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     * @see ResourceContextBuilder#method
     */
    public ResourceContextBuilder withMethod(final String method) {
-	getContextParameters().put(ResourceContextBuilder.method, method);
+	getContextParameters().put(Method, method);
 	return this;
    }
 
@@ -409,7 +409,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     * @see ResourceContextBuilder#classloader
     */
    public ResourceContextBuilder withContentType(final String contentType) {
-	getContextParameters().put(ResourceContextBuilder.contentType, contentType);
+	getContextParameters().put(ContentType, contentType);
 	return this;
    }
 
@@ -419,7 +419,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     * @see ResourceContextBuilder#customResourceStoreEntity
     */
    public ResourceContextBuilder withCustomResourceStoreEntity(final String customResourceStoreEntity) {
-	getContextParameters().put(ResourceContextBuilder.customResourceStoreEntity, customResourceStoreEntity);
+	getContextParameters().put(CustomResourceStoreEntity, customResourceStoreEntity);
 	return this;
    }
 
@@ -429,7 +429,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     * @see ResourceContextBuilder#bufferSize
     */
    public ResourceContextBuilder withBufferSize(final String bufferSize) {
-	getContextParameters().put(ResourceContextBuilder.bufferSize, bufferSize);
+	getContextParameters().put(BufferSize, bufferSize);
 	return this;
    }
 

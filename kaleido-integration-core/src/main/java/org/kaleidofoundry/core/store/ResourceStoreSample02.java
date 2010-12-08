@@ -40,11 +40,10 @@ public class ResourceStoreSample02 {
    // @Parameter overrides myResourceCtx configuration setting
    @Context(value = "myResourceCtx",
 	   parameters = {
-	   @Parameter(name = readonly, value = "true"),
-	   @Parameter(name = connectTimeout, value = "0"),
-	   @Parameter(name = readTimeout, value = "0")
-   }
-   )
+	   @Parameter(name = Readonly, value = "true"),
+	   @Parameter(name = ConnectTimeout, value = "0"),
+	   @Parameter(name = ReadTimeout, value = "0")
+   })
    protected ResourceStore resourceStore;
 
    /**
@@ -74,13 +73,10 @@ public class ResourceStoreSample02 {
 
 	} finally {
 	   // free buffered reader
-	   if (reader != null) {
-		reader.close();
-	   }
+	   try { if (reader != null) { reader.close(); } } catch (IOException ioe) {}
+	   
 	   // free the resource
-	   if (rh != null) {
-		rh.release();
-	   }
+	   if (rh != null) { rh.release(); }
 	}
    }
 

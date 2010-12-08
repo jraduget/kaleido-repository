@@ -33,11 +33,11 @@ import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
- * Jndi naming service implementation
+ * JNDI naming service implementation
  * 
  * @author Jerome RADUGET
  */
-@Declare(value = JndiNamingPluginName, description = "jndi naming service plugin implementation")
+@Declare(value = JndiNamingPluginName, description = "jndi naming service implementation")
 @Reviews(reviews = { @Review(category = ReviewCategoryEnum.Improvement, comment = "fail over on client side with context property : failover.enabled ; failover.waiting ; failover.maxretry ; home cache ") })
 public class JndiNamingService implements NamingService {
 
@@ -77,7 +77,7 @@ public class JndiNamingService implements NamingService {
 	try {
 	   // feed init context properties (can be empty)
 	   intialContext = new InitialContext(context.toProperties());
-	   for (String property : context.keySet()) {
+	   for (final String property : context.keySet()) {
 		intialContext.addToEnvironment(property, context.getProperty(property));
 	   }
 
@@ -139,4 +139,12 @@ public class JndiNamingService implements NamingService {
 	}
 	return initialContext;
    }
+
+   /**
+    * @return current instance context
+    */
+   RuntimeContext<NamingService> getContext() {
+	return context;
+   }
+
 }

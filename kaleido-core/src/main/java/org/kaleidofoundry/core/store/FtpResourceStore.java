@@ -88,22 +88,22 @@ public class FtpResourceStore extends AbstractResourceStore implements ResourceS
 	   Proxy httpProxy = null;
 
 	   // if a proxy is set & active
-	   if (!StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.proxySet))) {
-		if (Boolean.parseBoolean(context.getProperty(ResourceContextBuilder.proxySet))) {
+	   if (!StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.ProxySet))) {
+		if (Boolean.parseBoolean(context.getProperty(ResourceContextBuilder.ProxySet))) {
 
-		   final String proxyHost = context.getProperty(ResourceContextBuilder.proxyHost);
-		   final String proxyPort = context.getProperty(ResourceContextBuilder.proxyPort);
+		   final String proxyHost = context.getProperty(ResourceContextBuilder.ProxyHost);
+		   final String proxyPort = context.getProperty(ResourceContextBuilder.ProxyPort);
 
 		   if (!StringHelper.isEmpty(proxyHost)) {
 			httpProxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, !StringHelper.isEmpty(proxyPort) ? Integer.parseInt(proxyPort) : 80));
 
-			if (!StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.nonProxyHosts))) {
+			if (!StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.NonProxyHosts))) {
 			   // :( global...
-			   System.getProperties().put("ftp.nonProxyHosts", context.getProperty(ResourceContextBuilder.nonProxyHosts));
+			   System.getProperties().put("ftp.nonProxyHosts", context.getProperty(ResourceContextBuilder.NonProxyHosts));
 			}
 
-			if (!StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.proxyUser))
-				&& !StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.proxyPassword))) {
+			if (!StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.ProxyUser))
+				&& !StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.ProxyPassword))) {
 
 			   // Authenticator is global... :(
 			   // other way : urlConnection.setRequestProperty("Proxy-Authorization", Base64.encodeObject(username));
@@ -111,8 +111,8 @@ public class FtpResourceStore extends AbstractResourceStore implements ResourceS
 			   Authenticator.setDefault(new Authenticator() {
 				@Override
 				protected PasswordAuthentication getPasswordAuthentication() {
-				   return new PasswordAuthentication(context.getProperty(ResourceContextBuilder.proxyUser), context.getProperty(
-					   ResourceContextBuilder.proxyPassword).toCharArray());
+				   return new PasswordAuthentication(context.getProperty(ResourceContextBuilder.ProxyUser), context.getProperty(
+					   ResourceContextBuilder.ProxyPassword).toCharArray());
 				}
 			   });
 

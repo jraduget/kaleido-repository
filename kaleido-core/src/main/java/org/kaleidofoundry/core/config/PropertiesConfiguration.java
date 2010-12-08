@@ -22,6 +22,7 @@ import java.util.Properties;
 
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.store.ResourceException;
@@ -42,7 +43,8 @@ public class PropertiesConfiguration extends AbstractConfiguration {
     * @param context
     * @throws ResourceException
     */
-   public PropertiesConfiguration(final String name, final URI resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
+   public PropertiesConfiguration(@NotNull final String name, @NotNull final URI resourceUri, @NotNull final RuntimeContext<Configuration> context)
+	   throws ResourceException {
 	super(name, resourceUri, context);
    }
 
@@ -52,7 +54,8 @@ public class PropertiesConfiguration extends AbstractConfiguration {
     * @param context
     * @throws ResourceException
     */
-   public PropertiesConfiguration(final String name, final String resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
+   public PropertiesConfiguration(@NotNull final String name, @NotNull final String resourceUri, @NotNull final RuntimeContext<Configuration> context)
+	   throws ResourceException {
 	super(name, resourceUri, context);
    }
 
@@ -65,15 +68,15 @@ public class PropertiesConfiguration extends AbstractConfiguration {
    protected Cache<String, Serializable> loadProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> properties)
 	   throws ResourceException, ConfigurationException {
 	try {
-	   Properties lprops = new Properties();
+	   final Properties lprops = new Properties();
 	   lprops.load(resourceHandler.getInputStream());
 
-	   for (String propName : lprops.stringPropertyNames()) {
+	   for (final String propName : lprops.stringPropertyNames()) {
 		properties.put(normalizeKey(propName), lprops.getProperty(propName));
 	   }
 
 	   return properties;
-	} catch (IOException ioe) {
+	} catch (final IOException ioe) {
 	   throw new ResourceException(ioe);
 	}
    }

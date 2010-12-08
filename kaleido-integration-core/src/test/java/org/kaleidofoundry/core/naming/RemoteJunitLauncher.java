@@ -31,8 +31,13 @@ import org.kaleidofoundry.core.store.ResourceException;
 /**
  * @author Jerome RADUGET
  */
-public class RemoteJunitLauncher extends Assert {
+public abstract class RemoteJunitLauncher extends Assert {
 
+   /**
+    * @return
+    */
+   public abstract NamingServiceJndiSample getNamingServiceJndiSample();
+   
    @Before
    public void setup() throws ResourceException {
 	// load and register given configuration
@@ -47,29 +52,34 @@ public class RemoteJunitLauncher extends Assert {
    }
 
    @Test
-   public void testDatasource01() throws SQLException {
+   public void testDatasource() throws SQLException {
 	final String message = "hello world !";
-	RemoteJndiSample01 remoteJndiSample = new RemoteJndiSample01();
-	assertNotNull(remoteJndiSample.echoFromDatabase(message));
-	assertEquals(message, remoteJndiSample.echoFromDatabase(message));	
+	NamingServiceJndiSample jndiSample = getNamingServiceJndiSample();
+	assertNotNull(jndiSample);
+	assertNotNull(jndiSample.echoFromDatabase(message));
+	assertEquals(message, jndiSample.echoFromDatabase(message));	
    }
 
    @Test
-   public void testJms01() throws JMSException {
+   public void testJms() throws JMSException {
 	final String message = "hello world !";
-	RemoteJndiSample01 remoteJndiSample = new RemoteJndiSample01();
-	TextMessage jmsMessage = remoteJndiSample.echoFromJMS(message);
+	NamingServiceJndiSample jndiSample = getNamingServiceJndiSample();
+	assertNotNull(jndiSample);
+	TextMessage jmsMessage = jndiSample.echoFromJMS(message);
 	assertNotNull(jmsMessage);
 	assertEquals(message, jmsMessage.getText());
 	assertNotNull(jmsMessage.getJMSMessageID());
    }
    
    @Test
-   public void testEjb01() {
-	RemoteJndiSample01 remoteJndiSample = new RemoteJndiSample01();
-	assertEquals("hello world", remoteJndiSample.echoFromEJB("hello world"));
-	assertEquals("hello world2", remoteJndiSample.echoFromEJB("hello world2"));
-	assertEquals("hello world3", remoteJndiSample.echoFromEJB("hello world3"));
-	assertFalse("foo?".equals(remoteJndiSample.echoFromEJB("foo")));
+   public void testEjb() {
+	NamingServiceJndiSample jndiSample = getNamingServiceJndiSample();
+	assertNotNull(jndiSample);
+	assertEquals("hello world", jndiSample.echoFromEJB("hello world"));
+	assertEquals("hello world2", jndiSample.echoFromEJB("hello world2"));
+	assertEquals("hello world3", jndiSample.echoFromEJB("hello world3"));
+	assertFalse("foo?".equals(jndiSample.echoFromEJB("foo")));
    }   
+   
+   
 }

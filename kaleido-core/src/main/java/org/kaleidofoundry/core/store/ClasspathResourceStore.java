@@ -44,7 +44,7 @@ public class ClasspathResourceStore extends AbstractResourceStore implements Res
     */
    public ClasspathResourceStore(@NotNull final RuntimeContext<ResourceStore> context) {
 	super(context);
-	final String strClass = context.getProperty(ResourceContextBuilder.classloader);
+	final String strClass = context.getProperty(ResourceContextBuilder.Classloader);
 
 	if (strClass == null) {
 	   classLoader = Thread.currentThread().getContextClassLoader();

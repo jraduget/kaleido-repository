@@ -27,8 +27,8 @@ import java.util.Set;
 
 import org.kaleidofoundry.core.context.AbstractProviderService;
 import org.kaleidofoundry.core.context.Context;
-import org.kaleidofoundry.core.context.ProviderService;
 import org.kaleidofoundry.core.context.ProviderException;
+import org.kaleidofoundry.core.context.ProviderService;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.context.RuntimeContextEmptyParameterException;
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
@@ -44,8 +44,8 @@ import org.kaleidofoundry.core.util.StringHelper;
  * <ul>
  * <li>It can be manually used by developer via {@link ConfigurationFactory}</li>
  * <li>or</li>
- * <li>It will be used automatically by annotation processor (AOP AspectJ, Guice, Spring) which will handle {@link Context} annotation
- * at runtime</li>
+ * <li>It will be used automatically by annotation processor (AOP AspectJ, Guice, Spring) which will handle {@link Context} annotation at
+ * runtime</li>
  * </ul>
  * 
  * @author Jerome RADUGET
@@ -78,7 +78,7 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
    @Override
    public Configuration provides(@NotNull final RuntimeContext<Configuration> runtimeContext) throws ProviderException, ResourceException {
 	String name = runtimeContext.getProperty(Name);
-	String resourceUri = runtimeContext.getProperty(ResourceUri);
+	final String resourceUri = runtimeContext.getProperty(ResourceUri);
 
 	if (StringHelper.isEmpty(name)) {
 	   name = runtimeContext.getName();
@@ -152,7 +152,6 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 	   // re-check uri coherence ?
 	   return configuration;
 	}
-
    }
 
    /**
@@ -199,8 +198,8 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 		if (e.getCause() instanceof ResourceException) {
 		   throw (ResourceException) e.getCause();
 		} else {
-		   throw new ProviderException("context.provider.error.InvocationTargetException", impl.getName(),
-			   "String name, URI resourceUri, RuntimeContext<Configuration> context", e.getCause().getClass().getName(), e.getMessage());
+		   throw new ProviderException("context.provider.error.InvocationTargetException", e.getCause(), impl.getName(),
+			   "String name, URI resourceUri, RuntimeContext<Configuration> context");
 		}
 	   }
 	}

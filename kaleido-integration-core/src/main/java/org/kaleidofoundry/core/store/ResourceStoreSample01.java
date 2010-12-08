@@ -75,6 +75,14 @@ public class ResourceStoreSample01 {
 
 	   // connect to the resource with the injected context (proxy, credentials, ...)
 	   rh = resourceStore.get(URI.create("http://localhost/kaleidofoundry/it/store/foo.txt"));
+	   
+	   /* it would be same way with other uris :
+	    * 
+	    *	"ftp://localhost/kaleidofoundry/it/store/foo.txt"
+	    *	"file:/kaleidofoundry/it/store/foo.txt"
+	    *	"classpath:/org/kaleidofoundry/it/store/foo.txt"
+	    *	...
+	    */	   
 
 	   // handle the input stream resource as usual
 	   reader = new BufferedReader(new InputStreamReader(rh.getInputStream(), "UTF8"));
@@ -85,13 +93,10 @@ public class ResourceStoreSample01 {
 
 	} finally {
 	   // free buffered reader
-	   if (reader != null) {
-		reader.close();
-	   }
+	   try { if (reader != null) { reader.close(); } } catch (IOException ioe) {}
+	   
 	   // free the resource
-	   if (rh != null) {
-		rh.release();
-	   }
+	   if (rh != null) { rh.release(); }
 	}
    }
 }

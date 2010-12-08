@@ -126,8 +126,8 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
 
 	if (resource.getInputStream() != null) {
 
-	   final int buffSize = StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.bufferSize)) ? Integer.valueOf(context
-		   .getProperty(ResourceContextBuilder.bufferSize)) : 128;
+	   final int buffSize = StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.BufferSize)) ? Integer.valueOf(context
+		   .getProperty(ResourceContextBuilder.BufferSize)) : 128;
 	   final byte[] buffer = new byte[buffSize];
 	   final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -147,7 +147,7 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
     */
    private ResourceStoreEntity newInstance() {
 
-	final String customResourceStoreEntityClass = context.getProperty(ResourceContextBuilder.customResourceStoreEntity);
+	final String customResourceStoreEntityClass = context.getProperty(ResourceContextBuilder.CustomResourceStoreEntity);
 
 	if (StringHelper.isEmpty(customResourceStoreEntityClass)) {
 	   return new ResourceStoreEntity();
@@ -160,12 +160,12 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
 		   return (ResourceStoreEntity) instance;
 		} else {
 		   throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.context.customentity.illegaltype", context.getName(),
-			   context.getProperty(ResourceContextBuilder.customResourceStoreEntity), ResourceContextBuilder.customResourceStoreEntity));
+			   context.getProperty(ResourceContextBuilder.CustomResourceStoreEntity), ResourceContextBuilder.CustomResourceStoreEntity));
 		}
 
 	   } catch (final ClassNotFoundException cnfe) {
 		throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.context.customentity.notfound", context.getName(),
-			context.getProperty(ResourceContextBuilder.customResourceStoreEntity), ResourceContextBuilder.customResourceStoreEntity));
+			context.getProperty(ResourceContextBuilder.CustomResourceStoreEntity), ResourceContextBuilder.CustomResourceStoreEntity));
 	   } catch (final IllegalAccessException iae) {
 		throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.context.customentity.illegalconstructor",
 			customResourceStoreEntityClass, iae.getMessage()));

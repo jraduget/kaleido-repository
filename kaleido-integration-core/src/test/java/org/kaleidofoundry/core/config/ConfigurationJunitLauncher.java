@@ -25,8 +25,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
@@ -41,16 +41,16 @@ import org.kaleidofoundry.core.store.ResourceException;
  */
 public class ConfigurationJunitLauncher {
 
-   @BeforeClass
-   public static void setupStatic() throws ResourceException {
+   @Before
+   public void setup() throws ResourceException {
 	// load and register given configuration
-	// another way to to this, set following java env variable : -Dkaleido.configurations=myContext=classpath:/config/myContext.properties
-	ConfigurationFactory.provides("myContext", "classpath:/config/myContext.properties");
+	// another way to to this, set following java env variable : -Dkaleido.configurations=myConfigCtx=classpath:/config/myContext.properties
+	ConfigurationFactory.provides("myConfigCtx", "classpath:/config/myContext.properties");
    }
 
-   @AfterClass
-   public static void cleanupStatic() throws ResourceException {
-	ConfigurationFactory.destroy("myContext");
+   @After
+   public void cleanup() throws ResourceException {
+	ConfigurationFactory.destroy("myConfigCtx");
    }
 
    @Test
@@ -74,7 +74,7 @@ public class ConfigurationJunitLauncher {
 	Integer cacheManagerRegistryId = CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.ehCache1x.name(), "classpath:/config/ehcache.xml");
 	CacheManager cacheManager  = CacheManagerFactory.getRegistry().get(cacheManagerRegistryId);
 	assertNotNull(cacheManager);
-	Cache<String, String> currentConfigurationCache = cacheManager.getCache("kaleidofoundry/configuration/mySimpleConfig");
+	Cache<String, String> currentConfigurationCache = cacheManager.getCache("kaleidofoundry/configuration/myConfig");
 
 	assertTrue(currentConfigurationCache instanceof EhCache1xImpl<?, ?>);
 	assertTrue(currentConfigurationCache.getDelegate() instanceof net.sf.ehcache.Cache);

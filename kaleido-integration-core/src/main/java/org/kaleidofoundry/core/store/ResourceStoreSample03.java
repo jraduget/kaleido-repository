@@ -37,14 +37,14 @@ public class ResourceStoreSample03 {
 
    public ResourceStoreSample03() throws ResourceException {
 
-	RuntimeContext<ResourceStore> context =
+	RuntimeContext<ResourceStore> context = 
 	   new ResourceContextBuilder("myResourceCtx", ResourceStore.class)
-	.withUriScheme("http")
-	.withReadonly(true)
-	.withConnectTimeout(0)
-	.withReadTimeout(0)
-	.withProxySet(false)
-	.build();
+		.withUriScheme("http")
+		.withReadonly(true)
+		.withConnectTimeout(0)
+		.withReadTimeout(0)
+		.withProxySet(false)
+		.build();
 
 	resourceStore = ResourceStoreFactory.provides(context);
 
@@ -78,13 +78,10 @@ public class ResourceStoreSample03 {
 
 	} finally {
 	   // free buffered reader
-	   if (reader != null) {
-		reader.close();
-	   }
+	   try { if (reader != null) { reader.close(); } } catch (IOException ioe) {}
+	   
 	   // free the resource
-	   if (rh != null) {
-		rh.release();
-	   }
+	   if (rh != null) { rh.release(); }
 	}
    }
 

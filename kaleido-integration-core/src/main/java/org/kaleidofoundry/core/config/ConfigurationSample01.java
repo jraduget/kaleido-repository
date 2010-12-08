@@ -26,7 +26,7 @@ import org.kaleidofoundry.core.context.Context;
  * The following java env. variable have been set :
  * 
  * <pre>
- * -Dkaleido.configurations=mySimpleConfig=classpath:/config/myContext.properties
+ * -Dkaleido.configurations=myConfigCtx=classpath:/config/myContext.properties
  * </pre>
  * 
  * Configuration resource file : "classpath:/config/myConfig.properties" contains :
@@ -46,11 +46,11 @@ import org.kaleidofoundry.core.context.Context;
  * <pre>
  * 
  * # simple configuration context properties
- * configuration.mySimpleConfig.readonly=true
- * configuration.mySimpleConfig.resourceUri=classpath:/config/myConfig.properties
+ * configuration.myConfigCtx.readonly=true
+ * configuration.myConfigCtx.resourceUri=classpath:/config/myConfig.properties
  * 
  * # simple configuration context (optional) - used for cache manager policies
- * #configuration.mySimpleConfig.cacheManagerRef=myCacheManager
+ * #configuration.myConfigCtx.cacheManagerRef=myCacheManager
  * cacheManager.myCacheManager.providerCode=ehCache1x
  * cacheManager.myCacheManager.resourceUri=classpath:/config/ehcache.xml
  * 
@@ -82,7 +82,7 @@ import org.kaleidofoundry.core.context.Context;
  */
 public class ConfigurationSample01 {
 
-   @Context("mySimpleConfig")
+   @Context("myConfigCtx")
    private Configuration configuration;
 
    /**

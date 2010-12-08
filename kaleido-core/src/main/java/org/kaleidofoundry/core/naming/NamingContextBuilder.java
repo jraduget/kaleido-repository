@@ -343,99 +343,99 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
    /**
     * @see Context#PROVIDER_URL
     */
-   public static String ProviderUrl = Context.PROVIDER_URL;
+   public static final String ProviderUrl = Context.PROVIDER_URL;
    /**
     * @see Context#INITIAL_CONTEXT_FACTORY
     */
-   public static String InitialContextFactory = Context.INITIAL_CONTEXT_FACTORY;
+   public static final String InitialContextFactory = Context.INITIAL_CONTEXT_FACTORY;
    /**
     * @see Context#URL_PKG_PREFIXES
     */
-   public static String UrlPkgPrefixes = Context.URL_PKG_PREFIXES;
+   public static final String UrlPkgPrefixes = Context.URL_PKG_PREFIXES;
    /**
     * @see Context#DNS_URL
     */
-   public static String DnsUrl = Context.DNS_URL;
+   public static final String DnsUrl = Context.DNS_URL;
    /**
     * @see Context#AUTHORITATIVE
     */
-   public static String Authoritative = Context.AUTHORITATIVE;
+   public static final String Authoritative = Context.AUTHORITATIVE;
    /**
     * @see Context#BATCHSIZE
     */
-   public static String BatchSize = Context.BATCHSIZE;
+   public static final String BatchSize = Context.BATCHSIZE;
    /**
     * @see Context#LANGUAGE
     */
-   public static String Language = Context.LANGUAGE;
+   public static final String Language = Context.LANGUAGE;
    /**
     * @see Context#REFERRAL
     */
-   public static String Referral = Context.REFERRAL;
+   public static final String Referral = Context.REFERRAL;
    /**
     * @see Context#SECURITY_AUTHENTICATION
     */
-   public static String SecurityAuthentication = Context.SECURITY_AUTHENTICATION;
+   public static final String SecurityAuthentication = Context.SECURITY_AUTHENTICATION;
    /**
     * @see Context#SECURITY_PRINCIPAL
     */
-   public static String SecurityPrincipal = Context.SECURITY_PRINCIPAL;
+   public static final String SecurityPrincipal = Context.SECURITY_PRINCIPAL;
    /**
     * @see Context#SECURITY_CREDENTIALS
     */
-   public static String SecurityCredentials = Context.SECURITY_CREDENTIALS;
+   public static final String SecurityCredentials = Context.SECURITY_CREDENTIALS;
    /**
     * @see Context#SECURITY_PROTOCOL
     */
-   public static String SecurityProtocol = Context.SECURITY_PROTOCOL;
+   public static final String SecurityProtocol = Context.SECURITY_PROTOCOL;
    /**
     * @see Context#STATE_FACTORIES
     */
-   public static String StateFactories = Context.STATE_FACTORIES;
+   public static final String StateFactories = Context.STATE_FACTORIES;
    /**
     * 
     */
-   public static String CorbaORBInitialHost = "org.omg.CORBA.ORBInitialHost";
+   public static final String CorbaORBInitialHost = "org.omg.CORBA.ORBInitialHost";
    /**
     * 
     */
-   public static String CorbaORBInitialPort = "org.omg.CORBA.ORBInitialPort";
+   public static final String CorbaORBInitialPort = "org.omg.CORBA.ORBInitialPort";
 
    // kaleido custom properties ************************************************************************************************************
 
    /**
     * see {@link NamingContextBuilder}
     */
-   public static String EnvPrefixName = "java.naming.env.prefix";
+   public static final String EnvPrefixName = "java.naming.env.prefix";
 
    /**
     * see {@link NamingContextBuilder}
     * 
     * @see #CachingStrategy
     */
-   public static String Caching = "caching";
+   public static final String Caching = "caching";
 
    /**
     * see {@link NamingContextBuilder}
     * 
     * @see #Caching
     */
-   public static String CachingStrategy = "caching.strategy";
+   public static final String CachingStrategy = "caching.strategy";
 
    /**
     * see {@link NamingContextBuilder}
     */
-   public static String FailoverEnabled = "failover.enabled";
+   public static final String FailoverEnabled = "failover.enabled";
 
    /**
     * see {@link NamingContextBuilder}
     */
-   public static String FailoverWaitBeforeRetry = "failover.wait";
+   public static final String FailoverWaitBeforeRetry = "failover.wait";
 
    /**
     * see {@link NamingContextBuilder}
     */
-   public static String FailoverMaxRetry = "failover.maxretry";
+   public static final String FailoverMaxRetry = "failover.maxretry";
 
    /**
     * 

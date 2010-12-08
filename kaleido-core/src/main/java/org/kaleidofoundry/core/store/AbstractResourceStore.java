@@ -110,10 +110,10 @@ public abstract class AbstractResourceStore implements ResourceStore {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#isReadOnly()
     */
    public final boolean isReadOnly() {
-	if (StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.readonly))) {
+	if (StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.Readonly))) {
 	   return false;
 	} else {
-	   return Boolean.valueOf(context.getProperty(ResourceContextBuilder.readonly));
+	   return Boolean.valueOf(context.getProperty(ResourceContextBuilder.Readonly));
 	}
    }
 
@@ -207,14 +207,14 @@ public abstract class AbstractResourceStore implements ResourceStore {
     */
    protected void setUrlConnectionSettings(final URLConnection urlConnection) {
 
-	if (!StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.connectTimeout))) {
-	   urlConnection.setConnectTimeout(Integer.parseInt(context.getProperty(ResourceContextBuilder.connectTimeout)));
+	if (!StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.ConnectTimeout))) {
+	   urlConnection.setConnectTimeout(Integer.parseInt(context.getProperty(ResourceContextBuilder.ConnectTimeout)));
 	}
-	if (!StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.readTimeout))) {
-	   urlConnection.setReadTimeout(Integer.parseInt(context.getProperty(ResourceContextBuilder.readTimeout)));
+	if (!StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.ReadTimeout))) {
+	   urlConnection.setReadTimeout(Integer.parseInt(context.getProperty(ResourceContextBuilder.ReadTimeout)));
 	}
-	if (!StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.useCaches))) {
-	   urlConnection.setUseCaches(Boolean.parseBoolean(context.getProperty(ResourceContextBuilder.useCaches)));
+	if (!StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.UseCaches))) {
+	   urlConnection.setUseCaches(Boolean.parseBoolean(context.getProperty(ResourceContextBuilder.UseCaches)));
 	}
 
    }

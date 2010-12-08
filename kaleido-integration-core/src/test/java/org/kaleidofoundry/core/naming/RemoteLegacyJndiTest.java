@@ -31,9 +31,11 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 
 /**
+ * Legacy jndi look up and new jndi naming service lookup
+ * 
  * @author Jerome RADUGET
  */
-public class JndiNamingServiceTest extends Assert {
+public class RemoteLegacyJndiTest extends Assert {
 
    private static final String datasourceJndiName = "jdbc/kaleido";
 

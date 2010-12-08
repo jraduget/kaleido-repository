@@ -18,7 +18,7 @@
 		memoryStoreEvictionPolicy="LRU" />
 
 	<!-- READ_WRITE -->
-	<cache name="kaleidofoundry/configuration/mySimpleConfig"
+	<cache name="kaleidofoundry/configuration/myConfig"
 		eternal="true"
 		overflowToDisk="true"
 		diskPersistent="false"

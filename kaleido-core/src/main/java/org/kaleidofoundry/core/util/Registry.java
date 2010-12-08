@@ -22,6 +22,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 
 /**
@@ -33,6 +35,7 @@ import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
  * @param <T>
  */
 @ThreadSafe
+@Review(category = ReviewCategoryEnum.Improvement, comment = "Is the ConcurrentHashMap the best way for performance and concurrency ?")
 public class Registry<K, T> extends ConcurrentHashMap<K, T> implements ConcurrentMap<K, T> {
 
    private static final long serialVersionUID = -2537287170029457353L;

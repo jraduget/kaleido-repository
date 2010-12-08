@@ -35,14 +35,12 @@ import org.kaleidofoundry.core.context.Parameter;
  */
 public class ConfigurationSample02 {
 
-   @Context(value="mySimpleConfig",
-	   parameters={
+   @Context(value="myConfigCtx", parameters = {
 	   @Parameter(name=StorageAllowed, value="false"),
 	   @Parameter(name=ResourceUri, value="http://localhost/kaleidofoundry/it/config/myHttpConfig.properties"),
 	   @Parameter(name=CacheManagerRef, value="myCacheManager"),
 	   @Parameter(name=ResourceStoreRef, value="myConfigStore")
-   }
-   )
+   })
    private Configuration configuration;
 
    /**

@@ -49,12 +49,10 @@ public class ResourceStoreProvider extends AbstractProviderService<ResourceStore
     */
    @Override
    public ResourceStore provides(@NotNull final RuntimeContext<ResourceStore> context) throws ProviderException, ResourceException {
-	String uriScheme = context.getProperty(ResourceContextBuilder.uriScheme);
-	
-	if (StringHelper.isEmpty(uriScheme)) {
-	   throw new RuntimeContextEmptyParameterException(ResourceContextBuilder.uriScheme, context);
-	}
-	
+	final String uriScheme = context.getProperty(ResourceContextBuilder.UriScheme);
+
+	if (StringHelper.isEmpty(uriScheme)) { throw new RuntimeContextEmptyParameterException(ResourceContextBuilder.UriScheme, context); }
+
 	return provides(uriScheme, new RuntimeContext<ResourceStore>(ResourceStore.class));
    }
 
