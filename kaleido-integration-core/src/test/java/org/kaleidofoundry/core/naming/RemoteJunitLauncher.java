@@ -19,6 +19,7 @@ import java.sql.SQLException;
 
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
+import javax.sql.DataSource;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -34,10 +35,10 @@ import org.kaleidofoundry.core.store.ResourceException;
 public abstract class RemoteJunitLauncher extends Assert {
 
    /**
-    * @return
+    * @return naming service instance to test
     */
    public abstract NamingServiceJndiSample getNamingServiceJndiSample();
-   
+
    @Before
    public void setup() throws ResourceException {
 	// load and register given configuration
@@ -57,7 +58,7 @@ public abstract class RemoteJunitLauncher extends Assert {
 	NamingServiceJndiSample jndiSample = getNamingServiceJndiSample();
 	assertNotNull(jndiSample);
 	assertNotNull(jndiSample.echoFromDatabase(message));
-	assertEquals(message, jndiSample.echoFromDatabase(message));	
+	assertEquals(message, jndiSample.echoFromDatabase(message));
    }
 
    @Test
@@ -70,7 +71,7 @@ public abstract class RemoteJunitLauncher extends Assert {
 	assertEquals(message, jmsMessage.getText());
 	assertNotNull(jmsMessage.getJMSMessageID());
    }
-   
+
    @Test
    public void testEjb() {
 	NamingServiceJndiSample jndiSample = getNamingServiceJndiSample();
@@ -79,7 +80,13 @@ public abstract class RemoteJunitLauncher extends Assert {
 	assertEquals("hello world2", jndiSample.echoFromEJB("hello world2"));
 	assertEquals("hello world3", jndiSample.echoFromEJB("hello world3"));
 	assertFalse("foo?".equals(jndiSample.echoFromEJB("foo")));
-   }   
-   
-   
+   }
+
+   @Test(expected=NamingServiceNotFoundException.class)
+   public void testResourceNotFound() {
+	NamingServiceJndiSample jndiSample = getNamingServiceJndiSample();
+	assertNotNull(jndiSample);
+	jndiSample.getNamingService().locate("jdbc/unknown", DataSource.class);
+
+   }
 }

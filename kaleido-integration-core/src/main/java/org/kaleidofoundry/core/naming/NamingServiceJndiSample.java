@@ -6,11 +6,11 @@ import javax.jms.JMSException;
 import javax.jms.TextMessage;
 
 public interface NamingServiceJndiSample {
-   
+
    /**
     * use naming service to <b>get a connection from a datasource (connection pool)</b>
     * 
-    * @return
+    * @return input message, but select from database
     * @throws SQLException
     * @throws NamingServiceException
     */
@@ -38,13 +38,13 @@ public interface NamingServiceJndiSample {
     * @param message
     * @return input message
     * @throws NamingServiceException
-    * @see {@link MyLocalBean}
-    * @see {@link MyRemoteBean}
-    * @see {@link MyBean}
+    * @see MyLocalBean
+    * @see MyRemoteBean
+    * @see MyBean
     */
    String echoFromEJB(final String message);
-   
-   
+
+
    /**
     * @return only use for integration testing
     */

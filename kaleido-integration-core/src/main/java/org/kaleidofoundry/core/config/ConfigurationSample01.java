@@ -60,7 +60,7 @@ import org.kaleidofoundry.core.context.Context;
  * 
  * # http configuration context properties
  * configuration.myHttpConfig.readonly=true
- * configuration.myHttpConfig.resourceUri=http://localhost/kaleidofoundry/it/config/myHttpConfig.properties
+ * configuration.myHttpConfig.resourceUri=http://localhost:8080/kaleido-integration/config/myHttpConfig.properties
  * 
  * # http configuration context (optional) - used for resource store (proxy or other parameters...)
  * #configuration.myHttpConfig.resourceStoreRef=myConfigStore

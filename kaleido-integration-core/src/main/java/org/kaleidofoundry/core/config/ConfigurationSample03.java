@@ -38,7 +38,7 @@ public class ConfigurationSample03 {
 	RuntimeContext<Configuration> context = new ConfigurationContextBuilder("myManualCtx", Configuration.class)
 	.withName("myConfig")
 	.withStorageAllowed(false)
-	.withResourceUri("http://localhost/kaleidofoundry/it/config/myHttpConfig.properties")
+	.withResourceUri("http://localhost:8080/kaleido-integration/config/myHttpConfig.properties")
 	.withCacheManagerRef("myCacheManager")
 	.withResourceStoreRef("myConfigStore")
 	.build();

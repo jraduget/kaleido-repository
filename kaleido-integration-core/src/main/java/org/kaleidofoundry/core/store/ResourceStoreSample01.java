@@ -60,7 +60,7 @@ public class ResourceStoreSample01 {
    /**
     * method example that use the injected store
     * 
-    * @return the content of the resource "http://localhost/kaleidofoundry/it/store/foo.txt"
+    * @return the content of the resource "http://localhost:8080/kaleido-integration/store/foo.txt"
     * @throws ResourceException
     * @throws IOException
     */
@@ -74,7 +74,7 @@ public class ResourceStoreSample01 {
 	   StringBuilder stb = new StringBuilder();
 
 	   // connect to the resource with the injected context (proxy, credentials, ...)
-	   rh = resourceStore.get(URI.create("http://localhost/kaleidofoundry/it/store/foo.txt"));
+	   rh = resourceStore.get(URI.create("http://localhost:8080/kaleido-integration/store/foo.txt"));
 	   
 	   /* it would be same way with other uris :
 	    * 

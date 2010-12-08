@@ -50,7 +50,10 @@ public class ConfigurationJunitLauncher {
 
    @After
    public void cleanup() throws ResourceException {
+	// cleanup context configuration
 	ConfigurationFactory.destroy("myConfigCtx");
+	// cleanup configuration
+	ConfigurationFactory.destroy("myConfig");
    }
 
    @Test
