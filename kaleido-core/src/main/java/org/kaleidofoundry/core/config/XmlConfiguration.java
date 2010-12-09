@@ -20,7 +20,6 @@ import static org.kaleidofoundry.core.config.ConfigurationConstants.MultiValDefa
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,16 +69,6 @@ import org.xml.sax.SAXException;
  */
 @Declare(ConfigurationConstants.XmlConfigurationPluginName)
 public class XmlConfiguration extends AbstractConfiguration implements Configuration {
-
-   /**
-    * @param name
-    * @param resourceUri
-    * @param context
-    * @throws ResourceException
-    */
-   public XmlConfiguration(final String name, final URI resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
-	super(name, resourceUri, context);
-   }
 
    /**
     * @param name
@@ -162,8 +151,8 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
 		   }
 		   // multiple value have been detected
 		   else {
-			properties.put(normalizeKey(newKeyName.toString()), StringHelper.unsplit(MultiValDefaultSeparator, multipleValues
-				.toArray(new String[multipleValues.size()])));
+			properties.put(normalizeKey(newKeyName.toString()),
+				StringHelper.unsplit(MultiValDefaultSeparator, multipleValues.toArray(new String[multipleValues.size()])));
 			// properties.setMultiValueProperty(newKeyName.toString(), multipleValues.toArray(new String[multipleValues.size()]));
 		   }
 		}

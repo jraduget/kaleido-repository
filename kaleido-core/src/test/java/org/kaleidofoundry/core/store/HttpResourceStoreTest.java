@@ -15,8 +15,6 @@
  */
 package org.kaleidofoundry.core.store;
 
-import java.net.URI;
-
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.bio.SocketConnector;
@@ -69,8 +67,8 @@ public class HttpResourceStoreTest extends AbstractResourceStoreTest {
 	// be-careful, there is no-proxy settings for this test ;-)
 	resourceStore = new HttpResourceStore(new RuntimeContext<ResourceStore>(ResourceStore.class));
 
-	existingResources.put(new URI("http://localhost:9090/test/kaleidofoundry/it/store/foo.txt"), DEFAULT_RESOURCE_MOCK_TEST);
-	nonExistingResources.add(new URI("http://localhost:9090/test/kaleidofoundry/it/store/foo"));
+	existingResources.put("http://localhost:9090/test/kaleidofoundry/it/store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
+	nonExistingResources.add("http://localhost:9090/test/kaleidofoundry/it/store/foo");
    }
 
 }

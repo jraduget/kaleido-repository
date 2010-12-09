@@ -15,8 +15,6 @@
  */
 package org.kaleidofoundry.core.store;
 
-import java.net.URI;
-
 import org.junit.After;
 import org.junit.Before;
 import org.kaleidofoundry.core.context.RuntimeContext;
@@ -41,7 +39,7 @@ public class FtpResourceStoreTest extends AbstractResourceStoreTest {
 	// ftp mock setup
 	fakeFtpServer = new FakeFtpServer();
 	fakeFtpServer.setServerControlPort(43120);
-	FileSystem fileSystem = new UnixFakeFileSystem();
+	final FileSystem fileSystem = new UnixFakeFileSystem();
 	fileSystem.add(new FileEntry("/kaleidofoundry/it/store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST));
 	fakeFtpServer.setFileSystem(fileSystem);
 	fakeFtpServer.addUserAccount(new UserAccount("anonymous", "anonymous", "/"));
@@ -52,8 +50,8 @@ public class FtpResourceStoreTest extends AbstractResourceStoreTest {
 
 	// anonymous account : ftp://hostname/resourcepath
 	// account : ftp://username:password@hostname/resourcepath
-	existingResources.put(new URI("ftp://anonymous:anonymous@localhost:43120/kaleidofoundry/it/store/foo.txt"), DEFAULT_RESOURCE_MOCK_TEST);
-	nonExistingResources.add(new URI("ftp://anonymous:anonymous@localhost:43120/kaleidofoundry/it/store/foo"));
+	existingResources.put("ftp://anonymous:anonymous@localhost:43120/kaleidofoundry/it/store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
+	nonExistingResources.add("ftp://anonymous:anonymous@localhost:43120/kaleidofoundry/it/store/foo");
    }
 
    @After

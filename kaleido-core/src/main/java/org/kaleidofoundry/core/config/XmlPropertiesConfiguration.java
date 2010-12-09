@@ -17,7 +17,6 @@ package org.kaleidofoundry.core.config;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.URI;
 import java.util.Properties;
 
 import org.kaleidofoundry.core.cache.Cache;
@@ -42,16 +41,6 @@ public class XmlPropertiesConfiguration extends AbstractConfiguration implements
     * @param context
     * @throws ResourceException
     */
-   public XmlPropertiesConfiguration(final String name, final URI resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
-	super(name, resourceUri, context);
-   }
-
-   /**
-    * @param name
-    * @param resourceUri
-    * @param context
-    * @throws ResourceException
-    */
    public XmlPropertiesConfiguration(final String name, final String resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
 	super(name, resourceUri, context);
    }
@@ -66,15 +55,15 @@ public class XmlPropertiesConfiguration extends AbstractConfiguration implements
 	   throws ResourceException, ConfigurationException {
 	try {
 
-	   Properties lprops = new Properties();
+	   final Properties lprops = new Properties();
 	   lprops.loadFromXML(resourceHandler.getInputStream());
 
-	   for (String propName : lprops.stringPropertyNames()) {
+	   for (final String propName : lprops.stringPropertyNames()) {
 		properties.put(normalizeKey(propName), lprops.getProperty(propName));
 	   }
 
 	   return properties;
-	} catch (IOException ioe) {
+	} catch (final IOException ioe) {
 	   throw new ResourceException(ioe);
 	}
    }

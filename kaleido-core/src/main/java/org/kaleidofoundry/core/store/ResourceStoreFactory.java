@@ -16,7 +16,6 @@
 package org.kaleidofoundry.core.store;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
 
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
@@ -33,26 +32,6 @@ public abstract class ResourceStoreFactory {
    private static final ResourceStoreProvider RESOURCESTORE_PROVIDER = new ResourceStoreProvider(ResourceStore.class);
 
    /**
-    * create a instance of {@link ResourceStore} analyzing a given {@link URI}<br/>
-    * scheme of the uri is used to get the registered resource store implementation.
-    * 
-    * @param resourceUri <br/>
-    *           uri scheme, like: <code>http|https|ftp|file|classpath|webapp|...</code>, <br/>
-    *           or uri scheme start, like: <code>http://|https://|ftp://|file:/|classpath:/|webapp:/|...</code><br/>
-    *           or uri template, like : <code>http://host/path|classpath:/localpath</code
-    * @param context store runtime context
-    * @return new resource store instance, specific to the resource uri scheme
-    * @throws ResourceException
-    * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
-    *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
-    */
-   public static ResourceStore provides(@NotNull final URI resourceUri, @NotNull final RuntimeContext<ResourceStore> context) throws ProviderException,
-	   ResourceException {
-
-	return RESOURCESTORE_PROVIDER.provides(resourceUri, context);
-   }
-
-   /**
     * @param resourceUri <br/>
     *           uri scheme, like: <code>http|https|ftp|file|classpath|webapp|...</code>, <br/>
     *           or uri scheme start, like: <code>http://|https://|ftp://|file:/|classpath:/|webapp:/|...</code><br/>
@@ -62,7 +41,7 @@ public abstract class ResourceStoreFactory {
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
-   public static ResourceStore provides(final URI resourceUri) throws ProviderException, ResourceException {
+   public static ResourceStore provides(final String resourceUri) throws ProviderException, ResourceException {
 	return RESOURCESTORE_PROVIDER.provides(resourceUri);
    }
 
@@ -80,20 +59,6 @@ public abstract class ResourceStoreFactory {
    public static ResourceStore provides(@NotNull final String resourceUri, @NotNull final RuntimeContext<ResourceStore> context) throws ProviderException,
 	   ResourceException {
 	return RESOURCESTORE_PROVIDER.provides(resourceUri, context);
-   }
-
-   /**
-    * @param resourceUri <br/>
-    *           uri scheme, like: <code>http|https|ftp|file|classpath|webapp|...</code>, <br/>
-    *           or uri scheme start, like: <code>http://|https://|ftp://|file:/|classpath:/|webapp:/|...</code><br/>
-    *           or uri template, like : <code>http://host/path|classpath:/localpath</code
-    * @return new resource store instance
-    * @throws ResourceException
-    * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
-    *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
-    */
-   public static ResourceStore provides(final String resourceUri) throws ProviderException, ResourceException {
-	return RESOURCESTORE_PROVIDER.provides(resourceUri);
    }
 
    /**

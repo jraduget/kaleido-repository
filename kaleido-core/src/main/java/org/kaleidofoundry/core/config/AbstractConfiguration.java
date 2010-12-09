@@ -31,7 +31,6 @@ import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ConfigurationMes
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -109,17 +108,6 @@ public abstract class AbstractConfiguration implements Configuration {
     * @throws IllegalArgumentException if resourceUri is illegal ({@link URISyntaxException})
     */
    protected AbstractConfiguration(@NotNull final String name, @NotNull final String resourceUri, @NotNull final RuntimeContext<Configuration> context)
-	   throws ResourceException {
-	this(name, URI.create(resourceUri), context);
-   }
-
-   /**
-    * @param name
-    * @param resourceUri
-    * @param context
-    * @throws ResourceException
-    */
-   protected AbstractConfiguration(@NotNull final String name, @NotNull final URI resourceUri, @NotNull final RuntimeContext<Configuration> context)
 	   throws ResourceException {
 	this.name = name.toString();
 	this.context = context;

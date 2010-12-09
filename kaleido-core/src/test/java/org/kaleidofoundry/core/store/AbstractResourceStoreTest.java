@@ -16,7 +16,6 @@
 package org.kaleidofoundry.core.store;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -47,9 +46,9 @@ public abstract class AbstractResourceStoreTest extends Assert {
    protected ResourceStore resourceStore;
 
    // valid uri resource to test
-   protected Map<URI, String> existingResources = new LinkedHashMap<URI, String>();;
+   protected Map<String, String> existingResources = new LinkedHashMap<String, String>();;
    // inavlid uri resource that must failed at load time
-   protected Set<URI> nonExistingResources = new LinkedHashSet<URI>();
+   protected Set<String> nonExistingResources = new LinkedHashSet<String>();
 
    /**
     * disable i18n message bundle control to speed up test (no need of a local derby instance startup)
@@ -83,7 +82,7 @@ public abstract class AbstractResourceStoreTest extends Assert {
 
 	ResourceHandler resource = null;
 
-	for (final URI uriToTest : existingResources.keySet()) {
+	for (final String uriToTest : existingResources.keySet()) {
 	   try {
 		resource = resourceStore.get(uriToTest);
 		assertNotNull(resource);
@@ -110,7 +109,7 @@ public abstract class AbstractResourceStoreTest extends Assert {
 	}
 
 	// load not existing resource, throws ResourceNotFoundException
-	for (final URI uriToTest : nonExistingResources) {
+	for (final String uriToTest : nonExistingResources) {
 	   try {
 		resourceStore.get(uriToTest);
 		fail("uri <" + uriToTest + "> must throws ResourceNotFoundException");
@@ -121,7 +120,7 @@ public abstract class AbstractResourceStoreTest extends Assert {
 
    @Test
    public void exists() throws ResourceException {
-	for (final URI uriToTest : existingResources.keySet()) {
+	for (final String uriToTest : existingResources.keySet()) {
 	   assertTrue(resourceStore.exists(uriToTest));
 	}
    }
@@ -138,7 +137,7 @@ public abstract class AbstractResourceStoreTest extends Assert {
 	} catch (final NotNullException nae) {
 	}
 	// test a non existing resource, throws ResourceNotFoundException
-	for (final URI uriToTest : nonExistingResources) {
+	for (final String uriToTest : nonExistingResources) {
 	   assertFalse(resourceStore.exists(uriToTest));
 	}
    }

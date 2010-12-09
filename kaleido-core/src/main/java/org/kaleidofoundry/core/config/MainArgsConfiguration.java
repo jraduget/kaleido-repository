@@ -19,7 +19,6 @@ import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.ArgsMai
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.ArgsSeparator;
 
 import java.io.Serializable;
-import java.net.URI;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -40,16 +39,6 @@ import org.kaleidofoundry.core.util.StringHelper;
  */
 @Declare(ConfigurationConstants.MainArgsConfigurationPluginName)
 public class MainArgsConfiguration extends AbstractConfiguration implements Configuration {
-
-   /**
-    * @param name
-    * @param resourceUri ignored
-    * @param context
-    * @throws ResourceException
-    */
-   public MainArgsConfiguration(final String name, final URI resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
-	super(name, URI.create("memory:/internal/" + name + ".mainargs"), context);
-   }
 
    /**
     * @param name
@@ -79,15 +68,15 @@ public class MainArgsConfiguration extends AbstractConfiguration implements Conf
    protected Cache<String, Serializable> loadProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> cacheProperties)
 	   throws ResourceException, ConfigurationException {
 
-	String mainArgs = context.getProperty(ArgsMainString);
-	String argsSeparator = context.getProperty(ArgsSeparator);
+	final String mainArgs = context.getProperty(ArgsMainString);
+	final String argsSeparator = context.getProperty(ArgsSeparator);
 
 	final String[] args = ConverterHelper.stringToArray(mainArgs, argsSeparator != null ? argsSeparator : " ");
-	Map<String, String> argsMap = ConverterHelper.argsToMap(args);
+	final Map<String, String> argsMap = ConverterHelper.argsToMap(args);
 
 	if (argsMap != null) {
-	   for (Entry<String, String> entry : argsMap.entrySet()) {
-		String rawArgValue = entry.getValue();
+	   for (final Entry<String, String> entry : argsMap.entrySet()) {
+		final String rawArgValue = entry.getValue();
 		if (rawArgValue != null && rawArgValue.contains("|")) {
 		   cacheProperties.put(normalizeKey(entry.getKey()), StringHelper.replaceAll(rawArgValue, "|", " "));
 		} else {

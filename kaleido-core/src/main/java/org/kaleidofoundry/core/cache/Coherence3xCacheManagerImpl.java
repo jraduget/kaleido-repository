@@ -21,6 +21,7 @@ import static org.kaleidofoundry.core.i18n.InternalBundleHelper.CacheMessageBund
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -70,6 +71,7 @@ public class Coherence3xCacheManagerImpl extends AbstractCacheManager {
    /**
     * @param configuration
     * @param context
+    * @throws IllegalArgumentException if configuration is an invalid uri
     */
    public Coherence3xCacheManagerImpl(final String configuration, final RuntimeContext<CacheManager> context) {
 	super(configuration, context);
@@ -82,7 +84,8 @@ public class Coherence3xCacheManagerImpl extends AbstractCacheManager {
 
 	   try {
 		LOGGER.info(CacheMessageBundle.getMessage("cache.loading.custom", getMetaInformations(), configuration));
-		configurableCacheFactory = new DefaultConfigurableCacheFactory(singleResourceStore.getResourceBinding().getPath());
+		final URI resourceUri = URI.create(singleResourceStore.getResourceBinding());
+		configurableCacheFactory = new DefaultConfigurableCacheFactory(resourceUri.getPath());
 		com.tangosol.net.CacheFactory.setConfigurableCacheFactory(configurableCacheFactory);
 
 	   } catch (final WrapperException wre) {

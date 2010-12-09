@@ -17,7 +17,6 @@ package org.kaleidofoundry.core.config;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.URI;
 
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
@@ -35,16 +34,6 @@ import org.kaleidofoundry.core.system.OsEnvironment;
  */
 @Declare(ConfigurationConstants.OsEnvConfigurationPluginName)
 public class OsEnvConfiguration extends AbstractConfiguration implements Configuration {
-
-   /**
-    * @param name
-    * @param resourceUri ignored
-    * @param context
-    * @throws ResourceException
-    */
-   public OsEnvConfiguration(final String name, final URI resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
-	super(name, URI.create("memory:/internal/" + name + ".osenv"), context);
-   }
 
    /**
     * @param name

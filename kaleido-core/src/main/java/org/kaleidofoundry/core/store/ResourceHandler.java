@@ -15,7 +15,10 @@
  */
 package org.kaleidofoundry.core.store;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
@@ -32,13 +35,82 @@ import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
 public interface ResourceHandler {
 
    /**
+    * Get the input stream to get the content of the resource<br/>
+    * Use {@link BufferedInputStream} to handle it.<br/>
+    * Once done, free resource with {@link #release()}
+    * 
     * @return input stream of the resource
     */
    @NotNull
    InputStream getInputStream();
 
    /**
+    * Get the input stream reader to get the content of the resource<br/>
+    * Use {@link BufferedReader} to handle it.<br/>
+    * Once done, free resource with {@link #release()}
+    * 
+    * @return input stream of the resource
+    */
+   @NotNull
+   InputStreamReader getInputStreamReader() throws ResourceException;
+
+   /**
+    * Get the input stream reader to get the content of the resource<br/>
+    * Use {@link BufferedReader} to handle it.<br/>
+    * Once done, free resource with {@link #release()}
+    * 
+    * @param charset The name of a supported {@link java.nio.charset.Charset </code>charset<code>}
+    * @return input stream of the resource
+    */
+   @NotNull
+   InputStreamReader getInputStreamReader(String charset) throws ResourceException;
+
+   /**
+    * Get the full text representation of the resource<br/>
+    * <br/>
+    * When you have used this method, the {@link #getInputStream()} result will no more be available for a next call.<br/>
+    * For this reason, {@link #release()} method is automatically called at the end of this method. <br/>
+    * <br/>
+    * <b>Be careful, for huge resource, you should use :</b> {@link #getInputStreamReader()} with {@link BufferedReader} method.
+    * 
+    * @return text of the resource
+    * @throws ResourceException
+    */
+   @NotNull
+   String getText() throws ResourceException;
+
+   /**
+    * Get the full text representation of the resource<br/>
+    * <br/>
+    * When you have used this method, the {@link #getInputStream()} result will no more be available for a next call.<br/>
+    * For this reason, {@link #release()} method is automatically called at the end of this method. <br/>
+    * <br/>
+    * <b>Be careful, for huge resource, you should use :</b> {@link #getInputStreamReader()} with {@link BufferedReader} method.
+    * 
+    * @param charset The name of a supported {@link java.nio.charset.Charset </code>charset<code>}
+    * @return text of the resource
+    * @throws ResourceException
+    */
+   @NotNull
+   String getText(String charset) throws ResourceException;
+
+   /**
+    * Get the full binary data of the resource<br/>
+    * <br/>
+    * When you have used this method, the {@link #getInputStream()} result will no more be available for a next call.<br/>
+    * For this reason, {@link #release()} method is automatically called at the end of this method. <br/>
+    * <br/>
+    * <b>Be careful, for huge resource, you should use :</b> {@link #getInputStream()} with {@link BufferedInputStream} method.
+    * 
+    * @return text of the resource
+    * @throws ResourceException
+    */
+   @NotNull
+   byte[] getBytes() throws ResourceException;
+
+   /**
     * release resource and the eventual connections
     */
    void release();
+
 }

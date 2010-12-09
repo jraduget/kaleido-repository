@@ -50,7 +50,7 @@ import org.kaleidofoundry.core.plugin.Declare;
 @Stateless
 @Declare(ResourceStorePluginName)
 @Provider(ResourceStoreProvider.class)
-public interface ResourceStore extends Store<URI, ResourceHandler> {
+public interface ResourceStore extends Store<String, ResourceHandler> {
 
    /**
     * get a given resource <br/>
@@ -59,10 +59,11 @@ public interface ResourceStore extends Store<URI, ResourceHandler> {
     * @return resource input stream to get its content
     * @throws ResourceNotFoundException if resource can't be found, instead of returning null
     * @throws ResourceException other kind of error
+    * @throws IllegalArgumentException if resourceUri parameter is invalid - see ({@link URI#create(String)})
     */
    @Override
    @NotNull
-   ResourceHandler get(@NotNull URI resourceUri) throws ResourceException;
+   ResourceHandler get(@NotNull String resourceUri) throws ResourceException;
 
    /**
     * store updates on current R instance<br/>
@@ -72,10 +73,11 @@ public interface ResourceStore extends Store<URI, ResourceHandler> {
     * @return current instance of the store
     * @throws ResourceNotFoundException if resource can't be found, instead of returning null
     * @throws ResourceException other kind of error
+    * @throws IllegalArgumentException if resourceUri parameter is invalid - see ({@link URI#create(String)})
     */
    @Override
    @NotNull
-   ResourceStore store(@NotNull URI resourceUri, @NotNull ResourceHandler resource) throws ResourceException;
+   ResourceStore store(@NotNull String resourceUri, @NotNull ResourceHandler resource) throws ResourceException;
 
    /**
     * remove resource identify by its resource binding
@@ -84,18 +86,20 @@ public interface ResourceStore extends Store<URI, ResourceHandler> {
     * @return current instance of the store
     * @throws ResourceNotFoundException if resource can't be found for the uri
     * @throws ResourceException other kind of error
+    * @throws IllegalArgumentException if resourceUri parameter is invalid - see ({@link URI#create(String)})
     */
    @Override
    @NotNull
-   ResourceStore remove(@NotNull URI resourceUri) throws ResourceException;
+   ResourceStore remove(@NotNull String resourceUri) throws ResourceException;
 
    /**
     * @param resourceUri
     * @return does the resource exists <code>true / false</code>
     * @throws ResourceException other kind of error
+    * @throws IllegalArgumentException if resourceUri parameter is invalid - see ({@link URI#create(String)})
     */
    @Override
-   boolean exists(@NotNull URI resourceUri) throws ResourceException;
+   boolean exists(@NotNull String resourceUri) throws ResourceException;
 
    /**
     * @param origin uri of the original resource
@@ -103,16 +107,17 @@ public interface ResourceStore extends Store<URI, ResourceHandler> {
     * @return current instance of the store
     * @throws ResourceNotFoundException
     * @throws ResourceException
+    * @throws IllegalArgumentException if resourceUri parameter is invalid - see ({@link URI#create(String)})
     */
    @NotNull
-   ResourceStore move(@NotNull URI origin, @NotNull URI destination) throws ResourceException;
+   ResourceStore move(@NotNull String origin, @NotNull String destination) throws ResourceException;
 
    /**
     * check uri validity for the current store
     * 
     * @param resourceUri
     * @return true if uri can be handle by current store, otherwise throws an IllegalArgumentException
-    * @throws IllegalArgumentException
+    * @throws IllegalArgumentException is resourceUri is not handle by the resource store
     */
-   boolean isUriManageable(@NotNull final URI resourceUri);
+   boolean isUriManageable(@NotNull final String resourceUri);
 }

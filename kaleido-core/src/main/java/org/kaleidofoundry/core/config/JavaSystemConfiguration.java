@@ -19,7 +19,6 @@ import static org.kaleidofoundry.core.config.ConfigurationConstants.KeyPropertie
 import static org.kaleidofoundry.core.config.ConfigurationConstants.KeyRoot;
 
 import java.io.Serializable;
-import java.net.URI;
 import java.util.Properties;
 
 import org.kaleidofoundry.core.cache.Cache;
@@ -44,16 +43,6 @@ import org.kaleidofoundry.core.util.StringHelper;
  */
 @Declare(ConfigurationConstants.JavaSystemConfigurationPluginName)
 public class JavaSystemConfiguration extends AbstractConfiguration implements Configuration {
-
-   /**
-    * @param name
-    * @param resourceUri ignored
-    * @param context
-    * @throws ResourceException
-    */
-   public JavaSystemConfiguration(final String name, final URI resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
-	super(name, URI.create("memory:/internal/" + name + ".javasystem"), context);
-   }
 
    /**
     * @param name

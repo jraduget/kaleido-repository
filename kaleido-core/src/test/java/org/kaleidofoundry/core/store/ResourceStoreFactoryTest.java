@@ -15,8 +15,6 @@
  */
 package org.kaleidofoundry.core.store;
 
-import java.net.URI;
-
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -28,8 +26,8 @@ public class ResourceStoreFactoryTest extends Assert {
 
    @Test
    public void newClasspathResourceStore() throws ResourceException {
-	URI resourceUri = URI.create("classpath:/store/foo.txt");
-	ResourceStore resourceStore = ResourceStoreFactory.provides(resourceUri);
+	final String resourceUri = "classpath:/store/foo.txt";
+	final ResourceStore resourceStore = ResourceStoreFactory.provides(resourceUri);
 	assertNotNull(resourceStore);
 	assertEquals(ClasspathResourceStore.class, resourceStore.getClass());
 	assertTrue(resourceStore.isUriManageable(resourceUri));
@@ -37,9 +35,8 @@ public class ResourceStoreFactoryTest extends Assert {
 
    @Test
    public void newFileSystemResourceStore() throws ResourceException {
-	URI resourceUri = URI
-		.create("file:/F:/Developments/workspaces/eclipse/jappy/kaleido-core/src/test/resources/store/foo.txt");
-	ResourceStore resourceStore = ResourceStoreFactory.provides(resourceUri);
+	final String resourceUri = "file:/F:/Developments/workspaces/eclipse/jappy/kaleido-core/src/test/resources/store/foo.txt";
+	final ResourceStore resourceStore = ResourceStoreFactory.provides(resourceUri);
 	assertNotNull(resourceStore);
 	assertEquals(FileSystemResourceStore.class, resourceStore.getClass());
 	assertTrue(resourceStore.isUriManageable(resourceUri));
@@ -47,8 +44,8 @@ public class ResourceStoreFactoryTest extends Assert {
 
    @Test
    public void newFtpResourceStore() throws ResourceException {
-	URI resourceUri = URI.create("ftp://localhost/foo.txt");
-	ResourceStore resourceStore = ResourceStoreFactory.provides(resourceUri);
+	final String resourceUri = "ftp://localhost/foo.txt";
+	final ResourceStore resourceStore = ResourceStoreFactory.provides(resourceUri);
 	assertNotNull(resourceStore);
 	assertEquals(FtpResourceStore.class, resourceStore.getClass());
 	assertTrue(resourceStore.isUriManageable(resourceUri));
@@ -56,8 +53,8 @@ public class ResourceStoreFactoryTest extends Assert {
 
    @Test
    public void newHttpResourceStore() throws ResourceException {
-	URI resourceUri = URI.create("http://localhost/foo.txt");
-	ResourceStore resourceStore = ResourceStoreFactory.provides(resourceUri);
+	final String resourceUri = "http://localhost/foo.txt";
+	final ResourceStore resourceStore = ResourceStoreFactory.provides(resourceUri);
 	assertNotNull(resourceStore);
 	assertEquals(HttpResourceStore.class, resourceStore.getClass());
 	assertTrue(resourceStore.isUriManageable(resourceUri));
@@ -65,8 +62,8 @@ public class ResourceStoreFactoryTest extends Assert {
 
    @Test
    public void newJpaResourceStore() throws ResourceException {
-	URI resourceUri = URI.create("jpa:/tmp/foo.txt");
-	ResourceStore resourceStore = ResourceStoreFactory.provides(resourceUri);
+	final String resourceUri = "jpa:/tmp/foo.txt";
+	final ResourceStore resourceStore = ResourceStoreFactory.provides(resourceUri);
 	assertNotNull(resourceStore);
 	assertTrue(resourceStore.isUriManageable(resourceUri));
 	assertEquals(JpaResourceStore.class, resourceStore.getClass());

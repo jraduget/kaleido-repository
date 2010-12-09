@@ -17,7 +17,6 @@ package org.kaleidofoundry.core.config;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.URI;
 import java.util.Properties;
 
 import org.kaleidofoundry.core.cache.Cache;
@@ -36,17 +35,6 @@ import org.kaleidofoundry.core.store.SingleResourceStore;
  */
 @Declare(ConfigurationConstants.PropertiesConfigurationPluginName)
 public class PropertiesConfiguration extends AbstractConfiguration {
-
-   /**
-    * @param name
-    * @param resourceUri
-    * @param context
-    * @throws ResourceException
-    */
-   public PropertiesConfiguration(@NotNull final String name, @NotNull final URI resourceUri, @NotNull final RuntimeContext<Configuration> context)
-	   throws ResourceException {
-	super(name, resourceUri, context);
-   }
 
    /**
     * @param name

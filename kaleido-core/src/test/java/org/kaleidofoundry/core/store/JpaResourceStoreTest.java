@@ -65,8 +65,8 @@ public class JpaResourceStoreTest extends AbstractResourceStoreTest {
 	   em.persist(entity);
 
 	   // resource to test
-	   existingResources.put(new URI("jpa://tmp/foo.txt"), DEFAULT_RESOURCE_MOCK_TEST);
-	   nonExistingResources.add(new URI("jpa:/foo"));
+	   existingResources.put("jpa://tmp/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
+	   nonExistingResources.add("jpa:/foo");
 
 	   // resource store creation
 	   resourceStore = new JpaResourceStore(new RuntimeContext<ResourceStore>(ResourceStore.class));

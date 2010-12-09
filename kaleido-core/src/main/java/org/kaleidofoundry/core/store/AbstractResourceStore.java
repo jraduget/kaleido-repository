@@ -89,10 +89,10 @@ public abstract class AbstractResourceStore implements ResourceStore {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.store.ResourceStore#isUriManageable(java.net.URI)
+    * @see org.kaleidofoundry.core.store.ResourceStore#isUriManageable(java.net.String)
     */
    @Override
-   public boolean isUriManageable(@NotNull final URI resourceUri) {
+   public boolean isUriManageable(@NotNull final String resourceUri) {
 
 	final ResourceStoreType rst = ResourceStoreTypeEnum.match(resourceUri);
 
@@ -122,10 +122,10 @@ public abstract class AbstractResourceStore implements ResourceStore {
     * @see org.kaleidofoundry.core.lang.pattern.Store#load(java.lang.Object)
     */
    @Override
-   public final ResourceHandler get(@NotNull final URI resourceUri) throws ResourceException {
+   public final ResourceHandler get(@NotNull final String resourceUri) throws ResourceException {
 	isUriManageable(resourceUri);
-	final ResourceHandler in = doGet(resourceUri);
-	if (in == null || in.getInputStream() == null) { throw new ResourceNotFoundException(resourceUri.toString()); }
+	final ResourceHandler in = doGet(URI.create(resourceUri));
+	if (in == null || in.getInputStream() == null) { throw new ResourceNotFoundException(resourceUri); }
 	return in;
    }
 
@@ -134,10 +134,10 @@ public abstract class AbstractResourceStore implements ResourceStore {
     * @see org.kaleidofoundry.core.lang.pattern.Store#remove(java.lang.Object)
     */
    @Override
-   public final ResourceStore remove(@NotNull final URI resourceUri) throws ResourceException {
+   public final ResourceStore remove(@NotNull final String resourceUri) throws ResourceException {
 	if (isReadOnly()) { throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.resource.readonly.illegal", context.getName())); }
 	isUriManageable(resourceUri);
-	doRemove(resourceUri);
+	doRemove(URI.create(resourceUri));
 	return this;
    }
 
@@ -146,10 +146,10 @@ public abstract class AbstractResourceStore implements ResourceStore {
     * @see org.kaleidofoundry.core.lang.pattern.Store#store(java.lang.Object, java.lang.Object)
     */
    @Override
-   public final ResourceStore store(@NotNull final URI resourceUri, @NotNull final ResourceHandler resource) throws ResourceException {
+   public final ResourceStore store(@NotNull final String resourceUri, @NotNull final ResourceHandler resource) throws ResourceException {
 	if (isReadOnly()) { throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.resource.readonly.illegal", context.getName())); }
 	isUriManageable(resourceUri);
-	doStore(resourceUri, resource);
+	doStore(URI.create(resourceUri), resource);
 	return this;
    }
 
@@ -158,7 +158,7 @@ public abstract class AbstractResourceStore implements ResourceStore {
     * @see org.kaleidofoundry.core.store.ResourceStore#move(java.lang.String, java.lang.String)
     */
    @Override
-   public final ResourceStore move(@NotNull final URI origin, @NotNull final URI destination) throws ResourceException {
+   public final ResourceStore move(@NotNull final String origin, @NotNull final String destination) throws ResourceException {
 	if (isReadOnly()) { throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.resource.readonly.illegal", context.getName())); }
 	isUriManageable(origin);
 	isUriManageable(destination);
@@ -188,7 +188,7 @@ public abstract class AbstractResourceStore implements ResourceStore {
     * @see org.kaleidofoundry.core.lang.pattern.Store#exists(java.lang.Object)
     */
    @Override
-   public final boolean exists(@NotNull final URI resourceUri) throws ResourceException {
+   public final boolean exists(@NotNull final String resourceUri) throws ResourceException {
 	ResourceHandler resource = null;
 	try {
 	   resource = get(resourceUri);

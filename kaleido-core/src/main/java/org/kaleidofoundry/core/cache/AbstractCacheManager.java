@@ -103,7 +103,7 @@ public abstract class AbstractCacheManager implements CacheManager {
 		} else {
 		   resourceStore = ResourceStoreFactory.provides(configuration);
 		}
-		this.singleResourceStore = new SingleResourceStore(URI.create(configuration), resourceStore);
+		this.singleResourceStore = new SingleResourceStore(configuration, resourceStore);
 	   } catch (final ResourceNotFoundException rse) {
 		throw new CacheConfigurationNotFoundException("cache.configuration.notfound", getMetaInformations(), getCurrentConfiguration());
 	   } catch (final ResourceException rse) {

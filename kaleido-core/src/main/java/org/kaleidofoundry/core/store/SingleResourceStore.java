@@ -15,8 +15,6 @@
  */
 package org.kaleidofoundry.core.store;
 
-import java.net.URI;
-
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
@@ -26,7 +24,7 @@ import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
  */
 @Immutable
 @ThreadSafe
-public class SingleResourceStore extends AbstractSingleStore<URI, ResourceHandler> {
+public class SingleResourceStore extends AbstractSingleStore<String, ResourceHandler> {
 
    private final ResourceStore resourceStore;
    private ResourceHandler resourceHandler;
@@ -35,7 +33,7 @@ public class SingleResourceStore extends AbstractSingleStore<URI, ResourceHandle
     * @param resourceUri
     * @param resourceStore
     */
-   public SingleResourceStore(@NotNull final URI resourceUri, @NotNull final ResourceStore resourceStore) {
+   public SingleResourceStore(@NotNull final String resourceUri, @NotNull final ResourceStore resourceStore) {
 	super(resourceUri);
 	// check that uri, match to resourceStore type
 	resourceStore.isUriManageable(resourceUri);
@@ -80,7 +78,7 @@ public class SingleResourceStore extends AbstractSingleStore<URI, ResourceHandle
     * @see org.kaleidofoundry.core.store.AbstractSingleStore#init(java.lang.Object)
     */
    @Override
-   protected void init(final URI resourceBinding) {
+   protected void init(final String resourceBinding) {
    }
 
 }

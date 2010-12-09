@@ -44,9 +44,9 @@ public class FileSystemResourceStoreTest extends AbstractResourceStoreTest {
 
 	tmpFileName = tmpFile.toURI();
 
-	existingResources.put(new URI(tmpFileName.toString()), DEFAULT_RESOURCE_MOCK_TEST);
+	existingResources.put(tmpFileName.toString(), DEFAULT_RESOURCE_MOCK_TEST);
 
-	nonExistingResources.add(new URI("file:/foo"));
+	nonExistingResources.add("file:/foo");
    }
 
    @After

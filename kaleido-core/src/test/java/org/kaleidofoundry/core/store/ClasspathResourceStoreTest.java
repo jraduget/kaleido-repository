@@ -15,8 +15,6 @@
  */
 package org.kaleidofoundry.core.store;
 
-import java.net.URI;
-
 import org.junit.Before;
 import org.kaleidofoundry.core.context.RuntimeContext;
 
@@ -33,10 +31,10 @@ public class ClasspathResourceStoreTest extends AbstractResourceStoreTest {
 
 	resourceStore = new ClasspathResourceStore(new RuntimeContext<ResourceStore>(ResourceStore.class));
 
-	existingResources.put(new URI("classpath:/store/foo.txt"), DEFAULT_RESOURCE_MOCK_TEST);
-	existingResources.put(new URI("classpath://store/foo.txt"), DEFAULT_RESOURCE_MOCK_TEST);
+	existingResources.put("classpath:/store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
+	existingResources.put("classpath://store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
 
-	nonExistingResources.add(new URI("classpath:/store/foo"));
+	nonExistingResources.add("classpath:/store/foo");
    }
 
 }

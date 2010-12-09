@@ -182,24 +182,24 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 		final String pluginConfigExtention = declarePlugin.value().replace(ConfigurationPluginName, "").toLowerCase();
 
 		if (uriPath.endsWith(pluginConfigExtention)) {
-		   final Constructor<? extends Configuration> constructor = impl.getConstructor(String.class, URI.class, RuntimeContext.class);
-		   return constructor.newInstance(name, resourceURI, runtimeContext);
+		   final Constructor<? extends Configuration> constructor = impl.getConstructor(String.class, String.class, RuntimeContext.class);
+		   return constructor.newInstance(name, resourceURI.toString(), runtimeContext);
 		}
 
 	   } catch (final NoSuchMethodException e) {
 		throw new ProviderException("context.provider.error.NoSuchConstructorException", impl.getName(),
-			"String name, URI resourceUri, RuntimeContext<Configuration> context");
+			"String name, String resourceUri, RuntimeContext<Configuration> context");
 	   } catch (final InstantiationException e) {
 		throw new ProviderException("context.provider.error.InstantiationException", impl.getName(), e.getMessage());
 	   } catch (final IllegalAccessException e) {
 		throw new ProviderException("context.provider.error.IllegalAccessException", impl.getName(),
-			"String name, URI resourceUri, RuntimeContext<Configuration> context");
+			"String name, String resourceUri, RuntimeContext<Configuration> context");
 	   } catch (final InvocationTargetException e) {
 		if (e.getCause() instanceof ResourceException) {
 		   throw (ResourceException) e.getCause();
 		} else {
 		   throw new ProviderException("context.provider.error.InvocationTargetException", e.getCause(), impl.getName(),
-			   "String name, URI resourceUri, RuntimeContext<Configuration> context");
+			   "String name, String resourceUri, RuntimeContext<Configuration> context");
 		}
 	   }
 	}
