@@ -32,9 +32,18 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <th>Description</th>
  * </tr>
  * <tr>
- * <td>uriScheme</td>
+ * <td>uriRootPath</td>
  * <td>all</td>
- * <td>resource store uri scheme <code>http|https|ftp|file|classpath|webapp|...</code></td>
+ * <td>resource store uri root path, looks like (path is optional) :
+ * <ul>
+ * <li><code>http://host/</code> <b>or</b> <code>http://host/path</code></li>
+ * <li><code>ftp://host/</code> <b>or</b> <code>ftp://host/path</code></li>
+ * <li><code>classpath:/</code> <b>or</b> <code>classpath:/path</code></li>
+ * <li><code>file:/</code> <b>or</b> <code>file:/path</code></li>
+ * <li><code>webapp:/</code> <b>or</b> <code>webapp:/path</code></li>
+ * <li><code>...</code></li>
+ * </ul>
+ * <b>uri schemes handled</b>: <code>http|https|ftp|file|classpath|webapp|...</code></td>
  * </tr>
  * <tr>
  * <td>readonly</td>
@@ -149,8 +158,19 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<ResourceStore> {
 
    // * commons settings property name ****************
-   /** resource store uri scheme <code>http|https|ftp|file|classpath|webapp|...</code> */
-   public static final String UriScheme = "uriScheme";
+   /**
+    * resource store uri root path, looks like (path is optional) :
+    * <ul>
+    * <li><code>http://host/</code> <b>or</b> <code>http://host/path</code></li>
+    * <li><code>ftp://host/</code> <b>or</b> <code>ftp://host/path</code></li>
+    * <li><code>classpath:/</code> <b>or</b> <code>classpath:/path</code></li>
+    * <li><code>file:/</code> <b>or</b> <code>file:/path</code></li>
+    * <li><code>webapp:/</code> <b>or</b> <code>webapp:/path</code></li>
+    * <li><code>...</code></li>
+    * </ul>
+    * <b>uri schemes handled</b>: <code>http|https|ftp|file|classpath|webapp|...</code>
+    */
+   public static final String UriRootPath = "uriRootPath";
 
    /** resource store read-only usage <code>true|false</code> */
    public static final String Readonly = "readonly";
@@ -265,12 +285,12 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    // ** builder methods **************************
 
    /**
-    * @param uriScheme
+    * @param uriRootPath
     * @return current builder instance
-    * @see ResourceContextBuilder#readonly
+    * @see ResourceContextBuilder#uriRootPath
     */
-   public ResourceContextBuilder withUriScheme(final String uriScheme) {
-	getContextParameters().put(UriScheme, uriScheme);
+   public ResourceContextBuilder withUriRootPath(final String uriRootPath) {
+	getContextParameters().put(UriRootPath, uriRootPath);
 	return this;
    }
 

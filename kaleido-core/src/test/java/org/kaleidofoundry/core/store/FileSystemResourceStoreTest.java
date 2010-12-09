@@ -34,7 +34,9 @@ public class FileSystemResourceStoreTest extends AbstractResourceStoreTest {
    @Override
    public void setup() throws Throwable {
 	super.setup();
-	resourceStore = new FileSystemResourceStore(new RuntimeContext<ResourceStore>(ResourceStore.class));
+
+	final RuntimeContext<ResourceStore> context = new ResourceContextBuilder().withUriRootPath("file:/").build();
+	resourceStore = new FileSystemResourceStore(context);
 
 	// create temp file to test
 	final File tmpFile = File.createTempFile("kaleidofoundry-", ".test");
@@ -44,9 +46,9 @@ public class FileSystemResourceStoreTest extends AbstractResourceStoreTest {
 
 	tmpFileName = tmpFile.toURI();
 
-	existingResources.put(tmpFileName.toString(), DEFAULT_RESOURCE_MOCK_TEST);
+	existingResources.put(tmpFileName.getPath(), DEFAULT_RESOURCE_MOCK_TEST);
 
-	nonExistingResources.add("file:/foo");
+	nonExistingResources.add("foo");
    }
 
    @After

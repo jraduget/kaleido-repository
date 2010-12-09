@@ -29,10 +29,11 @@ public class ClasspathResourceStoreTest extends AbstractResourceStoreTest {
 
 	super.setup();
 
-	resourceStore = new ClasspathResourceStore(new RuntimeContext<ResourceStore>(ResourceStore.class));
+	final RuntimeContext<ResourceStore> context = new ResourceContextBuilder().withUriRootPath("classpath:/").build();
+	resourceStore = new ClasspathResourceStore(context);
 
-	existingResources.put("classpath:/store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
-	existingResources.put("classpath://store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
+	existingResources.put("store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
+	existingResources.put("/store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
 
 	nonExistingResources.add("classpath:/store/foo");
    }

@@ -57,19 +57,21 @@ public class JpaResourceStoreTest extends AbstractResourceStoreTest {
 
 	   // create mocked entity test
 	   final ResourceStoreEntity entity = new ResourceStoreEntity();
-	   entity.setUri(new URI("jpa://tmp/foo.txt").toString());
-	   entity.setName("/tmp/foo.txt");
-	   entity.setPath("/tmp/foo.txt");
+	   final URI resourceUri = URI.create("jpa:/tmp/foo.txt");
+	   entity.setUri(resourceUri.toString());
+	   entity.setName(resourceUri.getPath());
+	   entity.setPath(resourceUri.getPath());
 	   entity.setContent(DEFAULT_RESOURCE_MOCK_TEST.getBytes());
 
 	   em.persist(entity);
 
 	   // resource to test
-	   existingResources.put("jpa://tmp/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
-	   nonExistingResources.add("jpa:/foo");
+	   existingResources.put(resourceUri.toString(), DEFAULT_RESOURCE_MOCK_TEST);
+	   nonExistingResources.add("foo");
 
 	   // resource store creation
-	   resourceStore = new JpaResourceStore(new RuntimeContext<ResourceStore>(ResourceStore.class));
+	   final RuntimeContext<ResourceStore> context = new ResourceContextBuilder().withUriRootPath("jpa:/").build();
+	   resourceStore = new JpaResourceStore(context);
 
 	} catch (final RuntimeException rte) {
 	   LOGGER.error("setup error", rte);
@@ -82,8 +84,12 @@ public class JpaResourceStoreTest extends AbstractResourceStoreTest {
    @Override
    public void cleanup() {
 	try {
-	   em.remove(em.find(ResourceStoreEntity.class, "jpa://tmp/foo.txt"));
-	   transaction.commit();
+	   final URI resourceUri = URI.create("jpa:/tmp/foo.txt");
+	   final ResourceStoreEntity resource = em.find(ResourceStoreEntity.class, resourceUri.toString());
+	   if (resource != null) {
+		em.remove(resource);
+		transaction.commit();
+	   }
 	} finally {
 	   UnmanagedEntityManagerFactory.closeItSilently(em);
 	   UnmanagedEntityManagerFactory.closeItSilently(emf);

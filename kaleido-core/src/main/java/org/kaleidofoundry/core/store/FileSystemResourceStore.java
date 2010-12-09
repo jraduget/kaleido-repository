@@ -57,7 +57,7 @@ public class FileSystemResourceStore extends AbstractResourceStore implements Re
    @Override
    protected ResourceHandler doGet(final URI resourceUri) throws ResourceException {
 	try {
-	   return new ResourceHandlerBean(new FileInputStream(new File(resourceUri)));
+	   return new ResourceHandlerBean(new FileInputStream(new File(resourceUri.getPath())));
 	} catch (final FileNotFoundException fnfe) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
 	}
@@ -70,7 +70,7 @@ public class FileSystemResourceStore extends AbstractResourceStore implements Re
    @Override
    protected void doRemove(final URI resourceUri) throws ResourceException {
 
-	final File file = new File(resourceUri);
+	final File file = new File(resourceUri.getPath());
 	if (file.isDirectory()) {
 	   throw new ResourceException("store.resource.remove.directory", resourceUri.toString());
 	} else {
@@ -91,7 +91,7 @@ public class FileSystemResourceStore extends AbstractResourceStore implements Re
 	FileOutputStream out = null;
 
 	try {
-	   file = new File(resourceUri);
+	   file = new File(resourceUri.getPath());
 	   out = new FileOutputStream(file, false);
 
 	   final byte[] buff = new byte[128];

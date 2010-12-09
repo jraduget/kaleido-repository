@@ -49,45 +49,59 @@ public class ResourceStoreProvider extends AbstractProviderService<ResourceStore
     */
    @Override
    public ResourceStore provides(@NotNull final RuntimeContext<ResourceStore> context) throws ProviderException, ResourceException {
-	final String uriScheme = context.getProperty(ResourceContextBuilder.UriScheme);
+	final String uriRootPath = context.getProperty(ResourceContextBuilder.UriRootPath);
 
-	if (StringHelper.isEmpty(uriScheme)) { throw new RuntimeContextEmptyParameterException(ResourceContextBuilder.UriScheme, context); }
+	if (StringHelper.isEmpty(uriRootPath)) { throw new RuntimeContextEmptyParameterException(ResourceContextBuilder.UriRootPath, context); }
 
-	return provides(uriScheme, new RuntimeContext<ResourceStore>(ResourceStore.class));
+	return provides(uriRootPath, new RuntimeContext<ResourceStore>(ResourceStore.class));
    }
 
    /**
-    * @param resourceUri <br/>
-    *           uri scheme, like: <code>http|https|ftp|file|classpath|webapp|...</code>, <br/>
-    *           or uri scheme start, like: <code>http://|https://|ftp://|file:/|classpath:/|webapp:/|...</code><br/>
-    *           or uri template, like : <code>http://host/path|classpath:/localpath</code
+    * @param uriRootPath
+    *           resource store uri root path, looks like (path is optional) :
+    *           <ul>
+    *           <li><code>http://host/</code> <b>or</b> <code>http://host/path</code></li>
+    *           <li><code>ftp://host/</code> <b>or</b> <code>ftp://host/path</code></li>
+    *           <li><code>classpath:/</code> <b>or</b> <code>classpath:/path</code></li>
+    *           <li><code>file:/</code> <b>or</b> <code>file:/path</code></li>
+    *           <li><code>webapp:/</code> <b>or</b> <code>webapp:/path</code></li>
+    *           <li><code>...</li>
+    *           </ul>
+    *           <b>uri schemes handled</b>: <code>http|https|ftp|file|classpath|webapp|...</code>
     * @return new resource store instance
     * @throws ResourceException
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
-   public ResourceStore provides(final String resourceUri) throws ProviderException, ResourceException {
-	return provides(resourceUri, new RuntimeContext<ResourceStore>(ResourceStore.class));
+   public ResourceStore provides(final String uriRootPath) throws ProviderException, ResourceException {
+	return provides(uriRootPath, new RuntimeContext<ResourceStore>(ResourceStore.class));
    }
 
    /**
     * create a instance of {@link ResourceStore} analyzing a given {@link URI}<br/>
     * scheme of the uri is used to get the registered resource store implementation.
     * 
-    * @param resourceUriStr <br/>
-    *           uri scheme, like: <code>http|https|ftp|file|classpath|webapp|...</code>, <br/>
-    *           or uri scheme start, like: <code>http://|https://|ftp://|file:/|classpath:/|webapp:/|...</code><br/>
-    *           or uri template, like : <code>http://host/path|classpath:/localpath</code
+    * @param uriRootPath <br/>
+    *           resource store uri root path, looks like (path is optional) :
+    *           <ul>
+    *           <li><code>http://host/</code> <b>or</b> <code>http://host/path</code></li>
+    *           <li><code>ftp://host/</code> <b>or</b> <code>ftp://host/path</code></li>
+    *           <li><code>classpath:/</code> <b>or</b> <code>classpath:/path</code></li>
+    *           <li><code>file:/</code> <b>or</b> <code>file:/path</code></li>
+    *           <li><code>webapp:/</code> <b>or</b> <code>webapp:/path</code></li>
+    *           <li><code>...</li>
+    *           </ul>
+    *           <b>uri schemes handled</b>: <code>http|https|ftp|file|classpath|webapp|...</code>
     * @param context store runtime context
     * @return new resource store instance, specific to the resource uri scheme
     * @throws ResourceException
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
-   public ResourceStore provides(@NotNull final String resourceUriStr, @NotNull final RuntimeContext<ResourceStore> context) throws ProviderException,
+   public ResourceStore provides(@NotNull final String uriRootPath, @NotNull final RuntimeContext<ResourceStore> context) throws ProviderException,
 	   ResourceException {
 
-	final URI resourceUri = createURI(resourceUriStr);
+	final URI resourceUri = createURI(uriRootPath);
 	final ResourceStoreType rse = ResourceStoreTypeEnum.match(resourceUri);
 
 	if (rse != null) {

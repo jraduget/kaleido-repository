@@ -46,12 +46,13 @@ public class FtpResourceStoreTest extends AbstractResourceStoreTest {
 	fakeFtpServer.start();
 	// end ftp mock setip
 
-	resourceStore = new FtpResourceStore(new RuntimeContext<ResourceStore>(ResourceStore.class));
+	final RuntimeContext<ResourceStore> context = new ResourceContextBuilder().withUriRootPath("ftp://anonymous:anonymous@localhost:43120/").build();
+	resourceStore = new FtpResourceStore(context);
 
 	// anonymous account : ftp://hostname/resourcepath
 	// account : ftp://username:password@hostname/resourcepath
-	existingResources.put("ftp://anonymous:anonymous@localhost:43120/kaleidofoundry/it/store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
-	nonExistingResources.add("ftp://anonymous:anonymous@localhost:43120/kaleidofoundry/it/store/foo");
+	existingResources.put("kaleidofoundry/it/store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
+	nonExistingResources.add("kaleidofoundry/it/store/foo");
    }
 
    @After

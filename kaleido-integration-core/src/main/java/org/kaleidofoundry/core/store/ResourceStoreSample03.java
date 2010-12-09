@@ -36,7 +36,7 @@ public class ResourceStoreSample03 {
 
 	RuntimeContext<ResourceStore> context = 
 	   new ResourceContextBuilder("myResourceCtx", ResourceStore.class)
-		.withUriScheme("http")
+		.withUriRootPath("http://localhost:8080/kaleido-integration/")
 		.withReadonly(true)
 		.withConnectTimeout(0)
 		.withReadTimeout(0)
@@ -48,20 +48,27 @@ public class ResourceStoreSample03 {
    }
    
    /**
-    * Example method using built Resource Store<br/>
+    * <b>Example method using injected Resource Store</b><br/>
     * <br/>
     * 1. it connect to the given resource with the injected context (proxy, credentials, ...)<br/>
-    * 2. it get the resource content (text here), using the right charset ("UTF8" is the default is not specified)
+    * 2. it get the resource content (text here), using the right charset ("UTF8" is the default is not specified) <br/>
+    * <br/>
+    * <b>Path are relative from the resource store root uri, like :</b>
+    * <ul>
+    * <li>http://localhost:8080/kaleido-integration/</li>
+    * <li>ftp://localhost/kaleido-integration/</li>
+    * <li>classpath:/org/kaleidofoundry/core/</li>
+    * </ul>
     * 
     * @return the content of the resource "http://localhost:8080/kaleido-integration/store/foo.txt"
     * @throws ResourceException
     * @throws IOException
     */
    public String echo() throws ResourceException {
-	String resourceURI = "http://localhost:8080/kaleido-integration/store/foo.txt";
-	String text = resourceStore.get(resourceURI).getText("UTF8");	
-	System.out.printf("resource content [%s] :\n%s", resourceURI.toString(), text);	
-	return text;	
+	String resourceRelativePath = "store/foo.txt"; 
+	String text = resourceStore.get(resourceRelativePath).getText("UTF8");	
+	System.out.printf("resource content [%s] :\n%s", resourceRelativePath, text);	
+	return text;
    }
 
 }

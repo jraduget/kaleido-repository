@@ -33,16 +33,16 @@ import org.kaleidofoundry.core.plugin.Declare;
  * The {@link URI} (Uniform Resource Identifier) allow to bind different kind of resource :<br/>
  * You can use classic {@link URL} like :
  * <ul>
- * <li>http://
- * <li>ftp://
- * <li>file://
- * <li>classpath:/
- * <li>webapp:/
- * <li>jpa:/
- * <li>memory:/
+ * <li><code>http://</code></li>
+ * <li><code>ftp://</code></li>
+ * <li><code>file://</code></li>
+ * <li><code>classpath:/</code></li>
+ * <li><code>webapp:/</code></li>
+ * <li><code>jpa:/</code></li>
+ * <li><code>memory:/</code></li>
  * </ul>
  * <p>
- * More you can extends it, using other kind of "custom user" protocol (classpath://, jpa://, jdbc://, ...)
+ * <b>More you can extends it</b>, using other kind of "custom user" protocol <code>(classpath://, jpa://, jdbc://, ...)</code>
  * </p>
  * 
  * @author Jerome RADUGET
@@ -55,59 +55,59 @@ public interface ResourceStore extends Store<String, ResourceHandler> {
    /**
     * get a given resource <br/>
     * 
-    * @param resourceUri resource binding informations to access the resource<br/>
+    * @param resourceRelativePath relative resource path (relative from the resource store root uri)
     * @return resource input stream to get its content
     * @throws ResourceNotFoundException if resource can't be found, instead of returning null
     * @throws ResourceException other kind of error
-    * @throws IllegalArgumentException if resourceUri parameter is invalid - see ({@link URI#create(String)})
+    * @throws IllegalArgumentException if resourceRelativePath parameter is invalid - see ({@link URI#create(String)})
     */
    @Override
    @NotNull
-   ResourceHandler get(@NotNull String resourceUri) throws ResourceException;
+   ResourceHandler get(@NotNull String resourceRelativePath) throws ResourceException;
 
    /**
     * store updates on current R instance<br/>
     * 
-    * @param resourceUri resource uri which have to be store
+    * @param resourceRelativePath relative resource path (relative from the resource store root uri)
     * @param resource resource input stream to store
     * @return current instance of the store
     * @throws ResourceNotFoundException if resource can't be found, instead of returning null
     * @throws ResourceException other kind of error
-    * @throws IllegalArgumentException if resourceUri parameter is invalid - see ({@link URI#create(String)})
+    * @throws IllegalArgumentException if resourceRelativePath parameter is invalid - see ({@link URI#create(String)})
     */
    @Override
    @NotNull
-   ResourceStore store(@NotNull String resourceUri, @NotNull ResourceHandler resource) throws ResourceException;
+   ResourceStore store(@NotNull String resourceRelativePath, @NotNull ResourceHandler resource) throws ResourceException;
 
    /**
     * remove resource identify by its resource binding
     * 
-    * @param resourceUri resource binding which have to be removed
+    * @param resourceRelativePath relative resource path (relative from the resource store root uri)
     * @return current instance of the store
     * @throws ResourceNotFoundException if resource can't be found for the uri
     * @throws ResourceException other kind of error
-    * @throws IllegalArgumentException if resourceUri parameter is invalid - see ({@link URI#create(String)})
+    * @throws IllegalArgumentException if resourceRelativePath parameter is invalid - see ({@link URI#create(String)})
     */
    @Override
    @NotNull
-   ResourceStore remove(@NotNull String resourceUri) throws ResourceException;
+   ResourceStore remove(@NotNull String resourceRelativePath) throws ResourceException;
 
    /**
-    * @param resourceUri
+    * @param resourceRelativePath relative resource path (relative from the resource store root uri)
     * @return does the resource exists <code>true / false</code>
     * @throws ResourceException other kind of error
-    * @throws IllegalArgumentException if resourceUri parameter is invalid - see ({@link URI#create(String)})
+    * @throws IllegalArgumentException if resourceRelativePath parameter is invalid - see ({@link URI#create(String)})
     */
    @Override
-   boolean exists(@NotNull String resourceUri) throws ResourceException;
+   boolean exists(@NotNull String resourceRelativePath) throws ResourceException;
 
    /**
-    * @param origin uri of the original resource
-    * @param destination uri of the destination resource
+    * @param origin relative original resource path (relative from the resource store root uri)
+    * @param destination relative destination resource path (relative from the resource store root uri)
     * @return current instance of the store
     * @throws ResourceNotFoundException
     * @throws ResourceException
-    * @throws IllegalArgumentException if resourceUri parameter is invalid - see ({@link URI#create(String)})
+    * @throws IllegalArgumentException if resourceRelativePath parameter is invalid - see ({@link URI#create(String)})
     */
    @NotNull
    ResourceStore move(@NotNull String origin, @NotNull String destination) throws ResourceException;
@@ -117,7 +117,7 @@ public interface ResourceStore extends Store<String, ResourceHandler> {
     * 
     * @param resourceUri
     * @return true if uri can be handle by current store, otherwise throws an IllegalArgumentException
-    * @throws IllegalArgumentException is resourceUri is not handle by the resource store
+    * @throws IllegalArgumentException is resourceRelativePath is not handle by the resource store
     */
    boolean isUriManageable(@NotNull final String resourceUri);
 }

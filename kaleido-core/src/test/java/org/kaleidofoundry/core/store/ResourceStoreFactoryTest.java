@@ -26,56 +26,41 @@ public class ResourceStoreFactoryTest extends Assert {
 
    @Test
    public void newClasspathResourceStore() throws ResourceException {
-	final String resourceUri = "classpath:/store/foo.txt";
-	final ResourceStore resourceStore = ResourceStoreFactory.provides(resourceUri);
+	final ResourceStore resourceStore = ResourceStoreFactory.provides("classpath:/");
 	assertNotNull(resourceStore);
 	assertEquals(ClasspathResourceStore.class, resourceStore.getClass());
-	assertTrue(resourceStore.isUriManageable(resourceUri));
+	assertTrue(resourceStore.isUriManageable("classpath:/store/foo.txt"));
    }
 
    @Test
    public void newFileSystemResourceStore() throws ResourceException {
-	final String resourceUri = "file:/F:/Developments/workspaces/eclipse/jappy/kaleido-core/src/test/resources/store/foo.txt";
-	final ResourceStore resourceStore = ResourceStoreFactory.provides(resourceUri);
+	final ResourceStore resourceStore = ResourceStoreFactory.provides("file:/dev/workspace/kaleidofoundry");
 	assertNotNull(resourceStore);
 	assertEquals(FileSystemResourceStore.class, resourceStore.getClass());
-	assertTrue(resourceStore.isUriManageable(resourceUri));
+	assertTrue(resourceStore.isUriManageable("file:/dev/workspace/kaleidofoundry/kaleido-core/src/test/resources/store/foo.txt"));
    }
 
    @Test
    public void newFtpResourceStore() throws ResourceException {
-	final String resourceUri = "ftp://localhost/foo.txt";
-	final ResourceStore resourceStore = ResourceStoreFactory.provides(resourceUri);
+	final ResourceStore resourceStore = ResourceStoreFactory.provides("ftp://localhost/");
 	assertNotNull(resourceStore);
 	assertEquals(FtpResourceStore.class, resourceStore.getClass());
-	assertTrue(resourceStore.isUriManageable(resourceUri));
+	assertTrue(resourceStore.isUriManageable("ftp://localhost/foo.txt"));
    }
 
    @Test
    public void newHttpResourceStore() throws ResourceException {
-	final String resourceUri = "http://localhost/foo.txt";
-	final ResourceStore resourceStore = ResourceStoreFactory.provides(resourceUri);
+	final ResourceStore resourceStore = ResourceStoreFactory.provides("http://localhost/");
 	assertNotNull(resourceStore);
 	assertEquals(HttpResourceStore.class, resourceStore.getClass());
-	assertTrue(resourceStore.isUriManageable(resourceUri));
+	assertTrue(resourceStore.isUriManageable("http://localhost/foo.txt"));
    }
 
    @Test
    public void newJpaResourceStore() throws ResourceException {
-	final String resourceUri = "jpa:/tmp/foo.txt";
-	final ResourceStore resourceStore = ResourceStoreFactory.provides(resourceUri);
+	final ResourceStore resourceStore = ResourceStoreFactory.provides("jpa:/");
 	assertNotNull(resourceStore);
-	assertTrue(resourceStore.isUriManageable(resourceUri));
+	assertTrue(resourceStore.isUriManageable("tmp/foo.txt"));
 	assertEquals(JpaResourceStore.class, resourceStore.getClass());
    }
-
-   // @Rule
-   @Test
-   public void unManagedUri() {
-   }
-
-   @Test
-   public void illegalImplementation() {
-   }
-
 }

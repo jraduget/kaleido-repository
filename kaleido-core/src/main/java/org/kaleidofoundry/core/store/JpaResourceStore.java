@@ -30,6 +30,7 @@ import javax.persistence.PersistenceContext;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.store.entity.ResourceStoreEntity;
 import org.kaleidofoundry.core.util.StringHelper;
@@ -90,7 +91,7 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
    protected ResourceHandler doGet(final URI resourceUri) throws ResourceException {
 	final ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.toString());
 	if (entity == null) {
-	   throw new ResourceNotFoundException(resourceUri.toString());
+	   throw new ResourceNotFoundException(resourceUri.getPath());
 	} else {
 	   final ResourceHandler resourceHandler = new ResourceHandlerBean(new ByteArrayInputStream(entity.getContent()));
 	   return resourceHandler;
@@ -105,7 +106,7 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
    protected void doRemove(final URI resourceUri) throws ResourceException {
 	final ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.toString());
 	if (entity == null) {
-	   throw new ResourceNotFoundException(resourceUri.toString());
+	   throw new ResourceNotFoundException(resourceUri.getPath());
 	} else {
 	   getEntityManager().remove(entity);
 	}
@@ -116,10 +117,12 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doStore(java.net.URI, org.kaleidofoundry.core.store.ResourceHandler)
     */
    @Override
+   @Review(category = ReviewCategoryEnum.Fixme, comment = "parse resource store entity : uri - path - name")
    protected void doStore(final URI resourceUri, final ResourceHandler resource) throws ResourceException {
 
 	final ResourceStoreEntity storeEntity = newInstance();
 
+	// fixme
 	storeEntity.setUri(resourceUri.toString());
 	storeEntity.setName(resourceUri.getPath());
 	storeEntity.setPath(resourceUri.getPath());

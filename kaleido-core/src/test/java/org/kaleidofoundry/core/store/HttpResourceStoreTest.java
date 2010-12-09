@@ -65,10 +65,11 @@ public class HttpResourceStoreTest extends AbstractResourceStoreTest {
 	super.setup();
 
 	// be-careful, there is no-proxy settings for this test ;-)
-	resourceStore = new HttpResourceStore(new RuntimeContext<ResourceStore>(ResourceStore.class));
+	final RuntimeContext<ResourceStore> context = new ResourceContextBuilder().withUriRootPath("http://localhost:9090/test/").build();
+	resourceStore = new HttpResourceStore(context);
 
-	existingResources.put("http://localhost:9090/test/kaleidofoundry/it/store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
-	nonExistingResources.add("http://localhost:9090/test/kaleidofoundry/it/store/foo");
+	existingResources.put("kaleidofoundry/it/store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
+	nonExistingResources.add("kaleidofoundry/it/store/foo");
    }
 
 }

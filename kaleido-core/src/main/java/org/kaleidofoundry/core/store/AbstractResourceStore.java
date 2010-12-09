@@ -87,6 +87,25 @@ public abstract class AbstractResourceStore implements ResourceStore {
     */
    protected abstract void doStore(@NotNull URI resourceUri, @NotNull ResourceHandler resource) throws ResourceException;
 
+   /**
+    * build a full resource uri, given a relative path
+    * 
+    * @param resourceRelativePath
+    * @return
+    */
+   protected String buildResourceURi(final String resourceRelativePath) {
+
+	final String resourceRootUri = context.getProperty(ResourceContextBuilder.UriRootPath);
+	final StringBuilder resourceUri = new StringBuilder(resourceRootUri != null ? resourceRootUri : "");
+
+	if (resourceRootUri != null && !resourceRootUri.endsWith("/") && resourceRelativePath != null && !resourceRelativePath.startsWith("/")) {
+	   resourceUri.append("/");
+	}
+	resourceUri.append(resourceRelativePath);
+
+	return resourceUri.toString();
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.store.ResourceStore#isUriManageable(java.net.String)
@@ -122,10 +141,11 @@ public abstract class AbstractResourceStore implements ResourceStore {
     * @see org.kaleidofoundry.core.lang.pattern.Store#load(java.lang.Object)
     */
    @Override
-   public final ResourceHandler get(@NotNull final String resourceUri) throws ResourceException {
+   public final ResourceHandler get(@NotNull final String resourceRelativePath) throws ResourceException {
+	final String resourceUri = buildResourceURi(resourceRelativePath);
 	isUriManageable(resourceUri);
 	final ResourceHandler in = doGet(URI.create(resourceUri));
-	if (in == null || in.getInputStream() == null) { throw new ResourceNotFoundException(resourceUri); }
+	if (in == null || in.getInputStream() == null) { throw new ResourceNotFoundException(resourceRelativePath); }
 	return in;
    }
 
@@ -134,8 +154,9 @@ public abstract class AbstractResourceStore implements ResourceStore {
     * @see org.kaleidofoundry.core.lang.pattern.Store#remove(java.lang.Object)
     */
    @Override
-   public final ResourceStore remove(@NotNull final String resourceUri) throws ResourceException {
+   public final ResourceStore remove(@NotNull final String resourceRelativePath) throws ResourceException {
 	if (isReadOnly()) { throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.resource.readonly.illegal", context.getName())); }
+	final String resourceUri = buildResourceURi(resourceRelativePath);
 	isUriManageable(resourceUri);
 	doRemove(URI.create(resourceUri));
 	return this;
@@ -146,8 +167,9 @@ public abstract class AbstractResourceStore implements ResourceStore {
     * @see org.kaleidofoundry.core.lang.pattern.Store#store(java.lang.Object, java.lang.Object)
     */
    @Override
-   public final ResourceStore store(@NotNull final String resourceUri, @NotNull final ResourceHandler resource) throws ResourceException {
+   public final ResourceStore store(@NotNull final String resourceRelativePath, @NotNull final ResourceHandler resource) throws ResourceException {
 	if (isReadOnly()) { throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.resource.readonly.illegal", context.getName())); }
+	final String resourceUri = buildResourceURi(resourceRelativePath);
 	isUriManageable(resourceUri);
 	doStore(URI.create(resourceUri), resource);
 	return this;
@@ -160,8 +182,9 @@ public abstract class AbstractResourceStore implements ResourceStore {
    @Override
    public final ResourceStore move(@NotNull final String origin, @NotNull final String destination) throws ResourceException {
 	if (isReadOnly()) { throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.resource.readonly.illegal", context.getName())); }
-	isUriManageable(origin);
-	isUriManageable(destination);
+
+	isUriManageable(buildResourceURi(origin));
+	isUriManageable(buildResourceURi(destination));
 
 	if (exists(destination)) {
 	   remove(destination);
@@ -188,10 +211,10 @@ public abstract class AbstractResourceStore implements ResourceStore {
     * @see org.kaleidofoundry.core.lang.pattern.Store#exists(java.lang.Object)
     */
    @Override
-   public final boolean exists(@NotNull final String resourceUri) throws ResourceException {
+   public final boolean exists(@NotNull final String resourceRelativePath) throws ResourceException {
 	ResourceHandler resource = null;
 	try {
-	   resource = get(resourceUri);
+	   resource = get(resourceRelativePath);
 	   return true;
 	} catch (final ResourceNotFoundException rnfe) {
 	   return false;
