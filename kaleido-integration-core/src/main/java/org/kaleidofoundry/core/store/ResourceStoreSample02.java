@@ -15,15 +15,14 @@
  */
 package org.kaleidofoundry.core.store;
 
-import java.io.BufferedReader;
+import static org.kaleidofoundry.core.store.ResourceContextBuilder.ConnectTimeout;
+import static org.kaleidofoundry.core.store.ResourceContextBuilder.ReadTimeout;
+import static org.kaleidofoundry.core.store.ResourceContextBuilder.Readonly;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URI;
 
 import org.kaleidofoundry.core.context.Context;
 import org.kaleidofoundry.core.context.Parameter;
-
-import static org.kaleidofoundry.core.store.ResourceContextBuilder.*;
 
 /**
  * <p>
@@ -38,8 +37,7 @@ import static org.kaleidofoundry.core.store.ResourceContextBuilder.*;
 public class ResourceStoreSample02 {
 
    // @Parameter overrides myResourceCtx configuration setting
-   @Context(value = "myResourceCtx",
-	   parameters = {
+   @Context(value = "myResourceCtx", parameters = {
 	   @Parameter(name = Readonly, value = "true"),
 	   @Parameter(name = ConnectTimeout, value = "0"),
 	   @Parameter(name = ReadTimeout, value = "0")
@@ -47,37 +45,20 @@ public class ResourceStoreSample02 {
    protected ResourceStore resourceStore;
 
    /**
-    * method example that use the injected store
+    * Example method using injected Resource Store<br/>
+    * <br/>
+    * 1. it connect to the given resource with the injected context (proxy, credentials, ...)<br/>
+    * 2. it get the resource content (text here), using the right charset ("UTF8" is the default is not specified)
+    * 
     * @return the content of the resource "http://localhost:8080/kaleido-integration/store/foo.txt"
     * @throws ResourceException
     * @throws IOException
     */
-   public String echo() throws ResourceException, IOException {
-
-	ResourceHandler rh = null;
-	BufferedReader reader = null;
-	String inputLine;
-
-	try {
-	   StringBuilder stb = new StringBuilder();
-
-	   // connect to the resource with the injected context (proxy, credentials, ...)
-	   rh = resourceStore.get(URI.create("http://localhost:8080/kaleido-integration/store/foo.txt"));
-
-	   // handle the input stream resource as usual
-	   reader = new BufferedReader(new InputStreamReader(rh.getInputStream(), "UTF8"));
-	   while ((inputLine = reader.readLine()) != null) {
-		stb.append(inputLine).append("\n");
-	   }
-	   return stb.toString();
-
-	} finally {
-	   // free buffered reader
-	   try { if (reader != null) { reader.close(); } } catch (IOException ioe) {}
-	   
-	   // free the resource
-	   if (rh != null) { rh.release(); }
-	}
+   public String echo() throws ResourceException {
+	String resourceURI = "http://localhost:8080/kaleido-integration/store/foo.txt";
+	String text = resourceStore.get(resourceURI).getText("UTF8");	
+	System.out.printf("resource content [%s] :\n%s", resourceURI.toString(), text);	
+	return text;	
    }
 
 }
