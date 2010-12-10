@@ -28,7 +28,7 @@ import org.kaleidofoundry.core.store.ResourceException;
 /**
  * @author Jerome RADUGET
  */
-public class CacheManagerJunitLauncher {
+public class CacheManagerIntegrationTest {
 
    @BeforeClass
    public static void setupClass() throws ResourceException {

@@ -13,30 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core.naming;
+package org.kaleidofoundry.core.context;
 
 import org.junit.Test;
 
 /**
- * @see NamingServiceJndiSample02
- * 
  * @author Jerome RADUGET
  */
-public class RemoteJunitLauncher02 extends RemoteJunitLauncher {
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.naming.RemoteJunitLauncher#getNamingServiceJndiSample()
-    */
-   @Override
-   public NamingServiceJndiSample getNamingServiceJndiSample() {
-	return new NamingServiceJndiSample02();
-   }
+public class SpringSampleTest {
 
    @Test
-   public void checkContext() {	
-	JndiNamingService ns = (JndiNamingService) getNamingServiceJndiSample().getNamingService();	
-	assertNotNull(ns.getContext());
-	assertEquals("myNamingCtx02", ns.getContext().getName());	
+   public void simpleTest() {
    }
 }

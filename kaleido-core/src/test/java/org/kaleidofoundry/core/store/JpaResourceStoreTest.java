@@ -58,7 +58,7 @@ public class JpaResourceStoreTest extends AbstractResourceStoreTest {
 	   // create mocked entity test
 	   final ResourceStoreEntity entity = new ResourceStoreEntity();
 	   final URI resourceUri = URI.create("jpa:/tmp/foo.txt");
-	   entity.setUri(resourceUri.toString());
+	   entity.setUri(resourceUri.getPath());
 	   entity.setName(resourceUri.getPath());
 	   entity.setPath(resourceUri.getPath());
 	   entity.setContent(DEFAULT_RESOURCE_MOCK_TEST.getBytes());
@@ -66,7 +66,7 @@ public class JpaResourceStoreTest extends AbstractResourceStoreTest {
 	   em.persist(entity);
 
 	   // resource to test
-	   existingResources.put(resourceUri.toString(), DEFAULT_RESOURCE_MOCK_TEST);
+	   existingResources.put(resourceUri.getPath(), DEFAULT_RESOURCE_MOCK_TEST);
 	   nonExistingResources.add("foo");
 
 	   // resource store creation
@@ -85,7 +85,7 @@ public class JpaResourceStoreTest extends AbstractResourceStoreTest {
    public void cleanup() {
 	try {
 	   final URI resourceUri = URI.create("jpa:/tmp/foo.txt");
-	   final ResourceStoreEntity resource = em.find(ResourceStoreEntity.class, resourceUri.toString());
+	   final ResourceStoreEntity resource = em.find(ResourceStoreEntity.class, resourceUri.getPath());
 	   if (resource != null) {
 		em.remove(resource);
 		transaction.commit();

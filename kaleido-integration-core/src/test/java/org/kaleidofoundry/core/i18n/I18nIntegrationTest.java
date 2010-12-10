@@ -33,7 +33,7 @@ import org.kaleidofoundry.core.store.ResourceException;
 /**
  * @author Jerome RADUGET
  */
-public class I18nJunitLauncher extends Assert {
+public class I18nIntegrationTest extends Assert {
 
    @Before
    public void setup() throws ResourceException {

@@ -15,7 +15,7 @@
  */
 package org.kaleidofoundry.core.cache;
 
-import static org.kaleidofoundry.core.cache.CacheManagerJunitLauncher.assertions;
+import static org.kaleidofoundry.core.cache.CacheManagerIntegrationTest.assertions;
 
 import java.util.Map;
 
@@ -29,7 +29,7 @@ import org.kaleidofoundry.core.store.ResourceException;
 /**
  * @author Jerome RADUGET
  */
-public class CacheJunitLauncher extends Assert {
+public class CacheIntegrationTest extends Assert {
 
    @BeforeClass
    public static void setupClass() throws ResourceException {

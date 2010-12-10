@@ -53,7 +53,7 @@ public class ResourceStoreProvider extends AbstractProviderService<ResourceStore
 
 	if (StringHelper.isEmpty(uriRootPath)) { throw new RuntimeContextEmptyParameterException(ResourceContextBuilder.UriRootPath, context); }
 
-	return provides(uriRootPath, new RuntimeContext<ResourceStore>(ResourceStore.class));
+	return provides(uriRootPath, context);
    }
 
    /**

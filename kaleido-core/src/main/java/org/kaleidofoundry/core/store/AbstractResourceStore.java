@@ -98,9 +98,17 @@ public abstract class AbstractResourceStore implements ResourceStore {
 	final String resourceRootUri = context.getProperty(ResourceContextBuilder.UriRootPath);
 	final StringBuilder resourceUri = new StringBuilder(resourceRootUri != null ? resourceRootUri : "");
 
-	if (resourceRootUri != null && !resourceRootUri.endsWith("/") && resourceRelativePath != null && !resourceRelativePath.startsWith("/")) {
-	   resourceUri.append("/");
+	// remove '/' is UriRootPath ends with '/' and resourceRelativePath starts with a '/'
+	if (resourceRootUri != null && resourceRootUri.endsWith("/") && resourceRelativePath != null && resourceRelativePath.startsWith("/")) {
+	   resourceUri.deleteCharAt(resourceUri.length() - 1);
+	} else {
+
+	   // add '/' if needed
+	   if (resourceRootUri != null && !resourceRootUri.endsWith("/") && resourceRelativePath != null && !resourceRelativePath.startsWith("/")) {
+		resourceUri.append("/");
+	   }
 	}
+
 	resourceUri.append(resourceRelativePath);
 
 	return resourceUri.toString();

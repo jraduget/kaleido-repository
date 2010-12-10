@@ -24,7 +24,7 @@ import static org.kaleidofoundry.core.naming.NamingContextBuilder.*;
  * 
  * @author Jerome RADUGET
  */
-public class RemoteJunitLauncher03 extends RemoteJunitLauncher {
+public class RemoteJndiIntegrationTest03 extends RemoteJndiIntegrationTest {
 
    /*
     * (non-Javadoc)

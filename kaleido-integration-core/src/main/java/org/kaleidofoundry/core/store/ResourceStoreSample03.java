@@ -35,7 +35,7 @@ public class ResourceStoreSample03 {
    public ResourceStoreSample03() throws ResourceException {
 
 	RuntimeContext<ResourceStore> context = 
-	   new ResourceContextBuilder("myResourceCtx", ResourceStore.class)
+	   new ResourceContextBuilder("myManualResourceCtx", ResourceStore.class)
 		.withUriRootPath("http://localhost:8080/kaleido-integration/")
 		.withReadonly(true)
 		.withConnectTimeout(0)

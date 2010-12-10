@@ -60,7 +60,7 @@ public class ResourceStoreFactoryTest extends Assert {
    public void newJpaResourceStore() throws ResourceException {
 	final ResourceStore resourceStore = ResourceStoreFactory.provides("jpa:/");
 	assertNotNull(resourceStore);
-	assertTrue(resourceStore.isUriManageable("tmp/foo.txt"));
+	assertTrue(resourceStore.isUriManageable("jpa:/tmp/foo.txt"));
 	assertEquals(JpaResourceStore.class, resourceStore.getClass());
    }
 }

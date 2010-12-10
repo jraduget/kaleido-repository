@@ -32,7 +32,7 @@ import org.kaleidofoundry.core.store.ResourceException;
 /**
  * @author Jerome RADUGET
  */
-public abstract class RemoteJunitLauncher extends Assert {
+public abstract class RemoteJndiIntegrationTest extends Assert {
 
    /**
     * @return naming service instance to test

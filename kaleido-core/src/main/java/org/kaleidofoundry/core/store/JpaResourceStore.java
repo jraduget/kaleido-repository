@@ -89,7 +89,7 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
     */
    @Override
    protected ResourceHandler doGet(final URI resourceUri) throws ResourceException {
-	final ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.toString());
+	final ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.getPath());
 	if (entity == null) {
 	   throw new ResourceNotFoundException(resourceUri.getPath());
 	} else {
@@ -104,7 +104,7 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
     */
    @Override
    protected void doRemove(final URI resourceUri) throws ResourceException {
-	final ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.toString());
+	final ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.getPath());
 	if (entity == null) {
 	   throw new ResourceNotFoundException(resourceUri.getPath());
 	} else {
@@ -123,7 +123,7 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
 	final ResourceStoreEntity storeEntity = newInstance();
 
 	// fixme
-	storeEntity.setUri(resourceUri.toString());
+	storeEntity.setUri(resourceUri.getPath());
 	storeEntity.setName(resourceUri.getPath());
 	storeEntity.setPath(resourceUri.getPath());
 

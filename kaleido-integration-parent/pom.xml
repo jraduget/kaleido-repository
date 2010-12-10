@@ -23,4 +23,22 @@
 		<module>../kaleido-integration-ear</module>
 	</modules>
 	
+	<dependencies>
+		<!-- jmeter have no maven artifact in repository - define ${jmeter.home} in your ~/.m2/settings.xml -->
+		<dependency>
+      		<groupId>org.apache.jmeter</groupId>
+      		<artifactId>jmeter-core</artifactId>
+      		<version>2.4</version>
+      		<systemPath>${jmeter.home}/lib/ext/ApacheJMeter_core.jar</systemPath>
+      		<scope>system</scope>
+    	</dependency>
+		<dependency>
+      		<groupId>org.apache.jmeter</groupId>
+      		<artifactId>jmeter-java</artifactId>
+      		<version>2.4</version>
+      		<systemPath>${jmeter.home}/lib/ext/ApacheJMeter_java.jar</systemPath>
+      		<scope>system</scope>
+    	</dependency>    	
+	</dependencies>
+	
 </project>

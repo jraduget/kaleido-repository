@@ -39,7 +39,7 @@ import org.kaleidofoundry.core.store.ResourceException;
 /**
  * @author Jerome RADUGET
  */
-public class ConfigurationJunitLauncher {
+public class ConfigurationIntegrationTest {
 
    @Before
    public void setup() throws ResourceException {

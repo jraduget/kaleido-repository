@@ -15,14 +15,17 @@
  */
 package org.kaleidofoundry.core.naming;
 
+import static org.kaleidofoundry.core.naming.NamingContextBuilder.Caching;
+import static org.kaleidofoundry.core.naming.NamingContextBuilder.FailoverEnabled;
+import static org.kaleidofoundry.core.naming.NamingContextBuilder.InitialContextFactory;
+
 import org.junit.Test;
 
 /**
- * @see NamingServiceJndiSample01
- * 
+ * @see NamingServiceJndiSample04
  * @author Jerome RADUGET
  */
-public class RemoteJunitLauncher01 extends RemoteJunitLauncher {
+public class RemoteJndiIntegrationTest04 extends RemoteJndiIntegrationTest {
 
    /*
     * (non-Javadoc)
@@ -30,14 +33,17 @@ public class RemoteJunitLauncher01 extends RemoteJunitLauncher {
     */
    @Override
    public NamingServiceJndiSample getNamingServiceJndiSample() {
-	return new NamingServiceJndiSample01();
-   }
-   
-   @Test
-   public void checkContext() {	
-	JndiNamingService ns = (JndiNamingService) getNamingServiceJndiSample().getNamingService();	
-	assertNotNull(ns.getContext());
-	assertEquals("myNamingCtx", ns.getContext().getName());	
+	return new NamingServiceJndiSample04();
    }
 
+   @Test
+   public void checkContext() {	
+	JndiNamingService ns = (JndiNamingService) getNamingServiceJndiSample().getNamingService();
+	assertNotNull(ns);
+	assertNotNull(ns.getContext());
+	assertEquals("myManualNamingCtx", ns.getContext().getName());	
+	assertEquals("com.sun.enterprise.naming.SerialInitContextFactory", ns.getContext().getProperty(InitialContextFactory));
+	assertEquals("true", ns.getContext().getProperty(FailoverEnabled));
+	assertEquals("all", ns.getContext().getProperty(Caching));
+   }  
 }

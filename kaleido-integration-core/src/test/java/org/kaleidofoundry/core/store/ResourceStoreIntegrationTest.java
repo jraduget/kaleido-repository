@@ -29,7 +29,7 @@ import org.kaleidofoundry.core.config.ConfigurationFactory;
 /**
  * @author Jerome RADUGET
  */
-public class ResourceStoreJunitLauncher {
+public class ResourceStoreIntegrationTest {
 
    @BeforeClass
    public static void setupClass() throws ResourceException {
