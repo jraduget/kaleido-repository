@@ -15,8 +15,6 @@
  */
 package org.kaleidofoundry.core.store;
 
-import java.io.IOException;
-
 import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
@@ -34,19 +32,19 @@ public class ResourceStoreSample03 {
 
    public ResourceStoreSample03() throws ResourceException {
 
-	RuntimeContext<ResourceStore> context = 
+	RuntimeContext<ResourceStore> context =
 	   new ResourceContextBuilder("myManualResourceCtx", ResourceStore.class)
-		.withUriRootPath("http://localhost:8080/kaleido-integration/")
-		.withReadonly(true)
-		.withConnectTimeout(0)
-		.withReadTimeout(0)
-		.withProxySet(false)
-		.build();
+	.withUriRootPath("http://localhost:8080/kaleido-integration/")
+	.withReadonly(true)
+	.withConnectTimeout(0)
+	.withReadTimeout(0)
+	.withProxySet(false)
+	.build();
 
 	resourceStore = ResourceStoreFactory.provides(context);
 
    }
-   
+
    /**
     * <b>Example method using injected Resource Store</b><br/>
     * <br/>
@@ -62,12 +60,11 @@ public class ResourceStoreSample03 {
     * 
     * @return the content of the resource "http://localhost:8080/kaleido-integration/store/foo.txt"
     * @throws ResourceException
-    * @throws IOException
     */
    public String echo() throws ResourceException {
-	String resourceRelativePath = "store/foo.txt"; 
-	String text = resourceStore.get(resourceRelativePath).getText("UTF8");	
-	System.out.printf("resource content [%s] :\n%s", resourceRelativePath, text);	
+	String resourceRelativePath = "store/foo.txt";
+	String text = resourceStore.get(resourceRelativePath).getText("UTF8");
+	System.out.printf("resource content [%s] :\n%s", resourceRelativePath, text);
 	return text;
    }
 

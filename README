@@ -3,7 +3,13 @@ Welcome to KaleidoFoundry project !
 Project description
 -------------------
 
-Kaleidofoundry is a java / jee extensible framework, based on jdk 6 and jee 5 / 6 APIs. It is a technical base for handling : configuration, caching, file resource store, i18n labels & exception messages, jndi resource, mail, messaging... It has been designed to be easily integrated to your current java stack & environment (could be clustered or not, with replicated or distributed caching).
+Kaleido Foundry is a java extensible framework, based on jdk 6 and java ee 5 & 6 APIs. 
+It is a technical base for managing : file store, cache, configuration, i18n labels & exception messages, naming service (jndi for ejb / datasource / jms queue...), mail sender service (async or not), asynchronous messaging (jms, tibco rdv / ems...). 
+
+It has been designed to be easily used and extended by developer, and easy to integrate to your current java stack (your environment could be clustered or not, could use a replicated or distributed caching, could be hosted in the cloud like gae...). So, you can use open source or commercial libraries.
+
+More, KaleidoFoundry provides for its components a dynamic configuration management , called *context injection*. This context injection will allow to centralize and to manage the configuration changes on the behaviour of your components. An ioc integration with spring / guice / jee6 @Inject... is scheduled.
+
 
 Requirements
 ------------
@@ -22,6 +28,14 @@ Modules
 	. Other thinks like @NotNull, @NotYetImplemented, @PersistenceContext in unmanaged env...
   * kaleido-core-guice	KaleidoFoundry guice integration module (for context injection)
   * kaledo-core-spring	KaleidoFoundry spring integration module (for context injection)
+
+Integration test modules 
+------------------------
+  * kaleido-integration-parent
+  * kaleido-integration-core
+  * kaleido-integration-ejb
+  * kaleido-integration-war
+  * kaleido-integration-ear
 
 Upcoming 
 --------

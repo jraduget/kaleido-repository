@@ -15,8 +15,6 @@
  */
 package org.kaleidofoundry.core.store;
 
-import java.io.IOException;
-
 import org.kaleidofoundry.core.context.Context;
 
 /**
@@ -69,12 +67,11 @@ public class ResourceStoreSample01 {
     * 
     * @return the content of the resource "http://localhost:8080/kaleido-integration/store/foo.txt"
     * @throws ResourceException
-    * @throws IOException
     */
    public String echo() throws ResourceException {
-	String resourceRelativePath = "store/foo.txt"; 
-	String text = resourceStore.get(resourceRelativePath).getText("UTF8");	
-	System.out.printf("resource content [%s] :\n%s", resourceRelativePath, text);	
+	String resourceRelativePath = "store/foo.txt";
+	String text = resourceStore.get(resourceRelativePath).getText("UTF8");
+	System.out.printf("resource content [%s] :\n%s", resourceRelativePath, text);
 	return text;
    }
 }

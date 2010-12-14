@@ -91,7 +91,7 @@ public abstract class AbstractResourceStore implements ResourceStore {
     * build a full resource uri, given a relative path
     * 
     * @param resourceRelativePath
-    * @return
+    * @return full resource uri, given the relative path parameter
     */
    protected String buildResourceURi(final String resourceRelativePath) {
 

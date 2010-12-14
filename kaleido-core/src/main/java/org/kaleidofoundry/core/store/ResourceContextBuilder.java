@@ -287,7 +287,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    /**
     * @param uriRootPath
     * @return current builder instance
-    * @see ResourceContextBuilder#uriRootPath
+    * @see ResourceContextBuilder#UriRootPath
     */
    public ResourceContextBuilder withUriRootPath(final String uriRootPath) {
 	getContextParameters().put(UriRootPath, uriRootPath);
@@ -297,7 +297,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    /**
     * @param readonly
     * @return current builder instance
-    * @see ResourceContextBuilder#readonly
+    * @see ResourceContextBuilder#Readonly
     */
    public ResourceContextBuilder withReadonly(final boolean readonly) {
 	getContextParameters().put(Readonly, String.valueOf(readonly));
@@ -307,7 +307,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    /**
     * @param username
     * @return current builder instance
-    * @see ResourceContextBuilder#user
+    * @see ResourceContextBuilder#User
     */
    public ResourceContextBuilder withUser(final String username) {
 	getContextParameters().put(User, username);
@@ -317,7 +317,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    /**
     * @param password
     * @return current builder instance
-    * @see ResourceContextBuilder#password
+    * @see ResourceContextBuilder#Password
     */
    public ResourceContextBuilder withPassword(final String password) {
 	getContextParameters().put(Password, password);
@@ -327,7 +327,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    /**
     * @param connectTimeout
     * @return current builder instance
-    * @see ResourceContextBuilder#connectTimeout
+    * @see ResourceContextBuilder#ConnectTimeout
     */
    public ResourceContextBuilder withConnectTimeout(final int connectTimeout) {
 	getContextParameters().put(ConnectTimeout, String.valueOf(connectTimeout));
@@ -337,7 +337,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    /**
     * @param readTimeout
     * @return current builder instance
-    * @see ResourceContextBuilder#readTimeout
+    * @see ResourceContextBuilder#ReadTimeout
     */
    public ResourceContextBuilder withReadTimeout(final int readTimeout) {
 	getContextParameters().put(ReadTimeout, String.valueOf(readTimeout));
@@ -347,7 +347,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    /**
     * @param proxySet
     * @return current builder instance
-    * @see ResourceContextBuilder#proxySet
+    * @see ResourceContextBuilder#ProxySet
     */
    public ResourceContextBuilder withProxySet(final boolean proxySet) {
 	getContextParameters().put(ProxySet, String.valueOf(proxySet));
@@ -366,7 +366,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    /**
     * @param nonProxyHosts
     * @return current builder instance
-    * @see ResourceContextBuilder#nonProxyHosts
+    * @see ResourceContextBuilder#NonProxyHosts
     */
    public ResourceContextBuilder withNonProxyHosts(final String nonProxyHosts) {
 	getContextParameters().put(NonProxyHosts, nonProxyHosts);
@@ -376,7 +376,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    /**
     * @param proxyPort
     * @return current builder instance
-    * @see ResourceContextBuilder#proxyPort
+    * @see ResourceContextBuilder#ProxyPort
     */
    public ResourceContextBuilder withProxyPort(final int proxyPort) {
 	getContextParameters().put(ProxyPort, String.valueOf(proxyPort));
@@ -386,7 +386,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    /**
     * @param proxyUser
     * @return current builder instance
-    * @see ResourceContextBuilder#proxyUser
+    * @see ResourceContextBuilder#ProxyUser
     */
    public ResourceContextBuilder withProxyUser(final String proxyUser) {
 	getContextParameters().put(ProxyUser, proxyUser);
@@ -396,7 +396,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    /**
     * @param proxyPassword
     * @return current builder instance
-    * @see ResourceContextBuilder#proxyPassword
+    * @see ResourceContextBuilder#ProxyPassword
     */
    public ResourceContextBuilder withProxyPassword(final String proxyPassword) {
 	getContextParameters().put(ProxyPassword, proxyPassword);
@@ -406,7 +406,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    /**
     * @param classloader
     * @return current builder instance
-    * @see ResourceContextBuilder#classloader
+    * @see ResourceContextBuilder#Classloader
     */
    public ResourceContextBuilder withClassloader(final String classloader) {
 	getContextParameters().put(Classloader, classloader);
@@ -416,7 +416,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    /**
     * @param method
     * @return current builder instance
-    * @see ResourceContextBuilder#method
+    * @see ResourceContextBuilder#Method
     */
    public ResourceContextBuilder withMethod(final String method) {
 	getContextParameters().put(Method, method);
@@ -426,7 +426,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    /**
     * @param contentType
     * @return current builder instance
-    * @see ResourceContextBuilder#classloader
+    * @see ResourceContextBuilder#Classloader
     */
    public ResourceContextBuilder withContentType(final String contentType) {
 	getContextParameters().put(ContentType, contentType);
@@ -436,7 +436,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    /**
     * @param customResourceStoreEntity
     * @return current builder instance
-    * @see ResourceContextBuilder#customResourceStoreEntity
+    * @see ResourceContextBuilder#CustomResourceStoreEntity
     */
    public ResourceContextBuilder withCustomResourceStoreEntity(final String customResourceStoreEntity) {
 	getContextParameters().put(CustomResourceStoreEntity, customResourceStoreEntity);
@@ -446,7 +446,7 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
    /**
     * @param bufferSize
     * @return current builder instance
-    * @see ResourceContextBuilder#bufferSize
+    * @see ResourceContextBuilder#BufferSize
     */
    public ResourceContextBuilder withBufferSize(final String bufferSize) {
 	getContextParameters().put(BufferSize, bufferSize);

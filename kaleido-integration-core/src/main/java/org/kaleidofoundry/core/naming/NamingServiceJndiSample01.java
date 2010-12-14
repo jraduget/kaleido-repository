@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ import org.kaleidofoundry.core.context.Context;
  * <b>in a local environment :</b>
  * 
  * <pre>
- * # for a local naming service  
+ * # for a local naming service
  * # -> it is only an example. by default : caching and failover are disabled. Moreover no need of failover in a local context
  * naming.myNamingCtx.caching=false
  * naming.myNamingCtx.caching.strategy=none
@@ -90,7 +90,7 @@ public class NamingServiceJndiSample01 implements NamingServiceJndiSample {
     * @see org.kaleidofoundry.core.naming.NamingServiceJndiSample#echoFromDatabase(java.lang.String)
     */
    @Override
-   public String echoFromDatabase(String myMessage) throws SQLException {
+   public String echoFromDatabase(final String myMessage) throws SQLException {
 	return echoFromDatabase(namingService, myMessage);
    }
 
@@ -99,7 +99,7 @@ public class NamingServiceJndiSample01 implements NamingServiceJndiSample {
     * @see org.kaleidofoundry.core.naming.NamingServiceJndiSample#echoFromJMS(java.lang.String)
     */
    @Override
-   public TextMessage echoFromJMS(String myMessage) throws JMSException {
+   public TextMessage echoFromJMS(final String myMessage) throws JMSException {
 	return echoFromJMS(namingService, myMessage);
    }
 
@@ -108,11 +108,11 @@ public class NamingServiceJndiSample01 implements NamingServiceJndiSample {
     * @see org.kaleidofoundry.core.naming.NamingServiceJndiSample#echoFromEJB(java.lang.String)
     */
    @Override
-   public String echoFromEJB(String message) {
+   public String echoFromEJB(final String message) {
 	return echoFromEJB(namingService, message);
    }
 
-   
+
    // **************************************************************************************************************************************
    // commons static methods to test (these methods are used by several junit launcher)
    // **************************************************************************************************************************************
@@ -125,10 +125,10 @@ public class NamingServiceJndiSample01 implements NamingServiceJndiSample {
    /**
     * @param namingService
     * @param myMessage
-    * @return
+    * @return myMessage select from database
     * @throws SQLException
     */
-   public static String echoFromDatabase(NamingService namingService, String myMessage) throws SQLException {
+   public static String echoFromDatabase(final NamingService namingService, final String myMessage) throws SQLException {
 
 	// get remote or local datasource
 	javax.sql.DataSource myDatasource = namingService.locate("jdbc/kaleido", DataSource.class);
@@ -178,10 +178,10 @@ public class NamingServiceJndiSample01 implements NamingServiceJndiSample {
    /**
     * @param namingService
     * @param myMessage
-    * @return
+    * @return the sent jms message
     * @throws JMSException
     */
-   public static TextMessage echoFromJMS(NamingService namingService, String myMessage) throws JMSException {
+   public static TextMessage echoFromJMS(final NamingService namingService, final String myMessage) throws JMSException {
 
 	javax.jms.Connection connection = null;
 	javax.jms.Session session = null;
@@ -219,9 +219,9 @@ public class NamingServiceJndiSample01 implements NamingServiceJndiSample {
    /**
     * @param namingService
     * @param message
-    * @return
+    * @return the input message parameter, echo from the remote ejb
     */
-   public static String echoFromEJB(NamingService namingService, final String message) {
+   public static String echoFromEJB(final NamingService namingService, final String message) {
 
 	// get ejb client service (remote or local)
 	MyRemoteBean myRemoteBean = namingService.locate("java:global/kaleido-integration-ear/kaleido-integration-ejb/MyBean", MyRemoteBean.class);

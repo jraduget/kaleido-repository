@@ -19,8 +19,6 @@ import static org.kaleidofoundry.core.store.ResourceContextBuilder.ConnectTimeou
 import static org.kaleidofoundry.core.store.ResourceContextBuilder.ReadTimeout;
 import static org.kaleidofoundry.core.store.ResourceContextBuilder.Readonly;
 
-import java.io.IOException;
-
 import org.kaleidofoundry.core.context.Context;
 import org.kaleidofoundry.core.context.Parameter;
 
@@ -59,12 +57,11 @@ public class ResourceStoreSample02 {
     * 
     * @return the content of the resource "http://localhost:8080/kaleido-integration/store/foo.txt"
     * @throws ResourceException
-    * @throws IOException
     */
    public String echo() throws ResourceException {
-	String resourceRelativePath = "store/foo.txt"; 
-	String text = resourceStore.get(resourceRelativePath).getText("UTF8");	
-	System.out.printf("resource content [%s] :\n%s", resourceRelativePath, text);	
+	String resourceRelativePath = "store/foo.txt";
+	String text = resourceStore.get(resourceRelativePath).getText("UTF8");
+	System.out.printf("resource content [%s] :\n%s", resourceRelativePath, text);
 	return text;
    }
 

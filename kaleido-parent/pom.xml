@@ -79,6 +79,9 @@
 		<module>../kaleido-core-guice</module>
 		<module>../kaleido-core-spring</module>
 
+		<!-- integration modules --> 
+		<module>../kaleido-integration-parent</module>
+		
 		<!--to refactor 
 		<module>../kaleido-mailing</module> 
 		<module>../kaleido-messaging</module> 
