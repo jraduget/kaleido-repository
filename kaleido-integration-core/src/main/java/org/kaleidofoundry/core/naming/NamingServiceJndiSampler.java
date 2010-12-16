@@ -19,6 +19,9 @@ import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
+import org.kaleidofoundry.core.config.ConfigurationFactory;
+import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.util.ThrowableHelper;
 
 /**
  * @author Jerome RADUGET
@@ -26,7 +29,20 @@ import org.apache.jmeter.samplers.SampleResult;
 public class NamingServiceJndiSampler extends AbstractJavaSamplerClient {
 
    private static final String UserMessage = "message";
-   
+
+   static {
+	// load configuration & context
+	try {
+	   ConfigurationFactory.provides("myConfig", "classpath:/naming/myContext.properties");
+	} catch (ResourceException rse) {
+	   rse.printStackTrace();
+	   throw new IllegalStateException(rse);
+	} catch (RuntimeException rte) {
+	   rte.printStackTrace();
+	   throw rte;
+	}
+   }
+
    /*
     * (non-Javadoc)
     * @see org.apache.jmeter.protocol.java.sampler.JavaSamplerClient#runTest(org.apache.jmeter.protocol.java.sampler.JavaSamplerContext)
@@ -34,25 +50,31 @@ public class NamingServiceJndiSampler extends AbstractJavaSamplerClient {
    @Override
    public SampleResult runTest(JavaSamplerContext context) {
 
+	// sampler result
 	SampleResult results = new SampleResult();
+	// global sampler status
+	boolean mainSampleStatusOK = true;
+	// user message to process (for echo command)
+	String userMessage = context.getParameter(UserMessage);
+
+	// start sample
 	results.sampleStart();
 
+	// ejb call
 	try {
+
 	   // context and instance injection of the naming service
 	   NamingServiceJndiSample01 sample = new NamingServiceJndiSample01();
 
-	   // ejb call
-	   String userMessage = context.getParameter(UserMessage);
-	   String result = sample.echoFromEJB(userMessage);
-	   
-	   results.setSuccessful(true);
+	   results.setThreadName("naming-service-sampler-echoFromEJB");
+	   results.setResponseMessage(sample.echoFromEJB(userMessage));
 	   results.setResponseCodeOK();
-	   results.setResponseMessage(result);		
-
 	} catch (Throwable th) {
-	   results.setSuccessful(false);
+	   results.setResponseMessage(ThrowableHelper.getStackTrace(th));
+	   mainSampleStatusOK = false;
 	}
-	
+
+	results.setSuccessful(mainSampleStatusOK);
 	results.sampleEnd();
 	return results;
    }

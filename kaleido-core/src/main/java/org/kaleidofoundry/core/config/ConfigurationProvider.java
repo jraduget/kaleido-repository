@@ -204,7 +204,7 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 	   }
 	}
 
-	throw new ResourceException("store.resource.uri.custom.notmanaged", resourceURI.getScheme());
+	throw new ResourceException("store.resource.uri.custom.notmanaged", resourceURI.getScheme(), resourceURI.toString());
    }
 
 }

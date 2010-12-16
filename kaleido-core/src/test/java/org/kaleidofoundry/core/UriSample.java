@@ -20,6 +20,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,14 +28,14 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Jerome RADUGET
  */
-public class UriSample {
+public class UriSample extends Assert {
 
    private final static Logger LOGGER = LoggerFactory.getLogger(UriSample.class);
 
    @Test
    public void createUri() throws URISyntaxException {
 
-	List<String> urisToTest = new ArrayList<String>();
+	final List<String> urisToTest = new ArrayList<String>();
 
 	urisToTest.add("classpath:/");
 	urisToTest.add("classpath:/context");
@@ -58,7 +59,7 @@ public class UriSample {
 	urisToTest.add("ext://context");
 	urisToTest.add("jpa://context");
 
-	for (String uri : urisToTest) {
+	for (final String uri : urisToTest) {
 	   debugUri(new URI(uri));
 	}
    }
@@ -77,4 +78,5 @@ public class UriSample {
 	LOGGER.debug("\trawUserInfo=" + uri.getRawUserInfo());
 	LOGGER.debug("");
    }
+
 }

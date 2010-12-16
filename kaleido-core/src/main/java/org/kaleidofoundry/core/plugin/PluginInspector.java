@@ -18,8 +18,9 @@ package org.kaleidofoundry.core.plugin;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.PluginMessageBundle;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -29,9 +30,9 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import org.kaleidofoundry.core.plugin.processor.PluginAnnotationProcessor;
 import org.kaleidofoundry.core.system.JavaSystemHelper;
@@ -149,8 +150,8 @@ public class PluginInspector {
    }
 
    /**
-    * load / registered plugin meta data,<br/>
-    * process start by reading text file, containing interface name list of annotated plugin interface<br/>
+    * Load and registered plugin meta data,<br/>
+    * The process start by reading text file, containing interface name list of annotated plugin interface<br/>
     * this file is generate at compile time, by plugin annotation processor {@link PluginAnnotationProcessor} <br/>
     * None coherence check is done at this step, use <code>checkDeclaration</code> to do so <br/>
     * 
@@ -173,14 +174,15 @@ public class PluginInspector {
 		   final URL url = urls.nextElement();
 		   echoMessages.add(PluginMessageBundle.getMessage("plugin.info.visitor.resource.found", "interfaces", url.getPath()));
 
+		   InputStream resourceInput = null;
 		   Reader reader = null;
 		   BufferedReader buffReader = null;
 		   String line;
 
 		   try {
-			reader = new FileReader(url.getPath());
+			resourceInput = url.openStream();
+			reader = new InputStreamReader(resourceInput);
 			buffReader = new BufferedReader(reader);
-
 			line = buffReader.readLine();
 			while (line != null) {
 			   try {
@@ -193,15 +195,25 @@ public class PluginInspector {
 				throw new PluginRegistryException("plugin.error.load.classnotfound", cnfe, pluginMetaInfPath, line);
 			   }
 			}
+
+		   } catch (final IOException ioe) {
+			throw new PluginRegistryException("plugin.error.load.ioe", ioe, url.getFile() + "\n" + url.toString(), ioe.getMessage());
 		   } finally {
-			buffReader.close();
-			reader.close();
+			if (buffReader != null) {
+			   buffReader.close();
+			}
+			if (reader != null) {
+			   reader.close();
+			}
+			if (resourceInput != null) {
+			   resourceInput.close();
+			}
 		   }
 		}
 	   }
 	   return Collections.unmodifiableSet(pluginsSet);
 	} catch (final IOException ioe) {
-	   throw new PluginRegistryException("plugin.error.load.ioe", ioe, ioe.getMessage(), pluginMetaInfPath);
+	   throw new PluginRegistryException("plugin.error.load.ioe", ioe, pluginMetaInfPath, ioe.getMessage());
 	}
    }
 
@@ -230,14 +242,15 @@ public class PluginInspector {
 		   final URL url = urls.nextElement();
 		   echoMessages.add(PluginMessageBundle.getMessage("plugin.info.visitor.resource.found", "classes", url.getPath()));
 
+		   InputStream resourceInput = null;
 		   Reader reader = null;
 		   BufferedReader buffReader = null;
 		   String line;
 
 		   try {
-			reader = new FileReader(url.getPath());
+			resourceInput = url.openStream();
+			reader = new InputStreamReader(resourceInput);
 			buffReader = new BufferedReader(reader);
-
 			line = buffReader.readLine();
 			while (line != null) {
 			   try {
@@ -254,15 +267,25 @@ public class PluginInspector {
 				line = buffReader.readLine();
 			   }
 			}
+
+		   } catch (final IOException ioe) {
+			throw new PluginRegistryException("plugin.error.load.ioe", ioe, url.getFile(), ioe.getMessage());
 		   } finally {
-			buffReader.close();
-			reader.close();
+			if (buffReader != null) {
+			   buffReader.close();
+			}
+			if (reader != null) {
+			   reader.close();
+			}
+			if (resourceInput != null) {
+			   resourceInput.close();
+			}
 		   }
 		}
 	   }
 	   return Collections.unmodifiableSet(pluginImplsSet);
 	} catch (final IOException ioe) {
-	   throw new PluginRegistryException("plugin.error.load.ioe", ioe, ioe.getMessage(), pluginImplementationMetaInfPath);
+	   throw new PluginRegistryException("plugin.error.load.ioe", ioe, pluginImplementationMetaInfPath, ioe.getMessage());
 	}
    }
 

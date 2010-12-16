@@ -17,8 +17,7 @@ package org.kaleidofoundry.core.util;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
-import javax.servlet.ServletException;
+import java.lang.reflect.Method;
 
 /**
  * Exception Helper
@@ -26,6 +25,18 @@ import javax.servlet.ServletException;
  * @author Jerome RADUGET
  */
 public abstract class ThrowableHelper {
+
+   // Get javax.servlet.ServletException dynamically if no web container in classpath (no need to have servlet.jar in classpath)
+   final static Class<?> ServletExceptionClass;
+
+   static {
+	Class<?> servletExceptionClass = null;
+	try {
+	   servletExceptionClass = Class.forName("javax.servlet.ServletException");
+	} catch (final Throwable th) {
+	}
+	ServletExceptionClass = servletExceptionClass;
+   }
 
    /**
     * @param th
@@ -51,23 +62,28 @@ public abstract class ThrowableHelper {
 	   return;
 	}
 
-	// exception statck trace
+	// exception stack trace
 	ex.printStackTrace(pw);
 
-	// exception cause
-	if (ex instanceof ServletException) {
-	   final Throwable cause = ((ServletException) ex).getRootCause();
+	// servlet exception root cause
+	if (ServletExceptionClass != null && ex.getClass().isAssignableFrom(ServletExceptionClass)) {
+	   try {
+		final Method getRootCauseMethod = ex.getClass().getMethod("getRootCause");
+		final Throwable cause = (Throwable) getRootCauseMethod.invoke(ex, new Object[] {});
+		if (null != cause) {
+		   pw.println("Root Cause:");
+		   fillStackTrace(cause, pw);
+		   return;
+		}
+	   } catch (final Throwable th) {
+	   }
+	}
 
-	   if (null != cause) {
-		pw.println("Root Cause:");
-		fillStackTrace(cause, pw);
-	   }
-	} else {
-	   final Throwable cause = ex.getCause();
-	   if (null != cause) {
-		pw.println("Cause:");
-		fillStackTrace(cause, pw);
-	   }
+	// otherwise
+	final Throwable cause = ex.getCause();
+	if (null != cause) {
+	   pw.println("Cause:");
+	   fillStackTrace(cause, pw);
 	}
 
    }

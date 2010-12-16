@@ -24,8 +24,8 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.lang.annotation.Nullable;
 import org.kaleidofoundry.core.lang.annotation.Tested;
-import org.kaleidofoundry.core.util.URLEncoderHelper;
 
 /**
  * Utilities for managing java system like :
@@ -145,6 +145,7 @@ public class JavaSystemHelper {
     * @param resourceName relative path of the resource
     * @return the url of the first found resource in classpath (classes + jar) of the given classLoader
     */
+   @Nullable
    public static URL getResource(@NotNull final ClassLoader classLoader, @NotNull final String resourceName) {
 	URL url = null;
 
@@ -173,6 +174,7 @@ public class JavaSystemHelper {
     * @param resourceName relative path of the resource
     * @return the url of the first found resource in classpath (classes + jar)
     */
+   @Nullable
    public static URL getResource(final String resourceName) {
 	return getResource(getCurrentClassLoader(), resourceName);
    }
@@ -184,11 +186,12 @@ public class JavaSystemHelper {
     * @param resourceName relative path of the resource
     * @return {@link File} instance on the found resource, or null if not found
     */
+   @Nullable
    public static File getResourceAsFile(final ClassLoader classLoader, final String resourceName) {
 
 	final URL url = getResource(classLoader, resourceName);
 	if (url != null) {
-	   return new File(URLEncoderHelper.decode(url.getPath()));
+	   return new File(url.getFile());
 	} else {
 	   return null;
 	}
@@ -200,6 +203,7 @@ public class JavaSystemHelper {
     * @param resourceName relative path of the resource
     * @return the first found resource in classpath (classes + jar)<br/> {@link File} instance on the found resource, or null if not found
     */
+   @Nullable
    public static File getResourceAsFile(final String resourceName) {
 	return getResourceAsFile(getCurrentClassLoader(), resourceName);
    }
@@ -220,6 +224,7 @@ public class JavaSystemHelper {
     * @param resourceName
     * @return the first found resource in classpath (classes + jar) of the given classLoader
     */
+   @Nullable
    public static InputStream getResourceAsStream(@NotNull final ClassLoader classLoader, @NotNull final String resourceName) {
 	InputStream in = null;
 
@@ -248,6 +253,7 @@ public class JavaSystemHelper {
     * @return the first found resource in classpath (classes + jar)<br/>
     *         inputstream instance on the found resource, or null if not found
     */
+   @Nullable
    public static InputStream getResourceAsStream(final String resourceName) {
 	return getResourceAsStream(getCurrentClassLoader(), resourceName);
    }

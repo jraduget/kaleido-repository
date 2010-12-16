@@ -38,7 +38,7 @@ public class JavaSystemHelperTest extends Assert {
 
    @Test
    public void getSystemProperties() {
-	Properties props = JavaSystemHelper.getSystemProperties();
+	final Properties props = JavaSystemHelper.getSystemProperties();
 	assertNotNull(props);
 	assertTrue(props.size() > 0);
 	assertNotNull(props.get("os.name"));
@@ -67,7 +67,7 @@ public class JavaSystemHelperTest extends Assert {
 	urls = JavaSystemHelper.getResources(FOO_RESOURCE);
 	assertNotNull(urls);
 	assertTrue(urls.hasMoreElements());
-	URL url = urls.nextElement();
+	final URL url = urls.nextElement();
 	assertNotNull(url);
 	// existing jar resource (and more than one resources)
 	urls = JavaSystemHelper.getResources(META_INF_JAR_RESOURCE);
@@ -88,7 +88,7 @@ public class JavaSystemHelperTest extends Assert {
 	urls = JavaSystemHelper.getResources(JavaSystemHelper.class.getClassLoader(), FOO_RESOURCE);
 	assertNotNull(urls);
 	assertTrue(urls.hasMoreElements());
-	URL url = urls.nextElement();
+	final URL url = urls.nextElement();
 	assertNotNull(url);
 	// existing jar resource (and more than one resources)
 	urls = JavaSystemHelper.getResources(JavaSystemHelper.class.getClassLoader(), META_INF_JAR_RESOURCE);
@@ -115,6 +115,7 @@ public class JavaSystemHelperTest extends Assert {
 	// existing jar resource
 	url = JavaSystemHelper.getResource(META_INF_JAR_RESOURCE);
 	assertNotNull(url);
+	assertTrue(url.toExternalForm().contains("jar:file:"));
    }
 
    @Test
@@ -138,8 +139,11 @@ public class JavaSystemHelperTest extends Assert {
 	// unknown resource
 	File file = JavaSystemHelper.getResourceAsFile(UNKNOWN_FOO_RESOURCE);
 	assertNull(file);
-	// existing resource
+	// existing resource in the classpath (file system)
 	file = JavaSystemHelper.getResourceAsFile(FOO_RESOURCE);
+	assertNotNull(file);
+	// existing resource in the classpath (jar zip)
+	file = JavaSystemHelper.getResourceAsFile(META_INF_JAR_RESOURCE);
 	assertNotNull(file);
    }
 
