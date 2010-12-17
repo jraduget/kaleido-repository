@@ -28,18 +28,27 @@ import org.kaleidofoundry.core.util.ThrowableHelper;
  */
 public class NamingServiceJndiSampler extends AbstractJavaSamplerClient {
 
-   private static final String UserMessage = "message";
+   private static final String ConfigurationUri = "configurationUri";
+   private static final String EchoMessage = "echoMessage";
 
-   static {
+   @Override
+   public void setupTest(JavaSamplerContext context) {	
 	// load configuration & context
 	try {
-	   ConfigurationFactory.provides("myConfig", "classpath:/naming/myContext.properties");
+	   ConfigurationFactory.provides("myConfig", context.getParameter(ConfigurationUri));
 	} catch (ResourceException rse) {
-	   rse.printStackTrace();
 	   throw new IllegalStateException(rse);
 	} catch (RuntimeException rte) {
-	   rte.printStackTrace();
 	   throw rte;
+	}	
+   }
+
+   @Override
+   public void teardownTest(JavaSamplerContext context) {
+	try {
+	   ConfigurationFactory.destroy("myConfig");
+	} catch (ResourceException rse) {
+	   throw new IllegalStateException(rse);
 	}
    }
 
@@ -50,33 +59,89 @@ public class NamingServiceJndiSampler extends AbstractJavaSamplerClient {
    @Override
    public SampleResult runTest(JavaSamplerContext context) {
 
-	// sampler result
-	SampleResult results = new SampleResult();
+	// parent sampler result
+	SampleResult parentResults = new SampleResult();
+	// childs sampler result
+	SampleResult childResults;
 	// global sampler status
 	boolean mainSampleStatusOK = true;
 	// user message to process (for echo command)
-	String userMessage = context.getParameter(UserMessage);
-
+	String userMessage = context.getParameter(EchoMessage);
+	// naming service sample
+	NamingServiceJndiSample01 sample;
+	
 	// start sample
-	results.sampleStart();
-
-	// ejb call
+	parentResults.sampleStart();
+	parentResults.setThreadName("naming-service");
+	parentResults.setSampleLabel("naming-service-sampler");
+	
+	// 1. context injection cost
+	childResults = new SampleResult();
+	childResults.sampleStart();
+	childResults.setSampleLabel("context injection");
+	sample = new NamingServiceJndiSample01();
+	childResults.sampleEnd();
+	childResults.setResponseCodeOK();
+	childResults.setSuccessful(true);
+	parentResults.addSubResult(childResults);
+	
+	// 2. ejb call
+	childResults = new SampleResult();
 	try {
-
 	   // context and instance injection of the naming service
-	   NamingServiceJndiSample01 sample = new NamingServiceJndiSample01();
-
-	   results.setThreadName("naming-service-sampler-echoFromEJB");
-	   results.setResponseMessage(sample.echoFromEJB(userMessage));
-	   results.setResponseCodeOK();
+	   childResults.sampleStart();
+	   childResults.setSampleLabel("echoFromEJB");
+	   childResults.setResponseMessage(sample.echoFromEJB(userMessage));
+	   childResults.sampleEnd();
+	   childResults.setResponseCodeOK();
+	   childResults.setSuccessful(true);	   
 	} catch (Throwable th) {
-	   results.setResponseMessage(ThrowableHelper.getStackTrace(th));
+	   childResults.setResponseMessage(ThrowableHelper.getStackTrace(th));
+	   childResults.setSuccessful(false);
 	   mainSampleStatusOK = false;
+	}	
+	parentResults.addSubResult(childResults);
+	
+	// 3. jdbc datasource call
+	childResults = new SampleResult();
+	try {
+	   // context and instance injection of the naming service
+	   childResults.sampleStart();
+	   childResults.setSampleLabel("echoFromDatabase");
+	   childResults.setResponseMessage(sample.echoFromDatabase(userMessage));
+	   childResults.sampleEnd();
+	   childResults.setResponseCodeOK();
+	   childResults.setSuccessful(true);	   
+	} catch (Throwable th) {
+	   childResults.setResponseMessage(ThrowableHelper.getStackTrace(th));
+	   childResults.setSuccessful(false);
+	   mainSampleStatusOK = false;
+	}	
+	parentResults.addSubResult(childResults);
+	
+	// 4. jms call
+	childResults = new SampleResult();
+	try {
+	   // context and instance injection of the naming service
+	   childResults.sampleStart();
+	   childResults.setSampleLabel("echoFromJMS");
+	   childResults.setResponseMessage(sample.echoFromJMS(userMessage).getJMSCorrelationID());
+	   childResults.sampleEnd();
+	   childResults.setResponseCodeOK();
+	   childResults.setSuccessful(true);	   
+	} catch (Throwable th) {
+	   childResults.setResponseMessage(ThrowableHelper.getStackTrace(th));
+	   childResults.setSuccessful(false);
+	   mainSampleStatusOK = false;
+	}	
+	parentResults.addSubResult(childResults);
+	
+	// global parent sampler status
+	parentResults.setSuccessful(mainSampleStatusOK);
+	if (mainSampleStatusOK) {
+	   parentResults.setResponseCodeOK();
 	}
-
-	results.setSuccessful(mainSampleStatusOK);
-	results.sampleEnd();
-	return results;
+	return parentResults;
    }
 
    /*
@@ -86,7 +151,8 @@ public class NamingServiceJndiSampler extends AbstractJavaSamplerClient {
    @Override
    public Arguments getDefaultParameters() {
 	Arguments args = new Arguments();
-	args.addArgument(UserMessage, "Hello world!");
+	args.addArgument(ConfigurationUri, "classpath:/naming/myContext.properties");
+	args.addArgument(EchoMessage, "Hello world!");
 	return args;
    }
 }
