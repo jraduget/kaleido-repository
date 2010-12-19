@@ -437,6 +437,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 		        <artifactId>maven-surefire-report-plugin</artifactId>
+		        <inherited>true</inherited>
 		        <version>2.6</version>
 		        <configuration>
 					<!-- <outputDirectory>../kaleido-site/site/</outputDirectory>  -->
