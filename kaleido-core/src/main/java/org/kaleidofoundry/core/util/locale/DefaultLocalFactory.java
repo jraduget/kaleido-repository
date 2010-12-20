@@ -17,16 +17,12 @@ package org.kaleidofoundry.core.util.locale;
 
 import java.util.Locale;
 
-import org.kaleidofoundry.core.lang.annotation.Review;
-import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
-
 /**
  * @author Jerome RADUGET
  */
 public class DefaultLocalFactory extends LocaleFactory {
 
    @Override
-   @Review(comment = "detect web, ejb, ws container & context to compute \"user\" session context locale", category = ReviewCategoryEnum.ImplementIt)
    public Locale getCurrentLocale() {
 	return Locale.getDefault();
    }

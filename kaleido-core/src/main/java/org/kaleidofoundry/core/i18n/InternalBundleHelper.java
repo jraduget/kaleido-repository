@@ -38,5 +38,7 @@ public interface InternalBundleHelper {
    I18nMessages RuntimeContextMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.Runtimecontext.getResourceName(), CoreMessageBundle);
    /** Jndi message bundle */
    I18nMessages NamingServiceMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.Naming.getResourceName(), CoreMessageBundle);
+   /** Web message bundle */
+   I18nMessages WebMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.Web.getResourceName(), CoreMessageBundle);
 
 }

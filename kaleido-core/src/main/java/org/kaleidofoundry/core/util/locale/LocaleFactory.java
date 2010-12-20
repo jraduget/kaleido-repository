@@ -18,6 +18,7 @@ package org.kaleidofoundry.core.util.locale;
 import java.util.Locale;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * @author Jerome RADUGET
@@ -27,6 +28,11 @@ public abstract class LocaleFactory {
    static enum LocaleEnum {
 	Defaulf;
    }
+
+   /**
+    * parameter name used to set default local settings (web init parameter or java system properties...)
+    */
+   public static final String JavaEnvProperties = "locale.default";
 
    /**
     * @return current locale for the user or server
@@ -60,4 +66,34 @@ public abstract class LocaleFactory {
 	}
    }
 
+   /**
+    * Parse a string locale
+    * 
+    * @param localeString
+    * @return
+    */
+   public static Locale parseLocale(final String localeString) {
+
+	if (!StringHelper.isEmpty(localeString)) {
+
+	   final String[] localeParts = StringHelper.split(localeString, "_");
+	   final String language = (localeParts.length > 0 ? localeParts[0] : null);
+	   final String country = (localeParts.length > 1 ? localeParts[1] : null);
+	   final String variant = (localeParts.length > 2 ? localeParts[2] : null);
+
+	   if (language != null) {
+		if (country != null) {
+		   if (variant != null) {
+			return new Locale(language, country, variant);
+		   } else {
+			return new Locale(language, country);
+		   }
+		} else {
+		   return new Locale(language);
+		}
+	   }
+	}
+
+	return null;
+   }
 }

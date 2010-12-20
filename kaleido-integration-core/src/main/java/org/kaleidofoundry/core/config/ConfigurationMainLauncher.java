@@ -30,6 +30,7 @@ public class ConfigurationMainLauncher {
    public static void main(final String[] args) throws ResourceException, IOException {
 
 	try {
+	   
 	   // load and register given configuration
 	   // another way to to this, set following java env variable : -Dkaleido.configurations=myContext=classpath:/config/myContext.properties
 	   ConfigurationFactory.provides("myContext", "classpath:/config/myContext.properties");

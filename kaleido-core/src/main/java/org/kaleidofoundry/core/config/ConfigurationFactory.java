@@ -75,7 +75,8 @@ public abstract class ConfigurationFactory {
 
 		final StringTokenizer strConfigToken = new StringTokenizer(System.getProperty(JavaEnvProperties), JavaEnvPropertiesSeparator);
 		while (strConfigToken.hasMoreTokens()) {
-		   final String[] configItem = StringHelper.split(strConfigToken.nextToken(), JavaEnvPropertiesValueSeparator);
+		   final String configItemStr = strConfigToken.nextToken();
+		   final String[] configItem = StringHelper.split(configItemStr, JavaEnvPropertiesValueSeparator);
 		   // named declaration
 		   if (configItem.length == 2) {
 			provides(configItem[0], configItem[1]);
@@ -118,7 +119,7 @@ public abstract class ConfigurationFactory {
     */
    public static final void destroy(@NotNull final String configName) throws ResourceException {
 
-	Configuration configToDestroy = getRegistry().get(configName);
+	final Configuration configToDestroy = getRegistry().get(configName);
 
 	if (configToDestroy != null) {
 	   if (configToDestroy.isLoaded()) {

@@ -4,12 +4,28 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
 	<display-name>kaleido-integration-war</display-name>
+
+	<context-param>
+		<description>i18n default locale</description>
+		<param-name>locale.default</param-name>
+		<param-value>en</param-value>
+	</context-param>
+
+	<context-param>
+		<description>configurations to load</description>
+		<param-name>kaleido.configurations</param-name>
+		<param-value>myCacheConfig=classpath:/cache/myContext.properties,myI18nConfig=classpath:/i18n/myContext.properties</param-value>
+	</context-param>
+
+	<listener>
+		<description>kaleido-foundry web startup listerner</description>
+		<display-name>kaleido web startup</display-name>
+		<listener-class>org.kaleidofoundry.core.web.StartupListener</listener-class>
+	</listener>
+
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.htm</welcome-file>
 		<welcome-file>index.jsp</welcome-file>
-		<welcome-file>default.html</welcome-file>
-		<welcome-file>default.htm</welcome-file>
-		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
+	
 </web-app>

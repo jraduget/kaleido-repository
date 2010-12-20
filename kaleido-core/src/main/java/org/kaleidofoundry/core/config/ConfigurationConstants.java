@@ -34,19 +34,19 @@ public interface ConfigurationConstants {
     * Syntax of the property value :
     * 
     * <pre>
-    * configurationId01:configurationUri01;configurationId02:configurationUri02;...
+    * configurationId01:configurationUri01,configurationId02:configurationUri02,...
     * </pre>
     * 
     * Example :
     * 
     * <pre>
-    * java -Dkaleido.configurations=datasource:classpath:/datasource.properties;otherResource:http:/host/path/otherResource;...  YourMainClass
+    * java -Dkaleido.configurations=dsConfig=classpath:/datasource.properties,otherResource=http:/host/path/otherResource,...  YourMainClass
     * </pre>
     */
-   String JavaEnvProperties = "kaleido.configuration";
+   String JavaEnvProperties = "kaleido.configurations";
    /** Configuration item separator */
-   String JavaEnvPropertiesSeparator = ";";
-   /** Configuration value separator */
+   String JavaEnvPropertiesSeparator = ",";
+   /** Configurations name / value separator */
    String JavaEnvPropertiesValueSeparator = "=";
 
    // ** Plugin part ***************************************************************************************************
