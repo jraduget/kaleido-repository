@@ -50,6 +50,19 @@
 			<version>${project.version}</version>
 		</dependency>
 		
+		<!-- Core integration testing  -->
+		<dependency>
+			<groupId>org.kaleidofoundry</groupId>
+			<artifactId>kaleido-integration-core</artifactId>
+			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+          			<groupId>org.kaleidofoundry</groupId>
+          			<artifactId>kaleido-integration-ejb</artifactId>
+        		</exclusion>
+			</exclusions>
+		</dependency>
+		
 		<!-- Framework for logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>

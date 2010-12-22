@@ -135,7 +135,7 @@ public class FtpResourceStore extends AbstractResourceStore implements ResourceS
 	   urlConnection.connect();
 
 	   try {
-		return new ResourceHandlerBean(urlConnection.getInputStream());
+		return new ResourceHandlerBean(resourceUri.toString(), urlConnection.getInputStream());
 	   } catch (final FileNotFoundException fnfe) {
 		throw new ResourceNotFoundException(resourceUri.toString());
 	   }
@@ -143,7 +143,7 @@ public class FtpResourceStore extends AbstractResourceStore implements ResourceS
 	} catch (final MalformedURLException mure) {
 	   throw new IllegalStateException(InternalBundleHelper.ResourceStoreMessageBundle.getMessage("store.resource.uri.malformed", resourceUri.toString()));
 	} catch (final IOException ioe) {
-	   throw new ResourceException(ioe);
+	   throw new ResourceException(ioe, resourceUri.toString());
 	}
    }
 

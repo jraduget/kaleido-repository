@@ -35,16 +35,28 @@ import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
 @NotThreadSafe
 public class ResourceHandlerBean implements ResourceHandler {
 
+   private final String resourceUri;
    private final InputStream input;
 
    private boolean closed;
 
    /**
+    * @param resourceUri
     * @param input
     */
-   public ResourceHandlerBean(@NotNull final InputStream input) {
+   public ResourceHandlerBean(@NotNull final String resourceUri, @NotNull final InputStream input) {
 	this.input = input;
+	this.resourceUri = resourceUri;
 	this.closed = false;
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.store.ResourceHandler#getResourceUri()
+    */
+   @Override
+   public String getResourceUri() {
+	return resourceUri;
    }
 
    /*
@@ -67,7 +79,7 @@ public class ResourceHandlerBean implements ResourceHandler {
 	try {
 	   return IOHelper.toByteArray(getInputStream());
 	} catch (final IOException ioe) {
-	   throw new ResourceException(ioe);
+	   throw new ResourceException(ioe, resourceUri);
 	} finally {
 	   // free resource handler
 	   release();
@@ -94,7 +106,7 @@ public class ResourceHandlerBean implements ResourceHandler {
 	try {
 	   return new InputStreamReader(getInputStream(), charset);
 	} catch (final IOException ioe) {
-	   throw new ResourceException(ioe);
+	   throw new ResourceException(ioe, resourceUri);
 	}
    }
 
@@ -126,7 +138,7 @@ public class ResourceHandlerBean implements ResourceHandler {
 	   }
 	   return stb.toString();
 	} catch (final IOException ioe) {
-	   throw new ResourceException(ioe);
+	   throw new ResourceException(ioe, resourceUri);
 	} finally {
 	   // free buffered reader
 	   try {

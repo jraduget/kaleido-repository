@@ -49,6 +49,8 @@ public abstract class AbstractResourceStoreTest extends Assert {
    protected Map<String, String> existingResources = new LinkedHashMap<String, String>();;
    // inavlid uri resource that must failed at load time
    protected Set<String> nonExistingResources = new LinkedHashSet<String>();
+   // valid uri resource to store / move / remove
+   protected Map<String, String> existingResourcesForStore = new LinkedHashMap<String, String>();;
 
    /**
     * disable i18n message bundle control to speed up test (no need of a local derby instance startup)
@@ -147,6 +149,7 @@ public abstract class AbstractResourceStoreTest extends Assert {
    @NotYetImplemented
    @Review(comment = "store implementation test", category = ReviewCategoryEnum.ImplementIt)
    public void store() throws ResourceException {
+	// existingResourcesForStore
 	return; // annotation @NotYetImplemented handle throw new NotYetImplementedException()...
    }
 

@@ -57,7 +57,7 @@ public class FileSystemResourceStore extends AbstractResourceStore implements Re
    @Override
    protected ResourceHandler doGet(final URI resourceUri) throws ResourceException {
 	try {
-	   return new ResourceHandlerBean(new FileInputStream(new File(resourceUri.getPath())));
+	   return new ResourceHandlerBean(resourceUri.toString(), new FileInputStream(new File(resourceUri.getPath())));
 	} catch (final FileNotFoundException fnfe) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
 	}
@@ -100,13 +100,13 @@ public class FileSystemResourceStore extends AbstractResourceStore implements Re
 	   }
 
 	} catch (final IOException ioe) {
-	   throw new ResourceException(ioe);
+	   throw new ResourceException(ioe, resourceUri.toString());
 	} finally {
 	   if (out != null) {
 		try {
 		   out.close();
 		} catch (final IOException ioe) {
-		   throw new IllegalStateException("error closing outputstream", ioe);
+		   throw new ResourceException(ioe, resourceUri.toString());
 		}
 	   }
 	}

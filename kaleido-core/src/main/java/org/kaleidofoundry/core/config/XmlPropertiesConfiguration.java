@@ -64,7 +64,7 @@ public class XmlPropertiesConfiguration extends AbstractConfiguration implements
 
 	   return properties;
 	} catch (final IOException ioe) {
-	   throw new ResourceException(ioe);
+	   throw new ResourceException(ioe, resourceHandler.getResourceUri());
 	}
    }
 

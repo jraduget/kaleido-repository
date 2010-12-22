@@ -19,6 +19,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
@@ -33,6 +34,13 @@ import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
  */
 @NotThreadSafe
 public interface ResourceHandler {
+
+   /**
+    * Get the identifier of the file content resource {@link URI}
+    * 
+    * @return uri of the identifier of the file content resource
+    */
+   String getResourceUri();
 
    /**
     * Get the input stream to get the content of the resource<br/>

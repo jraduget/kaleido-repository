@@ -13,7 +13,7 @@
 	<name>KaleidoFoundry integration tests ear</name>
 	<packaging>ear</packaging>
 
-	<build>	
+	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-ear-plugin</artifactId>
@@ -22,7 +22,7 @@
 					<modules>
 						<jarModule>
 							<groupId>org.kaleidofoundry</groupId>
-							<artifactId>kaleido-integration-core</artifactId>
+							<artifactId>kaleido-integration-core</artifactId>							
 						</jarModule>
 						<ejbModule>
 							<groupId>org.kaleidofoundry</groupId>

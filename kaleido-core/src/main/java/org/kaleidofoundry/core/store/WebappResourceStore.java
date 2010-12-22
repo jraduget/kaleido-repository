@@ -63,7 +63,7 @@ public class WebappResourceStore extends AbstractResourceStore implements Resour
 	if (input == null) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
 	} else {
-	   return new ResourceHandlerBean(input);
+	   return new ResourceHandlerBean(resourceUri.toString(), input);
 	}
    }
 

@@ -14,8 +14,6 @@
 	<packaging>ejb</packaging>
 
 	<build>
-		<finalName>kaleido-integration-ejb</finalName>
-		
 		<plugins>
 			<!-- Enable aspectJ AOP for @NotNull, @Context, ... -->
 			<plugin>

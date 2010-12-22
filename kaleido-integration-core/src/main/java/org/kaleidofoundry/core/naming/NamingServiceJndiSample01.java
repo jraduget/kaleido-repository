@@ -224,8 +224,10 @@ public class NamingServiceJndiSample01 implements NamingServiceJndiSample {
    public static String echoFromEJB(final NamingService namingService, final String message) {
 
 	// get ejb client service (remote or local)
-	MyRemoteBean myRemoteBean = namingService.locate("java:global/kaleido-integration-ear/kaleido-integration-ejb/MyBean", MyRemoteBean.class);
-
+	// here, the ejb bean is annotated @Stateless(mappedName="ejb/MyBean") 
+	// if there is no mappedName you can still used the global name (jee6): "java:global/kaleido-integration-ear/kaleido-integration-ejb/MyBean"
+	MyRemoteBean myRemoteBean = namingService.locate("ejb/MyBean", MyRemoteBean.class);
+	
 	// call it
 	return myRemoteBean.echo(message);
    }

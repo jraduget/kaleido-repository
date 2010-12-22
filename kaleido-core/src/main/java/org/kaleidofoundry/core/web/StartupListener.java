@@ -60,7 +60,6 @@ public class StartupListener implements ServletContextListener {
 	// Parse and set default locale if needed
 	final String webappDefaultLocale = sce.getServletContext().getInitParameter(LocaleFactory.JavaEnvProperties);
 	if (!StringHelper.isEmpty(webappDefaultLocale)) {
-	   // sce.getServletContext().log(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.start.locale", webappDefaultLocale));
 	   LOGGER.info(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.start.locale", webappDefaultLocale));
 	   final Locale setDefaultLocale = LocaleFactory.parseLocale(webappDefaultLocale);
 	   Locale.setDefault(setDefaultLocale);
@@ -70,8 +69,6 @@ public class StartupListener implements ServletContextListener {
 	// Parse default configurations and load it if needed
 	final String kaleidoConfigurations = sce.getServletContext().getInitParameter(ConfigurationConstants.JavaEnvProperties);
 	if (!StringHelper.isEmpty(kaleidoConfigurations)) {
-	   // sce.getServletContext().log(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.start.configurations",
-	   // kaleidoConfigurations));
 	   LOGGER.info(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.start.configurations", kaleidoConfigurations));
 	   System.getProperties().put(ConfigurationConstants.JavaEnvProperties, kaleidoConfigurations);
 	   // load and register given configurations ids / url
@@ -93,7 +90,7 @@ public class StartupListener implements ServletContextListener {
    public void contextDestroyed(final ServletContextEvent sce) {
 	// unload and unregister given configurations ids / url
 	try {
-	   sce.getServletContext().log(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.stop.configurations"));
+	   LOGGER.info(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.stop.configurations"));
 	   ConfigurationFactory.destroyAll();
 	} catch (final ResourceException rse) {
 	   throw new IllegalStateException(rse);

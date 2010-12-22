@@ -49,7 +49,7 @@ public class MemoryResourceStore extends AbstractResourceStore {
    protected ResourceHandler doGet(final URI resourceUri) throws ResourceException {
 	ResourceHandler rh = memoryResources.get(resourceUri);
 	if (rh == null) {
-	   rh = new ResourceHandlerBean(new ByteArrayInputStream(new byte[0]));
+	   rh = new ResourceHandlerBean(resourceUri.toString(), new ByteArrayInputStream(new byte[0]));
 	   memoryResources.put(resourceUri, rh);
 	}
 	return rh;

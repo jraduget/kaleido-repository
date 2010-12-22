@@ -91,9 +91,9 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
    protected ResourceHandler doGet(final URI resourceUri) throws ResourceException {
 	final ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.getPath());
 	if (entity == null) {
-	   throw new ResourceNotFoundException(resourceUri.getPath());
+	   throw new ResourceNotFoundException(resourceUri.toString());
 	} else {
-	   final ResourceHandler resourceHandler = new ResourceHandlerBean(new ByteArrayInputStream(entity.getContent()));
+	   final ResourceHandler resourceHandler = new ResourceHandlerBean(resourceUri.toString(), new ByteArrayInputStream(entity.getContent()));
 	   return resourceHandler;
 	}
    }
@@ -106,7 +106,7 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
    protected void doRemove(final URI resourceUri) throws ResourceException {
 	final ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.getPath());
 	if (entity == null) {
-	   throw new ResourceNotFoundException(resourceUri.getPath());
+	   throw new ResourceNotFoundException(resourceUri.toString());
 	} else {
 	   getEntityManager().remove(entity);
 	}
@@ -140,7 +140,7 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
 		}
 		storeEntity.setContent(outputStream.toByteArray());
 	   } catch (final IOException ioe) {
-		throw new ResourceException(ioe);
+		throw new ResourceException(ioe, resourceUri.toString());
 	   }
 	}
    }

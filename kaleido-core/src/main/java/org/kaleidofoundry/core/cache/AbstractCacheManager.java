@@ -36,7 +36,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
@@ -243,19 +242,19 @@ public abstract class AbstractCacheManager implements CacheManager {
 
 	   // first line of separator
 	   for (final String column : tableWidths.keySet()) {
-		writer.append(StringUtils.rightPad("-", tableWidths.get(column) - 1, "-")).append(" ");
+		writer.append(StringHelper.rightPad("-", tableWidths.get(column) - 1, '-')).append(" ");
 	   }
 	   writer.append("\n");
 
 	   // columns name
 	   for (final String column : tableWidths.keySet()) {
-		writer.append(StringUtils.rightPad(StringUtils.abbreviate(column, tableWidths.get(column)), tableWidths.get(column), " "));
+		writer.append(StringHelper.rightPad(StringHelper.truncate(column, tableWidths.get(column)), tableWidths.get(column), ' '));
 	   }
 	   writer.append("\n");
 
 	   // second line of separator
 	   for (final String column : tableWidths.keySet()) {
-		writer.append(StringUtils.rightPad("-", tableWidths.get(column) - 1, "-")).append(" ");
+		writer.append(StringHelper.rightPad("-", tableWidths.get(column) - 1, '-')).append(" ");
 	   }
 	   writer.append("\n");
 
@@ -265,15 +264,15 @@ public abstract class AbstractCacheManager implements CacheManager {
 		for (final String cacheName : stats.keySet()) {
 
 		   // first column is cache name
-		   writer.append(StringUtils.rightPad(StringUtils.abbreviate(String.valueOf(cacheName), tableWidths.get("CacheName")),
-			   tableWidths.get("CacheName"), " "));
+		   writer.append(StringHelper.rightPad(StringHelper.truncate(String.valueOf(cacheName), tableWidths.get("CacheName")),
+			   tableWidths.get("CacheName"), ' '));
 
 		   // create a column for each stats of the current cache
 		   final Map<String, Object> statsValue = stats.get(cacheName);
 
 		   // append each column value to the writer
 		   for (final String statKey : statsValue.keySet()) {
-			writer.append(StringUtils.rightPad(String.valueOf(statsValue.get(statKey)), tableWidths.get(statKey), " "));
+			writer.append(StringHelper.rightPad(String.valueOf(statsValue.get(statKey)), tableWidths.get(statKey), ' '));
 
 		   }
 		   writer.append("\n");

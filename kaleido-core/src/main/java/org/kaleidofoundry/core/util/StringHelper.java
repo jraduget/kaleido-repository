@@ -153,6 +153,117 @@ public abstract class StringHelper {
    }
 
    /**
+    * Left pad the given text parameter
+    * 
+    * <pre>
+    * <b>Assertions:</b>
+    * 	assertNull(StringHelper.leftPad(null, 10));
+    * 	assertEquals("", StringHelper.leftPad("", 0));
+    * 	assertEquals(" ", StringHelper.leftPad("", 1));
+    * 	assertEquals("     ", StringHelper.leftPad("", 5));
+    * 	assertEquals("     Hello", StringHelper.leftPad("Hello", 10));
+    * 	assertEquals("    ", StringHelper.leftPad("    ", 0));
+    * 	assertEquals("    ", StringHelper.leftPad("    ", 1));
+    * 	assertEquals("    ", StringHelper.leftPad("    ", 3));
+    * </pre>
+    * 
+    * @param text
+    * @param size
+    * @return
+    */
+   public static String leftPad(final String text, final int size) {
+	return leftPad(text, size, ' ');
+   }
+
+   /**
+    * Left pad the given text parameter
+    * 
+    * <pre>
+    * <b>Assertions:</b>
+    * 	assertNull(StringHelper.leftPad(null, 10, '*'));
+    * 	assertEquals("", StringHelper.leftPad("", 0, '*'));
+    * 	assertEquals("*", StringHelper.leftPad("", 1, '*'));
+    * 	assertEquals("*****", StringHelper.leftPad("", 5, '*'));
+    * 	assertEquals("*****Hello", StringHelper.leftPad("Hello", 10, '*'));
+    * 	assertEquals("*****", StringHelper.leftPad("*****", 0, '*'));
+    * 	assertEquals("*****", StringHelper.leftPad("*****", 1, '*'));
+    * 	assertEquals("*****", StringHelper.leftPad("*****", 3, '*'));
+    * </pre>
+    * 
+    * @param text
+    * @param size
+    * @param padChar
+    * @return
+    */
+   public static String leftPad(final String text, final int size, final char padChar) {
+	if (text == null) { return null; }
+
+	final StringBuilder paddedText = new StringBuilder(size);
+	while (paddedText.length() < size - text.length()) {
+	   paddedText.append(padChar);
+	}
+
+	paddedText.append(text);
+
+	return paddedText.toString();
+   }
+
+   /**
+    * Right pad the given text parameter
+    * 
+    * <pre>
+    * <b>Assertions:</b>
+    * 	assertNull(StringHelper.rightPad(null, 10));
+    * 	assertEquals("", StringHelper.rightPad("", 0));
+    * 	assertEquals(" ", StringHelper.rightPad("", 1));
+    * 	assertEquals("     ", StringHelper.rightPad("", 5));
+    * 	assertEquals("Hello     ", StringHelper.rightPad("Hello", 10));
+    * 	assertEquals("    ", StringHelper.rightPad("    ", 0));
+    * 	assertEquals("    ", StringHelper.rightPad("    ", 1));
+    * 	assertEquals("    ", StringHelper.rightPad("    ", 3));
+    * </pre>
+    * 
+    * @param text
+    * @param size
+    * @return
+    */
+   public static String rightPad(final String text, final int size) {
+	return rightPad(text, size, ' ');
+   }
+
+   /**
+    * Right pad the given text parameter
+    * 
+    * <pre>
+    * <b>Assertions:</b>
+    * 	assertNull(StringHelper.rightPad(null, 10, '*'));
+    * 	assertEquals("", StringHelper.rightPad("", 0, '*'));
+    * 	assertEquals("*", StringHelper.rightPad("", 1, '*'));
+    * 	assertEquals("*****", StringHelper.rightPad("", 5, '*'));
+    * 	assertEquals("Hello*****", StringHelper.rightPad("Hello", 10, '*'));
+    * 	assertEquals("*****", StringHelper.rightPad("*****", 0, '*'));
+    * 	assertEquals("*****", StringHelper.rightPad("*****", 1, '*'));
+    * 	assertEquals("*****", StringHelper.rightPad("*****", 3, '*'));
+    * </pre>
+    * 
+    * @param text
+    * @param size
+    * @param pad
+    * @return
+    */
+   public static String rightPad(final String text, final int size, final char padChar) {
+	if (text == null) { return null; }
+
+	final StringBuilder paddedText = new StringBuilder(size);
+	paddedText.append(text);
+
+	while (paddedText.length() < size) {
+	   paddedText.append(padChar);
+	}
+	return paddedText.toString();
+   }
+
+   /**
     * Create a new String by replicating the given String n (count) times
     * 
     * <pre>

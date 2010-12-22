@@ -106,7 +106,7 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
 	} catch (final SAXException sae) {
 	   throw new ConfigurationException("config.load.xml.parsing.error", sae, singleResourceStore.getResourceBinding().toString());
 	} catch (final IOException ioe) {
-	   throw new ResourceException(ioe);
+	   throw new ResourceException(ioe, resourceHandler.getResourceUri());
 	}
    }
 

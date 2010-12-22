@@ -70,7 +70,7 @@ public class OsEnvConfiguration extends AbstractConfiguration implements Configu
 	   }
 	   return properties;
 	} catch (final IOException ioe) {
-	   throw new ResourceException(ioe);
+	   throw new ResourceException(ioe, resourceHandler.getResourceUri());
 	}
    }
 

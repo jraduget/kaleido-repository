@@ -27,8 +27,9 @@ import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.system.JavaSystemHelper;
 
 /**
- * classpath resource store implementation<br/>
- * readonly use: the store, remove, move methods will throw {@link IllegalStateException}
+ * Classpath file resource store implementation<br/>
+ * <br/>
+ * <b>this store is for readonly use</b>: the methods store, remove, move will throws {@link IllegalStateException}
  * 
  * @author Jerome RADUGET
  * @see ResourceContextBuilder enum of context configuration properties available
@@ -52,7 +53,7 @@ public class ClasspathResourceStore extends AbstractResourceStore implements Res
 	   try {
 		classLoader = Class.forName(strClass).getClassLoader();
 	   } catch (final ClassNotFoundException cnfe) {
-		throw new IllegalStateException("illegal context property 'classloader=" + strClass + "'", cnfe);
+		throw new IllegalStateException("Illegal context property 'classloader=" + strClass + "'", cnfe);
 	   }
 	}
    }
@@ -90,16 +91,16 @@ public class ClasspathResourceStore extends AbstractResourceStore implements Res
 	if (localPath.charAt(0) == '/') {
 	   final InputStream in = JavaSystemHelper.getResourceAsStream(getClassLoader(), localPath.substring(1));
 	   if (in != null) {
-		return new ResourceHandlerBean(in);
+		return new ResourceHandlerBean(resourceBinding.toString(), in);
 	   } else {
-		throw new ResourceNotFoundException(localPath.substring(1));
+		throw new ResourceNotFoundException(resourceBinding.toString());
 	   }
 	} else {
 	   final InputStream in = JavaSystemHelper.getResourceAsStream(getClassLoader(), localPath.toString());
 	   if (in != null) {
-		return new ResourceHandlerBean(in);
+		return new ResourceHandlerBean(resourceBinding.toString(), in);
 	   } else {
-		throw new ResourceNotFoundException(localPath.toString());
+		throw new ResourceNotFoundException(resourceBinding.toString());
 	   }
 	}
    }

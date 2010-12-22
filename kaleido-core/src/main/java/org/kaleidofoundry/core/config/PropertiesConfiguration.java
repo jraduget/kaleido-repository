@@ -65,7 +65,7 @@ public class PropertiesConfiguration extends AbstractConfiguration {
 
 	   return properties;
 	} catch (final IOException ioe) {
-	   throw new ResourceException(ioe);
+	   throw new ResourceException(ioe, resourceHandler.getResourceUri());
 	}
    }
 

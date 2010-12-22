@@ -66,6 +66,50 @@ public class StringHelperTest extends Assert {
    }
 
    @Test
+   public void leftPad() {
+	// default pad is space
+	assertNull(StringHelper.leftPad(null, 10));
+	assertEquals("", StringHelper.leftPad("", 0));
+	assertEquals(" ", StringHelper.leftPad("", 1));
+	assertEquals("     ", StringHelper.leftPad("", 5));
+	assertEquals("     Hello", StringHelper.leftPad("Hello", 10));
+	assertEquals("    ", StringHelper.leftPad("    ", 0));
+	assertEquals("    ", StringHelper.leftPad("    ", 1));
+	assertEquals("    ", StringHelper.leftPad("    ", 3));
+	// default pad is '*'
+	assertNull(StringHelper.leftPad(null, 10, '*'));
+	assertEquals("", StringHelper.leftPad("", 0, '*'));
+	assertEquals("*", StringHelper.leftPad("", 1, '*'));
+	assertEquals("*****", StringHelper.leftPad("", 5, '*'));
+	assertEquals("*****Hello", StringHelper.leftPad("Hello", 10, '*'));
+	assertEquals("*****", StringHelper.leftPad("*****", 0, '*'));
+	assertEquals("*****", StringHelper.leftPad("*****", 1, '*'));
+	assertEquals("*****", StringHelper.leftPad("*****", 3, '*'));
+   }
+
+   @Test
+   public void rightPad() {
+	// default pad is space
+	assertNull(StringHelper.rightPad(null, 10));
+	assertEquals("", StringHelper.rightPad("", 0));
+	assertEquals(" ", StringHelper.rightPad("", 1));
+	assertEquals("     ", StringHelper.rightPad("", 5));
+	assertEquals("Hello     ", StringHelper.rightPad("Hello", 10));
+	assertEquals("    ", StringHelper.rightPad("    ", 0));
+	assertEquals("    ", StringHelper.rightPad("    ", 1));
+	assertEquals("    ", StringHelper.rightPad("    ", 3));
+	// default pad is '*'
+	assertNull(StringHelper.rightPad(null, 10, '*'));
+	assertEquals("", StringHelper.rightPad("", 0, '*'));
+	assertEquals("*", StringHelper.rightPad("", 1, '*'));
+	assertEquals("*****", StringHelper.rightPad("", 5, '*'));
+	assertEquals("Hello*****", StringHelper.rightPad("Hello", 10, '*'));
+	assertEquals("*****", StringHelper.rightPad("*****", 0, '*'));
+	assertEquals("*****", StringHelper.rightPad("*****", 1, '*'));
+	assertEquals("*****", StringHelper.rightPad("*****", 3, '*'));
+   }
+
+   @Test
    public void replicate() {
 	assertEquals("", StringHelper.replicate(null, 0));
 	assertEquals("null", StringHelper.replicate(null, 1));

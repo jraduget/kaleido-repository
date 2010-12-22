@@ -98,9 +98,10 @@ public class ResourceException extends I18nException {
 
    /**
     * @param ioe
+    * @param resourceUri
     */
-   public ResourceException(final IOException ioe) {
-	super("store.resource.ioe", ioe, ioe.getMessage());
+   public ResourceException(final IOException ioe, final String resourceUri) {
+	super("store.resource.ioe", ioe, resourceUri);
    }
 
    /*

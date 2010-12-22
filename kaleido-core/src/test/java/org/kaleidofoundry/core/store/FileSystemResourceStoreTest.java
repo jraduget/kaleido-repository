@@ -56,7 +56,10 @@ public class FileSystemResourceStoreTest extends AbstractResourceStoreTest {
    public void cleanup() throws Throwable {
 	super.cleanup();
 	if (tmpFileName != null) {
-	   new File(tmpFileName).delete();
+	   final File tmpFile = new File(tmpFileName);
+	   if (tmpFile.exists()) {
+		System.out.printf("cleanup - deleted \"%s\" is %s", tmpFileName.getPath().substring(1), tmpFile.delete() ? "OK" : "KO");
+	   }
 	}
    }
 }
