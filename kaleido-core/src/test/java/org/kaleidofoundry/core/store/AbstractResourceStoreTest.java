@@ -50,7 +50,7 @@ public abstract class AbstractResourceStoreTest extends Assert {
    // inavlid uri resource that must failed at load time
    protected Set<String> nonExistingResources = new LinkedHashSet<String>();
    // valid uri resource to store / move / remove
-   protected Map<String, String> existingResourcesForStore = new LinkedHashMap<String, String>();;
+   protected Map<String, ResourceHandler> existingResourcesForStore = new LinkedHashMap<String, ResourceHandler>();;
 
    /**
     * disable i18n message bundle control to speed up test (no need of a local derby instance startup)
@@ -106,7 +106,7 @@ public abstract class AbstractResourceStoreTest extends Assert {
 	// null argument not allowed
 	try {
 	   resourceStore.get(null);
-	   fail("NullArgumentException expected");
+	   fail("NotNullException expected");
 	} catch (final NotNullException nae) {
 	}
 
@@ -135,7 +135,7 @@ public abstract class AbstractResourceStoreTest extends Assert {
 	// null argument not allowed
 	try {
 	   resourceStore.exists(null);
-	   fail("NullArgumentException expected");
+	   fail("NotNullException expected");
 	} catch (final NotNullException nae) {
 	}
 	// test a non existing resource, throws ResourceNotFoundException
@@ -146,11 +146,38 @@ public abstract class AbstractResourceStoreTest extends Assert {
 
    @Test
    @Ignore
-   @NotYetImplemented
-   @Review(comment = "store implementation test", category = ReviewCategoryEnum.ImplementIt)
    public void store() throws ResourceException {
-	// existingResourcesForStore
-	return; // annotation @NotYetImplemented handle throw new NotYetImplementedException()...
+
+	assertNotNull(resourceStore);
+	assertTrue("there is no resource entry to store in the test", existingResourcesForStore.size() > 0);
+
+	// null argument not allowed
+	try {
+	   resourceStore.store(null, null);
+	   fail("NotNullException expected");
+	} catch (final NotNullException nae) {
+	}
+
+	// for each resources to store
+	for (final String uriToTest : existingResourcesForStore.keySet()) {
+
+	   // get initial content
+	   try {
+		resourceStore.get(uriToTest);
+		fail("resource '" + uriToTest + "' already exists");
+	   } catch (final ResourceNotFoundException rnfe) {
+	   }
+
+	   // store the resource
+	   final ResourceHandler resourceToStore = existingResourcesForStore.get(uriToTest);
+	   assertNotNull(resourceToStore);
+	   resourceStore.store(uriToTest, resourceToStore);
+
+	   // get the stored resource
+	   final ResourceHandler resourceToGet = resourceStore.get(uriToTest);
+	   assertNotNull(resourceToGet);
+	   assertEquals(resourceToStore.getText(), resourceToGet.getText());
+	}
    }
 
    @Test
