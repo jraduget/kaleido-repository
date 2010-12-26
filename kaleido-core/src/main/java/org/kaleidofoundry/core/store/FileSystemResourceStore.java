@@ -99,6 +99,8 @@ public class FileSystemResourceStore extends AbstractResourceStore implements Re
 		out.write(buff);
 	   }
 
+	   out.flush();
+
 	} catch (final IOException ioe) {
 	   throw new ResourceException(ioe, resourceUri.toString());
 	} finally {
