@@ -15,7 +15,10 @@
  */
 package org.kaleidofoundry.core.store;
 
+import java.io.ByteArrayInputStream;
+
 import org.junit.Before;
+import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
@@ -36,6 +39,40 @@ public class ClasspathResourceStoreTest extends AbstractResourceStoreTest {
 	existingResources.put("/store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
 
 	nonExistingResources.add("classpath:/store/foo");
+
+   }
+
+   @Test
+   @Override
+   public void store() throws ResourceException {
+	try {
+	   resourceStore.store("store/toStore.txt", new ResourceHandlerBean("store/toStore.txt", new ByteArrayInputStream("foo".getBytes())));
+	   fail();
+	} catch (final ResourceException rse) {
+	   assertEquals("store.resource.implementation.readonly", rse.getCode());
+	}
+   }
+
+   @Test
+   @Override
+   public void move() throws ResourceException {
+	try {
+	   resourceStore.move("store/foo.txt", "newstore/foo.txt");
+	   fail();
+	} catch (final ResourceException rse) {
+	   assertEquals("store.resource.implementation.readonly", rse.getCode());
+	}
+   }
+
+   @Test
+   @Override
+   public void remove() throws ResourceException {
+	try {
+	   resourceStore.remove("store/toRemove.txt");
+	   fail();
+	} catch (final ResourceException rse) {
+	   assertEquals("store.resource.implementation.readonly", rse.getCode());
+	}
    }
 
 }
