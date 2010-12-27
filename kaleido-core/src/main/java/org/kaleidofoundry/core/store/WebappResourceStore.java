@@ -25,12 +25,18 @@ import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.web.ServletContextProvider;
+import org.kaleidofoundry.core.web.StartupListener;
 
 /**
- * Webapp resource store
+ * Webapp classpath resource store<br/>
+ * <br/>
+ * It gave you access to WEB-INF/ classpath resources <br/>
+ * <br/>
+ * To use it, please check you have right declared servlet listener {@link StartupListener} in your web.xml
  * 
  * @author Jerome RADUGET
  * @see ResourceContextBuilder enum of context configuration properties available
+ * @see StartupListener servlet listener to declare in your web.xml
  */
 @Declare(WebappStorePluginName)
 public class WebappResourceStore extends AbstractResourceStore implements ResourceStore {
@@ -73,7 +79,7 @@ public class WebappResourceStore extends AbstractResourceStore implements Resour
     */
    @Override
    protected void doRemove(final URI resourceUri) throws ResourceException {
-	throw new IllegalStateException("Can't remove a resource from webapp classpath. WebappResourceStore is for a readonly use");
+	throw new ResourceException("store.resource.implementation.readonly", getClass().getName());
    }
 
    /*
@@ -83,7 +89,7 @@ public class WebappResourceStore extends AbstractResourceStore implements Resour
     */
    @Override
    protected void doStore(final URI resourceUri, final ResourceHandler resource) throws ResourceException {
-	throw new IllegalStateException("Can't store a resource from webapp classpath. WebappResourceStore is for a readonly use");
+	throw new ResourceException("store.resource.implementation.readonly", getClass().getName());
    }
 
 }
