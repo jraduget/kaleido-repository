@@ -18,6 +18,7 @@ package org.kaleidofoundry.core.store;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +66,8 @@ public class FileSystemResourceStoreTest extends AbstractResourceStoreTest {
 	filesToDelete.add(tmpFileToStore);
 	tmpFileToStore.delete();
 
-	final ResourceHandler resource = new ResourceHandlerBean(filenameToStore, new ByteArrayInputStream(DEFAULT_RESOURCE_MOCK_TEST.getBytes("UTF-8")));
+	final InputStream inStore = new ByteArrayInputStream(DEFAULT_RESOURCE_MOCK_TEST.getBytes("UTF-8"));
+	final ResourceHandler resource = new ResourceHandlerBean(filenameToStore, inStore);
 	existingResourcesForStore.put(filenameToStore, resource);
 
    }
