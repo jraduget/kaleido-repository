@@ -54,8 +54,6 @@ public abstract class AbstractResourceStoreTest extends Assert {
 
    /**
     * disable i18n message bundle control to speed up test (no need of a local derby instance startup)
-    * 
-    * @throws Throwable
     */
    @Before
    public void setup() throws Throwable {
@@ -64,8 +62,6 @@ public abstract class AbstractResourceStoreTest extends Assert {
 
    /**
     * re-enable i18n message bundle control
-    * 
-    * @throws Throwable
     */
    @After
    public void cleanup() throws Throwable {
@@ -168,9 +164,12 @@ public abstract class AbstractResourceStoreTest extends Assert {
 	   }
 
 	   // store the resource
-	   final ResourceHandler resourceToStore = existingResourcesForStore.get(uriToTest);
+	   ResourceHandler resourceToStore = existingResourcesForStore.get(uriToTest);
 	   assertNotNull(resourceToStore);
 	   resourceStore.store(uriToTest, resourceToStore);
+
+	   // re-get the resource content (store reset resource input stream)
+	   resourceToStore = resourceStore.get(uriToTest);
 
 	   // get the stored resource
 	   final ResourceHandler resourceToGet = resourceStore.get(uriToTest);

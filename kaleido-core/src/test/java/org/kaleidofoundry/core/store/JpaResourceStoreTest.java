@@ -15,8 +15,9 @@
  */
 package org.kaleidofoundry.core.store;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -43,7 +44,7 @@ public class JpaResourceStoreTest extends AbstractResourceStoreTest {
 
    @Before
    @Override
-   public void setup() throws URISyntaxException {
+   public void setup() throws Throwable {
 
 	try {
 	   // jpa entity manager configuration (default kaleido)
@@ -68,6 +69,11 @@ public class JpaResourceStoreTest extends AbstractResourceStoreTest {
 	   // resource to test
 	   existingResources.put(resourceUri.getPath(), DEFAULT_RESOURCE_MOCK_TEST);
 	   nonExistingResources.add("foo");
+
+	   final String filenameToStore = "tmp/fooToStore.txt";
+	   final InputStream inStore = new ByteArrayInputStream(DEFAULT_RESOURCE_MOCK_TEST.getBytes("UTF-8"));
+	   final ResourceHandler resource = new ResourceHandlerBean(filenameToStore, inStore);
+	   existingResourcesForStore.put(filenameToStore, resource);
 
 	   // resource store creation
 	   final RuntimeContext<ResourceStore> context = new ResourceContextBuilder().withUriRootPath("jpa:/").build();
