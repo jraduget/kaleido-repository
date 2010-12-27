@@ -145,7 +145,6 @@ public abstract class AbstractResourceStoreTest extends Assert {
    }
 
    @Test
-   @Ignore
    public void store() throws ResourceException {
 
 	assertNotNull(resourceStore);
