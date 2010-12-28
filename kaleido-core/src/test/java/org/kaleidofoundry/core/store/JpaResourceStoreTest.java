@@ -15,8 +15,6 @@
  */
 package org.kaleidofoundry.core.store;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.net.URI;
 
 import javax.persistence.EntityManager;
@@ -52,32 +50,32 @@ public class JpaResourceStoreTest extends AbstractResourceStoreTest {
 	   // emf = UnmanagedEntityManagerFactory.getEntityManagerFactory("kaleido-core-derby-oracle");
 	   em = UnmanagedEntityManagerFactory.currentEntityManager();
 
+	   // resource store creation
+	   final RuntimeContext<ResourceStore> context = new ResourceContextBuilder().withUriRootPath("jpa:/").build();
+	   resourceStore = new JpaResourceStore(context);
+
 	   // begin transaction
 	   transaction = em.getTransaction();
 	   transaction.begin();
 
-	   // create mocked entity test
+	   // create mocked entity for the get test
 	   final ResourceStoreEntity entity = new ResourceStoreEntity();
 	   final URI resourceUri = URI.create("jpa:/tmp/foo.txt");
 	   entity.setUri(resourceUri.getPath());
 	   entity.setName(resourceUri.getPath());
 	   entity.setPath(resourceUri.getPath());
 	   entity.setContent(DEFAULT_RESOURCE_MOCK_TEST.getBytes());
-
 	   em.persist(entity);
 
-	   // resource to test
+	   // 1. existing resources (to get)
 	   existingResources.put(resourceUri.getPath(), DEFAULT_RESOURCE_MOCK_TEST);
+
+	   // 2. resources to get (but which not exists)
 	   nonExistingResources.add("foo");
 
+	   // 3. resources to store
 	   final String filenameToStore = "tmp/fooToStore.txt";
-	   final InputStream inStore = new ByteArrayInputStream(DEFAULT_RESOURCE_MOCK_TEST.getBytes("UTF-8"));
-	   final ResourceHandler resource = new ResourceHandlerBean(filenameToStore, inStore);
-	   existingResourcesForStore.put(filenameToStore, resource);
-
-	   // resource store creation
-	   final RuntimeContext<ResourceStore> context = new ResourceContextBuilder().withUriRootPath("jpa:/").build();
-	   resourceStore = new JpaResourceStore(context);
+	   existingResourcesForStore.put(filenameToStore, DEFAULT_RESOURCE_MOCK_TEST);
 
 	} catch (final RuntimeException rte) {
 	   LOGGER.error("setup error", rte);

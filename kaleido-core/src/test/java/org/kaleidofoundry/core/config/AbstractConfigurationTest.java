@@ -27,14 +27,10 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.lang.NotNullException;
-import org.kaleidofoundry.core.lang.NotYetImplementedException;
-import org.kaleidofoundry.core.lang.annotation.Review;
-import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
 import org.kaleidofoundry.core.store.ResourceException;
 
 /**
@@ -110,11 +106,28 @@ public abstract class AbstractConfigurationTest extends Assert {
    }
 
    @Test
-   @Ignore
-   @Review(comment = "configuration.store();", category = ReviewCategoryEnum.ImplementIt)
-   public void store() throws ResourceException {
+   public void store() throws ResourceException, URISyntaxException {
+
 	assertNotNull(configuration);
-	throw new NotYetImplementedException();
+
+	final Configuration configuration = newInstance();
+	assertNotNull(configuration);
+	assertFalse(configuration.isLoaded());
+	try {
+	   configuration.store();
+	   fail();
+	} catch (final IllegalStateException iste) {
+	}
+	
+	// try {
+	// configuration.store();
+	// } catch (final IllegalStateException iste) {
+	// assertTrue(iste.getMessage().contains("config.readonly.store"));
+	// }
+
+	// then can't test store anymore
+	// -> store can be a classpath resource and store method is not handled
+	// -> store() is tested in resource store module
    }
 
    @Test

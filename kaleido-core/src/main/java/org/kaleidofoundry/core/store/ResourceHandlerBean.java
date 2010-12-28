@@ -16,9 +16,12 @@
 package org.kaleidofoundry.core.store;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.io.IOHelper;
@@ -46,6 +49,29 @@ public class ResourceHandlerBean implements ResourceHandler {
     */
    public ResourceHandlerBean(@NotNull final String resourceUri, @NotNull final InputStream input) {
 	this.input = input;
+	this.resourceUri = resourceUri;
+	this.closed = false;
+   }
+
+   /**
+    * @param resourceUri
+    * @param input default encoding is UTF-8
+    * @throws UnsupportedEncodingException default text encoding is UTF-8
+    * @see Charset
+    */
+   public ResourceHandlerBean(@NotNull final String resourceUri, @NotNull final String input) throws UnsupportedEncodingException {
+	this(resourceUri, input, "UTF-8");
+   }
+
+   /**
+    * @param resourceUri
+    * @param input
+    * @param charset
+    * @throws UnsupportedEncodingException default text encoding is UTF-8
+    */
+   public ResourceHandlerBean(@NotNull final String resourceUri, @NotNull final String input, @NotNull final String charset)
+	   throws UnsupportedEncodingException {
+	this.input = new ByteArrayInputStream(input.getBytes(charset));
 	this.resourceUri = resourceUri;
 	this.closed = false;
    }
@@ -93,7 +119,7 @@ public class ResourceHandlerBean implements ResourceHandler {
    @Override
    @NotNull
    public InputStreamReader getInputStreamReader() throws ResourceException {
-	return getInputStreamReader("UTF8");
+	return getInputStreamReader("UTF-8");
    }
 
    /*
@@ -117,7 +143,7 @@ public class ResourceHandlerBean implements ResourceHandler {
    @Override
    @NotNull
    public String getText() throws ResourceException {
-	return getText("UTF8");
+	return getText("UTF-8");
    }
 
    /*
@@ -134,9 +160,14 @@ public class ResourceHandlerBean implements ResourceHandler {
 	   final StringBuilder stb = new StringBuilder();
 	   reader = new BufferedReader(getInputStreamReader(charset));
 	   while ((inputLine = reader.readLine()) != null) {
-		stb.append(inputLine).append("\n");
+		stb.append(inputLine.trim()).append("\n");
 	   }
-	   return stb.toString();
+	   if (stb.length() <= 0) {
+		return "";
+	   } else {
+		return stb.toString().substring(0, stb.length() - 1);
+	   }
+
 	} catch (final IOException ioe) {
 	   throw new ResourceException(ioe, resourceUri);
 	} finally {

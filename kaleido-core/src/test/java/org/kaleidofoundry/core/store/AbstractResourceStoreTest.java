@@ -16,6 +16,7 @@
 package org.kaleidofoundry.core.store;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -50,7 +51,7 @@ public abstract class AbstractResourceStoreTest extends Assert {
    // inavlid uri resource that must failed at load time
    protected Set<String> nonExistingResources = new LinkedHashSet<String>();
    // valid uri resource to store / move / remove
-   protected Map<String, ResourceHandler> existingResourcesForStore = new LinkedHashMap<String, ResourceHandler>();;
+   protected Map<String, String> existingResourcesForStore = new LinkedHashMap<String, String>();;
 
    /**
     * disable i18n message bundle control to speed up test (no need of a local derby instance startup)
@@ -141,7 +142,7 @@ public abstract class AbstractResourceStoreTest extends Assert {
    }
 
    @Test
-   public void store() throws ResourceException {
+   public void store() throws ResourceException, UnsupportedEncodingException {
 
 	assertNotNull(resourceStore);
 	assertTrue("there is no resource entry to store in the test", existingResourcesForStore.size() > 0);
@@ -164,17 +165,14 @@ public abstract class AbstractResourceStoreTest extends Assert {
 	   }
 
 	   // store the resource
-	   ResourceHandler resourceToStore = existingResourcesForStore.get(uriToTest);
-	   assertNotNull(resourceToStore);
-	   resourceStore.store(uriToTest, resourceToStore);
-
-	   // re-get the resource content (store reset resource input stream)
-	   resourceToStore = resourceStore.get(uriToTest);
+	   final String resourceToStoreAsText = existingResourcesForStore.get(uriToTest);
+	   assertNotNull(resourceToStoreAsText);
+	   resourceStore.store(uriToTest, new ResourceHandlerBean(uriToTest, resourceToStoreAsText));
 
 	   // get the stored resource
 	   final ResourceHandler resourceToGet = resourceStore.get(uriToTest);
 	   assertNotNull(resourceToGet);
-	   assertEquals(resourceToStore.getText(), resourceToGet.getText());
+	   assertEquals(resourceToStoreAsText, resourceToGet.getText());
 	}
    }
 

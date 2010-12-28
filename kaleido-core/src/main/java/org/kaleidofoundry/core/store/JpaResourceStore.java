@@ -23,14 +23,15 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Calendar;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Review;
-import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.store.entity.ResourceStoreEntity;
 import org.kaleidofoundry.core.util.StringHelper;
@@ -117,19 +118,20 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doStore(java.net.URI, org.kaleidofoundry.core.store.ResourceHandler)
     */
    @Override
-   @Review(category = ReviewCategoryEnum.Fixme, comment = "parse resource store entity : uri - path - name")
    protected void doStore(final URI resourceUri, final ResourceHandler resource) throws ResourceException {
 
 	final ResourceStoreEntity storeEntity = newInstance();
+	final String filename = resourceUri.getPath().substring(1);
 
-	// fixme
-	storeEntity.setUri(resourceUri.getPath());
-	storeEntity.setName(resourceUri.getPath());
-	storeEntity.setPath(resourceUri.getPath());
+	storeEntity.setUri(resourceUri.toString());
+	storeEntity.setName(FileHelper.getFileName(filename));
+	storeEntity.setPath(filename);
+	storeEntity.setCreationDate(Calendar.getInstance().getTime());
+	storeEntity.setUpdatedDate(Calendar.getInstance().getTime());
 
 	if (resource.getInputStream() != null) {
 
-	   final int buffSize = StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.BufferSize)) ? Integer.valueOf(context
+	   final int buffSize = !StringHelper.isEmpty(context.getProperty(ResourceContextBuilder.BufferSize)) ? Integer.valueOf(context
 		   .getProperty(ResourceContextBuilder.BufferSize)) : 128;
 	   final byte[] buffer = new byte[buffSize];
 	   final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -139,6 +141,9 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
 		   outputStream.write(buffer);
 		}
 		storeEntity.setContent(outputStream.toByteArray());
+
+		getEntityManager().merge(storeEntity);
+
 	   } catch (final IOException ioe) {
 		throw new ResourceException(ioe, resourceUri.toString());
 	   }

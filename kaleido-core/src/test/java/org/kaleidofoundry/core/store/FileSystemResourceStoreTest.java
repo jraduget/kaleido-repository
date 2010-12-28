@@ -15,10 +15,8 @@
  */
 package org.kaleidofoundry.core.store;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +45,7 @@ public class FileSystemResourceStoreTest extends AbstractResourceStoreTest {
 	final RuntimeContext<ResourceStore> context = new ResourceContextBuilder().withUriRootPath("file:/" + FileHelper.buildUnixAppPath(tempPath)).build();
 	resourceStore = new FileSystemResourceStore(context);
 
-	// 1. resources to test - create temp file
+	// 1. existing resources (to get) - create temp file as mock
 	final File tmpFileToGet = File.createTempFile("kaleido-resource-get-", ".test");
 	final FileWriter fout = new FileWriter(tmpFileToGet);
 	fout.append(DEFAULT_RESOURCE_MOCK_TEST);
@@ -57,7 +55,7 @@ public class FileSystemResourceStoreTest extends AbstractResourceStoreTest {
 
 	existingResources.put(FileHelper.getFileName(tmpFileToGet.getCanonicalPath()), DEFAULT_RESOURCE_MOCK_TEST);
 
-	// 2. resources that does not exist
+	// 2. resources to get (but which not exists)
 	nonExistingResources.add("foo");
 
 	// 3. resources to store
@@ -65,11 +63,7 @@ public class FileSystemResourceStoreTest extends AbstractResourceStoreTest {
 	final String filenameToStore = FileHelper.getFileName(tmpFileToStore.getCanonicalPath());
 	filesToDelete.add(tmpFileToStore);
 	tmpFileToStore.delete();
-
-	final InputStream inStore = new ByteArrayInputStream(DEFAULT_RESOURCE_MOCK_TEST.getBytes("UTF-8"));
-	final ResourceHandler resource = new ResourceHandlerBean(filenameToStore, inStore);
-	existingResourcesForStore.put(filenameToStore, resource);
-
+	existingResourcesForStore.put(filenameToStore, DEFAULT_RESOURCE_MOCK_TEST);
    }
 
    @After
