@@ -47,12 +47,11 @@ public class FileSystemResourceStoreTest extends AbstractResourceStoreTest {
 
 	// 1. existing resources (to get) - create temp file as mock
 	final File tmpFileToGet = File.createTempFile("kaleido-resource-get-", ".test");
-	final FileWriter fout = new FileWriter(tmpFileToGet);
+	FileWriter fout = new FileWriter(tmpFileToGet);
 	fout.append(DEFAULT_RESOURCE_MOCK_TEST);
 	fout.flush();
 	filesToDelete.add(tmpFileToGet);
 	fout.close();
-
 	existingResources.put(FileHelper.getFileName(tmpFileToGet.getCanonicalPath()), DEFAULT_RESOURCE_MOCK_TEST);
 
 	// 2. resources to get (but which not exists)
@@ -64,6 +63,27 @@ public class FileSystemResourceStoreTest extends AbstractResourceStoreTest {
 	filesToDelete.add(tmpFileToStore);
 	tmpFileToStore.delete();
 	existingResourcesForStore.put(filenameToStore, DEFAULT_RESOURCE_MOCK_TEST);
+
+	// 4. resources to remove
+	final File tmpFileToRemmove = File.createTempFile("kaleido-resource-remove-", ".test");
+	fout = new FileWriter(tmpFileToRemmove);
+	fout.append(DEFAULT_RESOURCE_MOCK_TEST);
+	fout.flush();
+	filesToDelete.add(tmpFileToRemmove);
+	existingResources.put(FileHelper.getFileName(tmpFileToRemmove.getCanonicalPath()), DEFAULT_RESOURCE_MOCK_TEST);
+
+	// 5. resources to move
+	final File tmpFileToMove = File.createTempFile("kaleido-resource-move-", ".test");
+	fout = new FileWriter(tmpFileToMove);
+	fout.append(DEFAULT_RESOURCE_MOCK_TEST);
+	fout.flush();
+	filesToDelete.add(tmpFileToMove);
+	fout.close();
+
+	final String fileToMovePath = FileHelper.getFileName(tmpFileToMove.getCanonicalPath());
+	existingResourcesForMove.put(fileToMovePath, fileToMovePath + ".move");
+	// TODO move with a new directory that not exists
+
    }
 
    @After

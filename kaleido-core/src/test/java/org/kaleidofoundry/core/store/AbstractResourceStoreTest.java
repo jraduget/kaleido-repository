@@ -26,14 +26,10 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.io.IOHelper;
 import org.kaleidofoundry.core.lang.NotNullException;
-import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
-import org.kaleidofoundry.core.lang.annotation.Review;
-import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
 
 /**
  * @author Jerome RADUGET
@@ -47,11 +43,15 @@ public abstract class AbstractResourceStoreTest extends Assert {
    protected ResourceStore resourceStore;
 
    // valid uri resource to test
-   protected Map<String, String> existingResources = new LinkedHashMap<String, String>();;
+   protected Map<String, String> existingResources = new LinkedHashMap<String, String>();
    // inavlid uri resource that must failed at load time
    protected Set<String> nonExistingResources = new LinkedHashSet<String>();
-   // valid uri resource to store / move / remove
-   protected Map<String, String> existingResourcesForStore = new LinkedHashMap<String, String>();;
+   // valid uri resource to store
+   protected Map<String, String> existingResourcesForStore = new LinkedHashMap<String, String>();
+   // valid uri resource to remove
+   protected Map<String, String> existingResourcesForRemove = new LinkedHashMap<String, String>();
+   // valid uri resource to move
+   protected Map<String, String> existingResourcesForMove = new LinkedHashMap<String, String>();
 
    /**
     * disable i18n message bundle control to speed up test (no need of a local derby instance startup)
@@ -177,18 +177,84 @@ public abstract class AbstractResourceStoreTest extends Assert {
    }
 
    @Test
-   @Ignore
-   @NotYetImplemented
-   @Review(comment = "move implementation test", category = ReviewCategoryEnum.ImplementIt)
    public void move() throws ResourceException {
-	return; // annotation @NotYetImplemented handle throw new NotYetImplementedException()...
+
+	assertNotNull(resourceStore);
+	assertTrue("there is no resource entry to move in the test", existingResourcesForMove.size() > 0);
+
+	// null argument not allowed
+	try {
+	   resourceStore.move(null, null);
+	   fail("NotNullException expected");
+	} catch (final NotNullException nae) {
+	}
+
+	// for each resources to remove
+	for (final String uriToTest : existingResourcesForMove.keySet()) {
+
+	   // get resource
+	   try {
+		resourceStore.get(uriToTest);
+	   } catch (final ResourceNotFoundException rnfe) {
+		fail("resource '" + rnfe.getMessage() + "' does not exists");
+	   }
+
+	   // move the resource
+	   final String newResourcePath = existingResourcesForMove.get(uriToTest);
+	   resourceStore.move(uriToTest, newResourcePath);
+
+	   // get the original resource
+	   try {
+		resourceStore.get(uriToTest);
+		fail("move resource failed '" + uriToTest + "' . The resource still exists");
+	   } catch (final ResourceNotFoundException rnfe) {
+	   }
+
+	   // get the new resource
+	   try {
+		resourceStore.get(newResourcePath);
+	   } catch (final ResourceNotFoundException rnfe) {
+		fail("move resource failed '" + newResourcePath + "' does not exists");
+	   }
+
+	   // remove the move resource
+	   resourceStore.remove(newResourcePath);
+
+	}
+
    }
 
    @Test
-   @Ignore
-   @NotYetImplemented
-   @Review(comment = "remove implementation test", category = ReviewCategoryEnum.ImplementIt)
    public void remove() throws ResourceException {
-	return; // annotation @NotYetImplemented handle throw new NotYetImplementedException()...
+	assertNotNull(resourceStore);
+	assertTrue("there is no resource entry to remove in the test", existingResourcesForStore.size() > 0);
+
+	// null argument not allowed
+	try {
+	   resourceStore.remove(null);
+	   fail("NotNullException expected");
+	} catch (final NotNullException nae) {
+	}
+
+	// for each resources to remove
+	for (final String uriToTest : existingResourcesForRemove.keySet()) {
+
+	   // get resource
+	   try {
+		resourceStore.get(uriToTest);
+	   } catch (final ResourceNotFoundException rnfe) {
+		fail("resource '" + rnfe.getMessage() + "' does not exists");
+	   }
+
+	   // remove the resource
+	   resourceStore.remove(uriToTest);
+
+	   // get remove resource
+	   try {
+		resourceStore.get(uriToTest);
+		fail("remove failed, resource '" + uriToTest + "' already exists");
+	   } catch (final ResourceNotFoundException rnfe) {
+	   }
+	}
    }
 }

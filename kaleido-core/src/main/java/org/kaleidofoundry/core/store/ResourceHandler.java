@@ -44,7 +44,7 @@ public interface ResourceHandler {
 
    /**
     * Get the input stream to get the content of the resource<br/>
-    * Use {@link BufferedInputStream} to handle it.<br/>
+    * You can use {@link BufferedInputStream} to handle it.<br/>
     * Once done, free resource with {@link #release()}
     * 
     * @return input stream of the resource
@@ -54,7 +54,7 @@ public interface ResourceHandler {
 
    /**
     * Get the input stream reader to get the content of the resource<br/>
-    * Use {@link BufferedReader} to handle it.<br/>
+    * You can use {@link BufferedReader} to handle it.<br/>
     * Once done, free resource with {@link #release()}
     * 
     * @return input stream of the resource
@@ -64,7 +64,7 @@ public interface ResourceHandler {
 
    /**
     * Get the input stream reader to get the content of the resource<br/>
-    * Use {@link BufferedReader} to handle it.<br/>
+    * You can use {@link BufferedReader} to handle it.<br/>
     * Once done, free resource with {@link #release()}
     * 
     * @param charset The name of a supported {@link java.nio.charset.Charset </code>charset<code>}
@@ -117,7 +117,7 @@ public interface ResourceHandler {
    byte[] getBytes() throws ResourceException;
 
    /**
-    * release resource and the eventual connections
+    * Release the resource and the eventual connections
     */
    void release();
 

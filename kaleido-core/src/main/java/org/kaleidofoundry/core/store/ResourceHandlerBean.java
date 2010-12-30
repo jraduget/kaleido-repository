@@ -71,9 +71,7 @@ public class ResourceHandlerBean implements ResourceHandler {
     */
    public ResourceHandlerBean(@NotNull final String resourceUri, @NotNull final String input, @NotNull final String charset)
 	   throws UnsupportedEncodingException {
-	this.input = new ByteArrayInputStream(input.getBytes(charset));
-	this.resourceUri = resourceUri;
-	this.closed = false;
+	this(resourceUri, new ByteArrayInputStream(input.getBytes(charset)));
    }
 
    /*

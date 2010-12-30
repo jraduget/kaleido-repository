@@ -90,7 +90,7 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
     */
    @Override
    protected ResourceHandler doGet(final URI resourceUri) throws ResourceException {
-	final ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.getPath());
+	final ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.toString());
 	if (entity == null) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
 	} else {
@@ -105,10 +105,10 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
     */
    @Override
    protected void doRemove(final URI resourceUri) throws ResourceException {
-	final ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.getPath());
+	final ResourceStoreEntity entity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.toString());
 	if (entity == null) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
-	} else {
+	} else {	   
 	   getEntityManager().remove(entity);
 	}
    }
@@ -120,14 +120,23 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
    @Override
    protected void doStore(final URI resourceUri, final ResourceHandler resource) throws ResourceException {
 
-	final ResourceStoreEntity storeEntity = newInstance();
+	boolean isNew = true;
 	final String filename = resourceUri.getPath().substring(1);
+	ResourceStoreEntity storeEntity;
 
-	storeEntity.setUri(resourceUri.toString());
-	storeEntity.setName(FileHelper.getFileName(filename));
-	storeEntity.setPath(filename);
-	storeEntity.setCreationDate(Calendar.getInstance().getTime());
-	storeEntity.setUpdatedDate(Calendar.getInstance().getTime());
+	storeEntity = getEntityManager().find(ResourceStoreEntity.class, resourceUri.toString());
+
+	if (storeEntity == null) {
+	   storeEntity = newInstance();
+	   storeEntity.setUri(resourceUri.toString());
+	   storeEntity.setName(FileHelper.getFileName(filename));
+	   storeEntity.setPath(filename);
+	   storeEntity.setCreationDate(Calendar.getInstance().getTime());
+	   isNew = true;
+	} else {
+	   storeEntity.setUpdatedDate(Calendar.getInstance().getTime());
+	   isNew = false;
+	}
 
 	if (resource.getInputStream() != null) {
 
@@ -142,7 +151,13 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
 		}
 		storeEntity.setContent(outputStream.toByteArray());
 
-		getEntityManager().merge(storeEntity);
+		if (isNew) {
+		   getEntityManager().persist(storeEntity);
+		   getEntityManager().flush(); // to remove
+		} else {
+		   getEntityManager().merge(storeEntity);
+		   getEntityManager().flush(); // to remove
+		}
 
 	   } catch (final IOException ioe) {
 		throw new ResourceException(ioe, resourceUri.toString());

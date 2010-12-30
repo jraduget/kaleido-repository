@@ -16,6 +16,7 @@
 package org.kaleidofoundry.core.store;
 
 import java.net.URI;
+import java.util.Calendar;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -24,6 +25,7 @@ import javax.persistence.EntityTransaction;
 import org.junit.After;
 import org.junit.Before;
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 import org.kaleidofoundry.core.store.entity.ResourceStoreEntity;
 import org.slf4j.Logger;
@@ -58,17 +60,18 @@ public class JpaResourceStoreTest extends AbstractResourceStoreTest {
 	   transaction = em.getTransaction();
 	   transaction.begin();
 
-	   // create mocked entity for the get test
-	   final ResourceStoreEntity entity = new ResourceStoreEntity();
-	   final URI resourceUri = URI.create("jpa:/tmp/foo.txt");
-	   entity.setUri(resourceUri.getPath());
-	   entity.setName(resourceUri.getPath());
-	   entity.setPath(resourceUri.getPath());
-	   entity.setContent(DEFAULT_RESOURCE_MOCK_TEST.getBytes());
-	   em.persist(entity);
-
-	   // 1. existing resources (to get)
-	   existingResources.put(resourceUri.getPath(), DEFAULT_RESOURCE_MOCK_TEST);
+	   // 1. existing resources (to get) - create mocked entity for the get test
+	   final ResourceStoreEntity entityToGet = new ResourceStoreEntity();
+	   final URI resourceUriToGet = URI.create("jpa:/tmp/foo.txt");
+	   final String filenameToGet = resourceUriToGet.getPath().substring(1);
+	   entityToGet.setUri(resourceUriToGet.toString());
+	   entityToGet.setName(FileHelper.getFileName(filenameToGet));
+	   entityToGet.setCreationDate(Calendar.getInstance().getTime());
+	   entityToGet.setPath(filenameToGet);
+	   entityToGet.setContent(DEFAULT_RESOURCE_MOCK_TEST.getBytes());
+	   em.persist(entityToGet);
+	   em.flush(); // flush to be sure, that entity is right persist
+	   existingResources.put(resourceUriToGet.getPath(), DEFAULT_RESOURCE_MOCK_TEST);
 
 	   // 2. resources to get (but which not exists)
 	   nonExistingResources.add("foo");
@@ -76,6 +79,19 @@ public class JpaResourceStoreTest extends AbstractResourceStoreTest {
 	   // 3. resources to store
 	   final String filenameToStore = "tmp/fooToStore.txt";
 	   existingResourcesForStore.put(filenameToStore, DEFAULT_RESOURCE_MOCK_TEST);
+
+	   // 4. resources to remove
+	   final ResourceStoreEntity entityToRemove = new ResourceStoreEntity();
+	   final URI resourceUriToRemove = URI.create("jpa:/tmp/fooToRemove.txt");
+	   final String filenameToRemove = resourceUriToRemove.getPath().substring(1);
+	   entityToRemove.setUri(resourceUriToRemove.toString());
+	   entityToRemove.setName(FileHelper.getFileName(filenameToRemove));
+	   entityToRemove.setCreationDate(Calendar.getInstance().getTime());
+	   entityToRemove.setPath(filenameToRemove);
+	   entityToRemove.setContent(DEFAULT_RESOURCE_MOCK_TEST.getBytes());
+	   em.persist(entityToRemove);
+	   em.flush(); // flush to be sure, that entity is right persist
+	   existingResourcesForRemove.put(filenameToRemove, DEFAULT_RESOURCE_MOCK_TEST);
 
 	} catch (final RuntimeException rte) {
 	   LOGGER.error("setup error", rte);
@@ -89,7 +105,7 @@ public class JpaResourceStoreTest extends AbstractResourceStoreTest {
    public void cleanup() {
 	try {
 	   final URI resourceUri = URI.create("jpa:/tmp/foo.txt");
-	   final ResourceStoreEntity resource = em.find(ResourceStoreEntity.class, resourceUri.getPath());
+	   final ResourceStoreEntity resource = em.find(ResourceStoreEntity.class, resourceUri.toString());
 	   if (resource != null) {
 		em.remove(resource);
 		transaction.commit();

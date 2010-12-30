@@ -40,6 +40,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  * <li><code>webapp:/</code></li>
  * <li><code>jpa:/</code></li>
  * <li><code>memory:/</code></li>
+ * <li><code>sftp://</code> - not yet implemented</li>
  * </ul>
  * <p>
  * <b>More you can extends it</b>, using other kind of "custom user" protocol <code>(classpath://, jpa://, jdbc://, ...)</code>
@@ -53,7 +54,7 @@ import org.kaleidofoundry.core.plugin.Declare;
 public interface ResourceStore extends Store<String, ResourceHandler> {
 
    /**
-    * get a given resource <br/>
+    * Get a given resource <br/>
     * 
     * @param resourceRelativePath relative resource path (relative from the resource store root uri)
     * @return resource input stream to get its content
@@ -66,7 +67,7 @@ public interface ResourceStore extends Store<String, ResourceHandler> {
    ResourceHandler get(@NotNull String resourceRelativePath) throws ResourceException;
 
    /**
-    * store updates on current R instance<br/>
+    * Store updates on current R instance<br/>
     * 
     * @param resourceRelativePath relative resource path (relative from the resource store root uri)
     * @param resource resource input stream to store
@@ -80,7 +81,7 @@ public interface ResourceStore extends Store<String, ResourceHandler> {
    ResourceStore store(@NotNull String resourceRelativePath, @NotNull ResourceHandler resource) throws ResourceException;
 
    /**
-    * remove resource identify by its resource binding
+    * Remove resource identify by its resource binding
     * 
     * @param resourceRelativePath relative resource path (relative from the resource store root uri)
     * @return current instance of the store
@@ -93,6 +94,8 @@ public interface ResourceStore extends Store<String, ResourceHandler> {
    ResourceStore remove(@NotNull String resourceRelativePath) throws ResourceException;
 
    /**
+    * Does a given resource exists ?
+    * 
     * @param resourceRelativePath relative resource path (relative from the resource store root uri)
     * @return does the resource exists <code>true / false</code>
     * @throws ResourceException other kind of error
@@ -102,6 +105,8 @@ public interface ResourceStore extends Store<String, ResourceHandler> {
    boolean exists(@NotNull String resourceRelativePath) throws ResourceException;
 
    /**
+    * Move a resource from a destination to another
+    * 
     * @param origin relative original resource path (relative from the resource store root uri)
     * @param destination relative destination resource path (relative from the resource store root uri)
     * @return current instance of the store
@@ -113,7 +118,7 @@ public interface ResourceStore extends Store<String, ResourceHandler> {
    ResourceStore move(@NotNull String origin, @NotNull String destination) throws ResourceException;
 
    /**
-    * check uri validity for the current store
+    * Check ths uri validity for the current store
     * 
     * @param resourceUri
     * @return true if uri can be handle by current store, otherwise throws an IllegalArgumentException

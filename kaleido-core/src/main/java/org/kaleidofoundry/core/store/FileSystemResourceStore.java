@@ -74,7 +74,7 @@ public class FileSystemResourceStore extends AbstractResourceStore implements Re
 	if (file.isDirectory()) {
 	   throw new ResourceException("store.resource.remove.directory", resourceUri.toString());
 	} else {
-	   if (file.delete()) { throw new ResourceException("store.resource.remove.illegal", resourceUri.toString()); }
+	   if (!file.delete()) { throw new ResourceException("store.resource.remove.illegal", resourceUri.toString()); }
 	}
 
    }
