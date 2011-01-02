@@ -93,6 +93,20 @@ public class JpaResourceStoreTest extends AbstractResourceStoreTest {
 	   em.flush(); // flush to be sure, that entity is right persist
 	   existingResourcesForRemove.put(filenameToRemove, DEFAULT_RESOURCE_MOCK_TEST);
 
+	   // 5. resources to move
+	   final ResourceStoreEntity entityToMove = new ResourceStoreEntity();
+	   final URI resourceUriToMove = URI.create("jpa:/tmp/fooToMove.txt");
+	   final String filenameToMove = resourceUriToMove.getPath().substring(1);
+	   entityToMove.setUri(resourceUriToMove.toString());
+	   entityToMove.setName(FileHelper.getFileName(filenameToMove));
+	   entityToMove.setCreationDate(Calendar.getInstance().getTime());
+	   entityToMove.setPath(filenameToMove);
+	   entityToMove.setContent(DEFAULT_RESOURCE_MOCK_TEST.getBytes());
+	   em.persist(entityToMove);
+	   em.flush(); // flush to be sure, that entity is right persist
+	   existingResourcesForMove.put(filenameToMove, filenameToMove + ".move");
+	   // TODO create an entity to move to a new directory that not exists
+
 	} catch (final RuntimeException rte) {
 	   LOGGER.error("setup error", rte);
 	   throw rte;

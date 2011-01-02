@@ -205,6 +205,9 @@ public abstract class AbstractResourceStore implements ResourceStore {
 	   if (resource != null) {
 		store(destination, resource);
 	   }
+
+	   remove(origin);
+
 	   return this;
 	} finally {
 	   if (resource != null) {
