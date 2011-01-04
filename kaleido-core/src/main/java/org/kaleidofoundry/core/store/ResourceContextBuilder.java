@@ -51,14 +51,16 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td>resource store read-only usage <code>true|false</code></td>
  * </tr>
  * <tr>
- * <td>connectionRetryCount</td>
+ * <td>maxRetryOnFailure</td>
  * <td>all</td>
- * <td>retry count settings for establish the connection</td>
+ * <td>it defines the maximum attempt count, when failure occurred for get / store / remove / move a resource (it is disabled if not
+ * defined)</td>
  * </tr>
  * <tr>
- * <td>readRetryCount</td>
+ * <td>sleepTimeBeforeRetryOnFailure</td>
  * <td>all</td>
- * <td>retry count settings for reading a resource</td>
+ * <td>it defines the time to sleep in ms before a new attempt, when failure occurred for get / store / remove / move a resource (it is
+ * disabled if not defined)</td>
  * </tr>
  * <tr>
  * <td>classloader</td>
@@ -174,10 +176,15 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
 
    /** resource store read-only usage <code>true|false</code> */
    public static final String Readonly = "readonly";
-   /** retry count settings for establish the connection */
-   public static final String ConnectionRetryCount = "connectionRetryCount";
-   /** retry count settings for reading a resource */
-   public static final String ReadRetryCount = "readRetryCount";
+   /**
+    * it defines the maximum attempt count, when failure occurred for get / store / remove / move a resource (it is disabled if not defined)
+    */
+   public static final String MaxRetryOnFailure = "maxRetryOnFailure";
+   /**
+    * it defines the time to sleep in ms before a new attempt, when failure occurred for get / store / remove / move a resource (it is
+    * disabled if not defined)
+    */
+   public static final String SleepTimeBeforeRetryOnFailure = "sleepTimeBeforeRetryOnFailure";
    /** property name for setting the class name, to get the class loader to use */
    public static final String Classloader = "classloader";
 
@@ -301,6 +308,26 @@ public class ResourceContextBuilder extends AbstractRuntimeContextBuilder<Resour
     */
    public ResourceContextBuilder withReadonly(final boolean readonly) {
 	getContextParameters().put(Readonly, String.valueOf(readonly));
+	return this;
+   }
+
+   /**
+    * @param maxRetryOnFailure
+    * @return current builder instance
+    * @see ResourceContextBuilder#MaxRetryOnFailure
+    */
+   public ResourceContextBuilder withMaxRetryOnFailure(final int maxRetryOnFailure) {
+	getContextParameters().put(MaxRetryOnFailure, String.valueOf(maxRetryOnFailure));
+	return this;
+   }
+
+   /**
+    * @param readonly
+    * @return current builder instance
+    * @see ResourceContextBuilder#SleepTimeBeforeRetryOnFailure
+    */
+   public ResourceContextBuilder withSleepTimeBeforeRetryOnFailure(final int sleepTimeBeforeRetryOnFailure) {
+	getContextParameters().put(SleepTimeBeforeRetryOnFailure, String.valueOf(sleepTimeBeforeRetryOnFailure));
 	return this;
    }
 

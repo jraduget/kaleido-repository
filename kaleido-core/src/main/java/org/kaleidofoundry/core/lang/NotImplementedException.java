@@ -84,6 +84,6 @@ public class NotImplementedException extends I18nRuntimeException {
     */
    @Override
    public final String getI18nBundleName() {
-	return InternalBundleEnum.Core.getResourceName();
+	return InternalBundleEnum.CORE.getResourceName();
    }
 }

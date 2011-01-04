@@ -175,7 +175,7 @@ public class ResourceHandlerBean implements ResourceHandler {
 		   reader.close();
 		}
 	   } catch (final IOException ioe) {
-		throw new IllegalStateException(InternalBundleHelper.ResourceStoreMessageBundle.getMessage("store.resource.inputstream.error", ioe.getMessage(),
+		throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.resource.inputstream.error", ioe.getMessage(),
 			ioe), ioe);
 	   }
 
@@ -195,7 +195,7 @@ public class ResourceHandlerBean implements ResourceHandler {
 		input.close();
 		closed = true;
 	   } catch (final IOException ioe) {
-		throw new IllegalStateException(InternalBundleHelper.ResourceStoreMessageBundle.getMessage("store.resource.inputstream.error", ioe.getMessage(),
+		throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.resource.inputstream.error", ioe.getMessage(),
 			ioe), ioe);
 	   }
 	}

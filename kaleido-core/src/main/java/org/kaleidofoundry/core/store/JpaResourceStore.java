@@ -15,7 +15,7 @@
  */
 package org.kaleidofoundry.core.store;
 
-import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ResourceStoreMessageBundle;
+import static org.kaleidofoundry.core.i18n.InternalBundleHelper.StoreMessageBundle;
 import static org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory.KaleidoPersistentContextUnitName;
 import static org.kaleidofoundry.core.store.ResourceStoreConstants.ClobJpaStorePluginName;
 
@@ -182,19 +182,19 @@ public class JpaResourceStore extends AbstractResourceStore implements ResourceS
 		if (instance instanceof ResourceStoreEntity) {
 		   return (ResourceStoreEntity) instance;
 		} else {
-		   throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.context.customentity.illegaltype", context.getName(),
+		   throw new IllegalStateException(StoreMessageBundle.getMessage("store.context.customentity.illegaltype", context.getName(),
 			   context.getProperty(ResourceContextBuilder.CustomResourceStoreEntity), ResourceContextBuilder.CustomResourceStoreEntity));
 		}
 
 	   } catch (final ClassNotFoundException cnfe) {
-		throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.context.customentity.notfound", context.getName(),
+		throw new IllegalStateException(StoreMessageBundle.getMessage("store.context.customentity.notfound", context.getName(),
 			context.getProperty(ResourceContextBuilder.CustomResourceStoreEntity), ResourceContextBuilder.CustomResourceStoreEntity));
 	   } catch (final IllegalAccessException iae) {
-		throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.context.customentity.illegalconstructor",
+		throw new IllegalStateException(StoreMessageBundle.getMessage("store.context.customentity.illegalconstructor",
 			customResourceStoreEntityClass, iae.getMessage()));
 
 	   } catch (final InstantiationException ie) {
-		throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.context.customentity.cantcreate", customResourceStoreEntityClass,
+		throw new IllegalStateException(StoreMessageBundle.getMessage("store.context.customentity.cantcreate", customResourceStoreEntityClass,
 			ie.getMessage()));
 	   }
 	}

@@ -106,7 +106,7 @@ public class ProviderException extends I18nRuntimeException {
     */
    @Override
    public String getI18nBundleName() {
-	return InternalBundleEnum.Runtimecontext.getResourceName();
+	return InternalBundleEnum.CONTEXT.getResourceName();
    }
 
 }

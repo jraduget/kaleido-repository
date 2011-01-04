@@ -15,7 +15,9 @@
  */
 package org.kaleidofoundry.core.store;
 
-import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ResourceStoreMessageBundle;
+import static org.kaleidofoundry.core.i18n.InternalBundleHelper.StoreMessageBundle;
+import static org.kaleidofoundry.core.store.ResourceContextBuilder.MaxRetryOnFailure;
+import static org.kaleidofoundry.core.store.ResourceContextBuilder.SleepTimeBeforeRetryOnFailure;
 
 import java.net.URI;
 import java.net.URLConnection;
@@ -23,10 +25,22 @@ import java.net.URLConnection;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * ResourceStore abstract class
+ * ResourceStore abstract class (common to all resource store class implementation)<br/>
+ * <br/>
+ * You can create your own resource store, by extending this class and implement :
+ * <ul>
+ * <li>{@link #getStoreType()}</li>
+ * <li>{@link #doGet(URI)}</li>
+ * <li>{@link #doRemove(URI)}</li>
+ * <li>{@link #doStore(URI, ResourceHandler)}</li>
+ * </ul>
+ * Then, annotate {@link Declare} your new class to register your implementation
  * 
  * @author Jerome RADUGET
  */
@@ -35,6 +49,8 @@ public abstract class AbstractResourceStore implements ResourceStore {
 
    protected final RuntimeContext<ResourceStore> context;
 
+   protected final Logger logger;
+
    /**
     * runtime context injection by constructor
     * 
@@ -42,6 +58,7 @@ public abstract class AbstractResourceStore implements ResourceStore {
     */
    public AbstractResourceStore(@NotNull final RuntimeContext<ResourceStore> context) {
 	this.context = context;
+	this.logger = LoggerFactory.getLogger(this.getClass());
    }
 
    /**
@@ -129,7 +146,7 @@ public abstract class AbstractResourceStore implements ResourceStore {
 	   }
 	}
 
-	throw new IllegalArgumentException(ResourceStoreMessageBundle.getMessage("store.resource.uri.illegal", resourceUri.toString(), getClass().getName()));
+	throw new IllegalArgumentException(StoreMessageBundle.getMessage("store.resource.uri.illegal", resourceUri.toString(), getClass().getName()));
    }
 
    /*
@@ -152,9 +169,48 @@ public abstract class AbstractResourceStore implements ResourceStore {
    public final ResourceHandler get(@NotNull final String resourceRelativePath) throws ResourceException {
 	final String resourceUri = buildResourceURi(resourceRelativePath);
 	isUriManageable(resourceUri);
-	final ResourceHandler in = doGet(URI.create(resourceUri));
-	if (in == null || in.getInputStream() == null) { throw new ResourceNotFoundException(resourceRelativePath); }
-	return in;
+
+	int retryCount = 0;
+	int maxRetryCount = 1;
+	ResourceException lastError = null;
+
+	while (retryCount < maxRetryCount) {
+	   try {
+		// try to get the resource
+		final ResourceHandler in = doGet(URI.create(resourceUri));
+		if (in == null || in.getInputStream() == null) { throw new ResourceNotFoundException(resourceRelativePath); }
+		return in;
+	   } catch (final ResourceException rse) {
+		lastError = rse;
+		maxRetryCount = getMaxRetryOnFailure();
+		// no fail-over, we throw the exception
+		if (maxRetryCount <= 0) {
+		   throw rse;
+		}
+		// wait for the configuring delay (in milliseconds)
+		else {
+		   retryCount++;
+		   final int sleepTime = getSleepTimeBeforeRetryOnFailure();
+		   if (retryCount < maxRetryCount) {
+			logger.warn(StoreMessageBundle.getMessage("store.retry.get.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount));
+			try {
+			   Thread.sleep((sleepTime));
+			} catch (final InterruptedException e) {
+			   logger.error(StoreMessageBundle.getMessage("store.retry.error", sleepTime), rse);
+			   throw rse;
+			}
+		   } else {
+			logger.error(StoreMessageBundle.getMessage("store.retry.get.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount), rse);
+		   }
+		}
+	   }
+	}
+
+	if (lastError != null) {
+	   throw lastError;
+	} else {
+	   throw new IllegalStateException();
+	}
    }
 
    /*
@@ -163,11 +219,50 @@ public abstract class AbstractResourceStore implements ResourceStore {
     */
    @Override
    public final ResourceStore remove(@NotNull final String resourceRelativePath) throws ResourceException {
-	if (isReadOnly()) { throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.resource.readonly.illegal", context.getName())); }
+	if (isReadOnly()) { throw new IllegalStateException(StoreMessageBundle.getMessage("store.resource.readonly.illegal", context.getName())); }
 	final String resourceUri = buildResourceURi(resourceRelativePath);
 	isUriManageable(resourceUri);
-	doRemove(URI.create(resourceUri));
-	return this;
+
+	int retryCount = 0;
+	int maxRetryCount = 1;
+	ResourceException lastError = null;
+
+	while (retryCount < maxRetryCount) {
+	   try {
+		// try to remove the resource
+		doRemove(URI.create(resourceUri));
+		return this;
+	   } catch (final ResourceException rse) {
+		lastError = rse;
+		maxRetryCount = getMaxRetryOnFailure();
+		// no fail-over, we throw the exception
+		if (maxRetryCount <= 0) {
+		   throw rse;
+		}
+		// wait for the configuring delay (in milliseconds)
+		else {
+		   retryCount++;
+		   final int sleepTime = getSleepTimeBeforeRetryOnFailure();
+		   if (retryCount < maxRetryCount) {
+			logger.warn(StoreMessageBundle.getMessage("store.retry.remove.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount));
+			try {
+			   Thread.sleep((sleepTime));
+			} catch (final InterruptedException e) {
+			   logger.error(StoreMessageBundle.getMessage("store.retry.error", sleepTime), rse);
+			   throw rse;
+			}
+		   } else {
+			logger.error(StoreMessageBundle.getMessage("store.retry.remove.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount), rse);
+		   }
+		}
+	   }
+	}
+
+	if (lastError != null) {
+	   throw lastError;
+	} else {
+	   throw new IllegalStateException();
+	}
    }
 
    /*
@@ -176,11 +271,50 @@ public abstract class AbstractResourceStore implements ResourceStore {
     */
    @Override
    public final ResourceStore store(@NotNull final String resourceRelativePath, @NotNull final ResourceHandler resource) throws ResourceException {
-	if (isReadOnly()) { throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.resource.readonly.illegal", context.getName())); }
+	if (isReadOnly()) { throw new IllegalStateException(StoreMessageBundle.getMessage("store.resource.readonly.illegal", context.getName())); }
 	final String resourceUri = buildResourceURi(resourceRelativePath);
 	isUriManageable(resourceUri);
-	doStore(URI.create(resourceUri), resource);
-	return this;
+
+	int retryCount = 0;
+	int maxRetryCount = 1;
+	ResourceException lastError = null;
+
+	while (retryCount < maxRetryCount) {
+	   try {
+		// try to store the resource
+		doStore(URI.create(resourceUri), resource);
+		return this;
+	   } catch (final ResourceException rse) {
+		lastError = rse;
+		maxRetryCount = getMaxRetryOnFailure();
+		// no fail-over, we throw the exception
+		if (maxRetryCount <= 0) {
+		   throw rse;
+		}
+		// wait for the configuring delay (in milliseconds)
+		else {
+		   retryCount++;
+		   final int sleepTime = getSleepTimeBeforeRetryOnFailure();
+		   if (retryCount < maxRetryCount) {
+			logger.warn(StoreMessageBundle.getMessage("store.retry.store.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount));
+			try {
+			   Thread.sleep((sleepTime));
+			} catch (final InterruptedException e) {
+			   logger.error(StoreMessageBundle.getMessage("store.retry.error", sleepTime), rse);
+			   throw rse;
+			}
+		   } else {
+			logger.error(StoreMessageBundle.getMessage("store.retry.store.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount), rse);
+		   }
+		}
+	   }
+	}
+
+	if (lastError != null) {
+	   throw lastError;
+	} else {
+	   throw new IllegalStateException();
+	}
    }
 
    /*
@@ -189,7 +323,7 @@ public abstract class AbstractResourceStore implements ResourceStore {
     */
    @Override
    public final ResourceStore move(@NotNull final String origin, @NotNull final String destination) throws ResourceException {
-	if (isReadOnly()) { throw new IllegalStateException(ResourceStoreMessageBundle.getMessage("store.resource.readonly.illegal", context.getName())); }
+	if (isReadOnly()) { throw new IllegalStateException(StoreMessageBundle.getMessage("store.resource.readonly.illegal", context.getName())); }
 
 	isUriManageable(buildResourceURi(origin));
 	isUriManageable(buildResourceURi(destination));
@@ -198,22 +332,18 @@ public abstract class AbstractResourceStore implements ResourceStore {
 	   remove(destination);
 	}
 
-	ResourceHandler resource = null;
+	final ResourceHandler resource = get(origin);
 
 	try {
-	   resource = get(origin);
 	   if (resource != null) {
 		store(destination, resource);
 	   }
-
-	   remove(origin);
-
-	   return this;
 	} finally {
-	   if (resource != null) {
-		resource.release();
-	   }
+	   resource.release();
 	}
+	remove(origin);
+
+	return this;
 
    }
 
@@ -251,5 +381,31 @@ public abstract class AbstractResourceStore implements ResourceStore {
 	   urlConnection.setUseCaches(Boolean.parseBoolean(context.getProperty(ResourceContextBuilder.UseCaches)));
 	}
 
+   }
+
+   /**
+    * @return max attempt after failure
+    * @see ResourceContextBuilder#MaxRetryOnFailure
+    */
+   protected int getMaxRetryOnFailure() {
+	final Integer maxRetry = context.getInteger(MaxRetryOnFailure);
+	if (maxRetry != null) {
+	   return maxRetry.intValue();
+	} else {
+	   return -1;
+	}
+   }
+
+   /**
+    * @return time to sleep after failure
+    * @see ResourceContextBuilder#SleepTimeBeforeRetryOnFailure
+    */
+   protected int getSleepTimeBeforeRetryOnFailure() {
+	final Integer sleepOnFailure = context.getInteger(SleepTimeBeforeRetryOnFailure);
+	if (sleepOnFailure != null) {
+	   return sleepOnFailure.intValue();
+	} else {
+	   return 0;
+	}
    }
 }

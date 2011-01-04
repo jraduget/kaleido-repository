@@ -101,7 +101,7 @@ public class NamingServiceException extends I18nRuntimeException {
     */
    @Override
    public String getI18nBundleName() {
-	return InternalBundleEnum.Naming.getResourceName();
+	return InternalBundleEnum.NAMING.getResourceName();
    }
 
 }

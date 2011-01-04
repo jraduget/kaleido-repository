@@ -128,7 +128,7 @@ public class ConfigurationException extends I18nRuntimeException {
     */
    @Override
    public String getI18nBundleName() {
-	return InternalBundleEnum.Configuration.getResourceName();
+	return InternalBundleEnum.CONFIGURATION.getResourceName();
    }
 
 }

@@ -70,6 +70,7 @@ public class FileSystemResourceStoreTest extends AbstractResourceStoreTest {
 	fout.append(DEFAULT_RESOURCE_MOCK_TEST);
 	fout.flush();
 	filesToDelete.add(tmpFileToRemmove);
+	fout.close();
 	existingResources.put(FileHelper.getFileName(tmpFileToRemmove.getCanonicalPath()), DEFAULT_RESOURCE_MOCK_TEST);
 
 	// 5. resources to move

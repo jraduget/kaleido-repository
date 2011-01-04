@@ -20,6 +20,7 @@ import static org.kaleidofoundry.core.store.ResourceStoreConstants.HttpStorePlug
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.Authenticator;
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
@@ -69,7 +70,7 @@ public class HttpResourceStore extends AbstractResourceStore implements Resource
     */
    @Override
    protected ResourceHandler doGet(final URI resourceUri) throws ResourceException {
-	if (resourceUri.getHost() == null) { throw new IllegalStateException(InternalBundleHelper.ResourceStoreMessageBundle.getMessage(
+	if (resourceUri.getHost() == null) { throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage(
 		"store.resource.uri.http.illegal", resourceUri.toString())); }
 	try {
 
@@ -139,7 +140,9 @@ public class HttpResourceStore extends AbstractResourceStore implements Resource
 	   }
 
 	} catch (final MalformedURLException mure) {
-	   throw new IllegalStateException(InternalBundleHelper.ResourceStoreMessageBundle.getMessage("store.resource.uri.malformed", resourceUri.toString()));
+	   throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.resource.uri.malformed", resourceUri.toString()));
+	} catch (final ConnectException ce) {
+	   throw new ResourceException("store.resource.connect.error", ce, resourceUri.toString());
 	} catch (final IOException ioe) {
 	   throw new ResourceException(ioe, resourceUri.toString());
 	}

@@ -17,7 +17,7 @@ package org.kaleidofoundry.core.context;
 
 import static org.kaleidofoundry.core.config.AbstractConfiguration.valueOf;
 import static org.kaleidofoundry.core.config.AbstractConfiguration.valuesOf;
-import static org.kaleidofoundry.core.i18n.InternalBundleHelper.RuntimeContextMessageBundle;
+import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ContextMessageBundle;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -362,7 +362,7 @@ public class RuntimeContext<T> {
 
 	final Context context = annotatedField.getAnnotation(Context.class);
 
-	if (context == null) { throw new IllegalArgumentException(RuntimeContextMessageBundle.getMessage("context.annotation.field.illegal",
+	if (context == null) { throw new IllegalArgumentException(ContextMessageBundle.getMessage("context.annotation.field.illegal",
 		Context.class.getName())); }
 
 	final Plugin<?> plugin = PluginHelper.getInterfacePlugin(annotatedField.getDeclaringClass());
@@ -407,7 +407,7 @@ public class RuntimeContext<T> {
 
 	} else {
 	   // RuntimeContext have already been injected
-	   throw new IllegalStateException(InternalBundleHelper.RuntimeContextMessageBundle.getMessage("context.annotation.illegalinject", target.name));
+	   throw new IllegalStateException(InternalBundleHelper.ContextMessageBundle.getMessage("context.annotation.illegalinject", target.name));
 	}
    }
 

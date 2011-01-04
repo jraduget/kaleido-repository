@@ -110,7 +110,7 @@ public class ResourceException extends I18nException {
     */
    @Override
    public String getI18nBundleName() {
-	return InternalBundleEnum.ResourceStore.getResourceName();
+	return InternalBundleEnum.STORE.getResourceName();
    }
 
 }

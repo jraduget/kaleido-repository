@@ -63,7 +63,7 @@ public class CacheException extends I18nRuntimeException {
 
    @Override
    public String getI18nBundleName() {
-	return InternalBundleEnum.Cache.getResourceName();
+	return InternalBundleEnum.CACHE.getResourceName();
    }
 
 }

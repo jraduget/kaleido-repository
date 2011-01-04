@@ -34,7 +34,7 @@ import org.kaleidofoundry.core.context.Parameter;
  */
 public class ResourceStoreSample02 {
 
-   // @Parameter overrides myResourceCtx configuration setting
+   // @Parameter overrides myResourceCtx configuration settings
    @Context(value = "myResourceCtx", parameters = {
 	   @Parameter(name = Readonly, value = "true"),
 	   @Parameter(name = ConnectTimeout, value = "0"),

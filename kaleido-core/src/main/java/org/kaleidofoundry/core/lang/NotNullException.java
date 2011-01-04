@@ -83,7 +83,7 @@ public class NotNullException extends I18nRuntimeException {
     */
    @Override
    public String getI18nBundleName() {
-	return InternalBundleEnum.Core.getResourceName();
+	return InternalBundleEnum.CORE.getResourceName();
    }
 
 }

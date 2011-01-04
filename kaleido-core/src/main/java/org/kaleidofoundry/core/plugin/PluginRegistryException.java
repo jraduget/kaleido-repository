@@ -103,7 +103,7 @@ public class PluginRegistryException extends I18nRuntimeException {
     */
    @Override
    public String getI18nBundleName() {
-	return InternalBundleEnum.Plugin.getResourceName();
+	return InternalBundleEnum.PLUGIN.getResourceName();
    }
 
 }

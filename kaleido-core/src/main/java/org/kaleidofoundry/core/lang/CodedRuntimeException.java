@@ -16,9 +16,9 @@
 package org.kaleidofoundry.core.lang;
 
 /**
- * This class is used to represent a runtime domain service exception (coded exception). <br/>
- * Runtime is normaly not handle, and propagate through the layers.<br/>
- * It has an unique code parameter, represented precisely type of exception.
+ * This class is used to represent a runtime service exception (coded exception). <br/>
+ * It has an unique code parameter, represented precisely type of exception.<br/>
+ * RuntimeException is normally not handle by programmer, and have to be propagated through the layers.<br/>
  * 
  * @author Jerome RADUGET
  */
@@ -56,7 +56,7 @@ public class CodedRuntimeException extends RuntimeException {
    }
 
    /**
-    * @return Retourne le code d'erreur de l'exception
+    * @return Error code of the RuntimeException
     */
    public String getCode() {
 	return code;

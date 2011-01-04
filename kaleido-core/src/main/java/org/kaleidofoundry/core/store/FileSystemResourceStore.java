@@ -31,10 +31,7 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 
 /**
- * File system resource store implementation (windows, linux, ...) <br/>
- * This implementation is only for read only use<br/>
- * You can extends it and override {@link #doRemove(URI)} and {@link #doStore(URI, ResourceHandler)} to your need, and {@link Declare} your
- * implementation to use it
+ * File system resource store implementation (windows, linux, macos, ...) <br/>
  * 
  * @author Jerome RADUGET
  * @see ResourceContextBuilder enum of context configuration properties available

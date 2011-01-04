@@ -29,15 +29,15 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
  */
 public enum InternalBundleEnum {
 
-   Core(true, "i18n/core/messages"),
-   Cache(true, "i18n/cache/messages"),
-   MessageBundle(true, "i18n/messagebundle/messages"),
-   Plugin(true, "i18n/plugin/messages"),
-   ResourceStore(true, "i18n/resourcestore/messages"),
-   Configuration(true, "i18n/configuration/messages"),
-   Runtimecontext(true, "i18n/runtimecontext/messages"),
-   Naming(true, "i18n/naming/messages"),
-   Web(true, "i18n/web/messages");
+   CORE(true, "i18n/core/messages"),
+   CACHE(true, "i18n/cache/messages"),
+   MESSAGE_BUNDLE(true, "i18n/messagebundle/messages"),
+   PLUGIN(true, "i18n/plugin/messages"),
+   STORE(true, "i18n/store/messages"),
+   CONFIGURATION(true, "i18n/configuration/messages"),
+   CONTEXT(true, "i18n/context/messages"),
+   NAMING(true, "i18n/naming/messages"),
+   WEB(true, "i18n/web/messages");
 
    private static Set<String> CustomReservedBundle = Collections.synchronizedSet(new HashSet<String>());
 

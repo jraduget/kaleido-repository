@@ -36,9 +36,13 @@ public class ResourceStoreSample03 {
 	   new ResourceContextBuilder("myManualResourceCtx", ResourceStore.class)
 	.withUriRootPath("http://localhost:8080/kaleido-integration/")
 	.withReadonly(true)
+	.withProxySet(false)
+	// configure connect and read timeout for the java net layer 
 	.withConnectTimeout(0)
 	.withReadTimeout(0)
-	.withProxySet(false)
+	// 5 attempts, with a wait of 2 seconds between each attempt 
+	.withMaxRetryOnFailure(5)
+	.withSleepTimeBeforeRetryOnFailure(2000)
 	.build();
 
 	resourceStore = ResourceStoreFactory.provides(context);

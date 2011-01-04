@@ -20,8 +20,8 @@ import java.util.Locale;
 import org.kaleidofoundry.core.lang.CodedRuntimeException;
 
 /**
- * I18nCoded RuntimeException
- * Runtime is normally not handle, and propagate through the layers.<br/>
+ * I18n Runtime Exception<br/>
+ * RuntimeException is normally not handle, and propagate through the layers.<br/>
  * 
  * @author Jerome RADUGET
  */
@@ -63,7 +63,6 @@ public abstract class I18nRuntimeException extends CodedRuntimeException {
     * @param args message tokens arguments
     */
    public I18nRuntimeException(final String code, final Throwable cause, final String... args) {
-
 	super(code, null, cause);
 	this.args = args;
    }
@@ -78,7 +77,7 @@ public abstract class I18nRuntimeException extends CodedRuntimeException {
    }
 
    /**
-    * @param code business code of the exception
+    * @param code code of the exception
     * @param locale user locale
     * @param args token value to replace
     */
@@ -89,7 +88,7 @@ public abstract class I18nRuntimeException extends CodedRuntimeException {
    }
 
    /**
-    * @param code business code of the exception
+    * @param code code of the exception
     * @param cause exception cause
     * @param locale user locale
     */
@@ -100,13 +99,12 @@ public abstract class I18nRuntimeException extends CodedRuntimeException {
    }
 
    /**
-    * @param code business code of the exception
+    * @param code code of the exception
     * @param cause exception cause
     * @param locale user locale
     * @param args message tokens arguments
     */
    public I18nRuntimeException(final String code, final Throwable cause, final Locale locale, final String... args) {
-
 	super(code, null, cause);
 	this.args = args;
 	this.locale = locale;

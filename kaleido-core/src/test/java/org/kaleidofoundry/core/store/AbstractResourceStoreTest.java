@@ -193,10 +193,15 @@ public abstract class AbstractResourceStoreTest extends Assert {
 	for (final String uriToTest : existingResourcesForMove.keySet()) {
 
 	   // get resource
+	   ResourceHandler resource = null;
 	   try {
-		resourceStore.get(uriToTest);
+		resource = resourceStore.get(uriToTest);
 	   } catch (final ResourceNotFoundException rnfe) {
 		fail("resource '" + rnfe.getMessage() + "' does not exists");
+	   } finally {
+		if (resource != null) {
+		   resource.release();
+		}
 	   }
 
 	   // move the resource
@@ -205,16 +210,24 @@ public abstract class AbstractResourceStoreTest extends Assert {
 
 	   // get the original resource
 	   try {
-		resourceStore.get(uriToTest);
+		resource = resourceStore.get(uriToTest);
 		fail("move resource failed '" + uriToTest + "' . The resource still exists");
 	   } catch (final ResourceNotFoundException rnfe) {
+	   } finally {
+		if (resource != null) {
+		   resource.release();
+		}
 	   }
 
 	   // get the new resource
 	   try {
-		resourceStore.get(newResourcePath);
+		resource = resourceStore.get(newResourcePath);
 	   } catch (final ResourceNotFoundException rnfe) {
 		fail("move resource failed '" + newResourcePath + "' does not exists");
+	   } finally {
+		if (resource != null) {
+		   resource.release();
+		}
 	   }
 
 	   // remove the move resource

@@ -16,7 +16,7 @@
 package org.kaleidofoundry.core.lang;
 
 /**
- * This class is used to represent a technical or domain service exception (coded exception). <br/>
+ * This class is used to represent a technical or domain exception (coded exception). <br/>
  * Code parameter have to be unique, and it represent more precisely the type of exception.
  * 
  * @author Jerome RADUGET

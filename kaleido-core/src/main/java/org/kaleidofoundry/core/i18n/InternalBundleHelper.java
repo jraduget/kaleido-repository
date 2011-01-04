@@ -23,22 +23,22 @@ package org.kaleidofoundry.core.i18n;
 public interface InternalBundleHelper {
 
    /** Core message bundle */
-   I18nMessages CoreMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.Core.getResourceName());
+   I18nMessages CoreMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.CORE.getResourceName());
    /** Cache message bundle */
-   I18nMessages CacheMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.Cache.getResourceName(), CoreMessageBundle);
+   I18nMessages CacheMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.CACHE.getResourceName(), CoreMessageBundle);
    /** Message bundle bundle */
-   I18nMessages MessageBundleMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.MessageBundle.getResourceName(), CoreMessageBundle);
+   I18nMessages I18nMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.MESSAGE_BUNDLE.getResourceName(), CoreMessageBundle);
    /** Plugin message bundle */
-   I18nMessages PluginMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.Plugin.getResourceName(), CoreMessageBundle);
+   I18nMessages PluginMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.PLUGIN.getResourceName(), CoreMessageBundle);
    /** ResourcStore message bundle */
-   I18nMessages ResourceStoreMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.ResourceStore.getResourceName(), CoreMessageBundle);
+   I18nMessages StoreMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.STORE.getResourceName(), CoreMessageBundle);
    /** Configuration message bundle */
-   I18nMessages ConfigurationMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.Configuration.getResourceName(), CoreMessageBundle);
+   I18nMessages ConfigurationMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.CONFIGURATION.getResourceName(), CoreMessageBundle);
    /** RuntimeContext message bundle */
-   I18nMessages RuntimeContextMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.Runtimecontext.getResourceName(), CoreMessageBundle);
+   I18nMessages ContextMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.CONTEXT.getResourceName(), CoreMessageBundle);
    /** Jndi message bundle */
-   I18nMessages NamingServiceMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.Naming.getResourceName(), CoreMessageBundle);
+   I18nMessages NamingMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.NAMING.getResourceName(), CoreMessageBundle);
    /** Web message bundle */
-   I18nMessages WebMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.Web.getResourceName(), CoreMessageBundle);
+   I18nMessages WebMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.WEB.getResourceName(), CoreMessageBundle);
 
 }
