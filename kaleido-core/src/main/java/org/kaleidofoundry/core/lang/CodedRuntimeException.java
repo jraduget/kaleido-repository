@@ -32,8 +32,7 @@ public class CodedRuntimeException extends RuntimeException {
     * @param code error code
     */
    public CodedRuntimeException(final String code) {
-	super(code);
-	this.code = code;
+	this(code, null);
    }
 
    /**

@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.core.store;
 
+import java.io.ByteArrayInputStream;
+
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.bio.SocketConnector;
@@ -22,6 +24,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 
@@ -72,4 +75,37 @@ public class HttpResourceStoreTest extends AbstractResourceStoreTest {
 	nonExistingResources.add("kaleidofoundry/it/store/foo");
    }
 
+   @Test
+   @Override
+   public void store() throws ResourceException {
+	try {
+	   resourceStore.store("kaleidofoundry/it/store/toStore.txt", new ResourceHandlerBean("kaleidofoundry/it/store/toStore.txt", new ByteArrayInputStream(
+		   "foo".getBytes())));
+	   fail();
+	} catch (final ResourceException rse) {
+	   assertEquals("store.resource.implementation.readonly", rse.getCode());
+	}
+   }
+
+   @Test
+   @Override
+   public void move() throws ResourceException {
+	try {
+	   resourceStore.move("kaleidofoundry/it/store/foo.txt", "kaleidofoundry/it/store/foo.old");
+	   fail();
+	} catch (final ResourceException rse) {
+	   assertEquals("store.resource.implementation.readonly", rse.getCode());
+	}
+   }
+
+   @Test
+   @Override
+   public void remove() throws ResourceException {
+	try {
+	   resourceStore.remove("kaleidofoundry/it/store/toRemove.txt");
+	   fail();
+	} catch (final ResourceException rse) {
+	   assertEquals("store.resource.implementation.readonly", rse.getCode());
+	}
+   }
 }

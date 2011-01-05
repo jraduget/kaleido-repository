@@ -31,21 +31,29 @@ import java.net.URLConnection;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
-import org.kaleidofoundry.core.lang.annotation.NotImplemented;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * Simple http & https resource store implementation<br/>
- * This implementation is only for read only use<br/>
- * You can extends it and override {@link #doRemove(URI)} and {@link #doStore(URI, ResourceHandler)} to your need, and {@link Declare} your
- * implementation to use it
+ * <br/>
+ * <b>This implementation is only for read only use</b> - the methods store, remove, move will throws {@link ResourceException}<br/>
+ * <br/>
+ * You can create your own resource store, by extending this class and overriding methods :
+ * <ul>
+ * <li>{@link #doRemove(URI)}</li>
+ * <li>{@link #doStore(URI, ResourceHandler)}</li>
+ * </ul>
+ * Then, annotate {@link Declare} your new class to register your implementation
  * 
  * @author Jerome RADUGET
  * @see ResourceContextBuilder enum of context configuration properties available
  */
 @Declare(HttpStorePluginName)
+@Review(category = ReviewCategoryEnum.Improvement, comment = "Create an implementation using commons http client + servlet for store / move / remove methods")
 public class HttpResourceStore extends AbstractResourceStore implements ResourceStore {
 
    /**
@@ -153,9 +161,8 @@ public class HttpResourceStore extends AbstractResourceStore implements Resource
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doRemove(java.net.URI)
     */
    @Override
-   @NotImplemented("remove method is not implemented in HttpResourceStore. Please consult java api doc")
    protected void doRemove(final URI resourceBinding) throws ResourceException {
-	return; // !! exception will be throws due to @NotImplemented !!
+	throw new ResourceException("store.resource.implementation.readonly", getClass().getName());
    }
 
    /*
@@ -163,36 +170,8 @@ public class HttpResourceStore extends AbstractResourceStore implements Resource
     * @see org.kaleidofoundry.core.store.AbstractResourceStore#doStore(java.net.URI, java.io.InputStream)
     */
    @Override
-   @NotImplemented("store method is not implemented in HttpResourceStore. Please consult java api doc")
    protected void doStore(final URI resourceBinding, final ResourceHandler resource) throws ResourceException {
-	// http://java.sun.com/docs/books/tutorial/networking/urls/readingWriting.html
-	// or http://www.javaworld.com/javaworld/javatips/javatip42/jw-Example.java.html
-
-	// OutputStream out = null;
-	// try {
-	// final URL configUrl = resourceBinding.toURL();
-	// final URLConnection urlConnection = configUrl.openConnection();
-	// urlConnection.connect();
-	// out = urlConnection.getOutputStream();
-	// int b;
-	// while ((b = resource.getInputStream().read()) != -1) {
-	// out.write(b);
-	// }
-	// } catch (MalformedURLException mure) {
-	// throw new IllegalStateException(resourceBinding.toString() + " is not an http:// or https:// uri");
-	// } catch (IOException ioe) {
-	// throw new StoreException(ioe);
-	// } finally {
-	// if (out != null) {
-	// try {
-	// out.close();
-	// } catch (IOException closeioe) {
-	// throw new StoreException(closeioe);
-	// }
-	// }
-	// }
-
-	return; // !! exception will be throws due to @NotImplemented !!
+	throw new ResourceException("store.resource.implementation.readonly", getClass().getName());
    }
 
 }

@@ -33,10 +33,10 @@ public abstract class I18nRuntimeException extends CodedRuntimeException {
    private String args[]; // arguments to pass to the message : "user {0} is disconnect"
 
    /**
-    * @param code domain code of the exception
+    * @param code i18n code of the exception
     */
    public I18nRuntimeException(final String code) {
-	super(code, null);
+	super(code);
    }
 
    /**
@@ -44,62 +44,54 @@ public abstract class I18nRuntimeException extends CodedRuntimeException {
     * @param args
     */
    public I18nRuntimeException(final String code, final String... args) {
-	super(code, null);
-	this.args = args;
+	this(code, (Locale) null, args);
    }
 
    /**
-    * @param code domain code of the exception
+    * @param code i18n code of the exception
     * @param cause
     */
    public I18nRuntimeException(final String code, final Throwable cause) {
-	super(code, null, cause);
-	args = null;
+	this(code, cause, null, (String[]) null);
    }
 
    /**
-    * @param code domain code of the exception
+    * @param code i18n code of the exception
     * @param cause
     * @param args message tokens arguments
     */
    public I18nRuntimeException(final String code, final Throwable cause, final String... args) {
-	super(code, null, cause);
-	this.args = args;
+	this(code, cause, null, args);
    }
 
    /**
-    * @param code domain code of the exception
+    * @param code i18n code of the exception
     * @param locale user locale
     */
    public I18nRuntimeException(final String code, final Locale locale) {
-	super(code, null);
-	this.locale = locale;
+	this(code, locale, (String[]) null);
    }
 
    /**
-    * @param code code of the exception
+    * @param code i18n code of the exception
     * @param locale user locale
     * @param args token value to replace
     */
    public I18nRuntimeException(final String code, final Locale locale, final String... args) {
-	super(code, null);
-	this.args = args;
-	this.locale = locale;
+	this(code, null, locale, args);
    }
 
    /**
-    * @param code code of the exception
+    * @param code i18n code of the exception
     * @param cause exception cause
     * @param locale user locale
     */
    public I18nRuntimeException(final String code, final Throwable cause, final Locale locale) {
-	super(code, null, cause);
-	args = null;
-	this.locale = locale;
+	this(code, cause, locale, (String[]) null);
    }
 
    /**
-    * @param code code of the exception
+    * @param code i18n code of the exception
     * @param cause exception cause
     * @param locale user locale
     * @param args message tokens arguments
@@ -128,11 +120,12 @@ public abstract class I18nRuntimeException extends CodedRuntimeException {
     * @return Message resource bundle
     */
    protected I18nMessages getMessages() {
-	// specified locale in exception
+	// locale is specified
 	if (getLocale() != null) {
 	   return I18nMessagesFactory.provides(getI18nBundleName(), getLocale());
-	   // default user / server locale compute by I18nMessagesFactory
-	} else {
+	}
+	// no locale : default user / server locale compute by I18nMessagesFactory
+	else {
 	   return I18nMessagesFactory.provides(getI18nBundleName());
 	}
    }

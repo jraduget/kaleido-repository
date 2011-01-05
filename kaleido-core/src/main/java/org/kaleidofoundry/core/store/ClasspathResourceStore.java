@@ -29,7 +29,7 @@ import org.kaleidofoundry.core.system.JavaSystemHelper;
 /**
  * Classpath file resource store implementation<br/>
  * <br/>
- * <b>this store is for readonly use</b>: the methods store, remove, move will throws {@link IllegalStateException}
+ * <b>This implementation is only for read only use</b> - the methods store, remove, move will throws {@link ResourceException}<br/>
  * 
  * @author Jerome RADUGET
  * @see ResourceContextBuilder enum of context configuration properties available

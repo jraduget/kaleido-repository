@@ -20,71 +20,66 @@ import java.util.Locale;
 import org.kaleidofoundry.core.lang.CodedException;
 
 /**
+ * <b>I18n Coded exception</b><br/>
  * <p>
- * Coded exception (unique code, used to identified precisely an exception. Can be used by service layer error, web service layer error
- * (fault code...)
- * </p>
- * <p>
- * Message of the exception is computed by an {@link DefaultMessageBundle}, using context user {@link Locale} (or default locale is user
- * have no context)
+ * An i18n coded exception is used to identified precisely an exception by a code and a i18n message.<br/>
+ * The exception code is bind to an i18n message using {@link I18nMessagesFactory}, and user specific {@link Locale}<br/>
+ * <br/>
+ * This exception can be extended and used in your service layer error, web service layer error (fault code...)
  * </p>
  * 
  * @author Jerome RADUGET
+ * @see I18nMessagesFactory
  */
 public abstract class I18nException extends CodedException {
 
    private static final long serialVersionUID = 6623119392420767038L;
 
-   private Locale locale; // user locale if specified
-   private String args[]; // arguments to pass to the message : "user {0} is disconnect"
+   private final Locale locale; // user locale if specified
+   private final String args[]; // arguments to pass to the message : "user {0} is disconnect"
 
    /**
-    * @param code domain code of the exception
+    * @param code i18n code of the exception
     */
    public I18nException(final String code) {
-	super(code, null);
+	this(code, (String[]) null);
    }
 
    /**
-    * @param code
+    * @param code i18n code of the exception
     * @param args
     */
    public I18nException(final String code, final String... args) {
-	super(code, null);
-	this.args = args;
+	this(code, (Locale) null, args);
    }
 
    /**
-    * @param code domain code of the exception
+    * @param code i18n code of the exception
     * @param cause
     */
    public I18nException(final String code, final Throwable cause) {
-	super(code, null, cause);
-	args = null;
+	this(code, cause, null, (String[]) null);
    }
 
    /**
-    * @param code domain code of the exception
+    * @param code i18n code of the exception
     * @param cause
     * @param args message tokens arguments
     */
    public I18nException(final String code, final Throwable cause, final String... args) {
-
-	super(code, null, cause);
-	this.args = args;
+	this(code, cause, null, args);
    }
 
    /**
-    * @param code domain code of the exception
+    * @param code i18n code of the exception
     * @param locale user locale
     */
    public I18nException(final String code, final Locale locale) {
-	super(code, null);
-	this.locale = locale;
+	this(code, locale, (String[]) null);
    }
 
    /**
-    * @param code business code of the exception
+    * @param code i18n code of the exception
     * @param locale user locale
     * @param args token value to replace
     */
@@ -95,24 +90,21 @@ public abstract class I18nException extends CodedException {
    }
 
    /**
-    * @param code business code of the exception
+    * @param code i18n code of the exception
     * @param cause exception cause
     * @param locale user locale
     */
    public I18nException(final String code, final Throwable cause, final Locale locale) {
-	super(code, null, cause);
-	args = null;
-	this.locale = locale;
+	this(code, cause, locale, (String[]) null);
    }
 
    /**
-    * @param code business code of the exception
+    * @param code i18n code of the exception
     * @param cause exception cause
     * @param locale user locale
     * @param args message tokens arguments
     */
    public I18nException(final String code, final Throwable cause, final Locale locale, final String... args) {
-
 	super(code, null, cause);
 	this.args = args;
 	this.locale = locale;
@@ -136,11 +128,12 @@ public abstract class I18nException extends CodedException {
     * @return Message resource bundle
     */
    protected I18nMessages getMessages() {
-	// specified locale in exception
+	// locale is specified
 	if (getLocale() != null) {
 	   return I18nMessagesFactory.provides(getI18nBundleName(), getLocale());
-	   // default user / server locale compute by I18nMessagesFactory
-	} else {
+	}
+	// no locale : default user / server locale compute by I18nMessagesFactory
+	else {
 	   return I18nMessagesFactory.provides(getI18nBundleName());
 	}
    }
