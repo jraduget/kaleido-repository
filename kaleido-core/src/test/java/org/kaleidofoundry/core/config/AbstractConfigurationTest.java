@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.lang.NotNullException;
-import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.StoreException;
 
 /**
  * @author Jerome RADUGET
@@ -44,11 +44,11 @@ public abstract class AbstractConfigurationTest extends Assert {
     * create configuration instance calling abstract method {@link #newInstance()}<br/>
     * and load it after creation
     * 
-    * @throws ResourceException
+    * @throws StoreException
     * @throws URISyntaxException
     */
    @Before
-   public void setup() throws ResourceException, URISyntaxException {
+   public void setup() throws StoreException, URISyntaxException {
 	// disable i18n message bundle control to speed up test (no need of a local derby instance startup)
 	I18nMessagesFactory.disableJpaControl();
 	// create and load instance
@@ -61,10 +61,10 @@ public abstract class AbstractConfigurationTest extends Assert {
    /**
     * unload and cleanup internal configuration cache
     * 
-    * @throws ResourceException
+    * @throws StoreException
     */
    @After
-   public void cleanup() throws ResourceException {
+   public void cleanup() throws StoreException {
 	if (configuration != null) {
 	   configuration.unload();
 	}
@@ -74,10 +74,10 @@ public abstract class AbstractConfigurationTest extends Assert {
 
    /**
     * @return the configuration manager to load and test
-    * @throws ResourceException
+    * @throws StoreException
     * @throws URISyntaxException
     */
-   protected abstract Configuration newInstance() throws ResourceException, URISyntaxException;
+   protected abstract Configuration newInstance() throws StoreException, URISyntaxException;
 
    @Test
    public void isLoaded() {
@@ -86,7 +86,7 @@ public abstract class AbstractConfigurationTest extends Assert {
    }
 
    @Test
-   public void load() throws ResourceException, URISyntaxException {
+   public void load() throws StoreException, URISyntaxException {
 	final Configuration configuration = newInstance();
 	assertNotNull(configuration);
 	assertFalse(configuration.isLoaded());
@@ -95,7 +95,7 @@ public abstract class AbstractConfigurationTest extends Assert {
    }
 
    @Test
-   public void unload() throws ResourceException, URISyntaxException {
+   public void unload() throws StoreException, URISyntaxException {
 	final Configuration configuration = newInstance();
 	assertNotNull(configuration);
 	assertFalse(configuration.isLoaded());
@@ -106,7 +106,7 @@ public abstract class AbstractConfigurationTest extends Assert {
    }
 
    @Test
-   public void store() throws ResourceException, URISyntaxException {
+   public void store() throws StoreException, URISyntaxException {
 
 	assertNotNull(configuration);
 
@@ -118,7 +118,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 	   fail();
 	} catch (final IllegalStateException iste) {
 	}
-	
+
 	// try {
 	// configuration.store();
 	// } catch (final IllegalStateException iste) {
@@ -127,7 +127,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 
 	// then can't test store anymore
 	// -> store can be a classpath resource and store method is not handled
-	// -> store() is tested in resource store module
+	// -> store() is tested in file store module
    }
 
    @Test
@@ -324,7 +324,7 @@ public abstract class AbstractConfigurationTest extends Assert {
    }
 
    @Test
-   public void addConfiguration() throws ResourceException, URISyntaxException {
+   public void addConfiguration() throws StoreException, URISyntaxException {
 	assertNotNull(configuration);
 	assertTrue(configuration.isLoaded());
 
@@ -361,7 +361,7 @@ public abstract class AbstractConfigurationTest extends Assert {
    }
 
    @Test
-   public void extractConfiguration() throws ResourceException, URISyntaxException {
+   public void extractConfiguration() throws StoreException, URISyntaxException {
 	assertNotNull(configuration);
 	assertTrue(configuration.isLoaded());
 

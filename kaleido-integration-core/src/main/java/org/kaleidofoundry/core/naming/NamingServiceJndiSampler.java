@@ -20,7 +20,7 @@ import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
-import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.util.ThrowableHelper;
 
 /**
@@ -36,7 +36,7 @@ public class NamingServiceJndiSampler extends AbstractJavaSamplerClient {
 	// load configuration & context
 	try {
 	   ConfigurationFactory.provides("myConfig", context.getParameter(ConfigurationUri));
-	} catch (ResourceException rse) {
+	} catch (StoreException rse) {
 	   throw new IllegalStateException(rse);
 	} catch (RuntimeException rte) {
 	   throw rte;
@@ -47,7 +47,7 @@ public class NamingServiceJndiSampler extends AbstractJavaSamplerClient {
    public void teardownTest(JavaSamplerContext context) {
 	try {
 	   ConfigurationFactory.destroy("myConfig");
-	} catch (ResourceException rse) {
+	} catch (StoreException rse) {
 	   throw new IllegalStateException(rse);
 	}
    }

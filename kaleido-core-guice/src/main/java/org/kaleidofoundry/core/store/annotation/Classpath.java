@@ -23,13 +23,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import org.kaleidofoundry.core.store.ClasspathResourceStore;
-import org.kaleidofoundry.core.store.ResourceStore;
+import org.kaleidofoundry.core.store.ClasspathFileStore;
+import org.kaleidofoundry.core.store.FileStore;
 
 import com.google.inject.BindingAnnotation;
 
 /**
- * Guice binding annotation for binding a {@link ResourceStore} to {@link ClasspathResourceStore}
+ * Guice binding annotation for binding a {@link FileStore} to {@link ClasspathFileStore}
  * 
  * @author Jerome RADUGET
  */

@@ -18,7 +18,7 @@ package org.kaleidofoundry.core.config;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.StoreException;
 
 /**
  * @author Jerome RADUGET
@@ -26,7 +26,7 @@ import org.kaleidofoundry.core.store.ResourceException;
 public class ConfigurationFactoryTest extends Assert {
 
    @Test
-   public void providePropertiesConfiguration() throws ResourceException {
+   public void providePropertiesConfiguration() throws StoreException {
 
 	final String configId = "propCpConfig";
 	final String configResourceUri = "classpath:/config/test.properties";
@@ -39,7 +39,7 @@ public class ConfigurationFactoryTest extends Assert {
    }
 
    @Test
-   public void provideXmlPropertiesConfiguration() throws ResourceException {
+   public void provideXmlPropertiesConfiguration() throws StoreException {
 
 	final String configId = "propXmlCpConfig";
 	final String configResourceUri = "classpath:/config/test.properties.xml";
@@ -52,7 +52,7 @@ public class ConfigurationFactoryTest extends Assert {
    }
 
    @Test
-   public void provideXmlConfiguration() throws ResourceException {
+   public void provideXmlConfiguration() throws StoreException {
 
 	final String configId = "xmlCpConfig";
 	final String configResourceUri = "classpath:/config/test.xml";
@@ -65,7 +65,7 @@ public class ConfigurationFactoryTest extends Assert {
    }
 
    @Test
-   public void provideJavaSystemConfiguration() throws ResourceException {
+   public void provideJavaSystemConfiguration() throws StoreException {
 
 	System.getProperties().setProperty("application.name", "app");
 	System.getProperties().setProperty("application.description", "description of the application...");

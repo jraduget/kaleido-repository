@@ -30,7 +30,6 @@ public interface CacheConstants {
    static enum DefaultCacheProviderEnum {
 
 	/* If you change an enum name, please changed below ;-) */
-
 	ehCache1x,
 	jbossCache3x,
 	infinispan4x,

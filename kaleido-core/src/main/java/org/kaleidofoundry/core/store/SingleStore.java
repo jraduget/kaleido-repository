@@ -66,36 +66,36 @@ public interface SingleStore<B, R> {
     * multi-thread access,it have to be synchronized
     * 
     * @return current instance
-    * @throws ResourceException
+    * @throws StoreException
     */
    @NotNull
-   R get() throws ResourceException;
+   R get() throws StoreException;
 
    /**
     * unload it <br/>
     * multi-thread access,it have to be synchronized
     * 
-    * @throws ResourceException
+    * @throws StoreException
     */
-   void unload() throws ResourceException;
+   void unload() throws StoreException;
 
    /**
     * reload it <br/>
     * multi-thread access,it have to be synchronized
     * 
     * @return current instance
-    * @throws ResourceException
+    * @throws StoreException
     */
    @NotNull
-   R reload() throws ResourceException;
+   R reload() throws StoreException;
 
    /**
     * store updates on current R instance<br/>
     * multi-thread access,it have to be synchronized
     * 
     * @return current instance
-    * @throws ResourceException
+    * @throws StoreException
     */
    @NotNull
-   R store() throws ResourceException;
+   R store() throws StoreException;
 }

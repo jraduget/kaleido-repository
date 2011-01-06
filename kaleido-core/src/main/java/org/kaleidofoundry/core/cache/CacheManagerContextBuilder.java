@@ -41,12 +41,12 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td>full class name, which will give the class loader to use</td>
  * </tr>
  * <tr>
- * <td>resourceUri</td>
+ * <td>fileStoreUri</td>
  * <td>uri of the external cache configuration file to use</td>
  * </tr>
  * <tr>
- * <td>resourceStoreRef</td>
- * <td>name of the resource store context to use, in order to load the external cache configuration</td>
+ * <td>fileStoreRef</td>
+ * <td>name of the file store context to use, in order to load the external cache configuration</td>
  * </tr>
  * </table>
  * </p>
@@ -63,9 +63,9 @@ public class CacheManagerContextBuilder extends AbstractRuntimeContextBuilder<Ca
    /** full class name, which will give the class loader to use */
    public static final String Classloader = "classloader";
    /** uri of the configuration file to use */
-   public static final String ResourceUri = "resourceUri";
-   /** name of the resource store context to use, in order to load configuration */
-   public static final String ResourceStoreRef = "resourceStoreRef";
+   public static final String FileStoreUri = "fileStoreUri";
+   /** name of the store context to use, in order to load configuration */
+   public static final String FileStoreRef = "fileStoreRef";
 
    /**
     * 
@@ -156,20 +156,20 @@ public class CacheManagerContextBuilder extends AbstractRuntimeContextBuilder<Ca
    }
 
    /**
-    * @param resourceUri
+    * @param fileStoreUri
     * @return current builder instance
     */
-   public CacheManagerContextBuilder withResourceUri(final String resourceUri) {
-	getContextParameters().put(ResourceUri, resourceUri);
+   public CacheManagerContextBuilder withFileStoreUri(final String fileStoreUri) {
+	getContextParameters().put(FileStoreUri, fileStoreUri);
 	return this;
    }
 
    /**
-    * @param resourceStoreRef
+    * @param fileStoreRef
     * @return current builder instance
     */
-   public CacheManagerContextBuilder withResourceStoreRef(final String resourceStoreRef) {
-	getContextParameters().put(ResourceStoreRef, resourceStoreRef);
+   public CacheManagerContextBuilder withFileStoreRef(final String fileStoreRef) {
+	getContextParameters().put(FileStoreRef, fileStoreRef);
 	return this;
    }
 }

@@ -20,10 +20,10 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.lang.annotation.Review;
-import org.kaleidofoundry.core.store.GuiceClasspathResourceStore;
-import org.kaleidofoundry.core.store.GuiceFtpResourceStore;
-import org.kaleidofoundry.core.store.GuiceHttpResourceStore;
-import org.kaleidofoundry.core.store.ResourceStore;
+import org.kaleidofoundry.core.store.GuiceClasspathFileStore;
+import org.kaleidofoundry.core.store.GuiceFtpStore;
+import org.kaleidofoundry.core.store.GuiceHttpFileStore;
+import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.annotation.Http;
 
 import com.google.inject.AbstractModule;
@@ -42,43 +42,43 @@ import com.google.inject.name.Names;
 public class GuiceSample extends Assert {
 
    private Injector injector;
-   private ResourceStoreSample resourceStoreSample;
+   private FileStoreSample fileStoreSample;
 
    @Before
    public void setup() {
-	injector = Guice.createInjector(new ResourceStoreModule());
-	resourceStoreSample = injector.getInstance(ResourceStoreSample.class);
+	injector = Guice.createInjector(new FileStoreModule());
+	fileStoreSample = injector.getInstance(FileStoreSample.class);
    }
 
    @Test
    public void testClassicInjection() {
-	assertNotNull(resourceStoreSample);
-	assertNotNull(resourceStoreSample.getResourceStore());
-	assertEquals(GuiceClasspathResourceStore.class, resourceStoreSample.getResourceStore().getClass());
+	assertNotNull(fileStoreSample);
+	assertNotNull(fileStoreSample.getFileStore());
+	assertEquals(GuiceClasspathFileStore.class, fileStoreSample.getFileStore().getClass());
    }
 
    @Test
    public void testNamedInjection() {
-	assertNotNull(resourceStoreSample);
-	assertNotNull(resourceStoreSample.getFtpResourceStore());
-	assertEquals(GuiceFtpResourceStore.class, resourceStoreSample.getFtpResourceStore().getClass());
+	assertNotNull(fileStoreSample);
+	assertNotNull(fileStoreSample.getFtpStore());
+	assertEquals(GuiceFtpStore.class, fileStoreSample.getFtpStore().getClass());
    }
 
    @Test
    public void testSingleton() {
-	assertNotNull(resourceStoreSample);
-	assertNotNull(resourceStoreSample.getResourceStore());
-	assertEquals(GuiceClasspathResourceStore.class, resourceStoreSample.getResourceStore().getClass());
+	assertNotNull(fileStoreSample);
+	assertNotNull(fileStoreSample.getFileStore());
+	assertEquals(GuiceClasspathFileStore.class, fileStoreSample.getFileStore().getClass());
 	// singleton test - will be true only if it is same injector instance that create the new instance
-	final ResourceStoreSample newOne = injector.getInstance(ResourceStoreSample.class);
-	assertSame(resourceStoreSample.getResourceStore(), newOne.getResourceStore());
+	final FileStoreSample newOne = injector.getInstance(FileStoreSample.class);
+	assertSame(fileStoreSample.getFileStore(), newOne.getFileStore());
    }
 
    @Test
    public void testGenericInjection() {
-	assertNotNull(resourceStoreSample);
-	assertNotNull(resourceStoreSample.getServiceSample());
-	assertEquals(ServiceStringSample.class, resourceStoreSample.getServiceSample().getClass());
+	assertNotNull(fileStoreSample);
+	assertNotNull(fileStoreSample.getServiceSample());
+	assertEquals(ServiceStringSample.class, fileStoreSample.getServiceSample().getClass());
    }
 }
 
@@ -87,19 +87,19 @@ public class GuiceSample extends Assert {
  * 
  * @author Jerome RADUGET
  */
-class ResourceStoreModule extends AbstractModule {
+class FileStoreModule extends AbstractModule {
    @Override
    public void configure() {
 	// bind classic interface to implementation
-	bind(ResourceStore.class).to(GuiceClasspathResourceStore.class).in(Scopes.SINGLETON);
-	bind(ResourceStore.class).annotatedWith(Http.class).to(GuiceHttpResourceStore.class).in(Scopes.SINGLETON);
+	bind(FileStore.class).to(GuiceClasspathFileStore.class).in(Scopes.SINGLETON);
+	bind(FileStore.class).annotatedWith(Http.class).to(GuiceHttpFileStore.class).in(Scopes.SINGLETON);
 
 	// bind generic interface to implementation
 	bind(new TypeLiteral<ServiceSample<String>>() {
 	}).to(ServiceStringSample.class);
 
 	// bind interface to implementation by name
-	bind(ResourceStore.class).annotatedWith(Names.named("ftp")).to(GuiceFtpResourceStore.class);
+	bind(FileStore.class).annotatedWith(Names.named("ftp")).to(GuiceFtpStore.class);
 
    }
 }
@@ -109,25 +109,25 @@ class ResourceStoreModule extends AbstractModule {
  * 
  * @author Jerome RADUGET
  */
-class ResourceStoreSample {
+class FileStoreSample {
 
-   private final ResourceStore resourceStore;
-   private final ResourceStore ftpResourceStore;
+   private final FileStore fileStore;
+   private final FileStore ftpStore;
    private final ServiceSample<String> serviceSample;
 
    @Inject
-   public ResourceStoreSample(final ResourceStore resourceStore, @Named("ftp") final ResourceStore ftpResourceStore, final ServiceSample<String> serviceSample) {
-	this.resourceStore = resourceStore;
+   public FileStoreSample(final FileStore fileStore, @Named("ftp") final FileStore ftpStore, final ServiceSample<String> serviceSample) {
+	this.fileStore = fileStore;
 	this.serviceSample = serviceSample;
-	this.ftpResourceStore = ftpResourceStore;
+	this.ftpStore = ftpStore;
    }
 
-   public ResourceStore getResourceStore() {
-	return resourceStore;
+   public FileStore getFileStore() {
+	return fileStore;
    }
 
-   public ResourceStore getFtpResourceStore() {
-	return ftpResourceStore;
+   public FileStore getFtpStore() {
+	return ftpStore;
    }
 
    public ServiceSample<String> getServiceSample() {

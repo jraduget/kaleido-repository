@@ -2,20 +2,20 @@
 <!-- To view this file, download free mind mapping software FreeMind from http://freemind.sourceforge.net -->
 <node COLOR="#000000" CREATED="1262523247000" ID="Freemind_Link_38240127" MODIFIED="1279799867260" TEXT="KaleidoFoundry core">
 <font BOLD="true" ITALIC="true" NAME="Dialog" SIZE="14"/>
-<node COLOR="#000000" CREATED="1263130504000" ID="Freemind_Link_38815464" MODIFIED="1277133868443" POSITION="left" TEXT="resource store">
+<node COLOR="#000000" CREATED="1263130504000" ID="Freemind_Link_38815464" MODIFIED="1277133868443" POSITION="left" TEXT="file store">
 <font BOLD="true" NAME="Dialog" SIZE="14"/>
 <node CREATED="1274170058864" ID="ID_1594601089" MODIFIED="1277133566210" STYLE="fork" TEXT="objectives">
 <node CREATED="1274170066317" ID="ID_1128149001" MODIFIED="1277065083655" STYLE="bubble" TEXT="to provide an uniform access to a resource file (configuration, template, ...)"/>
 <node CREATED="1274170094129" ID="ID_1172682028" MODIFIED="1277065000674" STYLE="bubble" TEXT="to support different back end : file system, ftp, http, clob, ..."/>
 </node>
 <node CREATED="1265977562627" ID="Freemind_Link_72346299" MODIFIED="1288858031797" TEXT="implementations">
-<node COLOR="#338800" CREATED="1274170207846" ID="ID_1485872953" MODIFIED="1274172597550" TEXT="ClasspathResourceStore"/>
-<node COLOR="#338800" CREATED="1274170224096" ID="ID_1332461641" MODIFIED="1274172597550" TEXT="FileSystemResourceStore"/>
-<node COLOR="#338800" CREATED="1274170233705" ID="ID_977496062" MODIFIED="1274172597550" TEXT="FtpResourceStore"/>
-<node COLOR="#338800" CREATED="1274170241752" ID="ID_1332115076" MODIFIED="1274172597550" TEXT="HttpResourceStore"/>
-<node COLOR="#338800" CREATED="1274170252299" ID="ID_1390417665" MODIFIED="1274172597534" TEXT="JpaResourceStore"/>
-<node COLOR="#338800" CREATED="1274170272220" ID="ID_204522737" MODIFIED="1274172597534" TEXT="MemoryResourceStore"/>
-<node COLOR="#ff0000" CREATED="1288858033219" ID="ID_188508210" MODIFIED="1288858070000" TEXT="SecureFtpResourceStore"/>
+<node COLOR="#338800" CREATED="1274170207846" ID="ID_1485872953" MODIFIED="1274172597550" TEXT="ClasspathFileStore"/>
+<node COLOR="#338800" CREATED="1274170224096" ID="ID_1332461641" MODIFIED="1274172597550" TEXT="FileSystemStore"/>
+<node COLOR="#338800" CREATED="1274170233705" ID="ID_977496062" MODIFIED="1274172597550" TEXT="FtpStore"/>
+<node COLOR="#338800" CREATED="1274170241752" ID="ID_1332115076" MODIFIED="1274172597550" TEXT="HttpFileStore"/>
+<node COLOR="#338800" CREATED="1274170252299" ID="ID_1390417665" MODIFIED="1274172597534" TEXT="JpaFileStore"/>
+<node COLOR="#338800" CREATED="1274170272220" ID="ID_204522737" MODIFIED="1274172597534" TEXT="MemoryFileStore"/>
+<node COLOR="#ff0000" CREATED="1288858033219" ID="ID_188508210" MODIFIED="1288858070000" TEXT="SecureFtpStore"/>
 <node CREATED="1277132539498" ID="ID_341829723" MODIFIED="1277132541076" TEXT="..."/>
 </node>
 </node>
@@ -49,7 +49,7 @@
 <node CREATED="1274171777061" ID="ID_611464567" LINK="#Freemind_Link_38802849" MODIFIED="1279693110231" STYLE="bubble" TEXT="to allow transparent use in a cluster (it uses cache stack, define your own cache policies)">
 <font NAME="SansSerif" SIZE="12"/>
 </node>
-<node CREATED="1265977948585" ID="Freemind_Link_619061248" LINK="#Freemind_Link_38815464" MODIFIED="1277133868443" STYLE="bubble" TEXT="based on resource store (file://, http://, ftp://, jpa:/ ...) to access configuration datas (xml, prop,...)">
+<node CREATED="1265977948585" ID="Freemind_Link_619061248" LINK="#Freemind_Link_38815464" MODIFIED="1277133868443" STYLE="bubble" TEXT="based on file store (file://, http://, ftp://, jpa:/ ...) to access configuration datas (xml, prop,...)">
 <font NAME="SansSerif" SIZE="12"/>
 </node>
 </node>
@@ -75,7 +75,7 @@
 <node CREATED="1265977808380" ID="Freemind_Link_30103298" MODIFIED="1289658080374" STYLE="bubble" TEXT="to handle i18n messages with tokens, extending standard jdk resource bundle"/>
 <node CREATED="1265977857365" ID="Freemind_Link_1571835055" MODIFIED="1277119504285" STYLE="bubble" TEXT="to expose and manage configuration via jmx, web, web service"/>
 <node CREATED="1277119466972" ID="ID_1145627297" LINK="#Freemind_Link_38802849" MODIFIED="1279693140623" STYLE="bubble" TEXT="to allow transparent use in a cluster (it uses cache stack, define your own cache policies)"/>
-<node CREATED="1265977874131" ID="Freemind_Link_1998347829" LINK="#Freemind_Link_38815464" MODIFIED="1277133398274" STYLE="bubble" TEXT="It is based on resource store (file://, http://, ftp://, jpa:/ ...) to access properties datas"/>
+<node CREATED="1265977874131" ID="Freemind_Link_1998347829" LINK="#Freemind_Link_38815464" MODIFIED="1277133398274" STYLE="bubble" TEXT="It is based on file store (file://, http://, ftp://, jpa:/ ...) to access properties datas"/>
 <node CREATED="1277131387990" ID="ID_225512285" MODIFIED="1279693159451" STYLE="bubble" TEXT="to introduce I18nException with error code, which extends standard Exception &amp; RuntimeException"/>
 </node>
 <node COLOR="#000000" CREATED="1263131048000" ID="Freemind_Link_38815915" MODIFIED="1277065046527" TEXT="implementations">
@@ -110,7 +110,7 @@
 <node COLOR="#000000" CREATED="1262524574000" ID="Freemind_Link_38240772" MODIFIED="1289658240906" STYLE="bubble" TEXT="to provide user, an extensible plugin registry (interface &amp; implementation), that allow to register yours">
 <font NAME="Dialog" SIZE="12"/>
 </node>
-<node CREATED="1277120760151" ID="ID_983704314" MODIFIED="1279693358939" STYLE="bubble" TEXT="kaleido internaly use this plugin (for resource store, cache, configuration, i18n, ...)"/>
+<node CREATED="1277120760151" ID="ID_983704314" MODIFIED="1279693358939" STYLE="bubble" TEXT="kaleido internaly use this plugin (for file store, cache, configuration, i18n, ...)"/>
 <node CREATED="1274174794647" ID="ID_213687145" MODIFIED="1277129845046" STYLE="bubble" TEXT="kaleido user / developper / constributor can add / extend / contribute with its own implem. for config, cache..."/>
 </node>
 <node COLOR="#000000" CREATED="1262524560000" ID="Freemind_Link_38240769" MODIFIED="1277120862651" TEXT="implementations">

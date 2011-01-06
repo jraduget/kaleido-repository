@@ -21,12 +21,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.Context;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.store.ClasspathResourceStore;
-import org.kaleidofoundry.core.store.FileSystemResourceStore;
-import org.kaleidofoundry.core.store.FtpResourceStore;
-import org.kaleidofoundry.core.store.HttpResourceStore;
-import org.kaleidofoundry.core.store.ResourceStore;
-import org.kaleidofoundry.core.store.ResourceStoreConstants;
+import org.kaleidofoundry.core.store.ClasspathFileStore;
+import org.kaleidofoundry.core.store.FileStore;
+import org.kaleidofoundry.core.store.FileStoreConstants;
+import org.kaleidofoundry.core.store.FileSystemStore;
+import org.kaleidofoundry.core.store.FtpStore;
+import org.kaleidofoundry.core.store.HttpFileStore;
 import org.kaleidofoundry.core.store.annotation.Classpath;
 import org.kaleidofoundry.core.store.annotation.File;
 import org.kaleidofoundry.core.store.annotation.Ftp;
@@ -48,75 +48,75 @@ public class RawResourceModuleTest extends Assert {
    @Before
    public void setup() {
 	// guice injector
-	injector = Guice.createInjector(new org.kaleidofoundry.core.store.module.ResourceStoreModule());
+	injector = Guice.createInjector(new org.kaleidofoundry.core.store.module.FileStoreModule());
 	// test guice instance
 	sample = injector.getInstance(Sample.class);
    }
 
    @Test
-   public void defaultResourceStore() {
+   public void defaultFileStore() {
 	assertNotNull(sample);
-	assertNotNull(sample.defaultResourceStore);
-	assertTrue(sample.defaultResourceStore instanceof FileSystemResourceStore);
+	assertNotNull(sample.defaultStore);
+	assertTrue(sample.defaultStore instanceof FileSystemStore);
    }
 
-   // ** find resourceStore by binding annotation **********************************************************************
+   // ** find fileStore by binding annotation **********************************************************************
    @Test
-   public void fileResourceStoreByAnnotation() {
+   public void fileStoreByAnnotation() {
 	assertNotNull(sample);
-	assertNotNull(sample.fileSystemResourceStore);
-	assertTrue(sample.fileSystemResourceStore instanceof FileSystemResourceStore);
-   }
-
-   @Test
-   public void ftpResourceStoreByAnnotation() {
-	assertNotNull(sample);
-	assertNotNull(sample.ftpResourceStore);
-	assertTrue(sample.ftpResourceStore instanceof FtpResourceStore);
+	assertNotNull(sample.fileSystemStore);
+	assertTrue(sample.fileSystemStore instanceof FileSystemStore);
    }
 
    @Test
-   public void httpResourceStoreByAnnotation() {
+   public void ftpStoreByAnnotation() {
 	assertNotNull(sample);
-	assertNotNull(sample.httpResourceStore);
-	assertTrue(sample.httpResourceStore instanceof HttpResourceStore);
+	assertNotNull(sample.ftpStore);
+	assertTrue(sample.ftpStore instanceof FtpStore);
    }
 
    @Test
-   public void classpathResourceStoreByAnnotation() {
+   public void httpFileStoreByAnnotation() {
 	assertNotNull(sample);
-	assertNotNull(sample.classpathResourceStore);
-	assertTrue(sample.classpathResourceStore instanceof ClasspathResourceStore);
-   }
-
-   // ** find resourceStore by qualifier name **************************************************************************
-
-   @Test
-   public void fileResourceStoreByName() {
-	assertNotNull(sample);
-	assertNotNull(sample.fileSystemResourceStore);
-	assertTrue(sample.fileSystemResourceStore instanceof FileSystemResourceStore);
+	assertNotNull(sample.httpStore);
+	assertTrue(sample.httpStore instanceof HttpFileStore);
    }
 
    @Test
-   public void ftpResourceStoreByName() {
+   public void classpathFileStoreByAnnotation() {
 	assertNotNull(sample);
-	assertNotNull(sample.ftpNamedResourceStore);
-	assertTrue(sample.ftpNamedResourceStore instanceof FtpResourceStore);
+	assertNotNull(sample.classpathStore);
+	assertTrue(sample.classpathStore instanceof ClasspathFileStore);
+   }
+
+   // ** find fileStore by qualifier name **************************************************************************
+
+   @Test
+   public void fileFileStoreByName() {
+	assertNotNull(sample);
+	assertNotNull(sample.fileSystemStore);
+	assertTrue(sample.fileSystemStore instanceof FileSystemStore);
    }
 
    @Test
-   public void httpResourceStoreByName() {
+   public void ftpStoreByName() {
 	assertNotNull(sample);
-	assertNotNull(sample.httpNamedResourceStore);
-	assertTrue(sample.httpNamedResourceStore instanceof HttpResourceStore);
+	assertNotNull(sample.ftpNamedStore);
+	assertTrue(sample.ftpNamedStore instanceof FtpStore);
    }
 
    @Test
-   public void classpathResourceStoreByName() {
+   public void httpFileStoreByName() {
 	assertNotNull(sample);
-	assertNotNull(sample.classpathNamedResourceStore);
-	assertTrue(sample.classpathNamedResourceStore instanceof ClasspathResourceStore);
+	assertNotNull(sample.httpNamedStore);
+	assertTrue(sample.httpNamedStore instanceof HttpFileStore);
+   }
+
+   @Test
+   public void classpathFileStoreByName() {
+	assertNotNull(sample);
+	assertNotNull(sample.classpathNamedStore);
+	assertTrue(sample.classpathNamedStore instanceof ClasspathFileStore);
    }
 
 }
@@ -126,36 +126,36 @@ public class RawResourceModuleTest extends Assert {
  */
 class Sample {
 
-   // default resource store
+   // default file store
    @Inject
-   ResourceStore defaultResourceStore;
+   FileStore defaultStore;
 
    // injection using custom binding guice annotation
    @Inject
    @Ftp
-   ResourceStore ftpResourceStore;
+   FileStore ftpStore;
    @Inject
    @Http
-   ResourceStore httpResourceStore;
+   FileStore httpStore;
    @Inject
    @File
-   ResourceStore fileSystemResourceStore;
+   FileStore fileSystemStore;
    @Inject
    @Classpath
-   ResourceStore classpathResourceStore;
+   FileStore classpathStore;
 
    // injection using custom binding guice named
    @Inject
-   @Named(ResourceStoreConstants.FtpStorePluginName)
-   ResourceStore ftpNamedResourceStore;
+   @Named(FileStoreConstants.FtpStorePluginName)
+   FileStore ftpNamedStore;
    @Inject
-   @Named(ResourceStoreConstants.HttpStorePluginName)
-   ResourceStore httpNamedResourceStore;
+   @Named(FileStoreConstants.HttpStorePluginName)
+   FileStore httpNamedStore;
    @Inject
-   @Named(ResourceStoreConstants.FileSystemStorePluginName)
-   ResourceStore fileNamedSystemResourceStore;
+   @Named(FileStoreConstants.FileSystemStorePluginName)
+   FileStore fileNamedSystemStore;
    @Inject
-   @Named(ResourceStoreConstants.ClasspathStorePluginName)
-   ResourceStore classpathNamedResourceStore;
+   @Named(FileStoreConstants.ClasspathStorePluginName)
+   FileStore classpathNamedStore;
 
 }

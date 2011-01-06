@@ -34,26 +34,4 @@ public interface PluginConstants {
    /** Plugin annotation processor output plugin implementation file, used for plugin meta-file generation */
    public static final String META_PLUGIN_IMPLEMENTATION_FILE = "META-INF/org.kaleidofoundry.core.plugin.implementation";
 
-   // Commons kaleido plugin name **************************************************************************************
-
-   /** I18n unique key identifier */
-   public static final String I18N = "i18n";
-
-   /** ResourceStore unique key identifier */
-   public static final String RESOURCE_STORE = "resourcestore";
-
-   /** DataSource unique key identifier */
-   public static final String DATASOURCE = "datasource";
-
-   /** Cache unique key identifier */
-   public static final String CACHE = "cache";
-
-   /** Mail unique key identifier */
-   public static final String MAIL = "mail";
-
-   /** Messaging unique key identifier */
-   public static final String MESSAGING = "messaging";
-
-   /** Rule unique key identifier */
-   public static final String RULE = "rule";
 }

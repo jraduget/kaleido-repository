@@ -29,7 +29,7 @@ import org.kaleidofoundry.core.context.service_with_no_provider.MyServiceWithRun
 import org.kaleidofoundry.core.context.service_with_no_provider.MyServiceWithStaticFinalRuntimeContext;
 import org.kaleidofoundry.core.context.service_with_no_provider.MyServiceWithStaticRuntimeContext;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
-import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.StoreException;
 
 /**
  * Test {@link RuntimeContext} injection using @{@link Context} <br/>
@@ -65,7 +65,7 @@ public class RuntimeContextNoProvidedFieldInjectorTest extends Assert {
    private MyServiceInterface myServiceWithRuntimeContextFromWrongConf;
 
    @Before
-   public void setup() throws ResourceException {
+   public void setup() throws StoreException {
 	// Disable i18n jpa message bundle control
 	I18nMessagesFactory.disableJpaControl();
 	// Register configurations used for testing
@@ -84,7 +84,7 @@ public class RuntimeContextNoProvidedFieldInjectorTest extends Assert {
    }
 
    @After
-   public void cleanup() throws ResourceException {
+   public void cleanup() throws StoreException {
 	// Remove all configurations
 	ConfigurationFactory.destroy("myConf");
 	ConfigurationFactory.destroy("anotherConf");

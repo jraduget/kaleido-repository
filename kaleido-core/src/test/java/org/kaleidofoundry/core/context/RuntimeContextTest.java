@@ -25,9 +25,9 @@ import org.junit.Test;
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.lang.annotation.Review;
-import org.kaleidofoundry.core.store.ResourceException;
-import org.kaleidofoundry.core.store.ResourceStore;
-import org.kaleidofoundry.core.store.ResourceStoreConstants;
+import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.FileStore;
+import org.kaleidofoundry.core.store.FileStoreConstants;
 
 /**
  * @author Jerome RADUGET
@@ -41,7 +41,7 @@ public class RuntimeContextTest extends Assert {
    private Configuration configuration;
 
    @Before
-   public void setup() throws IOException, ResourceException {
+   public void setup() throws IOException, StoreException {
 
 	// runtimeContext create with Configuration
 	configuration = ConfigurationFactory.provides("contextTest", "classpath:/context/context.properties");
@@ -49,7 +49,7 @@ public class RuntimeContextTest extends Assert {
    }
 
    @After
-   public void cleanup() throws ResourceException {
+   public void cleanup() throws StoreException {
 	if (configuration != null) {
 	   configuration.unload();
 	}
@@ -108,11 +108,11 @@ public class RuntimeContextTest extends Assert {
 
    @Test
    public void createNamedContextWithPlugin() {
-	final RuntimeContext<ResourceStore> runtimeContext = new RuntimeContext<ResourceStore>(TomcatContextName, ResourceStore.class);
+	final RuntimeContext<FileStore> runtimeContext = new RuntimeContext<FileStore>(TomcatContextName, FileStore.class);
 	assertNotNull(runtimeContext.getName());
 	assertEquals(TomcatContextName, runtimeContext.getName());
 	assertNotNull(runtimeContext.getPrefixProperty());
-	assertEquals(ResourceStoreConstants.ResourceStorePluginName, runtimeContext.getPrefixProperty());
+	assertEquals(FileStoreConstants.FileStorePluginName, runtimeContext.getPrefixProperty());
    }
 
    @Test

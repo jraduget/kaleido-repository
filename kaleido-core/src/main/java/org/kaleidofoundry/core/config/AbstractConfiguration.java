@@ -23,7 +23,7 @@ import static org.kaleidofoundry.core.config.ConfigurationConstants.LOGGER;
 import static org.kaleidofoundry.core.config.ConfigurationConstants.MultiValDefaultSeparator;
 import static org.kaleidofoundry.core.config.ConfigurationConstants.StrDateFormat;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.CacheManagerRef;
-import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.ResourceStoreRef;
+import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.FileStoreRef;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.StorageAllowed;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.UpdateAllowed;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ConfigurationMessageBundle;
@@ -60,11 +60,11 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Review;
 import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
-import org.kaleidofoundry.core.store.ResourceException;
-import org.kaleidofoundry.core.store.ResourceHandler;
-import org.kaleidofoundry.core.store.ResourceStore;
-import org.kaleidofoundry.core.store.ResourceStoreFactory;
-import org.kaleidofoundry.core.store.SingleResourceStore;
+import org.kaleidofoundry.core.store.FileHandler;
+import org.kaleidofoundry.core.store.FileStore;
+import org.kaleidofoundry.core.store.FileStoreFactory;
+import org.kaleidofoundry.core.store.SingleFileStore;
+import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.util.ConverterHelper;
 import org.kaleidofoundry.core.util.StringHelper;
 
@@ -79,7 +79,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  */
 @Immutable
 @ThreadSafe
-@Review(comment = "bootstrap load for classpath or file uri configuration which can defined a specific cacheManagerRef or resourceStoreRef, ... which is not yet loaded at build time", category = ReviewCategoryEnum.Fixme)
+@Review(comment = "bootstrap load for classpath or file uri configuration which can defined a specific cacheManagerRef or resourceStorageRef, ... which is not yet loaded at build time", category = ReviewCategoryEnum.Fixme)
 public abstract class AbstractConfiguration implements Configuration {
 
    // configuration name identifier
@@ -88,8 +88,8 @@ public abstract class AbstractConfiguration implements Configuration {
    // internal properties cache
    protected final Cache<String, Serializable> cacheProperties;
 
-   // external persistent singleStore
-   protected final SingleResourceStore singleResourceStore;
+   // external persistent singleFileStore
+   protected final SingleFileStore singleFileStore;
 
    // internal runtime context
    protected final RuntimeContext<Configuration> context;
@@ -104,24 +104,24 @@ public abstract class AbstractConfiguration implements Configuration {
     * @param name
     * @param resourceUri
     * @param context
-    * @throws ResourceException
+    * @throws StoreException
     * @throws IllegalArgumentException if resourceUri is illegal ({@link URISyntaxException})
     */
    protected AbstractConfiguration(@NotNull final String name, @NotNull final String resourceUri, @NotNull final RuntimeContext<Configuration> context)
-	   throws ResourceException {
+	   throws StoreException {
 	this.name = name.toString();
 	this.context = context;
 
-	// internal resource store instantiation
-	final String resourceStoreRef = context.getProperty(ResourceStoreRef);
-	final ResourceStore resourceStore;
+	// internal file store instantiation
+	final String fileStoreRef = context.getProperty(FileStoreRef);
+	final FileStore fileStore;
 
-	if (!StringHelper.isEmpty(resourceStoreRef)) {
-	   resourceStore = ResourceStoreFactory.provides(resourceUri, new RuntimeContext<ResourceStore>(resourceStoreRef, ResourceStore.class, context));
+	if (!StringHelper.isEmpty(fileStoreRef)) {
+	   fileStore = FileStoreFactory.provides(resourceUri, new RuntimeContext<FileStore>(fileStoreRef, FileStore.class, context));
 	} else {
-	   resourceStore = ResourceStoreFactory.provides(resourceUri);
+	   fileStore = FileStoreFactory.provides(resourceUri);
 	}
-	singleResourceStore = new SingleResourceStore(resourceUri, resourceStore);
+	singleFileStore = new SingleFileStore(resourceUri, fileStore);
 
 	// internal cache key / value instantiation
 	final CacheManager cacheManager;
@@ -148,23 +148,23 @@ public abstract class AbstractConfiguration implements Configuration {
     * @param resourceHandler
     * @param properties
     * @return internal cache instance
-    * @throws ResourceException
+    * @throws StoreException
     * @throws ConfigurationException
     */
-   protected abstract Cache<String, Serializable> loadProperties(ResourceHandler resourceHandler, Cache<String, Serializable> properties)
-	   throws ResourceException, ConfigurationException;
+   protected abstract Cache<String, Serializable> loadProperties(FileHandler resourceHandler, Cache<String, Serializable> properties) throws StoreException,
+	   ConfigurationException;
 
    /**
     * you don't need to release resourceHandler argument, it is done by agregator
     * 
-    * @param resourceStore
+    * @param fileStore
     * @param properties
     * @return internal cache instance
-    * @throws ResourceException
+    * @throws StoreException
     * @throws ConfigurationException
     */
-   protected abstract Cache<String, Serializable> storeProperties(Cache<String, Serializable> properties, SingleResourceStore resourceStore)
-	   throws ResourceException, ConfigurationException;
+   protected abstract Cache<String, Serializable> storeProperties(Cache<String, Serializable> properties, SingleFileStore fileStore) throws StoreException,
+	   ConfigurationException;
 
    /**
     * Normalize property path from argument. If standard property key is used like "application.name", it will be internally convert to
@@ -215,7 +215,7 @@ public abstract class AbstractConfiguration implements Configuration {
    }
 
    // **************************************************************************
-   // -> Load / singleResourceStore management
+   // -> Load / singleFileStore management
    // **************************************************************************
 
    /*
@@ -223,7 +223,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.Configuration#isLoaded()
     */
    public boolean isLoaded() {
-	return singleResourceStore.isLoaded();
+	return singleFileStore.isLoaded();
    }
 
    /*
@@ -231,10 +231,10 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.Configuration#load()
     */
    @Override
-   public final synchronized void load() throws ResourceException, ConfigurationException {
+   public final synchronized void load() throws StoreException, ConfigurationException {
 	if (isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.already", name)); }
 
-	final ResourceHandler resourceHandler = singleResourceStore.get();
+	final FileHandler resourceHandler = singleFileStore.get();
 	try {
 	   loadProperties(resourceHandler, cacheProperties);
 	} finally {
@@ -247,11 +247,11 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.Configuration#store()
     */
    @Override
-   public final synchronized void store() throws ResourceException, ConfigurationException {
+   public final synchronized void store() throws StoreException, ConfigurationException {
 	if (!isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.notloaded", name)); }
 	if (!isStorageAllowed()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.readonly.store", name)); }
 
-	singleResourceStore.store();
+	singleFileStore.store();
    }
 
    /*
@@ -259,12 +259,12 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.Configuration#unload()
     */
    @Override
-   public final synchronized void unload() throws ResourceException {
+   public final synchronized void unload() throws StoreException {
 	if (!isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.notloaded", name)); }
 	// cleanup cache entries
 	cacheProperties.removeAll();
 	// unload store
-	singleResourceStore.unload();
+	singleFileStore.unload();
 	// fire unload event
 	fireUnload();
    }
@@ -274,7 +274,7 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.Configuration#reload()
     */
    @Override
-   public final synchronized void reload() throws ResourceException, ConfigurationException {
+   public final synchronized void reload() throws StoreException, ConfigurationException {
 	if (!isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.notloaded", name)); }
 	// backup old entries
 	final Map<String, Serializable> oldItems = new HashMap<String, Serializable>();
@@ -284,7 +284,7 @@ public abstract class AbstractConfiguration implements Configuration {
 	// cleanup cache entries
 	cacheProperties.removeAll();
 	// unload store
-	singleResourceStore.unload();
+	singleFileStore.unload();
 	// load it
 	load();
 

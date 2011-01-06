@@ -16,7 +16,7 @@
 package org.kaleidofoundry.core.config;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.StoreException;
 
 /**
  * <p>
@@ -33,14 +33,14 @@ public class ConfigurationSample03 {
    // no automatic context injection here
    private final Configuration configuration;
 
-   public ConfigurationSample03() throws ResourceException {
+   public ConfigurationSample03() throws StoreException {
 
 	RuntimeContext<Configuration> context = new ConfigurationContextBuilder("myManualCtx", Configuration.class)
 	.withName("myConfig")
 	.withStorageAllowed(false)
-	.withResourceUri("http://localhost:8080/kaleido-integration/config/myHttpConfig.properties")
+	.withFileStoreUri("http://localhost:8080/kaleido-integration/config/myHttpConfig.properties")
 	.withCacheManagerRef("myCacheManager")
-	.withResourceStoreRef("myConfigStore")
+	.withFileStoreRef("myConfigStore")
 	.build();
 
 	configuration = ConfigurationFactory.provides(context);

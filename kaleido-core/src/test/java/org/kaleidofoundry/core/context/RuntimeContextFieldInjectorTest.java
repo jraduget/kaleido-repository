@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.context.service_with_no_provider.MySingleService;
-import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.StoreException;
 
 /**
  * @author Jerome RADUGET
@@ -32,13 +32,13 @@ import org.kaleidofoundry.core.store.ResourceException;
 public class RuntimeContextFieldInjectorTest extends Assert {
 
    @Before
-   public void setup() throws IOException, ResourceException {
+   public void setup() throws IOException, StoreException {
 	// register & load given configuration
 	ConfigurationFactory.provides("contextTest", "classpath:/context/context.properties");
    }
 
    @After
-   public void cleanup() throws ResourceException {
+   public void cleanup() throws StoreException {
 	ConfigurationFactory.destroy("contextTest");
    }
 

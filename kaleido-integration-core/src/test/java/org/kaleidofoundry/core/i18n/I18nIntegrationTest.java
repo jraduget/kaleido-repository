@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.EhCache1xImpl;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
-import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.StoreException;
 
 /**
  * @author Jerome RADUGET
@@ -36,14 +36,14 @@ import org.kaleidofoundry.core.store.ResourceException;
 public class I18nIntegrationTest extends Assert {
 
    @Before
-   public void setup() throws ResourceException {
+   public void setup() throws StoreException {
 	// load and register given configuration
 	// another way to to this, set following java env variable : -Dkaleido.configurations=myConfig=classpath:/i18n/myContext.properties
 	ConfigurationFactory.provides("myConfig", "classpath:/i18n/myContext.properties");
    }
 
    @After
-   public void cleanupClass() throws ResourceException {
+   public void cleanupClass() throws StoreException {
 	I18nMessagesFactory.clearCache();
 	ConfigurationFactory.destroy("myConfig");
    }

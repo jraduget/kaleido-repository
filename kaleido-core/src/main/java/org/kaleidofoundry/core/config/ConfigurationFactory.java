@@ -27,7 +27,7 @@ import org.kaleidofoundry.core.config.ConfigurationConstants.Extension;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -65,10 +65,10 @@ public abstract class ConfigurationFactory {
     * <br/>
     * If load have already be called, it does nothing more.
     * 
-    * @throws ResourceException
+    * @throws StoreException
     * @see ConfigurationConstants#JavaEnvProperties
     */
-   public static final void init() throws ResourceException {
+   public static final void init() throws StoreException {
 
 	if (!INIT_LOADED) {
 	   synchronized (ConfigurationFactory.class) {
@@ -94,9 +94,9 @@ public abstract class ConfigurationFactory {
    /**
     * Unload / Unregister / Destroy all registered configurations
     * 
-    * @throws ResourceException
+    * @throws StoreException
     */
-   public static final void destroyAll() throws ResourceException {
+   public static final void destroyAll() throws StoreException {
 
 	if (INIT_LOADED) {
 	   synchronized (ConfigurationFactory.class) {
@@ -115,9 +115,9 @@ public abstract class ConfigurationFactory {
     * Unload / Unregister / Destroy given configuration
     * 
     * @param configName
-    * @throws ResourceException
+    * @throws StoreException
     */
-   public static final void destroy(@NotNull final String configName) throws ResourceException {
+   public static final void destroy(@NotNull final String configName) throws StoreException {
 
 	final Configuration configToDestroy = getRegistry().get(configName);
 
@@ -172,12 +172,12 @@ public abstract class ConfigurationFactory {
     *           class
     *           if needed
     * @return configuration instance (loaded) which map to the resourceURI
-    * @throws ResourceException if configuration resource store throws error
+    * @throws StoreException if configuration store throws error
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     * @see Configuration
     */
-   public static Configuration provides(final RuntimeContext<Configuration> runtimeContext) throws ResourceException {
+   public static Configuration provides(final RuntimeContext<Configuration> runtimeContext) throws StoreException {
 	return CONFIGURATION_PROVIDER.provides(runtimeContext);
    }
 
@@ -216,12 +216,12 @@ public abstract class ConfigurationFactory {
     * @param name configuration name (unique identifier)
     * @param resourceURI
     * @return configuration instance (loaded) which map to the resourceURI
-    * @throws ResourceException if configuration resource store throws error
+    * @throws StoreException if configuration store throws error
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     * @see Configuration
     */
-   public static Configuration provides(@NotNull final String name, @NotNull final String resourceURI) throws ResourceException {
+   public static Configuration provides(@NotNull final String name, @NotNull final String resourceURI) throws StoreException {
 	return CONFIGURATION_PROVIDER.provides(name, resourceURI);
    }
 
@@ -263,13 +263,13 @@ public abstract class ConfigurationFactory {
     *           class
     *           if needed
     * @return configuration instance (loaded) which map to the resourceURI
-    * @throws ResourceException if configuration resource store throws error
+    * @throws StoreException if configuration store throws error
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     * @see Configuration
     */
    public static Configuration provides(@NotNull final String name, @NotNull final String resourceURI,
-	   @NotNull final RuntimeContext<Configuration> runtimeContext) throws ResourceException {
+	   @NotNull final RuntimeContext<Configuration> runtimeContext) throws StoreException {
 	return CONFIGURATION_PROVIDER.provides(name, resourceURI, runtimeContext);
    }
 
@@ -311,13 +311,13 @@ public abstract class ConfigurationFactory {
     *           class
     *           if needed
     * @return configuration instance (loaded) which map to the resourceURI
-    * @throws ResourceException if configuration resource store throws error
+    * @throws StoreException if configuration store throws error
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     * @see Configuration
     */
    public static Configuration provides(@NotNull final String name, @NotNull final URI resourceURI, @NotNull final RuntimeContext<Configuration> runtimeContext)
-	   throws ResourceException {
+	   throws StoreException {
 
 	return CONFIGURATION_PROVIDER.provides(name, resourceURI, runtimeContext);
 

@@ -21,14 +21,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.Context;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.store.ResourceStore;
+import org.kaleidofoundry.core.store.FileStore;
 
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 /**
- * Test contextual injection for resourceStore Module
+ * Test contextual injection for fileStore Module
  * 
  * @author Jerome RADUGET
  */
@@ -40,12 +40,12 @@ public class ContextualResourceModuleTest extends Assert {
    @Before
    public void setup() {
 	// guice injector
-	injector = Guice.createInjector(new org.kaleidofoundry.core.store.module.ResourceStoreModule());
+	injector = Guice.createInjector(new org.kaleidofoundry.core.store.module.FileStoreModule());
 	// test guice instance
 	sampleWithContext = injector.getInstance(SampleWithContext.class);
    }
 
-   // ** find resourceStore using contextual information ***************************************************************
+   // ** find fileStore using contextual information ***************************************************************
 
    @Test
    public void contextualInjectionByConstructor() {
@@ -72,17 +72,17 @@ public class ContextualResourceModuleTest extends Assert {
 	assertNotNull(sampleWithContext);
 
 	// test method injection
-	sampleWithContext.injectResourceStoreByMethod(sampleWithContext.getRuntimeContextInjectedByMethod());
+	sampleWithContext.injectFileStoreByMethod(sampleWithContext.getRuntimeContextInjectedByMethod());
 	assertEquals("method-injection-name", sampleWithContext.getRuntimeContextInjectedByMethod().getName());
 
    }
 
    @Test
-   public void contextualInjectResourceStoreByMethodArg() {
+   public void contextualInjectFileStoreByMethodArg() {
 	assertNotNull(sampleWithContext);
 
 	// test method injection
-	sampleWithContext.injectResourceStoreByMethodArg(sampleWithContext.getRuntimeContextInjectedByMethodArg());
+	sampleWithContext.injectFileStoreByMethodArg(sampleWithContext.getRuntimeContextInjectedByMethodArg());
 	assertEquals("method-arg-injection-name", sampleWithContext.getRuntimeContextInjectedByMethodArg().getName());
    }
 
@@ -94,43 +94,43 @@ public class ContextualResourceModuleTest extends Assert {
 class SampleWithContext {
 
    @Context("property-injection-name")
-   private RuntimeContext<ResourceStore> runtimeContextInjectedByField;
+   private RuntimeContext<FileStore> runtimeContextInjectedByField;
 
-   private final RuntimeContext<ResourceStore> runtimeContextInjectedByConstructor;
+   private final RuntimeContext<FileStore> runtimeContextInjectedByConstructor;
 
-   private RuntimeContext<ResourceStore> runtimeContextInjectedByMethod;
-   private RuntimeContext<ResourceStore> runtimeContextInjectedByMethodArg;
+   private RuntimeContext<FileStore> runtimeContextInjectedByMethod;
+   private RuntimeContext<FileStore> runtimeContextInjectedByMethodArg;
 
    // contextual injection using guice aop methodInterceptor
    @Inject
-   SampleWithContext(@Context("constructor-injection-name") final RuntimeContext<ResourceStore> runtimeContext) {
+   SampleWithContext(@Context("constructor-injection-name") final RuntimeContext<FileStore> runtimeContext) {
 	runtimeContextInjectedByConstructor = runtimeContext;
    }
 
    @Inject
    @Context("method-injection-name")
-   public void injectResourceStoreByMethod(final RuntimeContext<ResourceStore> runtimeContext) {
+   public void injectFileStoreByMethod(final RuntimeContext<FileStore> runtimeContext) {
 	runtimeContextInjectedByMethod = runtimeContext;
    }
 
    @Inject
-   public void injectResourceStoreByMethodArg(@Context("method-arg-injection-name") final RuntimeContext<ResourceStore> runtimeContext) {
+   public void injectFileStoreByMethodArg(@Context("method-arg-injection-name") final RuntimeContext<FileStore> runtimeContext) {
 	runtimeContextInjectedByMethodArg = runtimeContext;
    }
 
-   public RuntimeContext<ResourceStore> getRuntimeContextInjectedByField() {
+   public RuntimeContext<FileStore> getRuntimeContextInjectedByField() {
 	return runtimeContextInjectedByField;
    }
 
-   public RuntimeContext<ResourceStore> getRuntimeContextInjectedByConstructor() {
+   public RuntimeContext<FileStore> getRuntimeContextInjectedByConstructor() {
 	return runtimeContextInjectedByConstructor;
    }
 
-   public RuntimeContext<ResourceStore> getRuntimeContextInjectedByMethod() {
+   public RuntimeContext<FileStore> getRuntimeContextInjectedByMethod() {
 	return runtimeContextInjectedByMethod;
    }
 
-   public RuntimeContext<ResourceStore> getRuntimeContextInjectedByMethodArg() {
+   public RuntimeContext<FileStore> getRuntimeContextInjectedByMethodArg() {
 	return runtimeContextInjectedByMethodArg;
    }
 

@@ -18,7 +18,7 @@ package org.kaleidofoundry.core.config;
 import static org.kaleidofoundry.core.config.ConfigurationConstants.ConfigurationPluginName;
 import static org.kaleidofoundry.core.config.ConfigurationConstants.LOGGER;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.Name;
-import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.ResourceUri;
+import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.FileStoreUri;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -36,7 +36,7 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginFactory;
-import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -76,16 +76,16 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
     * @see org.kaleidofoundry.core.context.Provider#provides(org.kaleidofoundry.core.context.RuntimeContext)
     */
    @Override
-   public Configuration provides(@NotNull final RuntimeContext<Configuration> runtimeContext) throws ProviderException, ResourceException {
+   public Configuration provides(@NotNull final RuntimeContext<Configuration> runtimeContext) throws ProviderException, StoreException {
 	String name = runtimeContext.getProperty(Name);
-	final String resourceUri = runtimeContext.getProperty(ResourceUri);
+	final String resourceUri = runtimeContext.getProperty(FileStoreUri);
 
 	if (StringHelper.isEmpty(name)) {
 	   name = runtimeContext.getName();
 	}
 
 	if (StringHelper.isEmpty(name)) { throw new RuntimeContextEmptyParameterException(Name, runtimeContext); }
-	if (StringHelper.isEmpty(resourceUri)) { throw new RuntimeContextEmptyParameterException(ResourceUri, runtimeContext); }
+	if (StringHelper.isEmpty(resourceUri)) { throw new RuntimeContextEmptyParameterException(FileStoreUri, runtimeContext); }
 
 	return provides(name, resourceUri != null ? URI.create(resourceUri) : null, runtimeContext);
    }
@@ -95,11 +95,11 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
     * @param name
     * @param resourceURI
     * @return configuration instance
-    * @throws ResourceException if configuration resource store throws error
+    * @throws StoreException if configuration store throws error
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
-   public Configuration provides(@NotNull final String name, @NotNull final String resourceURI) throws ProviderException, ResourceException {
+   public Configuration provides(@NotNull final String name, @NotNull final String resourceURI) throws ProviderException, StoreException {
 	return provides(name, resourceURI, new RuntimeContext<Configuration>(Configuration.class));
    }
 
@@ -109,12 +109,12 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
     * @param resourceURI
     * @param runtimeContext
     * @return configuration instance
-    * @throws ResourceException if configuration resource store throws error
+    * @throws StoreException if configuration store throws error
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
    public Configuration provides(@NotNull final String name, @NotNull final String resourceURI, @NotNull final RuntimeContext<Configuration> runtimeContext)
-	   throws ProviderException, ResourceException {
+	   throws ProviderException, StoreException {
 	return provides(name, resourceURI != null ? URI.create(resourceURI) : null, runtimeContext);
    }
 
@@ -124,12 +124,12 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
     * @param resourceURI
     * @param runtimeContext
     * @return configuration instance
-    * @throws ResourceException if configuration resource store throws error
+    * @throws StoreException if configuration store throws error
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
    public Configuration provides(@NotNull final String name, @NotNull final URI resourceURI, @NotNull final RuntimeContext<Configuration> runtimeContext)
-	   throws ProviderException, ResourceException {
+	   throws ProviderException, StoreException {
 
 	final Configuration configuration = REGISTRY.get(name);
 
@@ -161,17 +161,17 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
     *           class
     *           if needed
     * @return new configuration instance which map to the resourceURI
-    * @throws ResourceException if configuration resource store throws error
+    * @throws StoreException if configuration store throws error
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     * @see Configuration
     */
    private Configuration create(@NotNull final String name, @NotNull final URI resourceURI, @NotNull final RuntimeContext<Configuration> runtimeContext)
-	   throws ProviderException, ResourceException {
+	   throws ProviderException, StoreException {
 
 	final Set<Plugin<Configuration>> pluginImpls = PluginFactory.getImplementationRegistry().findByInterface(Configuration.class);
 
-	// scan each @Declare resource store implementation, to get one which handle the uri scheme
+	// scan each @Declare store implementation, to get one which handle the uri scheme
 	for (final Plugin<Configuration> pi : pluginImpls) {
 	   final Class<? extends Configuration> impl = pi.getAnnotatedClass();
 	   try {
@@ -195,8 +195,8 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 		throw new ProviderException("context.provider.error.IllegalAccessException", impl.getName(),
 			"String name, String resourceUri, RuntimeContext<Configuration> context");
 	   } catch (final InvocationTargetException e) {
-		if (e.getCause() instanceof ResourceException) {
-		   throw (ResourceException) e.getCause();
+		if (e.getCause() instanceof StoreException) {
+		   throw (StoreException) e.getCause();
 		} else {
 		   throw new ProviderException("context.provider.error.InvocationTargetException", e.getCause(), impl.getName(),
 			   "String name, String resourceUri, RuntimeContext<Configuration> context");
@@ -204,7 +204,7 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 	   }
 	}
 
-	throw new ResourceException("store.resource.uri.custom.notmanaged", resourceURI.getScheme(), resourceURI.toString());
+	throw new StoreException("store.uri.custom.notmanaged", resourceURI.getScheme(), resourceURI.toString());
    }
 
 }

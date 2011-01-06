@@ -24,9 +24,9 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.store.ResourceException;
-import org.kaleidofoundry.core.store.ResourceHandler;
-import org.kaleidofoundry.core.store.SingleResourceStore;
+import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.FileHandler;
+import org.kaleidofoundry.core.store.SingleFileStore;
 
 /**
  * Properties {@link Configuration} implementation
@@ -40,10 +40,10 @@ public class PropertiesConfiguration extends AbstractConfiguration {
     * @param name
     * @param resourceUri
     * @param context
-    * @throws ResourceException
+    * @throws StoreException
     */
    public PropertiesConfiguration(@NotNull final String name, @NotNull final String resourceUri, @NotNull final RuntimeContext<Configuration> context)
-	   throws ResourceException {
+	   throws StoreException {
 	super(name, resourceUri, context);
    }
 
@@ -53,8 +53,8 @@ public class PropertiesConfiguration extends AbstractConfiguration {
     * org.kaleidofoundry.core.cache.Cache)
     */
    @Override
-   protected Cache<String, Serializable> loadProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> properties)
-	   throws ResourceException, ConfigurationException {
+   protected Cache<String, Serializable> loadProperties(final FileHandler resourceHandler, final Cache<String, Serializable> properties)
+	   throws StoreException, ConfigurationException {
 	try {
 	   final Properties lprops = new Properties();
 	   lprops.load(resourceHandler.getInputStream());
@@ -65,19 +65,19 @@ public class PropertiesConfiguration extends AbstractConfiguration {
 
 	   return properties;
 	} catch (final IOException ioe) {
-	   throw new ResourceException(ioe, resourceHandler.getResourceUri());
+	   throw new StoreException(ioe, resourceHandler.getResourceUri());
 	}
    }
 
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.AbstractConfiguration#storeProperties(org.kaleidofoundry.core.cache.Cache,
-    * org.kaleidofoundry.core.store.SingleResourceStore)
+    * org.kaleidofoundry.core.store.SingleFileStore)
     */
    @Override
    @NotYetImplemented
-   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> cacheProperties, final SingleResourceStore resourceStore)
-	   throws ResourceException, ConfigurationException {
+   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> cacheProperties, final SingleFileStore fileStore)
+	   throws StoreException, ConfigurationException {
 	// try {
 	// properties.save(resourceHandler.getInputStream());
 	// return properties;

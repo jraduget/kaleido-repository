@@ -50,7 +50,7 @@ public class MessageBundleControl extends Control {
    /**
     * @param context
     */
-   public MessageBundleControl(RuntimeContext<I18nMessages> context) {
+   public MessageBundleControl(final RuntimeContext<I18nMessages> context) {
 	this.context = context;
    }
 
@@ -97,7 +97,7 @@ public class MessageBundleControl extends Control {
     */
    @Reviews(reviews = {
 	   @Review(comment = "Make messageBundleControl extensible via {@link Plugin} extention. Load can be done via xml, jpa... ?", category = ReviewCategoryEnum.Improvement),
-	   @Review(comment = "Use resourceStore to load bundle resource", category = ReviewCategoryEnum.Improvement) })
+	   @Review(comment = "Use fileStore to load bundle resource", category = ReviewCategoryEnum.Improvement) })
    ResourceBundle newInputStreamBundle(final String baseName, final Locale locale, final MessageBundleControlFormat format, final ClassLoader loader,
 	   final boolean reload) throws IllegalAccessException, InstantiationException, IOException {
 

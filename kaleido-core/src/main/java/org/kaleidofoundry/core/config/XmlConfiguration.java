@@ -31,9 +31,9 @@ import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.store.ResourceException;
-import org.kaleidofoundry.core.store.ResourceHandler;
-import org.kaleidofoundry.core.store.SingleResourceStore;
+import org.kaleidofoundry.core.store.FileHandler;
+import org.kaleidofoundry.core.store.SingleFileStore;
+import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -74,9 +74,9 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
     * @param name
     * @param resourceUri
     * @param context
-    * @throws ResourceException
+    * @throws StoreException
     */
-   public XmlConfiguration(final String name, final String resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
+   public XmlConfiguration(final String name, final String resourceUri, final RuntimeContext<Configuration> context) throws StoreException {
 	super(name, resourceUri, context);
    }
 
@@ -86,8 +86,8 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
     * org.kaleidofoundry.core.cache.Cache)
     */
    @Override
-   protected Cache<String, Serializable> loadProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> properties)
-	   throws ResourceException, ConfigurationException {
+   protected Cache<String, Serializable> loadProperties(final FileHandler resourceHandler, final Cache<String, Serializable> properties) throws StoreException,
+	   ConfigurationException {
 
 	try {
 	   final DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
@@ -104,21 +104,21 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
 	} catch (final ParserConfigurationException pce) {
 	   throw new ConfigurationException("config.load.xml.dom.error", pce);
 	} catch (final SAXException sae) {
-	   throw new ConfigurationException("config.load.xml.parsing.error", sae, singleResourceStore.getResourceBinding().toString());
+	   throw new ConfigurationException("config.load.xml.parsing.error", sae, singleFileStore.getResourceBinding().toString());
 	} catch (final IOException ioe) {
-	   throw new ResourceException(ioe, resourceHandler.getResourceUri());
+	   throw new StoreException(ioe, resourceHandler.getResourceUri());
 	}
    }
 
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.AbstractConfiguration#storeProperties(org.kaleidofoundry.core.cache.Cache,
-    * org.kaleidofoundry.core.store.SingleResourceStore)
+    * org.kaleidofoundry.core.store.SingleFileStore)
     */
    @Override
    @NotYetImplemented
-   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> cacheProperties, final SingleResourceStore resourceStore)
-	   throws ResourceException, ConfigurationException {
+   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> cacheProperties, final SingleFileStore fileStore)
+	   throws StoreException, ConfigurationException {
 	return null; // annotation @NotYetImplemented handle throw new NotYetImplementedException()...
    }
 

@@ -84,7 +84,7 @@ public class Coherence3xCacheManagerImpl extends AbstractCacheManager {
 
 	   try {
 		LOGGER.info(CacheMessageBundle.getMessage("cache.loading.custom", getMetaInformations(), configuration));
-		final URI resourceUri = URI.create(singleResourceStore.getResourceBinding());
+		final URI resourceUri = URI.create(singleFileStore.getResourceBinding());
 		configurableCacheFactory = new DefaultConfigurableCacheFactory(resourceUri.getPath());
 		com.tangosol.net.CacheFactory.setConfigurableCacheFactory(configurableCacheFactory);
 

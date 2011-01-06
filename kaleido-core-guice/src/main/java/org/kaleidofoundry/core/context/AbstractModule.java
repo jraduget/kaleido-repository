@@ -82,7 +82,7 @@ public abstract class AbstractModule<T> extends com.google.inject.AbstractModule
 
 	// ** bindings ***************************************************************************************************
 
-	// 1. bind default and unnamed ResourceStore implementation
+	// 1. bind default and unnamed file store implementation
 	bind(annotatedInterface).to(getUnnamedImplementation()).in(scope(getUnnamedImplementation()));
 
 	// 2. bind standard kaleido implementation first

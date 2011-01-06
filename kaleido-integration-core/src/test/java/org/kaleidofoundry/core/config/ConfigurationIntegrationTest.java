@@ -34,7 +34,7 @@ import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.cache.CacheManagerProvider;
 import org.kaleidofoundry.core.cache.EhCache1xImpl;
-import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.StoreException;
 
 /**
  * @author Jerome RADUGET
@@ -42,14 +42,14 @@ import org.kaleidofoundry.core.store.ResourceException;
 public class ConfigurationIntegrationTest {
 
    @Before
-   public void setup() throws ResourceException {
+   public void setup() throws StoreException {
 	// load and register given configuration
 	// another way to to this, set following java env variable : -Dkaleido.configurations=myConfigCtx=classpath:/config/myContext.properties
 	ConfigurationFactory.provides("myConfigCtx", "classpath:/config/myContext.properties");
    }
 
    @After
-   public void cleanup() throws ResourceException {
+   public void cleanup() throws StoreException {
 	// cleanup context configuration
 	ConfigurationFactory.destroy("myConfigCtx");
 	// cleanup configuration
@@ -93,7 +93,7 @@ public class ConfigurationIntegrationTest {
    }
 
    @Test
-   public void testConfigurationSample03() throws ResourceException, ParseException {
+   public void testConfigurationSample03() throws StoreException, ParseException {
 	ConfigurationSample03 confSample = new ConfigurationSample03();
 	confSample.echo();
 	assertions(confSample.getConfiguration());

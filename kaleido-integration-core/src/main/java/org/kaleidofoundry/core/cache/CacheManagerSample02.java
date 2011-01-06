@@ -16,7 +16,7 @@
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ProviderCode;
-import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ResourceUri;
+import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreUri;
 import static org.kaleidofoundry.core.cache.CacheManagerSample01.feedCache;
 
 import org.kaleidofoundry.core.context.Context;
@@ -35,7 +35,7 @@ public class CacheManagerSample02 {
    @Context(value="myCacheManagerCtx02",
 	   parameters = {
 	   @Parameter(name = ProviderCode, value = "ehCache1x"),
-	   @Parameter(name = ResourceUri, value = "classpath:/cache/ehcache.xml")   }
+	   @Parameter(name = FileStoreUri, value = "classpath:/cache/ehcache.xml")   }
    )
    private CacheManager myCacheManager;
 

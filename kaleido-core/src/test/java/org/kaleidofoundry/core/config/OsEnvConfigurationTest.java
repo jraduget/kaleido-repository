@@ -22,7 +22,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.StoreException;
 
 /**
  * @author Jerome RADUGET
@@ -32,7 +32,7 @@ public class OsEnvConfigurationTest extends Assert {
    private Configuration configuration;
 
    @Before
-   public void setup() throws ResourceException {
+   public void setup() throws StoreException {
 	configuration = new OsEnvConfiguration("osEnv", new RuntimeContext<Configuration>(Configuration.class));
 	configuration.load();
    }
@@ -44,7 +44,7 @@ public class OsEnvConfigurationTest extends Assert {
    }
 
    @Test
-   public void load() throws ResourceException, URISyntaxException, ResourceException {
+   public void load() throws StoreException, URISyntaxException, StoreException {
 	final Configuration configuration = new OsEnvConfiguration("osEnv", new RuntimeContext<Configuration>(Configuration.class));
 	assertNotNull(configuration);
 	assertFalse(configuration.isLoaded());
@@ -53,7 +53,7 @@ public class OsEnvConfigurationTest extends Assert {
    }
 
    @Test
-   public void unload() throws ResourceException, URISyntaxException {
+   public void unload() throws StoreException, URISyntaxException {
 	assertNotNull(configuration);
 	assertTrue(configuration.isLoaded());
 	configuration.unload();
@@ -61,7 +61,7 @@ public class OsEnvConfigurationTest extends Assert {
    }
 
    @Test(expected = IllegalStateException.class)
-   public void store() throws ResourceException {
+   public void store() throws StoreException {
 	assertNotNull(configuration);
 	configuration.store();
    }

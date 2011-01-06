@@ -16,10 +16,10 @@ org.kaleidofoundry.core.config.XmlConfiguration
 org.kaleidofoundry.core.config.XmlPropertiesConfiguration
 org.kaleidofoundry.core.i18n.DefaultMessageBundle
 org.kaleidofoundry.core.naming.JndiNamingService
-org.kaleidofoundry.core.store.ClasspathResourceStore
-org.kaleidofoundry.core.store.FileSystemResourceStore
-org.kaleidofoundry.core.store.FtpResourceStore
-org.kaleidofoundry.core.store.HttpResourceStore
-org.kaleidofoundry.core.store.JpaResourceStore
-org.kaleidofoundry.core.store.MemoryResourceStore
-org.kaleidofoundry.core.store.WebappResourceStore
+org.kaleidofoundry.core.store.ClasspathFileStore
+org.kaleidofoundry.core.store.FileSystemStore
+org.kaleidofoundry.core.store.FtpStore
+org.kaleidofoundry.core.store.HttpFileStore
+org.kaleidofoundry.core.store.JpaFileStore
+org.kaleidofoundry.core.store.MemoryFileStore
+org.kaleidofoundry.core.store.WebappFileStore

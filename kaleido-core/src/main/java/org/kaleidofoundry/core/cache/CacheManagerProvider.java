@@ -124,8 +124,8 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
    @Override
    public CacheManager provides(final RuntimeContext<CacheManager> context) throws CacheConfigurationException, ProviderException {
 	String providerCode = context.getProperty(CacheManagerContextBuilder.ProviderCode);
-	String providerConfiguration = context.getProperty(CacheManagerContextBuilder.ResourceUri);
-	
+	final String providerConfiguration = context.getProperty(CacheManagerContextBuilder.FileStoreUri);
+
 	if (StringHelper.isEmpty(providerCode)) {
 	   providerCode = DEFAULT_CACHE_PROVIDER;
 	}
@@ -142,7 +142,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
     */
    @NotNull
    public CacheManager provides(@NotNull final String providerCode, final String configuration) throws CacheConfigurationException, ProviderException {
-	return provides(providerCode, configuration, new RuntimeContext<CacheManager>(CacheManager.class));	
+	return provides(providerCode, configuration, new RuntimeContext<CacheManager>(CacheManager.class));
    }
 
    /**
@@ -158,7 +158,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
    public CacheManager provides(@NotNull final String providerCode, final String configuration, @NotNull final RuntimeContext<CacheManager> context)
 	   throws CacheConfigurationException, ProviderException {
 
-	Integer cacheManagerId = getCacheManagerId(providerCode, configuration);
+	final Integer cacheManagerId = getCacheManagerId(providerCode, configuration);
 	CacheManager cacheManager = REGISTRY.get(cacheManagerId);
 
 	if (cacheManager == null) {
@@ -218,7 +218,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 	// dynamic lookup into register plugin
 	final Set<Plugin<CacheManager>> pluginImpls = PluginFactory.getImplementationRegistry().findByInterface(CacheManager.class);
 
-	// scan each @Declare resource store implementation, to get one which handle the given implementation code
+	// scan each @Declare file store implementation, to get one which handle the given implementation code
 	for (final Plugin<CacheManager> pi : pluginImpls) {
 	   final Class<? extends CacheManager> impl = pi.getAnnotatedClass();
 	   try {
@@ -260,8 +260,8 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 	try {
 	   return (Plugin<CacheManager>) plugin;
 	} catch (final ClassCastException cce) {
-	   throw new CacheException("cache.provider.classcasterror", code, plugin.getClass().getTypeParameters()[0].getClass().getName(), CacheManager.class
-		   .getName());
+	   throw new CacheException("cache.provider.classcasterror", code, plugin.getClass().getTypeParameters()[0].getClass().getName(),
+		   CacheManager.class.getName());
 	}
    }
 

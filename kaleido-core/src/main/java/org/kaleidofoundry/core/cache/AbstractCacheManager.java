@@ -16,8 +16,8 @@
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.Classloader;
-import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ResourceStoreRef;
-import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ResourceUri;
+import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreRef;
+import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreUri;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,11 +40,11 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Nullable;
-import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.FileStore;
+import org.kaleidofoundry.core.store.FileStoreFactory;
 import org.kaleidofoundry.core.store.ResourceNotFoundException;
-import org.kaleidofoundry.core.store.ResourceStore;
-import org.kaleidofoundry.core.store.ResourceStoreFactory;
-import org.kaleidofoundry.core.store.SingleResourceStore;
+import org.kaleidofoundry.core.store.SingleFileStore;
+import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.util.Registry;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
@@ -65,7 +65,7 @@ public abstract class AbstractCacheManager implements CacheManager {
 
    /** external persistent singleStore */
    @Nullable
-   protected final SingleResourceStore singleResourceStore;
+   protected final SingleFileStore singleFileStore;
 
    /** Local cache instances */
    @SuppressWarnings("rawtypes")
@@ -89,23 +89,23 @@ public abstract class AbstractCacheManager implements CacheManager {
 
 	// no need of configuration
 	if (StringHelper.isEmpty(configuration)) {
-	   this.singleResourceStore = null;
+	   this.singleFileStore = null;
 	}
-	// internal resource store instantiation
+	// internal file store instantiation
 	else {
-	   final String resourceStoreRef = context.getProperty(ResourceStoreRef);
-	   final ResourceStore resourceStore;
+	   final String fileStoreRef = context.getProperty(FileStoreRef);
+	   final FileStore fileStore;
 
 	   try {
-		if (!StringHelper.isEmpty(resourceStoreRef)) {
-		   resourceStore = ResourceStoreFactory.provides(configuration, new RuntimeContext<ResourceStore>(resourceStoreRef, ResourceStore.class, context));
+		if (!StringHelper.isEmpty(fileStoreRef)) {
+		   fileStore = FileStoreFactory.provides(configuration, new RuntimeContext<FileStore>(fileStoreRef, FileStore.class, context));
 		} else {
-		   resourceStore = ResourceStoreFactory.provides(configuration);
+		   fileStore = FileStoreFactory.provides(configuration);
 		}
-		this.singleResourceStore = new SingleResourceStore(configuration, resourceStore);
+		this.singleFileStore = new SingleFileStore(configuration, fileStore);
 	   } catch (final ResourceNotFoundException rse) {
 		throw new CacheConfigurationNotFoundException("cache.configuration.notfound", getMetaInformations(), getCurrentConfiguration());
-	   } catch (final ResourceException rse) {
+	   } catch (final StoreException rse) {
 		throw new CacheConfigurationException("cache.configuration.error", rse, getMetaInformations(), getCurrentConfiguration());
 	   }
 	}
@@ -148,8 +148,8 @@ public abstract class AbstractCacheManager implements CacheManager {
     */
    @Override
    public String getCurrentConfiguration() {
-	return !StringHelper.isEmpty(forcedConfiguration) ? forcedConfiguration : (StringHelper.isEmpty(context.getProperty(ResourceUri)) ? context
-		.getProperty(ResourceUri) : getDefaultConfiguration());
+	return !StringHelper.isEmpty(forcedConfiguration) ? forcedConfiguration : (StringHelper.isEmpty(context.getProperty(FileStoreUri)) ? context
+		.getProperty(FileStoreUri) : getDefaultConfiguration());
    }
 
    /*
@@ -167,11 +167,11 @@ public abstract class AbstractCacheManager implements CacheManager {
    public void destroyAll() {
 
 	try {
-	   if (singleResourceStore != null) {
-		singleResourceStore.unload();
+	   if (singleFileStore != null) {
+		singleFileStore.unload();
 	   }
-	} catch (final ResourceException rse) {
-	   LOGGER.error(InternalBundleHelper.CacheMessageBundle.getMessage("cache.destroyall.resourcestore.error"), rse);
+	} catch (final StoreException rse) {
+	   LOGGER.error(InternalBundleHelper.CacheMessageBundle.getMessage("cache.destroyall.store.error"), rse);
 	}
    }
 
@@ -305,12 +305,12 @@ public abstract class AbstractCacheManager implements CacheManager {
     * @throws CacheException
     */
    protected InputStream getConfiguration(final String configurationUri) throws CacheException {
-	if (singleResourceStore != null) {
+	if (singleFileStore != null) {
 	   try {
-		return singleResourceStore.get().getInputStream();
+		return singleFileStore.get().getInputStream();
 	   } catch (final ResourceNotFoundException rse) {
 		throw new CacheConfigurationNotFoundException("cache.configuration.notfound", getMetaInformations(), getCurrentConfiguration());
-	   } catch (final ResourceException rse) {
+	   } catch (final StoreException rse) {
 		throw new CacheConfigurationException("cache.configuration.error", rse, getMetaInformations(), getCurrentConfiguration());
 	   }
 	} else {

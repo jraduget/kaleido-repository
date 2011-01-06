@@ -46,7 +46,7 @@ import org.kaleidofoundry.core.context.Parameter;
  * #i18n.myBundleCtx.cacheManagerRef=myCacheManager
  * 
  * cacheManager.myCacheManager.providerCode=ehCache1x
- * cacheManager.myCacheManager.resourceUri=classpath:/i18n/ehcache.xml
+ * cacheManager.myCacheManager.fileStoreUri=classpath:/i18n/ehcache.xml
  * </pre>
  * 
  * Message file : "classpath:/i18n/messages_fr.properties" contains :

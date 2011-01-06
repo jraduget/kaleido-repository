@@ -19,7 +19,7 @@ import java.net.URISyntaxException;
 
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.StoreException;
 
 /**
  * @author Jerome RADUGET
@@ -27,7 +27,7 @@ import org.kaleidofoundry.core.store.ResourceException;
 public class JavaSystemConfigurationTest extends AbstractConfigurationTest {
 
    @Override
-   protected Configuration newInstance() throws ResourceException, URISyntaxException {
+   protected Configuration newInstance() throws StoreException, URISyntaxException {
 
 	// WARN : do not clear System.getProperties() to init test...
 	// -> it is possible but very unpredictable... I prefer to override default assertion
@@ -53,7 +53,7 @@ public class JavaSystemConfigurationTest extends AbstractConfigurationTest {
 
    @Test(expected = IllegalStateException.class)
    @Override
-   public void store() throws ResourceException {
+   public void store() throws StoreException {
 	assertNotNull(configuration);
 	configuration.store();
    }

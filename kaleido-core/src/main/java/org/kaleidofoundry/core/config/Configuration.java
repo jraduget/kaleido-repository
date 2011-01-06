@@ -30,13 +30,13 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Nullable;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.store.ClasspathResourceStore;
-import org.kaleidofoundry.core.store.FileSystemResourceStore;
-import org.kaleidofoundry.core.store.FtpResourceStore;
-import org.kaleidofoundry.core.store.HttpResourceStore;
-import org.kaleidofoundry.core.store.JpaResourceStore;
-import org.kaleidofoundry.core.store.ResourceException;
-import org.kaleidofoundry.core.store.ResourceStore;
+import org.kaleidofoundry.core.store.ClasspathFileStore;
+import org.kaleidofoundry.core.store.FileSystemStore;
+import org.kaleidofoundry.core.store.FtpStore;
+import org.kaleidofoundry.core.store.HttpFileStore;
+import org.kaleidofoundry.core.store.JpaFileStore;
+import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.FileStore;
 
 /**
  * <p>
@@ -60,14 +60,14 @@ import org.kaleidofoundry.core.store.ResourceStore;
  * <b>The configuration resource content (usually file)</b> could be accessed through different way, using URI : <br/>
  * <br/>
  * <ul>
- * <li>File system - {@link FileSystemResourceStore},</li>
- * <li>Java classpath - {@link ClasspathResourceStore},</li>
- * <li>Http url - {@link HttpResourceStore},</li>
- * <li>Ftp url - {@link FtpResourceStore},</li>
- * <li>Jpa custom url - {@link JpaResourceStore},</li>
+ * <li>File system - {@link FileSystemStore},</li>
+ * <li>Java classpath - {@link ClasspathFileStore},</li>
+ * <li>Http url - {@link HttpFileStore},</li>
+ * <li>Ftp url - {@link FtpStore},</li>
+ * <li>Jpa custom url - {@link JpaFileStore},</li>
  * <li>...</li>
  * </ul>
- * The type of the uri will determine the sub {@link ResourceStore} to use <br/>
+ * The type of the uri will determine the sub {@link FileStore} to use <br/>
  * <p>
  * <b>With your configuration instance, you can managed :</b>
  * <ul>
@@ -136,7 +136,7 @@ import org.kaleidofoundry.core.store.ResourceStore;
  * </ul>
  * </p>
  * 
- * @see ResourceStore
+ * @see FileStore
  * @author Jerome RADUGET
  */
 @ThreadSafe
@@ -445,25 +445,25 @@ public interface Configuration {
    /**
     * load configuration content
     * 
-    * @throws ResourceException
+    * @throws StoreException
     * @throws ConfigurationException
     */
-   void load() throws ResourceException, ConfigurationException;
+   void load() throws StoreException, ConfigurationException;
 
    /**
     * unload configuration content
     * 
-    * @throws ResourceException
+    * @throws StoreException
     * @see #addConfigurationListener(ConfigurationListener) to register a listener on unload
     */
-   void unload() throws ResourceException;
+   void unload() throws StoreException;
 
    /**
     * reload all configuration content
     * 
     * @see #addConfigurationListener(ConfigurationListener) to register a listener for changed values
     */
-   void reload() throws ResourceException, ConfigurationException;
+   void reload() throws StoreException, ConfigurationException;
 
    /**
     * @return Configuration have been loaded ? <code>true/false</code>
@@ -473,10 +473,10 @@ public interface Configuration {
    /**
     * Persist all configuration datas (with updade)
     * 
-    * @throws ResourceException
+    * @throws StoreException
     * @throws ConfigurationException
     */
-   void store() throws ResourceException, ConfigurationException;
+   void store() throws StoreException, ConfigurationException;
 
    /**
     * @return does configuration allowed the storage

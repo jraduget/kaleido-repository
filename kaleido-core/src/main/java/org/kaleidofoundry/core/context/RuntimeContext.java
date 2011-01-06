@@ -362,8 +362,7 @@ public class RuntimeContext<T> {
 
 	final Context context = annotatedField.getAnnotation(Context.class);
 
-	if (context == null) { throw new IllegalArgumentException(ContextMessageBundle.getMessage("context.annotation.field.illegal",
-		Context.class.getName())); }
+	if (context == null) { throw new IllegalArgumentException(ContextMessageBundle.getMessage("context.annotation.field.illegal", Context.class.getName())); }
 
 	final Plugin<?> plugin = PluginHelper.getInterfacePlugin(annotatedField.getDeclaringClass());
 
@@ -423,7 +422,7 @@ public class RuntimeContext<T> {
     * <br/>
     *         For example in kaleidofoundry, it could be :
     *         <ul>
-    *         <li>resourceStore
+    *         <li>store.file
     *         <li>jndi.context
     *         <li>messaging.consumer
     *         <li>messaging.transport

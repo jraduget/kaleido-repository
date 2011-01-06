@@ -47,15 +47,15 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td><code>true|false</code> , active or not readonly usage (no updates) of the configuration</td>
  * </tr>
  * <tr>
- * <td>resourceUri</td>
+ * <td>fileStoreUri</td>
  * <td>all</td>
  * <td>cache configuration resource uri</td>
  * </tr>
  * <tr>
- * <td>resourceStoreRef</td>
+ * <td>fileStoreRef</td>
  * <td>all</td>
- * <td>resource store context name that will be used to access the resourceUri (if configuration resource uri need a specific resource store
- * for authentication, or other needs..)</td>
+ * <td>file store context name that will be used to access the fileStoreUri (if configuration resource uri need a specific file store for
+ * authentication, or other needs..)</td>
  * </tr>
  * <tr>
  * <td>cacheManagerRef</td>
@@ -94,10 +94,10 @@ public class ConfigurationContextBuilder extends AbstractRuntimeContextBuilder<C
    public static final String StorageAllowed = "storageAllowed";
    /** common configuration context property - read-only update usage <code>true|false</code> value */
    public static final String UpdateAllowed = "updateAllowed";
-   /** common configuration context property - resource store {@link URI} to accessed the configuration file */
-   public static final String ResourceUri = "resourceUri";
-   /** common configuration context property - resource store context name that will be used to access the resourceUri */
-   public static final String ResourceStoreRef = "resourceStoreRef";
+   /** common configuration context property - file store {@link URI} to accessed the configuration file */
+   public static final String FileStoreUri = "fileStoreUri";
+   /** common configuration context property - file store context name that will be used to access the fileStoreUri */
+   public static final String FileStoreRef = "fileStoreRef";
    /** common configuration context property - cache manager context name to use */
    public static final String CacheManagerRef = "cacheManagerRef";
 
@@ -215,20 +215,20 @@ public class ConfigurationContextBuilder extends AbstractRuntimeContextBuilder<C
    }
 
    /**
-    * @param resourceuri
-    * @return set resourceuri context parameter
+    * @param fileStoreUri
+    * @return set fileStoreUri context parameter
     */
-   public ConfigurationContextBuilder withResourceUri(final String resourceuri) {
-	getContextParameters().put(ResourceUri, resourceuri);
+   public ConfigurationContextBuilder withFileStoreUri(final String fileStoreUri) {
+	getContextParameters().put(FileStoreUri, fileStoreUri);
 	return this;
    }
 
    /**
-    * @param resourcestoreref
-    * @return set resourcestoreref context parameter
+    * @param fileStoreRef
+    * @return set fileStoreRef context parameter
     */
-   public ConfigurationContextBuilder withResourceStoreRef(final String resourcestoreref) {
-	getContextParameters().put(ResourceStoreRef, resourcestoreref);
+   public ConfigurationContextBuilder withFileStoreRef(final String fileStoreRef) {
+	getContextParameters().put(FileStoreRef, fileStoreRef);
 	return this;
    }
 

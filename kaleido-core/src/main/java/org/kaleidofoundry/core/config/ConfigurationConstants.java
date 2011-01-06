@@ -52,7 +52,7 @@ public interface ConfigurationConstants {
    // ** Plugin part ***************************************************************************************************
 
    /**
-    * configuration resource store handled extension<br/>
+    * configuration file store handled extension<br/>
     */
    static enum Extension {
 	// if you change enum name, please report changed to plugin name
