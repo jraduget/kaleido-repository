@@ -169,7 +169,7 @@ public abstract class StringHelper {
     * 
     * @param text
     * @param size
-    * @return
+    * @return Left pad of the given text parameter
     */
    public static String leftPad(final String text, final int size) {
 	return leftPad(text, size, ' ');
@@ -193,7 +193,7 @@ public abstract class StringHelper {
     * @param text
     * @param size
     * @param padChar
-    * @return
+    * @return Left pad of the given text parameter
     */
    public static String leftPad(final String text, final int size, final char padChar) {
 	if (text == null) { return null; }
@@ -225,7 +225,7 @@ public abstract class StringHelper {
     * 
     * @param text
     * @param size
-    * @return
+    * @return Right pad of the given text parameter
     */
    public static String rightPad(final String text, final int size) {
 	return rightPad(text, size, ' ');
@@ -248,8 +248,8 @@ public abstract class StringHelper {
     * 
     * @param text
     * @param size
-    * @param pad
-    * @return
+    * @param padChar
+    * @return Right pad of the given text parameter
     */
    public static String rightPad(final String text, final int size, final char padChar) {
 	if (text == null) { return null; }

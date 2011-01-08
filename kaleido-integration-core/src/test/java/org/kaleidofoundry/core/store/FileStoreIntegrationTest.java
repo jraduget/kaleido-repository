@@ -50,8 +50,8 @@ public class FileStoreIntegrationTest {
 	FileStoreSample01 fileStore = new FileStoreSample01();
 	assertNotNull(fileStore);
 	assertNotNull(fileStore.echo());
-	assertEquals("line1\nline2\n", fileStore.echo());
-	assertEquals("line1\nline2\n", fileStore.echo());
+	assertEquals("line1\nline2", fileStore.echo());
+	assertEquals("line1\nline2", fileStore.echo());
    }
 
    @Test
@@ -60,8 +60,8 @@ public class FileStoreIntegrationTest {
 	FileStoreSample02 fileStore = new FileStoreSample02();
 	assertNotNull(fileStore);
 	assertNotNull(fileStore.echo());
-	assertEquals("line1\nline2\n", fileStore.echo());
-	assertEquals("line1\nline2\n", fileStore.echo());
+	assertEquals("line1\nline2", fileStore.echo());
+	assertEquals("line1\nline2", fileStore.echo());
    }
 
    @Test
@@ -70,7 +70,7 @@ public class FileStoreIntegrationTest {
 	FileStoreSample03 fileStore = new FileStoreSample03();
 	assertNotNull(fileStore);
 	assertNotNull(fileStore.echo());
-	assertEquals("line1\nline2\n", fileStore.echo());
-	assertEquals("line1\nline2\n", fileStore.echo());
+	assertEquals("line1\nline2", fileStore.echo());
+	assertEquals("line1\nline2", fileStore.echo());
    }
 }

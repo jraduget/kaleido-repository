@@ -322,7 +322,7 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
    }
 
    /**
-    * @param readonly
+    * @param sleepTimeBeforeRetryOnFailure
     * @return current builder instance
     * @see FileStoreContextBuilder#SleepTimeBeforeRetryOnFailure
     */

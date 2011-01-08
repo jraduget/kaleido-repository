@@ -70,7 +70,7 @@ public abstract class LocaleFactory {
     * Parse a string locale
     * 
     * @param localeString
-    * @return
+    * @return locale that map the given string parameter
     */
    public static Locale parseLocale(final String localeString) {
 
