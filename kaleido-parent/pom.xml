@@ -402,18 +402,6 @@
 					<outputDirectory>../kaleido-site/site/apidocs</outputDirectory>
 					<reportOutputDirectory>../kaleido-site/site/apidocs</reportOutputDirectory>
 					 -->
-					<!-- doclava test, ko on macosx and windows 
-					<bootclasspath>${java.home}/lib/rt.jar</bootclasspath>
-					<docletPath>/Users/jraduget/Developments/workspaces/eclipse/kaleidofoundry/kaleido-parent/lib/doclava.jar</docletPath>
-					<doclet>com.google.doclava.Doclava</doclet>
-					<additionalparam>
-						-quiet 
-						-federate JDK http://download.oracle.com/javase/6/docs/api/index.html?
-						-federationxml JDK http://doclava.googlecode.com/svn/static/api/openjdk-6.xml 
-						-hdf project.name "KaleidoFoundry" 
-					</additionalparam>
-					<useStandardDocletOptions>false</useStandardDocletOptions>
-					-->
 				</configuration>				
 			</plugin>
 			<plugin>
