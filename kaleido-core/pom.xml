@@ -13,9 +13,6 @@
 	<packaging>jar</packaging>
 
 	<properties>
-		<!-- AOP -->
-		<aspectj.version>1.6.7</aspectj.version>
-		
 		<!-- Cache implementation version -->
 		<jboss-cache.version>3.2.3.CR1</jboss-cache.version>
 		<coherence.version>3.6.0</coherence.version>
@@ -31,7 +28,8 @@
 			<artifactId>aspectjrt</artifactId>
 			<version>${aspectj.version}</version>
 		</dependency>
-		<!-- Ftp API -->
+	
+		<!-- FTP API -->
 		<dependency>
 			<groupId>commons-net</groupId>
 			<artifactId>commons-net</artifactId>
