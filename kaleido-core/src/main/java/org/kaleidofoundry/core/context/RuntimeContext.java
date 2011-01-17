@@ -153,6 +153,9 @@ import org.kaleidofoundry.core.util.StringHelper;
 @Immutable(comment = "instance which have been injected using @Context are immutable after injection")
 public class RuntimeContext<T> {
 
+   /** Context property name, used to enable the component listening of configuration parameters changes */
+   public static final String Dynamics = "dynamics";
+
    /*
     * Even if the field are not final, the class stay immutable.
     * a class instance which have been injected with @Context, can't be modifiable
@@ -344,6 +347,9 @@ public class RuntimeContext<T> {
 	   rc = new RuntimeContext<T>(context.value(), (String) null, true, configs);
 	}
 
+	// dynamics status of the context
+	rc.parameters.put(Dynamics, String.valueOf(context.dynamics()));
+
 	// handle and copy static annotation parameters
 	for (final Parameter p : context.parameters()) {
 	   rc.parameters.put(p.name(), p.value());
@@ -403,7 +409,6 @@ public class RuntimeContext<T> {
 		   target.parameters.put(key, origin.parameters.get(key));
 		}
 	   }
-
 	} else {
 	   // RuntimeContext have already been injected
 	   throw new IllegalStateException(InternalBundleHelper.ContextMessageBundle.getMessage("context.annotation.illegalinject", target.name));
@@ -439,6 +444,15 @@ public class RuntimeContext<T> {
     */
    public Class<T> getPluginInterface() {
 	return pluginInterface;
+   }
+
+   /**
+    * Does context allow dynamics properties changes ?
+    * 
+    * @return <code>true / false</code>, if not set return <code>false</code>
+    */
+   public boolean isDynamics() {
+	return getBoolean(Dynamics, false);
    }
 
    /**

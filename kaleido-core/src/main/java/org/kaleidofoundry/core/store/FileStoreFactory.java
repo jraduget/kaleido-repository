@@ -44,11 +44,10 @@ public abstract class FileStoreFactory {
     *           </ul>
     *           <b>uri schemes handled</b>: <code>http|https|ftp|file|classpath|webapp|...</code>
     * @return new file store instance
-    * @throws StoreException
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
-   public static FileStore provides(final String uriRootPath) throws ProviderException, StoreException {
+   public static FileStore provides(final String uriRootPath) throws ProviderException {
 	return FILE_STORE_PROVIDER.provides(uriRootPath);
    }
 
@@ -66,23 +65,20 @@ public abstract class FileStoreFactory {
     *           <b>uri schemes handled</b>: <code>http|https|ftp|file|classpath|webapp|...</code>
     * @param context
     * @return new file store instance, specific to the resource uri scheme
-    * @throws StoreException
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
-   public static FileStore provides(@NotNull final String uriRootPath, @NotNull final RuntimeContext<FileStore> context) throws ProviderException,
-	   StoreException {
+   public static FileStore provides(@NotNull final String uriRootPath, @NotNull final RuntimeContext<FileStore> context) throws ProviderException {
 	return FILE_STORE_PROVIDER.provides(uriRootPath, context);
    }
 
    /**
     * @param context
     * @return new file store instance
-    * @throws StoreException
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
-   public static FileStore provides(@NotNull final RuntimeContext<FileStore> context) throws ProviderException, StoreException {
+   public static FileStore provides(@NotNull final RuntimeContext<FileStore> context) throws ProviderException {
 	return FILE_STORE_PROVIDER.provides(context);
    }
 }

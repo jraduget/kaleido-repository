@@ -29,10 +29,9 @@ public class NamingServiceFactory {
    /**
     * @param context
     * @return new naming service instance
-    * @throws NamingServiceException
     * @throws ProviderException
     */
-   public static NamingService provides(@NotNull final RuntimeContext<NamingService> context) throws NamingServiceException, ProviderException {
+   public static NamingService provides(@NotNull final RuntimeContext<NamingService> context) throws ProviderException {
 	return NAMING_SERVICE_PROVIDER.provides(context);
    }
 

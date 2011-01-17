@@ -36,6 +36,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
@@ -103,10 +104,12 @@ public abstract class AbstractCacheManager implements CacheManager {
 		   fileStore = FileStoreFactory.provides(configuration);
 		}
 		this.singleFileStore = new SingleFileStore(configuration, fileStore);
-	   } catch (final ResourceNotFoundException rse) {
-		throw new CacheConfigurationNotFoundException("cache.configuration.notfound", getMetaInformations(), getCurrentConfiguration());
-	   } catch (final StoreException rse) {
-		throw new CacheConfigurationException("cache.configuration.error", rse, getMetaInformations(), getCurrentConfiguration());
+	   } catch (ProviderException pe) {
+		if (pe.getCause() instanceof ResourceNotFoundException) { throw new CacheConfigurationNotFoundException("cache.configuration.notfound",
+			getMetaInformations(), getCurrentConfiguration()); }
+		if (pe.getCause() instanceof StoreException) { throw new CacheConfigurationException("cache.configuration.error", pe.getCause(),
+			getMetaInformations(), getCurrentConfiguration()); }
+		throw pe;
 	   }
 	}
 

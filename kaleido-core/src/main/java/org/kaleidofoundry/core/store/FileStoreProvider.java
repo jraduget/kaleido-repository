@@ -45,10 +45,10 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.Provider#provides(org.kaleidofoundry.core.context.RuntimeContext)
+    * @see org.kaleidofoundry.core.context.Provider#_provides(org.kaleidofoundry.core.context.RuntimeContext)
     */
    @Override
-   public FileStore provides(@NotNull final RuntimeContext<FileStore> context) throws ProviderException, StoreException {
+   public FileStore _provides(@NotNull final RuntimeContext<FileStore> context) throws ProviderException {
 	final String uriRootPath = context.getProperty(FileStoreContextBuilder.UriRootPath);
 
 	if (StringHelper.isEmpty(uriRootPath)) { throw new RuntimeContextEmptyParameterException(FileStoreContextBuilder.UriRootPath, context); }
@@ -69,11 +69,10 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
     *           </ul>
     *           <b>uri schemes handled</b>: <code>http|https|ftp|file|classpath|webapp|...</code>
     * @return new file store instance
-    * @throws StoreException
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
-   public FileStore provides(final String uriRootPath) throws ProviderException, StoreException {
+   public FileStore provides(final String uriRootPath) throws ProviderException {
 	return provides(uriRootPath, new RuntimeContext<FileStore>(FileStore.class));
    }
 
@@ -94,11 +93,10 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
     *           <b>uri schemes handled</b>: <code>http|https|ftp|file|classpath|webapp|...</code>
     * @param context store runtime context
     * @return new file store instance, specific to the resource uri scheme
-    * @throws StoreException
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
-   public FileStore provides(@NotNull final String uriRootPath, @NotNull final RuntimeContext<FileStore> context) throws ProviderException, StoreException {
+   public FileStore provides(@NotNull final String uriRootPath, @NotNull final RuntimeContext<FileStore> context) throws ProviderException {
 
 	final URI resourceUri = createURI(uriRootPath);
 	final FileStoreType rse = FileStoreTypeEnum.match(resourceUri);
@@ -126,7 +124,7 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 		   throw new ProviderException("context.provider.error.IllegalAccessException", impl.getName(), "RuntimeContext<FileStore> context");
 		} catch (final InvocationTargetException e) {
 		   if (e.getCause() instanceof StoreException) {
-			throw (StoreException) e.getCause();
+			throw new ProviderException(e.getCause());
 		   } else {
 			throw new ProviderException("context.provider.error.InvocationTargetException", impl.getName(), "RuntimeContext<FileStore> context", e
 				.getCause().getClass().getName(), e.getMessage());
@@ -134,10 +132,10 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 		}
 	   }
 
-	   throw new StoreException("store.uri.custom.notmanaged", resourceUri.getScheme(), resourceUri.toString());
+	   throw new ProviderException(new StoreException("store.uri.custom.notmanaged", resourceUri.getScheme(), resourceUri.toString()));
 	}
 
-	throw new StoreException("store.uri.notmanaged", resourceUri.getScheme(), resourceUri.toString());
+	throw new ProviderException(new StoreException("store.uri.notmanaged", resourceUri.getScheme(), resourceUri.toString()));
 
    }
 

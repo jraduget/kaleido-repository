@@ -100,6 +100,21 @@ public class ProviderException extends I18nRuntimeException {
 	super(code, cause, locale, args);
    }
 
+   /**
+    * @param cause
+    */
+   public ProviderException(final Throwable cause) {
+	super("context.provider.error.default", cause);
+   }
+
+   /**
+    * @param cause
+    * @param args
+    */
+   public ProviderException(final Throwable cause, final String... args) {
+	super("context.provider.error.default", cause, args);
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.i18n.I18nRuntimeException#getI18nBundleName()

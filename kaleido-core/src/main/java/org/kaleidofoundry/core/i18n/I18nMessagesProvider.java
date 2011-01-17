@@ -49,10 +49,10 @@ public class I18nMessagesProvider extends AbstractProviderService<I18nMessages> 
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.ProviderService#provides(org.kaleidofoundry.core.context.RuntimeContext)
+    * @see org.kaleidofoundry.core.context.ProviderService#_provides(org.kaleidofoundry.core.context.RuntimeContext)
     */
    @Override
-   public I18nMessages provides(@NotNull final RuntimeContext<I18nMessages> context) {
+   public I18nMessages _provides(@NotNull final RuntimeContext<I18nMessages> context) {
 
 	final String baseName = context.getProperty(BaseName);
 	final String localeLanguageCode = context.getProperty(LocaleLanguage);

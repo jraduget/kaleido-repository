@@ -83,11 +83,6 @@ public @interface Context {
    String[] configurations() default {};
 
    /**
-    * @return when injected the {@link RuntimeContext}, default is lazy when getting {@link RuntimeContext} field
-    */
-   When when() default When.LazyGet;
-
-   /**
     * does you allow dynamics {@link RuntimeContext} changes from configuration changes ?
     */
    boolean dynamics() default false;
@@ -97,5 +92,10 @@ public @interface Context {
     *         if some parameter are set, they will be prior to the configurations items with same name
     */
    Parameter[] parameters() default {};
+
+   /**
+    * @return when injected the {@link RuntimeContext}, default is lazy when getting {@link RuntimeContext} field
+    */
+   When when() default When.LazyGet;
 
 }

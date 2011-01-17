@@ -44,10 +44,10 @@ public class MyServiceProvider extends AbstractProviderService<MyServiceInterfac
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.Provider#provides(org.kaleidofoundry.core.context.RuntimeContext)
+    * @see org.kaleidofoundry.core.context.Provider#_provides(org.kaleidofoundry.core.context.RuntimeContext)
     */
    @Override
-   public MyServiceInterface provides(final RuntimeContext<MyServiceInterface> context) throws ProviderException {
+   public MyServiceInterface _provides(final RuntimeContext<MyServiceInterface> context) throws ProviderException {
 
 	final Set<Plugin<MyServiceInterface>> pluginImpls = PluginFactory.getImplementationRegistry().findByInterface(MyServiceInterface.class);
 	final String contextPluginCode = context.getProperty("pluginCode");
@@ -70,8 +70,8 @@ public class MyServiceProvider extends AbstractProviderService<MyServiceInterfac
 	   } catch (final IllegalAccessException e) {
 		throw new ProviderException("context.provider.error.IllegalAccessException", impl.getName(), "");
 	   } catch (final InvocationTargetException e) {
-		throw new ProviderException("context.provider.error.InvocationTargetException", impl.getName(), "", e.getCause().getClass().getName(), e
-			.getMessage());
+		throw new ProviderException("context.provider.error.InvocationTargetException", impl.getName(), "", e.getCause().getClass().getName(),
+			e.getMessage());
 	   }
 	}
 

@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
+import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.util.ThrowableHelper;
 
@@ -32,19 +33,17 @@ public class NamingServiceJndiSampler extends AbstractJavaSamplerClient {
    private static final String EchoMessage = "echoMessage";
 
    @Override
-   public void setupTest(JavaSamplerContext context) {	
+   public void setupTest(final JavaSamplerContext context) {
 	// load configuration & context
 	try {
 	   ConfigurationFactory.provides("myConfig", context.getParameter(ConfigurationUri));
-	} catch (StoreException rse) {
-	   throw new IllegalStateException(rse);
-	} catch (RuntimeException rte) {
+	} catch (ProviderException rte) {
 	   throw rte;
-	}	
+	}
    }
 
    @Override
-   public void teardownTest(JavaSamplerContext context) {
+   public void teardownTest(final JavaSamplerContext context) {
 	try {
 	   ConfigurationFactory.destroy("myConfig");
 	} catch (StoreException rse) {
@@ -57,7 +56,7 @@ public class NamingServiceJndiSampler extends AbstractJavaSamplerClient {
     * @see org.apache.jmeter.protocol.java.sampler.JavaSamplerClient#runTest(org.apache.jmeter.protocol.java.sampler.JavaSamplerContext)
     */
    @Override
-   public SampleResult runTest(JavaSamplerContext context) {
+   public SampleResult runTest(final JavaSamplerContext context) {
 
 	// parent sampler result
 	SampleResult parentResults = new SampleResult();
@@ -69,12 +68,12 @@ public class NamingServiceJndiSampler extends AbstractJavaSamplerClient {
 	String userMessage = context.getParameter(EchoMessage);
 	// naming service sample
 	NamingServiceJndiSample01 sample;
-	
+
 	// start sample
 	parentResults.sampleStart();
 	parentResults.setThreadName("naming-service");
 	parentResults.setSampleLabel("naming-service-sampler");
-	
+
 	// 1. context injection cost
 	childResults = new SampleResult();
 	childResults.sampleStart();
@@ -84,7 +83,7 @@ public class NamingServiceJndiSampler extends AbstractJavaSamplerClient {
 	childResults.setResponseCodeOK();
 	childResults.setSuccessful(true);
 	parentResults.addSubResult(childResults);
-	
+
 	// 2. ejb call
 	childResults = new SampleResult();
 	try {
@@ -94,14 +93,14 @@ public class NamingServiceJndiSampler extends AbstractJavaSamplerClient {
 	   childResults.setResponseMessage(sample.echoFromEJB(userMessage));
 	   childResults.sampleEnd();
 	   childResults.setResponseCodeOK();
-	   childResults.setSuccessful(true);	   
+	   childResults.setSuccessful(true);
 	} catch (Throwable th) {
 	   childResults.setResponseMessage(ThrowableHelper.getStackTrace(th));
 	   childResults.setSuccessful(false);
 	   mainSampleStatusOK = false;
-	}	
+	}
 	parentResults.addSubResult(childResults);
-	
+
 	// 3. jdbc datasource call
 	childResults = new SampleResult();
 	try {
@@ -111,14 +110,14 @@ public class NamingServiceJndiSampler extends AbstractJavaSamplerClient {
 	   childResults.setResponseMessage(sample.echoFromDatabase(userMessage));
 	   childResults.sampleEnd();
 	   childResults.setResponseCodeOK();
-	   childResults.setSuccessful(true);	   
+	   childResults.setSuccessful(true);
 	} catch (Throwable th) {
 	   childResults.setResponseMessage(ThrowableHelper.getStackTrace(th));
 	   childResults.setSuccessful(false);
 	   mainSampleStatusOK = false;
-	}	
+	}
 	parentResults.addSubResult(childResults);
-	
+
 	// 4. jms call
 	childResults = new SampleResult();
 	try {
@@ -128,14 +127,14 @@ public class NamingServiceJndiSampler extends AbstractJavaSamplerClient {
 	   childResults.setResponseMessage(sample.echoFromJMS(userMessage).getJMSCorrelationID());
 	   childResults.sampleEnd();
 	   childResults.setResponseCodeOK();
-	   childResults.setSuccessful(true);	   
+	   childResults.setSuccessful(true);
 	} catch (Throwable th) {
 	   childResults.setResponseMessage(ThrowableHelper.getStackTrace(th));
 	   childResults.setSuccessful(false);
 	   mainSampleStatusOK = false;
-	}	
+	}
 	parentResults.addSubResult(childResults);
-	
+
 	// global parent sampler status
 	parentResults.setSuccessful(mainSampleStatusOK);
 	if (mainSampleStatusOK) {

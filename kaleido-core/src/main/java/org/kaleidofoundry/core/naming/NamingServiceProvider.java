@@ -35,10 +35,10 @@ public class NamingServiceProvider extends AbstractProviderService<NamingService
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.ProviderService#provides(org.kaleidofoundry.core.context.RuntimeContext)
+    * @see org.kaleidofoundry.core.context.ProviderService#_provides(org.kaleidofoundry.core.context.RuntimeContext)
     */
    @Override
-   public NamingService provides(final RuntimeContext<NamingService> context) throws ProviderException, NamingServiceException {
+   public NamingService _provides(final RuntimeContext<NamingService> context) throws ProviderException {
 	return new JndiNamingService(context);
    }
 

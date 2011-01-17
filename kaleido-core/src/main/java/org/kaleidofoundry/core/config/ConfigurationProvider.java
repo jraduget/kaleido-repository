@@ -17,8 +17,8 @@ package org.kaleidofoundry.core.config;
 
 import static org.kaleidofoundry.core.config.ConfigurationConstants.ConfigurationPluginName;
 import static org.kaleidofoundry.core.config.ConfigurationConstants.LOGGER;
-import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.Name;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.FileStoreUri;
+import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.Name;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -73,10 +73,10 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.Provider#provides(org.kaleidofoundry.core.context.RuntimeContext)
+    * @see org.kaleidofoundry.core.context.Provider#_provides(org.kaleidofoundry.core.context.RuntimeContext)
     */
    @Override
-   public Configuration provides(@NotNull final RuntimeContext<Configuration> runtimeContext) throws ProviderException, StoreException {
+   public Configuration _provides(@NotNull final RuntimeContext<Configuration> runtimeContext) throws ProviderException {
 	String name = runtimeContext.getProperty(Name);
 	final String resourceUri = runtimeContext.getProperty(FileStoreUri);
 
@@ -95,11 +95,10 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
     * @param name
     * @param resourceURI
     * @return configuration instance
-    * @throws StoreException if configuration store throws error
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
-   public Configuration provides(@NotNull final String name, @NotNull final String resourceURI) throws ProviderException, StoreException {
+   public Configuration provides(@NotNull final String name, @NotNull final String resourceURI) throws ProviderException {
 	return provides(name, resourceURI, new RuntimeContext<Configuration>(Configuration.class));
    }
 
@@ -109,12 +108,11 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
     * @param resourceURI
     * @param runtimeContext
     * @return configuration instance
-    * @throws StoreException if configuration store throws error
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
    public Configuration provides(@NotNull final String name, @NotNull final String resourceURI, @NotNull final RuntimeContext<Configuration> runtimeContext)
-	   throws ProviderException, StoreException {
+	   throws ProviderException {
 	return provides(name, resourceURI != null ? URI.create(resourceURI) : null, runtimeContext);
    }
 
@@ -124,33 +122,36 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
     * @param resourceURI
     * @param runtimeContext
     * @return configuration instance
-    * @throws StoreException if configuration store throws error
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
    public Configuration provides(@NotNull final String name, @NotNull final URI resourceURI, @NotNull final RuntimeContext<Configuration> runtimeContext)
-	   throws ProviderException, StoreException {
+	   throws ProviderException {
 
 	final Configuration configuration = REGISTRY.get(name);
 
-	if (configuration == null) {
-	   Configuration newInstance;
-	   // create it
-	   newInstance = create(name, resourceURI, runtimeContext);
-	   // load it
-	   newInstance.load();
-	   // register it
-	   REGISTRY.put(name, newInstance);
-	   // info
-	   LOGGER.info(InternalBundleHelper.ConfigurationMessageBundle.getMessage("config.load.info", name, resourceURI.toString()));
-	   // result
-	   return newInstance;
-	} else {
-	   if (!configuration.isLoaded()) {
-		configuration.load();
+	try {
+	   if (configuration == null) {
+		Configuration newInstance;
+		// create it
+		newInstance = create(name, resourceURI, runtimeContext);
+		// load it
+		newInstance.load();
+		// register it
+		REGISTRY.put(name, newInstance);
+		// info
+		LOGGER.info(InternalBundleHelper.ConfigurationMessageBundle.getMessage("config.load.info", name, resourceURI.toString()));
+		// result
+		return newInstance;
+	   } else {
+		if (!configuration.isLoaded()) {
+		   configuration.load();
+		}
+		// re-check uri coherence ?
+		return configuration;
 	   }
-	   // re-check uri coherence ?
-	   return configuration;
+	} catch (StoreException ste) {
+	   throw new ProviderException(ste);
 	}
    }
 
@@ -161,13 +162,12 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
     *           class
     *           if needed
     * @return new configuration instance which map to the resourceURI
-    * @throws StoreException if configuration store throws error
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     * @see Configuration
     */
    private Configuration create(@NotNull final String name, @NotNull final URI resourceURI, @NotNull final RuntimeContext<Configuration> runtimeContext)
-	   throws ProviderException, StoreException {
+	   throws ProviderException {
 
 	final Set<Plugin<Configuration>> pluginImpls = PluginFactory.getImplementationRegistry().findByInterface(Configuration.class);
 
@@ -196,7 +196,7 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 			"String name, String resourceUri, RuntimeContext<Configuration> context");
 	   } catch (final InvocationTargetException e) {
 		if (e.getCause() instanceof StoreException) {
-		   throw (StoreException) e.getCause();
+		   throw new ProviderException(e.getCause());
 		} else {
 		   throw new ProviderException("context.provider.error.InvocationTargetException", e.getCause(), impl.getName(),
 			   "String name, String resourceUri, RuntimeContext<Configuration> context");
@@ -204,7 +204,7 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 	   }
 	}
 
-	throw new StoreException("store.uri.custom.notmanaged", resourceURI.getScheme(), resourceURI.toString());
+	throw new ProviderException(new StoreException("store.uri.custom.notmanaged", resourceURI.getScheme(), resourceURI.toString()));
    }
 
 }

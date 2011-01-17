@@ -91,24 +91,22 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 
    /**
     * @return default cache manager provider (java system env. will be used, see class javadoc header)
-    * @throws CacheConfigurationException cache configuration resource exception
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
    @NotNull
-   public CacheManager provides() throws CacheConfigurationException, ProviderException {
+   public CacheManager provides() throws ProviderException {
 	return provides(DEFAULT_CACHE_PROVIDER, null, new RuntimeContext<CacheManager>(CacheManager.class));
    }
 
    /**
     * @param providerCodeCode
     * @return cache manager using specific providerCodeCode
-    * @throws CacheConfigurationException cache configuration resource exception
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
    @NotNull
-   public CacheManager provides(@NotNull final String providerCodeCode) throws CacheConfigurationException, ProviderException {
+   public CacheManager provides(@NotNull final String providerCodeCode) throws ProviderException {
 	return provides(providerCodeCode, null, new RuntimeContext<CacheManager>(CacheManager.class));
    }
 
@@ -116,13 +114,12 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
     * @param context
     * @return cache manager if context specify a specific provider, it will use it, otherwise default cache manager
     *         provider (java system env. will be used, see class java-doc header)
-    * @throws CacheConfigurationException cache configuration resource exception
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
    @NotNull
    @Override
-   public CacheManager provides(final RuntimeContext<CacheManager> context) throws CacheConfigurationException, ProviderException {
+   public CacheManager _provides(final RuntimeContext<CacheManager> context) throws ProviderException {
 	String providerCode = context.getProperty(CacheManagerContextBuilder.ProviderCode);
 	final String providerConfiguration = context.getProperty(CacheManagerContextBuilder.FileStoreUri);
 
@@ -141,7 +138,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
    @NotNull
-   public CacheManager provides(@NotNull final String providerCode, final String configuration) throws CacheConfigurationException, ProviderException {
+   public CacheManager provides(@NotNull final String providerCode, final String configuration) throws ProviderException {
 	return provides(providerCode, configuration, new RuntimeContext<CacheManager>(CacheManager.class));
    }
 
@@ -150,13 +147,12 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
     * @param configuration
     * @param context
     * @return cache manager instance
-    * @throws CacheConfigurationException cache configuration resource exception
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
    @NotNull
    public CacheManager provides(@NotNull final String providerCode, final String configuration, @NotNull final RuntimeContext<CacheManager> context)
-	   throws CacheConfigurationException, ProviderException {
+	   throws ProviderException {
 
 	final Integer cacheManagerId = getCacheManagerId(providerCode, configuration);
 	CacheManager cacheManager = REGISTRY.get(cacheManagerId);
@@ -199,12 +195,11 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
     * @param configuration
     * @param context
     * @return new cache manager instance
-    * @throws CacheConfigurationException cache configuration resource exception
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
    protected static synchronized CacheManager create(@NotNull final String providerCode, final String configuration,
-	   @NotNull final RuntimeContext<CacheManager> context) throws CacheConfigurationException, ProviderException {
+	   @NotNull final RuntimeContext<CacheManager> context) throws ProviderException {
 
 	// only for optimization reasons
 	if (providerCode.equalsIgnoreCase(DefaultCacheProviderEnum.local.name())) { return new LocalCacheManagerImpl(configuration, context); }
@@ -240,14 +235,14 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 			"String configuration, RuntimeContext<CacheManager> context");
 	   } catch (final InvocationTargetException e) {
 		if (e.getCause() instanceof CacheConfigurationException) {
-		   throw (CacheConfigurationException) e.getCause();
+		   throw new ProviderException(e.getCause());
 		} else {
 		   throw new ProviderException("context.provider.error.InvocationTargetException", impl.getName(),
 			   "String configuration, RuntimeContext<CacheManager> context", e.getCause().getClass().getName(), e.getMessage());
 		}
 	   }
 	}
-	throw new CacheException("cache.provider.illegal", providerCode);
+	throw new ProviderException(new CacheException("cache.provider.illegal", providerCode));
 
    }
 
