@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aspectj>
+	<weaver options="-XnoInline -Xlint:ignore -verbose -showWeaveInfo">
+		<include name="org.kaleidofoundry.core.MySpringBean" />
+	</weaver>
+	<aspects>
+		<aspect name="org.kaleidofoundry.core.lang.aop.NotNullAspect" />
+		<!-- 
+		<aspect name="org.kaleidofoundry.core.lang.aop.NotYetImplementedAspect" />
+		<aspect name="org.kaleidofoundry.core.lang.aop.NotImplementedAspect" />
+		
+		<aspect name="org.kaleidofoundry.core.persistence.PersistenceContextAspect" />
+		 
+		<aspect name="org.kaleidofoundry.core.context.RuntimeContextFieldInjectorAspect" />
+		<aspect name="org.kaleidofoundry.core.context.RuntimeContextProvidedFieldInjectorAspect" />
+		-->
+	</aspects>
+</aspectj>

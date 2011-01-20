@@ -16,7 +16,7 @@
 package org.kaleidofoundry.core.config;
 
 import java.util.EventListener;
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 /**
  * Configuration changes listener
@@ -47,7 +47,7 @@ public interface ConfigurationListener extends EventListener {
     * @param events
     * @see Configuration#fireConfigurationChangesEvents()
     */
-   void propertiesChanges(Set<ConfigurationChangeEvent> events);
+   void propertiesChanges(LinkedHashSet<ConfigurationChangeEvent> events);
 
    /**
     * @param source

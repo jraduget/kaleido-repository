@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"       
+       xmlns:context="http://www.springframework.org/schema/context"       
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        ">
+
+	<bean id="mySpringBean" class="org.kaleidofoundry.core.MySpringBean" />
+	
+	<!-- enable aspectj load time weaving (only for spring compatible aspect !!) 
+	     to use with :
+		 -javaagent:${M2_REPO}\org\springframework\spring-instrument\3.0.4.RELEASE\spring-instrument-3.0.4.RELEASE.jar
+		 or 
+		 -javaagent:${M2_REPO}\org\aspectj\aspectjweaver\1.6.9\aspectjweaver-1.6.9.jar
+	<context:load-time-weaver />
+	-->
+ 	
+ 	<!-- enable spring aop proxy (not native aspectj support) -->
+ 	<!-- 
+	<aop:aspectj-autoproxy>
+		<aop:include name="kaleidoNotNullAspect"/>
+		<aop:include name="kaleidoContextFieldInjectorAspect"/>
+		<aop:include name="kaleidoContextProvidedFieldInjectorAspect"/>
+		<aop:include name="kaleidoPersistenceContextAspect"/>
+		<aop:include name="kaleidoNotYetImplementedAspect"/>
+		<aop:include name="kaleidoNotImplementedAspect"/>
+	</aop:aspectj-autoproxy>
+	-->
+	
+	<!-- kaleido aspect  
+	<bean id="kaleidoNotNullAspect" class="org.kaleidofoundry.core.lang.aop.NotNullAspect" factory-method="aspectOf" />
+	<bean id="kaleidoContextFieldInjectorAspect" class="org.kaleidofoundry.core.context.RuntimeContextFieldInjectorAspect" factory-method="aspectOf"/>
+	<bean id="kaleidoContextProvidedFieldInjectorAspect" class="org.kaleidofoundry.core.context.RuntimeContextProvidedFieldInjectorAspect" factory-method="aspectOf"/>
+	<bean id="kaleidoPersistenceContextAspect" class="org.kaleidofoundry.core.persistence.PersistenceContextAspect" factory-method="aspectOf"/>
+	<bean id="kaleidoNotYetImplementedAspect" class="org.kaleidofoundry.core.lang.aop.NotYetImplementedAspect" factory-method="aspectOf"/>
+	<bean id="kaleidoNotImplementedAspect" class="org.kaleidofoundry.core.lang.aop.NotImplementedAspect" factory-method="aspectOf"/>
+ 	-->
+	  
+</beans>

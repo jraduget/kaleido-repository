@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>kaleido-core</artifactId>
-	<name>KaleidoFoundry core</name>
+	<name>KaleidoFoundry core module</name>
 	<packaging>jar</packaging>
 
 	<properties>

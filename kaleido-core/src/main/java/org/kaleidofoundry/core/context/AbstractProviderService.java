@@ -17,16 +17,26 @@ package org.kaleidofoundry.core.context;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.kaleidofoundry.core.config.Configuration;
+import org.kaleidofoundry.core.config.ConfigurationAdapter;
+import org.kaleidofoundry.core.config.ConfigurationChangeEvent;
+import org.kaleidofoundry.core.config.ConfigurationFactory;
+import org.kaleidofoundry.core.config.ConfigurationListener;
 import org.kaleidofoundry.core.lang.annotation.Review;
 import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
 import org.kaleidofoundry.core.lang.annotation.Reviews;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
+import org.kaleidofoundry.core.plugin.Plugin;
+import org.kaleidofoundry.core.plugin.PluginHelper;
 
 /**
  * Base implementation for {@link ProviderService} <br/>
- * Dynamics context are registered here in order to trigger configuration changes
+ * The dynamic runtime contexts are registered here, in order to trigger configuration changes
  * 
  * @author Jerome RADUGET
  * @param <T>
@@ -39,7 +49,11 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
 
    protected final Class<T> genericClassInterface;
 
+   /** runtime context instances */
    protected final Set<RuntimeContext<T>> dynamicsRegisterContext;
+
+   /** created configurations listeners instances by configuration */
+   protected final Map<String, ConfigurationListener> configurationsListeners;
 
    /**
     * @param genericClassInterface
@@ -47,6 +61,9 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
    public AbstractProviderService(final Class<T> genericClassInterface) {
 	this.genericClassInterface = genericClassInterface;
 	this.dynamicsRegisterContext = Collections.synchronizedSet(new HashSet<RuntimeContext<T>>());
+	this.configurationsListeners = new ConcurrentHashMap<String, ConfigurationListener>();
+
+	registerConfigurationsListeners();
    }
 
    /*
@@ -76,5 +93,73 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
     * @throws ProviderException
     */
    protected abstract T _provides(RuntimeContext<T> context) throws ProviderException;
+
+   /**
+    * register for listening configuration changes (multiples), for all registered configuration
+    */
+   synchronized void registerConfigurationsListeners() {
+
+	// for each declared configuration
+	for (final Configuration configuration : ConfigurationFactory.getRegistry().values()) {
+
+	   // clear existing listeners
+	   cleanupConfigurationsListeners(configuration);
+
+	   // create configuration change listener that trigger changes to registered runtime context
+	   final ConfigurationListener configurationListener = new ConfigurationAdapter() {
+		@Override
+		public void propertiesChanges(final LinkedHashSet<ConfigurationChangeEvent> events) {
+
+		   boolean fireChanges = false;
+		   final Plugin<?> currentPlugin = PluginHelper.getInterfacePlugin(genericClassInterface);
+
+		   // if one event is bound to current plugin (property name start by the plugin code) -> fire changes to runtime contexts
+		   for (final ConfigurationChangeEvent evt : events) {
+			if (evt != null && evt.getPropertyName().startsWith(currentPlugin.getName())) {
+			   fireChanges = true;
+			   break;
+			}
+		   }
+
+		   if (fireChanges) {
+			for (final RuntimeContext<T> rc : dynamicsRegisterContext) {
+			   if (rc.isDynamics()) {
+				rc.triggerConfigurationChangeEvents(events);
+			   }
+			}
+		   }
+		}
+	   };
+
+	   // add and register the new configuration listener
+	   configuration.addConfigurationListener(configurationListener);
+	   configurationsListeners.put(configuration.getName(), configurationListener);
+	}
+
+   }
+
+   /**
+    * cleanup configuration listeners that have been created by current provider instance
+    * 
+    * @param configuration
+    */
+   synchronized void cleanupConfigurationsListeners(final Configuration configuration) {
+	if (configuration != null) {
+	   final ConfigurationListener listener = configurationsListeners.get(configuration.getName());
+	   if (listener != null) {
+		configuration.removeConfigurationListener(listener);
+	   }
+	}
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see java.lang.Object#finalize()
+    */
+   @Override
+   protected void finalize() throws Throwable {
+	dynamicsRegisterContext.clear();
+	super.finalize();
+   }
 
 }

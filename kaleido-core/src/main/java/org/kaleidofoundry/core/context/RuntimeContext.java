@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.kaleidofoundry.core.config.Configuration;
+import org.kaleidofoundry.core.config.ConfigurationChangeEvent;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.config.ConfigurationRegistry;
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
@@ -819,6 +820,31 @@ public class RuntimeContext<T> {
    public Date getDate(final String key, final Date defaultValue) {
 	final Date d = getDate(key);
 	return d == null ? defaultValue : d;
+   }
+
+   // ***************************************************************************
+   // -> Configuration changes events methods
+   // ***************************************************************************
+
+   /**
+    * it does nothing by default<br/>
+    * you have to override this method, if you want to catch and process configuration changes events
+    * 
+    * @param listener
+    */
+   void onConfigurationChanges(final LinkedHashSet<ConfigurationChangeEvent> events) {
+	// create setConfigurationChangesHandler()...
+   }
+
+   /**
+    * it triggers the configuration changes given in argument
+    * 
+    * @param events
+    */
+   final void triggerConfigurationChangeEvents(final LinkedHashSet<ConfigurationChangeEvent> events) {
+	if (isDynamics()) {
+	   onConfigurationChanges(events);
+	}
    }
 
    // ***************************************************************************

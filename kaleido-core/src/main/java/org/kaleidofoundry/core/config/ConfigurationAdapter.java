@@ -15,7 +15,7 @@
  */
 package org.kaleidofoundry.core.config;
 
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 /**
  * @author Jerome RADUGET
@@ -56,10 +56,10 @@ public abstract class ConfigurationAdapter implements ConfigurationListener {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.ConfigurationListener#propertiesChanges(java.util.Set)
+    * @see org.kaleidofoundry.core.config.ConfigurationListener#propertiesChanges(java.util.LinkedHashSet)
     */
    @Override
-   public void propertiesChanges(final Set<ConfigurationChangeEvent> events) {
+   public void propertiesChanges(final LinkedHashSet<ConfigurationChangeEvent> events) {
    }
 
 }
