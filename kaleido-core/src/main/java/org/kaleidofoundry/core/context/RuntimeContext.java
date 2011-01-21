@@ -32,6 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.config.ConfigurationChangeEvent;
+import org.kaleidofoundry.core.config.ConfigurationChangeHandler;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.config.ConfigurationRegistry;
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
@@ -169,11 +170,13 @@ public class RuntimeContext<T> {
 
    // used only by {@link AbstractRuntimeContextBuilder}, for static injection
    boolean hasBeenInjectedByAnnotationProcessing;
-   // internal properties used by runtime context builder. context internal properties are in this case injected manually by the developer
-   // coding (using annotation, or using builder)
+   // internal properties used by runtime context builder.
+   // context internal properties are injected manually by the developer coding using annotation, or using builder
    final Map<String, String> parameters;
    // does context has been build by runtime context builder ? if yes, no more updates is possible)
    boolean hasBeenBuildByContextBuilder;
+   // an optional configuration change handler
+   ConfigurationChangeHandler configurationChangesHandler;
 
    /**
     * create <b>unnamed</b> {@link RuntimeContext} name, <b>without prefix</b>
@@ -450,10 +453,10 @@ public class RuntimeContext<T> {
    /**
     * Does context allow dynamics properties changes ?
     * 
-    * @return <code>true / false</code>, if not set return <code>false</code>
+    * @return <code>true / false</code>, if not set return <code>true</code>
     */
    public boolean isDynamics() {
-	return getBoolean(Dynamics, false);
+	return getBoolean(Dynamics, true);
    }
 
    /**
@@ -827,23 +830,25 @@ public class RuntimeContext<T> {
    // ***************************************************************************
 
    /**
-    * it does nothing by default<br/>
-    * you have to override this method, if you want to catch and process configuration changes events
+    * set here your configuration changes handler
     * 
-    * @param listener
+    * @param handler
     */
-   void onConfigurationChanges(final LinkedHashSet<ConfigurationChangeEvent> events) {
-	// create setConfigurationChangesHandler()...
+   public void setConfigurationChangeHandler(final ConfigurationChangeHandler handler) {
+	this.configurationChangesHandler = handler;
    }
 
    /**
-    * it triggers the configuration changes given in argument
+    * if current context is dynamics ({@link #isDynamics()}), and if configuration change handler is defined with
+    * {@link #setConfigurationChangeHandler(ConfigurationChangeHandler)},
+    * it will triggers the configuration changes given in argument, to the current handler<br/>
+    * <br/>
     * 
     * @param events
     */
    final void triggerConfigurationChangeEvents(final LinkedHashSet<ConfigurationChangeEvent> events) {
-	if (isDynamics()) {
-	   onConfigurationChanges(events);
+	if (configurationChangesHandler != null && isDynamics()) {
+	   configurationChangesHandler.onConfigurationChanges(events);
 	}
    }
 

@@ -83,9 +83,11 @@ public @interface Context {
    String[] configurations() default {};
 
    /**
-    * does you allow dynamics {@link RuntimeContext} changes from configuration changes ?
+    * does you allow dynamics {@link RuntimeContext} changes from configuration changes ? <br/>
+    * <br/>
+    * default value is <code>true</code>
     */
-   boolean dynamics() default false;
+   boolean dynamics() default true;
 
    /**
     * @return define here your static configuration parameters, that could no be changed at runtime<br/>
