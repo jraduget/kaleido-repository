@@ -34,7 +34,7 @@ public class FileStoreSample03 {
 
 	RuntimeContext<FileStore> context =
 	   new FileStoreContextBuilder("myManualResourceCtx", FileStore.class)
-	.withUriRootPath("http://localhost:8080/kaleido-integration/")
+	.withUriRootPath("http://localhost:8080/kaleido-it/")
 	.withReadonly(true)
 	.withProxySet(false)
 	// configure connect and read timeout for the java net layer 
@@ -57,12 +57,12 @@ public class FileStoreSample03 {
     * <br/>
     * <b>Path are relative from the file store root uri, like :</b>
     * <ul>
-    * <li>http://localhost:8080/kaleido-integration/</li>
-    * <li>ftp://localhost/kaleido-integration/</li>
+    * <li>http://localhost:8080/kaleido-it/</li>
+    * <li>ftp://localhost/kaleido-it/</li>
     * <li>classpath:/org/kaleidofoundry/core/</li>
     * </ul>
     * 
-    * @return the content of the resource "http://localhost:8080/kaleido-integration/store/foo.txt"
+    * @return the content of the resource "http://localhost:8080/kaleido-it/store/foo.txt"
     * @throws StoreException
     */
    public String echo() throws StoreException {

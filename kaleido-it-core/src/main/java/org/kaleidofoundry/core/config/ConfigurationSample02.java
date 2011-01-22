@@ -37,7 +37,7 @@ public class ConfigurationSample02 {
 
    @Context(value="myConfigCtx", parameters = {
 	   @Parameter(name=StorageAllowed, value="false"),
-	   @Parameter(name=FileStoreUri, value="http://localhost:8080/kaleido-integration/config/myHttpConfig.properties"),
+	   @Parameter(name=FileStoreUri, value="http://localhost:8080/kaleido-it/config/myHttpConfig.properties"),
 	   @Parameter(name=CacheManagerRef, value="myCacheManager"),
 	   @Parameter(name=FileStoreRef, value="myConfigStore")
    })
