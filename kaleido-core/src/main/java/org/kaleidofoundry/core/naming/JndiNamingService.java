@@ -58,7 +58,7 @@ public class JndiNamingService implements NamingService {
    @Override
    public <R> R locate(@NotNull final String resourceName, @NotNull final Class<R> ressourceClass) throws NamingServiceException {
 
-	final String jndiEnvNamePrefix = context.getProperty(EnvPrefixName); // optional java comp env prefix
+	final String jndiEnvNamePrefix = context.getString(EnvPrefixName); // optional java comp env prefix
 	final StringBuilder fullResourceName = new StringBuilder(); // full resource name
 
 	// we prefix resource name if needed
@@ -132,7 +132,7 @@ public class JndiNamingService implements NamingService {
    protected static <R> Context createInitialContext(final RuntimeContext<NamingService> context) throws NamingException {
 	final Context initialContext = new InitialContext();
 	for (final String propertyName : context.keySet()) {
-	   final String propertyValue = context.getProperty(propertyName);
+	   final String propertyValue = context.getString(propertyName);
 	   if (propertyValue != null) {
 		initialContext.addToEnvironment(propertyName, propertyValue);
 	   }

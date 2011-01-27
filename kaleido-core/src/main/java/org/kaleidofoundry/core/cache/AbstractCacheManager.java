@@ -94,7 +94,7 @@ public abstract class AbstractCacheManager implements CacheManager {
 	}
 	// internal file store instantiation
 	else {
-	   final String fileStoreRef = context.getProperty(FileStoreRef);
+	   final String fileStoreRef = context.getString(FileStoreRef);
 	   final FileStore fileStore;
 
 	   try {
@@ -104,7 +104,7 @@ public abstract class AbstractCacheManager implements CacheManager {
 		   fileStore = FileStoreFactory.provides(configuration);
 		}
 		this.singleFileStore = new SingleFileStore(configuration, fileStore);
-	   } catch (ProviderException pe) {
+	   } catch (final ProviderException pe) {
 		if (pe.getCause() instanceof ResourceNotFoundException) { throw new CacheConfigurationNotFoundException("cache.configuration.notfound",
 			getMetaInformations(), getCurrentConfiguration()); }
 		if (pe.getCause() instanceof StoreException) { throw new CacheConfigurationException("cache.configuration.error", pe.getCause(),
@@ -151,8 +151,8 @@ public abstract class AbstractCacheManager implements CacheManager {
     */
    @Override
    public String getCurrentConfiguration() {
-	return !StringHelper.isEmpty(forcedConfiguration) ? forcedConfiguration : (StringHelper.isEmpty(context.getProperty(FileStoreUri)) ? context
-		.getProperty(FileStoreUri) : getDefaultConfiguration());
+	return !StringHelper.isEmpty(forcedConfiguration) ? forcedConfiguration : (StringHelper.isEmpty(context.getString(FileStoreUri)) ? context
+		.getString(FileStoreUri) : getDefaultConfiguration());
    }
 
    /*
@@ -358,12 +358,12 @@ public abstract class AbstractCacheManager implements CacheManager {
     */
    protected ClassLoader currentClassLoader() {
 
-	final String contextClassLoader = context.getProperty(Classloader);
+	final String contextClassLoader = context.getString(Classloader);
 	ClassLoader currentClassLoader = null;
 
 	if (!StringHelper.isEmpty(contextClassLoader)) {
 	   try {
-		currentClassLoader = Class.forName(context.getProperty(Classloader)).getClass().getClassLoader();
+		currentClassLoader = Class.forName(context.getString(Classloader)).getClass().getClassLoader();
 	   } catch (final ClassNotFoundException cnfe) {
 	   }
 	}

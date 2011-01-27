@@ -16,7 +16,6 @@
 package org.kaleidofoundry.core.config;
 
 import static org.kaleidofoundry.core.config.ConfigurationConstants.KeyPropertiesSeparator;
-import static org.kaleidofoundry.core.config.ConfigurationConstants.MultiValDefaultSeparator;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -152,7 +151,7 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
 		   // multiple value have been detected
 		   else {
 			properties.put(normalizeKey(newKeyName.toString()),
-				StringHelper.unsplit(MultiValDefaultSeparator, multipleValues.toArray(new String[multipleValues.size()])));
+				StringHelper.unsplit(MultiValuesSeparator, multipleValues.toArray(new String[multipleValues.size()])));
 			// properties.setMultiValueProperty(newKeyName.toString(), multipleValues.toArray(new String[multipleValues.size()]));
 		   }
 		}

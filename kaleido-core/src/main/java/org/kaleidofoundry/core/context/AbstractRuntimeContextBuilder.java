@@ -15,10 +15,10 @@
  */
 package org.kaleidofoundry.core.context;
 
-import java.util.Map;
+import java.io.Serializable;
+import java.util.concurrent.ConcurrentMap;
 
 import org.kaleidofoundry.core.config.Configuration;
-import org.kaleidofoundry.core.lang.annotation.NotNull;
 
 /**
  * Base class used for building {@link RuntimeContext} instance<br/>
@@ -60,8 +60,8 @@ public abstract class AbstractRuntimeContextBuilder<T> {
 	this.context = new RuntimeContext<T>(name);
    }
 
-   public AbstractRuntimeContextBuilder(final Configuration... configurations) {
-	this.context = new RuntimeContext<T>(configurations);
+   public AbstractRuntimeContextBuilder(final ConcurrentMap<String, Serializable> staticParameters, final Configuration... configurations) {
+	this.context = new RuntimeContext<T>(staticParameters, configurations);
    }
 
    public AbstractRuntimeContextBuilder(final String name, final String prefix) {
@@ -72,12 +72,21 @@ public abstract class AbstractRuntimeContextBuilder<T> {
 	this.context = new RuntimeContext<T>(name, configurations);
    }
 
-   public AbstractRuntimeContextBuilder(final String name, final String prefixProperty, @NotNull final Configuration... configurations) {
+   public AbstractRuntimeContextBuilder(final String name, final String prefixProperty, final Configuration... configurations) {
 	this.context = new RuntimeContext<T>(name, prefixProperty, configurations);
+   }
+
+   public AbstractRuntimeContextBuilder(final String name, final String prefixProperty, final ConcurrentMap<String, Serializable> staticParameters,
+	   final Configuration... configurations) {
+	this.context = new RuntimeContext<T>(name, prefixProperty, staticParameters, configurations);
    }
 
    public AbstractRuntimeContextBuilder(final Class<T> pluginInterface) {
 	this.context = new RuntimeContext<T>(pluginInterface);
+   }
+
+   public AbstractRuntimeContextBuilder(final Class<T> pluginInterface, final ConcurrentMap<String, Serializable> staticParameters) {
+	this.context = new RuntimeContext<T>(pluginInterface, staticParameters);
    }
 
    public AbstractRuntimeContextBuilder(final Class<T> pluginInterface, final Configuration... configurations) {
@@ -88,11 +97,16 @@ public abstract class AbstractRuntimeContextBuilder<T> {
 	this.context = new RuntimeContext<T>(name, pluginInterface, configurations);
    }
 
+   public AbstractRuntimeContextBuilder(final String name, final Class<T> pluginInterface, final ConcurrentMap<String, Serializable> staticParameters,
+	   final Configuration... configurations) {
+	this.context = new RuntimeContext<T>(name, pluginInterface, configurations);
+   }
+
    /**
     * @return static parameters set by developer, which will overrides configuration items
     * @see RuntimeContext#getParameters() protected delegate
     */
-   protected Map<String, String> getContextParameters() {
+   protected ConcurrentMap<String, Serializable> getContextParameters() {
 	return context.getParameters();
    }
 

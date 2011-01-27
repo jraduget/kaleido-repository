@@ -27,10 +27,10 @@ import java.util.Set;
 
 import org.kaleidofoundry.core.context.AbstractProviderService;
 import org.kaleidofoundry.core.context.Context;
+import org.kaleidofoundry.core.context.ContextEmptyParameterException;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.ProviderService;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.context.RuntimeContextEmptyParameterException;
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
@@ -77,15 +77,15 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
     */
    @Override
    public Configuration _provides(@NotNull final RuntimeContext<Configuration> runtimeContext) throws ProviderException {
-	String name = runtimeContext.getProperty(Name);
-	final String resourceUri = runtimeContext.getProperty(FileStoreUri);
+	String name = runtimeContext.getString(Name);
+	final String resourceUri = runtimeContext.getString(FileStoreUri);
 
 	if (StringHelper.isEmpty(name)) {
 	   name = runtimeContext.getName();
 	}
 
-	if (StringHelper.isEmpty(name)) { throw new RuntimeContextEmptyParameterException(Name, runtimeContext); }
-	if (StringHelper.isEmpty(resourceUri)) { throw new RuntimeContextEmptyParameterException(FileStoreUri, runtimeContext); }
+	if (StringHelper.isEmpty(name)) { throw new ContextEmptyParameterException(Name, runtimeContext); }
+	if (StringHelper.isEmpty(resourceUri)) { throw new ContextEmptyParameterException(FileStoreUri, runtimeContext); }
 
 	return provides(name, resourceUri != null ? URI.create(resourceUri) : null, runtimeContext);
    }
@@ -150,7 +150,7 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 		// re-check uri coherence ?
 		return configuration;
 	   }
-	} catch (StoreException ste) {
+	} catch (final StoreException ste) {
 	   throw new ProviderException(ste);
 	}
    }

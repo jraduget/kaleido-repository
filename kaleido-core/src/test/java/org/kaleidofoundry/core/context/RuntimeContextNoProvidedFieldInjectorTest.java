@@ -132,8 +132,8 @@ public class RuntimeContextNoProvidedFieldInjectorTest extends Assert {
    public void testFinalNullContextInjection() {
 	try {
 	   myServiceWithFinalNullRuntimeContext.getContext();
-	   fail("RuntimeContextException expected");
-	} catch (final RuntimeContextException rce) {
+	   fail("ContextException expected");
+	} catch (final ContextException rce) {
 	   assertEquals("context.annotation.illegalfield", rce.getCode());
 	}
    }
@@ -142,8 +142,8 @@ public class RuntimeContextNoProvidedFieldInjectorTest extends Assert {
    public void testIllegalContextInjection() {
 	try {
 	   myServiceWithIllegalRuntimeContext.getCalendar();
-	   fail("RuntimeContextException expected");
-	} catch (final RuntimeContextException rce) {
+	   fail("ContextException expected");
+	} catch (final ContextException rce) {
 	   assertEquals("context.annotation.illegaluse.noRuntimeContextField", rce.getCode());
 	}
    }
@@ -161,8 +161,8 @@ public class RuntimeContextNoProvidedFieldInjectorTest extends Assert {
    public void testContextInjectionFromIllegalConf() {
 	try {
 	   myServiceWithRuntimeContextFromIllegalConf.getContext();
-	   fail("RuntimeContextException expected");
-	} catch (final RuntimeContextException rce) {
+	   fail("ContextException expected");
+	} catch (final ContextException rce) {
 	   assertEquals("context.annotation.illegalconfig.simple", rce.getCode());
 	}
    }

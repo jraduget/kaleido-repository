@@ -153,8 +153,8 @@ public class RuntimeContextProvidedFieldInjectorTest extends Assert {
    public void testFinalNullContextInjection() {
 	try {
 	   myServiceWithFinalNullRuntimeContext.getContext();
-	   fail("RuntimeContextException expected");
-	} catch (final RuntimeContextException rce) {
+	   fail("ContextException expected");
+	} catch (final ContextException rce) {
 	   assertEquals("context.annotation.illegalfield", rce.getCode());
 	}
    }
@@ -180,9 +180,9 @@ public class RuntimeContextProvidedFieldInjectorTest extends Assert {
    public void testContextInjectionFromIllegalConf() {
 	try {
 	   MyServiceInterface initialReference = myServiceWithRuntimeContextFromIllegalConf;
-	   fail("RuntimeContextException expected");
+	   fail("ContextException expected");
 	   initialReference.getContext();
-	} catch (final RuntimeContextException rce) {
+	} catch (final ContextException rce) {
 	   assertEquals("context.annotation.illegalconfig.simple", rce.getCode());
 	}
    }
@@ -193,7 +193,7 @@ public class RuntimeContextProvidedFieldInjectorTest extends Assert {
 	   MyServiceInterface initialReference = myServiceWithRuntimeContextFromWrongConf;
 	   fail("IllegalStateException expected (see MyServiceProvider)");
 	   initialReference.getContext();
-	} catch (final RuntimeContextEmptyParameterException rcpe) {
+	} catch (final ContextEmptyParameterException rcpe) {
 	   assertEquals("context.parameter.empty", rcpe.getCode());
 	   assertEquals("pluginCode", rcpe.getParameter());
 	}

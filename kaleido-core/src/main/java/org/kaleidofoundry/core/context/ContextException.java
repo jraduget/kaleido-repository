@@ -21,44 +21,43 @@ import org.kaleidofoundry.core.i18n.I18nRuntimeException;
 import org.kaleidofoundry.core.i18n.InternalBundleEnum;
 
 /**
+ * Runtime Context exception
+ * 
  * @author Jerome RADUGET
  */
-public class RuntimeContextException extends I18nRuntimeException {
+public class ContextException extends I18nRuntimeException {
 
-   /**
-    * 
-    */
    private static final long serialVersionUID = -2629807147396876107L;
 
-   public RuntimeContextException(final String code, final Locale locale, final String... args) {
+   public ContextException(final String code, final Locale locale, final String... args) {
 	super(code, locale, args);
    }
 
-   public RuntimeContextException(final String code, final Locale locale) {
+   public ContextException(final String code, final Locale locale) {
 	super(code, locale);
    }
 
-   public RuntimeContextException(final String code, final String... args) {
+   public ContextException(final String code, final String... args) {
 	super(code, args);
    }
 
-   public RuntimeContextException(final String code, final Throwable cause, final Locale locale, final String... args) {
+   public ContextException(final String code, final Throwable cause, final Locale locale, final String... args) {
 	super(code, cause, locale, args);
    }
 
-   public RuntimeContextException(final String code, final Throwable cause, final Locale locale) {
+   public ContextException(final String code, final Throwable cause, final Locale locale) {
 	super(code, cause, locale);
    }
 
-   public RuntimeContextException(final String code, final Throwable cause, final String... args) {
+   public ContextException(final String code, final Throwable cause, final String... args) {
 	super(code, cause, args);
    }
 
-   public RuntimeContextException(final String code, final Throwable cause) {
+   public ContextException(final String code, final Throwable cause) {
 	super(code, cause);
    }
 
-   public RuntimeContextException(final String code) {
+   public ContextException(final String code) {
 	super(code);
    }
 

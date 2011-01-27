@@ -22,8 +22,7 @@
  	<!-- 
 	<aop:aspectj-autoproxy>
 		<aop:include name="kaleidoNotNullAspect"/>
-		<aop:include name="kaleidoContextFieldInjectorAspect"/>
-		<aop:include name="kaleidoContextProvidedFieldInjectorAspect"/>
+		<aop:include name="kaleidoAnnotationContexInjectorAspect"/>
 		<aop:include name="kaleidoPersistenceContextAspect"/>
 		<aop:include name="kaleidoNotYetImplementedAspect"/>
 		<aop:include name="kaleidoNotImplementedAspect"/>
@@ -32,8 +31,7 @@
 	
 	<!-- kaleido aspect  
 	<bean id="kaleidoNotNullAspect" class="org.kaleidofoundry.core.lang.aop.NotNullAspect" factory-method="aspectOf" />
-	<bean id="kaleidoContextFieldInjectorAspect" class="org.kaleidofoundry.core.context.RuntimeContextFieldInjectorAspect" factory-method="aspectOf"/>
-	<bean id="kaleidoContextProvidedFieldInjectorAspect" class="org.kaleidofoundry.core.context.RuntimeContextProvidedFieldInjectorAspect" factory-method="aspectOf"/>
+	<bean id="kaleidoAnnotationContexInjectorAspect" class="org.kaleidofoundry.core.context.AnnotationContexInjectorAspect" factory-method="aspectOf"/>
 	<bean id="kaleidoPersistenceContextAspect" class="org.kaleidofoundry.core.persistence.PersistenceContextAspect" factory-method="aspectOf"/>
 	<bean id="kaleidoNotYetImplementedAspect" class="org.kaleidofoundry.core.lang.aop.NotYetImplementedAspect" factory-method="aspectOf"/>
 	<bean id="kaleidoNotImplementedAspect" class="org.kaleidofoundry.core.lang.aop.NotImplementedAspect" factory-method="aspectOf"/>

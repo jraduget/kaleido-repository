@@ -43,36 +43,166 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Context : <br/>
+ * This aspect is used to inject {@link RuntimeContext} on a field annotated by {@link Context}
+ * <p>
+ * <b>Usage 1 :</b><br/>
  * <ol>
- * <li>A class instance field is annotated {@link Context},</li>
- * <li>The class of the field have a {@link RuntimeContext} field to be created (it is not annotated {@link Context}),</li>
+ * <li>A class field {@link RuntimeContext} is annotated {@link Context},</li>
  * <li>This aspect have to init this field, using {@link Context} annotation meta data,</li>
- * <li>When to init the field ? see {@link Context#when()}</li>
+ * <li>See method poincut {@link #trackRuntimeContextField(JoinPoint, org.aspectj.lang.JoinPoint.EnclosingStaticPart)}</li>
+ * <li>Example :
+ * 
+ * <pre>
+ * public class MyClass {
+ * 
+ *    &#064;Context(name = &quot;jndi.context&quot;)
+ *    private RuntimeContext&lt;?&gt; context; // no need to instantiate it
+ * 
+ *    public MyClass() {           
+ *          	...
+ *          	// you can use context field in your constructor
+ *          	System.out.println(context.getString(&quot;...&quot;)); 
+ *          	...          	
+ *          }
+ * }
+ * </pre>
+ * 
+ * </li>
  * </ol>
- * This class is used in another class field, annotated @{@link Context} *
+ * </p>
+ * <p>
+ * <b>Usage 2 :</b><br/>
+ * <ol>
+ * <li>A class field is annotated {@link Context} (and this field is not a {@link RuntimeContext} instance),</li>
+ * <li>The field class have a {@link RuntimeContext} field (which is not annotated {@link Context}),</li>
+ * <li>This aspect have to init this field, using {@link Context} annotation meta data,</li>
+ * <li>Example :
+ * 
+ * <pre>
+ * public class MyControler {
+ * 	
+ * 	&#064;Context(name = &quot;myService.context&quot;)
+ * 	private MyService myService; // no need to instantiate it
+ * 
+ * 	public void processing(...) {
+ * 		// use myService with the given context
+ * 		myService.echo();
+ * 		...
+ * 	}
+ * }
+ * 
+ * public class MyService {
+ * 
+ *    private RuntimeContext&lt;MySingleService&gt; context;
+ * 
+ *    public MySingleService() {
+ * 		...
+ * 		// you can use context field in your constructor
+ * 	System.out.println(context.getString(&quot;...&quot;)); 
+ *          ...     
+ * 	}
+ * 
+ * 	public void echo() {
+ * 		return contex.toString();
+ * 	}
+ * 
+ * }
+ * 
+ * 
+ * </pre>
+ * 
+ * </li>
+ * </ol>
+ * </p>
  * 
  * @author Jerome RADUGET
  */
 @Aspect
-public class RuntimeContextProvidedFieldInjectorAspect {
+public class AnnotationContexInjectorAspect {
 
-   private static final Logger LOGGER = LoggerFactory.getLogger(RuntimeContextProvidedFieldInjectorAspect.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(AnnotationContexInjectorAspect.class);
 
-   // map of @Context field injected state
+   // map of @Context field injected state, used by complex RuntimeContext agregation
    private final ConcurrentMap<Field, Boolean> _$injectedFieldMap = new ConcurrentHashMap<Field, Boolean>();
 
-   public RuntimeContextProvidedFieldInjectorAspect() {
-	LOGGER.debug("@Aspect(RuntimeContextProvidedFieldInjectorAspect) new instance");
+   /**
+    * 
+    */
+   public AnnotationContexInjectorAspect() {
+	LOGGER.debug("@Aspect({}) new instance", getClass().getName());
    }
 
+   // **************************************************************************************************************************************
+   // Usage 1 : simple RuntimeContext injection
+   // **************************************************************************************************************************************
+
+   /**
+    * @param jp
+    * @param esjp
+    * @return
+    */
    // no need to filter on field modifier here, otherwise you can use private || !public at first get argument
-   @Pointcut("get(@org.kaleidofoundry.core.context.Context !org.kaleidofoundry.core.context.RuntimeContext *) && if()")
-   public static boolean trackAgregatedRuntimeContextField(final JoinPoint jp, final JoinPoint.EnclosingStaticPart esjp) {
-	LOGGER.debug("@Pointcut(RuntimeContextProvidedFieldInjectorAspect) trackAgregatedRuntimeContextField match");
+   @Pointcut("get(@org.kaleidofoundry.core.context.Context org.kaleidofoundry.core.context.RuntimeContext *) && if()")
+   public static boolean trackRuntimeContextField(final JoinPoint jp, final JoinPoint.EnclosingStaticPart esjp) {
+	LOGGER.debug("@Pointcut({}) trackRuntimeContextField match", AnnotationContexInjectorAspect.class.getName());
 	return true;
    }
 
+   /**
+    * @param jp
+    * @param esjp
+    * @param thisJoinPoint
+    * @param annotation
+    * @return
+    * @throws Throwable
+    */
+   // track field with ProceedingJoinPoint and annotation information with @annotation(annotation)
+   @SuppressWarnings("unchecked")
+   @Around("trackRuntimeContextField(jp, esjp) && @annotation(annotation)")
+   public Object trackRuntimeContextFieldToInject(final JoinPoint jp, final JoinPoint.EnclosingStaticPart esjp, final ProceedingJoinPoint thisJoinPoint,
+	   final Context annotation) throws Throwable {
+	if (thisJoinPoint.getSignature() instanceof FieldSignature) {
+	   final FieldSignature fs = (FieldSignature) thisJoinPoint.getSignature();
+	   final Object target = thisJoinPoint.getTarget();
+	   final Field field = fs.getField();
+	   field.setAccessible(true);
+	   final Object currentValue = field.get(target);
+	   if (currentValue == null) {
+		final RuntimeContext<?> runtimeContext = RuntimeContext.createFrom(annotation, fs.getFieldType());
+		field.set(target, runtimeContext);
+		return runtimeContext;
+	   } else {
+		return thisJoinPoint.proceed();
+	   }
+	} else {
+	   throw new IllegalStateException("aspect advise handle only field, please check your pointcut");
+	}
+   }
+
+   // **************************************************************************************************************************************
+   // Usage 2 : complex RuntimeContext injection
+   // **************************************************************************************************************************************
+
+   /**
+    * @param jp
+    * @param esjp
+    * @return
+    */
+   // no need to filter on field modifier here, otherwise you can use private || !public at first get argument
+   @Pointcut("get(@org.kaleidofoundry.core.context.Context !org.kaleidofoundry.core.context.RuntimeContext *) && if()")
+   public static boolean trackAgregatedRuntimeContextField(final JoinPoint jp, final JoinPoint.EnclosingStaticPart esjp) {
+	LOGGER.debug("@Pointcut({}) trackAgregatedRuntimeContextField match", AnnotationContexInjectorAspect.class.getName());
+	return true;
+   }
+
+   /**
+    * @param jp
+    * @param esjp
+    * @param thisJoinPoint
+    * @param annotation
+    * @return
+    * @throws Throwable
+    */
    // track field with ProceedingJoinPoint and annotation information with @annotation(annotation)
    @Around("trackAgregatedRuntimeContextField(jp, esjp) && @annotation(annotation)")
    @Reviews(reviews = {
@@ -105,17 +235,17 @@ public class RuntimeContextProvidedFieldInjectorAspect {
 		   if (annotatedField.getType().isAnnotationPresent(Provider.class)) {
 
 			// create provider using annotation meta-information
-			Provider provideInfo = annotatedField.getType().getAnnotation(Provider.class);
-			Constructor<? extends ProviderService<?>> providerConstructor = provideInfo.value().getConstructor(Class.class);
-			ProviderService<?> fieldProviderInstance = providerConstructor.newInstance(annotatedField.getType());
+			final Provider provideInfo = annotatedField.getType().getAnnotation(Provider.class);
+			final Constructor<? extends ProviderService<?>> providerConstructor = provideInfo.value().getConstructor(Class.class);
+			final ProviderService<?> fieldProviderInstance = providerConstructor.newInstance(annotatedField.getType());
 
 			// invoke provides method with Context annotation meta-informations
-			Method providesMethod = provideInfo.value().getMethod("provides", Context.class, Class.class);
+			final Method providesMethod = provideInfo.value().getMethod("provides", Context.class, Class.class);
 
 			try {
 			   fieldToInjectInstance = providesMethod.invoke(fieldProviderInstance, annotation, annotatedField.getType());
-			} catch (InvocationTargetException ite) {
-			   // direct runtime exception like RuntimeContextException...
+			} catch (final InvocationTargetException ite) {
+			   // direct runtime exception like ContextException...
 			   throw ite.getCause() != null ? ite.getCause() : (ite.getTargetException() != null ? ite.getTargetException() : ite);
 			}
 			// set the field that was not yet injected
@@ -169,7 +299,7 @@ public class RuntimeContextProvidedFieldInjectorAspect {
 					RuntimeContext.copyFrom(newRuntimeContext, currentRuntimeContext);
 				   } else {
 					// RuntimeContext field is final && null
-					throw new RuntimeContextException("context.annotation.illegalfield", fieldToInjectInstance.getClass().getName(), cfield.getName());
+					throw new ContextException("context.annotation.illegalfield", fieldToInjectInstance.getClass().getName(), cfield.getName());
 				   }
 				}
 
@@ -180,7 +310,7 @@ public class RuntimeContextProvidedFieldInjectorAspect {
 		   }
 
 		   // coherence checks
-		   if (!targetRuntimeContextFieldFound) { throw new RuntimeContextException("context.annotation.illegaluse.noRuntimeContextField",
+		   if (!targetRuntimeContextFieldFound) { throw new ContextException("context.annotation.illegaluse.noRuntimeContextField",
 			   annotatedFieldSignature.getFieldType().getName() + "#" + annotatedField.getName(), Context.class.getName()); }
 
 		}

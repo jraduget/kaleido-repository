@@ -82,7 +82,7 @@ public class DefaultMessageBundle extends ResourceBundle implements I18nMessages
 	else {
 	   LOGGER.debug("Create message bundle (with cacheManager) for '{}'", resourceName);
 	   final CacheManager cacheManager;
-	   final String cacheManagerContextRef = context.getProperty(I18nContextBuilder.CacheManagerRef);
+	   final String cacheManagerContextRef = context.getString(I18nContextBuilder.CacheManagerRef);
 
 	   if (!StringHelper.isEmpty(cacheManagerContextRef)) {
 		cacheManager = CacheManagerFactory.provides(new RuntimeContext<CacheManager>(cacheManagerContextRef, CacheManager.class, context));

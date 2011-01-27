@@ -15,6 +15,9 @@
  */
 package org.kaleidofoundry.core.naming;
 
+import java.io.Serializable;
+import java.util.concurrent.ConcurrentMap;
+
 import javax.ejb.EJBHome;
 import javax.naming.CommunicationException;
 import javax.naming.Context;
@@ -454,16 +457,25 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
 
    /**
     * @param pluginInterface
+    * @param staticParameters
+    */
+   public NamingContextBuilder(final Class<NamingService> pluginInterface, final ConcurrentMap<String, Serializable> staticParameters) {
+	super(pluginInterface, staticParameters);
+   }
+
+   /**
+    * @param pluginInterface
     */
    public NamingContextBuilder(final Class<NamingService> pluginInterface) {
 	super(pluginInterface);
    }
 
    /**
+    * @param staticParameters
     * @param configurations
     */
-   public NamingContextBuilder(final Configuration... configurations) {
-	super(configurations);
+   public NamingContextBuilder(final ConcurrentMap<String, Serializable> staticParameters, final Configuration... configurations) {
+	super(staticParameters, configurations);
    }
 
    /**
@@ -473,6 +485,17 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
     */
    public NamingContextBuilder(final String name, final Class<NamingService> pluginInterface, final Configuration... configurations) {
 	super(name, pluginInterface, configurations);
+   }
+
+   /**
+    * @param name
+    * @param pluginInterface
+    * @param staticParameters
+    * @param configurations
+    */
+   public NamingContextBuilder(final String name, final Class<NamingService> pluginInterface, final ConcurrentMap<String, Serializable> staticParameters,
+	   final Configuration... configurations) {
+	super(name, pluginInterface, staticParameters, configurations);
    }
 
    /**
@@ -490,6 +513,17 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
     */
    public NamingContextBuilder(final String name, final String prefixProperty, final Configuration... configurations) {
 	super(name, prefixProperty, configurations);
+   }
+
+   /**
+    * @param name
+    * @param prefixProperty
+    * @param staticParameters
+    * @param configurations
+    */
+   public NamingContextBuilder(final String name, final String prefixProperty, final ConcurrentMap<String, Serializable> staticParameters,
+	   final Configuration... configurations) {
+	super(name, prefixProperty, staticParameters, configurations);
    }
 
    /**

@@ -56,7 +56,7 @@ import org.kaleidofoundry.core.config.ConfigurationFactory;
  * <p>
  * Several aop implementations will be provided :
  * <ul>
- * <li>aspectj (default) - {@link RuntimeContextFieldInjectorAspect} & {@link RuntimeContextProvidedFieldInjectorAspect}</li>
+ * <li>aspectj (default) - {@link AnnotationContexInjectorAspect}</li>
  * <li>spring - incoming</li>
  * <li>guice - incoming</li>
  * </ul>
@@ -90,14 +90,14 @@ public @interface Context {
    boolean dynamics() default true;
 
    /**
-    * @return define here your static configuration parameters, that could no be changed at runtime<br/>
-    *         if some parameter are set, they will be prior to the configurations items with same name
+    * @return defines here your static configuration parameters, that should no be changed at runtime<br/>
+    *         if some parameter are set here, they will be used prior to the configurations items (having same name)
     */
    Parameter[] parameters() default {};
 
    /**
     * @return when injected the {@link RuntimeContext}, default is lazy when getting {@link RuntimeContext} field
     */
-   When when() default When.LazyGet;
+   // When when() default When.LazyGet;
 
 }

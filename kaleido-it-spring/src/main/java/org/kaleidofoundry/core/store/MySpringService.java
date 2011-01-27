@@ -13,27 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core.context;
+package org.kaleidofoundry.core.store;
 
-import java.io.Serializable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
- * Static parameter that can be join to a {@link Context}, in order to inject it to {@link RuntimeContext} <br/>
- * <br/>
- * It represents a static parameter, that could no be changed after {@link RuntimeContext} injection. <br/>
- * <br/>
- * By this way underling instance using {@link RuntimeContext} will be able to use this static parameter
- * 
  * @author Jerome RADUGET
  */
-public @interface Parameter {
+public class MySpringService {
 
-   /** context parameter name */
-   String name();
+   @Autowired
+   @Qualifier("myClasspathStore")
+   private FileStore store;
 
-   /** context parameter value */
-   String value();
-
-   /** context parameter class */
-   Class<? extends Serializable> type() default String.class;
+   /**
+    * @throws StoreException
+    */
+   public String echo() throws StoreException {
+	return store.get("foo.txt").getText();
+   }
 }

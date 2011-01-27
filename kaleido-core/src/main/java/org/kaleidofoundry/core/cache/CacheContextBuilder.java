@@ -15,6 +15,9 @@
  */
 package org.kaleidofoundry.core.cache;
 
+import java.io.Serializable;
+import java.util.concurrent.ConcurrentMap;
+
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
 import org.kaleidofoundry.core.context.RuntimeContext;
@@ -67,16 +70,25 @@ public class CacheContextBuilder extends AbstractRuntimeContextBuilder<Cache> {
 
    /**
     * @param pluginInterface
+    * @param staticParameters
+    */
+   public CacheContextBuilder(final Class<Cache> pluginInterface, final ConcurrentMap<String, Serializable> staticParameters) {
+	super(pluginInterface, staticParameters);
+   }
+
+   /**
+    * @param pluginInterface
     */
    public CacheContextBuilder(final Class<Cache> pluginInterface) {
 	super(pluginInterface);
    }
 
    /**
+    * @param staticParameters
     * @param configurations
     */
-   public CacheContextBuilder(final Configuration... configurations) {
-	super(configurations);
+   public CacheContextBuilder(final ConcurrentMap<String, Serializable> staticParameters, final Configuration... configurations) {
+	super(staticParameters, configurations);
    }
 
    /**
@@ -86,6 +98,17 @@ public class CacheContextBuilder extends AbstractRuntimeContextBuilder<Cache> {
     */
    public CacheContextBuilder(final String name, final Class<Cache> pluginInterface, final Configuration... configurations) {
 	super(name, pluginInterface, configurations);
+   }
+
+   /**
+    * @param name
+    * @param pluginInterface
+    * @param staticParameters
+    * @param configurations
+    */
+   public CacheContextBuilder(final String name, final Class<Cache> pluginInterface, final ConcurrentMap<String, Serializable> staticParameters,
+	   final Configuration... configurations) {
+	super(name, pluginInterface, staticParameters, configurations);
    }
 
    /**
@@ -103,6 +126,17 @@ public class CacheContextBuilder extends AbstractRuntimeContextBuilder<Cache> {
     */
    public CacheContextBuilder(final String name, final String prefixProperty, final Configuration... configurations) {
 	super(name, prefixProperty, configurations);
+   }
+
+   /**
+    * @param name
+    * @param prefixProperty
+    * @param staticParameters
+    * @param configurations
+    */
+   public CacheContextBuilder(final String name, final String prefixProperty, final ConcurrentMap<String, Serializable> staticParameters,
+	   final Configuration... configurations) {
+	super(name, prefixProperty, staticParameters, configurations);
    }
 
    /**

@@ -25,9 +25,9 @@ import java.util.Map.Entry;
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.store.FileHandler;
 import org.kaleidofoundry.core.store.SingleFileStore;
+import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.util.ConverterHelper;
 import org.kaleidofoundry.core.util.StringHelper;
 
@@ -68,8 +68,8 @@ public class MainArgsConfiguration extends AbstractConfiguration implements Conf
    protected Cache<String, Serializable> loadProperties(final FileHandler resourceHandler, final Cache<String, Serializable> cacheProperties)
 	   throws StoreException, ConfigurationException {
 
-	final String mainArgs = context.getProperty(ArgsMainString);
-	final String argsSeparator = context.getProperty(ArgsSeparator);
+	final String mainArgs = context.getString(ArgsMainString);
+	final String argsSeparator = context.getString(ArgsSeparator);
 
 	final String[] args = ConverterHelper.stringToArray(mainArgs, argsSeparator != null ? argsSeparator : " ");
 	final Map<String, String> argsMap = ConverterHelper.argsToMap(args);
@@ -94,8 +94,8 @@ public class MainArgsConfiguration extends AbstractConfiguration implements Conf
     * org.kaleidofoundry.core.store.SingleFileStore)
     */
    @Override
-   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> properties, final SingleFileStore fileStore)
-	   throws StoreException, ConfigurationException {
+   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> properties, final SingleFileStore fileStore) throws StoreException,
+	   ConfigurationException {
 	return properties; // never called
    }
 
