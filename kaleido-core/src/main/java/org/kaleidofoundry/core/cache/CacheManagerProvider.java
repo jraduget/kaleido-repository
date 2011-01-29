@@ -120,8 +120,8 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
    @NotNull
    @Override
    public CacheManager _provides(final RuntimeContext<CacheManager> context) throws ProviderException {
-	String providerCode = context.getProperty(CacheManagerContextBuilder.ProviderCode);
-	final String providerConfiguration = context.getProperty(CacheManagerContextBuilder.FileStoreUri);
+	String providerCode = context.getString(CacheManagerContextBuilder.ProviderCode);
+	final String providerConfiguration = context.getString(CacheManagerContextBuilder.FileStoreUri);
 
 	if (StringHelper.isEmpty(providerCode)) {
 	   providerCode = DEFAULT_CACHE_PROVIDER;

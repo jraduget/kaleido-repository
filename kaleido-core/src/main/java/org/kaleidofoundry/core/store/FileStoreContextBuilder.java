@@ -15,7 +15,9 @@
  */
 package org.kaleidofoundry.core.store;
 
+import java.io.Serializable;
 import java.net.URLConnection;
+import java.util.concurrent.ConcurrentMap;
 
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
@@ -227,11 +229,26 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
    public static final String ProxyPassword = "proxyPassword";
 
    /**
+    * 
+    */
+   public FileStoreContextBuilder() {
+	super();
+   }
+
+   /**
     * @param pluginInterface
     * @param configurations
     */
    public FileStoreContextBuilder(final Class<FileStore> pluginInterface, final Configuration... configurations) {
 	super(pluginInterface, configurations);
+   }
+
+   /**
+    * @param pluginInterface
+    * @param staticParameters
+    */
+   public FileStoreContextBuilder(final Class<FileStore> pluginInterface, final ConcurrentMap<String, Serializable> staticParameters) {
+	super(pluginInterface, staticParameters);
    }
 
    /**
@@ -242,10 +259,11 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
    }
 
    /**
+    * @param staticParameters
     * @param configurations
     */
-   public FileStoreContextBuilder(final Configuration... configurations) {
-	super(configurations);
+   public FileStoreContextBuilder(final ConcurrentMap<String, Serializable> staticParameters, final Configuration... configurations) {
+	super(staticParameters, configurations);
    }
 
    /**
@@ -255,6 +273,17 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
     */
    public FileStoreContextBuilder(final String name, final Class<FileStore> pluginInterface, final Configuration... configurations) {
 	super(name, pluginInterface, configurations);
+   }
+
+   /**
+    * @param name
+    * @param pluginInterface
+    * @param staticParameters
+    * @param configurations
+    */
+   public FileStoreContextBuilder(final String name, final Class<FileStore> pluginInterface, final ConcurrentMap<String, Serializable> staticParameters,
+	   final Configuration... configurations) {
+	super(name, pluginInterface, staticParameters, configurations);
    }
 
    /**
@@ -272,6 +301,17 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
     */
    public FileStoreContextBuilder(final String name, final String prefixProperty, final Configuration... configurations) {
 	super(name, prefixProperty, configurations);
+   }
+
+   /**
+    * @param name
+    * @param prefixProperty
+    * @param staticParameters
+    * @param configurations
+    */
+   public FileStoreContextBuilder(final String name, final String prefixProperty, final ConcurrentMap<String, Serializable> staticParameters,
+	   final Configuration... configurations) {
+	super(name, prefixProperty, staticParameters, configurations);
    }
 
    /**

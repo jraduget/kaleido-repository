@@ -112,7 +112,7 @@ public abstract class AbstractFileStore implements FileStore {
     */
    protected String buildResourceURi(final String resourceRelativePath) {
 
-	final String resourceRootUri = context.getProperty(FileStoreContextBuilder.UriRootPath);
+	final String resourceRootUri = context.getString(FileStoreContextBuilder.UriRootPath);
 	final StringBuilder resourceUri = new StringBuilder(resourceRootUri != null ? resourceRootUri : "");
 
 	// remove '/' is UriRootPath ends with '/' and resourceRelativePath starts with a '/'
@@ -155,10 +155,10 @@ public abstract class AbstractFileStore implements FileStore {
     */
    @Override
    public boolean isReadOnly() {
-	if (StringHelper.isEmpty(context.getProperty(FileStoreContextBuilder.Readonly))) {
+	if (StringHelper.isEmpty(context.getString(FileStoreContextBuilder.Readonly))) {
 	   return false;
 	} else {
-	   return Boolean.valueOf(context.getProperty(FileStoreContextBuilder.Readonly));
+	   return context.getBoolean(FileStoreContextBuilder.Readonly);
 	}
    }
 
@@ -254,7 +254,8 @@ public abstract class AbstractFileStore implements FileStore {
 			   throw rse;
 			}
 		   } else {
-			logger.error(StoreMessageBundle.getMessage("store.failover.retry.remove.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount), rse);
+			logger.error(StoreMessageBundle.getMessage("store.failover.retry.remove.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount),
+				rse);
 		   }
 		}
 	   }
@@ -306,7 +307,8 @@ public abstract class AbstractFileStore implements FileStore {
 			   throw rse;
 			}
 		   } else {
-			logger.error(StoreMessageBundle.getMessage("store.failover.retry.store.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount), rse);
+			logger.error(StoreMessageBundle.getMessage("store.failover.retry.store.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount),
+				rse);
 		   }
 		}
 	   }
@@ -373,14 +375,14 @@ public abstract class AbstractFileStore implements FileStore {
     */
    protected void setUrlConnectionSettings(final URLConnection urlConnection) {
 
-	if (!StringHelper.isEmpty(context.getProperty(FileStoreContextBuilder.ConnectTimeout))) {
-	   urlConnection.setConnectTimeout(Integer.parseInt(context.getProperty(FileStoreContextBuilder.ConnectTimeout)));
+	if (!StringHelper.isEmpty(context.getString(FileStoreContextBuilder.ConnectTimeout))) {
+	   urlConnection.setConnectTimeout(context.getInteger(FileStoreContextBuilder.ConnectTimeout));
 	}
-	if (!StringHelper.isEmpty(context.getProperty(FileStoreContextBuilder.ReadTimeout))) {
-	   urlConnection.setReadTimeout(Integer.parseInt(context.getProperty(FileStoreContextBuilder.ReadTimeout)));
+	if (!StringHelper.isEmpty(context.getString(FileStoreContextBuilder.ReadTimeout))) {
+	   urlConnection.setReadTimeout(context.getInteger(FileStoreContextBuilder.ReadTimeout));
 	}
-	if (!StringHelper.isEmpty(context.getProperty(FileStoreContextBuilder.UseCaches))) {
-	   urlConnection.setUseCaches(Boolean.parseBoolean(context.getProperty(FileStoreContextBuilder.UseCaches)));
+	if (!StringHelper.isEmpty(context.getString(FileStoreContextBuilder.UseCaches))) {
+	   urlConnection.setUseCaches(context.getBoolean(FileStoreContextBuilder.UseCaches));
 	}
 
    }

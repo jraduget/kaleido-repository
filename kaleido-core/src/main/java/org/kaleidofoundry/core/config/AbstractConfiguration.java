@@ -19,9 +19,6 @@ import static org.kaleidofoundry.core.config.ConfigurationConstants.KeyPropertie
 import static org.kaleidofoundry.core.config.ConfigurationConstants.KeyPropertiesSeparator;
 import static org.kaleidofoundry.core.config.ConfigurationConstants.KeyRoot;
 import static org.kaleidofoundry.core.config.ConfigurationConstants.KeySeparator;
-import static org.kaleidofoundry.core.config.ConfigurationConstants.LOGGER;
-import static org.kaleidofoundry.core.config.ConfigurationConstants.MultiValDefaultSeparator;
-import static org.kaleidofoundry.core.config.ConfigurationConstants.StrDateFormat;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.CacheManagerRef;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.FileStoreRef;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.StorageAllowed;
@@ -29,16 +26,10 @@ import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.UpdateA
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ConfigurationMessageBundle;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.URISyntaxException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -54,7 +45,6 @@ import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.config.ConfigurationChangeEvent.ConfigurationChangeType;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.lang.NotYetImplementedException;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Review;
@@ -65,6 +55,7 @@ import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.FileStoreFactory;
 import org.kaleidofoundry.core.store.SingleFileStore;
 import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.util.AbstractSerializer;
 import org.kaleidofoundry.core.util.ConverterHelper;
 import org.kaleidofoundry.core.util.StringHelper;
 
@@ -80,7 +71,7 @@ import org.kaleidofoundry.core.util.StringHelper;
 @Immutable
 @ThreadSafe
 @Review(comment = "bootstrap load for classpath or file uri configuration which can defined a specific cacheManagerRef or resourceStorageRef, ... which is not yet loaded at build time", category = ReviewCategoryEnum.Fixme)
-public abstract class AbstractConfiguration implements Configuration {
+public abstract class AbstractConfiguration extends AbstractSerializer implements Configuration {
 
    // configuration name identifier
    protected final String name;
@@ -109,11 +100,12 @@ public abstract class AbstractConfiguration implements Configuration {
     */
    protected AbstractConfiguration(@NotNull final String name, @NotNull final String resourceUri, @NotNull final RuntimeContext<Configuration> context)
 	   throws StoreException {
+
 	this.name = name.toString();
 	this.context = context;
 
 	// internal file store instantiation
-	final String fileStoreRef = context.getProperty(FileStoreRef);
+	final String fileStoreRef = context.getString(FileStoreRef);
 	final FileStore fileStore;
 
 	if (!StringHelper.isEmpty(fileStoreRef)) {
@@ -125,7 +117,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
 	// internal cache key / value instantiation
 	final CacheManager cacheManager;
-	final String cacheManagerContextRef = context.getProperty(CacheManagerRef);
+	final String cacheManagerContextRef = context.getString(CacheManagerRef);
 
 	if (!StringHelper.isEmpty(cacheManagerContextRef)) {
 	   cacheManager = CacheManagerFactory.provides(new RuntimeContext<CacheManager>(cacheManagerContextRef, CacheManager.class, context));
@@ -195,10 +187,10 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.Configuration#isStorageAllowed()
     */
    public boolean isStorageAllowed() {
-	if (StringHelper.isEmpty(context.getProperty(StorageAllowed))) {
+	if (StringHelper.isEmpty(context.getString(StorageAllowed))) {
 	   return true;
 	} else {
-	   return Boolean.valueOf(context.getProperty(StorageAllowed));
+	   return Boolean.valueOf(context.getString(StorageAllowed));
 	}
    }
 
@@ -207,10 +199,10 @@ public abstract class AbstractConfiguration implements Configuration {
     * @see org.kaleidofoundry.core.config.Configuration#isUpdateAllowed()
     */
    public boolean isUpdateAllowed() {
-	if (StringHelper.isEmpty(context.getProperty(UpdateAllowed))) {
+	if (StringHelper.isEmpty(context.getString(UpdateAllowed))) {
 	   return true;
 	} else {
-	   return Boolean.valueOf(context.getProperty(UpdateAllowed));
+	   return Boolean.valueOf(context.getString(UpdateAllowed));
 	}
    }
 
@@ -527,15 +519,6 @@ public abstract class AbstractConfiguration implements Configuration {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getString(java.lang .String, java.lang.String)
-    */
-   public String getString(final String key, final String defaultValue) {
-	final String s = getString(key);
-	return s == null ? defaultValue : s;
-   }
-
-   /*
-    * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#getProperty(java.lang.String)
     */
    @Override
@@ -583,277 +566,6 @@ public abstract class AbstractConfiguration implements Configuration {
 	firePropertyRemove(fullKey, oldValue);
    }
 
-   // ***************************************************************************
-   // -> Typed property value accessors
-   // ***************************************************************************
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.Configuration#getString(java.lang.String)
-    */
-   @Override
-   public String getString(final String key) {
-	return valueOf(getProperty(key), String.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.Configuration#getStringList(java.lang.String)
-    */
-   @Override
-   public List<String> getStringList(final String key) {
-	return valuesOf(getProperty(key), String.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBigDecimal(java .lang.String)
-    */
-   public BigDecimal getBigDecimal(final String key) {
-	return valueOf(getProperty(key), BigDecimal.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBigDecimal(java .lang.String, java.math.BigDecimal)
-    */
-   public BigDecimal getBigDecimal(final String key, final BigDecimal defaultValue) {
-	final BigDecimal bd = getBigDecimal(key);
-	return bd == null ? defaultValue : bd;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBigDecimalList (java.lang.String)
-    */
-   public List<BigDecimal> getBigDecimalList(final String key) {
-	return valuesOf(getProperty(key), BigDecimal.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBigInteger(java .lang.String)
-    */
-   public BigInteger getBigInteger(final String key) {
-	return valueOf(getProperty(key), BigInteger.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBigInteger(java .lang.String, java.math.BigInteger)
-    */
-   public BigInteger getBigInteger(final String key, final BigInteger defaultValue) {
-	final BigInteger bi = getBigInteger(key);
-	return bi == null ? defaultValue : bi;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBigIntegerList (java.lang.String)
-    */
-   public List<BigInteger> getBigIntegerList(final String key) {
-	return valuesOf(getProperty(key), BigInteger.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBoolean(java. lang.String)
-    */
-   public Boolean getBoolean(final String key) {
-	return valueOf(getProperty(key), Boolean.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBoolean(java. lang.String, java.lang.Boolean)
-    */
-   public Boolean getBoolean(final String key, final Boolean defaultValue) {
-	final Boolean b = getBoolean(key);
-	return b == null ? defaultValue : b;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBooleanList( java.lang.String)
-    */
-   public List<Boolean> getBooleanList(final String key) {
-	return valuesOf(getProperty(key), Boolean.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getByte(java.lang .String)
-    */
-   public Byte getByte(final String key) {
-	return valueOf(getProperty(key), Byte.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getByte(java.lang .String, java.lang.Byte)
-    */
-   public Byte getByte(final String key, final Byte defaultValue) {
-	final Byte b = getByte(key);
-	return b == null ? defaultValue : b;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getByteList(java .lang.String)
-    */
-   public List<Byte> getByteList(final String key) {
-	return valuesOf(getProperty(key), Byte.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getDouble(java.lang .String)
-    */
-   public Double getDouble(final String key) {
-	return valueOf(getProperty(key), Double.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getDouble(java.lang .String, double)
-    */
-   public Double getDouble(final String key, final Double defaultValue) {
-	final Double d = getDouble(key);
-	return d == null ? defaultValue : d;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getDoubleList(java .lang.String)
-    */
-   public List<Double> getDoubleList(final String key) {
-	return valuesOf(getProperty(key), Double.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getFloat(java.lang .String)
-    */
-   public Float getFloat(final String key) {
-	return valueOf(getProperty(key), Float.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getFloat(java.lang .String, java.lang.Float)
-    */
-   public Float getFloat(final String key, final Float defaultValue) {
-	final Float f = getFloat(key);
-	return f == null ? defaultValue : f;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getFloatList(java .lang.String)
-    */
-   public List<Float> getFloatList(final String key) {
-	return valuesOf(getProperty(key), Float.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getInt(java.lang .String)
-    */
-   public Integer getInteger(final String key) {
-	return valueOf(getProperty(key), Integer.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getInteger(java. lang.String, java.lang.Integer)
-    */
-   public Integer getInteger(final String key, final Integer defaultValue) {
-	final Integer i = getInteger(key);
-	return i == null ? defaultValue : i;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getIntList(java .lang.String)
-    */
-   public List<Integer> getIntegerList(final String key) {
-	return valuesOf(getProperty(key), Integer.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getLong(java.lang .String)
-    */
-   public Long getLong(final String key) {
-	return valueOf(getProperty(key), Long.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getLong(java.lang .String, java.lang.Long)
-    */
-   public Long getLong(final String key, final Long defaultValue) {
-	final Long l = getLong(key);
-	return l == null ? defaultValue : l;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getLongList(java .lang.String)
-    */
-   public List<Long> getLongList(final String key) {
-	return valuesOf(getProperty(key), Long.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getShort(java.lang .String)
-    */
-   public Short getShort(final String key) {
-	return valueOf(getProperty(key), Short.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getShort(java.lang .String, java.lang.Short)
-    */
-   public Short getShort(final String key, final Short defaultValue) {
-	final Short s = getShort(key);
-	return s == null ? defaultValue : s;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getShortList(java .lang.String)
-    */
-   public List<Short> getShortList(final String key) {
-	return valuesOf(getProperty(key), Short.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getDate(java.lang .String)
-    */
-   public Date getDate(final String key) {
-	return valueOf(getProperty(key), Date.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.Configuration#getDateList(java.lang.String)
-    */
-   public List<Date> getDateList(final String key) {
-	return valuesOf(getProperty(key), Date.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getDate(java.lang .String, java.lang.Date)
-    */
-   public Date getDate(final String key, final Date defaultValue) {
-	final Date d = getDate(key);
-	return d == null ? defaultValue : d;
-   }
-
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#toProperties(java.lang.String)
@@ -872,7 +584,7 @@ public abstract class AbstractConfiguration implements Configuration {
 	   propPath = StringHelper.replaceAll(propPath, KeySeparator, KeyPropertiesSeparator);
 
 	   if (propValues != null) {
-		prop.put(propPath, ConverterHelper.collectionToString(propValues, MultiValDefaultSeparator));
+		prop.put(propPath, ConverterHelper.collectionToString(propValues, MultiValuesSeparator));
 	   } else if (propValue != null) {
 		prop.put(propPath, propValue);
 	   }
@@ -887,121 +599,6 @@ public abstract class AbstractConfiguration implements Configuration {
     */
    public Properties toProperties() {
 	return toProperties(KeyRoot);
-   }
-
-   /**
-    * String to Object Converter
-    * 
-    * @param <T>
-    * @param value
-    * @param cl Target class
-    * @return Requested conversion of the string argument. If {@link NumberFormatException} or date {@link ParseException}, silent exception
-    *         will be logged, and null return
-    * @throws IllegalStateException for date or number parse error
-    */
-   @SuppressWarnings("unchecked")
-   @Review(comment = "use SimpleDateFormat has a thread local", category = ReviewCategoryEnum.Improvement)
-   public static <T> T valueOf(final Serializable value, final Class<T> cl) throws IllegalStateException {
-
-	if (value == null) { return null; }
-
-	if (value instanceof String) {
-
-	   final String strValue = (String) value;
-
-	   if (Boolean.class.isAssignableFrom(cl)) { return (T) Boolean.valueOf(strValue); }
-
-	   if (Number.class.isAssignableFrom(cl)) {
-		try {
-		   if (Byte.class == cl) { return (T) Byte.valueOf(strValue); }
-		   if (Short.class == cl) { return (T) Short.valueOf(strValue); }
-		   if (Integer.class == cl) { return (T) Integer.valueOf(strValue); }
-		   if (Long.class == cl) { return (T) Long.valueOf(strValue); }
-		   if (Float.class == cl) { return (T) Float.valueOf(strValue); }
-		   if (Double.class == cl) { return (T) Double.valueOf(strValue); }
-		   if (BigInteger.class == cl) { return (T) new BigInteger(strValue); }
-		   if (BigDecimal.class == cl) { return (T) new BigDecimal(strValue); }
-		} catch (final NumberFormatException nfe) {
-		   LOGGER.error(ConfigurationMessageBundle.getMessage("config.number.format", strValue));
-		   throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.number.format", strValue), nfe);
-		}
-	   }
-
-	   if (Date.class.isAssignableFrom(cl)) {
-		try {
-		   return (T) new SimpleDateFormat(StrDateFormat).parse(strValue);
-		} catch (final ParseException pe) {
-		   LOGGER.error(ConfigurationMessageBundle.getMessage("config.date.format", strValue, StrDateFormat));
-		   throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.date.format", strValue, StrDateFormat), pe);
-		}
-	   }
-
-	   if (String.class.isAssignableFrom(cl)) { return (T) (StringHelper.isEmpty(strValue) ? "" : strValue); }
-
-	   throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.property.illegal.class"));
-
-	} else if (value instanceof Number) {
-	   throw new NotYetImplementedException();
-	} else if (value instanceof Boolean) {
-	   throw new NotYetImplementedException();
-	} else if (value instanceof Date) { throw new NotYetImplementedException(); }
-
-	return null;
-   }
-
-   /**
-    * @param <T>
-    * @param values can be a String with multiple values separate by {@link ConfigurationConstants#MultiValDefaultSeparator}, or
-    * @param cl
-    * @return multiple value
-    */
-   public static <T> List<T> valuesOf(final Serializable values, final Class<T> cl) {
-
-	if (values == null) { return null; }
-
-	List<T> result = null;
-	if (values instanceof String) {
-	   final String strValue = (String) values;
-	   if (!StringHelper.isEmpty(strValue)) {
-		result = new LinkedList<T>();
-		final StringTokenizer strToken = new StringTokenizer(strValue, MultiValDefaultSeparator);
-		while (strToken.hasMoreTokens()) {
-		   result.add(valueOf(strToken.nextToken(), cl));
-		}
-	   }
-	} else {
-	   throw new NotYetImplementedException();
-	}
-	return result;
-   }
-
-   /**
-    * {@link Serializable} to String Converter
-    * 
-    * @param value instance to convert
-    * @return String conversion of the requested object
-    */
-   @Review(comment = "use SimpleDateFormat has a thread local", category = ReviewCategoryEnum.Improvement)
-   protected String serializableToString(final Serializable value) {
-
-	if (value != null) {
-
-	   if (value instanceof Number) {
-		return ((Number) value).toString();
-	   } else if (value instanceof Date) {
-		return new SimpleDateFormat(StrDateFormat).format(value);
-	   } else if (value instanceof String) {
-		return (String) value;
-	   } else if (value instanceof Boolean) {
-		return String.valueOf(value);
-	   } else if (value instanceof Byte) {
-		return String.valueOf(value);
-	   } else {
-		return value.toString();
-	   }
-	} else {
-	   return null;
-	}
    }
 
    /*
@@ -1062,7 +659,7 @@ public abstract class AbstractConfiguration implements Configuration {
 	   if (values != null && values.size() <= 1) {
 		str.append(key).append("=").append(value).append(" , ");
 	   } else {
-		str.append(key).append("=").append(ConverterHelper.collectionToString(values, MultiValDefaultSeparator)).append(" , ");
+		str.append(key).append("=").append(ConverterHelper.collectionToString(values, MultiValuesSeparator)).append(" , ");
 	   }
 	}
 	str.append("}");

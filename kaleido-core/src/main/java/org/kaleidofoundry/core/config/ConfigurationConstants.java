@@ -89,11 +89,5 @@ public interface ConfigurationConstants {
    String KeyPropertiesRoot = "";
    /** Default separator for properties name */
    String KeyPropertiesSeparator = ".";
-   /** Multiple value separator */
-   String MultiValDefaultSeparator = " ";
-   /** String Date Formatter */
-   String StrDateFormat = "yyyy-MM-dd'T'hh:mm:ss"; // yyyy-MM-ddThh:mm:ss
-   /** String Number Formatter */
-   String StrNumberFormat = "##0.0####";
 
 }

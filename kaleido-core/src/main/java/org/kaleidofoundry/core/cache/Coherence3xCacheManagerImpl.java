@@ -188,11 +188,11 @@ public class Coherence3xCacheManagerImpl extends AbstractCacheManager {
 
 	try {
 
-	   if (!StringHelper.isEmpty(context.getProperty(Classloader))) {
+	   if (!StringHelper.isEmpty(context.getString(Classloader))) {
 		try {
 		   return CacheFactory.getCache(name, Class.forName(Classloader).getClassLoader());
 		} catch (final ClassNotFoundException cnfe) {
-		   throw new CacheConfigurationException("cache.classloader.notfound", cnfe, context.getProperty(Classloader));
+		   throw new CacheConfigurationException("cache.classloader.notfound", cnfe, context.getString(Classloader));
 		}
 	   } else {
 		return com.tangosol.net.CacheFactory.getCache(name);

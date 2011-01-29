@@ -17,8 +17,8 @@ package org.kaleidofoundry.core.cache;
 
 import java.io.Serializable;
 
+import org.kaleidofoundry.core.context.ContextEmptyParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.context.RuntimeContextEmptyParameterException;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.util.StringHelper;
 
@@ -65,10 +65,10 @@ public abstract class AbstractCache<K extends Serializable, V extends Serializab
     */
    public AbstractCache(@NotNull final RuntimeContext<Cache<K, V>> context) {
 
-	this.name = context.getProperty(CacheContextBuilder.CacheName);
+	this.name = context.getString(CacheContextBuilder.CacheName);
 	this.context = context;
 
-	if (StringHelper.isEmpty(name)) { throw new RuntimeContextEmptyParameterException(CacheContextBuilder.CacheName, context); }
+	if (StringHelper.isEmpty(name)) { throw new ContextEmptyParameterException(CacheContextBuilder.CacheName, context); }
    }
 
    /**

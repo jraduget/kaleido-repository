@@ -9,10 +9,8 @@
 		<aspect name="org.kaleidofoundry.core.lang.aop.NotYetImplementedAspect" />
 		<aspect name="org.kaleidofoundry.core.lang.aop.NotImplementedAspect" />
 		
-		<aspect name="org.kaleidofoundry.core.persistence.PersistenceContextAspect" />
-		 
-		<aspect name="org.kaleidofoundry.core.context.RuntimeContextFieldInjectorAspect" />
-		<aspect name="org.kaleidofoundry.core.context.RuntimeContextProvidedFieldInjectorAspect" />
+		<aspect name="org.kaleidofoundry.core.persistence.PersistenceContextAspect" />		 
+		<aspect name="org.kaleidofoundry.core.context.AnnotationContexInjectorAspect" />
 		-->
 	</aspects>
 </aspectj>

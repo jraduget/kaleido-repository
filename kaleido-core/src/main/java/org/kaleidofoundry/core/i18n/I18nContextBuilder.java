@@ -15,6 +15,9 @@
  */
 package org.kaleidofoundry.core.i18n;
 
+import java.io.Serializable;
+import java.util.concurrent.ConcurrentMap;
+
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
 import org.kaleidofoundry.core.context.RuntimeContext;
@@ -80,38 +83,103 @@ public class I18nContextBuilder extends AbstractRuntimeContextBuilder<I18nMessag
     */
    public static final String ClassLoaderClass = "classLoaderClass";
 
+   /**
+    * 
+    */
    public I18nContextBuilder() {
 	super();
    }
 
+   /**
+    * @param pluginInterface
+    * @param configurations
+    */
    public I18nContextBuilder(final Class<I18nMessages> pluginInterface, final Configuration... configurations) {
 	super(pluginInterface, configurations);
    }
 
+   /**
+    * @param pluginInterface
+    * @param staticParameters
+    */
+   public I18nContextBuilder(final Class<I18nMessages> pluginInterface, final ConcurrentMap<String, Serializable> staticParameters) {
+	super(pluginInterface, staticParameters);
+   }
+
+   /**
+    * @param pluginInterface
+    */
    public I18nContextBuilder(final Class<I18nMessages> pluginInterface) {
 	super(pluginInterface);
    }
 
-   public I18nContextBuilder(final Configuration... configurations) {
-	super(configurations);
+   /**
+    * @param staticParameters
+    * @param configurations
+    */
+   public I18nContextBuilder(final ConcurrentMap<String, Serializable> staticParameters, final Configuration... configurations) {
+	super(staticParameters, configurations);
    }
 
+   /**
+    * @param name
+    * @param pluginInterface
+    * @param configurations
+    */
    public I18nContextBuilder(final String name, final Class<I18nMessages> pluginInterface, final Configuration... configurations) {
 	super(name, pluginInterface, configurations);
    }
 
+   /**
+    * @param name
+    * @param pluginInterface
+    * @param staticParameters
+    * @param configurations
+    */
+   public I18nContextBuilder(final String name, final Class<I18nMessages> pluginInterface, final ConcurrentMap<String, Serializable> staticParameters,
+	   final Configuration... configurations) {
+	super(name, pluginInterface, staticParameters, configurations);
+   }
+
+   /**
+    * @param name
+    * @param configurations
+    */
    public I18nContextBuilder(final String name, final Configuration... configurations) {
 	super(name, configurations);
    }
 
+   /**
+    * @param name
+    * @param prefixProperty
+    * @param configurations
+    */
    public I18nContextBuilder(final String name, final String prefixProperty, final Configuration... configurations) {
 	super(name, prefixProperty, configurations);
    }
 
+   /**
+    * @param name
+    * @param prefixProperty
+    * @param staticParameters
+    * @param configurations
+    */
+   public I18nContextBuilder(final String name, final String prefixProperty, final ConcurrentMap<String, Serializable> staticParameters,
+	   final Configuration... configurations) {
+	super(name, prefixProperty, staticParameters, configurations);
+   }
+
+   /**
+    * @param name
+    * @param prefix
+    */
    public I18nContextBuilder(final String name, final String prefix) {
 	super(name, prefix);
    }
 
+   /**
+    * @param name
+    */
    public I18nContextBuilder(final String name) {
 	super(name);
    }

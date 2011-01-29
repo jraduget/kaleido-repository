@@ -24,9 +24,9 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.kaleidofoundry.core.context.AbstractProviderService;
+import org.kaleidofoundry.core.context.ContextEmptyParameterException;
+import org.kaleidofoundry.core.context.ContextIllegalParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.context.RuntimeContextEmptyParameterException;
-import org.kaleidofoundry.core.context.RuntimeContextIllegalParameterException;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.system.JavaSystemHelper;
 import org.kaleidofoundry.core.util.StringHelper;
@@ -54,22 +54,22 @@ public class I18nMessagesProvider extends AbstractProviderService<I18nMessages> 
    @Override
    public I18nMessages _provides(@NotNull final RuntimeContext<I18nMessages> context) {
 
-	final String baseName = context.getProperty(BaseName);
-	final String localeLanguageCode = context.getProperty(LocaleLanguage);
-	final String countryLanguageCode = context.getProperty(LocaleCountry);
-	final String classLoaderClass = context.getProperty(ClassLoaderClass);
+	final String baseName = context.getString(BaseName);
+	final String localeLanguageCode = context.getString(LocaleLanguage);
+	final String countryLanguageCode = context.getString(LocaleCountry);
+	final String classLoaderClass = context.getString(ClassLoaderClass);
 
 	ClassLoader classLoader = null;
 	Locale locale = null;
 
 	// managed baseName
-	if (StringHelper.isEmpty(baseName)) { throw new RuntimeContextEmptyParameterException(BaseName, context); }
+	if (StringHelper.isEmpty(baseName)) { throw new ContextEmptyParameterException(BaseName, context); }
 
 	// managed classloader context
 	try {
 	   classLoader = StringHelper.isEmpty(classLoaderClass) ? null : Class.forName(classLoaderClass).getClassLoader();
 	} catch (final ClassNotFoundException cnfe) {
-	   throw new RuntimeContextIllegalParameterException(ClassLoaderClass, classLoaderClass, context, cnfe);
+	   throw new ContextIllegalParameterException(ClassLoaderClass, classLoaderClass, context, cnfe);
 	}
 
 	// managed locale language & country context

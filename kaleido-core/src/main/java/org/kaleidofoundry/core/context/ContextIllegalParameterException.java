@@ -20,7 +20,7 @@ import java.util.Locale;
 /**
  * @author Jerome RADUGET
  */
-public class RuntimeContextIllegalParameterException extends RuntimeContextException {
+public class ContextIllegalParameterException extends ContextException {
 
    private static final long serialVersionUID = -7106275164578192921L;
 
@@ -31,7 +31,7 @@ public class RuntimeContextIllegalParameterException extends RuntimeContextExcep
     * @param context
     * @param error
     */
-   public RuntimeContextIllegalParameterException(String parameter, String parameterValue, RuntimeContext<?> context, Throwable error ) {
+   public ContextIllegalParameterException(String parameter, String parameterValue, RuntimeContext<?> context, Throwable error ) {
 	super("context.parameter.causes.error", parameter, parameterValue, context.getName(), error.getMessage());
    }
    
@@ -40,7 +40,7 @@ public class RuntimeContextIllegalParameterException extends RuntimeContextExcep
     * @param locale
     * @param args
     */
-   RuntimeContextIllegalParameterException(final String code, final Locale locale, final String... args) {
+   ContextIllegalParameterException(final String code, final Locale locale, final String... args) {
 	super(code, locale, args);
    }
 
@@ -48,7 +48,7 @@ public class RuntimeContextIllegalParameterException extends RuntimeContextExcep
     * @param code
     * @param locale
     */
-    RuntimeContextIllegalParameterException(final String code, final Locale locale) {
+    ContextIllegalParameterException(final String code, final Locale locale) {
 	super(code, locale);
    }
 
@@ -56,7 +56,7 @@ public class RuntimeContextIllegalParameterException extends RuntimeContextExcep
     * @param code
     * @param args
     */
-    RuntimeContextIllegalParameterException(final String code, final String... args) {
+    ContextIllegalParameterException(final String code, final String... args) {
 	super(code, args);
    }
 
@@ -66,7 +66,7 @@ public class RuntimeContextIllegalParameterException extends RuntimeContextExcep
     * @param locale
     * @param args
     */
-    RuntimeContextIllegalParameterException(final String code, final Throwable cause, final Locale locale, final String... args) {
+    ContextIllegalParameterException(final String code, final Throwable cause, final Locale locale, final String... args) {
 	super(code, cause, locale, args);
    }
 
@@ -75,7 +75,7 @@ public class RuntimeContextIllegalParameterException extends RuntimeContextExcep
     * @param cause
     * @param locale
     */
-    RuntimeContextIllegalParameterException(final String code, final Throwable cause, final Locale locale) {
+    ContextIllegalParameterException(final String code, final Throwable cause, final Locale locale) {
 	super(code, cause, locale);
    }
 
@@ -84,7 +84,7 @@ public class RuntimeContextIllegalParameterException extends RuntimeContextExcep
     * @param cause
     * @param args
     */
-    RuntimeContextIllegalParameterException(final String code, final Throwable cause, final String... args) {
+    ContextIllegalParameterException(final String code, final Throwable cause, final String... args) {
 	super(code, cause, args);
    }
 
@@ -92,14 +92,14 @@ public class RuntimeContextIllegalParameterException extends RuntimeContextExcep
     * @param code
     * @param cause
     */
-    RuntimeContextIllegalParameterException(final String code, final Throwable cause) {
+    ContextIllegalParameterException(final String code, final Throwable cause) {
 	super(code, cause);
    }
 
    /**
     * @param code
     */
-    RuntimeContextIllegalParameterException(final String code) {
+    ContextIllegalParameterException(final String code) {
 	super(code);
    }
 

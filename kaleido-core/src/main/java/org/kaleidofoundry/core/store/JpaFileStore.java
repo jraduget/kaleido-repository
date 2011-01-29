@@ -140,8 +140,8 @@ public class JpaFileStore extends AbstractFileStore implements FileStore {
 
 	if (resource.getInputStream() != null) {
 
-	   final int buffSize = !StringHelper.isEmpty(context.getProperty(FileStoreContextBuilder.BufferSize)) ? Integer.valueOf(context
-		   .getProperty(FileStoreContextBuilder.BufferSize)) : 128;
+	   final int buffSize = !StringHelper.isEmpty(context.getString(FileStoreContextBuilder.BufferSize)) ? context
+		   .getInteger(FileStoreContextBuilder.BufferSize) : 128;
 	   final byte[] buffer = new byte[buffSize];
 	   final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -170,7 +170,7 @@ public class JpaFileStore extends AbstractFileStore implements FileStore {
     */
    private FileHandlerEntity newInstance() {
 
-	final String customFileHandlerEntityClass = context.getProperty(FileStoreContextBuilder.CustomFileHandlerEntity);
+	final String customFileHandlerEntityClass = context.getString(FileStoreContextBuilder.CustomFileHandlerEntity);
 
 	if (StringHelper.isEmpty(customFileHandlerEntityClass)) {
 	   return new FileHandlerEntity();

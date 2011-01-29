@@ -87,8 +87,8 @@ public class HttpFileStore extends AbstractFileStore implements FileStore {
     */
    @Override
    protected FileHandler doGet(final URI resourceUri) throws ResourceNotFoundException, StoreException {
-	if (resourceUri.getHost() == null) { throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage(
-		"store.uri.http.illegal", resourceUri.toString())); }
+	if (resourceUri.getHost() == null) { throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.uri.http.illegal",
+		resourceUri.toString())); }
 	try {
 
 	   /*
@@ -104,22 +104,22 @@ public class HttpFileStore extends AbstractFileStore implements FileStore {
 	   Proxy httpProxy = null;
 
 	   // if a proxy is set & active
-	   if (!StringHelper.isEmpty(context.getProperty(FileStoreContextBuilder.ProxySet))) {
-		if (Boolean.parseBoolean(context.getProperty(FileStoreContextBuilder.ProxySet))) {
+	   if (!StringHelper.isEmpty(context.getString(FileStoreContextBuilder.ProxySet))) {
+		if (context.getBoolean(FileStoreContextBuilder.ProxySet)) {
 
-		   final String proxyHost = context.getProperty(FileStoreContextBuilder.ProxyHost);
-		   final String proxyPort = context.getProperty(FileStoreContextBuilder.ProxyPort);
+		   final String proxyHost = context.getString(FileStoreContextBuilder.ProxyHost);
+		   final String proxyPort = context.getString(FileStoreContextBuilder.ProxyPort);
 
 		   if (!StringHelper.isEmpty(proxyHost)) {
 			httpProxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, !StringHelper.isEmpty(proxyPort) ? Integer.parseInt(proxyPort) : 80));
 
-			if (!StringHelper.isEmpty(context.getProperty(FileStoreContextBuilder.NonProxyHosts))) {
+			if (!StringHelper.isEmpty(context.getString(FileStoreContextBuilder.NonProxyHosts))) {
 			   // :( global...
 			   System.getProperties().put("http.nonProxyHosts", context.getProperty(FileStoreContextBuilder.NonProxyHosts));
 			}
 
-			if (!StringHelper.isEmpty(context.getProperty(FileStoreContextBuilder.ProxyUser))
-				&& !StringHelper.isEmpty(context.getProperty(FileStoreContextBuilder.ProxyPassword))) {
+			if (!StringHelper.isEmpty(context.getString(FileStoreContextBuilder.ProxyUser))
+				&& !StringHelper.isEmpty(context.getString(FileStoreContextBuilder.ProxyPassword))) {
 
 			   // Authenticator is global... :(
 			   // other way : urlConnection.setRequestProperty("Proxy-Authorization", Base64.encodeObject(username));
@@ -127,7 +127,7 @@ public class HttpFileStore extends AbstractFileStore implements FileStore {
 			   Authenticator.setDefault(new Authenticator() {
 				@Override
 				protected PasswordAuthentication getPasswordAuthentication() {
-				   return new PasswordAuthentication(context.getProperty(FileStoreContextBuilder.ProxyUser), context.getProperty(
+				   return new PasswordAuthentication(context.getString(FileStoreContextBuilder.ProxyUser), context.getString(
 					   FileStoreContextBuilder.ProxyPassword).toCharArray());
 				}
 			   });

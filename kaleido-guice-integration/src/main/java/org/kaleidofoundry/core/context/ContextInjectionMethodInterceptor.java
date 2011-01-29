@@ -53,7 +53,7 @@ class ContextInjectionMethodInterceptor implements MethodInterceptor {
 	int cptArg = 0;
 	RuntimeContext<?> runtimeContextArg = null;
 
-	for (Object arg : invocation.getArguments()) {
+	for (final Object arg : invocation.getArguments()) {
 	   if (arg != null && arg instanceof RuntimeContext<?>) {
 		runtimeContextArg = (RuntimeContext<?>) arg;
 		break;
@@ -68,8 +68,8 @@ class ContextInjectionMethodInterceptor implements MethodInterceptor {
 	   Context contextAnnot = null;
 
 	   // 2.1 scan method arguments, to detect a @Context declaration
-	   Annotation[] argsAnnot = invocation.getMethod().getParameterAnnotations()[cptArg];
-	   for (Annotation a : argsAnnot) {
+	   final Annotation[] argsAnnot = invocation.getMethod().getParameterAnnotations()[cptArg];
+	   for (final Annotation a : argsAnnot) {
 		if (a instanceof Context) {
 		   contextAnnot = (Context) a;
 		}
@@ -94,7 +94,7 @@ class ContextInjectionMethodInterceptor implements MethodInterceptor {
    }
 
    protected void debugInvovation(final MethodInvocation invocation) {
-	// 0. debug usefull part
+	// 0. debug useful part
 	if (LOGGER.isDebugEnabled()) {
 
 	   // method information
@@ -102,12 +102,12 @@ class ContextInjectionMethodInterceptor implements MethodInterceptor {
 
 	   // method argument information
 	   int cpt = 0;
-	   for (Object arg : invocation.getArguments()) {
+	   for (final Object arg : invocation.getArguments()) {
 		LOGGER.debug("\tmethod arg[{}]={}.toString()={}", new Object[] { cpt++, arg.getClass().getName(), arg });
 	   }
 
 	   // method annotation
-	   for (Annotation annot : invocation.getMethod().getDeclaredAnnotations()) {
+	   for (final Annotation annot : invocation.getMethod().getDeclaredAnnotations()) {
 		LOGGER.debug("\tmethod {} annotated by {}", invocation.getMethod().getName(), annot.annotationType().getName());
 	   }
 

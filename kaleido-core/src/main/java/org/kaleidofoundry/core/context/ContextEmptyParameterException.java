@@ -18,11 +18,11 @@ package org.kaleidofoundry.core.context;
 import java.util.Locale;
 
 /**
- * {@link RuntimeContextException} used when an context parameter is not set
+ * {@link ContextException} used when an context parameter is not set
  * 
  * @author Jerome RADUGET
  */
-public class RuntimeContextEmptyParameterException extends RuntimeContextIllegalParameterException {
+public class ContextEmptyParameterException extends ContextIllegalParameterException {
 
    private static final long serialVersionUID = 4225599225267075709L;
 
@@ -33,7 +33,7 @@ public class RuntimeContextEmptyParameterException extends RuntimeContextIllegal
     * @param context
     * @param locale
     */
-   public RuntimeContextEmptyParameterException(final String parameter, final RuntimeContext<?> context, final Locale locale) {
+   public ContextEmptyParameterException(final String parameter, final RuntimeContext<?> context, final Locale locale) {
 	super("context.parameter.empty", locale, parameter, context.getName());
 	this.parameter = parameter;
    }
@@ -42,7 +42,7 @@ public class RuntimeContextEmptyParameterException extends RuntimeContextIllegal
     * @param parameter
     * @param context
     */
-   public RuntimeContextEmptyParameterException(final String parameter, final RuntimeContext<?> context) {
+   public ContextEmptyParameterException(final String parameter, final RuntimeContext<?> context) {
 	super("context.parameter.empty", parameter, context.getName());
 	this.parameter = parameter;
    }

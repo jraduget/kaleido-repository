@@ -20,8 +20,8 @@ import static org.kaleidofoundry.core.store.FileStoreConstants.ClasspathStorePlu
 import java.io.InputStream;
 import java.net.URI;
 
+import org.kaleidofoundry.core.context.ContextIllegalParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.context.RuntimeContextIllegalParameterException;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
@@ -52,7 +52,7 @@ public class ClasspathFileStore extends AbstractFileStore implements FileStore {
    @NotNull
    protected ClassLoader getClassLoader() {
 	final ClassLoader classLoader;
-	final String strClass = context.getProperty(FileStoreContextBuilder.Classloader);
+	final String strClass = context.getString(FileStoreContextBuilder.Classloader);
 
 	if (strClass == null) {
 	   classLoader = Thread.currentThread().getContextClassLoader();
@@ -60,7 +60,7 @@ public class ClasspathFileStore extends AbstractFileStore implements FileStore {
 	   try {
 		classLoader = Class.forName(strClass).getClassLoader();
 	   } catch (final ClassNotFoundException cnfe) {
-		throw new RuntimeContextIllegalParameterException(FileStoreContextBuilder.Classloader, strClass, context, cnfe);
+		throw new ContextIllegalParameterException(FileStoreContextBuilder.Classloader, strClass, context, cnfe);
 	   }
 	}
 	return classLoader;

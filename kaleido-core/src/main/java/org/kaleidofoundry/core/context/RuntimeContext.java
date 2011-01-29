@@ -15,20 +15,16 @@
  */
 package org.kaleidofoundry.core.context;
 
-import static org.kaleidofoundry.core.config.AbstractConfiguration.valueOf;
-import static org.kaleidofoundry.core.config.AbstractConfiguration.valuesOf;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ContextMessageBundle;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Date;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.config.ConfigurationChangeEvent;
@@ -40,10 +36,10 @@ import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Review;
 import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
-import org.kaleidofoundry.core.lang.annotation.Reviews;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginHelper;
+import org.kaleidofoundry.core.util.AbstractSerializer;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -149,11 +145,9 @@ import org.kaleidofoundry.core.util.StringHelper;
  * @see Declare declaration of a new plugin interface or implemetation class
  * @see Context inject {@link RuntimeContext} to a class field, method argument...
  */
-@Reviews(reviews = {
-	@Review(comment = "review interaction between configuration and runtime context... use case, creation, event handling... have to be thread safe...", category = ReviewCategoryEnum.Todo),
-	@Review(comment = "create or RuntimeContext interface & hierarchy (DefaultRuntimeContext, PluginRuntimeContext)", category = ReviewCategoryEnum.Refactor) })
+@Review(comment = "comment and review interaction between configuration and runtime context... use case, creation, event handling... have to be thread safe...", category = ReviewCategoryEnum.Todo)
 @Immutable(comment = "instance which have been injected using @Context are immutable after injection")
-public class RuntimeContext<T> {
+public class RuntimeContext<T> extends AbstractSerializer {
 
    /** Context property name, used to enable the component listening of configuration parameters changes */
    public static final String Dynamics = "dynamics";
@@ -170,11 +164,11 @@ public class RuntimeContext<T> {
 
    // used only by {@link AbstractRuntimeContextBuilder}, for static injection
    boolean hasBeenInjectedByAnnotationProcessing;
-   // internal properties used by runtime context builder.
-   // context internal properties are injected manually by the developer coding using annotation, or using builder
-   final Map<String, String> parameters;
    // does context has been build by runtime context builder ? if yes, no more updates is possible)
    boolean hasBeenBuildByContextBuilder;
+   // static parameters (@Contex( parameters = {...})
+   // there are injected manually by the developer coding using annotation, or using builder
+   final ConcurrentMap<String, Serializable> parameters;
    // an optional configuration change handler
    ConfigurationChangeHandler configurationChangesHandler;
 
@@ -185,6 +179,16 @@ public class RuntimeContext<T> {
     */
    public RuntimeContext(final Configuration... configurations) {
 	this(null, (String) null, configurations);
+   }
+
+   /**
+    * create <b>unnamed</b> {@link RuntimeContext} name, with static parameters, <b>without prefix</b>
+    * 
+    * @param staticParameters staticParameters Optional static parameters
+    * @param configurations
+    */
+   public RuntimeContext(final ConcurrentMap<String, Serializable> staticParameters, final Configuration... configurations) {
+	this(null, (String) null, staticParameters, configurations);
    }
 
    /**
@@ -199,49 +203,67 @@ public class RuntimeContext<T> {
 
    /**
     * create unnamed {@link RuntimeContext}, with the given plugin prefix
-    * <p>
-    * <b>I would preferred introspection to get generic type T, without giving its Class in constructor argument...</b> <br/>
-    * But generic type are erased one compiled (java 4 compatibility)... <br/>
-    * <br/>
-    * Very interesting topics on the subject :
-    * <ul>
-    * <li>http://download.oracle.com/docs/cd/E17409_01/javase/tutorial/java/generics/erasure.html
-    * <li>http://gafter.blogspot.com/2006/12/super-type-tokens.html
-    * </ul>
-    * So, I keep simple solution of passing the Class of the generic in constructor. The abstract solution does not satisfy me.
-    * </p>
     * 
     * @param pluginInterface {@link Plugin} interface (interface annotated @{@link Declare}), so the {@link Plugin#getName()} will be the
     *           context prefix
+    * @see #RuntimeContext(String, Class, Map, Configuration...) for more informations see here
     */
    public RuntimeContext(final Class<T> pluginInterface) {
-	this(null, pluginInterface, new Configuration[0]);
+	this(null, pluginInterface, null, new Configuration[0]);
+   }
+
+   /**
+    * create unnamed {@link RuntimeContext}, with the given plugin prefix & static parameters
+    * 
+    * @param pluginInterface
+    * @param staticParameters
+    */
+   public RuntimeContext(final Class<T> pluginInterface, final ConcurrentMap<String, Serializable> staticParameters) {
+	this(null, pluginInterface, staticParameters, new Configuration[0]);
    }
 
    /**
     * create unnamed {@link RuntimeContext}, with the given plugin prefix & configurations
-    * <p>
-    * <b>I would preferred introspection to get generic type T, without giving its Class in constructor argument...</b> <br/>
-    * But generic type are erased one compiled (java 4 compatibility)... <br/>
-    * <br/>
-    * Very interesting topics on the subject :
-    * <ul>
-    * <li>http://download.oracle.com/docs/cd/E17409_01/javase/tutorial/java/generics/erasure.html
-    * <li>http://gafter.blogspot.com/2006/12/super-type-tokens.html
-    * </ul>
-    * So, I keep simple solution of passing the Class of the generic in constructor. The abstract solution does not satisfy me.
-    * </p>
     * 
     * @param pluginInterface {@link Plugin} interface (interface annotated @{@link Declare}), so the {@link Plugin#getName()} will be the
     *           context prefix
     * @param configurations configuration instances where to find properties, configurations have to be load before
+    * @see #RuntimeContext(String, Class, Map, Configuration...) for more informations see here
     */
    public RuntimeContext(final Class<T> pluginInterface, final Configuration... configurations) {
 	this(null, pluginInterface, configurations);
    }
 
+   public RuntimeContext(final Class<T> pluginInterface, final ConcurrentMap<String, Serializable> staticParameters, final Configuration... configurations) {
+	this(null, pluginInterface, staticParameters, configurations);
+   }
+
    /**
-    * create named {@link RuntimeContext}, with the given plugin prefix
+    * create named {@link RuntimeContext}, with the given plugin prefix & configurations
+    * 
+    * @param name context name
+    * @param pluginInterface {@link Plugin} interface (interface annotated @{@link Declare}), so the {@link Plugin#getName()} will be the
+    *           context prefix
+    * @param configurations configuration instances where to find properties, configurations have to be load before
+    * @see #RuntimeContext(String, Class, Map, Configuration...) for more informations see here
+    */
+   public RuntimeContext(final String name, final Class<T> pluginInterface, final Configuration... configurations) {
+	this(name, pluginInterface, false, null, configurations);
+   }
+
+   /**
+    * create named {@link RuntimeContext}, with the given prefix & configurations
+    * 
+    * @param name context name
+    * @param prefixProperty an optional prefix for the properties name (it can be used to categorized your own RuntimeContext)
+    * @param configurations configuration instances where to find properties, configurations have to be load before
+    */
+   public RuntimeContext(final String name, final String prefixProperty, final Configuration... configurations) {
+	this(name, prefixProperty, false, null, configurations);
+   }
+
+   /**
+    * create named {@link RuntimeContext}, with the given plugin prefix & static parameters & configurations
     * <p>
     * <b>I would preferred introspection to get generic type T, without giving its Class in constructor argument...</b> <br/>
     * But generic type are erased one compiled (java 4 compatibility)... <br/>
@@ -257,37 +279,37 @@ public class RuntimeContext<T> {
     * @param name context name
     * @param pluginInterface {@link Plugin} interface (interface annotated @{@link Declare}), so the {@link Plugin#getName()} will be the
     *           context prefix
-    * @param configurations configuration instances where to find properties, configurations have to be load before
+    * @param staticParameters Optional static parameters
+    * @param configurations
     */
-   public RuntimeContext(final String name, final Class<T> pluginInterface, final Configuration... configurations) {
-	this(name, pluginInterface, false, configurations);
+   public RuntimeContext(final String name, final Class<T> pluginInterface, final ConcurrentMap<String, Serializable> staticParameters,
+	   final Configuration... configurations) {
+	this(name, pluginInterface, false, staticParameters, configurations);
    }
 
    /**
+    * create named {@link RuntimeContext}, with the given plugin prefix & static parameters & configurations
+    * 
     * @param name context name
     * @param prefixProperty an optional prefix for the properties name (it can be used to categorized your own RuntimeContext)
-    * @param configurations configuration instances where to find properties, configurations have to be load before
+    * @param staticParameters Optional static parameters
+    * @param configurations
     */
-   public RuntimeContext(final String name, final String prefixProperty, @NotNull final Configuration... configurations) {
-	this(name, prefixProperty, false, configurations);
+   public RuntimeContext(final String name, final String prefixProperty, final ConcurrentMap<String, Serializable> staticParameters,
+	   final Configuration... configurations) {
+	this(name, prefixProperty, false, staticParameters, configurations);
    }
 
    /**
-    * @param name context name
-    * @param prefix an optional prefix for the properties name (it can be used to categorized your own RuntimeContext)
-    * @param context
-    */
-   public RuntimeContext(final String name, final String prefix, @NotNull final RuntimeContext<?> context) {
-	this(name, prefix, false, context.getConfigurations());
-   }
-
-   /**
+    * create named {@link RuntimeContext}, with the given plugin prefix and using given runtime context configurations
+    * 
     * @param name context name
     * @param pluginInterface
     * @param context
+    * @see #RuntimeContext(String, Class, Map, Configuration...) for more informations see here
     */
    public RuntimeContext(final String name, final Class<T> pluginInterface, @NotNull final RuntimeContext<?> context) {
-	this(name, pluginInterface, false, context.getConfigurations());
+	this(name, pluginInterface, false, null, context.getConfigurations());
    }
 
    /**
@@ -295,32 +317,34 @@ public class RuntimeContext<T> {
     * @param prefixProperty prefixProperty an optional prefix for the properties name (it can be used to categorized your own
     *           RuntimeContext)
     * @param hasBeenInjectedByAnnotationProcessing does context injection have been done (immutable after injection)
+    * @param staticParameters Optional static parameters
     * @param configurations configuration instances where to find properties, configurations have to be load before
     */
    RuntimeContext(final String name, final String prefixProperty, final boolean hasBeenInjectedByAnnotationProcessing,
-	   @NotNull final Configuration... configurations) {
+	   final ConcurrentMap<String, Serializable> staticParameters, final Configuration... configurations) {
 	this.name = name;
 	this.prefixProperty = prefixProperty;
 	this.pluginInterface = null;
 	this.configurations = configurations; // keep original instance, to handle property modification. don't re-copy it
 	this.hasBeenInjectedByAnnotationProcessing = hasBeenInjectedByAnnotationProcessing;
-	this.parameters = new ConcurrentHashMap<String, String>();
+	this.parameters = staticParameters == null ? new ConcurrentHashMap<String, Serializable>() : staticParameters;
    }
 
    /**
     * @param name context name
     * @param pluginInterface
     * @param hasBeenInjectedByAnnotationProcessing does context injection have been done (immutable after injection)
+    * @param staticParameters Optional static parameters
     * @param configurations configuration instances where to find properties, configurations have to be load before
     */
    RuntimeContext(final String name, final Class<T> pluginInterface, final boolean hasBeenInjectedByAnnotationProcessing,
-	   @NotNull final Configuration... configurations) {
+	   final ConcurrentMap<String, Serializable> staticParameters, final Configuration... configurations) {
 	this.name = name;
 	this.prefixProperty = PluginHelper.getPluginName(pluginInterface);
 	this.pluginInterface = pluginInterface;
 	this.configurations = configurations; // keep original instance, to handle property modification. don't re-copy it
 	this.hasBeenInjectedByAnnotationProcessing = hasBeenInjectedByAnnotationProcessing;
-	this.parameters = new ConcurrentHashMap<String, String>();
+	this.parameters = staticParameters == null ? new ConcurrentHashMap<String, Serializable>() : staticParameters;
    }
 
    /**
@@ -328,11 +352,11 @@ public class RuntimeContext<T> {
     * @param context
     * @param pluginInterface
     * @return new runtime context instance, build from given annotation
-    * @throws RuntimeContextIllegalParameterException if one of {@link Context#configurations()} is not registered
+    * @throws ContextIllegalParameterException if one of {@link Context#configurations()} is not registered
     */
    static <T> RuntimeContext<T> createFrom(@NotNull final Context context, final Class<T> pluginInterface) {
 
-	if (StringHelper.isEmpty(context.value())) { throw new RuntimeContextIllegalParameterException("context.annotation.value.empty"); }
+	if (StringHelper.isEmpty(context.value())) { throw new ContextIllegalParameterException("context.annotation.value.empty"); }
 
 	final RuntimeContext<T> rc;
 
@@ -341,22 +365,23 @@ public class RuntimeContext<T> {
 	final Configuration[] configs = new Configuration[configIds != null ? configIds.length : 0];
 	for (int i = 0; i < configs.length; i++) {
 	   configs[i] = ConfigurationFactory.getRegistry().get(configIds[i]);
-	   if (configs[i] == null) { throw new RuntimeContextIllegalParameterException("context.annotation.illegalconfig.simple", context.value(), configIds[i]); }
+	   if (configs[i] == null) { throw new ContextIllegalParameterException("context.annotation.illegalconfig.simple", context.value(), configIds[i]); }
+	}
+
+	// copy static annotation parameters
+	final ConcurrentMap<String, Serializable> staticParameters = new ConcurrentHashMap<String, Serializable>();
+	// fixed the dynamics status of the context
+	staticParameters.put(Dynamics, String.valueOf(context.dynamics()));
+
+	for (final Parameter p : context.parameters()) {
+	   staticParameters.put(p.name(), p.value());
 	}
 
 	// create runtimeContext instance
 	if (pluginInterface != null) {
-	   rc = new RuntimeContext<T>(context.value(), pluginInterface, true, configs);
+	   rc = new RuntimeContext<T>(context.value(), pluginInterface, true, staticParameters, configs);
 	} else {
-	   rc = new RuntimeContext<T>(context.value(), (String) null, true, configs);
-	}
-
-	// dynamics status of the context
-	rc.parameters.put(Dynamics, String.valueOf(context.dynamics()));
-
-	// handle and copy static annotation parameters
-	for (final Parameter p : context.parameters()) {
-	   rc.parameters.put(p.name(), p.value());
+	   rc = new RuntimeContext<T>(context.value(), (String) null, true, staticParameters, configs);
 	}
 
 	return rc;
@@ -366,7 +391,7 @@ public class RuntimeContext<T> {
     * @param annotatedField
     * @return new runtime context instance, build from given field
     * @throws IllegalArgumentException is the given field is not annotated {@link Context}
-    * @throws RuntimeContextException if one of {@link Context#configurations()} is not registered
+    * @throws ContextException if one of {@link Context#configurations()} is not registered
     */
    static RuntimeContext<?> createFrom(@NotNull final Field annotatedField) {
 
@@ -394,13 +419,15 @@ public class RuntimeContext<T> {
    }
 
    /**
-    * Internal helper for re-copy a runtime context, which have not been yet processing by annotation processor injector
+    * Internal helper for re-copy a runtime context,
+    * which have not been yet processing by annotation processor injector.
+    * It is used for final field, which have been manually instantiate
     * 
     * @param origin
     * @param target
     * @throws IllegalStateException is current context have already been injected
     */
-   public static void copyFrom(final RuntimeContext<?> origin, final RuntimeContext<?> target) {
+   static void copyFrom(final RuntimeContext<?> origin, final RuntimeContext<?> target) {
 	if (!target.hasBeenInjectedByAnnotationProcessing) {
 	   target.name = origin.name;
 	   target.prefixProperty = origin.prefixProperty;
@@ -467,16 +494,17 @@ public class RuntimeContext<T> {
     *         For a property which is defined both in multiple configurations: the first occurrence will be return (configuration array
     *         declaration order) <br/>
     */
-   public String getProperty(final String property) {
+   @Override
+   public Serializable getProperty(final String property) {
 
 	// first, search in local static parameters
-	String resutlt = parameters.get(property);
-	if (resutlt != null) { return resutlt; }
+	Serializable result = parameters.get(property);
+	if (result != null) { return result; }
 
 	// if not found, search in configurations
 	for (final Configuration config : getConfigurations()) {
-	   resutlt = config.getString(getFullPropertyName(property));
-	   if (resutlt != null) { return resutlt; }
+	   result = config.getProperty(getFullPropertyName(property));
+	   if (result != null) { return result; }
 	}
 	return null;
    }
@@ -561,268 +589,12 @@ public class RuntimeContext<T> {
 	final Properties props = new Properties();
 	for (final String prop : keySet()) {
 	   if (props.get(prop) == null) {
-		props.setProperty(prop, getProperty(prop));
+		props.setProperty(prop, getProperty(prop).toString());
 	   }
 	}
 
 	return props;
 
-   }
-
-   // ***************************************************************************
-   // -> Typed property value accessors
-   // ***************************************************************************
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBigDecimal(java .lang.String)
-    */
-   public BigDecimal getBigDecimal(final String key) {
-	return valueOf(getProperty(key), BigDecimal.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBigDecimal(java .lang.String, java.math.BigDecimal)
-    */
-   public BigDecimal getBigDecimal(final String key, final BigDecimal defaultValue) {
-	final BigDecimal bd = getBigDecimal(key);
-	return bd == null ? defaultValue : bd;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBigDecimalList (java.lang.String)
-    */
-   public List<BigDecimal> getBigDecimalList(final String key) {
-	return valuesOf(getProperty(key), BigDecimal.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBigInteger(java .lang.String)
-    */
-   public BigInteger getBigInteger(final String key) {
-	return valueOf(getProperty(key), BigInteger.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBigInteger(java .lang.String, java.math.BigInteger)
-    */
-   public BigInteger getBigInteger(final String key, final BigInteger defaultValue) {
-	final BigInteger bi = getBigInteger(key);
-	return bi == null ? defaultValue : bi;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBigIntegerList (java.lang.String)
-    */
-   public List<BigInteger> getBigIntegerList(final String key) {
-	return valuesOf(getProperty(key), BigInteger.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBoolean(java. lang.String)
-    */
-   public Boolean getBoolean(final String key) {
-	final String value = getProperty(key);
-	return StringHelper.isEmpty(value) ? null : Boolean.valueOf(value);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBoolean(java. lang.String, java.lang.Boolean)
-    */
-   public Boolean getBoolean(final String key, final Boolean defaultValue) {
-	final Boolean b = getBoolean(key);
-	return b == null ? defaultValue : b;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getBooleanList( java.lang.String)
-    */
-   public List<Boolean> getBooleanList(final String key) {
-	return valuesOf(getProperty(key), Boolean.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getByte(java.lang .String)
-    */
-   public Byte getByte(final String key) {
-	final String value = getProperty(key);
-	return StringHelper.isEmpty(value) ? null : Byte.valueOf(value.getBytes()[0]);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getByte(java.lang .String, java.lang.Byte)
-    */
-   public Byte getByte(final String key, final Byte defaultValue) {
-	final Byte b = getByte(key);
-	return b == null ? defaultValue : b;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getByteList(java .lang.String)
-    */
-   public List<Byte> getByteList(final String key) {
-	return valuesOf(getProperty(key), Byte.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getDouble(java.lang .String)
-    */
-   public Double getDouble(final String key) {
-	return valueOf(getProperty(key), Double.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getDouble(java.lang .String, double)
-    */
-   public Double getDouble(final String key, final Double defaultValue) {
-	final Double d = getDouble(key);
-	return d == null ? defaultValue : d;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getDoubleList(java .lang.String)
-    */
-   public List<Double> getDoubleList(final String key) {
-	return valuesOf(getProperty(key), Double.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getFloat(java.lang .String)
-    */
-   public Float getFloat(final String key) {
-	return valueOf(getProperty(key), Float.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getFloat(java.lang .String, java.lang.Float)
-    */
-   public Float getFloat(final String key, final Float defaultValue) {
-	final Float f = getFloat(key);
-	return f == null ? defaultValue : f;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getFloatList(java .lang.String)
-    */
-   public List<Float> getFloatList(final String key) {
-	return valuesOf(getProperty(key), Float.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getInt(java.lang .String)
-    */
-   public Integer getInteger(final String key) {
-	return valueOf(getProperty(key), Integer.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getInteger(java. lang.String, java.lang.Integer)
-    */
-   public Integer getInteger(final String key, final Integer defaultValue) {
-	final Integer i = getInteger(key);
-	return i == null ? defaultValue : i;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getIntList(java .lang.String)
-    */
-   public List<Integer> getIntegerList(final String key) {
-	return valuesOf(getProperty(key), Integer.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getLong(java.lang .String)
-    */
-   public Long getLong(final String key) {
-	return valueOf(getProperty(key), Long.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getLong(java.lang .String, java.lang.Long)
-    */
-   public Long getLong(final String key, final Long defaultValue) {
-	final Long l = getLong(key);
-	return l == null ? defaultValue : l;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getLongList(java .lang.String)
-    */
-   public List<Long> getLongList(final String key) {
-	return valuesOf(getProperty(key), Long.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getShort(java.lang .String)
-    */
-   public Short getShort(final String key) {
-	return valueOf(getProperty(key), Short.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getShort(java.lang .String, java.lang.Short)
-    */
-   public Short getShort(final String key, final Short defaultValue) {
-	final Short s = getShort(key);
-	return s == null ? defaultValue : s;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getShortList(java .lang.String)
-    */
-   public List<Short> getShortList(final String key) {
-	return valuesOf(getProperty(key), Short.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getDate(java.lang .String)
-    */
-   public Date getDate(final String key) {
-	return valueOf(getProperty(key), Date.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.Configuration#getDateList(java.lang.String)
-    */
-   public List<Date> getDateList(final String key) {
-	return valuesOf(getProperty(key), Date.class);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.config.Configuration#getDate(java.lang .String, java.lang.Date)
-    */
-   public Date getDate(final String key, final Date defaultValue) {
-	final Date d = getDate(key);
-	return d == null ? defaultValue : d;
    }
 
    // ***************************************************************************
@@ -868,8 +640,9 @@ public class RuntimeContext<T> {
 
    /**
     * @return static parameters set by developer, which will overrides configuration items
+    * @see Context#parameters()
     */
-   protected Map<String, String> getParameters() {
+   protected ConcurrentMap<String, Serializable> getParameters() {
 	return parameters;
    }
 
