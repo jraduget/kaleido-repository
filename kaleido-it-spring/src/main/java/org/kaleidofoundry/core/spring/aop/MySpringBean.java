@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core;
+package org.kaleidofoundry.core.spring.aop;
 
 import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreUri;
@@ -52,13 +52,7 @@ public class MySpringBean {
    @Context(value = "myI18nCtx")
    private I18nMessages messages;
 
-   /**
-    * @param <T>
-    * @param myParam
-    * @param mySecondParam
-    * @return
-    */
-   public String myMethodToTestNotNullAnnotation(@NotNull String myParam, String mySecondParam) {
+   public String methodWithNotNullAnnotation(@NotNull final String myParam, final String mySecondParam) {
 	return myParam;
    }
 

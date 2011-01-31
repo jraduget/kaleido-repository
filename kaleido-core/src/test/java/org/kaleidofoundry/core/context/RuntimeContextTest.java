@@ -62,14 +62,14 @@ public class RuntimeContextTest extends Assert {
    public void createEmptyContext() {
 	final RuntimeContext<?> runtimeContext = new RuntimeContext<Object>();
 	assertNull(runtimeContext.getName());
-	assertNull(runtimeContext.getPrefixProperty());
+	assertNull(runtimeContext.getPrefix());
    }
 
    @Test
    public void createEmptyContextFromConfiguration() {
 	final RuntimeContext<?> runtimeContext = new RuntimeContext<Object>(configuration);
 	assertNull(runtimeContext.getName());
-	assertNull(runtimeContext.getPrefixProperty());
+	assertNull(runtimeContext.getPrefix());
 	assertNotNull(runtimeContext.getConfigurations());
 
 	simpleSampleAssertions(runtimeContext, null, null);
@@ -82,7 +82,7 @@ public class RuntimeContextTest extends Assert {
 	final RuntimeContext<?> runtimeContext = new RuntimeContext<Object>(TomcatContextName);
 	assertNotNull(runtimeContext.getName());
 	assertEquals(TomcatContextName, runtimeContext.getName());
-	assertNull(runtimeContext.getPrefixProperty());
+	assertNull(runtimeContext.getPrefix());
    }
 
    @Test
@@ -90,7 +90,7 @@ public class RuntimeContextTest extends Assert {
 	final RuntimeContext<?> runtimeContext = new RuntimeContext<Object>(TomcatContextName, configuration);
 	assertNotNull(runtimeContext.getName());
 	assertEquals(TomcatContextName, runtimeContext.getName());
-	assertNull(runtimeContext.getPrefixProperty());
+	assertNull(runtimeContext.getPrefix());
 	assertNotNull(runtimeContext.getConfigurations());
 
 	simpleSampleAssertions(runtimeContext, TomcatContextName, null);
@@ -102,8 +102,8 @@ public class RuntimeContextTest extends Assert {
 	final RuntimeContext<?> runtimeContext = new RuntimeContext<Object>(TomcatContextName, ContextPrefix);
 	assertNotNull(runtimeContext.getName());
 	assertEquals(TomcatContextName, runtimeContext.getName());
-	assertNotNull(runtimeContext.getPrefixProperty());
-	assertEquals(ContextPrefix, runtimeContext.getPrefixProperty());
+	assertNotNull(runtimeContext.getPrefix());
+	assertEquals(ContextPrefix, runtimeContext.getPrefix());
    }
 
    @Test
@@ -111,8 +111,8 @@ public class RuntimeContextTest extends Assert {
 	final RuntimeContext<FileStore> runtimeContext = new RuntimeContext<FileStore>(TomcatContextName, FileStore.class);
 	assertNotNull(runtimeContext.getName());
 	assertEquals(TomcatContextName, runtimeContext.getName());
-	assertNotNull(runtimeContext.getPrefixProperty());
-	assertEquals(FileStoreConstants.FileStorePluginName, runtimeContext.getPrefixProperty());
+	assertNotNull(runtimeContext.getPrefix());
+	assertEquals(FileStoreConstants.FileStorePluginName, runtimeContext.getPrefix());
    }
 
    @Test
@@ -120,8 +120,8 @@ public class RuntimeContextTest extends Assert {
 	final RuntimeContext<?> runtimeContext = new RuntimeContext<Object>(TomcatContextName, ContextPrefix, configuration);
 	assertNotNull(runtimeContext.getName());
 	assertEquals(TomcatContextName, runtimeContext.getName());
-	assertNotNull(runtimeContext.getPrefixProperty());
-	assertEquals(ContextPrefix, runtimeContext.getPrefixProperty());
+	assertNotNull(runtimeContext.getPrefix());
+	assertEquals(ContextPrefix, runtimeContext.getPrefix());
 	assertNotNull(runtimeContext.getConfigurations());
 
 	simpleSampleAssertions(runtimeContext, TomcatContextName, ContextPrefix);

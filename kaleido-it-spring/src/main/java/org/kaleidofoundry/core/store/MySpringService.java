@@ -17,10 +17,12 @@ package org.kaleidofoundry.core.store;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Jerome RADUGET
  */
+@Service
 public class MySpringService {
 
    @Autowired

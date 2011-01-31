@@ -20,7 +20,6 @@ import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ContextMessageBu
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,7 +35,7 @@ import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Review;
 import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
-import org.kaleidofoundry.core.plugin.Declare;
+import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginHelper;
 import org.kaleidofoundry.core.util.AbstractSerializer;
@@ -48,29 +47,30 @@ import org.kaleidofoundry.core.util.StringHelper;
  * <ul>
  * <li>it encapsulates access to runtime configuration or environment informations,
  * <li>it is bind to one or more {@link Configuration}, so configurations changes can be managed at runtime,
- * <li>it can be a subset of this {@link Configuration} (the prefixProperty is done for that),
+ * <li>it can be a subset of this {@link Configuration} (the prefix is done for that),
  * <li>it has read only access to the {@link Configuration}
  * </ul>
  * <p>
- * <b>To categorize your properties :</b> you can used {@link #getPrefixProperty()} <br/>
+ * <b>To categorize your properties :</b> you can used a prefix : {@link #getPrefix()} <br/>
  * <br/>
- * It can be manually set, using constructors :
+ * This prefix can be manually set, using constructors :
  * <ul>
+ * <li> {@link RuntimeContext#RuntimeContext(String, Configuration...)}
  * <li> {@link RuntimeContext#RuntimeContext(String, String, Configuration...)}</li>
- * <li> {@link RuntimeContext#RuntimeContext(String, String, RuntimeContext)}</li>
+ * <li> {@link RuntimeContext#RuntimeContext(String, String, ConcurrentMap, Configuration...)}</li>
  * </ul>
  * <br/>
- * Another way to set and bind it to a declared {@link Plugin} (prefix property will be the plugin code), using constructors :
+ * Another way to set this prefix is to bind it to a type, using constructors :
  * <ul>
  * <li> {@link RuntimeContext#RuntimeContext(Class)}</li>
  * <li> {@link RuntimeContext#RuntimeContext(Class, Configuration...)}</li>
  * <li> {@link RuntimeContext#RuntimeContext(String, Class, Configuration...)}</li>
+ * <li> {@link RuntimeContext#RuntimeContext(String, Class, ConcurrentMap, Configuration...)}</li>
  * </ul>
  * The last way to build it using {@link Context} annotation, with static constructors :
  * <ul>
  * <li>{@link #createFrom(Field)}</li>
  * <li>{@link #createFrom(Context, Class)}</li>
- * <li></li>
  * </ul>
  * </p>
  * <p>
@@ -139,14 +139,26 @@ import org.kaleidofoundry.core.util.StringHelper;
  * </pre>
  * 
  * </p>
+ * <br/>
+ * <p>
+ * <b>I would preferred introspection to get generic type T, without giving type in constructor argument...</b> <br/>
+ * But generic type are erased one compiled (java 4 compatibility)... <br/>
+ * <br/>
+ * Very interesting topics on the subject :
+ * <ul>
+ * <li>http://download.oracle.com/docs/cd/E17409_01/javase/tutorial/java/generics/erasure.html
+ * <li>http://gafter.blogspot.com/2006/12/super-type-tokens.html
+ * </ul>
+ * So, I keep simple solution of passing the Class of the generic in constructor. The abstract solution does not satisfy me.
+ * </p>
  * 
  * @param <T> service interface / implementation class to use with this context
  * @author Jerome RADUGET
- * @see Declare declaration of a new plugin interface or implemetation class
  * @see Context inject {@link RuntimeContext} to a class field, method argument...
  */
-@Review(comment = "comment and review interaction between configuration and runtime context... use case, creation, event handling... have to be thread safe...", category = ReviewCategoryEnum.Todo)
 @Immutable(comment = "instance which have been injected using @Context are immutable after injection")
+@ThreadSafe
+@Review(comment = "comment and review interaction between configuration and runtime context... use case, creation, event handling... have to be thread safe...", category = ReviewCategoryEnum.Todo)
 public class RuntimeContext<T> extends AbstractSerializer {
 
    /** Context property name, used to enable the component listening of configuration parameters changes */
@@ -158,8 +170,8 @@ public class RuntimeContext<T> extends AbstractSerializer {
     * -> see #copyFrom(...) methods
     */
    private String name;
-   private String prefixProperty;
-   private final Class<T> pluginInterface;
+   private String prefix;
+   private final Class<T> type;
    private Configuration[] configurations;
 
    // used only by {@link AbstractRuntimeContextBuilder}, for static injection
@@ -184,11 +196,11 @@ public class RuntimeContext<T> extends AbstractSerializer {
    /**
     * create <b>unnamed</b> {@link RuntimeContext} name, with static parameters, <b>without prefix</b>
     * 
-    * @param staticParameters staticParameters Optional static parameters
+    * @param parameters Optional static parameters
     * @param configurations
     */
-   public RuntimeContext(final ConcurrentMap<String, Serializable> staticParameters, final Configuration... configurations) {
-	this(null, (String) null, staticParameters, configurations);
+   public RuntimeContext(final ConcurrentMap<String, Serializable> parameters, final Configuration... configurations) {
+	this(null, (String) null, parameters, configurations);
    }
 
    /**
@@ -202,159 +214,146 @@ public class RuntimeContext<T> extends AbstractSerializer {
    }
 
    /**
-    * create unnamed {@link RuntimeContext}, with the given plugin prefix
+    * create unnamed {@link RuntimeContext}, with the given type
     * 
-    * @param pluginInterface {@link Plugin} interface (interface annotated @{@link Declare}), so the {@link Plugin#getName()} will be the
-    *           context prefix
-    * @see #RuntimeContext(String, Class, Map, Configuration...) for more informations see here
+    * @param type if type is annotated {@link Plugin}, the current prefix will be the plugin code, otherwise the type package
     */
-   public RuntimeContext(final Class<T> pluginInterface) {
-	this(null, pluginInterface, null, new Configuration[0]);
+   public RuntimeContext(final Class<T> type) {
+	this(null, type, null, new Configuration[0]);
    }
 
    /**
     * create unnamed {@link RuntimeContext}, with the given plugin prefix & static parameters
     * 
-    * @param pluginInterface
-    * @param staticParameters
+    * @param type if type is annotated {@link Plugin}, the current prefix will be the plugin code, otherwise the type package
+    * @param parameters
     */
-   public RuntimeContext(final Class<T> pluginInterface, final ConcurrentMap<String, Serializable> staticParameters) {
-	this(null, pluginInterface, staticParameters, new Configuration[0]);
+   public RuntimeContext(final Class<T> type, final ConcurrentMap<String, Serializable> parameters) {
+	this(null, type, parameters, new Configuration[0]);
    }
 
    /**
     * create unnamed {@link RuntimeContext}, with the given plugin prefix & configurations
     * 
-    * @param pluginInterface {@link Plugin} interface (interface annotated @{@link Declare}), so the {@link Plugin#getName()} will be the
-    *           context prefix
+    * @param type if type is annotated {@link Plugin}, the current prefix will be the plugin code, otherwise the type package
     * @param configurations configuration instances where to find properties, configurations have to be load before
-    * @see #RuntimeContext(String, Class, Map, Configuration...) for more informations see here
     */
-   public RuntimeContext(final Class<T> pluginInterface, final Configuration... configurations) {
-	this(null, pluginInterface, configurations);
+   public RuntimeContext(final Class<T> type, final Configuration... configurations) {
+	this(null, type, configurations);
    }
 
-   public RuntimeContext(final Class<T> pluginInterface, final ConcurrentMap<String, Serializable> staticParameters, final Configuration... configurations) {
-	this(null, pluginInterface, staticParameters, configurations);
+   /**
+    * create unnamed {@link RuntimeContext}, with the given plugin prefix & static parameters & configurations
+    * 
+    * @param type if type is annotated {@link Plugin}, the current prefix will be the plugin code, otherwise the type package
+    * @param parameters optional static parameters
+    * @param configurations
+    */
+   public RuntimeContext(final Class<T> type, final ConcurrentMap<String, Serializable> parameters, final Configuration... configurations) {
+	this(null, type, parameters, configurations);
    }
 
    /**
     * create named {@link RuntimeContext}, with the given plugin prefix & configurations
     * 
     * @param name context name
-    * @param pluginInterface {@link Plugin} interface (interface annotated @{@link Declare}), so the {@link Plugin#getName()} will be the
-    *           context prefix
+    * @param type if type is annotated {@link Plugin}, the current prefix will be the plugin code, otherwise the type package
     * @param configurations configuration instances where to find properties, configurations have to be load before
-    * @see #RuntimeContext(String, Class, Map, Configuration...) for more informations see here
     */
-   public RuntimeContext(final String name, final Class<T> pluginInterface, final Configuration... configurations) {
-	this(name, pluginInterface, false, null, configurations);
+   public RuntimeContext(final String name, final Class<T> type, final Configuration... configurations) {
+	this(name, type, false, null, configurations);
    }
 
    /**
     * create named {@link RuntimeContext}, with the given prefix & configurations
     * 
     * @param name context name
-    * @param prefixProperty an optional prefix for the properties name (it can be used to categorized your own RuntimeContext)
+    * @param prefix an optional prefix for the properties name (it can be used to categorized your own RuntimeContext)
     * @param configurations configuration instances where to find properties, configurations have to be load before
     */
-   public RuntimeContext(final String name, final String prefixProperty, final Configuration... configurations) {
-	this(name, prefixProperty, false, null, configurations);
+   public RuntimeContext(final String name, final String prefix, final Configuration... configurations) {
+	this(name, prefix, false, null, configurations);
    }
 
    /**
-    * create named {@link RuntimeContext}, with the given plugin prefix & static parameters & configurations
-    * <p>
-    * <b>I would preferred introspection to get generic type T, without giving its Class in constructor argument...</b> <br/>
-    * But generic type are erased one compiled (java 4 compatibility)... <br/>
-    * <br/>
-    * Very interesting topics on the subject :
-    * <ul>
-    * <li>http://download.oracle.com/docs/cd/E17409_01/javase/tutorial/java/generics/erasure.html
-    * <li>http://gafter.blogspot.com/2006/12/super-type-tokens.html
-    * </ul>
-    * So, I keep simple solution of passing the Class of the generic in constructor. The abstract solution does not satisfy me.
-    * </p>
+    * create named {@link RuntimeContext}, with the given type prefix & static parameters & configurations
     * 
     * @param name context name
-    * @param pluginInterface {@link Plugin} interface (interface annotated @{@link Declare}), so the {@link Plugin#getName()} will be the
-    *           context prefix
-    * @param staticParameters Optional static parameters
+    * @param type if type is annotated {@link Plugin}, the current prefix will be the plugin code, otherwise the type package
+    * @param parameters optional static parameters
     * @param configurations
     */
-   public RuntimeContext(final String name, final Class<T> pluginInterface, final ConcurrentMap<String, Serializable> staticParameters,
-	   final Configuration... configurations) {
-	this(name, pluginInterface, false, staticParameters, configurations);
+   public RuntimeContext(final String name, final Class<T> type, final ConcurrentMap<String, Serializable> parameters, final Configuration... configurations) {
+	this(name, type, false, parameters, configurations);
    }
 
    /**
-    * create named {@link RuntimeContext}, with the given plugin prefix & static parameters & configurations
+    * create named {@link RuntimeContext}, with the given type prefix & static parameters & configurations
     * 
     * @param name context name
-    * @param prefixProperty an optional prefix for the properties name (it can be used to categorized your own RuntimeContext)
-    * @param staticParameters Optional static parameters
+    * @param prefix an optional prefix for the properties name (it can be used to categorized your own RuntimeContext)
+    * @param parameters optional static parameters
     * @param configurations
     */
-   public RuntimeContext(final String name, final String prefixProperty, final ConcurrentMap<String, Serializable> staticParameters,
-	   final Configuration... configurations) {
-	this(name, prefixProperty, false, staticParameters, configurations);
+   public RuntimeContext(final String name, final String prefix, final ConcurrentMap<String, Serializable> parameters, final Configuration... configurations) {
+	this(name, prefix, false, parameters, configurations);
    }
 
    /**
-    * create named {@link RuntimeContext}, with the given plugin prefix and using given runtime context configurations
+    * create named {@link RuntimeContext}, with the given type prefix and using given runtime context configurations
     * 
     * @param name context name
-    * @param pluginInterface
+    * @param type if type is annotated {@link Plugin}, the current prefix will be the plugin code, otherwise the type package
     * @param context
-    * @see #RuntimeContext(String, Class, Map, Configuration...) for more informations see here
     */
-   public RuntimeContext(final String name, final Class<T> pluginInterface, @NotNull final RuntimeContext<?> context) {
-	this(name, pluginInterface, false, null, context.getConfigurations());
+   public RuntimeContext(final String name, final Class<T> type, @NotNull final RuntimeContext<?> context) {
+	this(name, type, false, null, context.getConfigurations());
    }
 
    /**
     * @param name context name
-    * @param prefixProperty prefixProperty an optional prefix for the properties name (it can be used to categorized your own
+    * @param prefix prefix an optional prefix for the properties name (it can be used to categorized your own
     *           RuntimeContext)
     * @param hasBeenInjectedByAnnotationProcessing does context injection have been done (immutable after injection)
-    * @param staticParameters Optional static parameters
+    * @param parameters optional static parameters
     * @param configurations configuration instances where to find properties, configurations have to be load before
     */
-   RuntimeContext(final String name, final String prefixProperty, final boolean hasBeenInjectedByAnnotationProcessing,
-	   final ConcurrentMap<String, Serializable> staticParameters, final Configuration... configurations) {
+   RuntimeContext(final String name, final String prefix, final boolean hasBeenInjectedByAnnotationProcessing,
+	   final ConcurrentMap<String, Serializable> parameters, final Configuration... configurations) {
 	this.name = name;
-	this.prefixProperty = prefixProperty;
-	this.pluginInterface = null;
+	this.prefix = prefix;
+	this.type = null;
 	this.configurations = configurations; // keep original instance, to handle property modification. don't re-copy it
 	this.hasBeenInjectedByAnnotationProcessing = hasBeenInjectedByAnnotationProcessing;
-	this.parameters = staticParameters == null ? new ConcurrentHashMap<String, Serializable>() : staticParameters;
+	this.parameters = parameters == null ? new ConcurrentHashMap<String, Serializable>() : parameters;
    }
 
    /**
     * @param name context name
-    * @param pluginInterface
+    * @param type
     * @param hasBeenInjectedByAnnotationProcessing does context injection have been done (immutable after injection)
-    * @param staticParameters Optional static parameters
+    * @param parameters optional static parameters
     * @param configurations configuration instances where to find properties, configurations have to be load before
     */
-   RuntimeContext(final String name, final Class<T> pluginInterface, final boolean hasBeenInjectedByAnnotationProcessing,
-	   final ConcurrentMap<String, Serializable> staticParameters, final Configuration... configurations) {
+   RuntimeContext(final String name, final Class<T> type, final boolean hasBeenInjectedByAnnotationProcessing,
+	   final ConcurrentMap<String, Serializable> parameters, final Configuration... configurations) {
+	final String pluginPrefix = PluginHelper.getPluginName(type);
 	this.name = name;
-	this.prefixProperty = PluginHelper.getPluginName(pluginInterface);
-	this.pluginInterface = pluginInterface;
+	this.prefix = pluginPrefix != null ? pluginPrefix : (type != null ? type.getPackage().getName() : "");
+	this.type = type;
 	this.configurations = configurations; // keep original instance, to handle property modification. don't re-copy it
 	this.hasBeenInjectedByAnnotationProcessing = hasBeenInjectedByAnnotationProcessing;
-	this.parameters = staticParameters == null ? new ConcurrentHashMap<String, Serializable>() : staticParameters;
+	this.parameters = parameters == null ? new ConcurrentHashMap<String, Serializable>() : parameters;
    }
 
    /**
     * @param <T>
     * @param context
-    * @param pluginInterface
+    * @param type
     * @return new runtime context instance, build from given annotation
     * @throws ContextIllegalParameterException if one of {@link Context#configurations()} is not registered
     */
-   static <T> RuntimeContext<T> createFrom(@NotNull final Context context, final Class<T> pluginInterface) {
+   protected static <T> RuntimeContext<T> createFrom(@NotNull final Context context, final Class<T> type) {
 
 	if (StringHelper.isEmpty(context.value())) { throw new ContextIllegalParameterException("context.annotation.value.empty"); }
 
@@ -369,19 +368,19 @@ public class RuntimeContext<T> extends AbstractSerializer {
 	}
 
 	// copy static annotation parameters
-	final ConcurrentMap<String, Serializable> staticParameters = new ConcurrentHashMap<String, Serializable>();
+	final ConcurrentMap<String, Serializable> parameters = new ConcurrentHashMap<String, Serializable>();
 	// fixed the dynamics status of the context
-	staticParameters.put(Dynamics, String.valueOf(context.dynamics()));
+	parameters.put(Dynamics, String.valueOf(context.dynamics()));
 
 	for (final Parameter p : context.parameters()) {
-	   staticParameters.put(p.name(), p.value());
+	   parameters.put(p.name(), p.value());
 	}
 
 	// create runtimeContext instance
-	if (pluginInterface != null) {
-	   rc = new RuntimeContext<T>(context.value(), pluginInterface, true, staticParameters, configs);
+	if (type != null) {
+	   rc = new RuntimeContext<T>(context.value(), type, true, parameters, configs);
 	} else {
-	   rc = new RuntimeContext<T>(context.value(), (String) null, true, staticParameters, configs);
+	   rc = new RuntimeContext<T>(context.value(), (String) null, true, parameters, configs);
 	}
 
 	return rc;
@@ -393,7 +392,7 @@ public class RuntimeContext<T> extends AbstractSerializer {
     * @throws IllegalArgumentException is the given field is not annotated {@link Context}
     * @throws ContextException if one of {@link Context#configurations()} is not registered
     */
-   static RuntimeContext<?> createFrom(@NotNull final Field annotatedField) {
+   protected static RuntimeContext<?> createFrom(@NotNull final Field annotatedField) {
 
 	final Context context = annotatedField.getAnnotation(Context.class);
 
@@ -413,7 +412,7 @@ public class RuntimeContext<T> extends AbstractSerializer {
     * @param contextTarget
     */
    static <T> void createFrom(@NotNull final Context context, @NotNull final RuntimeContext<T> contextTarget) {
-	final RuntimeContext<T> newOne = createFrom(context, contextTarget.getPluginInterface());
+	final RuntimeContext<T> newOne = createFrom(context, contextTarget.getType());
 	copyFrom(newOne, contextTarget);
 	contextTarget.hasBeenInjectedByAnnotationProcessing = true;
    }
@@ -430,7 +429,7 @@ public class RuntimeContext<T> extends AbstractSerializer {
    static void copyFrom(final RuntimeContext<?> origin, final RuntimeContext<?> target) {
 	if (!target.hasBeenInjectedByAnnotationProcessing) {
 	   target.name = origin.name;
-	   target.prefixProperty = origin.prefixProperty;
+	   target.prefix = origin.prefix;
 	   target.configurations = origin.configurations;
 	   target.hasBeenInjectedByAnnotationProcessing = false;
 	   target.hasBeenBuildByContextBuilder = false;
@@ -466,15 +465,15 @@ public class RuntimeContext<T> extends AbstractSerializer {
     *         <li>...
     *         </ul>
     */
-   public String getPrefixProperty() {
-	return prefixProperty;
+   public String getPrefix() {
+	return prefix;
    }
 
    /**
-    * @return if {@link RuntimeContext} has been create giving a plugin interface, return it, otherwise return null
+    * @return if {@link RuntimeContext} has been create giving an type, return it, otherwise return null
     */
-   public Class<T> getPluginInterface() {
-	return pluginInterface;
+   public Class<T> getType() {
+	return type;
    }
 
    /**
@@ -531,7 +530,7 @@ public class RuntimeContext<T> extends AbstractSerializer {
 	final StringBuilder str = new StringBuilder();
 
 	str.append("{context name").append("=").append(name).append(" ");
-	str.append("prefix").append("=").append(prefixProperty).append("}").append(separator);
+	str.append("prefix").append("=").append(prefix).append("}").append(separator);
 
 	final Set<String> keys = keySet();
 	if (keys != null) {
@@ -667,21 +666,21 @@ public class RuntimeContext<T> extends AbstractSerializer {
     * @return Returns the eventual prefix (prefix + name) of property names
     */
    protected StringBuilder getFullPrefix() {
-	final StringBuilder prefix = new StringBuilder();
+	final StringBuilder fullprefix = new StringBuilder();
 
-	if (!StringHelper.isEmpty(prefixProperty)) {
-	   prefix.append(prefixProperty);
+	if (!StringHelper.isEmpty(prefix)) {
+	   fullprefix.append(prefix);
 	}
 
 	if (!StringHelper.isEmpty(getName()) && prefix.length() > 0) {
-	   prefix.append(".").append(name);
+	   fullprefix.append(".").append(name);
 	}
 
 	if (!StringHelper.isEmpty(getName()) && prefix.length() <= 0) {
-	   prefix.append(name);
+	   fullprefix.append(name);
 	}
 
-	return prefix;
+	return fullprefix;
    }
 
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core;
+package org.kaleidofoundry.core.spring.aop;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,18 +27,18 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Jerome RADUGET
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/applicationContext.xml" })
-public class SpringAopContextTest extends Assert {
+@ContextConfiguration(locations = { "classpath:/springApplicationContext.xml" })
+public class SpringAopInjectContextTest extends Assert {
 
    @Autowired
-   private MySpringBean mySpringBean; 
+   private MySpringBean mySpringBean;
 
    @Test
    public void notNullAnnotationOnParameter() {
 	assertNotNull(mySpringBean);
-	assertEquals("foo", mySpringBean.myMethodToTestNotNullAnnotation("foo", null));
+	assertEquals("foo", mySpringBean.methodWithNotNullAnnotation("foo", null));
 	try {
-	   mySpringBean.myMethodToTestNotNullAnnotation(null, "foo");
+	   mySpringBean.methodWithNotNullAnnotation(null, "foo");
 	   fail("NotNullException expected");
 	} catch (NotNullException nne) {
 	}

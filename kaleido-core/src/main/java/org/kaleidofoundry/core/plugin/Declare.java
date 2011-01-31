@@ -41,7 +41,7 @@ public @interface Declare {
 
    /**
     * @return unique name of the declared plugin
-    * @see RuntimeContext#getPrefixProperty() plugin name will be used as a configuration prefix for runtime context
+    * @see RuntimeContext#getPrefix() plugin name will be used as a configuration prefix for runtime context
     */
    String value();
 

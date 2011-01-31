@@ -47,7 +47,7 @@ public class RuntimeContextFieldInjectorTest extends Assert {
 	final MySingleService service = new MySingleService();
 	assertNotNull(service.getUnTypedRuntimeContext());
 	assertEquals("jndi.context.jboss", service.getUnTypedRuntimeContext().getName());
-	assertNull(service.getUnTypedRuntimeContext().getPrefixProperty());
+	assertNull(service.getUnTypedRuntimeContext().getPrefix());
 	assertEquals("localhost:1099", service.getUnTypedRuntimeContext().getProperty("java.naming.provider.url"));
 	assertEquals("org.jnp.interfaces.NamingContextFactory", service.getUnTypedRuntimeContext().getProperty("java.naming.factory.initial"));
 	assertEquals("org.jboss.naming:org.jnp.interfaces", service.getUnTypedRuntimeContext().getProperty("java.naming.factory.url.pkgs"));
@@ -58,7 +58,7 @@ public class RuntimeContextFieldInjectorTest extends Assert {
 	final MySingleService service = new MySingleService();
 	assertNotNull(service.getTypedRuntimeContext());
 	assertEquals("jndi.context.jboss", service.getUnTypedRuntimeContext().getName());
-	assertNull(service.getUnTypedRuntimeContext().getPrefixProperty());
+	assertNull(service.getUnTypedRuntimeContext().getPrefix());
 	assertEquals("localhost:1099", service.getUnTypedRuntimeContext().getProperty("java.naming.provider.url"));
 	assertEquals("org.jnp.interfaces.NamingContextFactory", service.getUnTypedRuntimeContext().getProperty("java.naming.factory.initial"));
 	assertEquals("org.jboss.naming:org.jnp.interfaces", service.getUnTypedRuntimeContext().getProperty("java.naming.factory.url.pkgs"));

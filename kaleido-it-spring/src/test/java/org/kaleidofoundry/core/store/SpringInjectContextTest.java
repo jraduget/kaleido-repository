@@ -26,11 +26,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Jerome RADUGET
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/storeContext.xml" })
-public class SpringAopContextTest extends Assert {
+@ContextConfiguration(locations = { "classpath:/springStoreContext.xml" })
+public class SpringInjectContextTest extends Assert {
 
    @Autowired
-   private MySpringService mySpringService; 
+   private MySpringService mySpringService;
 
    @Test
    public void echo() throws StoreException {
