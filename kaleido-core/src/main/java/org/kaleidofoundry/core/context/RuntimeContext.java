@@ -339,7 +339,7 @@ public class RuntimeContext<T> extends AbstractSerializer {
 	   final ConcurrentMap<String, Serializable> parameters, final Configuration... configurations) {
 	final String pluginPrefix = PluginHelper.getPluginName(type);
 	this.name = name;
-	this.prefix = pluginPrefix != null ? pluginPrefix : (type != null ? type.getPackage().getName() : "");
+	this.prefix = pluginPrefix != null ? pluginPrefix : null;
 	this.type = type;
 	this.configurations = configurations; // keep original instance, to handle property modification. don't re-copy it
 	this.hasBeenInjectedByAnnotationProcessing = hasBeenInjectedByAnnotationProcessing;
@@ -672,11 +672,11 @@ public class RuntimeContext<T> extends AbstractSerializer {
 	   fullprefix.append(prefix);
 	}
 
-	if (!StringHelper.isEmpty(getName()) && prefix.length() > 0) {
+	if (!StringHelper.isEmpty(getName()) && prefix != null && prefix.length() > 0) {
 	   fullprefix.append(".").append(name);
 	}
 
-	if (!StringHelper.isEmpty(getName()) && prefix.length() <= 0) {
+	if (!StringHelper.isEmpty(getName()) && (prefix == null || prefix.length() <= 0)) {
 	   fullprefix.append(name);
 	}
 

@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core.store;
+package org.kaleidofoundry.core.spring.xml;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kaleidofoundry.core.config.ConfigurationException;
+import org.kaleidofoundry.core.store.StoreException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -26,17 +28,23 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Jerome RADUGET
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/springStoreContext.xml" })
+@ContextConfiguration(locations = { "classpath:/springContext.xml" })
 public class SpringInjectContextTest extends Assert {
 
    @Autowired
    private MySpringService mySpringService;
 
    @Test
-   public void echo() throws StoreException {
+   public void testStore() throws StoreException {
 	assertNotNull(mySpringService);
-	String content = mySpringService.echo();
-	System.out.println(content);
-	assertEquals("line1\nline2", content);
+	assertEquals("line1\nline2", mySpringService.getStoreResource("foo.txt"));
+   }
+
+   @Test
+   public void testConfiguration() throws ConfigurationException {
+	assertNotNull(mySpringService);
+	assertEquals("myApp", mySpringService.getConfigurationProperty("application.name"));
+	assertEquals("1.0", mySpringService.getConfigurationProperty("application.version"));
+	assertNull(mySpringService.getConfigurationProperty("?"));
    }
 }

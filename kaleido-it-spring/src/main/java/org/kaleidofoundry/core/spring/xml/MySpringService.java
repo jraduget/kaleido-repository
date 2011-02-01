@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core.store;
+package org.kaleidofoundry.core.spring.xml;
 
+import org.kaleidofoundry.core.config.Configuration;
+import org.kaleidofoundry.core.config.ConfigurationException;
+import org.kaleidofoundry.core.store.FileStore;
+import org.kaleidofoundry.core.store.StoreException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -26,13 +30,27 @@ import org.springframework.stereotype.Service;
 public class MySpringService {
 
    @Autowired
-   @Qualifier("myClasspathStore")
+   @Qualifier("myStore")
    private FileStore store;
 
+   @Autowired
+   @Qualifier("myConfig")
+   private Configuration configuration;
+
    /**
+    * @param resource resource name (relative path)
     * @throws StoreException
     */
-   public String echo() throws StoreException {
-	return store.get("foo.txt").getText();
+   public String getStoreResource(final String resource) throws StoreException {
+	return store.get(resource).getText();
+   }
+
+   /**
+    * @param property
+    * @return the given configuration property
+    * @throws ConfigurationException
+    */
+   public String getConfigurationProperty(final String property) throws ConfigurationException {
+	return configuration.getString(property);
    }
 }

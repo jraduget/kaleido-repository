@@ -27,8 +27,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Jerome RADUGET
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/springApplicationContext.xml" })
-public class SpringAopInjectContextTest extends Assert {
+@ContextConfiguration(locations = { "classpath:/springAopContext.xml" })
+public class SpringAopContextTest extends Assert {
 
    @Autowired
    private MySpringBean mySpringBean;
