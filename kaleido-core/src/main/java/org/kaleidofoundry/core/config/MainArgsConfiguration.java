@@ -41,6 +41,14 @@ import org.kaleidofoundry.core.util.StringHelper;
 public class MainArgsConfiguration extends AbstractConfiguration implements Configuration {
 
    /**
+    * @param context
+    * @throws StoreException
+    */
+   public MainArgsConfiguration(final RuntimeContext<Configuration> context) throws StoreException {
+	super(context);
+   }
+
+   /**
     * @param name
     * @param resourceUri
     * @param context

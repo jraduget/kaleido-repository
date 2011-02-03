@@ -21,9 +21,9 @@ import java.io.Serializable;
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.store.FileHandler;
 import org.kaleidofoundry.core.store.SingleFileStore;
+import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.system.OsEnvironment;
 
 /**
@@ -34,6 +34,14 @@ import org.kaleidofoundry.core.system.OsEnvironment;
  */
 @Declare(ConfigurationConstants.OsEnvConfigurationPluginName)
 public class OsEnvConfiguration extends AbstractConfiguration implements Configuration {
+
+   /**
+    * @param context
+    * @throws StoreException
+    */
+   public OsEnvConfiguration(final RuntimeContext<Configuration> context) throws StoreException {
+	super(context);
+   }
 
    /**
     * @param name
@@ -60,8 +68,8 @@ public class OsEnvConfiguration extends AbstractConfiguration implements Configu
     * org.kaleidofoundry.core.cache.Cache)
     */
    @Override
-   protected Cache<String, Serializable> loadProperties(final FileHandler resourceHandler, final Cache<String, Serializable> properties)
-	   throws StoreException, ConfigurationException {
+   protected Cache<String, Serializable> loadProperties(final FileHandler resourceHandler, final Cache<String, Serializable> properties) throws StoreException,
+	   ConfigurationException {
 	try {
 	   final OsEnvironment environment = new OsEnvironment();
 	   for (final String key : environment.stringPropertyNames()) {

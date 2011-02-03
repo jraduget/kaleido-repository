@@ -25,9 +25,9 @@ import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.store.FileHandler;
 import org.kaleidofoundry.core.store.SingleFileStore;
+import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -43,6 +43,14 @@ import org.kaleidofoundry.core.util.StringHelper;
  */
 @Declare(ConfigurationConstants.JavaSystemConfigurationPluginName)
 public class JavaSystemConfiguration extends AbstractConfiguration implements Configuration {
+
+   /**
+    * @param context
+    * @throws StoreException
+    */
+   public JavaSystemConfiguration(final RuntimeContext<Configuration> context) throws StoreException {
+	super(context);
+   }
 
    /**
     * @param name
@@ -97,8 +105,8 @@ public class JavaSystemConfiguration extends AbstractConfiguration implements Co
     * org.kaleidofoundry.core.store.SingleFileStore)
     */
    @Override
-   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> properties, final SingleFileStore fileStore)
-	   throws StoreException, ConfigurationException {
+   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> properties, final SingleFileStore fileStore) throws StoreException,
+	   ConfigurationException {
 	return properties; // never called
    }
 

@@ -21,6 +21,8 @@ import static org.kaleidofoundry.core.config.ConfigurationConstants.KeyRoot;
 import static org.kaleidofoundry.core.config.ConfigurationConstants.KeySeparator;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.CacheManagerRef;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.FileStoreRef;
+import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.FileStoreUri;
+import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.Name;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.StorageAllowed;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.UpdateAllowed;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ConfigurationMessageBundle;
@@ -44,6 +46,7 @@ import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.config.ConfigurationChangeEvent.ConfigurationChangeType;
+import org.kaleidofoundry.core.context.ContextEmptyParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
@@ -92,17 +95,32 @@ public abstract class AbstractConfiguration extends AbstractSerializer implement
    private final LinkedBlockingQueue<ConfigurationChangeEvent> changesEvents;
 
    /**
+    * @param context
+    * @throws StoreException
+    */
+   protected AbstractConfiguration(@NotNull final RuntimeContext<Configuration> context) throws StoreException {
+	this(null, null, context);
+   }
+
+   /**
     * @param name
     * @param resourceUri
     * @param context
     * @throws StoreException
     * @throws IllegalArgumentException if resourceUri is illegal ({@link URISyntaxException})
     */
-   protected AbstractConfiguration(@NotNull final String name, @NotNull final String resourceUri, @NotNull final RuntimeContext<Configuration> context)
-	   throws StoreException {
+   protected AbstractConfiguration(String name, String resourceUri, @NotNull final RuntimeContext<Configuration> context) throws StoreException {
 
-	this.name = name.toString();
+	// argument & context inputs
+	name = !StringHelper.isEmpty(name) ? name : (!StringHelper.isEmpty(context.getString(Name)) ? context.getString(Name) : context.getName());
+	resourceUri = !StringHelper.isEmpty(resourceUri) ? resourceUri : context.getString(FileStoreUri);
+
+	// context check
+	if (StringHelper.isEmpty(name)) { throw new ContextEmptyParameterException(Name, context); }
+	if (StringHelper.isEmpty(resourceUri)) { throw new ContextEmptyParameterException(FileStoreUri, context); }
+
 	this.context = context;
+	this.name = name;
 
 	// internal file store instantiation
 	final String fileStoreRef = context.getString(FileStoreRef);

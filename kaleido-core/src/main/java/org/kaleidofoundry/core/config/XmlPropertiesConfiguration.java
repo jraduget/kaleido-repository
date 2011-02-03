@@ -23,9 +23,9 @@ import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.store.FileHandler;
 import org.kaleidofoundry.core.store.SingleFileStore;
+import org.kaleidofoundry.core.store.StoreException;
 
 /**
  * Xml properties implementation
@@ -34,6 +34,14 @@ import org.kaleidofoundry.core.store.SingleFileStore;
  */
 @Declare(ConfigurationConstants.XmlPropertiesConfigurationPluginName)
 public class XmlPropertiesConfiguration extends AbstractConfiguration implements Configuration {
+
+   /**
+    * @param context
+    * @throws StoreException
+    */
+   public XmlPropertiesConfiguration(final RuntimeContext<Configuration> context) throws StoreException {
+	super(context);
+   }
 
    /**
     * @param name
@@ -51,8 +59,8 @@ public class XmlPropertiesConfiguration extends AbstractConfiguration implements
     * org.kaleidofoundry.core.cache.Cache)
     */
    @Override
-   protected Cache<String, Serializable> loadProperties(final FileHandler resourceHandler, final Cache<String, Serializable> properties)
-	   throws StoreException, ConfigurationException {
+   protected Cache<String, Serializable> loadProperties(final FileHandler resourceHandler, final Cache<String, Serializable> properties) throws StoreException,
+	   ConfigurationException {
 	try {
 
 	   final Properties lprops = new Properties();

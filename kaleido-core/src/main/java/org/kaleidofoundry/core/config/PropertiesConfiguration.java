@@ -24,9 +24,9 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.store.FileHandler;
 import org.kaleidofoundry.core.store.SingleFileStore;
+import org.kaleidofoundry.core.store.StoreException;
 
 /**
  * Properties {@link Configuration} implementation
@@ -35,6 +35,14 @@ import org.kaleidofoundry.core.store.SingleFileStore;
  */
 @Declare(ConfigurationConstants.PropertiesConfigurationPluginName)
 public class PropertiesConfiguration extends AbstractConfiguration {
+
+   /**
+    * @param context
+    * @throws StoreException
+    */
+   public PropertiesConfiguration(final RuntimeContext<Configuration> context) throws StoreException {
+	super(context);
+   }
 
    /**
     * @param name
@@ -53,8 +61,8 @@ public class PropertiesConfiguration extends AbstractConfiguration {
     * org.kaleidofoundry.core.cache.Cache)
     */
    @Override
-   protected Cache<String, Serializable> loadProperties(final FileHandler resourceHandler, final Cache<String, Serializable> properties)
-	   throws StoreException, ConfigurationException {
+   protected Cache<String, Serializable> loadProperties(final FileHandler resourceHandler, final Cache<String, Serializable> properties) throws StoreException,
+	   ConfigurationException {
 	try {
 	   final Properties lprops = new Properties();
 	   lprops.load(resourceHandler.getInputStream());

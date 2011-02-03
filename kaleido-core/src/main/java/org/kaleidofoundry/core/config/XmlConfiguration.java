@@ -70,6 +70,14 @@ import org.xml.sax.SAXException;
 public class XmlConfiguration extends AbstractConfiguration implements Configuration {
 
    /**
+    * @param context
+    * @throws StoreException
+    */
+   public XmlConfiguration(final RuntimeContext<Configuration> context) throws StoreException {
+	super(context);
+   }
+
+   /**
     * @param name
     * @param resourceUri
     * @param context
