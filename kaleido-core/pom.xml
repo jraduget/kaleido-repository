@@ -15,7 +15,7 @@
 	<properties>
 		<!-- Cache implementation version -->
 		<jboss-cache.version>3.2.3.CR1</jboss-cache.version>
-		<coherence.version>3.6.0</coherence.version>
+		<coherence.version>3.6.1</coherence.version>
 		<ehcache.version>2.1.0</ehcache.version>
 		<infinispan.version>4.0.0.FINAL</infinispan.version>
 	</properties>
