@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.kaleidofoundry.core.config.ConfigurationConstants;
 import org.kaleidofoundry.core.lang.NotYetImplementedException;
 import org.kaleidofoundry.core.lang.annotation.Review;
 import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
@@ -71,7 +70,7 @@ public abstract class AbstractSerializer {
 
    /**
     * @param key
-    * @return
+    * @return value of the property
     */
    public abstract Serializable getProperty(final String key);
 
@@ -413,7 +412,7 @@ public abstract class AbstractSerializer {
 
    /**
     * @param <T>
-    * @param values can be a String with multiple values separate by {@link ConfigurationConstants#MultiValDefaultSeparator}, or
+    * @param values can be a String with multiple values separate by {@link #DefaultMultiValuesSeparator}, or
     * @param cl
     * @return multiple value
     */

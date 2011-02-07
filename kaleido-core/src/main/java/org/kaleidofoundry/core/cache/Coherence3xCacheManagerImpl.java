@@ -17,6 +17,7 @@ package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.CoherenceCacheManagerPluginName;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.Classloader;
+import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreUri;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.CacheMessageBundle;
 
 import java.io.IOException;
@@ -65,7 +66,7 @@ public class Coherence3xCacheManagerImpl extends AbstractCacheManager {
     * @param context
     */
    public Coherence3xCacheManagerImpl(final RuntimeContext<CacheManager> context) {
-	this(null, context);
+	this(context.getString(FileStoreUri), context);
    }
 
    /**

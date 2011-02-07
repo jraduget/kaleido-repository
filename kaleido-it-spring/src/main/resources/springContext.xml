@@ -27,15 +27,71 @@
 	</bean>
 	
 	<bean id="myConfig" class="org.kaleidofoundry.core.config.PropertiesConfiguration" init-method="load">		
-		<constructor-arg type="java.lang.String" value="myConfig"/>
-		<constructor-arg type="java.lang.String" value="classpath:/config/myConfig.properties"/>
 		<constructor-arg>		
 			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
-				<constructor-arg type="java.lang.String" value="myStoreCtx"/>
+				<constructor-arg type="java.lang.String" value="myConfigCtx"/>
 				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.config.Configuration"/>
+				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
+					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
+						<entry key="name" value="myConfig" />
+						<entry key="fileStoreUri" value="classpath:/config/myConfig.properties" />
+					</util:map>
+				</constructor-arg>				
 				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
 			</bean>
 		</constructor-arg>
 	</bean>
 	
+	<bean id="myCacheManager" class="org.kaleidofoundry.core.cache.EhCache1xManagerImpl">		
+		<constructor-arg>		
+			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
+				<constructor-arg type="java.lang.String" value="myCacheManagerCtx"/>
+				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.cache.CacheManager"/>				
+				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
+					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
+						<entry key="providerCode" value="ehCache1x" />
+						<entry key="fileStoreUri" value="classpath:/cache/ehcache.xml" />
+					</util:map>
+				</constructor-arg>
+				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
+			</bean>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 
+	<bean id="myCache" class="org.kaleidofoundry.core.cache.EhCache1xImpl">		
+		<constructor-arg>		
+			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
+				<constructor-arg type="java.lang.String" value="myCacheCtx"/>
+				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.cache.Cache"/>				
+				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
+					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
+						<entry key="providerCode" value="ehCache1x" />
+						<entry key="fileStoreUri" value="classpath:/cache/ehcache.xml" />
+					</util:map>
+				</constructor-arg>
+				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
+			</bean>
+		</constructor-arg>
+	</bean>	
+	 -->
+	 
+	<bean id="myNamingService" class="org.kaleidofoundry.core.naming.JndiNamingService">		
+		<constructor-arg>		
+			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
+				<constructor-arg type="java.lang.String" value="myNamingCtx"/>
+				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.naming.NamingService"/>				
+				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
+					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
+						<entry key="java.naming.factory.initial" value="com.sun.enterprise.naming.SerialInitContextFactory" />
+						<entry key="java.naming.factory.url.pkgs" value="com.sun.enterprise.naming" />
+						<entry key="java.naming.factory.state" value="com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl" />
+						<entry key="org.omg.CORBA.ORBInitialHost" value="127.0.0.1" />
+						<entry key="org.omg.CORBA.ORBInitialPort" value="3700" />
+					</util:map>
+				</constructor-arg>
+				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
+			</bean>
+		</constructor-arg>
+	</bean>	 
 </beans>

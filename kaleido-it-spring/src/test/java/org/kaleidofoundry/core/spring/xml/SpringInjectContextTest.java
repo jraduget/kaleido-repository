@@ -15,10 +15,16 @@
  */
 package org.kaleidofoundry.core.spring.xml;
 
+import javax.sql.DataSource;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kaleidofoundry.core.cache.CacheDefinitionNotFoundException;
+import org.kaleidofoundry.core.cache.CacheException;
 import org.kaleidofoundry.core.config.ConfigurationException;
+import org.kaleidofoundry.core.naming.NamingServiceException;
+import org.kaleidofoundry.core.naming.NamingServiceNotFoundException;
 import org.kaleidofoundry.core.store.StoreException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -46,5 +52,38 @@ public class SpringInjectContextTest extends Assert {
 	assertEquals("myApp", mySpringService.getConfigurationProperty("application.name"));
 	assertEquals("1.0", mySpringService.getConfigurationProperty("application.version"));
 	assertNull(mySpringService.getConfigurationProperty("?"));
+   }
+
+   @Test
+   public void testCacheManager() throws CacheException {
+	assertNotNull(mySpringService);
+	assertNotNull(mySpringService.getCache("CacheSample01"));
+	assertEquals(0, mySpringService.getCache("CacheSample01").size());
+	try {
+	   mySpringService.getCache("UnknownCacheName");
+	   fail("CacheDefinitionNotFoundException expected");
+	} catch (CacheDefinitionNotFoundException cnfe) {
+	}
+   }
+
+   @Test
+   public void testCache() throws CacheException {
+	assertNotNull(mySpringService);
+	assertNull(mySpringService.getCacheValue("?"));
+	assertEquals("value1", mySpringService.getCacheValue("key1"));
+	assertEquals("value2", mySpringService.getCacheValue("key2"));
+   }
+
+   @Test
+   public void testNamingService() throws NamingServiceException {
+	assertNotNull(mySpringService);
+	assertNotNull(mySpringService.getNamingResource("jdbc/kaleido", DataSource.class));
+	assertNotNull(mySpringService.getNamingResource("jdbc/kaleido", DataSource.class));
+	try {
+	   assertNotNull(mySpringService.getNamingResource("jdbc/kaleido", DataSource.class));
+	   fail("NamingServiceNotFoundException expected");
+	} catch (NamingServiceNotFoundException nsnf) {
+
+	}
    }
 }
