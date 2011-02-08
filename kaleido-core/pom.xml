@@ -16,7 +16,7 @@
 		<!-- Cache implementation version -->
 		<jboss-cache.version>3.2.3.CR1</jboss-cache.version>
 		<coherence.version>3.6.1</coherence.version>
-		<ehcache.version>2.1.0</ehcache.version>
+		<ehcache.version>2.3.2</ehcache.version>
 		<infinispan.version>4.0.0.FINAL</infinispan.version>
 	</properties>
 
@@ -29,12 +29,6 @@
 			<version>${aspectj.version}</version>
 		</dependency>
 	
-		<!-- FTP API -->
-		<dependency>
-			<groupId>commons-net</groupId>
-			<artifactId>commons-net</artifactId>
-			<version>2.2</version>
-		</dependency>
 				
 		<!-- Cache implementations -->
 		<dependency>
@@ -62,6 +56,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- Store FTP API 
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>2.2</version>
+		</dependency>
+		-->
 
 		<!-- ** Testing part **************************************************************** -->
 
