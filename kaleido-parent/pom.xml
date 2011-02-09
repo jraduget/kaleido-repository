@@ -1,13 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>6</version>
+	</parent>
+  	
 	<groupId>org.kaleidofoundry</groupId>
 	<artifactId>kaleido-parent</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 
 	<name>KaleidoFoundry parent POM</name>
 	<url>http://code.google.com/p/kaleido-foundry/</url>
-	<description>Parent POM for all kaleido-foundry projects. It provide the default project build configuration.</description>
+	<description>Parent POM for all kaleido-foundry modules. It provides default build configurations.</description>
 	<packaging>pom</packaging>
 
 	<licenses>
@@ -54,24 +61,19 @@
 	</mailingLists>
 
 	<properties>
-		<!-- kaleido options -->
+		<!-- kaleido version -->
 		<kaleido.version>1.0.0-SNAPSHOT</kaleido.version>
-
 		<!-- jdk / jee global version dependencies -->
 		<jdk.version>1.6</jdk.version>
-
 		<!-- AOP / Aspectj -->
 		<aspectj.version>1.6.9</aspectj.version>
-
 		<!-- framework global version dependencies -->
 		<slf4j.version>1.6.1</slf4j.version>
 		<log4j.version>1.2.16</log4j.version>
 		<junit.version>4.8.1</junit.version>
-
 		<!-- integration url properties -->
 		<sonar.host.url>http://localhost:8080/sonar</sonar.host.url>
 		<hudson.host.url>http://localhost:8080/hudson</hudson.host.url>
-
 		<!-- source encoding options -->
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 	</properties>
@@ -79,22 +81,19 @@
 	<modules>
 		<!-- core modules -->
 		<module>../kaleido-core</module>
-		
-		<module>../kaleido-guice-integration</module>
-		<module>../kaleido-spring-integration</module>
-
-		<!-- integration test modules --> 
-		<module>../kaleido-it-parent</module>
-		
-		<!--to refactor 
+		<!--incoming - to refactor 
 		<module>../kaleido-mailing</module> 
 		<module>../kaleido-messaging</module> 
 		<module>../kaleido-reporting</module> 
 		-->
+		<!-- integration modules -->
+		<module>../kaleido-guice-integration</module>
+		<module>../kaleido-spring-integration</module>
+		<!-- integration tests modules --> 
+		<module>../kaleido-it-parent</module>		
 	</modules>
 
 	<dependencies>
-
 		<!-- Framework for Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -102,7 +101,6 @@
 			<version>${slf4j.version}</version>
 			<scope>compile</scope>
 		</dependency>
-
 		<!-- Framework for testing -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -110,7 +108,6 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
 	<repositories>
@@ -150,7 +147,8 @@
 		<!-- JPA eclipse link provider -->
 		<repository>
 			<id>EclipseLink Repo</id>
-			<!-- official eclipse, but redirection works bad with maven <url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url> -->
+			<!-- it is not the official eclipse, but the redirection works bad with maven 
+			<url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url> -->
 			<url>http://eclipse.ialto.org/rt/eclipselink/maven.repo/</url>
 			<layout>default</layout>
 		</repository>
@@ -184,9 +182,9 @@
 	</pluginRepositories>
 
 	<scm>
-		<connection>scm:git:https://kaleidofoundry@github.com/kaleidofoundry/kaleido-repository.git</connection>
-		<developerConnection>scm:git:https://kaleidofoundry@github.com/kaleidofoundry/kaleido-repository.git</developerConnection>
-		<url>http://github.com/kaleidofoundry/kaleido-repository</url>
+    	<connection>scm:svn:http://kaleido-foundry.googlecode.com/svn/trunk/</connection>
+    	<developerConnection>scm:svn:https://kaleido-foundry.googlecode.com/svn/trunk/</developerConnection>
+    	<url>http://kaleido-foundry.googlecode.com/svn/trunk/</url>		
 	</scm>
 
 	<issueManagement>

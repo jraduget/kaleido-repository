@@ -15,9 +15,9 @@
 	<properties>
 		<!-- Cache implementation version -->
 		<jboss-cache.version>3.2.3.CR1</jboss-cache.version>
-		<coherence.version>3.6.1</coherence.version>
-		<ehcache.version>2.3.2</ehcache.version>
-		<infinispan.version>4.0.0.FINAL</infinispan.version>
+		<terracotta-ehcache.version>2.3.2</terracotta-ehcache.version>
+		<jboss-infinispan.version>4.0.0.FINAL</jboss-infinispan.version>
+		<oracle-coherence.version>3.6.1</oracle-coherence.version>
 	</properties>
 
 	<dependencies>
@@ -34,28 +34,32 @@
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache-core</artifactId>
-			<version>${ehcache.version}</version>
+			<version>${terracotta-ehcache.version}</version>
 			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.cache</groupId>
 			<artifactId>jbosscache-core</artifactId>
 			<version>${jboss-cache.version}</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.oracle.coherence</groupId>
-			<artifactId>coherence</artifactId>
-			<version>${coherence.version}</version>
-			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-core</artifactId>
-			<version>${infinispan.version}</version>
+			<version>${jboss-infinispan.version}</version>
 			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
-
+		<dependency>
+			<groupId>com.oracle.coherence</groupId>
+			<artifactId>coherence</artifactId>
+			<version>${oracle-coherence.version}</version>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+		
 		<!-- Store FTP API 
 		<dependency>
 			<groupId>commons-net</groupId>
