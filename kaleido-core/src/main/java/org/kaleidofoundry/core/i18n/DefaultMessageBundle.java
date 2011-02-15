@@ -48,8 +48,9 @@ public class DefaultMessageBundle extends ResourceBundle implements I18nMessages
    final Cache<String, String> resourceBundleCache;
    // used internally for kaleidofoundry internal resource bundle data
    final Properties resourceBundleNoCache;
-
+   // bundle resource name
    final String resourceName;
+   // bundle parent (can be null)
    private ResourceBundle parent;
 
    // internal runtime context
