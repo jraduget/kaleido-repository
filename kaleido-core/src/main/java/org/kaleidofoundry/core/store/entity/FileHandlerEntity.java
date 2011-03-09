@@ -28,6 +28,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -40,7 +41,8 @@ import org.kaleidofoundry.core.lang.annotation.Review;
  * 
  * @author Jerome RADUGET
  */
-@Entity
+@Entity(name = "FileStore")
+@Table(name = "FILE_STORE")
 @Review(comment = "Audit information (locale zone for the date, user information...)")
 public class FileHandlerEntity implements Serializable {
 

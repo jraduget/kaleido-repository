@@ -26,8 +26,9 @@ Modules
 	. Nnaming api (jndi lookup ejb, jms queue / topic, datasource, ...)
 	. Context injection api (@Context enable runtime context injection, to core modules)
 	. Other thinks like @NotNull, @NotYetImplemented, @PersistenceContext in unmanaged env...
-  * kaleido-guice-integration	KaleidoFoundry guice integration module (for context injection)
-  * kaledo-spring-integration	KaleidoFoundry spring integration module (for context injection)
+  * kaleido-guice	KaleidoFoundry guice integration module (for context injection)
+  * kaleido-spring	KaleidoFoundry spring integration module (for context injection)
+  * kaleido-jee6	KaleidoFoundry jee6 integration module (for context injection, jpa 2 ...)
 
 Integration test modules 
 ------------------------

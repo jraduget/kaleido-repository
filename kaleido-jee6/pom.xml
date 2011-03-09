@@ -9,8 +9,8 @@
 		<relativePath>../kaleido-parent/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>kaleido-guice-integration</artifactId>
-	<name>KaleidoFoundry guice integration module</name>
+	<artifactId>kaleido-jee6</artifactId>
+	<name>KaleidoFoundry jee6 module</name>
 	<packaging>jar</packaging>
 
 	<dependencies>
@@ -22,11 +22,12 @@
 			<version>${project.version}</version>
 		</dependency>
 
-		<!-- IOC -->
+		<!-- JavaEE 6 profile - Ejb 3.1, JPA 2.x, ... -->
 		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
-			<version>2.0</version>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>6.0</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- ** Testing part **************************************************************** -->

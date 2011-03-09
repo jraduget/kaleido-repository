@@ -385,7 +385,9 @@ public abstract class AbstractConfiguration extends AbstractSerializer implement
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#fireConfigurationChangesEvents()
     */
-   public void fireConfigurationChangesEvents() {
+   public int fireConfigurationChangesEvents() {
+
+	int changes = changesEvents.size();
 
 	for (final ConfigurationListener listener : listeners.getListeners(ConfigurationListener.class)) {
 
@@ -404,6 +406,8 @@ public abstract class AbstractConfiguration extends AbstractSerializer implement
 
 	// clear past fire events
 	changesEvents.clear();
+
+	return changes;
    }
 
    /**
@@ -509,10 +513,19 @@ public abstract class AbstractConfiguration extends AbstractSerializer implement
 
    /*
     * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.Configuration#containsKey(java.lang.String)
+    */
+   @Override
+   public boolean containsKey(final String key) {
+	return containsKey(key, "");
+   }
+
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.config.Configuration#containsKey(java .lang.String)
     */
    public boolean containsKey(final String key, final String prefix) {
-	return keySet(prefix).contains(key);
+	return keySet(prefix).contains(normalizeKey(key));
    }
 
    /*

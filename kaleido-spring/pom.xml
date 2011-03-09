@@ -9,8 +9,8 @@
 		<relativePath>../kaleido-parent/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>kaleido-spring-integration</artifactId>
-	<name>KaleidoFoundry spring integration module</name>
+	<artifactId>kaleido-spring</artifactId>
+	<name>KaleidoFoundry spring module</name>
 	<packaging>jar</packaging>
 
 	<dependencies>

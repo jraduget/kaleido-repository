@@ -27,8 +27,7 @@
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
 			<version>${aspectj.version}</version>
-		</dependency>
-	
+		</dependency>		
 				
 		<!-- Cache implementations -->
 		<dependency>
@@ -60,11 +59,16 @@
 			<optional>true</optional>
 		</dependency>
 		
-		<!-- Store FTP API 
+		<!-- Store FTP and SSH (SFTP / SCP ...) API 
 		<dependency>
 			<groupId>commons-net</groupId>
 			<artifactId>commons-net</artifactId>
 			<version>2.2</version>
+		</dependency>		
+		<dependency>
+    		<groupId>com.jcraft</groupId>
+    		<artifactId>jsch</artifactId>
+    		<version>0.1.42</version>
 		</dependency>
 		-->
 

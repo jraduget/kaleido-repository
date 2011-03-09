@@ -86,9 +86,11 @@
 		<module>../kaleido-messaging</module> 
 		<module>../kaleido-reporting</module> 
 		-->
-		<!-- integration modules -->
-		<module>../kaleido-guice-integration</module>
-		<module>../kaleido-spring-integration</module>
+		<!-- core integration modules -->
+		<module>../kaleido-jee6</module>
+		<module>../kaleido-spring</module>
+		<module>../kaleido-guice</module>
+
 		<!-- integration tests modules --> 
 		<module>../kaleido-it-parent</module>		
 	</modules>
@@ -468,7 +470,7 @@
 		<profile>
 			<id>javaee6</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<activeByDefault>false</activeByDefault>
 				<property>
 					<name>javaee</name>
 					<value>6</value>
@@ -496,8 +498,14 @@
 					<version>6.0</version>
 					<scope>provided</scope>
 				</dependency>
-				<!-- javaee6 web profile <dependency> <groupId>javax</groupId> <artifactId>javaee-web-api</artifactId> 
-					<version>6.0</version> <scope>provided</scope> </dependency> -->
+				<!-- javaee6 web profile 
+				<dependency> 
+					<groupId>javax</groupId>
+					<artifactId>javaee-web-api</artifactId> 
+					<version>6.0</version> 
+					<scope>provided</scope> 
+				</dependency> 
+				-->
 			</dependencies>
 		</profile>
 
@@ -505,7 +513,7 @@
 		<profile>
 			<id>javaee5</id>
 			<activation>
-				<activeByDefault>false</activeByDefault>
+				<activeByDefault>true</activeByDefault>
 				<property>
 					<name>javaee</name>
 					<value>5</value>
@@ -553,6 +561,20 @@
 					<version>1.1</version>
 					<scope>provided</scope>
 				</dependency>
+				<!-- jax-ws api -->
+				<dependency>
+					<groupId>javax.xml.ws</groupId>
+					<artifactId>jaxws-api</artifactId>
+					<version>2.0</version>
+					<scope>provided</scope>
+				</dependency>				
+				<!-- jax-rs api -->
+				<dependency>
+					<groupId>javax.ws.rs</groupId>
+					<artifactId>jsr311-api</artifactId>
+					<version>1.0</version>
+					<scope>provided</scope>
+				</dependency>				
 			</dependencies>
 		</profile>
 

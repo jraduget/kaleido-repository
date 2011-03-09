@@ -87,10 +87,24 @@
 			<artifactId>gf-client</artifactId>
 			<version>3.0.1</version>
 			<scope>system</scope>
-			<systemPath>${glassfishv3.home}/glassfish/modules/gf-client.jar</systemPath>			
+			<systemPath>${glassfishv3.home}/glassfish/modules/gf-client-module.jar</systemPath>			
 			<optional>true</optional>
 		</dependency>
 		
+		<!-- REST / JAXB - JSON -->
+		<dependency>
+    		<groupId>com.sun.jersey</groupId>
+   			<artifactId>jersey-client</artifactId>
+    		<version>1.5</version>
+    		<scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>com.sun.jersey</groupId>
+		    <artifactId>jersey-json</artifactId>
+		    <version>1.5</version>
+		    <scope>test</scope>
+		</dependency>		
+				
 	</dependencies>
 
 </project>

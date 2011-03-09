@@ -285,6 +285,9 @@ public abstract class AbstractConfigurationTest extends Assert {
    public void containsKey() {
 	assertNotNull(configuration);
 	assertTrue(configuration.containsKey("//application/modules/marketing/name", "//application/modules"));
+	assertTrue(configuration.containsKey("application.modules.marketing.name", "application.modules"));
+	assertTrue(configuration.containsKey("application.modules.marketing.name", ""));
+	assertTrue(configuration.containsKey("application.modules.marketing.name"));
 	assertFalse(configuration.containsKey("//application/modules/marketing", "foo"));
 	try {
 	   configuration.containsKey("//application/modules/marketing", null);
