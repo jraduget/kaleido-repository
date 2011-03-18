@@ -25,6 +25,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.kaleidofoundry.core.cache.Cache;
+import org.kaleidofoundry.core.config.entity.FireChangesReport;
 import org.kaleidofoundry.core.context.Provider;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Nullable;
@@ -197,12 +198,12 @@ public interface Configuration {
    void removeConfigurationListener(ConfigurationListener listener);
 
    /**
-    * fire all configuration changes events (update, remove) since the last call<br/>
+    * fire all configuration changes events (create, update, remove) since the last call<br/>
     * events are fired in the order of creation
     * 
-    * @return number of configurations changes which have been fired
+    * @return report of configurations changes which have been fired
     */
-   int fireConfigurationChangesEvents();
+   FireChangesReport fireConfigurationChangesEvents();
 
    // **************************************************************************
    // -> Keys management

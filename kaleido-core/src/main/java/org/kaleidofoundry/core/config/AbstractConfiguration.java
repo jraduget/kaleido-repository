@@ -46,6 +46,7 @@ import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.config.ConfigurationChangeEvent.ConfigurationChangeType;
+import org.kaleidofoundry.core.config.entity.FireChangesReport;
 import org.kaleidofoundry.core.context.ContextEmptyParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
@@ -61,6 +62,8 @@ import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.util.AbstractSerializer;
 import org.kaleidofoundry.core.util.ConverterHelper;
 import org.kaleidofoundry.core.util.StringHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -75,6 +78,8 @@ import org.kaleidofoundry.core.util.StringHelper;
 @ThreadSafe
 @Review(comment = "bootstrap load for classpath or file uri configuration which can defined a specific cacheManagerRef or resourceStorageRef, ... which is not yet loaded at build time", category = ReviewCategoryEnum.Fixme)
 public abstract class AbstractConfiguration extends AbstractSerializer implements Configuration {
+
+   protected static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
 
    // configuration name identifier
    protected final String name;
@@ -339,6 +344,8 @@ public abstract class AbstractConfiguration extends AbstractSerializer implement
    }
 
    /**
+    * fire event will be queued until {@link #fireConfigurationChangesEvents} was called
+    * 
     * @param propertyName
     * @param newValue
     */
@@ -347,12 +354,11 @@ public abstract class AbstractConfiguration extends AbstractSerializer implement
 	final ConfigurationChangeEvent event = ConfigurationChangeEvent.newCreateEvent(this, propertyName, newValue);
 	changesEvents.add(event);
 
-	for (final ConfigurationListener listener : listeners.getListeners(ConfigurationListener.class)) {
-	   listener.propertyCreate(event);
-	}
    }
 
    /**
+    * fire event will be queued until {@link #fireConfigurationChangesEvents} was called
+    * 
     * @param propertyName
     * @param oldValue
     * @param newValue
@@ -362,12 +368,11 @@ public abstract class AbstractConfiguration extends AbstractSerializer implement
 	final ConfigurationChangeEvent event = ConfigurationChangeEvent.newUpdateEvent(this, propertyName, oldValue, newValue);
 	changesEvents.add(event);
 
-	for (final ConfigurationListener listener : listeners.getListeners(ConfigurationListener.class)) {
-	   listener.propertyUpdate(event);
-	}
    }
 
    /**
+    * fire event will be queued until {@link #fireConfigurationChangesEvents} was called
+    * 
     * @param propertyName
     * @param oldValue
     */
@@ -376,19 +381,33 @@ public abstract class AbstractConfiguration extends AbstractSerializer implement
 	final ConfigurationChangeEvent event = ConfigurationChangeEvent.newRemoveEvent(this, propertyName, oldValue);
 	changesEvents.add(event);
 
-	for (final ConfigurationListener listener : listeners.getListeners(ConfigurationListener.class)) {
-	   listener.propertyRemove(event);
-	}
    }
 
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#fireConfigurationChangesEvents()
     */
-   public int fireConfigurationChangesEvents() {
+   public FireChangesReport fireConfigurationChangesEvents() {
 
-	int changes = changesEvents.size();
+	int created = 0;
+	int updated = 0;
+	int removed = 0;
+	int listenerCount = 0;
 
+	// count event by types
+	for (final ConfigurationChangeEvent event : changesEvents) {
+	   if (event.getConfigurationChangeType() == ConfigurationChangeType.CREATE) {
+		created++;
+	   }
+	   if (event.getConfigurationChangeType() == ConfigurationChangeType.UPDATE) {
+		updated++;
+	   }
+	   if (event.getConfigurationChangeType() == ConfigurationChangeType.REMOVE) {
+		removed++;
+	   }
+	}
+
+	// fire event to registered listener
 	for (final ConfigurationListener listener : listeners.getListeners(ConfigurationListener.class)) {
 
 	   for (final ConfigurationChangeEvent event : changesEvents) {
@@ -401,13 +420,23 @@ public abstract class AbstractConfiguration extends AbstractSerializer implement
 		if (event.getConfigurationChangeType() == ConfigurationChangeType.REMOVE) {
 		   listener.propertyRemove(event);
 		}
+		listenerCount++;
 	   }
 	}
 
 	// clear past fire events
 	changesEvents.clear();
 
-	return changes;
+	// created message report
+	FireChangesReport fireReport = new FireChangesReport(getName(), singleFileStore.getResourceBinding(), created, updated, removed, listenerCount);
+
+	// log message
+	LOGGER.info(ConfigurationMessageBundle.getMessage("config.firechanges.info0", name, singleFileStore.getResourceBinding(), fireReport.getCreated(),
+		fireReport.getUpdated(), fireReport.getRemoved(), fireReport.getListernerCount()));
+	LOGGER.info(ConfigurationMessageBundle.getMessage("config.firechanges.info1", fireReport.getCreated(), fireReport.getUpdated(), fireReport.getRemoved()));
+	LOGGER.info(ConfigurationMessageBundle.getMessage("config.firechanges.info2", fireReport.getListernerCount()));
+
+	return fireReport;
    }
 
    /**

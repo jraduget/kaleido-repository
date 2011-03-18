@@ -15,11 +15,16 @@
  */
 package org.kaleidofoundry.core.config.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 import org.kaleidofoundry.core.lang.annotation.Review;
 
@@ -27,6 +32,8 @@ import org.kaleidofoundry.core.lang.annotation.Review;
  * @author Jerome RADUGET
  */
 @XmlRootElement(name = "property")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(propOrder = { "name", "value", "type", "description" })
 @Entity(name = "ConfigurationPropety")
 @Table(name = "CONFIGURATION_PROPERTY")
 @Review(comment = "Audit information (locale zone for the date, user information...)")
@@ -37,33 +44,50 @@ public class ConfigurationProperty {
    private ConfigurationEntity configuration;
    @Id
    private String name;
+   private String value;
+   private Class<?> type;
    private String description;
 
    /**
     * 
     */
    public ConfigurationProperty() {
-	this(null, null, null);
+	this(null, null, null, null);
    }
 
    /**
     * @param configuration the configuration of the property
     * @param name property name
+    * @param type property type
     */
-   public ConfigurationProperty(final ConfigurationEntity configuration, final String name) {
-	this(configuration, name, null);
+   public ConfigurationProperty(final ConfigurationEntity configuration, final String name, final Class<?> type) {
+	this(configuration, name, type, null);
    }
 
    /**
     * @param configuration the configuration of the property
     * @param name property name
+    * @param type property type
     * @param description optional description
     */
-   public ConfigurationProperty(final ConfigurationEntity configuration, final String name, final String description) {
+   public ConfigurationProperty(final ConfigurationEntity configuration, final String name, final Class<?> type, final String description) {
+	this(configuration, name, null, type, description);
+   }
+
+   /**
+    * @param configuration the configuration of the property
+    * @param name property name
+    * @param value property value
+    * @param type property type
+    * @param description optional description
+    */
+   public ConfigurationProperty(final ConfigurationEntity configuration, final String name, final String value, final Class<?> type, final String description) {
 	super();
 	this.configuration = configuration;
 	this.name = name;
 	this.description = description;
+	this.value = value;
+	this.type = type;
    }
 
    /**
@@ -108,6 +132,34 @@ public class ConfigurationProperty {
 	this.description = description;
    }
 
+   /**
+    * @return the property value
+    */
+   public Serializable getValue() {
+	return value;
+   }
+
+   /**
+    * @param value the property value to set
+    */
+   public void setValue(final String value) {
+	this.value = value;
+   }
+
+   /**
+    * @return the property type
+    */
+   public Class<?> getType() {
+	return type;
+   }
+
+   /**
+    * @param type the property type
+    */
+   public void setType(final Class<?> type) {
+	this.type = type;
+   }
+
    /*
     * (non-Javadoc)
     * @see java.lang.Object#hashCode()
@@ -119,6 +171,8 @@ public class ConfigurationProperty {
 	result = prime * result + ((configuration == null) ? 0 : configuration.hashCode());
 	result = prime * result + ((description == null) ? 0 : description.hashCode());
 	result = prime * result + ((name == null) ? 0 : name.hashCode());
+	result = prime * result + ((value == null) ? 0 : value.hashCode());
+	result = prime * result + ((type == null) ? 0 : type.hashCode());
 	return result;
    }
 
@@ -141,6 +195,12 @@ public class ConfigurationProperty {
 	if (name == null) {
 	   if (other.name != null) { return false; }
 	} else if (!name.equals(other.name)) { return false; }
+	if (value == null) {
+	   if (other.value != null) { return false; }
+	} else if (!value.equals(other.value)) { return false; }
+	if (type == null) {
+	   if (other.type != null) { return false; }
+	} else if (!type.equals(other.type)) { return false; }
 	return true;
    }
 
@@ -150,8 +210,8 @@ public class ConfigurationProperty {
     */
    @Override
    public String toString() {
-	return "ConfigurationProperty [configuration=" + (configuration != null ? configuration.getName() : "") + ", name=" + name + ", description="
-		+ description + "]";
+	return "ConfigurationProperty [configuration=" + (configuration != null ? configuration.getName() : "") + ", name=" + name + ", value=" + value
+		+ ", type=" + type + ", description=" + description + "]";
    }
 
 }

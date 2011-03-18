@@ -21,6 +21,11 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.kaleidofoundry.core.lang.annotation.Review;
@@ -29,15 +34,19 @@ import org.kaleidofoundry.core.lang.annotation.Review;
  * @author Jerome RADUGET
  */
 @XmlRootElement(name = "configuration")
+@XmlAccessorType(XmlAccessType.FIELD)
 @Entity(name = "Configuration")
 @Table(name = "CONFIGURATION")
 @Review(comment = "Audit information (locale zone for the date, user information...)")
 public class ConfigurationEntity {
 
    @Id
+   @XmlID
    private String name;
    private String uri;
    private String description;
+   @XmlElementWrapper(name = "properties")
+   @XmlElement(name = "property")
    private List<ConfigurationProperty> properties;
 
    public ConfigurationEntity() {

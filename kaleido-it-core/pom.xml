@@ -87,7 +87,7 @@
 			<artifactId>gf-client</artifactId>
 			<version>3.0.1</version>
 			<scope>system</scope>
-			<systemPath>${glassfishv3.home}/glassfish/modules/gf-client-module.jar</systemPath>			
+			<systemPath>${glassfishv3.home}/glassfish/lib/gf-client.jar</systemPath>			
 			<optional>true</optional>
 		</dependency>
 		

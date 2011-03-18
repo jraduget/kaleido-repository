@@ -99,38 +99,41 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
 	// for each declared configuration
 	for (final Configuration configuration : ConfigurationFactory.getRegistry().values()) {
 
-	   // clear existing listeners
-	   cleanupConfigurationsListeners(configuration);
+	   if (configuration.isUpdateAllowed()) {
 
-	   // create configuration change listener that trigger changes to registered runtime context
-	   final ConfigurationListener configurationListener = new ConfigurationAdapter() {
-		@Override
-		public void propertiesChanges(final LinkedHashSet<ConfigurationChangeEvent> events) {
+		// clear existing listeners
+		cleanupConfigurationsListeners(configuration);
 
-		   boolean fireChanges = false;
-		   final Plugin<?> currentPlugin = PluginHelper.getInterfacePlugin(genericClassInterface);
+		// create configuration change listener that trigger changes to registered runtime context
+		final ConfigurationListener configurationListener = new ConfigurationAdapter() {
+		   @Override
+		   public void propertiesChanges(final LinkedHashSet<ConfigurationChangeEvent> events) {
 
-		   // if one event is bound to current plugin (property name start by the plugin code) -> fire changes to runtime contexts
-		   for (final ConfigurationChangeEvent evt : events) {
-			if (evt != null && evt.getPropertyName().startsWith(currentPlugin.getName())) {
-			   fireChanges = true;
-			   break;
+			boolean fireChanges = false;
+			final Plugin<?> currentPlugin = PluginHelper.getInterfacePlugin(genericClassInterface);
+
+			// if one event is bound to current plugin (property name start by the plugin code) -> fire changes to runtime contexts
+			for (final ConfigurationChangeEvent evt : events) {
+			   if (evt != null && evt.getPropertyName().startsWith(currentPlugin.getName())) {
+				fireChanges = true;
+				break;
+			   }
 			}
-		   }
 
-		   if (fireChanges) {
-			for (final RuntimeContext<T> rc : dynamicsRegisterContext) {
-			   if (rc.isDynamics()) {
-				rc.triggerConfigurationChangeEvents(events);
+			if (fireChanges) {
+			   for (final RuntimeContext<T> rc : dynamicsRegisterContext) {
+				if (rc.isDynamics()) {
+				   rc.triggerConfigurationChangeEvents(events);
+				}
 			   }
 			}
 		   }
-		}
-	   };
+		};
 
-	   // add and register the new configuration listener
-	   configuration.addConfigurationListener(configurationListener);
-	   configurationsListeners.put(configuration.getName(), configurationListener);
+		// add and register the new configuration listener
+		configuration.addConfigurationListener(configurationListener);
+		configurationsListeners.put(configuration.getName(), configurationListener);
+	   }
 	}
 
    }

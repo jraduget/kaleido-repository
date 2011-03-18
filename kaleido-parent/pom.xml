@@ -2,11 +2,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>6</version>
-	</parent>
+  	<parent>
+    	<groupId>org.sonatype.oss</groupId>
+    	<artifactId>oss-parent</artifactId>
+    	<version>7</version>
+  	</parent>
   	
 	<groupId>org.kaleidofoundry</groupId>
 	<artifactId>kaleido-parent</artifactId>
@@ -208,23 +208,6 @@
 		</notifiers>
 	</ciManagement>
 
-	<distributionManagement>
-		<repository>
-			<id>repository.kaleidofoundry.org</id>
-			<url>file://${maven.repository.root}</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshots.kaleidofoundry.org</id>
-			<name>Kaleido Snapshot Repository</name>
-			<url>dav:https://snapshots.kaleidofoundry.org/maven2</url>
-		</snapshotRepository>
-		<site>
-			<id>maven.kaleidofoundry.site.org</id>
-			<name>Kaleido maven site</name>
-			<url>${kaleido.staging.siteURL}/maven/${kaleido-version}</url>
-		</site>
-	</distributionManagement>
-
 	<build>
 		<plugins>
 			<!-- compilation -->
@@ -298,7 +281,51 @@
 				<artifactId>maven-scm-plugin</artifactId>
 				<version>1.4</version>
 			</plugin>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+				<!-- doclava configuration 
+				<configuration>
+			          <docletArtifact>
+			            <groupId>com.google.doclava</groupId>
+			            <artifactId>doclava</artifactId>
+			            <version>1.0.3</version>
+			          </docletArtifact>
+			          <doclet>com.google.doclava.Doclava</doclet>
+			          <bootclasspath>${sun.boot.class.path}</bootclasspath>
+			          <additionalparam>
+			             -quiet
+			             -federate JDK http://download.oracle.com/javase/6/docs/api/index.html?
+			             -federationxml JDK http://doclava.googlecode.com/svn/static/api/openjdk-6.xml
+			             -hdf project.name "${project.name}"
+			             -d ${project.build.directory}/apidocs
+			           </additionalparam>
+			          <useStandardDocletOptions>false</useStandardDocletOptions>
+			          <additionalJOption>-J-Xmx1024m</additionalJOption>
+			    </configuration>	
+			    -->		
+				<configuration>
+					<links>
+						<link>http://download.oracle.com/javase/6/docs/api/</link>
+						<link>http://download.oracle.com/javaee/6/api/</link>
+						<!-- <link>http://download.oracle.com/javaee/5/api/</link> -->
+						<link>http://junit.sourceforge.net/javadoc/</link>
+						<link>http://www.slf4j.org/api/</link>
+					</links>
+					<source>${jdk.version}</source>
+					<minmemory>128m</minmemory>
+					<maxmemory>512m</maxmemory>
+					<docfilessubdirs>true</docfilessubdirs>
+					<linksource>true</linksource>					
+					<aggregate>true</aggregate>
+					<!-- 
+					<outputDirectory>../kaleido-site/site/apidocs</outputDirectory>
+					<reportOutputDirectory>../kaleido-site/site/apidocs</reportOutputDirectory>
+					 -->
+				</configuration>				       	
+			</plugin>			
+			<!-- ide -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
@@ -373,30 +400,6 @@
 
 	<reporting>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.7</version>
-				<configuration>
-					<links>
-						<link>http://download.oracle.com/javase/6/docs/api/</link>
-						<link>http://download.oracle.com/javaee/6/api/</link>
-						<!-- <link>http://download.oracle.com/javaee/5/api/</link> -->
-						<link>http://junit.sourceforge.net/javadoc/</link>
-						<link>http://www.slf4j.org/api/</link>
-					</links>
-					<source>${jdk.version}</source>
-					<minmemory>128m</minmemory>
-					<maxmemory>512m</maxmemory>
-					<docfilessubdirs>true</docfilessubdirs>
-					<linksource>true</linksource>					
-					<aggregate>true</aggregate>
-					<!-- 
-					<outputDirectory>../kaleido-site/site/apidocs</outputDirectory>
-					<reportOutputDirectory>../kaleido-site/site/apidocs</reportOutputDirectory>
-					 -->
-				</configuration>				
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
