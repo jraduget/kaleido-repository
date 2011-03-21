@@ -139,7 +139,7 @@ public class AnnotationContexInjectorAspect {
    /**
     * @param jp
     * @param esjp
-    * @return
+    * @return <code>true / false</code> to enable poincut
     */
    // no need to filter on field modifier here, otherwise you can use private || !public at first get argument
    @Pointcut("get(@org.kaleidofoundry.core.context.Context org.kaleidofoundry.core.context.RuntimeContext *) && if()")
@@ -153,7 +153,7 @@ public class AnnotationContexInjectorAspect {
     * @param esjp
     * @param thisJoinPoint
     * @param annotation
-    * @return
+    * @return <code>true / false</code> to enable poincut
     * @throws Throwable
     */
    // track field with ProceedingJoinPoint and annotation information with @annotation(annotation)
@@ -186,7 +186,7 @@ public class AnnotationContexInjectorAspect {
    /**
     * @param jp
     * @param esjp
-    * @return
+    * @return <code>true / false</code> to enable poincut
     */
    // no need to filter on field modifier here, otherwise you can use private || !public at first get argument
    @Pointcut("get(@org.kaleidofoundry.core.context.Context !org.kaleidofoundry.core.context.RuntimeContext *) && if()")
@@ -200,7 +200,7 @@ public class AnnotationContexInjectorAspect {
     * @param esjp
     * @param thisJoinPoint
     * @param annotation
-    * @return
+    * @return <code>true / false</code> if join point have been processed
     * @throws Throwable
     */
    // track field with ProceedingJoinPoint and annotation information with @annotation(annotation)
@@ -310,8 +310,8 @@ public class AnnotationContexInjectorAspect {
 		   }
 
 		   // coherence checks
-		   if (!targetRuntimeContextFieldFound) { throw new ContextException("context.annotation.illegaluse.noRuntimeContextField",
-			   annotatedFieldSignature.getFieldType().getName() + "#" + annotatedField.getName(), Context.class.getName()); }
+		   if (!targetRuntimeContextFieldFound) { throw new ContextException("context.annotation.illegaluse.noRuntimeContextField", annotatedFieldSignature
+			   .getFieldType().getName() + "#" + annotatedField.getName(), Context.class.getName()); }
 
 		}
 	   }

@@ -6,6 +6,7 @@ derby.log
 .settings/
 .svn/
 .DS_Store
+.tomcatplugin
 kaleido-wiki/
 kaleido-site/
 kaleido-mail/

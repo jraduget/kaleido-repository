@@ -25,18 +25,19 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.kaleidofoundry.core.cache.Cache;
+import org.kaleidofoundry.core.config.entity.FireChangesReport;
 import org.kaleidofoundry.core.context.Provider;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Nullable;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.store.ClasspathFileStore;
+import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.FileSystemStore;
 import org.kaleidofoundry.core.store.FtpStore;
 import org.kaleidofoundry.core.store.HttpFileStore;
 import org.kaleidofoundry.core.store.JpaFileStore;
 import org.kaleidofoundry.core.store.StoreException;
-import org.kaleidofoundry.core.store.FileStore;
 
 /**
  * <p>
@@ -197,10 +198,12 @@ public interface Configuration {
    void removeConfigurationListener(ConfigurationListener listener);
 
    /**
-    * fire all configuration changes events (update, remove) since the last call<br/>
+    * fire all configuration changes events (create, update, remove) since the last call<br/>
     * events are fired in the order of creation
+    * 
+    * @return report of configurations changes which have been fired
     */
-   void fireConfigurationChangesEvents();
+   FireChangesReport fireConfigurationChangesEvents();
 
    // **************************************************************************
    // -> Keys management
@@ -242,6 +245,12 @@ public interface Configuration {
     */
    @NotNull
    Set<String> keySet(@NotNull String prefix);
+
+   /**
+    * @param key property key to find
+    * @return <code>true</code>if key exists, <code>false</code> otherwise
+    */
+   boolean containsKey(String key);
 
    /**
     * @param key property key to find

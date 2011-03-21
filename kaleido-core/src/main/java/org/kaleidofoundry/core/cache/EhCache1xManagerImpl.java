@@ -16,6 +16,7 @@
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.EhCacheManagerPluginName;
+import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreUri;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.CacheMessageBundle;
 
 import java.io.FileNotFoundException;
@@ -60,7 +61,7 @@ public class EhCache1xManagerImpl extends AbstractCacheManager {
     * @param context
     */
    public EhCache1xManagerImpl(final RuntimeContext<org.kaleidofoundry.core.cache.CacheManager> context) {
-	this(null, context);
+	this(context.getString(FileStoreUri), context);
    }
 
    /**

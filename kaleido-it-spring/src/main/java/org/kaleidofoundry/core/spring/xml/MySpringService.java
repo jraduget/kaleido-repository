@@ -15,8 +15,13 @@
  */
 package org.kaleidofoundry.core.spring.xml;
 
+import org.kaleidofoundry.core.cache.Cache;
+import org.kaleidofoundry.core.cache.CacheException;
+import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.config.ConfigurationException;
+import org.kaleidofoundry.core.naming.NamingService;
+import org.kaleidofoundry.core.naming.NamingServiceException;
 import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.StoreException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +42,18 @@ public class MySpringService {
    @Qualifier("myConfig")
    private Configuration configuration;
 
+   @Autowired
+   @Qualifier("myCacheManager")
+   private CacheManager cacheManager;
+
+   // @Autowired
+   // @Qualifier("myCache")
+   private Cache<String, String> cache;
+
+   @Autowired
+   @Qualifier("myNamingService")
+   private NamingService namingService;
+
    /**
     * @param resource resource name (relative path)
     * @throws StoreException
@@ -52,5 +69,38 @@ public class MySpringService {
     */
    public String getConfigurationProperty(final String property) throws ConfigurationException {
 	return configuration.getString(property);
+   }
+
+   /**
+    * @param name cache name identifier
+    * @return the given cache instance
+    * @throws CacheException
+    */
+   public Cache<String, String> getCache(final String name) throws CacheException {
+	return cacheManager.getCache(name);
+   }
+
+   /**
+    * @param key key of the search value
+    * @return the given cache value
+    * @throws CacheException
+    */
+   public String getCacheValue(final String key) throws CacheException {
+	// init some values for testing
+	cache.put("key1", "value1");
+	cache.put("key2", "value2");
+
+	return cache.get(key);
+   }
+
+   /**
+    * @param <R> type of the resource
+    * @param resourceName name of the resource
+    * @param ressourceClass type of the resource
+    * @return the local or remote resource
+    * @throws NamingServiceException
+    */
+   public <R> R getNamingResource(final String resourceName, final Class<R> ressourceClass) throws NamingServiceException {
+	return namingService.locate(resourceName, ressourceClass);
    }
 }

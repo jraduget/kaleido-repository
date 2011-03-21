@@ -103,6 +103,7 @@ public abstract class AbstractConfigurationListenerTest extends Assert {
 	commonInitAssertions();
 
 	configuration.setProperty("newProperty", "foo");
+	configuration.fireConfigurationChangesEvents();
 
 	assertEquals(10 + getListenerCount(), fireCreateCount);
 	assertEquals(20, fireUpdateCount);
@@ -123,6 +124,7 @@ public abstract class AbstractConfigurationListenerTest extends Assert {
 	commonInitAssertions();
 
 	configuration.setProperty("application.name", "app new name");
+	configuration.fireConfigurationChangesEvents();
 
 	assertEquals(10, fireCreateCount);
 	assertEquals(20 + getListenerCount(), fireUpdateCount);
@@ -142,6 +144,7 @@ public abstract class AbstractConfigurationListenerTest extends Assert {
 	commonInitAssertions();
 
 	configuration.removeProperty("application.name");
+	configuration.fireConfigurationChangesEvents();
 
 	assertEquals(10, fireCreateCount);
 	assertEquals(20, fireUpdateCount);

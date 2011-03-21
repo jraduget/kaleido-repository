@@ -15,11 +15,11 @@
  */
 package org.kaleidofoundry.core.context;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.kaleidofoundry.core.config.Configuration;
@@ -50,7 +50,7 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
    protected final Class<T> genericClassInterface;
 
    /** runtime context instances */
-   protected final Set<RuntimeContext<T>> dynamicsRegisterContext;
+   protected final List<RuntimeContext<T>> dynamicsRegisterContext;
 
    /** created configurations listeners instances by configuration */
    protected final Map<String, ConfigurationListener> configurationsListeners;
@@ -60,9 +60,8 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
     */
    public AbstractProviderService(final Class<T> genericClassInterface) {
 	this.genericClassInterface = genericClassInterface;
-	this.dynamicsRegisterContext = Collections.synchronizedSet(new HashSet<RuntimeContext<T>>());
+	this.dynamicsRegisterContext = Collections.synchronizedList(new ArrayList<RuntimeContext<T>>());
 	this.configurationsListeners = new ConcurrentHashMap<String, ConfigurationListener>();
-
 	registerConfigurationsListeners();
    }
 
@@ -81,9 +80,7 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
     */
    @Override
    public final T provides(final RuntimeContext<T> context) throws ProviderException {
-	if (context.isDynamics()) {
-	   dynamicsRegisterContext.add(context);
-	}
+	registerDynamicContext(context);
 	return _provides(context);
    }
 
@@ -102,38 +99,41 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
 	// for each declared configuration
 	for (final Configuration configuration : ConfigurationFactory.getRegistry().values()) {
 
-	   // clear existing listeners
-	   cleanupConfigurationsListeners(configuration);
+	   if (configuration.isUpdateAllowed()) {
 
-	   // create configuration change listener that trigger changes to registered runtime context
-	   final ConfigurationListener configurationListener = new ConfigurationAdapter() {
-		@Override
-		public void propertiesChanges(final LinkedHashSet<ConfigurationChangeEvent> events) {
+		// clear existing listeners
+		cleanupConfigurationsListeners(configuration);
 
-		   boolean fireChanges = false;
-		   final Plugin<?> currentPlugin = PluginHelper.getInterfacePlugin(genericClassInterface);
+		// create configuration change listener that trigger changes to registered runtime context
+		final ConfigurationListener configurationListener = new ConfigurationAdapter() {
+		   @Override
+		   public void propertiesChanges(final LinkedHashSet<ConfigurationChangeEvent> events) {
 
-		   // if one event is bound to current plugin (property name start by the plugin code) -> fire changes to runtime contexts
-		   for (final ConfigurationChangeEvent evt : events) {
-			if (evt != null && evt.getPropertyName().startsWith(currentPlugin.getName())) {
-			   fireChanges = true;
-			   break;
+			boolean fireChanges = false;
+			final Plugin<?> currentPlugin = PluginHelper.getInterfacePlugin(genericClassInterface);
+
+			// if one event is bound to current plugin (property name start by the plugin code) -> fire changes to runtime contexts
+			for (final ConfigurationChangeEvent evt : events) {
+			   if (evt != null && evt.getPropertyName().startsWith(currentPlugin.getName())) {
+				fireChanges = true;
+				break;
+			   }
 			}
-		   }
 
-		   if (fireChanges) {
-			for (final RuntimeContext<T> rc : dynamicsRegisterContext) {
-			   if (rc.isDynamics()) {
-				rc.triggerConfigurationChangeEvents(events);
+			if (fireChanges) {
+			   for (final RuntimeContext<T> rc : dynamicsRegisterContext) {
+				if (rc.isDynamics()) {
+				   rc.triggerConfigurationChangeEvents(events);
+				}
 			   }
 			}
 		   }
-		}
-	   };
+		};
 
-	   // add and register the new configuration listener
-	   configuration.addConfigurationListener(configurationListener);
-	   configurationsListeners.put(configuration.getName(), configurationListener);
+		// add and register the new configuration listener
+		configuration.addConfigurationListener(configurationListener);
+		configurationsListeners.put(configuration.getName(), configurationListener);
+	   }
 	}
 
    }
@@ -149,6 +149,17 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
 	   if (listener != null) {
 		configuration.removeConfigurationListener(listener);
 	   }
+	}
+   }
+
+   /**
+    * registered given runtime context (if it is dynamics)
+    * 
+    * @param context
+    */
+   protected void registerDynamicContext(final RuntimeContext<T> context) {
+	if (context.isDynamics()) {
+	   dynamicsRegisterContext.add(context);
 	}
    }
 

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.kaleidofoundry</groupId>
 		<artifactId>kaleido-it-parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>0.8.0-SNAPSHOT</version>
 		<relativePath>../kaleido-it-parent/pom.xml</relativePath>
 	</parent>
 
@@ -19,7 +19,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.3</version>
+				<version>1.3.1</version>
 				<configuration>
 					<aspectLibraries>
 						<aspectLibrary>

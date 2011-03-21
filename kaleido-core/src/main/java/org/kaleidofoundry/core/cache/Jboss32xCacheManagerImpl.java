@@ -16,6 +16,7 @@
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.JbossCacheManagerPluginName;
+import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreUri;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.CacheMessageBundle;
 
 import java.io.InputStream;
@@ -59,7 +60,7 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
     * @param context
     */
    public Jboss32xCacheManagerImpl(final RuntimeContext<org.kaleidofoundry.core.cache.CacheManager> context) {
-	this(null, context);
+	this(context.getString(FileStoreUri), context);
    }
 
    /**

@@ -15,22 +15,28 @@
  */
 package org.kaleidofoundry.core.naming;
 
+import static org.kaleidofoundry.core.i18n.InternalBundleHelper.NamingMessageBundle;
 import static org.kaleidofoundry.core.naming.NamingConstants.JndiNamingPluginName;
 import static org.kaleidofoundry.core.naming.NamingContextBuilder.EnvPrefixName;
+import static org.kaleidofoundry.core.naming.NamingContextBuilder.FailoverEnabled;
+import static org.kaleidofoundry.core.naming.NamingContextBuilder.FailoverMaxRetry;
+import static org.kaleidofoundry.core.naming.NamingContextBuilder.FailoverWaitBeforeRetry;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
-import javax.validation.constraints.NotNull;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Review;
 import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
 import org.kaleidofoundry.core.lang.annotation.Reviews;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * JNDI naming service implementation
@@ -40,6 +46,8 @@ import org.kaleidofoundry.core.util.StringHelper;
 @Declare(value = JndiNamingPluginName, description = "jndi naming service implementation")
 @Reviews(reviews = { @Review(category = ReviewCategoryEnum.Improvement, comment = "fail over on client side with context property : failover.enabled ; failover.waiting ; failover.maxretry ; home cache ") })
 public class JndiNamingService implements NamingService {
+
+   protected static final Logger logger = LoggerFactory.getLogger(JndiNamingService.class);
 
    private final RuntimeContext<NamingService> context;
 
@@ -82,7 +90,11 @@ public class JndiNamingService implements NamingService {
 	   }
 
 	   // lookup the resource
-	   resource = intialContext.lookup(fullResourceName.toString());
+	   if (isFailoverEnabled()) {
+		resource = lookupWithFailover(intialContext, fullResourceName.toString());
+	   } else {
+		resource = intialContext.lookup(fullResourceName.toString());
+	   }
 
 	   // cast check of the result object (remote or local)
 	   try {
@@ -145,6 +157,91 @@ public class JndiNamingService implements NamingService {
     */
    RuntimeContext<NamingService> getContext() {
 	return context;
+   }
+
+   /**
+    * @return does failover is enabled
+    * @see NamingContextBuilder#FailoverEnabled
+    */
+   protected boolean isFailoverEnabled() {
+	return context.getBoolean(FailoverEnabled, false);
+   }
+
+   /**
+    * @return max attempt after failure
+    * @see NamingContextBuilder#FailoverMaxRetry
+    */
+   protected int getFailoverMaxRetry() {
+	final Integer maxRetry = context.getInteger(FailoverMaxRetry);
+	if (maxRetry != null) {
+	   return maxRetry.intValue();
+	} else {
+	   return -1;
+	}
+   }
+
+   /**
+    * @return time to sleep after failure
+    * @see NamingContextBuilder#FailoverWaitBeforeRetry
+    */
+   protected int getFailoverWaitBeforeRetry() {
+	final Integer sleepOnFailure = context.getInteger(FailoverWaitBeforeRetry);
+	if (sleepOnFailure != null) {
+	   return sleepOnFailure.intValue();
+	} else {
+	   return 0;
+	}
+   }
+
+   /**
+    * jndi lookup using if configure a failover processing
+    * 
+    * @param intialContext
+    * @param resourceName
+    * @return the lookup resource
+    * @throws NamingException
+    */
+   protected Object lookupWithFailover(final Context intialContext, final String resourceName) throws NamingException {
+
+	int retryCount = 0;
+	int maxRetryCount = 1;
+	NamingException lastError = null;
+
+	while (retryCount < maxRetryCount) {
+	   try {
+		return intialContext.lookup(resourceName);
+	   } catch (final NamingException nae) {
+		lastError = nae;
+		maxRetryCount = getFailoverMaxRetry();
+		// no fail-over, we throw the exception
+		if (maxRetryCount <= 0) {
+		   throw nae;
+		}
+		// wait for the configuring delay (in milliseconds)
+		else {
+		   retryCount++;
+		   final int sleepTime = getFailoverWaitBeforeRetry();
+		   if (retryCount < maxRetryCount) {
+			logger.warn(NamingMessageBundle.getMessage("naming.failover.retry.get.info", resourceName, sleepTime, retryCount, maxRetryCount));
+			try {
+			   Thread.sleep((sleepTime));
+			} catch (final InterruptedException e) {
+			   logger.error(NamingMessageBundle.getMessage("naming.failover.retry.error", sleepTime), nae);
+			   throw nae;
+			}
+		   } else {
+			logger.error(NamingMessageBundle.getMessage("naming.failover.retry.get.info", resourceName, sleepTime, retryCount, maxRetryCount), nae);
+		   }
+		}
+	   }
+	}
+
+	if (lastError != null) {
+	   throw lastError;
+	} else {
+	   throw new IllegalStateException();
+	}
+
    }
 
 }

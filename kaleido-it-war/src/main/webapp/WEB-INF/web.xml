@@ -14,7 +14,7 @@
 	<context-param>
 		<description>configurations to load</description>
 		<param-name>kaleido.configurations</param-name>
-		<param-value>myCacheConfig=classpath:/cache/myContext.properties,myI18nConfig=classpath:/i18n/myContext.properties</param-value>
+		<param-value>myConfig=classpath:/config/myConfig.properties,myCacheConfig=classpath:/cache/myContext.properties,myI18nConfig=classpath:/i18n/myContext.properties</param-value>
 	</context-param>
 
 	<listener>
@@ -23,9 +23,24 @@
 		<listener-class>org.kaleidofoundry.core.web.StartupListener</listener-class>
 	</listener>
 
+	<servlet>
+		<servlet-name>RestResourcesServlet</servlet-name>
+		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+  		<init-param>
+               <param-name>javax.ws.rs.Application</param-name>
+               <param-value>org.kaleidofoundry.core.web.RestResourcesApp</param-value>
+        </init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>RestResourcesServlet</servlet-name>
+		<url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
+
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
-	
+
 </web-app>

@@ -16,6 +16,7 @@
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.InfinispanCacheManagerPluginName;
+import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreUri;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.CacheMessageBundle;
 
 import java.io.IOException;
@@ -59,7 +60,7 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
     * @param context
     */
    public Infinispan4xCacheManagerImpl(final RuntimeContext<org.kaleidofoundry.core.cache.CacheManager> context) {
-	this(null, context);
+	this(context.getString(FileStoreUri), context);
    }
 
    /**
