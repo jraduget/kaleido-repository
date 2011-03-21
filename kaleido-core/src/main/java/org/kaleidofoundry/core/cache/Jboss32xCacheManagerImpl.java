@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,6 +51,10 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
    /** Default cache configuration */
    private static final String DefaultCacheConfiguration = "jboss.xml";
 
+   // internal jboss cache manager
+   @SuppressWarnings("rawtypes")
+   final org.jboss.cache.CacheFactory cacheManager;
+
    /**
     * @param context
     */
@@ -59,17 +63,23 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
    }
 
    /**
-    * @param configuration
+    * @param configuration override the context configuration file (if defined)
     * @param context
     */
+   @SuppressWarnings("rawtypes")
    public Jboss32xCacheManagerImpl(final String configuration, final RuntimeContext<CacheManager> context) {
 	super(configuration, context);
 
+	// internal jboss cache factory
+	cacheManager = new DefaultCacheFactory();
 	// test if configuration is legal
 	final String initTestCacheName = "__inittest__";
-	createCache(initTestCacheName, configuration);
+	// get and create the cache
+	createCache(initTestCacheName);
+	// all is ok, we detroy it
 	destroy(initTestCacheName);
    }
+
 
    /*
     * (non-Javadoc)
@@ -96,15 +106,11 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
    @SuppressWarnings("unchecked")
    @Override
    public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
-
 	Cache<K, V> cache = cachesByName.get(name);
-
 	if (cache == null) {
-	   final org.jboss.cache.Cache<K, V> jbossCache = createCache(name, getCurrentConfiguration());
-	   cache = new Jboss32xCacheImpl<K, V>(name, context, jbossCache);
+	   cache = new Jboss32xCacheImpl<K, V>(name, context);
 	   cachesByName.put(name, cache);
 	}
-
 	return cache;
    }
 
@@ -113,7 +119,7 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
     * @see org.kaleidofoundry.core.cache.CacheFactory#destroy(java.lang.String)
     */
    @Override
-   public void destroy(final String cacheName) {
+   public synchronized void destroy(final String cacheName) {
 	final Cache<?, ?> cache = cachesByName.get(cacheName);
 	if (cache != null) {
 	   ((Jboss32xCacheImpl<?, ?>) cache).destroy();
@@ -126,7 +132,7 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
     * @see org.kaleidofoundry.core.cache.CacheFactory#destroyAll()
     */
    @Override
-   public void destroyAll() {
+   public synchronized void destroyAll() {
 	super.destroyAll();
 	for (final String name : cachesByName.keySet()) {
 	   LOGGER.info(CacheMessageBundle.getMessage("cache.destroy.info", getMetaInformations(), name));
@@ -135,41 +141,7 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
 
 	// unregister cache manager instance
 	CacheManagerProvider.getRegistry()
-		.remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.jbossCache3x.name(), getCurrentConfiguration()));
-   }
-
-   /**
-    * @param name cache name
-    * @param configurationUri url to the configuration file of the cache.
-    * @return provider cache instance
-    */
-   protected <K, V> org.jboss.cache.Cache<K, V> createCache(final String name, final String configurationUri) {
-
-	org.jboss.cache.CacheFactory<K, V> cacheFactory;
-	org.jboss.cache.Cache<K, V> cache;
-
-	try {
-
-	   cacheFactory = new DefaultCacheFactory<K, V>(); // generic type, don't create it in constructor
-
-	   if (StringHelper.isEmpty(configurationUri)) {
-		LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration(), name));
-		cache = cacheFactory.createCache(true);
-	   } else {
-		final InputStream inConf = getConfiguration(configurationUri);
-
-		if (inConf != null) {
-		   LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration(), name));
-		   cache = cacheFactory.createCache(inConf, true);
-		} else {
-		   throw new CacheConfigurationNotFoundException("cache.configuration.notfound", JbossCacheManagerPluginName, configurationUri);
-		}
-	   }
-	   return cache;
-	} catch (final ConfigurationException cfe) {
-	   throw new CacheConfigurationException("cache.configuration.error", cfe, JbossCacheManagerPluginName,
-		   StringHelper.isEmpty(configurationUri) ? DefaultCacheConfiguration : configurationUri);
-	}
+	.remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.jbossCache3x.name(), getCurrentConfiguration()));
    }
 
    /*
@@ -191,4 +163,34 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
 	return new LinkedHashMap<String, Object>();
    }
 
+   /**
+    * @param name cache name
+    * @param <K>
+    * @param <V>
+    * @return provider cache instance
+    */
+   @SuppressWarnings("unchecked")
+   protected <K extends Serializable, V extends Serializable> org.jboss.cache.Cache<K, V> createCache(final String name) {
+
+	try {
+	   final org.jboss.cache.Cache<K, V> cache;
+
+	   if (StringHelper.isEmpty(getCurrentConfiguration())) {
+		LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), DefaultCacheConfiguration, name));
+		cache = cacheManager.createCache(true);
+	   } else {
+		final InputStream inConf = getConfiguration(getCurrentConfiguration());
+		if (inConf != null) {
+		   LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration(),
+			   name));
+		   cache = cacheManager.createCache(inConf, true);
+		} else {
+		   throw new CacheConfigurationNotFoundException("cache.configuration.notfound", JbossCacheManagerPluginName, getCurrentConfiguration());
+		}
+	   }
+	   return cache;
+	} catch (final ConfigurationException cfe) {
+	   throw new CacheConfigurationException("cache.configuration.error", cfe, JbossCacheManagerPluginName, getCurrentConfiguration());
+	}
+   }
 }

@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
    private static final String DefaultCacheConfiguration = null;
 
    // internal cache manager
-   private final CacheManager cacheManager;
+   final CacheManager infiniSpanCacheManager;
 
    /**
     * @param context
@@ -63,25 +63,23 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
    }
 
    /**
-    * @param configuration
+    * @param configuration override the context configuration file (if defined)
     * @param context
     */
    public Infinispan4xCacheManagerImpl(final String configuration, final RuntimeContext<org.kaleidofoundry.core.cache.CacheManager> context) {
-
 	super(configuration, context);
-	try {
-	   final String configurationUri = getCurrentConfiguration();
 
-	   if (StringHelper.isEmpty(configurationUri)) {
+	try {
+	   if (StringHelper.isEmpty(configuration)) {
 		LOGGER.info(CacheMessageBundle.getMessage("cache.loading.default", getMetaInformations(), DefaultCacheConfiguration));
-		cacheManager = new DefaultCacheManager(true);
+		infiniSpanCacheManager = new DefaultCacheManager(true);
 	   } else {
-		final InputStream inConf = getConfiguration(configurationUri);
+		final InputStream inConf = getConfiguration(configuration);
 		if (inConf != null) {
-		   LOGGER.info(CacheMessageBundle.getMessage("cache.loading.custom", getMetaInformations(), configurationUri));
-		   cacheManager = new DefaultCacheManager(inConf, true);
+		   LOGGER.info(CacheMessageBundle.getMessage("cache.loading.custom", getMetaInformations(), configuration));
+		   infiniSpanCacheManager = new DefaultCacheManager(inConf, true);
 		} else {
-		   throw new CacheConfigurationNotFoundException("cache.configuration.notfound", InfinispanCacheManagerPluginName, configurationUri);
+		   throw new CacheConfigurationNotFoundException("cache.configuration.notfound", InfinispanCacheManagerPluginName, configuration);
 		}
 	   }
 	} catch (final ConfigurationException cfe) {
@@ -90,6 +88,7 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
 	   throw new CacheConfigurationException("cache.configuration.error", ioe, InfinispanCacheManagerPluginName, getCurrentConfiguration());
 	}
    }
+
 
    /*
     * (non-Javadoc)
@@ -106,7 +105,7 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
     */
    @Override
    public String getMetaInformations() {
-	return "infinispan-4.x - [4.0.x -> 4.0.x]";
+	return "infinispan-4.x - [4.0.x -> 4.x]";
    }
 
    /*
@@ -116,15 +115,11 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
    @SuppressWarnings({ "unchecked", "rawtypes" })
    @Override
    public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
-
 	Cache<K, V> cache = cachesByName.get(name);
-
 	if (cache == null) {
-	   final org.infinispan.Cache<?, ?> jbossCache = createCache(name);
-	   cache = new Infinispan4xCacheImpl(name, context, jbossCache);
+	   cache = new Infinispan4xCacheImpl(name, context);
 	   cachesByName.put(name, cache);
 	}
-
 	return cache;
    }
 
@@ -133,7 +128,7 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
     * @see org.kaleidofoundry.core.cache.CacheFactory#destroy(java.lang.String)
     */
    @Override
-   public void destroy(final String cacheName) {
+   public synchronized void destroy(final String cacheName) {
 	final Cache<?, ?> cache = cachesByName.get(cacheName);
 	if (cache != null) {
 	   ((Infinispan4xCacheImpl<?, ?>) cache).getInfinispanCache().getCacheManager().stop();
@@ -147,30 +142,17 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
     * @see org.kaleidofoundry.core.cache.CacheFactory#destroyAll()
     */
    @Override
-   public void destroyAll() {
+   public synchronized void destroyAll() {
 	super.destroyAll();
 	for (final String name : cachesByName.keySet()) {
 	   LOGGER.info(CacheMessageBundle.getMessage("cache.destroy.info", getMetaInformations(), name));
 	   destroy(name);
 	}
-	cacheManager.stop();
+	infiniSpanCacheManager.stop();
 
 	// unregister cacheManager
 	CacheManagerProvider.getRegistry()
-		.remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.infinispan4x.name(), getCurrentConfiguration()));
-   }
-
-   /**
-    * @param name
-    * @return provider cache instance
-    */
-   protected <K, V> org.infinispan.Cache<K, V> createCache(final String name) {
-	try {
-	   LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration(), name));
-	   return cacheManager.getCache(name);
-	} catch (final ConfigurationException cfe) {
-	   throw new CacheConfigurationException("cache.configuration.error", cfe, InfinispanCacheManagerPluginName, getCurrentConfiguration());
-	}
+	.remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.infinispan4x.name(), getCurrentConfiguration()));
    }
 
    /*
@@ -192,4 +174,17 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
 	return new LinkedHashMap<String, Object>();
    }
 
+   /**
+    * @param name
+    * @return provider cache instance
+    */
+   protected <K, V> org.infinispan.Cache<K, V> createCache(final String name) {
+
+	LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration(), name));
+	try {
+	   return infiniSpanCacheManager.getCache(name);
+	} catch (final ConfigurationException cfe) {
+	   throw new CacheConfigurationException("cache.configuration.error", cfe, InfinispanCacheManagerPluginName, getCurrentConfiguration());
+	}
+   }
 }

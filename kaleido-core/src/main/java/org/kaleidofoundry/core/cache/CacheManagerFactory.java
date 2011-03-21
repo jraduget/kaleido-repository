@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,6 +111,19 @@ public abstract class CacheManagerFactory {
    @NotNull
    public static CacheManager provides(@NotNull final String providerCode, final String configuration) {
 	return CACHEMANAGER_PROVIDER.provides(providerCode, configuration);
+   }
+
+   /**
+    * @param providerCode
+    * @param context
+    * @return cacheFactory implementation
+    * @throws CacheConfigurationException cache configuration resource exception
+    * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
+    *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
+    */
+   @NotNull
+   public static CacheManager provides(@NotNull final String providerCode, @NotNull final RuntimeContext<CacheManager> context) {
+	return CACHEMANAGER_PROVIDER.provides(providerCode, null, context);
    }
 
    /**

@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
    }
 
    /**
-    * @param configuration
+    * @param configuration override the context configuration file (if defined)
     * @param context
     */
    public LocalCacheManagerImpl(final String configuration, final RuntimeContext<CacheManager> context) {
@@ -97,7 +97,7 @@ public class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
     */
    @SuppressWarnings({ "rawtypes" })
    @Override
-   public void destroy(final String cacheName) {
+   public synchronized void destroy(final String cacheName) {
 	final Cache<?, ?> cache = cachesByName.get(cacheName);
 	if (cache != null) {
 	   ((LocalCacheImpl) cache).destroy();
@@ -110,7 +110,7 @@ public class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
     * @see org.kaleidofoundry.core.cache.CacheFactory#destroyAll()
     */
    @Override
-   public void destroyAll() {
+   public synchronized void destroyAll() {
 	super.destroyAll();
 	for (final String name : cachesByName.keySet()) {
 	   LOGGER.info(CacheMessageBundle.getMessage("cache.destroy.info", getMetaInformations(), name));

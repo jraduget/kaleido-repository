@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.CoherenceCachePluginName;
+import static org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum.coherence3x;
+import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -40,32 +42,56 @@ public class Coherence3xCacheImpl<K extends Serializable, V extends Serializable
 
    private final NamedCache namedCache;
 
+   private final Coherence3xCacheManagerImpl cacheManager;
+
    /**
     * @param context
-    * @param cache
     */
-   Coherence3xCacheImpl(@NotNull final RuntimeContext<Cache<K, V>> context, @NotNull final NamedCache cache) {
-	super(context);
-	this.namedCache = cache;
+   Coherence3xCacheImpl(@NotNull final RuntimeContext<Cache<K, V>> context) {
+	this(context.getString(CacheName), null, context);
    }
 
    /**
     * @param c
     * @param context
-    * @param cache coherence cache instantiate via factory
     */
-   Coherence3xCacheImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<Cache<K, V>> context, @NotNull final NamedCache cache) {
-	this(c.getName(), context, cache);
+   Coherence3xCacheImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<Cache<K, V>> context) {
+	this(c.getName(), context);
    }
 
    /**
     * @param name
     * @param context
-    * @param cache coherence cache instantiate via factory
     */
-   Coherence3xCacheImpl(@NotNull final String name, @NotNull final RuntimeContext<Cache<K, V>> context, @NotNull final NamedCache cache) {
+   Coherence3xCacheImpl(@NotNull final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
+	this(name, null, context);
+   }
+
+   /**
+    * constructor used by direct ioc injection like spring / guice ...
+    * 
+    * @param name
+    * @param cacheManager
+    * @param context
+    */
+   Coherence3xCacheImpl(final String name, final Coherence3xCacheManagerImpl cacheManager, @NotNull final RuntimeContext<Cache<K, V>> context) {
+	// check name argument in ancestor
 	super(name, context);
-	this.namedCache = cache;
+
+	// the cacheManager to use
+	if (cacheManager != null) {
+	   this.cacheManager = cacheManager;
+	} else {
+	   this.cacheManager = (Coherence3xCacheManagerImpl) CacheManagerFactory.provides(coherence3x.name(),
+		   new RuntimeContext<CacheManager>(
+			   coherence3x.name(), CacheManager.class, context));
+	}
+
+	// create internal cache provider
+	this.namedCache = this.cacheManager.createCache(name);
+
+	// registered it to cache manager (needed by spring or guice direct injection)
+	this.cacheManager.cachesByName.put(name, this);
    }
 
    /*

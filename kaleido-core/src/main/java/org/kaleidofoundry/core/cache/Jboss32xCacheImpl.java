@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.JbossCachePluginName;
+import static org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum.jbossCache3x;
+import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -44,25 +46,21 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
 
    private final Cache<K, V> cache;
    private final Node<K, V> root;
+   private final Jboss32xCacheManagerImpl cacheManager;
 
    /**
     * @param context
-    * @param cache
     */
-   Jboss32xCacheImpl(@NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context, @NotNull final Cache<K, V> cache) {
-	super(context);
-	this.cache = cache;
-	this.root = createAndStartIt();
+   Jboss32xCacheImpl(@NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+	this(context.getString(CacheName), context);
    }
 
    /**
     * @param c
     * @param context
-    * @param cache jboss cache instantiate via factory
     */
-   Jboss32xCacheImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context,
-	   @NotNull final Cache<K, V> cache) {
-	this(c.getName(), context, cache);
+   Jboss32xCacheImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+	this(c.getName(), context);
    }
 
    /**
@@ -70,12 +68,35 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
     * @param context
     * @param cache jboss cache instantiate via factory
     */
-   Jboss32xCacheImpl(@NotNull final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context,
-	   @NotNull final Cache<K, V> cache) {
+   Jboss32xCacheImpl(final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+	this(name, null, context);
+   }
 
+   /**
+    * constructor used by direct ioc injection like spring / guice ...
+    * 
+    * @param name
+    * @param cacheManager
+    * @param context
+    */
+   Jboss32xCacheImpl(final String name, final Jboss32xCacheManagerImpl cacheManager,
+	   @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+	// check name argument in ancestor
 	super(name, context);
-	this.cache = cache;
+
+	// the cacheManager to use
+	if (cacheManager != null) {
+	   this.cacheManager = cacheManager;
+	} else {
+	   this.cacheManager = (Jboss32xCacheManagerImpl) CacheManagerFactory.provides(jbossCache3x.name(),
+		   new RuntimeContext<org.kaleidofoundry.core.cache.CacheManager>(jbossCache3x.name(), org.kaleidofoundry.core.cache.CacheManager.class, context));
+	}
+	// create internal cache provider
+	this.cache = this.cacheManager.createCache(context.getString(CacheName));
+	// create jboss cache root and start it
 	this.root = createAndStartIt();
+	// registered it to cache manager (needed by spring or guice direct injection)
+	this.cacheManager.cachesByName.put(name, this);
    }
 
    /**
@@ -174,5 +195,6 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
    public Object getDelegate() {
 	return root;
    }
+
 
 }

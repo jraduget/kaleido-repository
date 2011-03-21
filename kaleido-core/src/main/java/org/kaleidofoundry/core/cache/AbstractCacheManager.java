@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,8 +58,8 @@ public abstract class AbstractCacheManager implements CacheManager {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCacheManager.class);
 
-   /** force the use of this cache configuration */
-   private final String forcedConfiguration;
+   /** force the use of this cache configuration instead of the context one (if defined) */
+   protected final String forcedConfiguration;
 
    /** internal runtime context */
    protected final RuntimeContext<CacheManager> context;
@@ -73,6 +73,8 @@ public abstract class AbstractCacheManager implements CacheManager {
    protected final transient Registry<String, Cache> cachesByName;
 
    /**
+    * constructor will use runtime context to get configuration uri
+    * 
     * @param context
     */
    public AbstractCacheManager(@NotNull final RuntimeContext<CacheManager> context) {
@@ -80,7 +82,7 @@ public abstract class AbstractCacheManager implements CacheManager {
    }
 
    /**
-    * @param configuration force the use of this cache configuration. if context specify a configuration, it will be ignored for this value.
+    * @param configuration override the context configuration file (if defined)
     * @param context
     * @throws CacheConfigurationException cache configuration resource exception
     */
@@ -88,22 +90,26 @@ public abstract class AbstractCacheManager implements CacheManager {
    public AbstractCacheManager(final String configuration, @NotNull final RuntimeContext<CacheManager> context) {
 	super();
 
+	forcedConfiguration = StringHelper.isEmpty(configuration) ? null : configuration;
+
 	// no need of configuration
-	if (StringHelper.isEmpty(configuration)) {
-	   this.singleFileStore = null;
+	if (forcedConfiguration == null && StringHelper.isEmpty(context.getString(FileStoreUri))) {
+	   singleFileStore = null;
 	}
-	// internal file store instantiation
+	// configuration is given
 	else {
+
 	   final String fileStoreRef = context.getString(FileStoreRef);
 	   final FileStore fileStore;
+	   final String fileStoreUri = StringHelper.isEmpty(forcedConfiguration) ? context.getString(FileStoreUri) : forcedConfiguration;
 
 	   try {
 		if (!StringHelper.isEmpty(fileStoreRef)) {
-		   fileStore = FileStoreFactory.provides(configuration, new RuntimeContext<FileStore>(fileStoreRef, FileStore.class, context));
+		   fileStore = FileStoreFactory.provides(fileStoreUri, new RuntimeContext<FileStore>(fileStoreRef, FileStore.class, context));
 		} else {
-		   fileStore = FileStoreFactory.provides(configuration);
+		   fileStore = FileStoreFactory.provides(fileStoreUri);
 		}
-		this.singleFileStore = new SingleFileStore(configuration, fileStore);
+		singleFileStore = new SingleFileStore(fileStoreUri, fileStore);
 	   } catch (final ProviderException pe) {
 		if (pe.getCause() instanceof ResourceNotFoundException) { throw new CacheConfigurationNotFoundException("cache.configuration.notfound",
 			getMetaInformations(), getCurrentConfiguration()); }
@@ -114,8 +120,7 @@ public abstract class AbstractCacheManager implements CacheManager {
 	}
 
 	this.context = context;
-	this.forcedConfiguration = configuration;
-	this.cachesByName = new Registry<String, Cache>();
+	cachesByName = new Registry<String, Cache>();
    }
 
    /*
@@ -159,6 +164,7 @@ public abstract class AbstractCacheManager implements CacheManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheManager#destroy(java.lang.Class)
     */
+   @Override
    public void destroy(@NotNull final Class<?> cl) {
 	destroy(cl.getName());
    }
@@ -167,6 +173,7 @@ public abstract class AbstractCacheManager implements CacheManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheManager#destroyAll()
     */
+   @Override
    public void destroyAll() {
 
 	try {
@@ -191,6 +198,7 @@ public abstract class AbstractCacheManager implements CacheManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheManager#dumpStatistics()
     */
+   @Override
    @NotNull
    public Map<String, Map<String, Object>> dumpStatistics() {
 	final Map<String, Map<String, Object>> dumpStatistics = new LinkedHashMap<String, Map<String, Object>>();
@@ -204,6 +212,7 @@ public abstract class AbstractCacheManager implements CacheManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheManager#clearStatistics()
     */
+   @Override
    public void clearStatistics() {
 	for (final String cacheName : getCacheNames()) {
 	   clearStatistics(cacheName);
@@ -214,6 +223,7 @@ public abstract class AbstractCacheManager implements CacheManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheManager#printStatistics(java.io.OutputStream)
     */
+   @Override
    public void printStatistics(@NotNull final OutputStream out) throws IOException {
 	Writer writer = null;
 	writer = new OutputStreamWriter(out);
@@ -225,6 +235,7 @@ public abstract class AbstractCacheManager implements CacheManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheManager#printStatistics(java.io.Writer)
     */
+   @Override
    public void printStatistics(@NotNull final Writer writer) throws IOException {
 
 	final Map<String, Map<String, Object>> stats = dumpStatistics();
@@ -288,6 +299,7 @@ public abstract class AbstractCacheManager implements CacheManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheManager#printStatistics()
     */
+   @Override
    @NotNull
    public String printStatistics() throws IOException {
 	final StringWriter writer = new StringWriter();

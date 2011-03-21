@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.EhCachePluginName;
+import static org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum.ehCache1x;
+import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -42,34 +44,59 @@ import org.kaleidofoundry.core.plugin.Declare;
 @Declare(EhCachePluginName)
 public class EhCache1xImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> implements org.kaleidofoundry.core.cache.Cache<K, V> {
 
-   private final Cache cache;
+   // internal ehcache instance
+   private final Cache ehCache;
+   // instance of the cacheManager to use
+   private final EhCache1xManagerImpl cacheManager;
 
    /**
     * @param context
-    * @param cache
     */
-   EhCache1xImpl(@NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context, @NotNull final Cache cache) {
-	super(context);
-	this.cache = cache;
+   EhCache1xImpl(@NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+	this(context.getString(CacheName), context);
    }
 
    /**
     * @param c
     * @param context
-    * @param cache
     */
-   EhCache1xImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context, @NotNull final Cache cache) {
-	this(c.getName(), context, cache);
+   EhCache1xImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+	this(c.getName(), context);
    }
 
    /**
     * @param name
-    * @context
-    * @param cache
+    * @param context
     */
-   EhCache1xImpl(@NotNull final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context, @NotNull final Cache cache) {
+   EhCache1xImpl(final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+	this(name, null, context);
+   }
+
+   /**
+    * constructor used by direct ioc injection like spring / guice ...
+    * 
+    * @param name
+    * @param cacheManager
+    * @param context
+    */
+   EhCache1xImpl(final String name, final EhCache1xManagerImpl cacheManager, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+	// check name argument in ancestor
 	super(name, context);
-	this.cache = cache;
+
+	// the cacheManager to use
+	if (cacheManager != null) {
+	   this.cacheManager = cacheManager;
+	} else {
+	   this.cacheManager = (EhCache1xManagerImpl) CacheManagerFactory.provides(ehCache1x.name(),
+		   new RuntimeContext<org.kaleidofoundry.core.cache.CacheManager>(ehCache1x.name(),
+			   org.kaleidofoundry.core.cache.CacheManager.class, context));
+	}
+
+	// create internal cache provider
+	ehCache = this.cacheManager.createCache(name);
+
+	// registered it to cache manager (needed by spring or guice direct injection)
+	this.cacheManager.cachesByName.put(name, this);
    }
 
    /*
@@ -79,7 +106,7 @@ public class EhCache1xImpl<K extends Serializable, V extends Serializable> exten
    @SuppressWarnings("unchecked")
    @Override
    public V doGet(final K id) {
-	final Element elt = cache.getQuiet(id); // no stat, perf. decreaze :(
+	final Element elt = ehCache.getQuiet(id); // no stat, perf. decrease :(
 	return elt != null ? (V) elt.getObjectValue() : null;
    }
 
@@ -89,7 +116,7 @@ public class EhCache1xImpl<K extends Serializable, V extends Serializable> exten
     */
    @Override
    public void doPut(final K key, final V entity) {
-	cache.putQuiet(new Element(key, entity)); // no stat, perf. decreaze :(
+	ehCache.putQuiet(new Element(key, entity)); // no stat, perf. decrease :(
    }
 
    /*
@@ -98,7 +125,7 @@ public class EhCache1xImpl<K extends Serializable, V extends Serializable> exten
     */
    @Override
    public boolean doRemove(final Serializable id) {
-	return cache.removeQuiet(id);
+	return ehCache.removeQuiet(id);
    }
 
    /*
@@ -108,7 +135,7 @@ public class EhCache1xImpl<K extends Serializable, V extends Serializable> exten
    @SuppressWarnings("unchecked")
    @Override
    public Set<K> keys() {
-	return new HashSet<K>(cache.getKeys());
+	return new HashSet<K>(ehCache.getKeys());
    }
 
    /**
@@ -121,7 +148,7 @@ public class EhCache1xImpl<K extends Serializable, V extends Serializable> exten
 
 	final Collection<V> result = new ArrayList<V>();
 	V value;
-	for (final Object key : cache.getKeys()) {
+	for (final Object key : ehCache.getKeys()) {
 	   value = get((K) key);
 	   if (value != null) {
 		result.add(value);
@@ -136,7 +163,7 @@ public class EhCache1xImpl<K extends Serializable, V extends Serializable> exten
     */
    @Override
    public void removeAll() {
-	cache.removeAll();
+	ehCache.removeAll();
    }
 
    /*
@@ -145,7 +172,7 @@ public class EhCache1xImpl<K extends Serializable, V extends Serializable> exten
     */
    @Override
    public int size() {
-	return cache.getSize();
+	return ehCache.getSize();
    }
 
    /*
@@ -154,7 +181,7 @@ public class EhCache1xImpl<K extends Serializable, V extends Serializable> exten
     */
    @Override
    public Object getDelegate() {
-	return cache;
+	return ehCache;
    }
 
    /**
@@ -162,14 +189,14 @@ public class EhCache1xImpl<K extends Serializable, V extends Serializable> exten
     */
    void destroy() {
 	hasBeenDestroy = true;
-	// cache.dispose(); must be done by cacheManager
+	// cache.dispose(); be careful, it must be done by cacheManager
    }
 
    /**
     * @return the cache
     */
    protected Cache getCache() {
-	return cache;
+	return ehCache;
    }
 
 }

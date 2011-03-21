@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,11 +45,9 @@ public abstract class AbstractCache<K extends Serializable, V extends Serializab
 
    /**
     * @param context
-    * @param name
     */
-   public AbstractCache(@NotNull final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
-	this.name = name;
-	this.context = context;
+   public AbstractCache(@NotNull final RuntimeContext<Cache<K, V>> context) {
+	this(context.getString(CacheContextBuilder.CacheName), context);
    }
 
    /**
@@ -62,13 +60,12 @@ public abstract class AbstractCache<K extends Serializable, V extends Serializab
 
    /**
     * @param context
+    * @param name
     */
-   public AbstractCache(@NotNull final RuntimeContext<Cache<K, V>> context) {
-
-	this.name = context.getString(CacheContextBuilder.CacheName);
-	this.context = context;
-
+   public AbstractCache(final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
 	if (StringHelper.isEmpty(name)) { throw new ContextEmptyParameterException(CacheContextBuilder.CacheName, context); }
+	this.name = name;
+	this.context = context;
    }
 
    /**
@@ -137,6 +134,7 @@ public abstract class AbstractCache<K extends Serializable, V extends Serializab
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.Cache#hasBeenDestroy()
     */
+   @Override
    public boolean hasBeenDestroy() {
 	return hasBeenDestroy;
    }

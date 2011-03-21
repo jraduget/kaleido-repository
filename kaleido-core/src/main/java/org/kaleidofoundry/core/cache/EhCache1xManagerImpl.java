@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,8 +53,8 @@ public class EhCache1xManagerImpl extends AbstractCacheManager {
    /** Default cache configuration */
    private static final String DefaultCacheConfiguration = "ehcache.xml";
 
-   // internal cache manager
-   private final net.sf.ehcache.CacheManager cacheManager;
+   // internal ehCache cache manager
+   final net.sf.ehcache.CacheManager ehCacheManager;
 
    /**
     * @param context
@@ -66,31 +66,29 @@ public class EhCache1xManagerImpl extends AbstractCacheManager {
    /**
     * @param configuration url to the configuration file of the cache.<br/>
     *           This file have to be in classpath or on external file system. If null is specified, default / fail-safe
-    *           cache configuration implementation will be loaded
+    *           cache configuration implementation will be loaded<br/>
+    *           override the context configuration file (if defined)
     * @param context
     */
    public EhCache1xManagerImpl(final String configuration, final RuntimeContext<org.kaleidofoundry.core.cache.CacheManager> context) {
 	super(configuration, context);
 
-	final String configurationUri = getCurrentConfiguration();
-
 	try {
-	   if (StringHelper.isEmpty(configurationUri)) {
+	   if (StringHelper.isEmpty(configuration)) {
 		LOGGER.info(CacheMessageBundle.getMessage("cache.loading.default", getMetaInformations(), DefaultCacheConfiguration));
-		cacheManager = new CacheManager();
-		if (cacheManager == null) { throw newCacheException("cache.configuration.notfound", new String[] { EhCacheManagerPluginName,
+		ehCacheManager = new CacheManager();
+		if (ehCacheManager == null) { throw newCacheException("cache.configuration.notfound", new String[] { EhCacheManagerPluginName,
 			DefaultCacheConfiguration }); }
 	   } else {
-
-		LOGGER.info(CacheMessageBundle.getMessage("cache.loading.custom", getMetaInformations(), configurationUri));
-		final InputStream inConf = getConfiguration(configurationUri);
+		LOGGER.info(CacheMessageBundle.getMessage("cache.loading.custom", getMetaInformations(), configuration));
+		final InputStream inConf = getConfiguration(configuration);
 		if (inConf != null) {
-		   cacheManager = new CacheManager(inConf);
+		   ehCacheManager = new CacheManager(inConf);
 		} else {
-		   cacheManager = new CacheManager(configurationUri);
+		   ehCacheManager = new CacheManager(configuration);
 		}
 
-		if (cacheManager == null) { throw newCacheException("cache.configuration.notfound", new String[] { EhCacheManagerPluginName, configurationUri }); }
+		if (ehCacheManager == null) { throw newCacheException("cache.configuration.notfound", new String[] { EhCacheManagerPluginName, configuration }); }
 
 	   }
 	} catch (final net.sf.ehcache.CacheException ehce) {
@@ -114,7 +112,7 @@ public class EhCache1xManagerImpl extends AbstractCacheManager {
     */
    @Override
    public String getMetaInformations() {
-	return "ehcache-1.x - [1.2.x -> 2.1.x]";
+	return "ehcache-1.x - [1.2.x -> 2.x]";
    }
 
    /*
@@ -124,15 +122,12 @@ public class EhCache1xManagerImpl extends AbstractCacheManager {
    @SuppressWarnings("unchecked")
    @Override
    public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
-
 	Cache<K, V> cache = cachesByName.get(name);
-
 	if (cache == null) {
-	   final net.sf.ehcache.Cache ehCache = createCache(name);
-	   cache = new EhCache1xImpl<K, V>(name, context, ehCache);
+	   cache = new EhCache1xImpl<K, V>(name, this, context);
+	   // registered it to cache manager
 	   cachesByName.put(name, cache);
 	}
-
 	return cache;
    }
 
@@ -141,7 +136,7 @@ public class EhCache1xManagerImpl extends AbstractCacheManager {
     * @see org.kaleidofoundry.core.cache.CacheFactory#destroy(java.lang.String)
     */
    @Override
-   public void destroy(final String cacheName) {
+   public synchronized void destroy(final String cacheName) {
 	final Cache<?, ?> cache = cachesByName.get(cacheName);
 	if (cache != null) {
 	   // custom ehcache destroy
@@ -155,7 +150,7 @@ public class EhCache1xManagerImpl extends AbstractCacheManager {
     * @see org.kaleidofoundry.core.cache.CacheFactory#destroyAll()
     */
    @Override
-   public void destroyAll() {
+   public synchronized void destroyAll() {
 
 	super.destroyAll();
 
@@ -166,37 +161,12 @@ public class EhCache1xManagerImpl extends AbstractCacheManager {
 	}
 
 	// ehcache cacheManager shutdown
-	if (cacheManager != null) {
-	   cacheManager.shutdown();
+	if (ehCacheManager != null) {
+	   ehCacheManager.shutdown();
 	}
 
 	// unregister cacheManager
 	CacheManagerProvider.getRegistry().remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.ehCache1x.name(), getCurrentConfiguration()));
-   }
-
-   /**
-    * @param name
-    * @return cache provider
-    */
-   protected net.sf.ehcache.Cache createCache(final String name) {
-
-	net.sf.ehcache.Cache cache;
-
-	try {
-
-	   LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration(), name));
-	   cache = cacheManager.getCache(name);
-
-	   if (cache == null) {
-		throw new CacheDefinitionNotFoundException("cache.configuration.notCachefound", name);
-	   } else {
-		cache.setStatisticsEnabled(false); // performance decrease a lot with statistics (<= 1.7.x) :(
-		return cache;
-	   }
-
-	} catch (final net.sf.ehcache.CacheException ehce) {
-	   throw newCacheConfigurationException("cache.configuration.error", ehce, EhCacheManagerPluginName, getCurrentConfiguration());
-	}
    }
 
    /**
@@ -263,4 +233,33 @@ public class EhCache1xManagerImpl extends AbstractCacheManager {
 	}
    }
 
+   /**
+    * @param name
+    * @param context
+    * @return cache provider
+    */
+   protected net.sf.ehcache.Cache createCache(final String name) {
+
+	LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration(), name));
+
+	try {
+	   // the internal ehcache instance that will be created
+	   final net.sf.ehcache.Cache cache;
+
+	   cache = ehCacheManager.getCache(name);
+
+	   if (cache == null) {
+		throw new CacheDefinitionNotFoundException("cache.configuration.notCachefound", name);
+	   } else {
+		// for version <= 1.7.x : performance decrease a lot with statistics
+		// for version >= 2.x, statistics can be change in xml configuration
+		cache.setStatisticsEnabled(false);
+
+		return cache;
+	   }
+
+	} catch (final net.sf.ehcache.CacheException ehce) {
+	   throw newCacheConfigurationException("cache.configuration.error", ehce, EhCacheManagerPluginName, getCurrentConfiguration());
+	}
+   }
 }

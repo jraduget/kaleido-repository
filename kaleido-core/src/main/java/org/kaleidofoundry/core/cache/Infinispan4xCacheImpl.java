@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.InfinispanCachePluginName;
+import static org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum.infinispan4x;
+import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -33,17 +35,19 @@ import org.kaleidofoundry.core.plugin.Declare;
  */
 @Declare(InfinispanCachePluginName)
 public class Infinispan4xCacheImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> implements
-	org.kaleidofoundry.core.cache.Cache<K, V> {
+org.kaleidofoundry.core.cache.Cache<K, V> {
 
+   // internal infinspan cache instance
    private final Cache<K, V> cache;
+   // instance of the cacheManager to use
+   private final Infinispan4xCacheManagerImpl cacheManager;
 
    /**
     * @param context
     * @param cache
     */
-   Infinispan4xCacheImpl(@NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context, @NotNull final Cache<K, V> cache) {
-	super(context);
-	this.cache = cache;
+   Infinispan4xCacheImpl(@NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+	this(context.getString(CacheName), context);
    }
 
    /**
@@ -51,9 +55,8 @@ public class Infinispan4xCacheImpl<K extends Serializable, V extends Serializabl
     * @param context
     * @param cache infinispan cache instantiate via factory
     */
-   Infinispan4xCacheImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context,
-	   @NotNull final Cache<K, V> cache) {
-	this(c.getName(), context, cache);
+   Infinispan4xCacheImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+	this(c.getName(), context);
    }
 
    /**
@@ -61,10 +64,33 @@ public class Infinispan4xCacheImpl<K extends Serializable, V extends Serializabl
     * @param context
     * @param cache infinispan cache instantiate via factory
     */
-   Infinispan4xCacheImpl(@NotNull final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context,
-	   @NotNull final Cache<K, V> cache) {
+   Infinispan4xCacheImpl(final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+	this(name, null, context);
+   }
+
+   /**
+    * @param name
+    * @param cacheManager
+    * @param context
+    * @param cache infinispan cache instantiate via factory
+    */
+   Infinispan4xCacheImpl(final String name, final Infinispan4xCacheManagerImpl cacheManager,
+	   @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
 	super(name, context);
-	this.cache = cache;
+
+	// the cacheManager to use
+	if (cacheManager != null) {
+	   this.cacheManager = cacheManager;
+	} else {
+	   this.cacheManager = (Infinispan4xCacheManagerImpl) CacheManagerFactory.provides(infinispan4x.name(),
+		   new RuntimeContext<org.kaleidofoundry.core.cache.CacheManager>(infinispan4x.name(), org.kaleidofoundry.core.cache.CacheManager.class, context));
+	}
+
+	// create internal cache provider
+	this.cache = this.cacheManager.createCache(name);
+
+	// registered it to cache manager (needed by spring or guice direct injection)
+	this.cacheManager.cachesByName.put(name, this);
    }
 
    /*
