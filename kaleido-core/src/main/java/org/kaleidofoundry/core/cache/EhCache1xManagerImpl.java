@@ -236,7 +236,6 @@ public class EhCache1xManagerImpl extends AbstractCacheManager {
 
    /**
     * @param name
-    * @param context
     * @return cache provider
     */
    protected net.sf.ehcache.Cache createCache(final String name) {

@@ -51,6 +51,19 @@
 					<skip>true</skip>
 				</configuration>
 			</plugin>
+			<!-- disable google code upload for integration modules -->
+			<plugin>
+				<groupId>com.googlecode.maven-gcu-plugin</groupId>
+				<artifactId>maven-gcu-plugin</artifactId>
+				<version>1.1</version>
+				<inherited>false</inherited>
+				<executions>				
+					<execution>
+						<id>gcode-upload</id>
+						<phase>none</phase>
+					</execution>
+				</executions>
+			</plugin>	
 		</plugins>
 	</build>
 	

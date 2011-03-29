@@ -66,7 +66,6 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
    /**
     * @param name
     * @param context
-    * @param cache jboss cache instantiate via factory
     */
    Jboss32xCacheImpl(final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
 	this(name, null, context);
@@ -195,6 +194,5 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
    public Object getDelegate() {
 	return root;
    }
-
 
 }

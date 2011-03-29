@@ -35,7 +35,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  */
 @Declare(InfinispanCachePluginName)
 public class Infinispan4xCacheImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> implements
-org.kaleidofoundry.core.cache.Cache<K, V> {
+	org.kaleidofoundry.core.cache.Cache<K, V> {
 
    // internal infinspan cache instance
    private final Cache<K, V> cache;
@@ -44,7 +44,6 @@ org.kaleidofoundry.core.cache.Cache<K, V> {
 
    /**
     * @param context
-    * @param cache
     */
    Infinispan4xCacheImpl(@NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
 	this(context.getString(CacheName), context);
@@ -53,7 +52,6 @@ org.kaleidofoundry.core.cache.Cache<K, V> {
    /**
     * @param c
     * @param context
-    * @param cache infinispan cache instantiate via factory
     */
    Infinispan4xCacheImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
 	this(c.getName(), context);
@@ -62,7 +60,6 @@ org.kaleidofoundry.core.cache.Cache<K, V> {
    /**
     * @param name
     * @param context
-    * @param cache infinispan cache instantiate via factory
     */
    Infinispan4xCacheImpl(final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
 	this(name, null, context);
@@ -72,7 +69,6 @@ org.kaleidofoundry.core.cache.Cache<K, V> {
     * @param name
     * @param cacheManager
     * @param context
-    * @param cache infinispan cache instantiate via factory
     */
    Infinispan4xCacheImpl(final String name, final Infinispan4xCacheManagerImpl cacheManager,
 	   @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {

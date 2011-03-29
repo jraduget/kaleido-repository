@@ -65,8 +65,8 @@ import org.kaleidofoundry.core.util.StringHelper;
 @Path("/configurations/{config}")
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 @Review(category = ReviewCategoryEnum.ImplementIt, comment = "JPA implementation and tests")
-public class ConfigurationManagerBean implements ConfigurationManager {
-
+public class ConfigurationManagerBean { // implements ConfigurationManager { // GF3.x bug with interface ? -
+						    // http://java.net/jira/browse/GLASSFISH-16199
    /** injected and used to handle security context */
    @Context
    SecurityContext securityContext;
