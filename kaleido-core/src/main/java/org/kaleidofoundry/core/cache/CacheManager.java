@@ -165,4 +165,9 @@ public interface CacheManager {
    @NotNull
    String printStatistics() throws IOException;
 
+   /**
+    * @return Return the underlying provider object
+    */
+   Object getDelegate();
+
 }

@@ -49,7 +49,6 @@
 				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.cache.CacheManager"/>				
 				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
 					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
-						<entry key="providerCode" value="ehCache1x" />
 						<entry key="fileStoreUri" value="classpath:/cache/ehcache.xml" />
 					</util:map>
 				</constructor-arg>
@@ -57,25 +56,43 @@
 			</bean>
 		</constructor-arg>
 	</bean>
-	
-	<!-- 
-	<bean id="myCache" class="org.kaleidofoundry.core.cache.EhCache1xImpl">		
+
+	<bean id="myCache" class="org.kaleidofoundry.core.cache.EhCache1xImpl">
+		<constructor-arg value="CacheSample01"/>
+		<constructor-arg ref="myCacheManager"/>		
+	</bean>
+
+	<bean id="myOtherCacheManager" class="org.kaleidofoundry.core.cache.Infinispan4xCacheManagerImpl">		
 		<constructor-arg>		
 			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
-				<constructor-arg type="java.lang.String" value="myCacheCtx"/>
+				<constructor-arg type="java.lang.String" value="myOtherCacheManagerCtx"/>
+				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.cache.CacheManager"/>				
+				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
+					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
+						<entry key="fileStoreUri" value="classpath:/cache/infinispan-local.xml" />
+					</util:map>
+				</constructor-arg>
+				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
+			</bean>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="myOtherCache" class="org.kaleidofoundry.core.cache.Infinispan4xCacheImpl">
+		<constructor-arg value="OtherCacheSample01"/>
+		<constructor-arg ref="myOtherCacheManager"/>		
+		<constructor-arg>					
+			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
+				<constructor-arg type="java.lang.String" value="myOtherCacheCtx"/>
 				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.cache.Cache"/>				
 				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
 					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
-						<entry key="cacheName" value="CacheSample01" />
-						<entry key="cacheManagerRef" value="myCacheManagerCtx" />
 					</util:map>
 				</constructor-arg>
 				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
 			</bean>
 		</constructor-arg>
 	</bean>		
-	 -->
-	 
+	 		 
 	<bean id="myNamingService" class="org.kaleidofoundry.core.naming.JndiNamingService">		
 		<constructor-arg>		
 			<bean class="org.kaleidofoundry.core.context.RuntimeContext">

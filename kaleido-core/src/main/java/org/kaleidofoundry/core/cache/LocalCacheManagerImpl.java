@@ -139,6 +139,15 @@ public class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
    public void clearStatistics(final String cacheName) {
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.CacheManager#getDelegate()
+    */
+   @Override
+   public Object getDelegate() {
+	return this;
+   }
+
    /**
     * @param name
     * @param configurationUri

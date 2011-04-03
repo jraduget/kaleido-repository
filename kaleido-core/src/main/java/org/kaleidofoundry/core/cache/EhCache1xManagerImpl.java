@@ -234,6 +234,15 @@ public class EhCache1xManagerImpl extends AbstractCacheManager {
 	}
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.CacheManager#getDelegate()
+    */
+   @Override
+   public Object getDelegate() {
+	return ehCacheManager;
+   }
+
    /**
     * @param name
     * @return cache provider
@@ -249,7 +258,7 @@ public class EhCache1xManagerImpl extends AbstractCacheManager {
 	   cache = ehCacheManager.getCache(name);
 
 	   if (cache == null) {
-		throw new CacheDefinitionNotFoundException("cache.configuration.notCachefound", name);
+		throw new CacheDefinitionNotFoundException("cache.configuration.notCachefound", name, getCurrentConfiguration());
 	   } else {
 		// for version <= 1.7.x : performance decrease a lot with statistics
 		// for version >= 2.x, statistics can be change in xml configuration

@@ -81,7 +81,6 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
 	destroy(initTestCacheName);
    }
 
-
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheManager#getDefaultConfiguration()
@@ -142,7 +141,7 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
 
 	// unregister cache manager instance
 	CacheManagerProvider.getRegistry()
-	.remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.jbossCache3x.name(), getCurrentConfiguration()));
+		.remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.jbossCache3x.name(), getCurrentConfiguration()));
    }
 
    /*
@@ -164,6 +163,15 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
 	return new LinkedHashMap<String, Object>();
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.CacheManager#getDelegate()
+    */
+   @Override
+   public Object getDelegate() {
+	return cacheManager;
+   }
+
    /**
     * @param name cache name
     * @param <K>
@@ -182,8 +190,7 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
 	   } else {
 		final InputStream inConf = getConfiguration(getCurrentConfiguration());
 		if (inConf != null) {
-		   LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration(),
-			   name));
+		   LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration(), name));
 		   cache = cacheManager.createCache(inConf, true);
 		} else {
 		   throw new CacheConfigurationNotFoundException("cache.configuration.notfound", JbossCacheManagerPluginName, getCurrentConfiguration());

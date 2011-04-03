@@ -75,6 +75,21 @@ public class SpringInjectContextTest extends Assert {
    }
 
    @Test
+   public void testAnotherCacheManager() throws CacheException {
+	assertNotNull(mySpringService);
+	assertNotNull(mySpringService.getOtherCache("OtherCacheSample01"));
+	assertEquals(0, mySpringService.getOtherCache("OtherCacheSample01").size());
+   }
+
+   @Test
+   public void testAnotherCache() throws CacheException {
+	assertNotNull(mySpringService);
+	assertNull(mySpringService.getOtherCacheValue("?"));
+	assertEquals("value11", mySpringService.getOtherCacheValue("key11"));
+	assertEquals("value21", mySpringService.getOtherCacheValue("key21"));
+   }
+
+   @Test
    public void testNamingService() throws NamingServiceException {
 	assertNotNull(mySpringService);
 	assertNotNull(mySpringService.getNamingResource("jdbc/kaleido", DataSource.class));

@@ -46,9 +46,17 @@ public class MySpringService {
    @Qualifier("myCacheManager")
    private CacheManager cacheManager;
 
-   // @Autowired
-   // @Qualifier("myCache")
+   @Autowired
+   @Qualifier("myCache")
    private Cache<String, String> cache;
+
+   @Autowired
+   @Qualifier("myOtherCacheManager")
+   private CacheManager anotherCacheManager;
+
+   @Autowired
+   @Qualifier("myOtherCache")
+   private Cache<String, String> myOtherCache;
 
    @Autowired
    @Qualifier("myNamingService")
@@ -89,8 +97,28 @@ public class MySpringService {
 	// init some values for testing
 	cache.put("key1", "value1");
 	cache.put("key2", "value2");
-
 	return cache.get(key);
+   }
+
+   /**
+    * @param key key of the search value
+    * @return the given cache value
+    * @throws CacheException
+    */
+   public String getOtherCacheValue(final String key) throws CacheException {
+	// init some values for testing
+	myOtherCache.put("key11", "value11");
+	myOtherCache.put("key21", "value21");
+	return myOtherCache.get(key);
+   }
+
+   /**
+    * @param name cache name identifier
+    * @return the given cache instance
+    * @throws CacheException
+    */
+   public Cache<String, String> getOtherCache(final String name) throws CacheException {
+	return anotherCacheManager.getCache(name);
    }
 
    /**

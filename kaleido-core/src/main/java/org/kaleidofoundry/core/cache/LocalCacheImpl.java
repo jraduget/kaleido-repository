@@ -16,6 +16,8 @@
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.DefaultLocalCachePluginName;
+import static org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum.local;
+import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -39,28 +41,61 @@ import org.kaleidofoundry.core.plugin.Declare;
 public class LocalCacheImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> {
 
    private final ConcurrentMap<K, V> CacheableMap = new ConcurrentHashMap<K, V>();
+   private final LocalCacheManagerImpl cacheManager;
+
+   /**
+    * @param context
+    */
+   LocalCacheImpl(@NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+	this(context.getString(CacheName), context);
+   }
+
+   /**
+    * @param c
+    * @param context
+    */
+   LocalCacheImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+	this(c.getName(), context);
+   }
 
    /**
     * @param name
     * @param context
     */
-   public LocalCacheImpl(final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+   LocalCacheImpl(final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+	this(name, null, context);
+   }
+
+   /**
+    * constructor used by direct ioc injection like spring / guice ...
+    * 
+    * @param name
+    * @param cacheManager
+    */
+   LocalCacheImpl(final String name, final LocalCacheManagerImpl cacheManager) {
+	this(name, cacheManager, new RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>>());
+   }
+
+   /**
+    * constructor used by direct ioc injection like spring / guice ...
+    * 
+    * @param name
+    * @param cacheManager
+    * @param context
+    */
+   LocalCacheImpl(final String name, final LocalCacheManagerImpl cacheManager, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
 	super(name, context);
-   }
 
-   /**
-    * @param cl
-    * @param context
-    */
-   public LocalCacheImpl(final Class<?> cl, final RuntimeContext<Cache<K, V>> context) {
-	super(cl, context);
-   }
+	if (cacheManager != null) {
+	   this.cacheManager = cacheManager;
+	} else {
+	   this.cacheManager = (LocalCacheManagerImpl) CacheManagerFactory.provides(local.name(), new RuntimeContext<org.kaleidofoundry.core.cache.CacheManager>(
+		   local.name(), org.kaleidofoundry.core.cache.CacheManager.class, context));
+	}
 
-   /**
-    * @param context
-    */
-   public LocalCacheImpl(final RuntimeContext<Cache<K, V>> context) {
-	super(context);
+	// registered it to cache manager (needed by spring or guice direct injection)
+	this.cacheManager.cachesByName.put(name, this);
+
    }
 
    /*

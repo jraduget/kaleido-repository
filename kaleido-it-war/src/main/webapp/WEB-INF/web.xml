@@ -12,7 +12,7 @@
 	</context-param>
 
 	<context-param>
-		<description>configurations to load</description>
+		<description>the configurations to load separated by a comma</description>
 		<param-name>kaleido.configurations</param-name>
 		<param-value>myConfig=classpath:/config/myConfig.properties,myCacheConfig=classpath:/cache/myContext.properties,myI18nConfig=classpath:/i18n/myContext.properties</param-value>
 	</context-param>

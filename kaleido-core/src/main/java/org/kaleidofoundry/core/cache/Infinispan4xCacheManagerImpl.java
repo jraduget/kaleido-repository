@@ -90,7 +90,6 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
 	}
    }
 
-
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheManager#getDefaultConfiguration()
@@ -153,7 +152,7 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
 
 	// unregister cacheManager
 	CacheManagerProvider.getRegistry()
-	.remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.infinispan4x.name(), getCurrentConfiguration()));
+		.remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.infinispan4x.name(), getCurrentConfiguration()));
    }
 
    /*
@@ -173,6 +172,15 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
    @Review(category = ReviewCategoryEnum.Todo)
    public Map<String, Object> dumpStatistics(final String cacheName) {
 	return new LinkedHashMap<String, Object>();
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.CacheManager#getDelegate()
+    */
+   @Override
+   public Object getDelegate() {
+	return infiniSpanCacheManager;
    }
 
    /**

@@ -191,6 +191,15 @@ public class Coherence3xCacheManagerImpl extends AbstractCacheManager {
 	return new LinkedHashMap<String, Object>();
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.CacheManager#getDelegate()
+    */
+   @Override
+   public Object getDelegate() {
+	return configurableCacheFactory;
+   }
+
    /**
     * create internal provider cache, using cache manager configuration
     * 

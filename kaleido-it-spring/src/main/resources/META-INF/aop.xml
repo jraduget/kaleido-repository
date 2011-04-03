@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <aspectj>
 	<weaver options="-XnoInline -Xlint:ignore -verbose -showWeaveInfo">
-		<include name="org.kaleidofoundry.core.MySpringBean" />
+		<include name="org.kaleidofoundry.core.spring.aop.MySpringBean" />
 	</weaver>
 	<aspects>
 		<aspect name="org.kaleidofoundry.core.lang.aop.NotNullAspect" />

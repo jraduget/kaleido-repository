@@ -72,6 +72,16 @@ public class Coherence3xCacheImpl<K extends Serializable, V extends Serializable
     * 
     * @param name
     * @param cacheManager
+    */
+   Coherence3xCacheImpl(final String name, final Coherence3xCacheManagerImpl cacheManager) {
+	this(name, cacheManager, new RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>>());
+   }
+
+   /**
+    * constructor used by direct ioc injection like spring / guice ...
+    * 
+    * @param name
+    * @param cacheManager
     * @param context
     */
    Coherence3xCacheImpl(final String name, final Coherence3xCacheManagerImpl cacheManager, @NotNull final RuntimeContext<Cache<K, V>> context) {
@@ -82,9 +92,8 @@ public class Coherence3xCacheImpl<K extends Serializable, V extends Serializable
 	if (cacheManager != null) {
 	   this.cacheManager = cacheManager;
 	} else {
-	   this.cacheManager = (Coherence3xCacheManagerImpl) CacheManagerFactory.provides(coherence3x.name(),
-		   new RuntimeContext<CacheManager>(
-			   coherence3x.name(), CacheManager.class, context));
+	   this.cacheManager = (Coherence3xCacheManagerImpl) CacheManagerFactory.provides(coherence3x.name(), new RuntimeContext<CacheManager>(
+		   coherence3x.name(), CacheManager.class, context));
 	}
 
 	// create internal cache provider

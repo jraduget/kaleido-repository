@@ -66,6 +66,18 @@ public class Infinispan4xCacheImpl<K extends Serializable, V extends Serializabl
    }
 
    /**
+    * constructor used by direct ioc injection like spring / guice ...
+    * 
+    * @param name
+    * @param cacheManager
+    */
+   Infinispan4xCacheImpl(final String name, final Infinispan4xCacheManagerImpl cacheManager) {
+	this(name, cacheManager, new RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>>());
+   }
+
+   /**
+    * constructor used by direct ioc injection like spring / guice ...
+    * 
     * @param name
     * @param cacheManager
     * @param context

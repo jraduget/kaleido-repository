@@ -76,6 +76,16 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
     * 
     * @param name
     * @param cacheManager
+    */
+   Jboss32xCacheImpl(final String name, final Jboss32xCacheManagerImpl cacheManager) {
+	this(name, cacheManager, new RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>>());
+   }
+
+   /**
+    * constructor used by direct ioc injection like spring / guice ...
+    * 
+    * @param name
+    * @param cacheManager
     * @param context
     */
    Jboss32xCacheImpl(final String name, final Jboss32xCacheManagerImpl cacheManager,

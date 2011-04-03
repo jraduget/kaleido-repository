@@ -77,6 +77,16 @@ public class EhCache1xImpl<K extends Serializable, V extends Serializable> exten
     * 
     * @param name
     * @param cacheManager
+    */
+   EhCache1xImpl(final String name, final EhCache1xManagerImpl cacheManager) {
+	this(name, cacheManager, new RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>>());
+   }
+
+   /**
+    * constructor used by direct ioc injection like spring / guice ...
+    * 
+    * @param name
+    * @param cacheManager
     * @param context
     */
    EhCache1xImpl(final String name, final EhCache1xManagerImpl cacheManager, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
@@ -88,8 +98,7 @@ public class EhCache1xImpl<K extends Serializable, V extends Serializable> exten
 	   this.cacheManager = cacheManager;
 	} else {
 	   this.cacheManager = (EhCache1xManagerImpl) CacheManagerFactory.provides(ehCache1x.name(),
-		   new RuntimeContext<org.kaleidofoundry.core.cache.CacheManager>(ehCache1x.name(),
-			   org.kaleidofoundry.core.cache.CacheManager.class, context));
+		   new RuntimeContext<org.kaleidofoundry.core.cache.CacheManager>(ehCache1x.name(), org.kaleidofoundry.core.cache.CacheManager.class, context));
 	}
 
 	// create internal cache provider

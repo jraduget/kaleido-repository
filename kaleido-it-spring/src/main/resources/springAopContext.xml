@@ -8,13 +8,13 @@
            	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
         ">
 
-	<bean id="mySpringBean" class="org.kaleidofoundry.core.MySpringBean" />
+	<bean id="mySpringBean" class="org.kaleidofoundry.core.spring.aop.MySpringBean" />
 	
 	<!-- enable aspectj load time weaving (only for spring compatible aspect !!) 
 	     to use with :
-		 -javaagent:${M2_REPO}\org\springframework\spring-instrument\3.0.4.RELEASE\spring-instrument-3.0.4.RELEASE.jar
+		 -javaagent:${M2_REPO}/org/springframework/spring-instrument/3.0.4.RELEASE/spring-instrument-3.0.4.RELEASE.jar
 		 or 
-		 -javaagent:${M2_REPO}\org\aspectj\aspectjweaver\1.6.9\aspectjweaver-1.6.9.jar
+		 -javaagent:${M2_REPO}/org/aspectj/aspectjweaver/1.6.9/aspectjweaver-1.6.9.jar
 	<context:load-time-weaver />
 	-->
  	
