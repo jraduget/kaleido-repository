@@ -350,7 +350,6 @@ public abstract class AbstractConfiguration extends AbstractSerializer implement
     * @param newValue
     */
    protected void firePropertyCreate(final String propertyName, final Serializable newValue) {
-
 	final ConfigurationChangeEvent event = ConfigurationChangeEvent.newCreateEvent(this, propertyName, newValue);
 	changesEvents.add(event);
 
@@ -364,10 +363,8 @@ public abstract class AbstractConfiguration extends AbstractSerializer implement
     * @param newValue
     */
    protected void firePropertyUpdate(final String propertyName, final Serializable oldValue, final Serializable newValue) {
-
 	final ConfigurationChangeEvent event = ConfigurationChangeEvent.newUpdateEvent(this, propertyName, oldValue, newValue);
 	changesEvents.add(event);
-
    }
 
    /**
@@ -377,10 +374,8 @@ public abstract class AbstractConfiguration extends AbstractSerializer implement
     * @param oldValue
     */
    protected void firePropertyRemove(final String propertyName, final Serializable oldValue) {
-
 	final ConfigurationChangeEvent event = ConfigurationChangeEvent.newRemoveEvent(this, propertyName, oldValue);
 	changesEvents.add(event);
-
    }
 
    /*

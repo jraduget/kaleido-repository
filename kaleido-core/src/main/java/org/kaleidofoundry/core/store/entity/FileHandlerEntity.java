@@ -42,6 +42,7 @@ import org.kaleidofoundry.core.lang.annotation.Review;
  * @author Jerome RADUGET
  */
 @Entity(name = "FileStore")
+// @Access(AccessType.FIELD)
 @Table(name = "FILE_STORE")
 @Review(comment = "Audit information (locale zone for the date, user information...)")
 public class FileHandlerEntity implements Serializable {

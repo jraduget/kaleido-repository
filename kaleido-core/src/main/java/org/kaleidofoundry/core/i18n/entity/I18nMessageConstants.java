@@ -22,9 +22,9 @@ package org.kaleidofoundry.core.i18n.entity;
  */
 public interface I18nMessageConstants {
 
-   /** {@link I18nMessage} entity table name */
    // ML == MultiLanguism, I would prefer to not specify table name, but i have an eclipse link issue (ddl generation for constraints,
    // because second character class name is a digit "I18...")
+   /** {@link I18nMessage} entity table name */
    String Table_I18nMessage = "MLI18N_ENTRY";
    /** {@link I18nMessageLanguage} entity table name */
    String Table_I18nMessageLanguage = "MLI18N_LANGUAGE";
@@ -35,7 +35,7 @@ public interface I18nMessageConstants {
     * Query static final informations
     */
    public static interface Query_MessagesByLocale {
-	String Name = "findMessagesByLanguageIso";
+	String Name = "i18n.findMessagesByLanguageIso";
 	String Parameter_ResourceName = "resourceName";
 	String Parameter_Locale = "localeId";
 	String Jql = "select ml from I18nMessageLanguage ml, I18nMessage m where ml.message.id=m.id and m.group.code = :" + Parameter_ResourceName

@@ -50,7 +50,7 @@ public class EntityManagerSample extends Assert {
 
 	try {
 	   // jpa entity manager configuration
-	   emf = Persistence.createEntityManagerFactory("kaleido-core");
+	   emf = Persistence.createEntityManagerFactory("kaleido");
 	   em = emf.createEntityManager();
 
 	   // begin transaction

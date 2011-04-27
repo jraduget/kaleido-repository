@@ -60,6 +60,7 @@ import org.kaleidofoundry.core.lang.annotation.Review;
  * @author Jerome RADUGET
  */
 @Entity
+// @Access(AccessType.FIELD)
 @Table(name = Table_I18nMessageGroupe)
 @Review(comment = "Audit information (locale zone for the date, user information...)")
 public class I18nMessageGroup implements Serializable {

@@ -33,6 +33,11 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.kaleidofoundry.core.i18n.entity.I18nMessageConstants.Query_MessagesByLocale;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
@@ -45,8 +50,11 @@ import org.kaleidofoundry.core.util.StringHelper;
  * @author Jerome RADUGET
  */
 @Entity
+// @Access(AccessType.FIELD)
 @Table(name = Table_I18nMessageLanguage, uniqueConstraints = { @UniqueConstraint(columnNames = { "MESSAGE_ID", "LOCALE" }) })
-@NamedQueries( { @NamedQuery(name = Query_MessagesByLocale.Name, query = Query_MessagesByLocale.Jql) })
+@NamedQueries({ @NamedQuery(name = Query_MessagesByLocale.Name, query = Query_MessagesByLocale.Jql) })
+@XmlRootElement(name = "i18n")
+@XmlAccessorType(XmlAccessType.FIELD)
 @Review(comment = "Audit information (locale zone for the date, user information...)")
 public class I18nMessageLanguage implements Serializable {
 
@@ -56,13 +64,16 @@ public class I18nMessageLanguage implements Serializable {
 
    @Id
    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+   @XmlID
    private Integer id;
    @ManyToOne(cascade = CascadeType.ALL)
    @JoinColumn(name = "MESSAGE_ID", referencedColumnName = "ID")
+   @XmlTransient
    private I18nMessage message;
    @Column(name = "LOCALE_ID")
    private String localeId;
    @Transient
+   @XmlTransient
    private Locale locale;
    private String isoLanguage;
    private String content;

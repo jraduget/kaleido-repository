@@ -15,12 +15,22 @@
  */
 package org.kaleidofoundry.core.config.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Table_ConfigurationEntity;
+import static org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum.Improvement;
 
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -33,21 +43,31 @@ import org.kaleidofoundry.core.lang.annotation.Review;
 /**
  * @author Jerome RADUGET
  */
+@Entity
+// @Access(AccessType.FIELD)
+@Table(name = Table_ConfigurationEntity, uniqueConstraints = { @UniqueConstraint(columnNames = { "NAME" }), @UniqueConstraint(columnNames = { "URI" }) })
 @XmlRootElement(name = "configuration")
 @XmlAccessorType(XmlAccessType.FIELD)
-@Entity(name = "Configuration")
-@Table(name = "CONFIGURATION")
-@Review(comment = "Audit information (locale zone for the date, user information...)")
-public class ConfigurationEntity {
+@Review(comment = "Audit information (locale zone for the date, user information...)", category = Improvement)
+public class ConfigurationEntity implements Serializable {
+
+   private static final long serialVersionUID = -2875384104892173181L;
+
+   // PRIVATE VARIABLES INSTANCES *************************************************************************************
 
    @Id
-   @XmlID
-   private String name;
+   @GeneratedValue
+   private Long id;
+   @Column(name = "URI", unique = true)
    private String uri;
+   @XmlID
+   @Column(name = "NAME", unique = true)
+   private String name;
    private String description;
    @XmlElementWrapper(name = "properties")
    @XmlElement(name = "property")
-   private List<ConfigurationProperty> properties;
+   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+   private Set<ConfigurationProperty> properties;
 
    public ConfigurationEntity() {
 	this(null);
@@ -78,7 +98,14 @@ public class ConfigurationEntity {
 	this.name = name;
 	this.uri = uri;
 	this.description = description;
-	this.properties = new ArrayList<ConfigurationProperty>();
+	this.properties = new HashSet<ConfigurationProperty>();
+   }
+
+   /**
+    * @return persistent identifier
+    */
+   public Long getId() {
+	return id;
    }
 
    /**
@@ -86,6 +113,13 @@ public class ConfigurationEntity {
     */
    public String getName() {
 	return name;
+   }
+
+   /**
+    * @param id the persistent id to set
+    */
+   public void setId(final Long id) {
+	this.id = id;
    }
 
    /**
@@ -126,14 +160,14 @@ public class ConfigurationEntity {
    /**
     * @return the properties
     */
-   public List<ConfigurationProperty> getProperties() {
+   public Set<ConfigurationProperty> getProperties() {
 	return properties;
    }
 
    /**
     * @param properties the properties to set
     */
-   public void setProperties(final List<ConfigurationProperty> properties) {
+   public void setProperties(final Set<ConfigurationProperty> properties) {
 	this.properties = properties;
    }
 
@@ -145,9 +179,7 @@ public class ConfigurationEntity {
    public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + ((name == null) ? 0 : name.hashCode());
 	result = prime * result + ((uri == null) ? 0 : uri.hashCode());
-	result = prime * result + ((description == null) ? 0 : description.hashCode());
 	return result;
    }
 
@@ -161,16 +193,9 @@ public class ConfigurationEntity {
 	if (obj == null) { return false; }
 	if (!(obj instanceof ConfigurationEntity)) { return false; }
 	ConfigurationEntity other = (ConfigurationEntity) obj;
-	if (description == null) {
-	   if (other.description != null) { return false; }
-	} else if (!description.equals(other.description)) { return false; }
-	if (name == null) {
-	   if (other.name != null) { return false; }
-	} else if (!name.equals(other.name)) { return false; }
 	if (uri == null) {
 	   if (other.uri != null) { return false; }
 	} else if (!uri.equals(other.uri)) { return false; }
-
 	return true;
    }
 
@@ -180,7 +205,7 @@ public class ConfigurationEntity {
     */
    @Override
    public String toString() {
-	return "ConfigurationEntity [name=" + name + ", uri=" + uri + ", description=" + description + "]";
+	return "ConfigurationEntity [uri=" + uri + ", name=" + name + ", description=" + description + "]";
    }
 
 }

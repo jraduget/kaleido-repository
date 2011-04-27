@@ -45,7 +45,7 @@ public class PersistenceContextAspectTest extends Assert {
     */
    @BeforeClass
    public static void setupStatic() {
-	emf = UnmanagedEntityManagerFactory.getEntityManagerFactory("kaleido-core-custom");
+	emf = UnmanagedEntityManagerFactory.getEntityManagerFactory("kaleido-custom");
    }
 
    /**
@@ -65,7 +65,7 @@ public class PersistenceContextAspectTest extends Assert {
 
    @Before
    public void setup() {
-	em = UnmanagedEntityManagerFactory.currentEntityManager("kaleido-core-custom");
+	em = UnmanagedEntityManagerFactory.currentEntityManager("kaleido-custom");
 	et = em.getTransaction();
 	et.begin();
    }

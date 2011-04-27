@@ -29,7 +29,7 @@ import java.util.ResourceBundle.Control;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.entity.I18nMessageLanguage;
-import org.kaleidofoundry.core.i18n.entity.I18nMessageService;
+import org.kaleidofoundry.core.i18n.entity.I18nMessageManagerBean;
 import org.kaleidofoundry.core.lang.annotation.Review;
 import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
 import org.kaleidofoundry.core.lang.annotation.Reviews;
@@ -145,7 +145,7 @@ public class MessageBundleControl extends Control {
 	   if (format == MessageBundleControlFormat.JPA_ENTITY_PROPERTIES && I18nMessagesProvider.JpaIsEnabled) {
 
 		@Review(comment = "create a service injector (local / guice / spring / ejb3 local or remote...)")
-		final I18nMessageService messageService = new I18nMessageService();
+		final I18nMessageManagerBean messageService = new I18nMessageManagerBean();
 		final List<I18nMessageLanguage> messagesLanguage = messageService.findMessagesByLocale(baseName, locale);
 
 		if (!messagesLanguage.isEmpty()) {

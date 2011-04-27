@@ -15,35 +15,54 @@
  */
 package org.kaleidofoundry.core.config.entity;
 
+import static org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Table_ConfigurationProperty;
+
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
+import org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Query_ConfigurationPropertyByName;
 import org.kaleidofoundry.core.lang.annotation.Review;
 
 /**
  * @author Jerome RADUGET
  */
+@Entity
+// @Access(AccessType.FIELD)
+@Table(name = Table_ConfigurationProperty, uniqueConstraints = { @UniqueConstraint(columnNames = { "NAME", "CONFIGURATION_ID" }) })
+@NamedQueries({ @NamedQuery(name = Query_ConfigurationPropertyByName.Name, query = Query_ConfigurationPropertyByName.Jql) })
 @XmlRootElement(name = "property")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "name", "value", "type", "description" })
-@Entity(name = "ConfigurationPropety")
-@Table(name = "CONFIGURATION_PROPERTY")
+@XmlType(propOrder = { "id", "name", "value", "type", "description" })
 @Review(comment = "Audit information (locale zone for the date, user information...)")
-public class ConfigurationProperty {
+public class ConfigurationProperty implements Serializable {
+
+   private static final long serialVersionUID = 2271419559641887975L;
 
    @Id
+   @GeneratedValue
+   private Long id;
+   @Column(name = "NAME")
+   private String name;
+   @ManyToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name = "CONFIGURATION_ID", insertable = false, updatable = true, nullable = false)
    @XmlTransient
    private ConfigurationEntity configuration;
-   @Id
-   private String name;
    private String value;
    private Class<?> type;
    private String description;
@@ -83,8 +102,8 @@ public class ConfigurationProperty {
     */
    public ConfigurationProperty(final ConfigurationEntity configuration, final String name, final String value, final Class<?> type, final String description) {
 	super();
-	this.configuration = configuration;
 	this.name = name;
+	this.configuration = configuration;
 	this.description = description;
 	this.value = value;
 	this.type = type;
@@ -95,6 +114,13 @@ public class ConfigurationProperty {
     */
    public ConfigurationEntity getConfiguration() {
 	return configuration;
+   }
+
+   /**
+    * @return persistent identifier
+    */
+   public Long getId() {
+	return id;
    }
 
    /**
@@ -116,6 +142,13 @@ public class ConfigurationProperty {
     */
    public void setConfiguration(final ConfigurationEntity configuration) {
 	this.configuration = configuration;
+   }
+
+   /**
+    * @param id the persistent id to set
+    */
+   public void setId(final Long id) {
+	this.id = id;
    }
 
    /**
@@ -169,10 +202,7 @@ public class ConfigurationProperty {
 	final int prime = 31;
 	int result = 1;
 	result = prime * result + ((configuration == null) ? 0 : configuration.hashCode());
-	result = prime * result + ((description == null) ? 0 : description.hashCode());
 	result = prime * result + ((name == null) ? 0 : name.hashCode());
-	result = prime * result + ((value == null) ? 0 : value.hashCode());
-	result = prime * result + ((type == null) ? 0 : type.hashCode());
 	return result;
    }
 
@@ -189,18 +219,9 @@ public class ConfigurationProperty {
 	if (configuration == null) {
 	   if (other.configuration != null) { return false; }
 	} else if (!configuration.equals(other.configuration)) { return false; }
-	if (description == null) {
-	   if (other.description != null) { return false; }
-	} else if (!description.equals(other.description)) { return false; }
 	if (name == null) {
 	   if (other.name != null) { return false; }
 	} else if (!name.equals(other.name)) { return false; }
-	if (value == null) {
-	   if (other.value != null) { return false; }
-	} else if (!value.equals(other.value)) { return false; }
-	if (type == null) {
-	   if (other.type != null) { return false; }
-	} else if (!type.equals(other.type)) { return false; }
 	return true;
    }
 

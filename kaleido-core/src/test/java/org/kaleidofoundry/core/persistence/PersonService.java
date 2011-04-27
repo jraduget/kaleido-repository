@@ -25,7 +25,7 @@ import javax.persistence.PersistenceContext;
  */
 public class PersonService {
 
-   @PersistenceContext(unitName = "kaleido-core-custom")
+   @PersistenceContext(unitName = "kaleido-custom")
    EntityManager entityManager;
 
    /**

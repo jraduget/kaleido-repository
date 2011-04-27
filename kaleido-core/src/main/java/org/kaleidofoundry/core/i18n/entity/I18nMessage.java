@@ -17,6 +17,7 @@ package org.kaleidofoundry.core.i18n.entity;
 
 import static org.kaleidofoundry.core.i18n.entity.I18nMessageConstants.DefaultMessageGroup;
 import static org.kaleidofoundry.core.i18n.entity.I18nMessageConstants.Table_I18nMessage;
+import static org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum.Improvement;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -44,8 +45,9 @@ import org.kaleidofoundry.core.lang.annotation.Review;
  * @author Jerome RADUGET
  */
 @Entity
+// @Access(AccessType.FIELD)
 @Table(name = Table_I18nMessage, uniqueConstraints = { @UniqueConstraint(columnNames = { "CODE", "GROUP_CODE" }) })
-@Review(comment = "Audit information (locale zone for the date, user information...)")
+@Review(comment = "Audit information (locale zone for the date, user information...)", category = Improvement)
 public class I18nMessage implements Serializable {
 
    private static final long serialVersionUID = 1585648396936219771L;
@@ -53,7 +55,7 @@ public class I18nMessage implements Serializable {
    // PRIVATE VARIABLES INSTANCES *************************************************************************************
    @Id
    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-   private Integer id;
+   private Long id;
    @Column(name = "CODE")
    private String code;
    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -114,7 +116,7 @@ public class I18nMessage implements Serializable {
    /**
     * @return unique system identifier
     */
-   public Integer getId() {
+   public Long getId() {
 	return id;
    }
 

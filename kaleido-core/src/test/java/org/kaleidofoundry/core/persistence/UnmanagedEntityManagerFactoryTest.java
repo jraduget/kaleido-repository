@@ -65,16 +65,16 @@ public class UnmanagedEntityManagerFactoryTest extends Assert {
 	EntityManager em2 = null;
 	try {
 	   // first call will create default kaleido EntityManager
-	   em = UnmanagedEntityManagerFactory.currentEntityManager("kaleido-core-custom");
+	   em = UnmanagedEntityManagerFactory.currentEntityManager("kaleido-custom");
 	   assertNotNull(em);
 	   assertTrue(em.isOpen());
-	   assertSame(em, UnmanagedEntityManagerFactory.currentEntityManager("kaleido-core-custom"));
-	   assertSame(em, UnmanagedEntityManagerFactory.currentEntityManager("kaleido-core-custom"));
+	   assertSame(em, UnmanagedEntityManagerFactory.currentEntityManager("kaleido-custom"));
+	   assertSame(em, UnmanagedEntityManagerFactory.currentEntityManager("kaleido-custom"));
 	   // close and free it
 	   UnmanagedEntityManagerFactory.close(em);
 	   assertFalse(em.isOpen());
 	   // factory have to return a new instance
-	   em2 = UnmanagedEntityManagerFactory.currentEntityManager("kaleido-core-custom");
+	   em2 = UnmanagedEntityManagerFactory.currentEntityManager("kaleido-custom");
 	   assertNotSame(em, em2);
 	} finally {
 	   if (em2 != null && em2.isOpen()) {
@@ -122,14 +122,14 @@ public class UnmanagedEntityManagerFactoryTest extends Assert {
 	EntityManagerFactory emf2 = null;
 	try {
 	   // first call will create default kaleido EntityManager
-	   emf = UnmanagedEntityManagerFactory.getEntityManagerFactory("kaleido-core-custom");
+	   emf = UnmanagedEntityManagerFactory.getEntityManagerFactory("kaleido-custom");
 	   assertNotNull(emf);
-	   assertSame(emf, UnmanagedEntityManagerFactory.getEntityManagerFactory("kaleido-core-custom"));
-	   assertSame(emf, UnmanagedEntityManagerFactory.getEntityManagerFactory("kaleido-core-custom"));
+	   assertSame(emf, UnmanagedEntityManagerFactory.getEntityManagerFactory("kaleido-custom"));
+	   assertSame(emf, UnmanagedEntityManagerFactory.getEntityManagerFactory("kaleido-custom"));
 	   // close and free it
 	   UnmanagedEntityManagerFactory.close(emf);
 	   // factory have to return a new instance
-	   emf2 = UnmanagedEntityManagerFactory.getEntityManagerFactory("kaleido-core-custom");
+	   emf2 = UnmanagedEntityManagerFactory.getEntityManagerFactory("kaleido-custom");
 	   assertNotSame(emf, emf2);
 	} finally {
 	   if (emf != null && emf.isOpen()) {

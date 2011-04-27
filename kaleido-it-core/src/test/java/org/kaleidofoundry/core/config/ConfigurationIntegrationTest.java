@@ -37,6 +37,8 @@ import org.kaleidofoundry.core.cache.EhCache1xImpl;
 import org.kaleidofoundry.core.store.StoreException;
 
 /**
+ * Integration test for configuration context injection
+ * 
  * @author Jerome RADUGET
  */
 public class ConfigurationIntegrationTest {
@@ -44,7 +46,8 @@ public class ConfigurationIntegrationTest {
    @Before
    public void setup() throws StoreException {
 	// load and register given configuration
-	// another way to to this, set following java env variable : -Dkaleido.configurations=myConfigCtx=classpath:/config/myContext.properties
+	// another way to to this, set following java env variable :
+	// -Dkaleido.configurations=myConfigCtx=classpath:/config/myContext.properties
 	ConfigurationFactory.provides("myConfigCtx", "classpath:/config/myContext.properties");
    }
 
@@ -56,6 +59,11 @@ public class ConfigurationIntegrationTest {
 	ConfigurationFactory.destroy("myConfig");
    }
 
+   /**
+    * {@link ConfigurationSample01}
+    * 
+    * @throws ParseException
+    */
    @Test
    public void testConfigurationSample01() throws ParseException {
 	ConfigurationSample01 confSample = new ConfigurationSample01();
@@ -65,6 +73,11 @@ public class ConfigurationIntegrationTest {
 	assertNull(confSample.getConfiguration().getBoolean("myapp.sample.http"));
    }
 
+   /**
+    * {@link ConfigurationSample02}
+    * 
+    * @throws ParseException
+    */
    @Test
    public void testConfigurationSample02() throws ParseException {
 	ConfigurationSample02 confSample = new ConfigurationSample02();
@@ -75,7 +88,7 @@ public class ConfigurationIntegrationTest {
 
 	// assert that ehcache instance are right been created and feeded
 	Integer cacheManagerRegistryId = CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.ehCache1x.name(), "classpath:/config/ehcache.xml");
-	CacheManager cacheManager  = CacheManagerFactory.getRegistry().get(cacheManagerRegistryId);
+	CacheManager cacheManager = CacheManagerFactory.getRegistry().get(cacheManagerRegistryId);
 	assertNotNull(cacheManager);
 	Cache<String, String> currentConfigurationCache = cacheManager.getCache("kaleidofoundry/configuration/myConfig");
 
@@ -92,6 +105,12 @@ public class ConfigurationIntegrationTest {
 	assertEquals("false", ehCacheConfInstance.get("//myapp/sample/boolean").getObjectValue());
    }
 
+   /**
+    * {@link ConfigurationSample03}
+    * 
+    * @throws StoreException
+    * @throws ParseException
+    */
    @Test
    public void testConfigurationSample03() throws StoreException, ParseException {
 	ConfigurationSample03 confSample = new ConfigurationSample03();

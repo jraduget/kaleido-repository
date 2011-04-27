@@ -53,7 +53,7 @@ public abstract class UnmanagedEntityManagerFactory {
    /**
     * default name for internal kaleidofoundry persistent context unit name (declare into persitence.xml)
     */
-   public static final String KaleidoPersistentContextUnitName = "kaleido-core";
+   public static final String KaleidoPersistentContextUnitName = "kaleido";
 
    // default kaleidofoundry EntityManagerFactory
    private static EntityManagerFactory DefaultEmf;
@@ -95,20 +95,20 @@ public abstract class UnmanagedEntityManagerFactory {
 	if (KaleidoPersistentContextUnitName.equals(persistenceUnitName)) {
 	   return currentEntityManager();
 	} else {
-	   
-	   // if none registry have been created yet 
+
+	   // if none registry have been created yet
 	   if (CustomEmRegistry.get() == null) {
 		CustomEmRegistry.set(new Registry<String, EntityManager>());
 	   }
-	   
+
 	   // get current entityManager thread
 	   EntityManager em = CustomEmRegistry.get().get(persistenceUnitName);
 
 	   // create entityManager if needed (if null or closed)
 	   if (em == null || !em.isOpen()) {
-		em = getEntityManagerFactory(persistenceUnitName).createEntityManager();		
+		em = getEntityManagerFactory(persistenceUnitName).createEntityManager();
 		CustomEmRegistry.get().put(persistenceUnitName, em);
-	   } 
+	   }
 
 	   return em;
 	}
@@ -164,7 +164,7 @@ public abstract class UnmanagedEntityManagerFactory {
 	// browse custom threadlocal em to find it
 	else {
 	   boolean foundEm = false;
-	   for (Entry<String, EntityManager> entry: CustomEmRegistry.get().entrySet()) {
+	   for (Entry<String, EntityManager> entry : CustomEmRegistry.get().entrySet()) {
 		if (entry.getValue() == em) {
 		   em.close();
 		   CustomEmRegistry.get().remove(entry.getKey());

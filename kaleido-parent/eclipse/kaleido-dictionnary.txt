@@ -8,3 +8,4 @@ apache
 classpath
 guice
 serializable
+locale
