@@ -15,7 +15,9 @@
  */
 package org.kaleidofoundry.core.config.entity;
 
-import static org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Table_ConfigurationEntity;
+import static org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Entity_Configuration;
+import static org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Table_Configuration;
+import static org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Table_ConfigurationProperties;
 import static org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum.Improvement;
 
 import java.io.Serializable;
@@ -28,9 +30,12 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -43,11 +48,11 @@ import org.kaleidofoundry.core.lang.annotation.Review;
 /**
  * @author Jerome RADUGET
  */
-@Entity
-// @Access(AccessType.FIELD)
-@Table(name = Table_ConfigurationEntity, uniqueConstraints = { @UniqueConstraint(columnNames = { "NAME" }), @UniqueConstraint(columnNames = { "URI" }) })
+@Entity(name = Entity_Configuration)
+// @Access(AccessType.PROPERTY)
+@Table(name = Table_Configuration, uniqueConstraints = { @UniqueConstraint(columnNames = { "NAME" }), @UniqueConstraint(columnNames = { "URI" }) })
 @XmlRootElement(name = "configuration")
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.PROPERTY)
 @Review(comment = "Audit information (locale zone for the date, user information...)", category = Improvement)
 public class ConfigurationEntity implements Serializable {
 
@@ -66,8 +71,11 @@ public class ConfigurationEntity implements Serializable {
    private String description;
    @XmlElementWrapper(name = "properties")
    @XmlElement(name = "property")
-   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+   @JoinTable(name = Table_ConfigurationProperties, joinColumns = @JoinColumn(name = "CONFIGURATION_ID"), inverseJoinColumns = @JoinColumn(name = "PROPERTY_ID"))
    private Set<ConfigurationProperty> properties;
+   @Version
+   Integer version;
 
    public ConfigurationEntity() {
 	this(null);

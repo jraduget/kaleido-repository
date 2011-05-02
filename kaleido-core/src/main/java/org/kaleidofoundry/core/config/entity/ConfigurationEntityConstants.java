@@ -20,11 +20,20 @@ package org.kaleidofoundry.core.config.entity;
  */
 public interface ConfigurationEntityConstants {
 
+   /** {@link ConfigurationEntity} entity name */
+   String Entity_Configuration = "Configuration";
+
+   /** {@link ConfigurationProperty} entity name */
+   String Entity_Property = "ConfigurationProperty";
+
    /** {@link ConfigurationEntity} entity table name */
-   String Table_ConfigurationEntity = "CONFIGURATION";
+   String Table_Configuration = "CONFIGURATION";
 
    /** {@link ConfigurationProperty} entity table name */
-   String Table_ConfigurationProperty = "CONFIGURATION_PROPERTY";
+   String Table_Property = "CONFIGURATION_PROPERTY";
+
+   /** {@link ConfigurationProperty} association table name */
+   String Table_ConfigurationProperties = "CONFIGURATION_PROPERTIES";
 
    /**
     * Query static final informations
@@ -33,7 +42,7 @@ public interface ConfigurationEntityConstants {
 	String Name = "config.findPropertyByName";
 	String Parameter_ConfigurationName = "configName";
 	String Parameter_Name = "name";
-	String Jql = "select cp from ConfigurationProperty cp, ConfigurationEntity c where cp.configuration.id=c.id and cp.name = :" + Parameter_Name
-		+ " and c.name = :" + Parameter_ConfigurationName;
+	String Jql = "select cp from " + Entity_Property + " cp, " + Entity_Configuration + " c where cp.name = :" + Parameter_Name + " and c.name = :"
+		+ Parameter_ConfigurationName;
    }
 }

@@ -33,6 +33,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlID;
@@ -50,7 +51,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * @author Jerome RADUGET
  */
 @Entity
-// @Access(AccessType.FIELD)
+// @Access(AccessType.PROPERTY)
 @Table(name = Table_I18nMessageLanguage, uniqueConstraints = { @UniqueConstraint(columnNames = { "MESSAGE_ID", "LOCALE" }) })
 @NamedQueries({ @NamedQuery(name = Query_MessagesByLocale.Name, query = Query_MessagesByLocale.Jql) })
 @XmlRootElement(name = "i18n")
@@ -77,6 +78,8 @@ public class I18nMessageLanguage implements Serializable {
    private Locale locale;
    private String isoLanguage;
    private String content;
+   @Version
+   Integer version;
 
    public I18nMessageLanguage() {
    }

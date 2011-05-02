@@ -25,7 +25,6 @@ import javax.ws.rs.core.UriBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.kaleidofoundry.core.config.entity.ConfigurationEntity;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
 import org.kaleidofoundry.core.config.entity.FireChangesReport;
 
@@ -231,11 +230,8 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	assertEquals("", property.getDescription());
 
 	// update an exiting property
-	ClientResponse response = getBaseResource()
-		.path("putProperty")
-		.accept(getMedia().getType())
-		.put(ClientResponse.class,
-			new ConfigurationProperty(new ConfigurationEntity("myConfig"), "myapp.name", "my new application", String.class, "new description"));
+	ClientResponse response = getBaseResource().path("putProperty").accept(getMedia().getType())
+		.put(ClientResponse.class, new ConfigurationProperty("myapp.name", "my new application", String.class, "new description"));
 	assertNotNull(response);
 	assertEquals(204, response.getStatus());
 

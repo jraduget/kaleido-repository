@@ -31,6 +31,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 import org.kaleidofoundry.core.lang.annotation.Review;
 
@@ -42,8 +43,8 @@ import org.kaleidofoundry.core.lang.annotation.Review;
  * @author Jerome RADUGET
  */
 @Entity(name = "FileStore")
-// @Access(AccessType.FIELD)
-@Table(name = "FILE_STORE")
+// @Access(AccessType.PROPERTY)
+@Table(name = "FILESTORE")
 @Review(comment = "Audit information (locale zone for the date, user information...)")
 public class FileHandlerEntity implements Serializable {
 
@@ -63,6 +64,8 @@ public class FileHandlerEntity implements Serializable {
    @Temporal(TemporalType.TIMESTAMP)
    @Column(insertable = false, updatable = true, nullable = true)
    private Date updatedDate;
+   @Version
+   Integer version;
 
    @PreUpdate
    protected void preUpdate() {

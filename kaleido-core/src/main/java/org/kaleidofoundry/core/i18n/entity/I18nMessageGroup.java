@@ -25,6 +25,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import org.kaleidofoundry.core.lang.annotation.Review;
 
@@ -60,7 +61,7 @@ import org.kaleidofoundry.core.lang.annotation.Review;
  * @author Jerome RADUGET
  */
 @Entity
-// @Access(AccessType.FIELD)
+// @Access(AccessType.PROPERTY)
 @Table(name = Table_I18nMessageGroupe)
 @Review(comment = "Audit information (locale zone for the date, user information...)")
 public class I18nMessageGroup implements Serializable {
@@ -75,6 +76,8 @@ public class I18nMessageGroup implements Serializable {
    private I18nMessage description;
    @ManyToOne(optional = true)
    private I18nMessageGroup parent;
+   @Version
+   Integer version;
 
    /**
     * default constructor

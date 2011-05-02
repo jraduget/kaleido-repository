@@ -94,9 +94,10 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
    @GET
    @Path("/")
    public ConfigurationEntity getConfigurationEntity(final @PathParam("config") String config) throws ConfigurationNotFoundException, IllegalStateException {
-	ConfigurationEntity configurationEntity = new ConfigurationEntity(config);
+	final ConfigurationEntity configurationEntity;
 	if (em == null) {
 	   Configuration configuration = getRegisteredConfiguration(config);
+	   configurationEntity = new ConfigurationEntity(config);
 	   for (String key : configuration.keySet()) {
 		configurationEntity.getProperties().add(getConfigurationProperty(config, key, false));
 	   }
@@ -146,7 +147,9 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 	configProperty.getName();
 	// meta data update
 	if (em != null) {
-	   em.persist(configProperty);
+	   ConfigurationEntity configuration = getConfigurationEntity(config);
+	   configuration.getProperties().add(property);
+	   em.persist(configuration);
 	}
    }
 
@@ -289,8 +292,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 	   }
 	   Serializable value = configuration.getProperty(propertyName);
 	   Class<?> type = value != null ? value.getClass() : null;
-	   ConfigurationEntity configurationEntity = new ConfigurationEntity(configuration.getName(), "", "not persistent");
-	   property = new ConfigurationProperty(configurationEntity, propertyName, configuration.getString(propertyName), type, "not persistent");
+	   property = new ConfigurationProperty(propertyName, configuration.getString(propertyName), type, "not persistent");
 	} else {
 	   // JPA 1.x for jee5 compatibility
 	   Query query = em.createQuery(Jql);

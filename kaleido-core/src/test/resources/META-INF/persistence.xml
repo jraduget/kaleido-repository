@@ -30,45 +30,12 @@
 			
 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
 			<property name="eclipselink.ddl-generation.output-mode" value="both" />
-			<property name="eclipselink.application-location" value="../kaleido-it-ear/script/database" />
-			<property name="eclipselink.drop-ddl-jdbc-file-name" value="dropDerbyKaleidoCoreSchema.sql" />
-			<property name="eclipselink.create-ddl-jdbc-file-name" value="createDerbyKaleidoCoreSchema.sql" />
+			<property name="eclipselink.application-location" value="src/main/scripts/" />
+			<property name="eclipselink.drop-ddl-jdbc-file-name" value="dropSchema-derby.sql" />
+			<property name="eclipselink.create-ddl-jdbc-file-name" value="createSchema-derby.sql" />
 		</properties>
 
 	</persistence-unit>
-
-	<!--**** integration test oracle part for ********************************************************************** -->
-	<persistence-unit name="kaleido-oracle" transaction-type="RESOURCE_LOCAL">
-		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-
-		<!-- entities declarations -->
-		<class>org.kaleidofoundry.core.store.entity.FileHandlerEntity</class>		
-		<class>org.kaleidofoundry.core.i18n.entity.I18nMessage</class>
-		<class>org.kaleidofoundry.core.i18n.entity.I18nMessageGroup</class>
-		<class>org.kaleidofoundry.core.i18n.entity.I18nMessageLanguage</class>
-		<class>org.kaleidofoundry.core.config.entity.ConfigurationEntity</class>
-		<class>org.kaleidofoundry.core.config.entity.ConfigurationProperty</class>
-		
-		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-
-		<properties>
-			<property name="javax.persistence.jdbc.driver" value="oracle.jdbc.driver.OracleDriver" />
-			<property name="javax.persistence.jdbc.url"
-				value="jdbc:oracle:thin:@(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = oracle-kaleido-dev)(PORT = 1521))) (CONNECT_DATA = (SERVICE_NAME=ORACLE_KALEIDO_DEV) (SERVER = DEDICATED)))" />
-			<property name="javax.persistence.jdbc.user" value="kaleido" />
-			<property name="javax.persistence.jdbc.password" value="kaleido" />
-			<property name="eclipselink.target-database" value="Oracle" />
-			<property name="eclipselink.logging.level" value="FINE" />
-			<property name="eclipselink.ddl-generation" value="create-tables" />
-			<property name="eclipselink.ddl-generation.output-mode" value="both" />
-			<property name="eclipselink.application-location" value="./target/test-classes" />
-			<property name="eclipselink.drop-ddl-jdbc-file-name" value="dropOracleSchema.sql" />
-			<property name="eclipselink.create-ddl-jdbc-file-name" value="createOracleSchema.sql" />
-		</properties>
-
-	</persistence-unit>
-
-
 
 	<!-- custom unit test for PersistenceFactory -->
 	<persistence-unit name="kaleido-custom" transaction-type="RESOURCE_LOCAL">

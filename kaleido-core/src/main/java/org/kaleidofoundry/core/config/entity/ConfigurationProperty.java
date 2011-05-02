@@ -15,21 +15,22 @@
  */
 package org.kaleidofoundry.core.config.entity;
 
-import static org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Table_ConfigurationProperty;
+import static org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Entity_Property;
+import static org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Table_Property;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -42,12 +43,12 @@ import org.kaleidofoundry.core.lang.annotation.Review;
 /**
  * @author Jerome RADUGET
  */
-@Entity
-// @Access(AccessType.FIELD)
-@Table(name = Table_ConfigurationProperty, uniqueConstraints = { @UniqueConstraint(columnNames = { "NAME", "CONFIGURATION_ID" }) })
+@Entity(name = Entity_Property)
+// @Access(AccessType.PROPERTY)
+@Table(name = Table_Property)
 @NamedQueries({ @NamedQuery(name = Query_ConfigurationPropertyByName.Name, query = Query_ConfigurationPropertyByName.Jql) })
 @XmlRootElement(name = "property")
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.PROPERTY)
 @XmlType(propOrder = { "id", "name", "value", "type", "description" })
 @Review(comment = "Audit information (locale zone for the date, user information...)")
 public class ConfigurationProperty implements Serializable {
@@ -59,13 +60,14 @@ public class ConfigurationProperty implements Serializable {
    private Long id;
    @Column(name = "NAME")
    private String name;
-   @ManyToOne(fetch = FetchType.LAZY)
-   @JoinColumn(name = "CONFIGURATION_ID", insertable = false, updatable = true, nullable = false)
+   @ManyToMany(fetch = FetchType.LAZY, mappedBy = "properties")
    @XmlTransient
-   private ConfigurationEntity configuration;
+   private Set<ConfigurationEntity> configurations;
    private String value;
-   private Class<?> type;
+   private String type;
    private String description;
+   @Version
+   Integer version;
 
    /**
     * 
@@ -75,45 +77,41 @@ public class ConfigurationProperty implements Serializable {
    }
 
    /**
-    * @param configuration the configuration of the property
     * @param name property name
     * @param type property type
     */
-   public ConfigurationProperty(final ConfigurationEntity configuration, final String name, final Class<?> type) {
-	this(configuration, name, type, null);
+   public ConfigurationProperty(final String name, final Class<?> type) {
+	this(name, type, null);
    }
 
    /**
-    * @param configuration the configuration of the property
     * @param name property name
     * @param type property type
     * @param description optional description
     */
-   public ConfigurationProperty(final ConfigurationEntity configuration, final String name, final Class<?> type, final String description) {
-	this(configuration, name, null, type, description);
+   public ConfigurationProperty(final String name, final Class<?> type, final String description) {
+	this(name, null, type, description);
    }
 
    /**
-    * @param configuration the configuration of the property
     * @param name property name
     * @param value property value
     * @param type property type
     * @param description optional description
     */
-   public ConfigurationProperty(final ConfigurationEntity configuration, final String name, final String value, final Class<?> type, final String description) {
+   public ConfigurationProperty(final String name, final String value, final Class<?> type, final String description) {
 	super();
 	this.name = name;
-	this.configuration = configuration;
 	this.description = description;
 	this.value = value;
-	this.type = type;
+	this.type = type != null ? type.getName() : null;
    }
 
    /**
     * @return the configuration of the property
     */
-   public ConfigurationEntity getConfiguration() {
-	return configuration;
+   public Set<ConfigurationEntity> getConfigurations() {
+	return configurations;
    }
 
    /**
@@ -138,10 +136,10 @@ public class ConfigurationProperty implements Serializable {
    }
 
    /**
-    * @param configuration the configuration to set
+    * @param configurations the configuration to set
     */
-   public void setConfiguration(final ConfigurationEntity configuration) {
-	this.configuration = configuration;
+   public void setConfigurations(final Set<ConfigurationEntity> configurations) {
+	this.configurations = configurations;
    }
 
    /**
@@ -182,15 +180,15 @@ public class ConfigurationProperty implements Serializable {
    /**
     * @return the property type
     */
-   public Class<?> getType() {
-	return type;
+   public Class<?> getType() throws ClassNotFoundException {
+	return Class.forName(type);
    }
 
    /**
     * @param type the property type
     */
    public void setType(final Class<?> type) {
-	this.type = type;
+	this.type = type != null ? type.getName() : null;
    }
 
    /*
@@ -201,8 +199,11 @@ public class ConfigurationProperty implements Serializable {
    public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + ((configuration == null) ? 0 : configuration.hashCode());
+	result = prime * result + ((configurations == null) ? 0 : configurations.hashCode());
+	result = prime * result + ((description == null) ? 0 : description.hashCode());
 	result = prime * result + ((name == null) ? 0 : name.hashCode());
+	result = prime * result + ((type == null) ? 0 : type.hashCode());
+	result = prime * result + ((value == null) ? 0 : value.hashCode());
 	return result;
    }
 
@@ -216,12 +217,21 @@ public class ConfigurationProperty implements Serializable {
 	if (obj == null) { return false; }
 	if (!(obj instanceof ConfigurationProperty)) { return false; }
 	ConfigurationProperty other = (ConfigurationProperty) obj;
-	if (configuration == null) {
-	   if (other.configuration != null) { return false; }
-	} else if (!configuration.equals(other.configuration)) { return false; }
+	if (configurations == null) {
+	   if (other.configurations != null) { return false; }
+	} else if (!configurations.equals(other.configurations)) { return false; }
+	if (description == null) {
+	   if (other.description != null) { return false; }
+	} else if (!description.equals(other.description)) { return false; }
 	if (name == null) {
 	   if (other.name != null) { return false; }
 	} else if (!name.equals(other.name)) { return false; }
+	if (type == null) {
+	   if (other.type != null) { return false; }
+	} else if (!type.equals(other.type)) { return false; }
+	if (value == null) {
+	   if (other.value != null) { return false; }
+	} else if (!value.equals(other.value)) { return false; }
 	return true;
    }
 
@@ -231,8 +241,7 @@ public class ConfigurationProperty implements Serializable {
     */
    @Override
    public String toString() {
-	return "ConfigurationProperty [configuration=" + (configuration != null ? configuration.getName() : "") + ", name=" + name + ", value=" + value
-		+ ", type=" + type + ", description=" + description + "]";
+	return "ConfigurationProperty [name=" + name + ", value=" + value + ", type=" + type + ", description=" + description + "]";
    }
 
 }

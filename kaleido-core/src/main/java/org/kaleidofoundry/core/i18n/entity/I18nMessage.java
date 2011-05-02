@@ -38,14 +38,22 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 
 import org.kaleidofoundry.core.lang.annotation.Review;
 
 /**
+ * An i18n message, bind to :
+ * <ul>
+ * <li>a group ({@link #getGroup()} ,
+ * <li>a type {@link #getType()},
+ * <li>a list of translation {@link #getMessageLanguages()}
+ * </ul>
+ * 
  * @author Jerome RADUGET
  */
 @Entity
-// @Access(AccessType.FIELD)
+// @Access(AccessType.PROPERTY)
 @Table(name = Table_I18nMessage, uniqueConstraints = { @UniqueConstraint(columnNames = { "CODE", "GROUP_CODE" }) })
 @Review(comment = "Audit information (locale zone for the date, user information...)", category = Improvement)
 public class I18nMessage implements Serializable {
@@ -69,6 +77,8 @@ public class I18nMessage implements Serializable {
    @Column(insertable = false, updatable = true, nullable = true)
    private Date lastUsed;
    private boolean enabled;
+   @Version
+   Integer version;
 
    public I18nMessage() {
 	this(null);
@@ -128,7 +138,7 @@ public class I18nMessage implements Serializable {
    }
 
    /**
-    * @return group (define by the user functional ) of the message
+    * @return group (define by the user functional) of the message
     */
    public I18nMessageGroup getGroup() {
 	return group;
