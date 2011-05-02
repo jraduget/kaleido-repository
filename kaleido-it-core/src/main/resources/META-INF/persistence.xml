@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+	version="1.0">
+
+	<persistence-unit name="kaleido" transaction-type="JTA" >
+
+		<jta-data-source>jdbc/kaleido</jta-data-source>
+
+		<!-- entities declarations -->
+		<class>org.kaleidofoundry.core.store.entity.FileHandlerEntity</class>
+		<class>org.kaleidofoundry.core.i18n.entity.I18nMessage</class>
+		<class>org.kaleidofoundry.core.i18n.entity.I18nMessageGroup</class>
+		<class>org.kaleidofoundry.core.i18n.entity.I18nMessageLanguage</class>
+		<class>org.kaleidofoundry.core.config.entity.ConfigurationEntity</class>
+		<class>org.kaleidofoundry.core.config.entity.ConfigurationProperty</class>
+
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+
+	</persistence-unit>
+
+</persistence>
