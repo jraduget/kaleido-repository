@@ -166,7 +166,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 	getRegisteredConfiguration(config).removeProperty(property);
 	// remove it from meta data
 	if (em != null) {
-	   em.remove(entity);
+	   em.remove(em.merge(entity));
 	}
    }
 
@@ -283,17 +283,10 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
    protected ConfigurationProperty getConfigurationProperty(final String config, final String propertyName, final boolean checkPropExists) {
 
 	Configuration configuration;
-	ConfigurationProperty property;
+	ConfigurationProperty property = null;
 
-	if (em == null) {
-	   configuration = getRegisteredConfiguration(config);
-	   if (checkPropExists) {
-		if (!configuration.containsKey(propertyName, "")) { throw new PropertyNotFoundException(config, propertyName); }
-	   }
-	   Serializable value = configuration.getProperty(propertyName);
-	   Class<?> type = value != null ? value.getClass() : null;
-	   property = new ConfigurationProperty(propertyName, configuration.getString(propertyName), type, "not persistent");
-	} else {
+	// first check in the database model
+	if (em != null) {
 	   // JPA 1.x for jee5 compatibility
 	   Query query = em.createQuery(Jql);
 	   query.setParameter(Parameter_Name, propertyName);
@@ -304,11 +297,20 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 	   } catch (NoResultException nre) {
 		property = null;
 	   }
-
-	   if (checkPropExists) {
-		if (property == null) { throw new PropertyNotFoundException(config, propertyName); }
-	   }
 	}
+
+	// if not found find property in in-memory registered configurations
+	if (property == null) {
+	   configuration = getRegisteredConfiguration(config);
+	   if (checkPropExists) {
+		if (!configuration.containsKey(propertyName, "")) { throw new PropertyNotFoundException(config, propertyName); }
+	   }
+	   Serializable value = configuration.getProperty(propertyName);
+	   Class<?> type = value != null ? value.getClass() : null;
+	   property = new ConfigurationProperty(propertyName, configuration.getString(propertyName), type, "not persistent");
+
+	}
+
 	return property;
    }
 }

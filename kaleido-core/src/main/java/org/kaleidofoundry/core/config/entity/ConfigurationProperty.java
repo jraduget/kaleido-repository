@@ -48,7 +48,7 @@ import org.kaleidofoundry.core.lang.annotation.Review;
 @Table(name = Table_Property)
 @NamedQueries({ @NamedQuery(name = Query_ConfigurationPropertyByName.Name, query = Query_ConfigurationPropertyByName.Jql) })
 @XmlRootElement(name = "property")
-@XmlAccessorType(XmlAccessType.PROPERTY)
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "id", "name", "value", "type", "description" })
 @Review(comment = "Audit information (locale zone for the date, user information...)")
 public class ConfigurationProperty implements Serializable {
@@ -67,6 +67,7 @@ public class ConfigurationProperty implements Serializable {
    private String type;
    private String description;
    @Version
+   @XmlTransient
    Integer version;
 
    /**

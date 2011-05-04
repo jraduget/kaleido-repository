@@ -42,6 +42,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.kaleidofoundry.core.lang.annotation.Review;
 
@@ -52,7 +53,7 @@ import org.kaleidofoundry.core.lang.annotation.Review;
 // @Access(AccessType.PROPERTY)
 @Table(name = Table_Configuration, uniqueConstraints = { @UniqueConstraint(columnNames = { "NAME" }), @UniqueConstraint(columnNames = { "URI" }) })
 @XmlRootElement(name = "configuration")
-@XmlAccessorType(XmlAccessType.PROPERTY)
+@XmlAccessorType(XmlAccessType.FIELD)
 @Review(comment = "Audit information (locale zone for the date, user information...)", category = Improvement)
 public class ConfigurationEntity implements Serializable {
 
@@ -75,6 +76,7 @@ public class ConfigurationEntity implements Serializable {
    @JoinTable(name = Table_ConfigurationProperties, joinColumns = @JoinColumn(name = "CONFIGURATION_ID"), inverseJoinColumns = @JoinColumn(name = "PROPERTY_ID"))
    private Set<ConfigurationProperty> properties;
    @Version
+   @XmlTransient
    Integer version;
 
    public ConfigurationEntity() {

@@ -42,7 +42,7 @@ public interface ConfigurationEntityConstants {
 	String Name = "config.findPropertyByName";
 	String Parameter_ConfigurationName = "configName";
 	String Parameter_Name = "name";
-	String Jql = "select cp from " + Entity_Property + " cp, " + Entity_Configuration + " c where cp.name = :" + Parameter_Name + " and c.name = :"
-		+ Parameter_ConfigurationName;
+	String Jql = "SELECT cp FROM " + Entity_Property + " cp JOIN " + Entity_Configuration + " c.properties WHERE cp.name = :" + Parameter_Name
+		+ " AND c.name = :" + Parameter_ConfigurationName;
    }
 }
