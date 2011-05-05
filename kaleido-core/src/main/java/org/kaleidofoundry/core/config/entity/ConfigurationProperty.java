@@ -60,8 +60,8 @@ public class ConfigurationProperty implements Serializable {
    private Long id;
    @Column(name = "NAME")
    private String name;
-   @ManyToMany(fetch = FetchType.LAZY, mappedBy = "properties")
    @XmlTransient
+   @ManyToMany(fetch = FetchType.LAZY, mappedBy = "properties")
    private Set<ConfigurationEntity> configurations;
    private String value;
    private String type;
