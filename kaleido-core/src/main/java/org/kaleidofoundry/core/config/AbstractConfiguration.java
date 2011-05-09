@@ -181,22 +181,6 @@ public abstract class AbstractConfiguration extends AbstractSerializer implement
    protected abstract Cache<String, Serializable> storeProperties(Cache<String, Serializable> properties, SingleFileStore fileStore) throws StoreException,
 	   ConfigurationException;
 
-   /**
-    * Normalize property path from argument. If standard property key is used like "application.name", it will be internally convert to
-    * "//application/name"
-    * 
-    * @param propertyPath
-    * @return Normalize propertyPath argument
-    */
-   protected String normalizeKey(@NotNull final String propertyPath) {
-	final StringBuilder normalizeKey = new StringBuilder();
-	if (!propertyPath.startsWith(KeyRoot)) {
-	   normalizeKey.append(KeyRoot);
-	}
-	normalizeKey.append(StringHelper.replaceAll(propertyPath, KeyPropertiesSeparator, KeySeparator));
-	return normalizeKey.toString();
-   }
-
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#getName()
@@ -719,6 +703,22 @@ public abstract class AbstractConfiguration extends AbstractSerializer implement
 	}
 	str.append("}");
 	return str.toString();
+   }
+
+   /**
+    * Normalize property path from argument. If standard property key is used like "application.name", it will be internally convert to
+    * "//application/name"
+    * 
+    * @param propertyPath
+    * @return Normalize propertyPath argument
+    */
+   public static String normalizeKey(@NotNull final String propertyPath) {
+	final StringBuilder normalizeKey = new StringBuilder();
+	if (!propertyPath.startsWith(KeyRoot)) {
+	   normalizeKey.append(KeyRoot);
+	}
+	normalizeKey.append(StringHelper.replaceAll(propertyPath, KeyPropertiesSeparator, KeySeparator));
+	return normalizeKey.toString();
    }
 
 }

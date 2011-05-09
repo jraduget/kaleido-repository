@@ -38,6 +38,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
+import org.kaleidofoundry.core.config.AbstractConfiguration;
 import org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Query_FindPropertyByName;
 import org.kaleidofoundry.core.lang.annotation.Review;
 
@@ -105,9 +106,9 @@ public class ConfigurationProperty implements Serializable {
     */
    public ConfigurationProperty(final String name, final String value, final Class<?> type, final String description) {
 	super();
-	this.name = name;
-	this.description = description;
-	this.value = value;
+	setName(name);
+	setDescription(description);
+	setValue(value);
 	this.type = type != null ? type.getName() : null;
 	this.configurations = new HashSet<ConfigurationModel>();
    }
@@ -158,7 +159,11 @@ public class ConfigurationProperty implements Serializable {
     * @param name the property to set
     */
    public void setName(final String name) {
-	this.name = name;
+	if (name != null) {
+	   this.name = AbstractConfiguration.normalizeKey(name);
+	} else {
+	   this.name = null;
+	}
    }
 
    /**

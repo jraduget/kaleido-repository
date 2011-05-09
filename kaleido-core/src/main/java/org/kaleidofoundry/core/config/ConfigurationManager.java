@@ -42,7 +42,7 @@ public interface ConfigurationManager {
     * @throws ConfigurationNotFoundException
     * @throws IllegalStateException
     */
-   ConfigurationModel getConfigurationEntity(@NotNull String config) throws ConfigurationNotFoundException, IllegalStateException;
+   ConfigurationModel getConfigurationModel(@NotNull String config) throws ConfigurationNotFoundException, IllegalStateException;
 
    /**
     * get the raw property value
@@ -108,7 +108,7 @@ public interface ConfigurationManager {
 
    /**
     * <p>
-    * For the top class properties example, implements by{@link PropertiesConfiguration} :
+    * For the top class properties example, implements by {@link PropertiesConfiguration} :
     * 
     * <pre>
     * configuration.keySet()= {&quot;//application/name&quot;, &quot;//application/version&quot;, &quot;//application/description&quot;, &quot;//application/date&quot;, &quot;//application/librairies&quot;, "application.modules.sales", ...}
@@ -120,7 +120,7 @@ public interface ConfigurationManager {
     * @return a set (clone) of all the declared property keys <br/>
     */
    @NotNull
-   List<ConfigurationProperty> keys(@NotNull String config);
+   List<String> keys(@NotNull String config);
 
    /**
     * @param config
@@ -128,7 +128,7 @@ public interface ConfigurationManager {
     * @return a set (clone) of all declared property keys filtered by prefix argument
     */
    @NotNull
-   List<ConfigurationProperty> keys(@NotNull String config, @NotNull String prefix);
+   List<String> keys(@NotNull String config, @NotNull String prefix);
 
    /**
     * @param config

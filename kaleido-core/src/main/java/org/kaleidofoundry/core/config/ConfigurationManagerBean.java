@@ -20,9 +20,7 @@ import static org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory.
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -89,7 +87,7 @@ public class ConfigurationManagerBean implements ConfigurationManager {
     */
    @GET
    @Path("/")
-   public ConfigurationModel getConfigurationEntity(final @PathParam("config") String config) throws ConfigurationNotFoundException, IllegalStateException {
+   public ConfigurationModel getConfigurationModel(final @PathParam("config") String config) throws ConfigurationNotFoundException, IllegalStateException {
 	final ConfigurationModel configurationModel;
 	if (em == null) {
 	   Configuration configuration = getRegisteredConfiguration(config);
@@ -153,7 +151,7 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 	ConfigurationProperty currentProperty = findConfigurationPropertyByName(config, property.getName(), false);
 	// meta data update
 	if (em != null) {
-	   ConfigurationModel configuration = getConfigurationEntity(config);
+	   ConfigurationModel configuration = getConfigurationModel(config);
 	   configuration.getProperties().add(property);
 	   if (currentProperty == null) {
 		em.persist(property);
@@ -186,7 +184,7 @@ public class ConfigurationManagerBean implements ConfigurationManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.AbstractConfigurationManager#keySet(java.lang.String)
     */
-   public List<ConfigurationProperty> keys(final @PathParam("config") String config) {
+   public List<String> keys(final @PathParam("config") String config) {
 	return keys(config, null);
    }
 
@@ -196,13 +194,23 @@ public class ConfigurationManagerBean implements ConfigurationManager {
     */
    @GET
    @Path("keys")
-   public List<ConfigurationProperty> keys(final @PathParam("config") String config, @QueryParam("prefix") final String prefix) {
-	Set<ConfigurationProperty> properties = new HashSet<ConfigurationProperty>();
-	Set<String> keys = StringHelper.isEmpty(prefix) ? getRegisteredConfiguration(config).keySet() : getRegisteredConfiguration(config).keySet(prefix);
-	for (String key : keys) {
-	   properties.add(findConfigurationPropertyByName(config, key, false));
+   public List<String> keys(final @PathParam("config") String config, @QueryParam("prefix") final String prefix) {
+
+	final List<String> keys = new ArrayList<String>();
+	try {
+	   // first attempt in the registered configuration
+	   keys.addAll(StringHelper.isEmpty(prefix) ? getRegisteredConfiguration(config).keySet() : getRegisteredConfiguration(config).keySet(prefix));
+	} catch (ConfigurationNotFoundException cnfe) {
+	   // second attempt in the databases
+	   String normalizePrefix = !StringHelper.isEmpty(prefix) ? AbstractConfiguration.normalizeKey(prefix) : prefix;
+	   ConfigurationModel model = findConfigurationModelByName(config, true);
+	   for (ConfigurationProperty p : model.getProperties()) {
+		if (!StringHelper.isEmpty(p.getName()) && (StringHelper.isEmpty(prefix) || p.getName().startsWith(normalizePrefix))) {
+		   keys.add(p.getName());
+		}
+	   }
 	}
-	return new ArrayList<ConfigurationProperty>(properties);
+	return keys;
    }
 
    /*
@@ -298,11 +306,11 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 
    /**
     * @param config
-    * @param checkPropExists
+    * @param checkConfigExists
     * @return configuration meta data
-    * @throws ConfigurationNotFoundException
+    * @throws ConfigurationNotFoundException if checkConfigExists is true and if configuration can't be found in current registry
     */
-   protected ConfigurationModel findConfigurationModelByName(final String config, final boolean checkPropExists) throws ConfigurationNotFoundException {
+   protected ConfigurationModel findConfigurationModelByName(final String config, final boolean checkConfigExists) throws ConfigurationNotFoundException {
 
 	ConfigurationModel configurationModel = null;
 
@@ -318,7 +326,7 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 		configurationModel = null;
 	   }
 	}
-	if (checkPropExists) {
+	if (checkConfigExists) {
 	   if (configurationModel == null) { throw new ConfigurationNotFoundException(config); }
 	}
 
@@ -342,7 +350,7 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 	if (em != null) {
 	   // JPA 1.x for jee5 compatibility
 	   Query query = em.createQuery(Query_FindPropertyByName.Jql);
-	   query.setParameter(Query_FindPropertyByName.Parameter_Name, propertyName);
+	   query.setParameter(Query_FindPropertyByName.Parameter_Name, AbstractConfiguration.normalizeKey(propertyName));
 	   query.setParameter(Query_FindPropertyByName.Parameter_ConfigurationName, config);
 
 	   try {
