@@ -15,9 +15,6 @@
  */
 package org.kaleidofoundry.core.config;
 
-import static org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Query_ConfigurationPropertyByName.Jql;
-import static org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Query_ConfigurationPropertyByName.Parameter_ConfigurationName;
-import static org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Query_ConfigurationPropertyByName.Parameter_Name;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ConfigurationMessageBundle;
 import static org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory.KaleidoPersistentContextUnitName;
 
@@ -45,12 +42,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import org.kaleidofoundry.core.config.entity.ConfigurationEntity;
+import org.kaleidofoundry.core.config.entity.ConfigurationModel;
+import org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Query_FindConfigurationByName;
+import org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Query_FindPropertyByName;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
 import org.kaleidofoundry.core.config.entity.FireChangesReport;
 import org.kaleidofoundry.core.lang.annotation.Review;
 import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
-import org.kaleidofoundry.core.lang.annotation.Reviews;
 import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.util.StringHelper;
 
@@ -70,10 +68,8 @@ import org.kaleidofoundry.core.util.StringHelper;
 @Stateless(mappedName = "ejb/configuration")
 @Path("/configurations/{config}")
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-@Reviews(reviews = {
-	@Review(category = ReviewCategoryEnum.ImplementIt, comment = "JPA implementation and tests"),
-	@Review(category = ReviewCategoryEnum.Fixme, comment = "restore 'implements ConfigurationManager which cause a bug' - I open a GF3.x bug for this : GLASSFISH-16199") })
-public class ConfigurationManagerBean { // implements ConfigurationManager {
+@Review(category = ReviewCategoryEnum.Fixme, comment = "restore 'implements ConfigurationManager which cause a bug' - I open a GF3.x bug for this : GLASSFISH-16199")
+public class ConfigurationManagerBean implements ConfigurationManager {
 
    /** injected and used to handle security context */
    @Context
@@ -93,19 +89,18 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     */
    @GET
    @Path("/")
-   public ConfigurationEntity getConfigurationEntity(final @PathParam("config") String config) throws ConfigurationNotFoundException, IllegalStateException {
-	final ConfigurationEntity configurationEntity;
+   public ConfigurationModel getConfigurationEntity(final @PathParam("config") String config) throws ConfigurationNotFoundException, IllegalStateException {
+	final ConfigurationModel configurationModel;
 	if (em == null) {
 	   Configuration configuration = getRegisteredConfiguration(config);
-	   configurationEntity = new ConfigurationEntity(config);
+	   configurationModel = new ConfigurationModel(config);
 	   for (String key : configuration.keySet()) {
-		configurationEntity.getProperties().add(getConfigurationProperty(config, key, false));
+		configurationModel.getProperties().add(findConfigurationPropertyByName(config, key, false));
 	   }
 	} else {
-	   configurationEntity = em.find(ConfigurationEntity.class, config);
-	   if (configurationEntity == null) { throw new ConfigurationNotFoundException(config); }
+	   configurationModel = findConfigurationModelByName(config, true);
 	}
-	return configurationEntity;
+	return configurationModel;
    }
 
    /*
@@ -126,29 +121,46 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     */
    @GET
    @Path("set/{property}")
-   public ConfigurationProperty setPropertyValue(final @PathParam("config") String config, @PathParam("property") final String property,
+   public Serializable setPropertyValue(final @PathParam("config") String config, @PathParam("property") final String property,
 	   @QueryParam("value") final String value) {
-	ConfigurationProperty configProperty = getConfigurationProperty(config, property, false);
-	getRegisteredConfiguration(config).setProperty(property, value);
-	return configProperty;
+	// check that property exists in the model
+	findConfigurationPropertyByName(config, property, true);
+	// get registered configuration and set the property value
+	Configuration configuration = getRegisteredConfiguration(config);
+	Serializable oldValue = configuration.getProperty(property);
+	configuration.setProperty(property, value);
+	return oldValue;
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#getProperty(java.lang.String, java.lang.String)
+    */
    @GET
    @Path("getProperty/{property}")
    public ConfigurationProperty getProperty(final @PathParam("config") String config, final @PathParam("property") String property) {
-	return getConfigurationProperty(config, property, true);
+	return findConfigurationPropertyByName(config, property, true);
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#putProperty(java.lang.String, ConfigurationProperty)
+    */
    @PUT
    @Path("putProperty")
    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
    public void putProperty(final @PathParam("config") String config, final ConfigurationProperty property) {
-	ConfigurationProperty configProperty = getConfigurationProperty(config, property.getName(), false);
-	configProperty.getName();
+	ConfigurationProperty currentProperty = findConfigurationPropertyByName(config, property.getName(), false);
 	// meta data update
 	if (em != null) {
-	   ConfigurationEntity configuration = getConfigurationEntity(config);
+	   ConfigurationModel configuration = getConfigurationEntity(config);
 	   configuration.getProperties().add(property);
+	   if (currentProperty == null) {
+		em.persist(property);
+	   } else {
+		property.setId(currentProperty.getId());
+		em.merge(property);
+	   }
 	   em.persist(configuration);
 	}
    }
@@ -161,13 +173,13 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
    @Path("remove/{property}")
    public void removeProperty(final @PathParam("config") String config, @PathParam("property") final String property) {
 	// throw not found exception if not found
-	ConfigurationProperty entity = getConfigurationProperty(config, property, true);
-	// remove it from store
-	getRegisteredConfiguration(config).removeProperty(property);
-	// remove it from meta data
+	ConfigurationProperty entity = findConfigurationPropertyByName(config, property, true);
+	// remove it from meta data database
 	if (em != null) {
 	   em.remove(em.merge(entity));
 	}
+	// remove it from registered configuration
+	getRegisteredConfiguration(config).removeProperty(property);
    }
 
    /*
@@ -188,7 +200,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 	Set<ConfigurationProperty> properties = new HashSet<ConfigurationProperty>();
 	Set<String> keys = StringHelper.isEmpty(prefix) ? getRegisteredConfiguration(config).keySet() : getRegisteredConfiguration(config).keySet(prefix);
 	for (String key : keys) {
-	   properties.add(getConfigurationProperty(config, key, false));
+	   properties.add(findConfigurationPropertyByName(config, key, false));
 	}
 	return new ArrayList<ConfigurationProperty>(properties);
    }
@@ -253,6 +265,16 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 	getRegisteredConfiguration(config).reload();
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#isLoaded(java.lang.String)
+    */
+   @PUT
+   @Path("isLoaded")
+   public boolean isLoaded(@PathParam("config") final String config) throws ConfigurationNotFoundException {
+	return getRegisteredConfiguration(config).isLoaded();
+   }
+
    // ** private / protected part ***********************************************************************************************
 
    /**
@@ -276,11 +298,42 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 
    /**
     * @param config
+    * @param checkPropExists
+    * @return configuration meta data
+    * @throws ConfigurationNotFoundException
+    */
+   protected ConfigurationModel findConfigurationModelByName(final String config, final boolean checkPropExists) throws ConfigurationNotFoundException {
+
+	ConfigurationModel configurationModel = null;
+
+	// first check in the database model
+	if (em != null) {
+	   // JPA 1.x for jee5 compatibility
+	   Query query = em.createQuery(Query_FindConfigurationByName.Jql);
+	   query.setParameter(Query_FindConfigurationByName.Parameter_ConfigurationName, config);
+
+	   try {
+		configurationModel = (ConfigurationModel) query.getSingleResult();
+	   } catch (NoResultException nre) {
+		configurationModel = null;
+	   }
+	}
+	if (checkPropExists) {
+	   if (configurationModel == null) { throw new ConfigurationNotFoundException(config); }
+	}
+
+	return configurationModel;
+   }
+
+   /**
+    * @param config
     * @param propertyName
     * @param checkPropExists
     * @return property meta data
+    * @throws PropertyNotFoundException
     */
-   protected ConfigurationProperty getConfigurationProperty(final String config, final String propertyName, final boolean checkPropExists) {
+   protected ConfigurationProperty findConfigurationPropertyByName(final String config, final String propertyName, final boolean checkPropExists)
+	   throws PropertyNotFoundException {
 
 	Configuration configuration;
 	ConfigurationProperty property = null;
@@ -288,12 +341,13 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 	// first check in the database model
 	if (em != null) {
 	   // JPA 1.x for jee5 compatibility
-	   Query query = em.createQuery(Jql);
-	   query.setParameter(Parameter_Name, propertyName);
-	   query.setParameter(Parameter_ConfigurationName, config);
+	   Query query = em.createQuery(Query_FindPropertyByName.Jql);
+	   query.setParameter(Query_FindPropertyByName.Parameter_Name, propertyName);
+	   query.setParameter(Query_FindPropertyByName.Parameter_ConfigurationName, config);
 
 	   try {
 		property = (ConfigurationProperty) query.getSingleResult();
+		// property = em.find(ConfigurationProperty.class, property.getId());
 	   } catch (NoResultException nre) {
 		property = null;
 	   }
@@ -307,10 +361,13 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 	   }
 	   Serializable value = configuration.getProperty(propertyName);
 	   Class<?> type = value != null ? value.getClass() : null;
-	   property = new ConfigurationProperty(propertyName, configuration.getString(propertyName), type, "not persistent");
+	   property = new ConfigurationProperty(propertyName, configuration.getString(propertyName), type, DefaultDescription);
 
 	}
 
 	return property;
    }
+
+   /** default property description for a non persistent database property */
+   public static final String DefaultDescription = "<no persistent property description>";
 }

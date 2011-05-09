@@ -18,15 +18,15 @@ package org.kaleidofoundry.core.config.entity;
 /**
  * @author Jerome RADUGET
  */
-public interface ConfigurationEntityConstants {
+public interface ConfigurationModelConstants {
 
-   /** {@link ConfigurationEntity} entity name */
+   /** {@link ConfigurationModel} entity name */
    String Entity_Configuration = "Configuration";
 
    /** {@link ConfigurationProperty} entity name */
    String Entity_Property = "ConfigurationProperty";
 
-   /** {@link ConfigurationEntity} entity table name */
+   /** {@link ConfigurationModel} entity table name */
    String Table_Configuration = "CONFIGURATION";
 
    /** {@link ConfigurationProperty} entity table name */
@@ -36,23 +36,25 @@ public interface ConfigurationEntityConstants {
    String Table_ConfigurationProperties = "CONFIGURATION_PROPERTIES";
 
    /**
-    * Query static final informations
+    * Query static final informations<br/>
+    * Find configuration by name
     */
-   public static interface Query_ConfigurationPropertyByName {
+   public static interface Query_FindConfigurationByName {
+	String Name = "config.findConfigurationByName";
+	String Parameter_ConfigurationName = "configName";
+	String Jql = "SELECT c FROM " + Entity_Configuration + " c WHERE c.name = :" + Parameter_ConfigurationName;
+   }
+
+   /**
+    * Query static final informations<br/>
+    * Find configuration property by name
+    */
+   public static interface Query_FindPropertyByName {
 	String Name = "config.findPropertyByName";
 	String Parameter_ConfigurationName = "configName";
 	String Parameter_Name = "name";
 	String Jql = "SELECT cp FROM " + Entity_Property + " cp JOIN cp.configurations c  WHERE cp.name = :" + Parameter_Name + " AND c.name = :"
 		+ Parameter_ConfigurationName;
    }
-   // SELECT cp FROM ConfigurationProperty cp JOIN Configuration c.properties WHERE cp.name = :name AND c.name = :configName
-   /*
-    * select distinct t
-    * from Trade t
-    * join t.combo c
-    * join c.legs l
-    * join l.exchange e
-    * where e.exchangeShortName = 'whatever'
-    */
 
 }

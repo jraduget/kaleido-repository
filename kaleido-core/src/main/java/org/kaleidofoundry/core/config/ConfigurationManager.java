@@ -21,7 +21,7 @@ import java.util.List;
 import javax.ejb.Local;
 import javax.ejb.Remote;
 
-import org.kaleidofoundry.core.config.entity.ConfigurationEntity;
+import org.kaleidofoundry.core.config.entity.ConfigurationModel;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
 import org.kaleidofoundry.core.config.entity.FireChangesReport;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
@@ -42,7 +42,7 @@ public interface ConfigurationManager {
     * @throws ConfigurationNotFoundException
     * @throws IllegalStateException
     */
-   ConfigurationEntity getConfigurationEntity(@NotNull String config) throws ConfigurationNotFoundException, IllegalStateException;
+   ConfigurationModel getConfigurationEntity(@NotNull String config) throws ConfigurationNotFoundException, IllegalStateException;
 
    /**
     * get the raw property value
@@ -58,16 +58,19 @@ public interface ConfigurationManager {
    Serializable getPropertyValue(@NotNull String config, @NotNull String property) throws ConfigurationNotFoundException, IllegalStateException;
 
    /**
+    * set / define / change the value of a property (but do not persist it. Call {@link #store(String)} to persist its value)
+    * 
     * @param config
     * @param property
-    * @param value
-    * @return the updated property
+    * @param value the new value to set
+    * @return the old property value
     * @throws ConfigurationNotFoundException if configuration can't be found in registry
+    * @throws PropertyNotFoundException if property can't be found in configuration meta model. Call
+    *            {@link #putProperty(String, ConfigurationProperty)} to set a new one
     * @throws IllegalStateException if configuration is not yet loaded
     */
    @NotNull
-   ConfigurationProperty setPropertyValue(@NotNull String config, @NotNull String property, String value) throws ConfigurationNotFoundException,
-	   IllegalStateException;
+   Serializable setPropertyValue(@NotNull String config, @NotNull String property, String value) throws ConfigurationNotFoundException, IllegalStateException;
 
    /**
     * get the property
@@ -83,6 +86,8 @@ public interface ConfigurationManager {
    ConfigurationProperty getProperty(@NotNull String config, @NotNull String property) throws ConfigurationNotFoundException, IllegalStateException;
 
    /**
+    * define and persist a new property in the configuration meta model
+    * 
     * @param config
     * @param property
     * @throws ConfigurationNotFoundException
@@ -174,5 +179,12 @@ public interface ConfigurationManager {
     * @see Configuration#reload()
     */
    void reload(@NotNull String config) throws StoreException;
+
+   /**
+    * @param config
+    * @return <code>true|false</code>
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry
+    */
+   boolean isLoaded(@NotNull String config) throws ConfigurationNotFoundException;
 
 }

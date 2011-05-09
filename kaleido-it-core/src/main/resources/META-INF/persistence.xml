@@ -13,7 +13,7 @@
 		<class>org.kaleidofoundry.core.i18n.entity.I18nMessage</class>
 		<class>org.kaleidofoundry.core.i18n.entity.I18nMessageGroup</class>
 		<class>org.kaleidofoundry.core.i18n.entity.I18nMessageLanguage</class>
-		<class>org.kaleidofoundry.core.config.entity.ConfigurationEntity</class>
+		<class>org.kaleidofoundry.core.config.entity.ConfigurationModel</class>
 		<class>org.kaleidofoundry.core.config.entity.ConfigurationProperty</class>
 
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>

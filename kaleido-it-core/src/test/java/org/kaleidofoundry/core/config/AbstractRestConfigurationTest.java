@@ -97,7 +97,7 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	assertNotNull(response);
 	// assertEquals("myConfig", response.getConfiguration().getName());
 	assertEquals("myapp.name", response.getName());
-	assertEquals("", response.getDescription());
+	assertEquals(ConfigurationManagerBean.DefaultDescription, response.getDescription());
 
 	response = getBaseResource().path("getProperty").path("myapp.sample.float").accept(getMedia().getType()).get(ConfigurationProperty.class);
 	System.out.println(response);
@@ -227,7 +227,7 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	ConfigurationProperty property = getBaseResource().path("getProperty").path("myapp.name").accept(getMedia().getType()).get(ConfigurationProperty.class);
 	assertNotNull(property);
 	assertEquals("myapp.name", property.getName());
-	assertEquals("", property.getDescription());
+	assertEquals(ConfigurationManagerBean.DefaultDescription, property.getDescription());
 
 	// update an exiting property
 	ClientResponse response = getBaseResource().path("putProperty").accept(getMedia().getType())

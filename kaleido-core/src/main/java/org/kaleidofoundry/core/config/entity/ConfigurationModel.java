@@ -15,9 +15,9 @@
  */
 package org.kaleidofoundry.core.config.entity;
 
-import static org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Entity_Configuration;
-import static org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Table_Configuration;
-import static org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Table_ConfigurationProperties;
+import static org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Entity_Configuration;
+import static org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Table_Configuration;
+import static org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Table_ConfigurationProperties;
 import static org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum.Improvement;
 
 import java.io.Serializable;
@@ -55,7 +55,7 @@ import org.kaleidofoundry.core.lang.annotation.Review;
 @XmlRootElement(name = "configuration")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Review(comment = "Audit information (locale zone for the date, user information...)", category = Improvement)
-public class ConfigurationEntity implements Serializable {
+public class ConfigurationModel implements Serializable {
 
    private static final long serialVersionUID = -2875384104892173181L;
 
@@ -72,21 +72,21 @@ public class ConfigurationEntity implements Serializable {
    private String description;
    @XmlElementWrapper(name = "properties")
    @XmlElement(name = "property")
-   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
    @JoinTable(name = Table_ConfigurationProperties, joinColumns = @JoinColumn(name = "CONFIGURATION_ID"), inverseJoinColumns = @JoinColumn(name = "PROPERTY_ID"))
    private Set<ConfigurationProperty> properties;
    @Version
    @XmlTransient
    Integer version;
 
-   public ConfigurationEntity() {
+   public ConfigurationModel() {
 	this(null);
    }
 
    /**
     * @param name
     */
-   public ConfigurationEntity(final String name) {
+   public ConfigurationModel(final String name) {
 	this(name, null, null);
    }
 
@@ -94,7 +94,7 @@ public class ConfigurationEntity implements Serializable {
     * @param name
     * @param uri
     */
-   public ConfigurationEntity(final String name, final String uri) {
+   public ConfigurationModel(final String name, final String uri) {
 	this(name, uri, null);
    }
 
@@ -103,7 +103,7 @@ public class ConfigurationEntity implements Serializable {
     * @param uri
     * @param description
     */
-   public ConfigurationEntity(final String name, final String uri, final String description) {
+   public ConfigurationModel(final String name, final String uri, final String description) {
 	super();
 	this.name = name;
 	this.uri = uri;
@@ -201,8 +201,8 @@ public class ConfigurationEntity implements Serializable {
    public boolean equals(final Object obj) {
 	if (this == obj) { return true; }
 	if (obj == null) { return false; }
-	if (!(obj instanceof ConfigurationEntity)) { return false; }
-	ConfigurationEntity other = (ConfigurationEntity) obj;
+	if (!(obj instanceof ConfigurationModel)) { return false; }
+	ConfigurationModel other = (ConfigurationModel) obj;
 	if (uri == null) {
 	   if (other.uri != null) { return false; }
 	} else if (!uri.equals(other.uri)) { return false; }

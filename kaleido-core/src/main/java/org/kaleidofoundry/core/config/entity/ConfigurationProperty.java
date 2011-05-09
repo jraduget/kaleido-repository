@@ -15,8 +15,8 @@
  */
 package org.kaleidofoundry.core.config.entity;
 
-import static org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Entity_Property;
-import static org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Table_Property;
+import static org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Entity_Property;
+import static org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Table_Property;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -37,16 +37,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-import org.kaleidofoundry.core.config.entity.ConfigurationEntityConstants.Query_ConfigurationPropertyByName;
+import org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Query_FindPropertyByName;
 import org.kaleidofoundry.core.lang.annotation.Review;
 
 /**
+ * Meta model of a configuration property
+ * 
  * @author Jerome RADUGET
  */
 @Entity(name = Entity_Property)
 // @Access(AccessType.PROPERTY)
 @Table(name = Table_Property)
-@NamedQueries({ @NamedQuery(name = Query_ConfigurationPropertyByName.Name, query = Query_ConfigurationPropertyByName.Jql) })
+@NamedQueries({ @NamedQuery(name = Query_FindPropertyByName.Name, query = Query_FindPropertyByName.Jql) })
 @XmlRootElement(name = "property")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "id", "name", "value", "type", "description" })
@@ -62,7 +64,7 @@ public class ConfigurationProperty implements Serializable {
    private String name;
    @XmlTransient
    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "properties")
-   private Set<ConfigurationEntity> configurations;
+   private Set<ConfigurationModel> configurations;
    private String value;
    private String type;
    private String description;
@@ -111,7 +113,7 @@ public class ConfigurationProperty implements Serializable {
    /**
     * @return the configuration of the property
     */
-   public Set<ConfigurationEntity> getConfigurations() {
+   public Set<ConfigurationModel> getConfigurations() {
 	return configurations;
    }
 
@@ -139,7 +141,7 @@ public class ConfigurationProperty implements Serializable {
    /**
     * @param configurations the configuration to set
     */
-   public void setConfigurations(final Set<ConfigurationEntity> configurations) {
+   public void setConfigurations(final Set<ConfigurationModel> configurations) {
 	this.configurations = configurations;
    }
 

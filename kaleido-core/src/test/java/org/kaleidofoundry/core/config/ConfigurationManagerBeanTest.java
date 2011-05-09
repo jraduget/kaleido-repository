@@ -15,6 +15,7 @@
  */
 package org.kaleidofoundry.core.config;
 
+import java.io.Serializable;
 import java.util.HashSet;
 
 import javax.persistence.EntityManager;
@@ -26,7 +27,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.kaleidofoundry.core.config.entity.ConfigurationEntity;
+import org.kaleidofoundry.core.config.entity.ConfigurationModel;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 import org.slf4j.Logger;
@@ -35,11 +36,14 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Jerome RADUGET
  */
-public class ConfigurationManagerJpaTest extends Assert {
+public class ConfigurationManagerBeanTest extends Assert {
 
-   private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationManagerJpaTest.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationManagerBeanTest.class);
 
    private static EntityManagerFactory emf;
+
+   private static final String MyConfigurationName = "myNamedConfig";
+   private static final String MyConfigurationUri = "classpath:/config/myNamedConfig.properties";
 
    /**
     * create a database with mocked data
@@ -61,18 +65,31 @@ public class ConfigurationManagerJpaTest extends Assert {
 
 	   et.begin();
 
-	   ConfigurationEntity entity = new ConfigurationEntity();
-	   entity.setUri("file:/host/path");
-	   entity.setName("myNamedConfig");
-	   entity.setDescription("description");
-	   entity.setProperties(new HashSet<ConfigurationProperty>());
+	   // create configuration meta model
+	   ConfigurationModel configurationModel = new ConfigurationModel();
+	   configurationModel.setUri(MyConfigurationUri);
+	   configurationModel.setName(MyConfigurationName);
+	   configurationModel.setDescription("description");
+	   configurationModel.setProperties(new HashSet<ConfigurationProperty>());
 
-	   entity.getProperties().add(new ConfigurationProperty("key01", "value01", String.class, "descr01"));
-	   entity.getProperties().add(new ConfigurationProperty("key02", "123.45", Float.class, "descr02"));
+	   ConfigurationProperty property;
 
-	   em.merge(entity);
+	   property = new ConfigurationProperty("key01", "value01", String.class, "descr01");
+	   em.persist(property);
+	   configurationModel.getProperties().add(property);
+
+	   property = new ConfigurationProperty("key02", "123.45", Float.class, "descr02");
+	   em.persist(property);
+	   configurationModel.getProperties().add(property);
+
+	   em.persist(configurationModel);
+
+	   em.flush();
 
 	   et.commit();
+
+	   // register configuration
+	   ConfigurationFactory.provides(MyConfigurationName, MyConfigurationUri);
 
 	} catch (final RuntimeException re) {
 	   LOGGER.error("static setup", re);
@@ -99,17 +116,139 @@ public class ConfigurationManagerJpaTest extends Assert {
    }
 
    @Test
+   public void notFoundConfiguration() {
+	try {
+	   configurationManager.getConfigurationEntity("unknown");
+	   fail();
+	} catch (ConfigurationNotFoundException cnfe) {
+	}
+   }
+
+   @Test
    public void getProperty() throws ClassNotFoundException {
-	ConfigurationProperty property = configurationManager.getProperty("myNamedConfig", "key02");
+	try {
+	   configurationManager.getPropertyValue(MyConfigurationName, "unknown");
+	   fail();
+	} catch (PropertyNotFoundException pnfe) {
+	}
+
+	ConfigurationProperty property = configurationManager.getProperty(MyConfigurationName, "key01");
+	assertNotNull(property);
+	assertNotNull(property.getId());
+	assertEquals("key01", property.getName());
+	assertEquals("descr01", property.getDescription());
+	assertEquals(String.class, property.getType());
+	assertEquals("value01", property.getValue());
+	assertNotNull(property.getConfigurations());
+	assertEquals(1, property.getConfigurations().size());
+   }
+
+   @Test
+   public void getPropertyValue() throws ClassNotFoundException {
+	try {
+	   configurationManager.getPropertyValue(MyConfigurationName, "unknown");
+	   fail();
+	} catch (PropertyNotFoundException pnfe) {
+	}
+	ConfigurationProperty property = configurationManager.getProperty(MyConfigurationName, "key02");
 	assertNotNull(property);
 	assertNotNull(property.getId());
 	assertEquals("key02", property.getName());
 	assertEquals("descr02", property.getDescription());
 	assertEquals(Float.class, property.getType());
 	assertEquals("123.45", property.getValue());
-
 	assertNotNull(property.getConfigurations());
 	assertEquals(1, property.getConfigurations().size());
+   }
 
+   @Test
+   public void setPropertyValue() {
+	try {
+	   configurationManager.setPropertyValue(MyConfigurationName, "unknown", "");
+	   fail();
+	} catch (PropertyNotFoundException pnfe) {
+	}
+	Serializable oldValue = configurationManager.setPropertyValue(MyConfigurationName, "key02", "678.9");
+	assertNotNull(oldValue);
+	assertEquals("123.45", oldValue);
+	assertEquals("678.9", configurationManager.getPropertyValue(MyConfigurationName, "key02"));
+
+	// store have not been called, check that property value don't change in the persistence layer
+	ConfigurationProperty property = configurationManager.getProperty(MyConfigurationName, "key02");
+	assertNotNull(property);
+	assertEquals("123.45", property.getValue());
+   }
+
+   @Test
+   public void putProperty() throws ClassNotFoundException {
+
+	try {
+	   configurationManager.getProperty(MyConfigurationName, "newKey");
+	   fail();
+	} catch (PropertyNotFoundException pnfe) {
+	}
+
+	ConfigurationProperty property = new ConfigurationProperty("newKey", "newValue", String.class, "newDescription");
+	assertNull(property.getId());
+	configurationManager.putProperty(MyConfigurationName, property);
+
+	property = configurationManager.getProperty(MyConfigurationName, "newKey");
+	assertNotNull(property);
+	assertNotNull(property.getId());
+	assertEquals("newKey", property.getName());
+	assertEquals("newDescription", property.getDescription());
+	assertEquals(String.class, property.getType());
+	assertEquals("newValue", property.getValue());
+	assertNotNull(property.getConfigurations());
+
+	// clean
+	configurationManager.removeProperty(MyConfigurationName, "newKey");
+
+   }
+
+   @Test
+   public void removeProperty() {
+
+	try {
+	   configurationManager.removeProperty(MyConfigurationName, "unknown");
+	   fail();
+	} catch (PropertyNotFoundException pnfe) {
+	}
+
+	assertFalse(configurationManager.keys(MyConfigurationName).contains("newKey"));
+
+	ConfigurationProperty property = new ConfigurationProperty("newKey", "newValue", String.class, "newDescription");
+	assertNull(property.getId());
+	configurationManager.putProperty(MyConfigurationName, property);
+
+	assertTrue(configurationManager.keys(MyConfigurationName).contains("newKey"));
+	assertEquals(3, configurationManager.keys(MyConfigurationName));
+
+	configurationManager.removeProperty(MyConfigurationName, "newKey");
+
+	assertFalse(configurationManager.keys(MyConfigurationName).contains("newKey"));
+	assertEquals(2, configurationManager.keys(MyConfigurationName));
+   }
+
+   @Test
+   public void keys() {
+
+	try {
+	   configurationManager.keys("unknown");
+	   fail();
+	} catch (ConfigurationNotFoundException cnfe) {
+	}
+
+	assertNotNull(configurationManager.keys(MyConfigurationName));
+	assertTrue(configurationManager.keys(MyConfigurationName).contains("key01"));
+	assertTrue(configurationManager.keys(MyConfigurationName).contains("key02"));
+	assertEquals(2, configurationManager.keys(MyConfigurationName));
+   }
+
+   @Test
+   public void containsKey() {
+	assertTrue(configurationManager.keys(MyConfigurationName).contains("key01"));
+	assertTrue(configurationManager.keys(MyConfigurationName).contains("key02"));
+	assertFalse(configurationManager.keys(MyConfigurationName).contains("key03"));
    }
 }

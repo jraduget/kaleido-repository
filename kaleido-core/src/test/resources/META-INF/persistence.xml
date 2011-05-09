@@ -11,7 +11,7 @@
 		<class>org.kaleidofoundry.core.i18n.entity.I18nMessage</class>
 		<class>org.kaleidofoundry.core.i18n.entity.I18nMessageGroup</class>
 		<class>org.kaleidofoundry.core.i18n.entity.I18nMessageLanguage</class>		
-		<class>org.kaleidofoundry.core.config.entity.ConfigurationEntity</class>
+		<class>org.kaleidofoundry.core.config.entity.ConfigurationModel</class>
 		<class>org.kaleidofoundry.core.config.entity.ConfigurationProperty</class>
 		
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
@@ -23,7 +23,8 @@
 			<property name="javax.persistence.jdbc.password" value="APP" />
 			<property name="eclipselink.target-database" value="Derby" />
 			
-			<property name="eclipselink.logging.level" value="FINE" />
+			<property name="eclipselink.logging.level" value="FINEST" />
+			<property name="eclipselink.logging.level.sql" value="FINEST" />
 			<property name="eclipselink.logging.timestamp" value="false" />
 			<property name="eclipselink.logging.session" value="false" />
 			<property name="eclipselink.logging.thread" value="false" />
