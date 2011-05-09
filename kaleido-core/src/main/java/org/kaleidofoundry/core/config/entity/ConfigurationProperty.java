@@ -19,6 +19,7 @@ import static org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.
 import static org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Table_Property;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -108,6 +109,7 @@ public class ConfigurationProperty implements Serializable {
 	this.description = description;
 	this.value = value;
 	this.type = type != null ? type.getName() : null;
+	this.configurations = new HashSet<ConfigurationModel>();
    }
 
    /**

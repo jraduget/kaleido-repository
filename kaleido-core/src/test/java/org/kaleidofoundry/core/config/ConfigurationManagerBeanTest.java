@@ -75,11 +75,11 @@ public class ConfigurationManagerBeanTest extends Assert {
 	   ConfigurationProperty property;
 
 	   property = new ConfigurationProperty("key01", "value01", String.class, "descr01");
-	   em.persist(property);
+	   property.getConfigurations().add(configurationModel);
 	   configurationModel.getProperties().add(property);
 
 	   property = new ConfigurationProperty("key02", "123.45", Float.class, "descr02");
-	   em.persist(property);
+	   property.getConfigurations().add(configurationModel);
 	   configurationModel.getProperties().add(property);
 
 	   em.persist(configurationModel);
