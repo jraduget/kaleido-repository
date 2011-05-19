@@ -33,12 +33,12 @@ import org.kaleidofoundry.core.config.ConfigurationRegistry;
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.lang.annotation.Review;
-import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
+import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginHelper;
-import org.kaleidofoundry.core.util.AbstractSerializer;
+import org.kaleidofoundry.core.util.AbstractPropertyAccessor;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -158,8 +158,8 @@ import org.kaleidofoundry.core.util.StringHelper;
  */
 @Immutable(comment = "instance which have been injected using @Context are immutable after injection")
 @ThreadSafe
-@Review(comment = "comment and review interaction between configuration and runtime context... use case, creation, event handling... have to be thread safe...", category = ReviewCategoryEnum.Todo)
-public class RuntimeContext<T> extends AbstractSerializer {
+@Task(comment = "comment and review interaction between configuration and runtime context... use case, creation, event handling... have to be thread safe...", labels = TaskLabel.Review)
+public class RuntimeContext<T> extends AbstractPropertyAccessor {
 
    /** Context property name, used to enable the component listening of configuration parameters changes */
    public static final String Dynamics = "dynamics";

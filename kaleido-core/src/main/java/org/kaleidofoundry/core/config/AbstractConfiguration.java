@@ -51,15 +51,15 @@ import org.kaleidofoundry.core.context.ContextEmptyParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.lang.annotation.Review;
-import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
+import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.kaleidofoundry.core.store.FileHandler;
 import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.FileStoreFactory;
 import org.kaleidofoundry.core.store.SingleFileStore;
 import org.kaleidofoundry.core.store.StoreException;
-import org.kaleidofoundry.core.util.AbstractSerializer;
+import org.kaleidofoundry.core.util.AbstractPropertyAccessor;
 import org.kaleidofoundry.core.util.ConverterHelper;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
@@ -76,8 +76,8 @@ import org.slf4j.LoggerFactory;
  */
 @Immutable
 @ThreadSafe
-@Review(comment = "bootstrap load for classpath or file uri configuration which can defined a specific cacheManagerRef or resourceStorageRef, ... which is not yet loaded at build time", category = ReviewCategoryEnum.Fixme)
-public abstract class AbstractConfiguration extends AbstractSerializer implements Configuration {
+@Task(comment = "bootstrap load for classpath or file uri configuration which can defined a specific cacheManagerRef or resourceStorageRef, ... which is not yet loaded at build time", labels = TaskLabel.Defect)
+public abstract class AbstractConfiguration extends AbstractPropertyAccessor implements Configuration {
 
    protected static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
 

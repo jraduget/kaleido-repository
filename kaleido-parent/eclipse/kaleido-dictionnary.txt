@@ -9,3 +9,4 @@ classpath
 guice
 serializable
 locale
+deserialize

@@ -31,7 +31,7 @@ import javax.persistence.PersistenceContext;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.store.entity.FileHandlerEntity;
 import org.kaleidofoundry.core.util.StringHelper;
@@ -43,7 +43,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * @see FileStoreContextBuilder enum of context configuration properties available
  */
 @Declare(ClobJpaStorePluginName)
-@Review(comment = "Annotate it as @Stateless ejb to enable ejb exposition + injection - import right ejb 3.x library - problem : coupling it to ejb3")
+@Task(comment = "Annotate it as @Stateless ejb to enable ejb exposition + injection - import right ejb 3.x library - problem : coupling it to ejb3")
 public class JpaFileStore extends AbstractFileStore implements FileStore {
 
    @PersistenceContext(unitName = KaleidoPersistentContextUnitName)

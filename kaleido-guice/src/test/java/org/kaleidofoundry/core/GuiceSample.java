@@ -19,7 +19,7 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.store.GuiceClasspathFileStore;
 import org.kaleidofoundry.core.store.GuiceFtpStore;
 import org.kaleidofoundry.core.store.GuiceHttpFileStore;
@@ -38,7 +38,7 @@ import com.google.inject.name.Names;
 /**
  * @author Jerome RADUGET
  */
-@Review(comment = "provider , bindConstant")
+@Task(comment = "provider , bindConstant")
 public class GuiceSample extends Assert {
 
    private Injector injector;

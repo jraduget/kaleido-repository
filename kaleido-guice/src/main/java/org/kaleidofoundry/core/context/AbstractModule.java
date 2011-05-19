@@ -22,8 +22,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.aopalliance.intercept.MethodInterceptor;
-import org.kaleidofoundry.core.lang.annotation.Review;
-import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
+import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginFactory;
@@ -52,7 +52,7 @@ import com.google.inject.name.Names;
  * @author Jerome RADUGET
  * @param <T>
  */
-@Review(comment = "providers for RuntimeContext", category = ReviewCategoryEnum.Todo)
+@Task(comment = "providers for RuntimeContext", labels = TaskLabel.ImplementIt)
 public abstract class AbstractModule<T> extends com.google.inject.AbstractModule {
 
    static final Logger LOGGER = LoggerFactory.getLogger(AbstractModule.class);

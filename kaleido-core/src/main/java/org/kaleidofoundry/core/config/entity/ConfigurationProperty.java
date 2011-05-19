@@ -31,6 +31,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -40,7 +41,9 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.kaleidofoundry.core.config.AbstractConfiguration;
 import org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Query_FindPropertyByName;
-import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.util.PrimitiveTypeToStringSerializer;
+import org.kaleidofoundry.core.util.ToStringSerializer;
 
 /**
  * Meta model of a configuration property
@@ -54,7 +57,7 @@ import org.kaleidofoundry.core.lang.annotation.Review;
 @XmlRootElement(name = "property")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "id", "name", "value", "type", "description" })
-@Review(comment = "Audit information (locale zone for the date, user information...)")
+@Task(comment = "Audit information (locale zone for the date, user information...)")
 public class ConfigurationProperty implements Serializable {
 
    private static final long serialVersionUID = 2271419559641887975L;
@@ -73,6 +76,9 @@ public class ConfigurationProperty implements Serializable {
    @Version
    @XmlTransient
    Integer version;
+   @Transient
+   @XmlTransient
+   private final ToStringSerializer serializer;
 
    /**
     * 
@@ -104,13 +110,14 @@ public class ConfigurationProperty implements Serializable {
     * @param type property type
     * @param description optional description
     */
-   public ConfigurationProperty(final String name, final String value, final Class<?> type, final String description) {
+   public ConfigurationProperty(final String name, final Serializable value, final Class<?> type, final String description) {
 	super();
 	setName(name);
 	setDescription(description);
 	setValue(value);
 	this.type = type != null ? type.getName() : null;
 	this.configurations = new HashSet<ConfigurationModel>();
+	this.serializer = new PrimitiveTypeToStringSerializer();
    }
 
    /**
@@ -177,27 +184,36 @@ public class ConfigurationProperty implements Serializable {
     * @return the property value
     */
    public Serializable getValue() {
-	return value;
+	return serializer.deserialize(value, getType());
    }
 
    /**
     * @param value the property value to set
     */
-   public void setValue(final String value) {
-	this.value = value;
+   public <T extends Serializable> void setValue(final T value) {
+	Class<T> type = getType();
+	if (type != null) {
+	   this.value = serializer.serialize(value, type);
+	}
    }
 
    /**
     * @return the property type
     */
-   public Class<?> getType() throws ClassNotFoundException {
-	return Class.forName(type);
+   @SuppressWarnings("unchecked")
+   public <T extends Serializable> Class<T> getType() {
+	if (type == null) { return null; }
+	try {
+	   return (Class<T>) Class.forName(type);
+	} catch (ClassNotFoundException cnfe) {
+	   throw new IllegalStateException(cnfe);
+	}
    }
 
    /**
     * @param type the property type
     */
-   public void setType(final Class<?> type) {
+   public <T extends Serializable> void setType(final Class<T> type) {
 	this.type = type != null ? type.getName() : null;
    }
 

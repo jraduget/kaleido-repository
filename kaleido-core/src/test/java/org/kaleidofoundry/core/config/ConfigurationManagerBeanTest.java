@@ -78,7 +78,7 @@ public class ConfigurationManagerBeanTest extends Assert {
 	   property.getConfigurations().add(configurationModel);
 	   configurationModel.getProperties().add(property);
 
-	   property = new ConfigurationProperty("//key02", "123.45", Float.class, "descr02");
+	   property = new ConfigurationProperty("//key02", 123.45f, Float.class, "descr02");
 	   property.getConfigurations().add(configurationModel);
 	   configurationModel.getProperties().add(property);
 
@@ -116,16 +116,25 @@ public class ConfigurationManagerBeanTest extends Assert {
    }
 
    @Test
-   public void notFoundConfiguration() {
+   public void getConfigurationModel() {
 	try {
 	   configurationManager.getConfigurationModel("unknown");
 	   fail();
 	} catch (ConfigurationNotFoundException cnfe) {
 	}
+
+	ConfigurationModel configModel = configurationManager.getConfigurationModel(MyConfigurationName);
+	assertNotNull(configModel);
+	assertNotNull(configModel.getId());
+	assertEquals(MyConfigurationName, configModel.getName());
+	assertEquals("description", configModel.getDescription());
+	assertEquals(MyConfigurationUri, configModel.getUri());
+	assertNotNull(configModel.getProperties());
+	assertEquals(2, configModel.getProperties().size());
    }
 
    @Test
-   public void getProperty() throws ClassNotFoundException {
+   public void getProperty() {
 	try {
 	   configurationManager.getPropertyValue(MyConfigurationName, "//unknown");
 	   fail();
@@ -144,7 +153,7 @@ public class ConfigurationManagerBeanTest extends Assert {
    }
 
    @Test
-   public void getPropertyValue() throws ClassNotFoundException {
+   public void getPropertyValue() {
 	try {
 	   configurationManager.getPropertyValue(MyConfigurationName, "unknown");
 	   fail();
@@ -156,7 +165,7 @@ public class ConfigurationManagerBeanTest extends Assert {
 	assertEquals("//key02", property.getName());
 	assertEquals("descr02", property.getDescription());
 	assertEquals(Float.class, property.getType());
-	assertEquals("123.45", property.getValue());
+	assertEquals(123.45f, property.getValue());
 	assertNotNull(property.getConfigurations());
 	assertEquals(1, property.getConfigurations().size());
    }
@@ -168,19 +177,19 @@ public class ConfigurationManagerBeanTest extends Assert {
 	   fail();
 	} catch (PropertyNotFoundException pnfe) {
 	}
-	Serializable oldValue = configurationManager.setPropertyValue(MyConfigurationName, "//key02", "678.9");
+	Serializable oldValue = configurationManager.setPropertyValue(MyConfigurationName, "//key02", 678.9f);
 	assertNotNull(oldValue);
-	assertEquals("123.45", oldValue);
-	assertEquals("678.9", configurationManager.getPropertyValue(MyConfigurationName, "//key02"));
+	assertEquals(123.45f, oldValue);
+	assertEquals(678.9f, configurationManager.getPropertyValue(MyConfigurationName, "//key02"));
 
 	// store have not been called, check that property value don't change in the persistence layer
 	ConfigurationProperty property = configurationManager.getProperty(MyConfigurationName, "//key02");
 	assertNotNull(property);
-	assertEquals("123.45", property.getValue());
+	assertEquals(123.45f, property.getValue());
    }
 
    @Test
-   public void putProperty() throws ClassNotFoundException {
+   public void putProperty() {
 
 	try {
 	   configurationManager.getProperty(MyConfigurationName, "//newKey");
@@ -248,8 +257,14 @@ public class ConfigurationManagerBeanTest extends Assert {
 
    @Test
    public void containsKey() {
-	assertTrue(configurationManager.keys(MyConfigurationName).contains("//key01"));
-	assertTrue(configurationManager.keys(MyConfigurationName).contains("//key02"));
-	assertFalse(configurationManager.keys(MyConfigurationName).contains("//key03"));
+	assertTrue(configurationManager.containsKey(MyConfigurationName, "//key01"));
+	assertTrue(configurationManager.containsKey(MyConfigurationName, "//key02"));
+	assertFalse(configurationManager.containsKey(MyConfigurationName, "//key03"));
    }
+
+   @Test
+   public void store() {
+	fail("TODO");
+   }
+
 }

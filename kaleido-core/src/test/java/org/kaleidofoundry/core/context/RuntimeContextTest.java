@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
-import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.FileStoreConstants;
@@ -32,7 +32,7 @@ import org.kaleidofoundry.core.store.FileStoreConstants;
 /**
  * @author Jerome RADUGET
  */
-@Review(comment = "test parameters builder priority to configuration")
+@Task(comment = "test parameters builder priority to configuration")
 public class RuntimeContextTest extends Assert {
 
    private static final String TomcatContextName = "tomcat";

@@ -18,10 +18,12 @@ package org.kaleidofoundry.core.config.entity;
 import static org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Entity_Configuration;
 import static org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Table_Configuration;
 import static org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Table_ConfigurationProperties;
-import static org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum.Improvement;
+import static org.kaleidofoundry.core.lang.annotation.TaskLabel.Enhancement;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -44,7 +46,7 @@ import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.Task;
 
 /**
  * @author Jerome RADUGET
@@ -54,7 +56,7 @@ import org.kaleidofoundry.core.lang.annotation.Review;
 @Table(name = Table_Configuration, uniqueConstraints = { @UniqueConstraint(columnNames = { "NAME" }), @UniqueConstraint(columnNames = { "URI" }) })
 @XmlRootElement(name = "configuration")
 @XmlAccessorType(XmlAccessType.FIELD)
-@Review(comment = "Audit information (locale zone for the date, user information...)", category = Improvement)
+@Task(comment = "Audit information (locale zone for the date, user information...)", labels = Enhancement)
 public class ConfigurationModel implements Serializable {
 
    private static final long serialVersionUID = -2875384104892173181L;
@@ -179,6 +181,19 @@ public class ConfigurationModel implements Serializable {
     */
    public void setProperties(final Set<ConfigurationProperty> properties) {
 	this.properties = properties;
+   }
+
+   /**
+    * @return properties by name
+    */
+   public Map<String, ConfigurationProperty> getPropertiesByName() {
+	Map<String, ConfigurationProperty> map = new HashMap<String, ConfigurationProperty>();
+	if (properties != null) {
+	   for (ConfigurationProperty cp : properties) {
+		map.put(cp.getName(), cp);
+	   }
+	}
+	return map;
    }
 
    /*

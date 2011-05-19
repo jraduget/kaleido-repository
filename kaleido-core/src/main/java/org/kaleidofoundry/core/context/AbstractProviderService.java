@@ -27,9 +27,9 @@ import org.kaleidofoundry.core.config.ConfigurationAdapter;
 import org.kaleidofoundry.core.config.ConfigurationChangeEvent;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.config.ConfigurationListener;
-import org.kaleidofoundry.core.lang.annotation.Review;
-import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
-import org.kaleidofoundry.core.lang.annotation.Reviews;
+import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.lang.annotation.TaskLabel;
+import org.kaleidofoundry.core.lang.annotation.Tasks;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginHelper;
@@ -42,9 +42,9 @@ import org.kaleidofoundry.core.plugin.PluginHelper;
  * @param <T>
  */
 @ThreadSafe
-@Reviews(reviews = {
-	@Review(category = ReviewCategoryEnum.Refactor, comment = "use singletons annotation information and move default registry instance here ?"),
-	@Review(category = ReviewCategoryEnum.Refactor, comment = "create default method introspection which provide instance") })
+@Tasks(tasks = {
+	@Task(labels = TaskLabel.Enhancement, comment = "use singletons annotation information and move default registry instance here ?"),
+	@Task(labels = TaskLabel.Enhancement, comment = "create default method introspection which provide instance") })
 public abstract class AbstractProviderService<T> implements ProviderService<T> {
 
    protected final Class<T> genericClassInterface;

@@ -30,9 +30,6 @@ import javax.rmi.PortableRemoteObject;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.lang.annotation.Review;
-import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
-import org.kaleidofoundry.core.lang.annotation.Reviews;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
@@ -44,7 +41,6 @@ import org.slf4j.LoggerFactory;
  * @author Jerome RADUGET
  */
 @Declare(value = JndiNamingPluginName, description = "jndi naming service implementation")
-@Reviews(reviews = { @Review(category = ReviewCategoryEnum.Improvement, comment = "fail over on client side with context property : failover.enabled ; failover.waiting ; failover.maxretry ; home cache ") })
 public class JndiNamingService implements NamingService {
 
    protected static final Logger logger = LoggerFactory.getLogger(JndiNamingService.class);

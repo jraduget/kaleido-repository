@@ -22,26 +22,30 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Review annotation, like a to do, but can be processing by an annotation processor to build listing / report
+ * The task annotation is like a "to do"<br/>
+ * The advantage : it can be processing by an annotation processor to build listing / report
  * 
  * @author Jerome RADUGET
  */
 @Documented
-@Target( { ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.ANNOTATION_TYPE, ElementType.PACKAGE, ElementType.PARAMETER,
+@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.ANNOTATION_TYPE, ElementType.PACKAGE, ElementType.PARAMETER,
 	ElementType.FIELD, ElementType.LOCAL_VARIABLE })
 @Retention(RetentionPolicy.SOURCE)
-public @interface Review {
+public @interface Task {
 
-   /** @return comment of the code review */
+   /** @return a bug tracker code */
+   String code() default "";
+
+   /** @return a description of the task */
    String comment() default "";
 
-   /** @return author of the review comment */
+   /** @return labels of the task */
+   TaskLabel[] labels() default TaskLabel.ImplementIt;
+
+   /** @return the author of the task */
    String author() default "";
 
-   /** @return assignee developer for the review */
+   /** @return the assignee for the task */
    String assignee() default "";
-
-   /** @return review category */
-   ReviewCategoryEnum category() default ReviewCategoryEnum.Todo;
 
 }

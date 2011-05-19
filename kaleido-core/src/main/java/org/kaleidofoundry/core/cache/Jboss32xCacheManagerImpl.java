@@ -30,8 +30,8 @@ import org.jboss.cache.config.ConfigurationException;
 import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.lang.annotation.Review;
-import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
+import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
@@ -149,7 +149,7 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
     * @see org.kaleidofoundry.core.cache.CacheFactory#clearStatistics(java.lang.String)
     */
    @Override
-   @Review(category = ReviewCategoryEnum.Todo)
+   @Task(labels = TaskLabel.ImplementIt)
    public void clearStatistics(final String cacheName) {
    }
 
@@ -158,7 +158,7 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
     * @see org.kaleidofoundry.core.cache.CacheFactory#dumpStatistics(java.lang.String)
     */
    @Override
-   @Review(comment = "http://www.redhat.com/docs/manuals/jboss/jboss-eap-4.3/doc/cache/Tree_Cache_Guide/Management_Information-JBoss_Cache_Statistics.html", category = ReviewCategoryEnum.Todo)
+   @Task(comment = "http://www.redhat.com/docs/manuals/jboss/jboss-eap-4.3/doc/cache/Tree_Cache_Guide/Management_Information-JBoss_Cache_Statistics.html", labels = TaskLabel.ImplementIt)
    public Map<String, Object> dumpStatistics(final String cacheName) {
 	return new LinkedHashMap<String, Object>();
    }

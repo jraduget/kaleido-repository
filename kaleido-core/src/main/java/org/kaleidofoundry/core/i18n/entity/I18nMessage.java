@@ -17,7 +17,7 @@ package org.kaleidofoundry.core.i18n.entity;
 
 import static org.kaleidofoundry.core.i18n.entity.I18nMessageConstants.DefaultMessageGroup;
 import static org.kaleidofoundry.core.i18n.entity.I18nMessageConstants.Table_I18nMessage;
-import static org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum.Improvement;
+import static org.kaleidofoundry.core.lang.annotation.TaskLabel.Enhancement;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -40,7 +40,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
-import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.lang.annotation.Tasks;
 
 /**
  * An i18n message, bind to :
@@ -55,7 +56,8 @@ import org.kaleidofoundry.core.lang.annotation.Review;
 @Entity
 // @Access(AccessType.PROPERTY)
 @Table(name = Table_I18nMessage, uniqueConstraints = { @UniqueConstraint(columnNames = { "CODE", "GROUP_CODE" }) })
-@Review(comment = "Audit information (locale zone for the date, user information...)", category = Improvement)
+@Tasks(tasks = { @Task(comment = "Replace group 0-1 by labels 0-n associations ", labels = Enhancement),
+	@Task(comment = "Audit information (locale zone for the date, user information...)", labels = Enhancement) })
 public class I18nMessage implements Serializable {
 
    private static final long serialVersionUID = 1585648396936219771L;

@@ -35,7 +35,7 @@ import javax.ws.rs.core.MediaType;
 import mazz.i18n.annotation.I18NMessage;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.Task;
 
 /**
  * Service which handle {@link I18NMessage} persistent model
@@ -57,7 +57,7 @@ public class I18nMessageManagerBean {
     */
    @Path("/i18n/{resourceName}/{locale}")
    @SuppressWarnings("unchecked")
-   @Review(comment = "use JPA Criteria API 2.0 if possible : Class.forName(\"javax.persistence.criteria.QueryBuilder\"); if not found use jpql ?")
+   @Task(comment = "use JPA Criteria API 2.0 if possible : Class.forName(\"javax.persistence.criteria.QueryBuilder\"); if not found use jpql ?")
    public List<I18nMessageLanguage> findMessagesByLocale(@NotNull @PathParam("resourceName") final String resourceName,
 	   @NotNull @PathParam("locale") final Locale locale) {
 

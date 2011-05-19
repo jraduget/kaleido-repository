@@ -27,7 +27,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.Task;
 
 /**
  * Group of message<br/>
@@ -63,7 +63,7 @@ import org.kaleidofoundry.core.lang.annotation.Review;
 @Entity
 // @Access(AccessType.PROPERTY)
 @Table(name = Table_I18nMessageGroupe)
-@Review(comment = "Audit information (locale zone for the date, user information...)")
+@Task(comment = "Audit information (locale zone for the date, user information...)")
 public class I18nMessageGroup implements Serializable {
 
    private static final long serialVersionUID = 2526191394171289538L;

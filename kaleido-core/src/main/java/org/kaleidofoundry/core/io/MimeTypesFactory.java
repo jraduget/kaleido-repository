@@ -17,7 +17,7 @@ package org.kaleidofoundry.core.io;
 
 import java.io.IOException;
 
-import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.lang.annotation.Tested;
 
 /**
@@ -26,7 +26,7 @@ import org.kaleidofoundry.core.lang.annotation.Tested;
  * @author Jerome RADUGET
  */
 @Tested
-@Review(comment = "use {@link MimetypesFileTypeMap} instead {@link MimeTypesDefaultService} ?")
+@Task(comment = "use {@link MimetypesFileTypeMap} instead {@link MimeTypesDefaultService} ?")
 public abstract class MimeTypesFactory {
 
    /* default unique instance */

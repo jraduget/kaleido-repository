@@ -33,7 +33,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
-import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.Task;
 
 /**
  * Default entity to store a file content in a blob / clob ...<br/>
@@ -45,7 +45,7 @@ import org.kaleidofoundry.core.lang.annotation.Review;
 @Entity(name = "FileStore")
 // @Access(AccessType.PROPERTY)
 @Table(name = "FILESTORE")
-@Review(comment = "Audit information (locale zone for the date, user information...)")
+@Task(comment = "Audit information (locale zone for the date, user information...)")
 public class FileHandlerEntity implements Serializable {
 
    private static final long serialVersionUID = 6158960255569565876L;

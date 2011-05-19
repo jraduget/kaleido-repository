@@ -23,7 +23,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.kaleidofoundry.core.context.Provider;
-import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.plugin.Declare;
 
 /**
@@ -36,7 +36,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  */
 @Declare(I18nMessageBundlePluginName)
 @Provider(value = I18nMessagesProvider.class, singletons = false)
-@Review(comment = "javadoc description & samples")
+@Task(comment = "javadoc description & samples")
 public interface I18nMessages {
 
    /**

@@ -30,9 +30,9 @@ import java.util.ResourceBundle.Control;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.entity.I18nMessageLanguage;
 import org.kaleidofoundry.core.i18n.entity.I18nMessageManagerBean;
-import org.kaleidofoundry.core.lang.annotation.Review;
-import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
-import org.kaleidofoundry.core.lang.annotation.Reviews;
+import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.lang.annotation.TaskLabel;
+import org.kaleidofoundry.core.lang.annotation.Tasks;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,9 +95,9 @@ public class MessageBundleControl extends Control {
     * @throws InstantiationException
     * @throws IOException
     */
-   @Reviews(reviews = {
-	   @Review(comment = "Make messageBundleControl extensible via {@link Plugin} extention. Load can be done via xml, jpa... ?", category = ReviewCategoryEnum.Improvement),
-	   @Review(comment = "Use fileStore to load bundle resource", category = ReviewCategoryEnum.Improvement) })
+   @Tasks(tasks = {
+	   @Task(comment = "Make messageBundleControl extensible via {@link Plugin} extention. Load can be done via xml, jpa... ?", labels = TaskLabel.Enhancement),
+	   @Task(comment = "Use fileStore to load bundle resource", labels = TaskLabel.Enhancement) })
    ResourceBundle newInputStreamBundle(final String baseName, final Locale locale, final MessageBundleControlFormat format, final ClassLoader loader,
 	   final boolean reload) throws IllegalAccessException, InstantiationException, IOException {
 
@@ -144,7 +144,7 @@ public class MessageBundleControl extends Control {
 	   // jpa entity datas
 	   if (format == MessageBundleControlFormat.JPA_ENTITY_PROPERTIES && I18nMessagesProvider.JpaIsEnabled) {
 
-		@Review(comment = "create a service injector (local / guice / spring / ejb3 local or remote...)")
+		@Task(comment = "create a service injector (local / guice / spring / ejb3 local or remote...)")
 		final I18nMessageManagerBean messageService = new I18nMessageManagerBean();
 		final List<I18nMessageLanguage> messagesLanguage = messageService.findMessagesByLocale(baseName, locale);
 

@@ -70,7 +70,8 @@ public interface ConfigurationManager {
     * @throws IllegalStateException if configuration is not yet loaded
     */
    @NotNull
-   Serializable setPropertyValue(@NotNull String config, @NotNull String property, String value) throws ConfigurationNotFoundException, IllegalStateException;
+   Serializable setPropertyValue(@NotNull String config, @NotNull String property, Serializable value) throws ConfigurationNotFoundException,
+	   IllegalStateException;
 
    /**
     * get the property

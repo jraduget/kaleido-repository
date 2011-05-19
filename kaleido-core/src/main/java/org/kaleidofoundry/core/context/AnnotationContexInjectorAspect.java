@@ -33,9 +33,9 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.FieldSignature;
-import org.kaleidofoundry.core.lang.annotation.Review;
-import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
-import org.kaleidofoundry.core.lang.annotation.Reviews;
+import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.lang.annotation.TaskLabel;
+import org.kaleidofoundry.core.lang.annotation.Tasks;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginHelper;
 import org.kaleidofoundry.core.util.ReflectionHelper;
@@ -205,9 +205,9 @@ public class AnnotationContexInjectorAspect {
     */
    // track field with ProceedingJoinPoint and annotation information with @annotation(annotation)
    @Around("trackAgregatedRuntimeContextField(jp, esjp) && @annotation(annotation)")
-   @Reviews(reviews = {
-	   @Review(comment = "check and handle reflection exception ", category = ReviewCategoryEnum.Improvement),
-	   @Review(comment = "for provider reflection part, add static method to AbstractProvider with following code ", category = ReviewCategoryEnum.Improvement) })
+   @Tasks(tasks = {
+	   @Task(comment = "check and handle reflection exception ", labels = TaskLabel.Enhancement),
+	   @Task(comment = "for provider reflection part, add static method to AbstractProvider with following code ", labels = TaskLabel.Enhancement) })
    public Object trackAgregatedRuntimeContextFieldToInject(final JoinPoint jp, final JoinPoint.EnclosingStaticPart esjp,
 	   final ProceedingJoinPoint thisJoinPoint, final Context annotation) throws Throwable {
 

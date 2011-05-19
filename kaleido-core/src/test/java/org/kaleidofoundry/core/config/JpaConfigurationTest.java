@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2010 the original author or authors.
+ *  Copyright 2008-2011 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,14 +13,26 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.kaleidofoundry.core.lang.annotation;
+package org.kaleidofoundry.core.config;
+
+import java.net.URISyntaxException;
+
+import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.store.StoreException;
 
 /**
- * Reviews annotation, like a to do, but can be processing by an annotation processor to build listing / report
- * 
  * @author Jerome RADUGET
  */
-public @interface Reviews {
+public class JpaConfigurationTest extends AbstractConfigurationTest {
 
-   Review[] reviews() default {};
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfigurationTest#newInstance()
+    */
+   @Override
+   @Task
+   protected Configuration newInstance() throws StoreException, URISyntaxException {
+	return null;
+   }
+
 }

@@ -17,7 +17,7 @@ package org.kaleidofoundry.core.context;
 
 import java.lang.reflect.Field;
 
-import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.Task;
 
 import com.google.inject.MembersInjector;
 import com.google.inject.TypeLiteral;
@@ -67,7 +67,7 @@ class ContextMembersInjector<T> implements MembersInjector<T> {
    }
 
    @Override
-   @Review(comment = "error management with i18n error ?")
+   @Task(comment = "error management with i18n error ?")
    public void injectMembers(final T t) {
 	try {
 	   field.set(t, RuntimeContext.createFrom(field));

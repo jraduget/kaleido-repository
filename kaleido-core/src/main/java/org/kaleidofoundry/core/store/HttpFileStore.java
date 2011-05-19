@@ -32,8 +32,8 @@ import java.net.URLConnection;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.lang.annotation.Review;
-import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
+import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 
@@ -53,7 +53,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * @see FileStoreContextBuilder enum of context configuration properties available
  */
 @Declare(HttpStorePluginName)
-@Review(category = ReviewCategoryEnum.Improvement, comment = "Create an implementation using commons http client + servlet for store / move / remove methods")
+@Task(labels = TaskLabel.Enhancement, comment = "Create an implementation using commons http client + servlet for store / move / remove methods")
 public class HttpFileStore extends AbstractFileStore implements FileStore {
 
    /**

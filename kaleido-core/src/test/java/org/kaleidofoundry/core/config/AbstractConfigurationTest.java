@@ -119,6 +119,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 	} catch (final IllegalStateException iste) {
 	}
 
+	fail("TODO");
 	// try {
 	// configuration.store();
 	// } catch (final IllegalStateException iste) {

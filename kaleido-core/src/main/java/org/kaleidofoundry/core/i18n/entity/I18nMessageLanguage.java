@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import org.kaleidofoundry.core.i18n.entity.I18nMessageConstants.Query_MessagesByLocale;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.lang.annotation.Review;
+import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -56,7 +56,7 @@ import org.kaleidofoundry.core.util.StringHelper;
 @NamedQueries({ @NamedQuery(name = Query_MessagesByLocale.Name, query = Query_MessagesByLocale.Jql) })
 @XmlRootElement(name = "i18n")
 @XmlAccessorType(XmlAccessType.FIELD)
-@Review(comment = "Audit information (locale zone for the date, user information...)")
+@Task(comment = "Audit information (locale zone for the date, user information...)")
 public class I18nMessageLanguage implements Serializable {
 
    private static final long serialVersionUID = -212656122786380270L;

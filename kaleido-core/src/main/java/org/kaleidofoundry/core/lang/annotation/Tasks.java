@@ -16,13 +16,11 @@
 package org.kaleidofoundry.core.lang.annotation;
 
 /**
+ * Reviews annotation, like a to do, but can be processing by an annotation processor to build listing / report
+ * 
  * @author Jerome RADUGET
  */
-public enum ReviewCategoryEnum {
+public @interface Tasks {
 
-   Todo,
-   ImplementIt,
-   Fixme,
-   Refactor,
-   Improvement;
+   Task[] tasks() default {};
 }

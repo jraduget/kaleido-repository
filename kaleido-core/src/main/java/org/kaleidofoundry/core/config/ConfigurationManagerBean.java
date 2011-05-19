@@ -45,8 +45,8 @@ import org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Query_F
 import org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Query_FindPropertyByName;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
 import org.kaleidofoundry.core.config.entity.FireChangesReport;
-import org.kaleidofoundry.core.lang.annotation.Review;
-import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
+import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.util.StringHelper;
 
@@ -66,7 +66,7 @@ import org.kaleidofoundry.core.util.StringHelper;
 @Stateless(mappedName = "ejb/configuration")
 @Path("/configurations/{config}")
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-@Review(category = ReviewCategoryEnum.Fixme, comment = "restore 'implements ConfigurationManager which cause a bug' - I open a GF3.x bug for this : GLASSFISH-16199")
+@Task(labels = TaskLabel.Defect, comment = "restore 'implements ConfigurationManager which cause a bug' - I open a GF3.x bug for this : GLASSFISH-16199")
 public class ConfigurationManagerBean implements ConfigurationManager {
 
    /** injected and used to handle security context */
@@ -93,7 +93,7 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 	   Configuration configuration = getRegisteredConfiguration(config);
 	   configurationModel = new ConfigurationModel(config);
 	   for (String key : configuration.keySet()) {
-		configurationModel.getProperties().add(findConfigurationPropertyByName(config, key, false));
+		configurationModel.getProperties().add(getRegisteredProperty(config, key, false));
 	   }
 	} else {
 	   configurationModel = findConfigurationModelByName(config, true);
@@ -108,9 +108,13 @@ public class ConfigurationManagerBean implements ConfigurationManager {
    @GET
    @Path("get/{property}")
    public Serializable getPropertyValue(final @PathParam("config") String config, final @PathParam("property") String property) {
-	Serializable value = getRegisteredConfiguration(config).getProperty(property);
-	if (value == null) { throw new PropertyNotFoundException(config, property); }
-	return value;
+	try {
+	   Serializable value = getRegisteredConfiguration(config).getProperty(property);
+	   if (value == null) { throw new PropertyNotFoundException(config, property); }
+	   return value;
+	} catch (ConfigurationNotFoundException cne) {
+	   return getProperty(config, property).getValue();
+	}
    }
 
    /*
@@ -120,13 +124,37 @@ public class ConfigurationManagerBean implements ConfigurationManager {
    @GET
    @Path("set/{property}")
    public Serializable setPropertyValue(final @PathParam("config") String config, @PathParam("property") final String property,
-	   @QueryParam("value") final String value) {
-	// check that property exists in the model
-	findConfigurationPropertyByName(config, property, true);
+	   @QueryParam("value") final Serializable value) {
+
+	boolean setProperty = false;
+	Serializable oldValue = null;
+
 	// get registered configuration and set the property value
-	Configuration configuration = getRegisteredConfiguration(config);
-	Serializable oldValue = configuration.getProperty(property);
-	configuration.setProperty(property, value);
+	try {
+	   Configuration configuration = getRegisteredConfiguration(config);
+	   oldValue = configuration.getProperty(property);
+	   configuration.setProperty(property, value);
+	   setProperty = true;
+	} catch (ConfigurationNotFoundException cne) {
+	}
+
+	if (em != null && !setProperty) {
+	   // get model configuration and set the property value
+	   try {
+		ConfigurationProperty configurationProperty = findConfigurationPropertyByName(config, property, true);
+		if (!setProperty) {
+		   oldValue = configurationProperty.getValue();
+		}
+		configurationProperty.setValue(value);
+		em.merge(configurationProperty);
+		setProperty = true;
+	   } catch (ConfigurationNotFoundException cne) {
+	   }
+	}
+
+	if (!setProperty) { throw new PropertyNotFoundException(config, property); }
+
+	// check that property exists in the model
 	return oldValue;
    }
 
@@ -195,7 +223,6 @@ public class ConfigurationManagerBean implements ConfigurationManager {
    @GET
    @Path("keys")
    public List<String> keys(final @PathParam("config") String config, @QueryParam("prefix") final String prefix) {
-
 	final List<String> keys = new ArrayList<String>();
 	try {
 	   // first attempt in the registered configuration
@@ -220,7 +247,7 @@ public class ConfigurationManagerBean implements ConfigurationManager {
    @GET
    @Path("contains/{property}")
    public boolean containsKey(final @PathParam("config") String config, @PathParam("property") final String key) {
-	return getRegisteredConfiguration(config).containsKey(key, null);
+	return keys(config, null).contains(key);
    }
 
    /*
@@ -240,7 +267,26 @@ public class ConfigurationManagerBean implements ConfigurationManager {
    @PUT
    @Path("store")
    public void store(@PathParam("config") final String config) throws StoreException {
-	getRegisteredConfiguration(config).store();
+
+	// store configuration resource file
+	Configuration configuration = getRegisteredConfiguration(config);
+	configuration.store();
+
+	// store configuration model
+	if (em != null) {
+	   ConfigurationModel model = findConfigurationModelByName(config, false);
+	   if (model != null) {
+		for (String name : configuration.keySet()) {
+		   ConfigurationProperty property = model.getPropertiesByName().get(name);
+		   if (property != null) {
+			property.setValue(configuration.getProperty(name));
+			em.merge(property);
+		   }
+
+		}
+	   }
+	}
+
    }
 
    /*
@@ -286,22 +332,41 @@ public class ConfigurationManagerBean implements ConfigurationManager {
    // ** private / protected part ***********************************************************************************************
 
    /**
-    * @param name
+    * @param configName
     * @return the given configuration search by name
     * @throws ConfigurationNotFoundException if configuration can't be found in current registry
     * @throws IllegalStateException if configuration is not loaded
     */
-   protected Configuration getRegisteredConfiguration(final String name) throws ConfigurationNotFoundException {
-	Configuration config = ConfigurationFactory.getRegistry().get(name);
+   protected Configuration getRegisteredConfiguration(final String configName) throws ConfigurationNotFoundException {
+	Configuration config = ConfigurationFactory.getRegistry().get(configName);
 	if (config == null) {
-	   throw new ConfigurationNotFoundException(name);
+	   throw new ConfigurationNotFoundException(configName);
 	} else {
 	   if (!config.isLoaded()) {
-		throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.notloaded", name));
+		throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.notloaded", configName));
 	   } else {
 		return config;
 	   }
 	}
+   }
+
+   /**
+    * @param configName
+    * @param propertyName
+    * @param checkPropExists
+    * @return configuration property
+    * @throws ConfigurationNotFoundException
+    * @throws PropertyNotFoundException if checkPropExists is true and if configuration property can't be found in current registry
+    */
+   protected ConfigurationProperty getRegisteredProperty(final String configName, final String propertyName, final boolean checkPropExists)
+	   throws ConfigurationNotFoundException, PropertyNotFoundException {
+	Configuration configuration = getRegisteredConfiguration(configName);
+	if (checkPropExists) {
+	   if (!configuration.containsKey(propertyName, "")) { throw new PropertyNotFoundException(configName, propertyName); }
+	}
+	Serializable value = configuration.getProperty(propertyName);
+	Class<?> type = value != null ? value.getClass() : null;
+	return new ConfigurationProperty(propertyName, configuration.getString(propertyName), type, DefaultDescription);
    }
 
    /**
@@ -343,7 +408,6 @@ public class ConfigurationManagerBean implements ConfigurationManager {
    protected ConfigurationProperty findConfigurationPropertyByName(final String config, final String propertyName, final boolean checkPropExists)
 	   throws PropertyNotFoundException {
 
-	Configuration configuration;
 	ConfigurationProperty property = null;
 
 	// first check in the database model
@@ -355,23 +419,11 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 
 	   try {
 		property = (ConfigurationProperty) query.getSingleResult();
-		// property = em.find(ConfigurationProperty.class, property.getId());
 	   } catch (NoResultException nre) {
-		property = null;
 	   }
 	}
 
-	// if not found find property in in-memory registered configurations
-	if (property == null) {
-	   configuration = getRegisteredConfiguration(config);
-	   if (checkPropExists) {
-		if (!configuration.containsKey(propertyName, "")) { throw new PropertyNotFoundException(config, propertyName); }
-	   }
-	   Serializable value = configuration.getProperty(propertyName);
-	   Class<?> type = value != null ? value.getClass() : null;
-	   property = new ConfigurationProperty(propertyName, configuration.getString(propertyName), type, DefaultDescription);
-
-	}
+	if (property == null && checkPropExists) { throw new PropertyNotFoundException(config, propertyName); }
 
 	return property;
    }

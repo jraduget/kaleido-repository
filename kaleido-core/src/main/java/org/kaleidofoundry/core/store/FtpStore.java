@@ -34,8 +34,8 @@ import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
-import org.kaleidofoundry.core.lang.annotation.Review;
-import org.kaleidofoundry.core.lang.annotation.ReviewCategoryEnum;
+import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 
@@ -156,7 +156,7 @@ public class FtpStore extends AbstractFileStore implements FileStore {
     */
    @Override
    @NotYetImplemented
-   @Review(comment = "ftp do remove", category = ReviewCategoryEnum.ImplementIt)
+   @Task(comment = "ftp do remove", labels = TaskLabel.ImplementIt)
    protected void doRemove(final URI resourceUri) throws ResourceNotFoundException, StoreException {
 	return; // annotation @NotYetImplemented handle throw new NotYetImplementedException()...
    }
@@ -167,7 +167,7 @@ public class FtpStore extends AbstractFileStore implements FileStore {
     */
    @Override
    @NotYetImplemented
-   @Review(comment = "ftp do store", category = ReviewCategoryEnum.ImplementIt)
+   @Task(comment = "ftp do store", labels = TaskLabel.ImplementIt)
    protected void doStore(final URI resourceUri, final FileHandler resource) throws StoreException {
 	return; // annotation @NotYetImplemented handle throw new NotYetImplementedException()...
    }
