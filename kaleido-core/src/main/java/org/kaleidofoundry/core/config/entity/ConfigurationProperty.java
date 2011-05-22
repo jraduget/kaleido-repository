@@ -113,11 +113,11 @@ public class ConfigurationProperty implements Serializable {
    public ConfigurationProperty(final String name, final Serializable value, final Class<?> type, final String description) {
 	super();
 	setName(name);
-	setDescription(description);
-	setValue(value);
+	this.description = description;
 	this.type = type != null ? type.getName() : null;
 	this.configurations = new HashSet<ConfigurationModel>();
 	this.serializer = new PrimitiveTypeToStringSerializer();
+	setValue(value);
    }
 
    /**

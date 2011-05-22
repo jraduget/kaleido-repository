@@ -147,6 +147,7 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 		}
 		configurationProperty.setValue(value);
 		em.merge(configurationProperty);
+		em.flush();
 		setProperty = true;
 	   } catch (ConfigurationNotFoundException cne) {
 	   }
@@ -179,15 +180,20 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 	ConfigurationProperty currentProperty = findConfigurationPropertyByName(config, property.getName(), false);
 	// meta data update
 	if (em != null) {
-	   ConfigurationModel configuration = getConfigurationModel(config);
-	   configuration.getProperties().add(property);
+	   ConfigurationModel configurationModel = getConfigurationModel(config);
+	   configurationModel.getProperties().add(property);
+	   property.getConfigurations().add(configurationModel);
+	   // if it is a new property creation
 	   if (currentProperty == null) {
 		em.persist(property);
-	   } else {
+	   }
+	   // if it is an update property
+	   else {
 		property.setId(currentProperty.getId());
 		em.merge(property);
 	   }
-	   em.persist(configuration);
+	   em.merge(configurationModel);
+	   em.flush();
 	}
    }
 
@@ -198,14 +204,33 @@ public class ConfigurationManagerBean implements ConfigurationManager {
    @DELETE
    @Path("remove/{property}")
    public void removeProperty(final @PathParam("config") String config, @PathParam("property") final String property) {
-	// throw not found exception if not found
-	ConfigurationProperty entity = findConfigurationPropertyByName(config, property, true);
-	// remove it from meta data database
+	boolean foundConfiguration = false;
+	boolean foundConfigurationProperty = false;
 	if (em != null) {
-	   em.remove(em.merge(entity));
+	   ConfigurationModel configurationModel = findConfigurationModelByName(config, false);
+	   if (configurationModel != null) {
+		foundConfiguration = true;
+		ConfigurationProperty configurationProperty = configurationModel.getPropertiesByName().get(property);
+		if (configurationProperty != null) {
+		   foundConfigurationProperty = true;
+		   // remove it from meta data database
+		   configurationModel.getProperties().remove(configurationProperty);
+		   em.merge(configurationModel);
+		   em.remove(em.merge(configurationProperty));
+		   em.flush();
+		}
+	   }
 	}
-	// remove it from registered configuration
-	getRegisteredConfiguration(config).removeProperty(property);
+	try {
+	   Configuration configuration = getRegisteredConfiguration(config);
+	   // check if property exists
+	   if (!foundConfigurationProperty && !configuration.containsKey(property)) { throw new PropertyNotFoundException(config, property); }
+	   // remove it from registered configuration
+	   configuration.removeProperty(property);
+	} catch (ConfigurationNotFoundException cnfe) {
+	   if (!foundConfigurationProperty) { throw new PropertyNotFoundException(config, property); }
+	   if (!foundConfiguration) { throw cnfe; }
+	}
    }
 
    /*
@@ -285,6 +310,7 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 
 		}
 	   }
+	   em.flush();
 	}
 
    }

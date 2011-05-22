@@ -171,7 +171,7 @@ public interface Configuration {
    void setProperty(@NotNull String key, @NotNull Serializable value);
 
    /**
-    * Remove given property
+    * Remove given property (if property key does not exist, do nothing)
     * 
     * @param key key identifier (unique)
     * @throws IllegalStateException if configuration is for read-only use

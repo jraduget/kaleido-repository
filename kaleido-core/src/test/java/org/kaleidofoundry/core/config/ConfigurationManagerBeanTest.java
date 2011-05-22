@@ -20,12 +20,10 @@ import java.util.HashSet;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
 
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.entity.ConfigurationModel;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
@@ -40,19 +38,18 @@ public class ConfigurationManagerBeanTest extends Assert {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationManagerBeanTest.class);
 
-   private static EntityManagerFactory emf;
-
    private static final String MyConfigurationName = "myNamedConfig";
    private static final String MyConfigurationUri = "classpath:/config/myNamedConfig.properties";
+
+   private EntityManager em;
+   private EntityManagerFactory emf;
+   private ConfigurationManagerBean configurationManager;
 
    /**
     * create a database with mocked data
     */
-   @BeforeClass
-   public static void setupStatic() {
-
-	EntityManager em = null;
-	EntityTransaction et = null;
+   @Before
+   public void setup() {
 
 	try {
 
@@ -61,9 +58,9 @@ public class ConfigurationManagerBeanTest extends Assert {
 
 	   // current entity manager
 	   em = UnmanagedEntityManagerFactory.currentEntityManager();
-	   et = em.getTransaction();
 
-	   et.begin();
+	   // begin transaction
+	   em.getTransaction().begin();
 
 	   // create configuration meta model
 	   ConfigurationModel configurationModel = new ConfigurationModel();
@@ -86,7 +83,7 @@ public class ConfigurationManagerBeanTest extends Assert {
 
 	   em.flush();
 
-	   et.commit();
+	   configurationManager = new ConfigurationManagerBean();
 
 	   // register configuration
 	   // ConfigurationFactory.provides(MyConfigurationName, MyConfigurationUri);
@@ -94,25 +91,22 @@ public class ConfigurationManagerBeanTest extends Assert {
 	} catch (final RuntimeException re) {
 	   LOGGER.error("static setup", re);
 	   throw re;
-	} finally {
+	}
+   }
+
+   @After
+   public void cleanup() {
+
+	try {
 	   if (em != null) {
+		em.getTransaction().commit();
 		UnmanagedEntityManagerFactory.close(em);
 	   }
+	} finally {
+	   if (emf != null) {
+		UnmanagedEntityManagerFactory.close(emf);
+	   }
 	}
-   }
-
-   @AfterClass
-   public static void cleanupStatic() {
-	if (emf != null) {
-	   UnmanagedEntityManagerFactory.close(emf);
-	}
-   }
-
-   private ConfigurationManagerBean configurationManager = null;
-
-   @Before
-   public void setup() {
-	configurationManager = new ConfigurationManagerBean();
    }
 
    @Test
@@ -232,12 +226,12 @@ public class ConfigurationManagerBeanTest extends Assert {
 	configurationManager.putProperty(MyConfigurationName, property);
 
 	assertTrue(configurationManager.keys(MyConfigurationName).contains("//newKey"));
-	assertEquals(3, configurationManager.keys(MyConfigurationName));
+	assertEquals(3, configurationManager.keys(MyConfigurationName).size());
 
 	configurationManager.removeProperty(MyConfigurationName, "//newKey");
 
 	assertFalse(configurationManager.keys(MyConfigurationName).contains("//newKey"));
-	assertEquals(2, configurationManager.keys(MyConfigurationName));
+	assertEquals(2, configurationManager.keys(MyConfigurationName).size());
    }
 
    @Test
