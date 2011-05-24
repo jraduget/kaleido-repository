@@ -16,97 +16,24 @@
 package org.kaleidofoundry.core.config;
 
 import java.io.Serializable;
-import java.util.HashSet;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.entity.ConfigurationModel;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
-import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Jerome RADUGET
  */
-public class ConfigurationManagerBeanTest extends Assert {
+public class AbstractConfigurationManagerTest extends Assert {
 
-   private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationManagerBeanTest.class);
+   protected static final String MyConfigurationName = "myNamedConfig";
+   protected static final String MyConfigurationUri = "classpath:/config/myNamedConfig.properties";
 
-   private static final String MyConfigurationName = "myNamedConfig";
-   private static final String MyConfigurationUri = "classpath:/config/myNamedConfig.properties";
+   protected final ConfigurationManagerBean configurationManager;
 
-   private EntityManager em;
-   private EntityManagerFactory emf;
-   private ConfigurationManagerBean configurationManager;
-
-   /**
-    * create a database with mocked data
-    */
-   @Before
-   public void setup() {
-
-	try {
-
-	   // memorize entity manager factory in order to clean it up at end of tests
-	   emf = UnmanagedEntityManagerFactory.getEntityManagerFactory();
-
-	   // current entity manager
-	   em = UnmanagedEntityManagerFactory.currentEntityManager();
-
-	   // begin transaction
-	   em.getTransaction().begin();
-
-	   // create configuration meta model
-	   ConfigurationModel configurationModel = new ConfigurationModel();
-	   configurationModel.setUri(MyConfigurationUri);
-	   configurationModel.setName(MyConfigurationName);
-	   configurationModel.setDescription("description");
-	   configurationModel.setProperties(new HashSet<ConfigurationProperty>());
-
-	   ConfigurationProperty property;
-
-	   property = new ConfigurationProperty("//key01", "value01", String.class, "descr01");
-	   property.getConfigurations().add(configurationModel);
-	   configurationModel.getProperties().add(property);
-
-	   property = new ConfigurationProperty("//key02", 123.45f, Float.class, "descr02");
-	   property.getConfigurations().add(configurationModel);
-	   configurationModel.getProperties().add(property);
-
-	   em.persist(configurationModel);
-
-	   em.flush();
-
-	   configurationManager = new ConfigurationManagerBean();
-
-	   // register configuration
-	   // ConfigurationFactory.provides(MyConfigurationName, MyConfigurationUri);
-
-	} catch (final RuntimeException re) {
-	   LOGGER.error("static setup", re);
-	   throw re;
-	}
-   }
-
-   @After
-   public void cleanup() {
-
-	try {
-	   if (em != null) {
-		em.getTransaction().commit();
-		UnmanagedEntityManagerFactory.close(em);
-	   }
-	} finally {
-	   if (emf != null) {
-		UnmanagedEntityManagerFactory.close(emf);
-	   }
-	}
+   public AbstractConfigurationManagerTest(final ConfigurationManagerBean configurationManager) {
+	this.configurationManager = configurationManager;
    }
 
    @Test
@@ -130,7 +57,13 @@ public class ConfigurationManagerBeanTest extends Assert {
    @Test
    public void getProperty() {
 	try {
-	   configurationManager.getPropertyValue(MyConfigurationName, "//unknown");
+	   configurationManager.getProperty("unknown", "//unknown");
+	   fail();
+	} catch (ConfigurationNotFoundException cnfe) {
+	}
+
+	try {
+	   configurationManager.getProperty(MyConfigurationName, "//unknown");
 	   fail();
 	} catch (PropertyNotFoundException pnfe) {
 	}
@@ -148,6 +81,11 @@ public class ConfigurationManagerBeanTest extends Assert {
 
    @Test
    public void getPropertyValue() {
+	try {
+	   configurationManager.getPropertyValue("unknown", "//unknown");
+	   fail();
+	} catch (ConfigurationNotFoundException cnfe) {
+	}
 	try {
 	   configurationManager.getPropertyValue(MyConfigurationName, "unknown");
 	   fail();
@@ -167,10 +105,15 @@ public class ConfigurationManagerBeanTest extends Assert {
    @Test
    public void setPropertyValue() {
 	try {
-	   configurationManager.setPropertyValue(MyConfigurationName, "//unknown", "");
+	   configurationManager.setPropertyValue("unknown", "//unknown", "");
 	   fail();
-	} catch (PropertyNotFoundException pnfe) {
+	} catch (ConfigurationNotFoundException cnfe) {
 	}
+	// try {
+	// configurationManager.setPropertyValue(MyConfigurationName, "//unknown", "");
+	// fail();
+	// } catch (PropertyNotFoundException pnfe) {
+	// }
 	Serializable oldValue = configurationManager.setPropertyValue(MyConfigurationName, "//key02", 678.9f);
 	assertNotNull(oldValue);
 	assertEquals(123.45f, oldValue);
@@ -185,6 +128,11 @@ public class ConfigurationManagerBeanTest extends Assert {
    @Test
    public void putProperty() {
 
+	try {
+	   configurationManager.putProperty("unknown", new ConfigurationProperty());
+	   fail();
+	} catch (ConfigurationNotFoundException cnfe) {
+	}
 	try {
 	   configurationManager.getProperty(MyConfigurationName, "//newKey");
 	   fail();
@@ -213,6 +161,11 @@ public class ConfigurationManagerBeanTest extends Assert {
    @Test
    public void removeProperty() {
 
+	try {
+	   configurationManager.removeProperty("unknown", "//unknown");
+	   fail();
+	} catch (ConfigurationNotFoundException cnfe) {
+	}
 	try {
 	   configurationManager.removeProperty(MyConfigurationName, "//unknown");
 	   fail();
@@ -260,5 +213,4 @@ public class ConfigurationManagerBeanTest extends Assert {
    public void store() {
 	fail("TODO");
    }
-
 }

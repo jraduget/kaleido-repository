@@ -126,7 +126,8 @@ public class ConfigurationManagerBean implements ConfigurationManager {
    public Serializable setPropertyValue(final @PathParam("config") String config, @PathParam("property") final String property,
 	   @QueryParam("value") final Serializable value) {
 
-	boolean setProperty = false;
+	boolean foundConfiguration = false;
+	boolean foundConfigurationProperty = false;
 	Serializable oldValue = null;
 
 	// get registered configuration and set the property value
@@ -134,26 +135,28 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 	   Configuration configuration = getRegisteredConfiguration(config);
 	   oldValue = configuration.getProperty(property);
 	   configuration.setProperty(property, value);
-	   setProperty = true;
+	   foundConfiguration = true;
+	   foundConfigurationProperty = true;
 	} catch (ConfigurationNotFoundException cne) {
 	}
 
-	if (em != null && !setProperty) {
+	if (em != null && !foundConfigurationProperty) {
 	   // get model configuration and set the property value
 	   try {
 		ConfigurationProperty configurationProperty = findConfigurationPropertyByName(config, property, true);
-		if (!setProperty) {
+		if (!foundConfigurationProperty) {
 		   oldValue = configurationProperty.getValue();
 		}
 		configurationProperty.setValue(value);
 		em.merge(configurationProperty);
 		em.flush();
-		setProperty = true;
-	   } catch (ConfigurationNotFoundException cne) {
+		foundConfigurationProperty = true;
+	   } catch (ConfigurationNotFoundException cnfe) {
+		if (!foundConfiguration) { throw cnfe; }
 	   }
 	}
 
-	if (!setProperty) { throw new PropertyNotFoundException(config, property); }
+	if (!foundConfigurationProperty) { throw new PropertyNotFoundException(config, property); }
 
 	// check that property exists in the model
 	return oldValue;
@@ -228,8 +231,8 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 	   // remove it from registered configuration
 	   configuration.removeProperty(property);
 	} catch (ConfigurationNotFoundException cnfe) {
-	   if (!foundConfigurationProperty) { throw new PropertyNotFoundException(config, property); }
 	   if (!foundConfiguration) { throw cnfe; }
+	   if (!foundConfigurationProperty) { throw new PropertyNotFoundException(config, property); }
 	}
    }
 
@@ -429,10 +432,18 @@ public class ConfigurationManagerBean implements ConfigurationManager {
     * @param propertyName
     * @param checkPropExists
     * @return property meta data
+    * @throws ConfigurationNotFoundException
     * @throws PropertyNotFoundException
     */
    protected ConfigurationProperty findConfigurationPropertyByName(final String config, final String propertyName, final boolean checkPropExists)
-	   throws PropertyNotFoundException {
+	   throws ConfigurationNotFoundException, PropertyNotFoundException {
+
+	// check that configuration is registered or have been persist
+	try {
+	   getRegisteredConfiguration(config);
+	} catch (ConfigurationNotFoundException cnfe) {
+	   findConfigurationModelByName(config, true);
+	}
 
 	ConfigurationProperty property = null;
 

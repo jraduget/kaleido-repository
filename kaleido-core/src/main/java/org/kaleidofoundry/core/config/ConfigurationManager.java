@@ -39,7 +39,7 @@ public interface ConfigurationManager {
    /**
     * @param config
     * @return the requested configuration
-    * @throws ConfigurationNotFoundException
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @throws IllegalStateException
     */
    ConfigurationModel getConfigurationModel(@NotNull String config) throws ConfigurationNotFoundException, IllegalStateException;
@@ -50,12 +50,13 @@ public interface ConfigurationManager {
     * @param config
     * @param property
     * @return the raw property value
-    * @throws ConfigurationNotFoundException if configuration can't be found in registry
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @throws PropertyNotFoundException if property can't be found in configuration
     * @throws IllegalStateException if configuration is not yet loaded
     */
    @NotNull
-   Serializable getPropertyValue(@NotNull String config, @NotNull String property) throws ConfigurationNotFoundException, IllegalStateException;
+   Serializable getPropertyValue(@NotNull String config, @NotNull String property) throws ConfigurationNotFoundException, PropertyNotFoundException,
+	   IllegalStateException;
 
    /**
     * set / define / change the value of a property (but do not persist it. Call {@link #store(String)} to persist its value)
@@ -64,14 +65,14 @@ public interface ConfigurationManager {
     * @param property
     * @param value the new value to set
     * @return the old property value
-    * @throws ConfigurationNotFoundException if configuration can't be found in registry
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @throws PropertyNotFoundException if property can't be found in configuration meta model. Call
     *            {@link #putProperty(String, ConfigurationProperty)} to set a new one
     * @throws IllegalStateException if configuration is not yet loaded
     */
    @NotNull
    Serializable setPropertyValue(@NotNull String config, @NotNull String property, Serializable value) throws ConfigurationNotFoundException,
-	   IllegalStateException;
+	   PropertyNotFoundException, IllegalStateException;
 
    /**
     * get the property
@@ -79,19 +80,20 @@ public interface ConfigurationManager {
     * @param config
     * @param property
     * @return the raw property value
-    * @throws ConfigurationNotFoundException if configuration can't be found in registry
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @throws PropertyNotFoundException if property can't be found in configuration
     * @throws IllegalStateException if configuration is not yet loaded
     */
    @NotNull
-   ConfigurationProperty getProperty(@NotNull String config, @NotNull String property) throws ConfigurationNotFoundException, IllegalStateException;
+   ConfigurationProperty getProperty(@NotNull String config, @NotNull String property) throws ConfigurationNotFoundException, PropertyNotFoundException,
+	   IllegalStateException;
 
    /**
     * define and persist a new property in the configuration meta model
     * 
     * @param config
     * @param property
-    * @throws ConfigurationNotFoundException
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @throws IllegalStateException
     */
    @NotNull
@@ -100,12 +102,13 @@ public interface ConfigurationManager {
    /**
     * @param config
     * @param property
-    * @throws ConfigurationNotFoundException if configuration can't be found in registry
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @throws PropertyNotFoundException if property can't be found in configuration
     * @throws IllegalStateException if configuration is not yet loaded
     */
    @NotNull
-   void removeProperty(@NotNull String config, @NotNull String property) throws ConfigurationNotFoundException, IllegalStateException;
+   void removeProperty(@NotNull String config, @NotNull String property) throws ConfigurationNotFoundException, PropertyNotFoundException,
+	   IllegalStateException;
 
    /**
     * <p>
@@ -118,32 +121,36 @@ public interface ConfigurationManager {
     * </p>
     * 
     * @param config
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @return a set (clone) of all the declared property keys <br/>
     */
    @NotNull
-   List<String> keys(@NotNull String config);
+   List<String> keys(@NotNull String config) throws ConfigurationNotFoundException;
 
    /**
     * @param config
     * @param prefix prefix key name filtering
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @return a set (clone) of all declared property keys filtered by prefix argument
     */
    @NotNull
-   List<String> keys(@NotNull String config, @NotNull String prefix);
+   List<String> keys(@NotNull String config, @NotNull String prefix) throws ConfigurationNotFoundException;
 
    /**
     * @param config
     * @param key property key to find
     * @return <code>true</code>if key exists, <code>false</code> otherwise
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     */
-   boolean containsKey(@NotNull String config, @NotNull String key);
+   boolean containsKey(@NotNull String config, @NotNull String key) throws ConfigurationNotFoundException;
 
    /**
     * fire all the last configuration changes to the registered class instances
     * 
     * @return number of configurations changes which have been fired
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     */
-   FireChangesReport fireChanges(@NotNull String config);
+   FireChangesReport fireChanges(@NotNull String config) throws ConfigurationNotFoundException;
 
    /**
     * store the changes made to the configuration
@@ -151,8 +158,9 @@ public interface ConfigurationManager {
     * @param config
     * @see Configuration#store()
     * @throws StoreException
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     */
-   void store(@NotNull String config) throws StoreException;
+   void store(@NotNull String config) throws ConfigurationNotFoundException, StoreException;
 
    /**
     * load the configuration
@@ -160,8 +168,9 @@ public interface ConfigurationManager {
     * @param config
     * @throws StoreException
     * @see Configuration#load()
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     */
-   void load(@NotNull String config) throws StoreException;
+   void load(@NotNull String config) throws ConfigurationNotFoundException, StoreException;
 
    /**
     * unload the configuration
@@ -169,8 +178,9 @@ public interface ConfigurationManager {
     * @param config
     * @throws StoreException
     * @see Configuration#unload()
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     */
-   void unload(@NotNull String config) throws StoreException;
+   void unload(@NotNull String config) throws ConfigurationNotFoundException, StoreException;
 
    /**
     * reload the configuration
@@ -178,13 +188,14 @@ public interface ConfigurationManager {
     * @param config
     * @throws StoreException
     * @see Configuration#reload()
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     */
-   void reload(@NotNull String config) throws StoreException;
+   void reload(@NotNull String config) throws ConfigurationNotFoundException, StoreException;
 
    /**
     * @param config
     * @return <code>true|false</code>
-    * @throws ConfigurationNotFoundException if configuration can't be found in registry
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     */
    boolean isLoaded(@NotNull String config) throws ConfigurationNotFoundException;
 
