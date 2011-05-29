@@ -17,17 +17,20 @@ package org.kaleidofoundry.core.config;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.kaleidofoundry.core.store.StoreException;
 
 /**
+ * Test {@link ConfigurationManagerBean} with a configuration that have been registered and whose meta model have been persisted
+ * 
  * @author Jerome RADUGET
  */
-public class ConfigurationManagerRegisteredTest extends ConfigurationManagerPersistentTest {
+public class ConfigurationManager02Test extends ConfigurationManager01Test {
 
    @Override
    @Before
    public void setup() {
-	//
+	// call meta model creation in ancestor
 	super.setup();
 	// register configuration
 	ConfigurationFactory.provides(MyConfigurationName, MyConfigurationUri);
@@ -40,7 +43,22 @@ public class ConfigurationManagerRegisteredTest extends ConfigurationManagerPers
 	try {
 	   ConfigurationFactory.destroy(MyConfigurationName);
 	} catch (StoreException ste) {
+	}
+   }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfigurationManagerTest#store()
+    */
+   @Override
+   @Test
+   public void store() {
+	super.store();
+	try {
+	   configurationManager.store(MyConfigurationName);
+	   fail();
+	} catch (StoreException se) {
+	   assertEquals("store.readonly.illegal", se.getCode());
 	}
    }
 }

@@ -191,6 +191,14 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
 
    /*
     * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.Configuration#getResourceUri()
+    */
+   public String getResourceUri() {
+	return singleFileStore.getResourceBinding();
+   }
+
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#isStorageAllowed()
     */
    public boolean isStorageAllowed() {
@@ -231,7 +239,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     */
    @Override
    public final synchronized void load() throws StoreException, ConfigurationException {
-	if (isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.already", name)); }
+	if (isLoaded()) { throw new ConfigurationException("config.load.already", name); }
 
 	final FileHandler resourceHandler = singleFileStore.get();
 	try {
@@ -246,9 +254,9 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * @see org.kaleidofoundry.core.config.Configuration#store()
     */
    @Override
-   public final synchronized void store() throws StoreException, ConfigurationException {
-	if (!isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.notloaded", name)); }
-	if (!isStorageAllowed()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.readonly.store", name)); }
+   public final synchronized void store() throws StoreException {
+	if (!isLoaded()) { throw new ConfigurationException("config.load.notloaded", name); }
+	if (!isStorageAllowed()) { throw new ConfigurationException("config.readonly.store", name); }
 
 	singleFileStore.store();
    }
@@ -258,8 +266,8 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * @see org.kaleidofoundry.core.config.Configuration#unload()
     */
    @Override
-   public final synchronized void unload() throws StoreException {
-	if (!isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.notloaded", name)); }
+   public final synchronized void unload() throws StoreException, ConfigurationException {
+	if (!isLoaded()) { throw new ConfigurationException("config.load.notloaded", name); }
 	// cleanup cache entries
 	cacheProperties.removeAll();
 	// unload store
@@ -274,7 +282,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     */
    @Override
    public final synchronized void reload() throws StoreException, ConfigurationException {
-	if (!isLoaded()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.notloaded", name)); }
+	if (!isLoaded()) { throw new ConfigurationException("config.load.notloaded", name); }
 	// backup old entries
 	final Map<String, Serializable> oldItems = new HashMap<String, Serializable>();
 	for (final String oldPropName : cacheProperties.keys()) {
@@ -571,7 +579,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     */
    @Override
    public void setProperty(@NotNull final String key, @NotNull final Serializable newValue) {
-	if (!isUpdateAllowed()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.readonly.update", name)); }
+	if (!isUpdateAllowed()) { throw new ConfigurationException("config.readonly.update", name); }
 	// normalize the given key
 	final String fullKey = normalizeKey(key);
 	// is it a new property ?
@@ -594,7 +602,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     */
    @Override
    public void removeProperty(@NotNull final String key) {
-	if (!isUpdateAllowed()) { throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.readonly.update", name)); }
+	if (!isUpdateAllowed()) { throw new ConfigurationException("config.readonly.update", name); }
 	// normalize the given key
 	final String fullKey = normalizeKey(key);
 	// memorize old value for fire event
@@ -688,13 +696,11 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     */
    @Override
    public String toString() {
-
 	final StringBuilder str = new StringBuilder("{");
 	for (final Iterator<String> it = keysIterator(); it.hasNext();) {
 	   final String key = it.next();
 	   final String value = getString(key);
 	   final List<String> values = getStringList(key);
-
 	   if (values != null && values.size() <= 1) {
 		str.append(key).append("=").append(value).append(" , ");
 	   } else {

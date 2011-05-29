@@ -40,23 +40,53 @@ public interface ConfigurationManager {
     * @param config
     * @return the requested configuration
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
-    * @throws IllegalStateException
+    * @throws ConfigurationException
     */
-   ConfigurationModel getConfigurationModel(@NotNull String config) throws ConfigurationNotFoundException, IllegalStateException;
+   ConfigurationModel getConfigurationModel(@NotNull String config) throws ConfigurationNotFoundException, ConfigurationException;
 
    /**
     * get the raw property value
     * 
     * @param config
     * @param property
+    * @param type
+    * @return the property value (converted as type T)
+    * @throws ConfigurationNotFoundException
+    * @throws PropertyNotFoundException
+    * @param <T>
+    */
+   <T extends Serializable> T getPropertyValue(final String config, final String property, final Class<T> type) throws ConfigurationNotFoundException,
+	   PropertyNotFoundException;
+
+   /**
+    * get the property value as a string
+    * 
+    * @param config
+    * @param property
     * @return the raw property value
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @throws PropertyNotFoundException if property can't be found in configuration
-    * @throws IllegalStateException if configuration is not yet loaded
+    * @throws ConfigurationException if configuration is not yet loaded
     */
-   @NotNull
-   Serializable getPropertyValue(@NotNull String config, @NotNull String property) throws ConfigurationNotFoundException, PropertyNotFoundException,
-	   IllegalStateException;
+   String getPropertyValue(@NotNull String config, @NotNull String property) throws ConfigurationNotFoundException, PropertyNotFoundException,
+	   ConfigurationException;
+
+   /**
+    * set / define / change the value of a property (but do not persist it. Call {@link #store(String)} to persist its value)
+    * 
+    * @param config
+    * @param property
+    * @param value the new value to set
+    * @param type the type of the value
+    * @return the old property value
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
+    * @throws PropertyNotFoundException if property can't be found in configuration meta model. Call
+    *            {@link #putProperty(String, ConfigurationProperty)} to set a new one
+    * @throws ConfigurationException if configuration is not yet loaded
+    * @param <T>
+    */
+   <T extends Serializable> T setPropertyValue(@NotNull String config, @NotNull String property, T value, Class<T> type) throws ConfigurationNotFoundException,
+	   PropertyNotFoundException, ConfigurationException;
 
    /**
     * set / define / change the value of a property (but do not persist it. Call {@link #store(String)} to persist its value)
@@ -68,11 +98,10 @@ public interface ConfigurationManager {
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @throws PropertyNotFoundException if property can't be found in configuration meta model. Call
     *            {@link #putProperty(String, ConfigurationProperty)} to set a new one
-    * @throws IllegalStateException if configuration is not yet loaded
+    * @throws ConfigurationException if configuration is not yet loaded
     */
-   @NotNull
-   Serializable setPropertyValue(@NotNull String config, @NotNull String property, Serializable value) throws ConfigurationNotFoundException,
-	   PropertyNotFoundException, IllegalStateException;
+   String setPropertyValue(String config, String property, String value) throws ConfigurationNotFoundException, PropertyNotFoundException,
+	   ConfigurationException;
 
    /**
     * get the property
@@ -82,11 +111,11 @@ public interface ConfigurationManager {
     * @return the raw property value
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @throws PropertyNotFoundException if property can't be found in configuration
-    * @throws IllegalStateException if configuration is not yet loaded
+    * @throws ConfigurationException if configuration is not yet loaded
     */
    @NotNull
    ConfigurationProperty getProperty(@NotNull String config, @NotNull String property) throws ConfigurationNotFoundException, PropertyNotFoundException,
-	   IllegalStateException;
+	   ConfigurationException;
 
    /**
     * define and persist a new property in the configuration meta model
@@ -94,21 +123,21 @@ public interface ConfigurationManager {
     * @param config
     * @param property
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
-    * @throws IllegalStateException
+    * @throws ConfigurationException
     */
    @NotNull
-   void putProperty(@NotNull String config, @NotNull ConfigurationProperty property) throws ConfigurationNotFoundException, IllegalStateException;
+   void putProperty(@NotNull String config, @NotNull ConfigurationProperty property) throws ConfigurationNotFoundException, ConfigurationException;
 
    /**
     * @param config
     * @param property
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @throws PropertyNotFoundException if property can't be found in configuration
-    * @throws IllegalStateException if configuration is not yet loaded
+    * @throws ConfigurationException if configuration is not yet loaded
     */
    @NotNull
    void removeProperty(@NotNull String config, @NotNull String property) throws ConfigurationNotFoundException, PropertyNotFoundException,
-	   IllegalStateException;
+	   ConfigurationException;
 
    /**
     * <p>

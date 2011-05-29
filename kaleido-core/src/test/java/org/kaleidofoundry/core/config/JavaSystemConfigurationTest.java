@@ -51,11 +51,15 @@ public class JavaSystemConfigurationTest extends AbstractConfigurationTest {
 	return new JavaSystemConfiguration("javaSystemConfig", new RuntimeContext<Configuration>(Configuration.class));
    }
 
-   @Test(expected = IllegalStateException.class)
    @Override
    public void store() throws StoreException {
 	assertNotNull(configuration);
-	configuration.store();
+	try {
+	   configuration.store();
+	   fail();
+	} catch (ConfigurationException ce) {
+	   assertEquals("config.readonly.store", ce.getCode());
+	}
    }
 
    @Test

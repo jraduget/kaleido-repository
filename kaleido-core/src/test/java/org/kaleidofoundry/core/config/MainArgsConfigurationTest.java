@@ -48,11 +48,16 @@ public class MainArgsConfigurationTest extends AbstractConfigurationTest {
 
    }
 
-   @Test(expected = IllegalStateException.class)
+   @Test
    @Override
    public void store() throws StoreException {
 	assertNotNull(configuration);
-	configuration.store();
+	try {
+	   configuration.store();
+	   fail();
+	} catch (ConfigurationException ce) {
+	   assertEquals("config.readonly.store", ce.getCode());
+	}
    }
 
    @Test

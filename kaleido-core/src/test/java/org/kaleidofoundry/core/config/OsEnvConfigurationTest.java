@@ -60,10 +60,15 @@ public class OsEnvConfigurationTest extends Assert {
 	assertTrue(!configuration.isLoaded());
    }
 
-   @Test(expected = IllegalStateException.class)
+   @Test
    public void store() throws StoreException {
 	assertNotNull(configuration);
-	configuration.store();
+	try {
+	   configuration.store();
+	   fail();
+	} catch (ConfigurationException ce) {
+	   assertEquals("config.readonly.store", ce.getCode());
+	}
    }
 
    @Test

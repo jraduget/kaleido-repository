@@ -53,6 +53,7 @@ public class SingleFileStore extends AbstractSingleStore<String, FileHandler> {
     */
    @Override
    protected FileHandler doStore() throws StoreException {
+	if (fileStore.isReadOnly()) { throw new StoreException("store.readonly.illegal", getResourceBinding()); }
 	fileStore.store(getResourceBinding(), fileHandler);
 	return fileHandler;
    }

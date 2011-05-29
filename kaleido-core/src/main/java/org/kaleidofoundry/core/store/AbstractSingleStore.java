@@ -48,7 +48,7 @@ public abstract class AbstractSingleStore<B, R> implements SingleStore<B, R> {
    }
 
    /**
-    * Custom init method, call at end of constructor.<br/>
+    * Custom initialize method, call at end of constructor.<br/>
     * If error must be throw, throws {@link Throwable} like {@link IllegalStateException}, ...
     * 
     * @param resourceBinding

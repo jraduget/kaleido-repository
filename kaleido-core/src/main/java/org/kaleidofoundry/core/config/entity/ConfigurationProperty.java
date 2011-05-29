@@ -188,6 +188,15 @@ public class ConfigurationProperty implements Serializable {
    }
 
    /**
+    * @param <T>
+    * @param type the type you want
+    * @return the property value
+    */
+   public <T extends Serializable> T getValue(final Class<T> type) {
+	return serializer.deserialize(value, type);
+   }
+
+   /**
     * @param value the property value to set
     */
    public <T extends Serializable> void setValue(final T value) {

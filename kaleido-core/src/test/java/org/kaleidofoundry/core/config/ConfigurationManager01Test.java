@@ -22,6 +22,7 @@ import javax.persistence.EntityManagerFactory;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.kaleidofoundry.core.config.entity.ConfigurationModel;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
@@ -29,18 +30,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Test {@link ConfigurationManagerBean} with a configuration model that have been persisted, but not registered
+ * 
  * @author Jerome RADUGET
  */
-public class ConfigurationManagerPersistentTest extends AbstractConfigurationManagerTest {
+public class ConfigurationManager01Test extends AbstractConfigurationManagerTest {
 
-   public ConfigurationManagerPersistentTest() {
+   public ConfigurationManager01Test() {
 	super(new ConfigurationManagerBean());
    }
 
-   private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationManagerPersistentTest.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationManager01Test.class);
 
-   private EntityManager em;
-   private EntityManagerFactory emf;
+   protected EntityManager em;
+   protected EntityManagerFactory emf;
 
    /**
     * create a database with mocked data
@@ -99,6 +102,61 @@ public class ConfigurationManagerPersistentTest extends AbstractConfigurationMan
 		UnmanagedEntityManagerFactory.close(emf);
 	   }
 	}
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfigurationManagerTest#getConfigurationModel()
+    */
+   @Override
+   @Test
+   public void getConfigurationModel() {
+	super.getConfigurationModel();
+
+	ConfigurationModel configModel = configurationManager.getConfigurationModel(MyConfigurationName);
+	assertNotNull(configModel);
+	assertNotNull(configModel.getId());
+	assertEquals(MyConfigurationName, configModel.getName());
+	assertEquals("description", configModel.getDescription());
+	assertEquals(MyConfigurationUri, configModel.getUri());
+	assertNotNull(configModel.getProperties());
+	assertEquals(2, configModel.getProperties().size());
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfigurationManagerTest#getProperty()
+    */
+   @Override
+   public void getProperty() {
+	super.getProperty();
+	ConfigurationProperty property = configurationManager.getProperty(MyConfigurationName, "//key01");
+	assertNotNull(property.getId());
+	assertEquals("descr01", property.getDescription());
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfigurationManagerTest#getPropertyValue()
+    */
+   @Override
+   public void getPropertyValue() {
+	super.getPropertyValue();
+	ConfigurationProperty property = configurationManager.getProperty(MyConfigurationName, "//key02");
+	assertNotNull(property.getId());
+	assertEquals("descr02", property.getDescription());
+	assertEquals(Float.class, property.getType());
+	assertEquals(123.45f, property.getValue());
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfigurationManagerTest#store()
+    */
+   @Override
+   @Test
+   public void store() {
+	// nothing to do
    }
 
 }

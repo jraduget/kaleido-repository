@@ -16,8 +16,13 @@
 package org.kaleidofoundry.core.store;
 
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.StoreMessageBundle;
+import static org.kaleidofoundry.core.store.FileStoreContextBuilder.ConnectTimeout;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.MaxRetryOnFailure;
+import static org.kaleidofoundry.core.store.FileStoreContextBuilder.ReadTimeout;
+import static org.kaleidofoundry.core.store.FileStoreContextBuilder.Readonly;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.SleepTimeBeforeRetryOnFailure;
+import static org.kaleidofoundry.core.store.FileStoreContextBuilder.UriRootPath;
+import static org.kaleidofoundry.core.store.FileStoreContextBuilder.UseCaches;
 
 import java.net.URI;
 import java.net.URLConnection;
@@ -112,7 +117,7 @@ public abstract class AbstractFileStore implements FileStore {
     */
    protected String buildResourceURi(final String resourceRelativePath) {
 
-	final String resourceRootUri = context.getString(FileStoreContextBuilder.UriRootPath);
+	final String resourceRootUri = context.getString(UriRootPath);
 	final StringBuilder resourceUri = new StringBuilder(resourceRootUri != null ? resourceRootUri : "");
 
 	// remove '/' is UriRootPath ends with '/' and resourceRelativePath starts with a '/'
@@ -155,10 +160,10 @@ public abstract class AbstractFileStore implements FileStore {
     */
    @Override
    public boolean isReadOnly() {
-	if (StringHelper.isEmpty(context.getString(FileStoreContextBuilder.Readonly))) {
+	if (StringHelper.isEmpty(context.getString(Readonly))) {
 	   return false;
 	} else {
-	   return context.getBoolean(FileStoreContextBuilder.Readonly);
+	   return context.getBoolean(Readonly);
 	}
    }
 
@@ -220,7 +225,7 @@ public abstract class AbstractFileStore implements FileStore {
     */
    @Override
    public final FileStore remove(@NotNull final String resourceRelativePath) throws StoreException {
-	if (isReadOnly()) { throw new StoreException("store.readonly.illegal", context.getName()); }
+	if (isReadOnly()) { throw new StoreException("store.readonly.illegal", context.getName() != null ? context.getName() : ""); }
 
 	final String resourceUri = buildResourceURi(resourceRelativePath);
 	isUriManageable(resourceUri);
@@ -274,7 +279,7 @@ public abstract class AbstractFileStore implements FileStore {
     */
    @Override
    public final FileStore store(@NotNull final String resourceRelativePath, @NotNull final FileHandler resource) throws StoreException {
-	if (isReadOnly()) { throw new StoreException("store.readonly.illegal", context.getName()); }
+	if (isReadOnly()) { throw new StoreException("store.readonly.illegal", context.getName() != null ? context.getName() : ""); }
 	final String resourceUri = buildResourceURi(resourceRelativePath);
 	isUriManageable(resourceUri);
 
@@ -327,7 +332,7 @@ public abstract class AbstractFileStore implements FileStore {
     */
    @Override
    public final FileStore move(@NotNull final String origin, @NotNull final String destination) throws ResourceNotFoundException, StoreException {
-	if (isReadOnly()) { throw new StoreException("store.readonly.illegal", context.getName()); }
+	if (isReadOnly()) { throw new StoreException("store.readonly.illegal", context.getName() != null ? context.getName() : ""); }
 
 	isUriManageable(buildResourceURi(origin));
 	isUriManageable(buildResourceURi(destination));
@@ -375,14 +380,14 @@ public abstract class AbstractFileStore implements FileStore {
     */
    protected void setUrlConnectionSettings(final URLConnection urlConnection) {
 
-	if (!StringHelper.isEmpty(context.getString(FileStoreContextBuilder.ConnectTimeout))) {
-	   urlConnection.setConnectTimeout(context.getInteger(FileStoreContextBuilder.ConnectTimeout));
+	if (!StringHelper.isEmpty(context.getString(ConnectTimeout))) {
+	   urlConnection.setConnectTimeout(context.getInteger(ConnectTimeout));
 	}
-	if (!StringHelper.isEmpty(context.getString(FileStoreContextBuilder.ReadTimeout))) {
-	   urlConnection.setReadTimeout(context.getInteger(FileStoreContextBuilder.ReadTimeout));
+	if (!StringHelper.isEmpty(context.getString(ReadTimeout))) {
+	   urlConnection.setReadTimeout(context.getInteger(ReadTimeout));
 	}
-	if (!StringHelper.isEmpty(context.getString(FileStoreContextBuilder.UseCaches))) {
-	   urlConnection.setUseCaches(context.getBoolean(FileStoreContextBuilder.UseCaches));
+	if (!StringHelper.isEmpty(context.getString(UseCaches))) {
+	   urlConnection.setUseCaches(context.getBoolean(UseCaches));
 	}
 
    }

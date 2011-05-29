@@ -53,6 +53,26 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     */
    public abstract Serializable getProperty(final String key);
 
+   /**
+    * @param key property name
+    * @param type type of the return value
+    * @return value of the property
+    * @param <T>
+    */
+   public <T extends Serializable> T getProperty(final String key, final Class<T> type) {
+	return _deserialize(getProperty(key), type);
+   }
+
+   /**
+    * @param key property name
+    * @param type type of the return value
+    * @return values of the property
+    * @param <T>
+    */
+   public <T extends Serializable> List<T> getPropertyList(final String key, final Class<T> type) {
+	return _deserializeToList(getProperty(key), type);
+   }
+
    // ***************************************************************************
    // -> Typed property value accessors
    // ***************************************************************************
@@ -61,7 +81,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.Configuration#getString(java.lang.String)
     */
    public String getString(final String key) {
-	return _deserialize(getProperty(key), String.class);
+	return getProperty(key, String.class);
    }
 
    /*
@@ -78,7 +98,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.Configuration#getStringList(java.lang.String)
     */
    public List<String> getStringList(final String key) {
-	return _deserializeToList(getProperty(key), String.class);
+	return getPropertyList(key, String.class);
    }
 
    /*
@@ -86,7 +106,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getBigDecimal(java .lang.String)
     */
    public BigDecimal getBigDecimal(final String key) {
-	return _deserialize(getProperty(key), BigDecimal.class);
+	return getProperty(key, BigDecimal.class);
    }
 
    /*
@@ -103,7 +123,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getBigDecimalList (java.lang.String)
     */
    public List<BigDecimal> getBigDecimalList(final String key) {
-	return _deserializeToList(getProperty(key), BigDecimal.class);
+	return getPropertyList(key, BigDecimal.class);
    }
 
    /*
@@ -111,7 +131,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getBigInteger(java .lang.String)
     */
    public BigInteger getBigInteger(final String key) {
-	return _deserialize(getProperty(key), BigInteger.class);
+	return getProperty(key, BigInteger.class);
    }
 
    /*
@@ -128,7 +148,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getBigIntegerList (java.lang.String)
     */
    public List<BigInteger> getBigIntegerList(final String key) {
-	return _deserializeToList(getProperty(key), BigInteger.class);
+	return getPropertyList(key, BigInteger.class);
    }
 
    /*
@@ -136,7 +156,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getBoolean(java. lang.String)
     */
    public Boolean getBoolean(final String key) {
-	return _deserialize(getProperty(key), Boolean.class);
+	return getProperty(key, Boolean.class);
    }
 
    /*
@@ -153,7 +173,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getBooleanList( java.lang.String)
     */
    public List<Boolean> getBooleanList(final String key) {
-	return _deserializeToList(getProperty(key), Boolean.class);
+	return getPropertyList(key, Boolean.class);
    }
 
    /*
@@ -161,7 +181,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getByte(java.lang .String)
     */
    public Byte getByte(final String key) {
-	return _deserialize(getProperty(key), Byte.class);
+	return getProperty(key, Byte.class);
    }
 
    /*
@@ -178,7 +198,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getByteList(java .lang.String)
     */
    public List<Byte> getByteList(final String key) {
-	return _deserializeToList(getProperty(key), Byte.class);
+	return getPropertyList(key, Byte.class);
    }
 
    /*
@@ -186,7 +206,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getDouble(java.lang .String)
     */
    public Double getDouble(final String key) {
-	return _deserialize(getProperty(key), Double.class);
+	return getProperty(key, Double.class);
    }
 
    /*
@@ -203,7 +223,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getDoubleList(java .lang.String)
     */
    public List<Double> getDoubleList(final String key) {
-	return _deserializeToList(getProperty(key), Double.class);
+	return getPropertyList(key, Double.class);
    }
 
    /*
@@ -211,7 +231,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getFloat(java.lang .String)
     */
    public Float getFloat(final String key) {
-	return _deserialize(getProperty(key), Float.class);
+	return getProperty(key, Float.class);
    }
 
    /*
@@ -228,7 +248,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getFloatList(java .lang.String)
     */
    public List<Float> getFloatList(final String key) {
-	return _deserializeToList(getProperty(key), Float.class);
+	return getPropertyList(key, Float.class);
    }
 
    /*
@@ -236,7 +256,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getInt(java.lang .String)
     */
    public Integer getInteger(final String key) {
-	return _deserialize(getProperty(key), Integer.class);
+	return getProperty(key, Integer.class);
    }
 
    /*
@@ -253,7 +273,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getIntList(java .lang.String)
     */
    public List<Integer> getIntegerList(final String key) {
-	return _deserializeToList(getProperty(key), Integer.class);
+	return getPropertyList(key, Integer.class);
    }
 
    /*
@@ -261,7 +281,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getLong(java.lang .String)
     */
    public Long getLong(final String key) {
-	return _deserialize(getProperty(key), Long.class);
+	return getProperty(key, Long.class);
    }
 
    /*
@@ -278,7 +298,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getLongList(java .lang.String)
     */
    public List<Long> getLongList(final String key) {
-	return _deserializeToList(getProperty(key), Long.class);
+	return getPropertyList(key, Long.class);
    }
 
    /*
@@ -286,7 +306,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getShort(java.lang .String)
     */
    public Short getShort(final String key) {
-	return _deserialize(getProperty(key), Short.class);
+	return getProperty(key, Short.class);
    }
 
    /*
@@ -303,7 +323,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getShortList(java .lang.String)
     */
    public List<Short> getShortList(final String key) {
-	return _deserializeToList(getProperty(key), Short.class);
+	return getPropertyList(key, Short.class);
    }
 
    /*
@@ -311,7 +331,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.config.Configuration#getDate(java.lang .String)
     */
    public Date getDate(final String key) {
-	return _deserialize(getProperty(key), Date.class);
+	return getProperty(key, Date.class);
    }
 
    /*
@@ -319,7 +339,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @see org.kaleidofoundry.core.config.Configuration#getDateList(java.lang.String)
     */
    public List<Date> getDateList(final String key) {
-	return _deserializeToList(getProperty(key), Date.class);
+	return getPropertyList(key, Date.class);
    }
 
    /*

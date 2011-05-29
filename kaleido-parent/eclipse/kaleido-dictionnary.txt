@@ -10,3 +10,4 @@ guice
 serializable
 locale
 deserialize
+throwable

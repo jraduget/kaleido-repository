@@ -18,6 +18,7 @@ package org.kaleidofoundry.core.config;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URI;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -150,6 +151,11 @@ public interface Configuration {
     */
    String getName();
 
+   /**
+    * @return configuration resource {@link URI}
+    */
+   String getResourceUri();
+
    // **************************************************************************
    // -> Property configuration access management
    // **************************************************************************
@@ -159,6 +165,22 @@ public interface Configuration {
     * @return get the raw property value <br>
     */
    Serializable getProperty(@NotNull String key);
+
+   /**
+    * @param key property name
+    * @param type type of the return value
+    * @return value of the property
+    * @param <T>
+    */
+   <T extends Serializable> T getProperty(final String key, final Class<T> type);
+
+   /**
+    * @param key property name
+    * @param type type of the return value
+    * @return values of the property
+    * @param <T>
+    */
+   <T extends Serializable> List<T> getPropertyList(final String key, final Class<T> type);
 
    /**
     * add or update property value
@@ -455,7 +477,7 @@ public interface Configuration {
     * load configuration content
     * 
     * @throws StoreException
-    * @throws ConfigurationException
+    * @throws ConfigurationException if configuration is already loaded
     */
    void load() throws StoreException, ConfigurationException;
 
@@ -463,13 +485,15 @@ public interface Configuration {
     * unload configuration content
     * 
     * @throws StoreException
+    * @throws ConfigurationException if configuration is not loaded
     * @see #addConfigurationListener(ConfigurationListener) to register a listener on unload
     */
-   void unload() throws StoreException;
+   void unload() throws StoreException, ConfigurationException;
 
    /**
     * reload all configuration content
     * 
+    * @throws ConfigurationException if configuration is not loaded
     * @see #addConfigurationListener(ConfigurationListener) to register a listener for changed values
     */
    void reload() throws StoreException, ConfigurationException;
@@ -483,7 +507,7 @@ public interface Configuration {
     * Persist all configuration datas (with updade)
     * 
     * @throws StoreException
-    * @throws ConfigurationException
+    * @throws ConfigurationException if configuration is not loaded, or is for readonly use
     */
    void store() throws StoreException, ConfigurationException;
 

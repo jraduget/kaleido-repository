@@ -15,7 +15,6 @@
  */
 package org.kaleidofoundry.core.config;
 
-import static org.kaleidofoundry.core.i18n.InternalBundleHelper.ConfigurationMessageBundle;
 import static org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory.KaleidoPersistentContextUnitName;
 
 import java.io.Serializable;
@@ -67,7 +66,7 @@ import org.kaleidofoundry.core.util.StringHelper;
 @Path("/configurations/{config}")
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 @Task(labels = TaskLabel.Defect, comment = "restore 'implements ConfigurationManager which cause a bug' - I open a GF3.x bug for this : GLASSFISH-16199")
-public class ConfigurationManagerBean implements ConfigurationManager {
+public class ConfigurationManagerBean { // implements ConfigurationManager {
 
    /** injected and used to handle security context */
    @Context
@@ -88,15 +87,15 @@ public class ConfigurationManagerBean implements ConfigurationManager {
    @GET
    @Path("/")
    public ConfigurationModel getConfigurationModel(final @PathParam("config") String config) throws ConfigurationNotFoundException, IllegalStateException {
-	final ConfigurationModel configurationModel;
-	if (em == null) {
+	ConfigurationModel configurationModel = findConfigurationModelByName(config, false);
+	if (em == null || configurationModel == null) {
 	   Configuration configuration = getRegisteredConfiguration(config);
-	   configurationModel = new ConfigurationModel(config);
+	   configurationModel = new ConfigurationModel(config, configuration.getResourceUri());
 	   for (String key : configuration.keySet()) {
-		configurationModel.getProperties().add(getRegisteredProperty(config, key, false));
+		ConfigurationProperty property = getRegisteredProperty(config, key, false);
+		property.getConfigurations().add(configurationModel);
+		configurationModel.getProperties().add(property);
 	   }
-	} else {
-	   configurationModel = findConfigurationModelByName(config, true);
 	}
 	return configurationModel;
    }
@@ -107,33 +106,56 @@ public class ConfigurationManagerBean implements ConfigurationManager {
     */
    @GET
    @Path("get/{property}")
-   public Serializable getPropertyValue(final @PathParam("config") String config, final @PathParam("property") String property) {
+   public String getPropertyValue(final @PathParam("config") String config, final @PathParam("property") String property) {
 	try {
-	   Serializable value = getRegisteredConfiguration(config).getProperty(property);
+	   String value = getRegisteredConfiguration(config).getString(property);
 	   if (value == null) { throw new PropertyNotFoundException(config, property); }
 	   return value;
 	} catch (ConfigurationNotFoundException cne) {
-	   return getProperty(config, property).getValue();
+	   return getProperty(config, property).getValue(String.class);
 	}
    }
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.ConfigurationManager#setProperty(java.lang.String, java.lang.String, java.io.Serializable)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#getProperty(java.lang.String, java.lang.String)
+    */
+   public <T extends Serializable> T getPropertyValue(final String config, final String property, final Class<T> type) {
+	try {
+	   T value = getRegisteredConfiguration(config).getProperty(property, type);
+	   if (value == null) { throw new PropertyNotFoundException(config, property); }
+	   return value;
+	} catch (ConfigurationNotFoundException cne) {
+	   return getProperty(config, property).getValue(type);
+	}
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#setPropertyValue(java.lang.String, java.lang.String, java.lang.String)
     */
    @GET
    @Path("set/{property}")
-   public Serializable setPropertyValue(final @PathParam("config") String config, @PathParam("property") final String property,
-	   @QueryParam("value") final Serializable value) {
+   public String setPropertyValue(final @PathParam("config") String config, @PathParam("property") final String property,
+	   @QueryParam("value") final String value) {
+	return setPropertyValue(config, property, value, String.class);
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#setPropertyValue(java.lang.String, java.lang.String, java.io.Serializable,
+    * java.lang.Class)
+    */
+   public <T extends Serializable> T setPropertyValue(final String config, final String property, final T value, final Class<T> type) {
 
 	boolean foundConfiguration = false;
 	boolean foundConfigurationProperty = false;
-	Serializable oldValue = null;
+	T oldValue = null;
 
 	// get registered configuration and set the property value
 	try {
 	   Configuration configuration = getRegisteredConfiguration(config);
-	   oldValue = configuration.getProperty(property);
+	   oldValue = configuration.getProperty(property, type);
 	   configuration.setProperty(property, value);
 	   foundConfiguration = true;
 	   foundConfigurationProperty = true;
@@ -145,7 +167,7 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 	   try {
 		ConfigurationProperty configurationProperty = findConfigurationPropertyByName(config, property, true);
 		if (!foundConfigurationProperty) {
-		   oldValue = configurationProperty.getValue();
+		   oldValue = configurationProperty.getValue(type);
 		}
 		configurationProperty.setValue(value);
 		em.merge(configurationProperty);
@@ -169,7 +191,32 @@ public class ConfigurationManagerBean implements ConfigurationManager {
    @GET
    @Path("getProperty/{property}")
    public ConfigurationProperty getProperty(final @PathParam("config") String config, final @PathParam("property") String property) {
-	return findConfigurationPropertyByName(config, property, true);
+
+	ConfigurationException ce;
+
+	try {
+	   // first, check that property exists in the model
+	   return findConfigurationPropertyByName(config, property, true);
+	} catch (ConfigurationNotFoundException cnfe) {
+	   ce = cnfe;
+	} catch (PropertyNotFoundException pne) {
+	   ce = pne;
+	}
+
+	// second, build a non persistent one with the given information
+	try {
+	   ConfigurationProperty cp = getRegisteredProperty(config, property, true);
+	   ConfigurationModel cm = getConfigurationModel(config);
+	   cp.getConfigurations().add(cm);
+	   return cp;
+	} catch (ConfigurationNotFoundException cnfe) {
+	   if (ce instanceof PropertyNotFoundException) {
+		throw ce;
+	   } else {
+		throw cnfe;
+	   }
+	}
+
    }
 
    /*
@@ -252,19 +299,27 @@ public class ConfigurationManagerBean implements ConfigurationManager {
    @Path("keys")
    public List<String> keys(final @PathParam("config") String config, @QueryParam("prefix") final String prefix) {
 	final List<String> keys = new ArrayList<String>();
-	try {
-	   // first attempt in the registered configuration
-	   keys.addAll(StringHelper.isEmpty(prefix) ? getRegisteredConfiguration(config).keySet() : getRegisteredConfiguration(config).keySet(prefix));
-	} catch (ConfigurationNotFoundException cnfe) {
-	   // second attempt in the databases
+	boolean foundConfiguration = false;
+
+	if (em != null) {
+	   // first attempt in the configuration model
 	   String normalizePrefix = !StringHelper.isEmpty(prefix) ? AbstractConfiguration.normalizeKey(prefix) : prefix;
-	   ConfigurationModel model = findConfigurationModelByName(config, true);
-	   for (ConfigurationProperty p : model.getProperties()) {
-		if (!StringHelper.isEmpty(p.getName()) && (StringHelper.isEmpty(prefix) || p.getName().startsWith(normalizePrefix))) {
-		   keys.add(p.getName());
+	   ConfigurationModel model = findConfigurationModelByName(config, false);
+	   if (model != null) {
+		foundConfiguration = true;
+		for (ConfigurationProperty p : model.getProperties()) {
+		   if (!StringHelper.isEmpty(p.getName()) && (StringHelper.isEmpty(prefix) || p.getName().startsWith(normalizePrefix))) {
+			keys.add(p.getName());
+		   }
 		}
 	   }
 	}
+
+	if (!foundConfiguration) {
+	   // second attempt in the registered configuration
+	   keys.addAll(StringHelper.isEmpty(prefix) ? getRegisteredConfiguration(config).keySet() : getRegisteredConfiguration(config).keySet(prefix));
+	}
+
 	return keys;
    }
 
@@ -295,7 +350,6 @@ public class ConfigurationManagerBean implements ConfigurationManager {
    @PUT
    @Path("store")
    public void store(@PathParam("config") final String config) throws StoreException {
-
 	// store configuration resource file
 	Configuration configuration = getRegisteredConfiguration(config);
 	configuration.store();
@@ -315,7 +369,6 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 	   }
 	   em.flush();
 	}
-
    }
 
    /*
@@ -364,7 +417,7 @@ public class ConfigurationManagerBean implements ConfigurationManager {
     * @param configName
     * @return the given configuration search by name
     * @throws ConfigurationNotFoundException if configuration can't be found in current registry
-    * @throws IllegalStateException if configuration is not loaded
+    * @throws ConfigurationException if configuration is not loaded
     */
    protected Configuration getRegisteredConfiguration(final String configName) throws ConfigurationNotFoundException {
 	Configuration config = ConfigurationFactory.getRegistry().get(configName);
@@ -372,7 +425,7 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 	   throw new ConfigurationNotFoundException(configName);
 	} else {
 	   if (!config.isLoaded()) {
-		throw new IllegalStateException(ConfigurationMessageBundle.getMessage("config.load.notloaded", configName));
+		throw new ConfigurationException("config.load.notloaded", configName);
 	   } else {
 		return config;
 	   }
@@ -391,11 +444,11 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 	   throws ConfigurationNotFoundException, PropertyNotFoundException {
 	Configuration configuration = getRegisteredConfiguration(configName);
 	if (checkPropExists) {
-	   if (!configuration.containsKey(propertyName, "")) { throw new PropertyNotFoundException(configName, propertyName); }
+	   if (!configuration.containsKey(propertyName)) { throw new PropertyNotFoundException(configName, propertyName); }
 	}
 	Serializable value = configuration.getProperty(propertyName);
 	Class<?> type = value != null ? value.getClass() : null;
-	return new ConfigurationProperty(propertyName, configuration.getString(propertyName), type, DefaultDescription);
+	return new ConfigurationProperty(propertyName, configuration.getProperty(propertyName), type, DefaultDescription);
    }
 
    /**
