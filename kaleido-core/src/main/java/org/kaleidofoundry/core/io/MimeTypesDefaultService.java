@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.kaleidofoundry.core.lang.annotation.Tested;
 import org.kaleidofoundry.core.system.JavaSystemHelper;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.kaleidofoundry.core.util.properties.ExtendedProperties;
@@ -35,7 +34,6 @@ import org.kaleidofoundry.core.util.properties.ExtendedProperties;
  * 
  * @author Jerome RADUGET
  */
-@Tested
 public class MimeTypesDefaultService {
 
    /* Filename containing the mime types to load */

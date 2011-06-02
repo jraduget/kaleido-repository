@@ -19,14 +19,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.kaleidofoundry.core.lang.annotation.Tested;
-
 /**
  * Helper for date handle
  * 
  * @author Jerome RADUGET
  */
-@Tested
 public abstract class DateHelper {
 
    /**

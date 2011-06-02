@@ -15,18 +15,18 @@
  */
 package org.kaleidofoundry.core.io;
 
+import static org.kaleidofoundry.core.lang.annotation.TaskLabel.Enhancement;
+
 import java.io.IOException;
 
 import org.kaleidofoundry.core.lang.annotation.Task;
-import org.kaleidofoundry.core.lang.annotation.Tested;
 
 /**
  * MimeTypesDefaultService factory
  * 
  * @author Jerome RADUGET
  */
-@Tested
-@Task(comment = "use {@link MimetypesFileTypeMap} instead {@link MimeTypesDefaultService} ?")
+@Task(comment = "use {@link MimetypesFileTypeMap} instead {@link MimeTypesDefaultService} ?", labels = { Enhancement })
 public abstract class MimeTypesFactory {
 
    /* default unique instance */

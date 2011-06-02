@@ -26,7 +26,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.kaleidofoundry.core.lang.annotation.Nullable;
-import org.kaleidofoundry.core.lang.annotation.Tested;
 
 /**
  * Utility class converter
@@ -46,7 +45,6 @@ public abstract class ConverterHelper {
     *         (valueDelimiter is '=') <br/>
     *         return null if args is null
     */
-   @Tested
    @Nullable
    public static Map<String, String> argsToMap(final String[] args) {
 	return argsToMap(args, "=");
@@ -63,7 +61,6 @@ public abstract class ConverterHelper {
     * @return convert args arrays (main method for example), to map (key -> value) <br/>
     *         return null if args or valueDelimiter is null
     */
-   @Tested
    @Nullable
    public static Map<String, String> argsToMap(final String[] args, final String valueDelimiter) {
 	if (args == null || valueDelimiter == null) { return null; }
@@ -96,7 +93,6 @@ public abstract class ConverterHelper {
     * @return Converting a String array representation with delemiteur value given in argument <br/>
     *         return null if args values is null
     */
-   @Tested
    @Nullable
    public static String arrayToString(final String[] values, final String delimiter) {
 	if (values == null) { return null; }
@@ -118,7 +114,6 @@ public abstract class ConverterHelper {
     *         use toString() for having element string representation <br/>
     *         return null if args values is null
     */
-   @Tested
    @Nullable
    public static String collectionToString(final Collection<?> values, final String delimiter) {
 	if (values == null) { return null; }
@@ -141,7 +136,6 @@ public abstract class ConverterHelper {
     * @return Converts a string with separator, to a array<br/>
     *         return null if args or delimiter is null
     */
-   @Tested
    @Nullable
    public static String[] stringToArray(final String values, final String delimiter) {
 	if (values == null || delimiter == null) { return null; }
@@ -162,7 +156,6 @@ public abstract class ConverterHelper {
     * @return Converts a string with separator in list of values<br/>
     *         return null if args or delimiter is null
     */
-   @Tested
    @Nullable
    public static List<String> stringToCollection(final String values, final String delimiter) {
 	if (values == null || delimiter == null) { return null; }
@@ -183,7 +176,6 @@ public abstract class ConverterHelper {
     * @return Converts a string with separator in LinkedHashSet of values<br/>
     *         return null if args or delimiter is null
     */
-   @Tested
    @Nullable
    public static Set<String> stringToSet(final String values, final String delimiter) {
 	if (values == null || delimiter == null) { return null; }

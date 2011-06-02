@@ -30,7 +30,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
 
-import org.kaleidofoundry.core.lang.annotation.Tested;
 import org.kaleidofoundry.core.system.JavaSystemHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -199,7 +198,6 @@ public abstract class IOHelper {
     * @return {@link Iterable} on line of a file content. You have to call {@link IoIterable#close()} when you have finish to use it
     * @throws IOException
     */
-   @Tested
    public static IoIterable<String> readlines(final String filename) throws IOException {
 
 	final FileReader fileReader = new FileReader(filename);
@@ -261,7 +259,7 @@ public abstract class IOHelper {
     * @param classLoader class loader to use
     * @return inputStream for reading resource (null if no resource found)
     */
-   @Tested
+
    public static InputStream getResourceInputStream(final String resourcePath, final ClassLoader classLoader) {
 
 	// 1. try to get resource from url connection (without authentification)

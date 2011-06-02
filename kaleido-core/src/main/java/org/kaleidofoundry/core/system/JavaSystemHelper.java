@@ -25,7 +25,6 @@ import java.util.Properties;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Nullable;
-import org.kaleidofoundry.core.lang.annotation.Tested;
 
 /**
  * Utilities for managing java system like :
@@ -37,7 +36,6 @@ import org.kaleidofoundry.core.lang.annotation.Tested;
  * 
  * @author Jerome RADUGET
  */
-@Tested
 public class JavaSystemHelper {
 
    /**

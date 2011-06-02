@@ -18,7 +18,6 @@ package org.kaleidofoundry.core.util.properties;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import org.kaleidofoundry.core.lang.annotation.TestIt;
 import org.kaleidofoundry.core.lang.annotation.Nullable;
 
 /**
@@ -30,7 +29,6 @@ import org.kaleidofoundry.core.lang.annotation.Nullable;
  * 
  * @author Jerome RADUGET
  */
-@TestIt
 public class ExtendedProperties extends Properties {
 
    private static final long serialVersionUID = 8223542956966149283L;

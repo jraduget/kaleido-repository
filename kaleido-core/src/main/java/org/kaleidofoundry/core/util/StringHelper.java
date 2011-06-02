@@ -23,14 +23,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.kaleidofoundry.core.lang.annotation.Tested;
-
 /**
  * String Helper static method
  * 
  * @author Jerome RADUGET
  */
-@Tested()
 public abstract class StringHelper {
 
    /**

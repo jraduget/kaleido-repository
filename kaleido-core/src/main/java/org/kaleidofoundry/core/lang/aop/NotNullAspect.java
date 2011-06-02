@@ -29,7 +29,6 @@ import org.aspectj.lang.reflect.ConstructorSignature;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.kaleidofoundry.core.lang.NotNullException;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.lang.annotation.Tested;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +64,6 @@ import org.slf4j.LoggerFactory;
  */
 
 @Aspect
-@Tested
 public class NotNullAspect {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(NotNullAspect.class);

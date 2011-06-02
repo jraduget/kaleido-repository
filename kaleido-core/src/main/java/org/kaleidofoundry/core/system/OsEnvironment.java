@@ -26,7 +26,6 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.Map;
 import java.util.Properties;
 
-import org.kaleidofoundry.core.lang.annotation.Tested;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.kaleidofoundry.core.util.StringHelper;
 
@@ -45,7 +44,6 @@ import org.kaleidofoundry.core.util.StringHelper;
  * 
  * @author Jerome RADUGET
  */
-@Tested
 @ThreadSafe
 public class OsEnvironment extends Properties {
 

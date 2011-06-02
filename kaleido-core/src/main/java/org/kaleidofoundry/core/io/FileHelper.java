@@ -17,7 +17,6 @@ package org.kaleidofoundry.core.io;
 
 import java.io.File;
 
-import org.kaleidofoundry.core.lang.annotation.Tested;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -43,7 +42,6 @@ public abstract class FileHelper {
     * @return Normalizes the path given <br/>
     *         Sample : buildPath("/foo\\toto/tutu\\gaga") => "/foo/toto/tutu/gaga/" on a UNIX system
     */
-   @Tested
    public static String buildPath(final String path) {
 	return buildCustomPath(path, null);
    }
@@ -56,7 +54,6 @@ public abstract class FileHelper {
     * @return Normalizes the path given <br/>
     *         Sample : buildUnixAppPath("/foo\\toto/tutu\\gaga") => "/foo/toto/tutu/gaga/" on a UNIX system
     */
-   @Tested
    public static String buildUnixAppPath(final String path) {
 	return buildCustomPath(path, UNIX_SEPARATOR);
    }
@@ -69,7 +66,6 @@ public abstract class FileHelper {
     * @return Normalizes the path given <br/>
     *         Sample : buildWindowsAppPath("/foo\\toto/tutu\\gaga") => "\foo\toto\tutu\gaga\" on a WINDOWS system
     */
-   @Tested
    public static String buildWindowsAppPath(final String path) {
 	return buildCustomPath(path, WINDOWS_SEP);
    }
@@ -82,7 +78,6 @@ public abstract class FileHelper {
     * @return Normalizes the path given <br/>
     *         Sample : buildWebAppPath("/foo\\toto/tutu\\gaga") => "/foo/toto/tutu/gaga/" on a UNIX system
     */
-   @Tested
    public static String buildWebAppPath(final String path) {
 	return buildCustomPath(path, WEBAPP_SEPARATOR);
    }
@@ -96,7 +91,6 @@ public abstract class FileHelper {
     * @return Normalizes the path given <br/>
     *         Sample : buildCustomPath("/foo/toto/titi", "$") => "$foo$kaleidofoundry$core$io$" on a UNIX system
     */
-   @Tested
    public static String buildCustomPath(final String path, String pathSepToUse) {
 
 	if (path != null) {
@@ -134,7 +128,6 @@ public abstract class FileHelper {
     *         Sample : if obj instance of "org.kaleidofoundry.core.io.FileHelper" => "/org/kaleidofoundry/core/io" on a
     *         UNIX system
     */
-   @Tested
    public static String getRelativeClassPath(final Object obj) {
 	if (obj != null) {
 	   return getRelativeClassPath(obj.getClass());
@@ -148,7 +141,6 @@ public abstract class FileHelper {
     * @return relative path (path package) to the class as argument <br/>
     *         Sample : "org.kaleidofoundry.core.io.FileHelper" => "/org/kaleidofoundry/core/io" on a UNIX system
     */
-   @Tested
    public static String getRelativeClassPath(final Class<?> c) {
 	if (c != null) {
 	   return StringHelper.replaceAll(c.getPackage().getName(), ".", File.separator) + File.separator;
@@ -163,7 +155,6 @@ public abstract class FileHelper {
     * @return parent directory as input, without path separator at end <br/>
     *         Sample : "/foo/toto/tutu" => "/foo/toto"
     */
-   @Tested
    public static String buildParentPath(String path) {
 
 	if (path == null) { return null; }
@@ -191,7 +182,7 @@ public abstract class FileHelper {
     * @return extension of the filename argument <br/>
     *         Sample : "/foo/filename.txt" => "txt"
     */
-   @Tested
+
    public static String getFileNameExtension(final String filename) {
 
 	if (filename != null) {
@@ -226,7 +217,7 @@ public abstract class FileHelper {
     * @return extension of the filename argument without its extension <br/>
     *         Sample : "/foo/filename.txt" => "/foo/filename"
     */
-   @Tested
+
    public static String getFileNameWithoutExt(final String filename) {
 
 	if (filename != null) {
@@ -261,7 +252,6 @@ public abstract class FileHelper {
     * @return extension of the filename argument <br/>
     *         Sample : "/foo/filename.txt" => "filename.txt"
     */
-   @Tested
    public static String getFileName(final String fullPath) {
 
 	if (fullPath != null) {

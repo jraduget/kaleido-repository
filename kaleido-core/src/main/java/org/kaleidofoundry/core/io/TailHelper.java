@@ -20,14 +20,12 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import org.kaleidofoundry.core.io.Tail.TailLine;
-import org.kaleidofoundry.core.lang.annotation.Tested;
 
 /**
  * Helper methods for {@link Tail} class
  * 
  * @author Jerome RADUGET
  */
-@Tested
 public abstract class TailHelper {
 
    /**
@@ -51,8 +49,7 @@ public abstract class TailHelper {
     * @throws URISyntaxException
     * @see Tail
     */
-   public static List<TailLine> tail(final String resourcePath, final long beginLine, final long lastLine) throws IOException,
-	   URISyntaxException {
+   public static List<TailLine> tail(final String resourcePath, final long beginLine, final long lastLine) throws IOException, URISyntaxException {
 	return new Tail(resourcePath).tail(beginLine, lastLine);
    }
 
@@ -77,8 +74,7 @@ public abstract class TailHelper {
     * @throws IOException
     * @see Tail
     */
-   public static List<TailLine> tail(final ClassLoader loader, final String classPathResource, final long beginLine, final long lastLine)
-	   throws IOException {
+   public static List<TailLine> tail(final ClassLoader loader, final String classPathResource, final long beginLine, final long lastLine) throws IOException {
 	return new Tail(loader, classPathResource).tail(beginLine, lastLine);
    }
 

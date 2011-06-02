@@ -37,8 +37,6 @@ import java.util.Set;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Nullable;
-import org.kaleidofoundry.core.lang.annotation.TestIt;
-import org.kaleidofoundry.core.lang.annotation.Tested;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +58,6 @@ public abstract class ReflectionHelper {
     *         <li>org.kaleido.core.Configuration$InnerClass -> InnerClass</li>
     *         </ul>
     */
-   @Tested
    @NotNull
    public static final String getShortClassName(@NotNull final Class<?> c) {
 	final String name = c.getCanonicalName();
@@ -77,7 +74,7 @@ public abstract class ReflectionHelper {
     * @param name method name with no arg that we search
     * @return Method instance
     */
-   @Tested
+
    @Nullable
    public static final Method getMethodWithNoArgs(@NotNull final Class<?> pClass, final String name) {
 	try {
@@ -93,7 +90,7 @@ public abstract class ReflectionHelper {
     * @return array of all classes, return by class declared methods (be careful, {@link Void} & {@link Void#TYPE} is a
     *         type ;-) )
     */
-   @Tested
+
    @NotNull
    public static final Set<Class<?>> getAllDeclaredMethodsReturns(@NotNull final Class<?> pClass) {
 
@@ -113,7 +110,7 @@ public abstract class ReflectionHelper {
     * @return Returns the full declared and inherited methods of a class. Look in the super class and implemented
     *         interfaces to build its result
     */
-   @Tested
+
    @NotNull
    public static final Collection<Method> getAllDeclaredMethods(@NotNull final Class<?> c) {
 	return getAllDeclaredMethodsByName(c).values();
@@ -125,7 +122,7 @@ public abstract class ReflectionHelper {
     *         implemented
     *         interfaces to build its result
     */
-   @Tested
+
    @NotNull
    public static final Map<String, Method> getAllDeclaredMethodsByName(@NotNull final Class<?> c) {
 
@@ -160,7 +157,7 @@ public abstract class ReflectionHelper {
     * @param c Class which we seek all interfaces
     * @return list of all interfaces implemented by the class as argument
     */
-   @Tested
+
    @NotNull
    public static final Set<Class<?>> getAllInterfaces(final Class<?> c) {
 
@@ -197,7 +194,7 @@ public abstract class ReflectionHelper {
     * @param c
     * @return Extract all super classes of a given class ({@link Object} is not included)
     */
-   @Tested
+
    @NotNull
    public static final Class<?>[] getSuperClasses(@NotNull final Class<?> c) {
 
@@ -230,7 +227,6 @@ public abstract class ReflectionHelper {
     * @return Extract all declared fields of the current class, and from the super classe<b>s</b> of the given class.
     */
    @NotNull
-   @Tested
    public static final Set<Field> getAllDeclaredFields(@NotNull final Class<?> c) {
 	return getAllDeclaredFields(c, (Class<? extends Annotation>) null);
    }
@@ -241,7 +237,6 @@ public abstract class ReflectionHelper {
     * @return Extract all declared fields of the current class, and from of the super classe<b>s</b> of the given class.
     */
    @NotNull
-   @Tested
    public static final Set<Field> getAllDeclaredFields(@NotNull final Class<?> c, final Class<? extends Annotation> annotation) {
 	return getAllDeclaredFields(c, annotation, new int[0]);
    }
@@ -251,7 +246,7 @@ public abstract class ReflectionHelper {
     * @param modifiers the field modifiers filter, see {@link Modifier}
     * @return Extract all declared fields of the current class, and from of the super classe<b>s</b> of the given class.
     */
-   @Tested
+
    public static final Set<Field> getAllDeclaredFields(@NotNull final Class<?> c, final int... modifiers) {
 	return getAllDeclaredFields(c, null, modifiers);
    }
@@ -264,7 +259,6 @@ public abstract class ReflectionHelper {
     * @see Modifier
     */
    @NotNull
-   @Tested
    public static final Set<Field> getAllDeclaredFields(@NotNull final Class<?> c, final Class<? extends Annotation> annotation, final int... modifiers) {
 
 	final Set<Field> fieldSet = new LinkedHashSet<Field>();
@@ -346,7 +340,6 @@ public abstract class ReflectionHelper {
     * @param method Method name to invoke
     * @return static method result (or Void.TYPE if exception...)
     */
-   @TestIt
    public static final Object invokeStaticMethodSilently(final Method method) {
 	return invokeStaticMethodSilently(method, null);
    }
@@ -359,7 +352,6 @@ public abstract class ReflectionHelper {
     * @param args method args
     * @return static method result (or Void.TYPE if exception...)
     */
-   @TestIt
    public static final Object invokeStaticMethodSilently(@NotNull final Method method, final Object[] args) {
 
 	try {
@@ -389,7 +381,6 @@ public abstract class ReflectionHelper {
     * @throws IllegalAccessException Attempted execution of the method due to a problem of access (private ,...)
     * @throws InvocationTargetException Exception during execution of the method body
     */
-   @TestIt
    public static Object invokePropertyChain(final String propertiesChain, final Object instance, final String propertiesChainSeparator)
 	   throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 	int propertiesSeparatorIndex = -1;
@@ -425,7 +416,6 @@ public abstract class ReflectionHelper {
     * @throws InvocationTargetException Exception during execution of the method body
     * @see #invokePropertyChain(String, Object, String)
     */
-   @TestIt
    public static Object invokePropertyWithNoArgs(final Object instance, final String property) throws NoSuchMethodException, IllegalAccessException,
 	   InvocationTargetException {
 	Method method = null;

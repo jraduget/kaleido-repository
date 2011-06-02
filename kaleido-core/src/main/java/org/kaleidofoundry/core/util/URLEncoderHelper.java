@@ -18,14 +18,11 @@ package org.kaleidofoundry.core.util;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
-import org.kaleidofoundry.core.lang.annotation.Tested;
-
 /**
  * Helper for url encoding
  * 
  * @author Jerome RADUGET
  */
-@Tested
 public abstract class URLEncoderHelper {
 
    /**

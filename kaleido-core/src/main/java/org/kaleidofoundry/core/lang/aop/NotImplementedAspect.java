@@ -21,7 +21,6 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.kaleidofoundry.core.lang.NotImplementedException;
 import org.kaleidofoundry.core.lang.annotation.NotImplemented;
-import org.kaleidofoundry.core.lang.annotation.Tested;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +30,6 @@ import org.slf4j.LoggerFactory;
  * @see NotImplemented
  */
 @Aspect
-@Tested
 public class NotImplementedAspect {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(NotImplementedAspect.class);

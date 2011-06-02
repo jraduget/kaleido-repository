@@ -30,8 +30,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.kaleidofoundry.core.lang.annotation.Tested;
-
 /**
  * Simulate tail command (linux) on a file content. <br/>
  * <br/>
@@ -43,7 +41,6 @@ import org.kaleidofoundry.core.lang.annotation.Tested;
  * 
  * @author Jerome RADUGET
  */
-@Tested
 public class Tail {
 
    /** Argument to specify index of begin line */
@@ -173,7 +170,7 @@ public class Tail {
    /**
     * @return Last buffer compute by tail command
     */
-   @Tested
+
    public List<TailLine> getCurrentBuffer() {
 	return lastBuffer;
    }
@@ -181,7 +178,6 @@ public class Tail {
    /**
     * Clear current buffer
     */
-   @Tested
    public void clearCurrentBuffer() {
 	lastBuffer.clear();
    }
@@ -191,7 +187,6 @@ public class Tail {
     * @return list of n last line of the buffer
     * @throws IOException
     */
-   @Tested
    public List<TailLine> tail(final long lastLine) throws IOException {
 	final Map<String, Object> args = new HashMap<String, Object>();
 
@@ -208,7 +203,7 @@ public class Tail {
     * @return list of n last line of the buffer
     * @throws IOException
     */
-   @Tested
+
    public List<TailLine> tail(final long beginLine, final long lastLine) throws IOException {
 	final Map<String, Object> args = new HashMap<String, Object>();
 
@@ -229,7 +224,6 @@ public class Tail {
     * @see #BEGINLINE_ARGS
     * @see #LASTLINE_COUNT_ARGS
     */
-   @Tested
    public List<TailLine> tail(final Map<String, Object> args) throws IOException {
 	final Map<String, Object> typepArgs = typeArgs(args);
 	final Number beginLine = (Number) typepArgs.get(BEGINLINE_ARGS);

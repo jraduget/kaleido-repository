@@ -30,6 +30,9 @@ public enum TaskLabel {
    Review,
    Other,
 
+   UnitTest,
+   IntegrationTest,
+
    Documentation,
    Usability,
    Maintainability,
