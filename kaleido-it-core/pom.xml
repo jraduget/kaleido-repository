@@ -65,6 +65,11 @@
 		<!-- Framework for logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>		
+		<dependency>
+			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
@@ -86,9 +91,9 @@
 			<groupId>org.glassfish.appclient</groupId>
 			<artifactId>gf-client</artifactId>
 			<version>3.0.1</version>
-			<scope>system</scope>
 			<systemPath>${glassfishv3.home}/glassfish/modules/gf-client.jar</systemPath>			
-			<optional>true</optional>
+			<optional>true</optional>			
+			<scope>system</scope>
 		</dependency>
 		
 		<!-- REST / JAXB - JSON -->
