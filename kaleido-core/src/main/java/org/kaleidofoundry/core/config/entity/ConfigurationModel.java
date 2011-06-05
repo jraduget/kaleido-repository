@@ -230,7 +230,7 @@ public class ConfigurationModel implements Serializable {
     */
    @Override
    public String toString() {
-	return "ConfigurationEntity [uri=" + uri + ", name=" + name + ", description=" + description + "]";
+	return "ConfigurationEntity [uri=" + uri + ", name=" + name + ", description=" + description + ", id=" + id + "]";
    }
 
 }

@@ -20,6 +20,7 @@ import static org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory.
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -92,7 +93,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 	   Configuration configuration = getRegisteredConfiguration(config);
 	   configurationModel = new ConfigurationModel(config, configuration.getResourceUri());
 	   for (String key : configuration.keySet()) {
-		ConfigurationProperty property = getRegisteredProperty(config, key, false);
+		ConfigurationProperty property = newConfigurationProperty(configuration, key);
 		property.getConfigurations().add(configurationModel);
 		configurationModel.getProperties().add(property);
 	   }
@@ -134,11 +135,10 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.ConfigurationManager#setPropertyValue(java.lang.String, java.lang.String, java.lang.String)
     */
-   @GET
+   @PUT
    @Path("set/{property}")
-   public String setPropertyValue(final @PathParam("config") String config, @PathParam("property") final String property,
-	   @QueryParam("value") final String value) {
-	return setPropertyValue(config, property, value, String.class);
+   public void setPropertyValue(final @PathParam("config") String config, @PathParam("property") final String property, @QueryParam("value") final String value) {
+	setPropertyValue(config, property, value, String.class);
    }
 
    /*
@@ -287,8 +287,8 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.AbstractConfigurationManager#keySet(java.lang.String)
     */
-   public List<String> keys(final @PathParam("config") String config) {
-	return keys(config, null);
+   public List<ConfigurationProperty> properties(final String config) {
+	return properties(config, null);
    }
 
    /*
@@ -296,9 +296,9 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.AbstractConfigurationManager#keySet(java.lang.String, java.lang.String)
     */
    @GET
-   @Path("keys")
-   public List<String> keys(final @PathParam("config") String config, @QueryParam("prefix") final String prefix) {
-	final List<String> keys = new ArrayList<String>();
+   @Path("properties")
+   public List<ConfigurationProperty> properties(final @PathParam("config") String config, @QueryParam("prefix") final String prefix) {
+	final List<ConfigurationProperty> properties = new ArrayList<ConfigurationProperty>();
 	boolean foundConfiguration = false;
 
 	if (em != null) {
@@ -309,7 +309,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 		foundConfiguration = true;
 		for (ConfigurationProperty p : model.getProperties()) {
 		   if (!StringHelper.isEmpty(p.getName()) && (StringHelper.isEmpty(prefix) || p.getName().startsWith(normalizePrefix))) {
-			keys.add(p.getName());
+			properties.add(p);
 		   }
 		}
 	   }
@@ -317,10 +317,14 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 
 	if (!foundConfiguration) {
 	   // second attempt in the registered configuration
-	   keys.addAll(StringHelper.isEmpty(prefix) ? getRegisteredConfiguration(config).keySet() : getRegisteredConfiguration(config).keySet(prefix));
+	   Configuration configuration = getRegisteredConfiguration(config);
+	   Set<String> keys = StringHelper.isEmpty(prefix) ? getRegisteredConfiguration(config).keySet() : getRegisteredConfiguration(config).keySet(prefix);
+	   for (String key : keys) {
+		properties.add(newConfigurationProperty(configuration, key));
+	   }
 	}
 
-	return keys;
+	return properties;
    }
 
    /*
@@ -329,8 +333,8 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     */
    @GET
    @Path("contains/{property}")
-   public boolean containsKey(final @PathParam("config") String config, @PathParam("property") final String key) {
-	return keys(config, null).contains(key);
+   public boolean containsKey(final @PathParam("config") String config, @PathParam("property") final String property) {
+	return properties(config, null).contains(property);
    }
 
    /*
@@ -446,9 +450,8 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 	if (checkPropExists) {
 	   if (!configuration.containsKey(propertyName)) { throw new PropertyNotFoundException(configName, propertyName); }
 	}
-	Serializable value = configuration.getProperty(propertyName);
-	Class<?> type = value != null ? value.getClass() : null;
-	return new ConfigurationProperty(propertyName, configuration.getProperty(propertyName), type, DefaultDescription);
+
+	return newConfigurationProperty(configuration, propertyName);
    }
 
    /**
@@ -516,6 +519,12 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 	if (property == null && checkPropExists) { throw new PropertyNotFoundException(config, propertyName); }
 
 	return property;
+   }
+
+   private ConfigurationProperty newConfigurationProperty(final Configuration configuration, final String propertyName) {
+	Serializable value = configuration.getProperty(propertyName);
+	Class<?> type = value != null ? value.getClass() : null;
+	return new ConfigurationProperty(propertyName, configuration.getProperty(propertyName), type, DefaultDescription);
    }
 
    /** default property description for a non persistent database property */

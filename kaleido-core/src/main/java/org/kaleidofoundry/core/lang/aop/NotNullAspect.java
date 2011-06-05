@@ -62,7 +62,6 @@ import org.slf4j.LoggerFactory;
  * @author Jerome RADUGET
  * @see NotNull
  */
-
 @Aspect
 public class NotNullAspect {
 
@@ -122,7 +121,6 @@ public class NotNullAspect {
    @Around("methodResult(jp, esjp)")
    public Object afterMethodResult(final JoinPoint jp, final JoinPoint.EnclosingStaticPart esjp, final ProceedingJoinPoint thisJoinPoint) throws Throwable {
 	LOGGER.debug("@After NotNullAspect - afterMethodResult");
-
 	Object result = thisJoinPoint.proceed();
 	if (result == null) {
 	   throw new NotNullException(jp.getStaticPart().getSignature().toString(), jp.getSignature().toString(), jp.getSourceLocation().toString());

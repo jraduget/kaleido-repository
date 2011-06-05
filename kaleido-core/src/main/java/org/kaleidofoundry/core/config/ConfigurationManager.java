@@ -94,14 +94,12 @@ public interface ConfigurationManager {
     * @param config
     * @param property
     * @param value the new value to set
-    * @return the old property value
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @throws PropertyNotFoundException if property can't be found in configuration meta model. Call
     *            {@link #putProperty(String, ConfigurationProperty)} to set a new one
     * @throws ConfigurationException if configuration is not yet loaded
     */
-   String setPropertyValue(String config, String property, String value) throws ConfigurationNotFoundException, PropertyNotFoundException,
-	   ConfigurationException;
+   void setPropertyValue(String config, String property, String value) throws ConfigurationNotFoundException, PropertyNotFoundException, ConfigurationException;
 
    /**
     * get the property
@@ -129,6 +127,8 @@ public interface ConfigurationManager {
    void putProperty(@NotNull String config, @NotNull ConfigurationProperty property) throws ConfigurationNotFoundException, ConfigurationException;
 
    /**
+    * remove the property from the configuration
+    * 
     * @param config
     * @param property
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
@@ -154,7 +154,7 @@ public interface ConfigurationManager {
     * @return a set (clone) of all the declared property keys <br/>
     */
    @NotNull
-   List<String> keys(@NotNull String config) throws ConfigurationNotFoundException;
+   List<ConfigurationProperty> properties(@NotNull String config) throws ConfigurationNotFoundException;
 
    /**
     * @param config
@@ -163,15 +163,15 @@ public interface ConfigurationManager {
     * @return a set (clone) of all declared property keys filtered by prefix argument
     */
    @NotNull
-   List<String> keys(@NotNull String config, @NotNull String prefix) throws ConfigurationNotFoundException;
+   List<ConfigurationProperty> properties(@NotNull String config, @NotNull String prefix) throws ConfigurationNotFoundException;
 
    /**
     * @param config
-    * @param key property key to find
+    * @param property property key to find
     * @return <code>true</code>if key exists, <code>false</code> otherwise
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     */
-   boolean containsKey(@NotNull String config, @NotNull String key) throws ConfigurationNotFoundException;
+   boolean containsKey(@NotNull String config, @NotNull String property) throws ConfigurationNotFoundException;
 
    /**
     * fire all the last configuration changes to the registered class instances

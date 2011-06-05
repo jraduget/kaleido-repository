@@ -124,15 +124,14 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	assertEquals("my new application", strResponse);
 	try {
 	   // update an exiting property
-	   strResponse = getBaseResource().path("set").path("myapp.name").queryParam("value", "my updated application").accept(getMedia().getType())
-		   .get(String.class);
+	   getBaseResource().path("set").path("myapp.name").queryParam("value", "my updated application").put();
 	   // check update getting new value
 	   strResponse = getBaseResource().path("get").path("myapp.name").accept(getMedia().getType()).get(String.class);
 	   assertNotNull(strResponse);
 	   assertEquals("my updated application", strResponse);
 
 	   // create a new property
-	   strResponse = getBaseResource().path("set").path("newProp").queryParam("value", "my new prop value").accept(getMedia().getType()).get(String.class);
+	   getBaseResource().path("set").path("newProp").queryParam("value", "my new prop value").put();
 	   // check update getting new value
 	   strResponse = getBaseResource().path("get").path("newProp").accept(getMedia().getType()).get(String.class);
 	   assertNotNull(strResponse);
@@ -140,8 +139,7 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 
 	} finally {
 	   // restore initial value
-	   getBaseResource().path("set").path("myapp.name").queryParam("value", "my new application").accept(getMedia().getType())
-		   .get(ConfigurationProperty.class);
+	   getBaseResource().path("set").path("myapp.name").queryParam("value", "my new application").put();
 	   // remove created property
 	   getBaseResource().path("remove").path("newProp").delete();
 	}
@@ -157,7 +155,7 @@ public abstract class AbstractRestConfigurationTest extends Assert {
    @Test
    public void remove() {
 	// set initial value
-	getBaseResource().path("set").path("keyToRemove").queryParam("value", "eheh").accept(getMedia().getType()).get(ConfigurationProperty.class);
+	getBaseResource().path("set").path("keyToRemove").queryParam("value", "eheh").put();
 	// remove it
 	getBaseResource().path("remove").path("keyToRemove").delete();
 	// check fired event count
@@ -178,9 +176,10 @@ public abstract class AbstractRestConfigurationTest extends Assert {
    }
 
    @Test
-   public void keys() {
-	List<ConfigurationProperty> response = getBaseResource().path("keys").accept(getMedia().getType()).get(new GenericType<List<ConfigurationProperty>>() {
-	});
+   public void properties() {
+	List<ConfigurationProperty> response = getBaseResource().path("properties").accept(getMedia().getType())
+		.get(new GenericType<List<ConfigurationProperty>>() {
+		});
 	assertNotNull(response);
 	assertEquals(5, response.size());
 	for (ConfigurationProperty property : response) {
@@ -190,8 +189,8 @@ public abstract class AbstractRestConfigurationTest extends Assert {
    }
 
    @Test
-   public void keysWithPrefix() {
-	List<ConfigurationProperty> response = getBaseResource().path("keys").queryParam("prefix", "myapp").accept(getMedia().getType())
+   public void propertiesWithPrefix() {
+	List<ConfigurationProperty> response = getBaseResource().path("properties").queryParam("prefix", "myapp").accept(getMedia().getType())
 		.get(new GenericType<List<ConfigurationProperty>>() {
 		});
 	assertNotNull(response);
@@ -201,20 +200,21 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	   assertTrue("can't found property" + property.getName(), keys.contains(property.getName()));
 	}
 
-	response = getBaseResource().path("keys").queryParam("prefix", "myapp/sample").accept(getMedia().getType())
+	response = getBaseResource().path("properties").queryParam("prefix", "myapp/sample").accept(getMedia().getType())
 		.get(new GenericType<List<ConfigurationProperty>>() {
 		});
 	assertNotNull(response);
 	assertEquals(3, response.size());
 
-	response = getBaseResource().path("keys").queryParam("prefix", "myapp/admin/email").accept(getMedia().getType())
+	response = getBaseResource().path("properties").queryParam("prefix", "myapp/admin/email").accept(getMedia().getType())
 		.get(new GenericType<List<ConfigurationProperty>>() {
 		});
 	assertNotNull(response);
 	assertEquals(1, response.size());
 
-	response = getBaseResource().path("keys").queryParam("prefix", "?").accept(getMedia().getType()).get(new GenericType<List<ConfigurationProperty>>() {
-	});
+	response = getBaseResource().path("properties").queryParam("prefix", "?").accept(getMedia().getType())
+		.get(new GenericType<List<ConfigurationProperty>>() {
+		});
 	assertNotNull(response);
 	assertEquals(0, response.size());
 

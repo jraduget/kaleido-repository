@@ -235,10 +235,7 @@ public class ConfigurationProperty implements Serializable {
 	final int prime = 31;
 	int result = 1;
 	result = prime * result + ((configurations == null) ? 0 : configurations.hashCode());
-	result = prime * result + ((description == null) ? 0 : description.hashCode());
 	result = prime * result + ((name == null) ? 0 : name.hashCode());
-	result = prime * result + ((type == null) ? 0 : type.hashCode());
-	result = prime * result + ((value == null) ? 0 : value.hashCode());
 	return result;
    }
 
@@ -252,21 +249,24 @@ public class ConfigurationProperty implements Serializable {
 	if (obj == null) { return false; }
 	if (!(obj instanceof ConfigurationProperty)) { return false; }
 	ConfigurationProperty other = (ConfigurationProperty) obj;
+
 	if (configurations == null) {
 	   if (other.configurations != null) { return false; }
-	} else if (!configurations.equals(other.configurations)) { return false; }
-	if (description == null) {
-	   if (other.description != null) { return false; }
-	} else if (!description.equals(other.description)) { return false; }
+	} else if (!configurations.equals(other.configurations)) {
+	   boolean haveOneCommonConfig = false;
+	   for (ConfigurationModel config : configurations) {
+		for (ConfigurationModel config2 : other.configurations) {
+		   if (config.equals(config2)) {
+			haveOneCommonConfig = true;
+			break;
+		   }
+		}
+	   }
+	   if (!haveOneCommonConfig) { return false; }
+	}
 	if (name == null) {
 	   if (other.name != null) { return false; }
 	} else if (!name.equals(other.name)) { return false; }
-	if (type == null) {
-	   if (other.type != null) { return false; }
-	} else if (!type.equals(other.type)) { return false; }
-	if (value == null) {
-	   if (other.value != null) { return false; }
-	} else if (!value.equals(other.value)) { return false; }
 	return true;
    }
 
@@ -276,7 +276,7 @@ public class ConfigurationProperty implements Serializable {
     */
    @Override
    public String toString() {
-	return "ConfigurationProperty [name=" + name + ", value=" + value + ", type=" + type + ", description=" + description + "]";
+	return "ConfigurationProperty [name=" + name + ", value=" + value + ", type=" + type + ", description=" + description + ", id=" + id + "]";
    }
 
 }
