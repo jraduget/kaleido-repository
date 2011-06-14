@@ -59,6 +59,7 @@ public interface ConfigurationConstants {
 	properties,
 	xmlproperties,
 	xml,
+	model,
 	javasystem,
 	osenv,
 	mainargs
@@ -72,6 +73,9 @@ public interface ConfigurationConstants {
    String XmlPropertiesConfigurationPluginName = "configuration.properties.xml";
    /** xml implementation configuration plugin name - configuration resource uri have to end with '.xml' */
    String XmlConfigurationPluginName = "configuration.xml";
+   /** jpa model implementation for configuration, plugin name */
+   String JpaModelConfigurationPluginName = "configuration.model";
+
    /** java env variable implementation configuration plugin name - configuration resource uri have to end with '.javasystem' */
    String JavaSystemConfigurationPluginName = "configuration.javasystem";
    /** operating system env variable implementation configuration plugin name - configuration resource uri have to end with '.osenv' */

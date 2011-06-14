@@ -21,7 +21,7 @@ import java.net.URI;
 import java.util.Set;
 
 import org.kaleidofoundry.core.context.AbstractProviderService;
-import org.kaleidofoundry.core.context.ContextEmptyParameterException;
+import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
@@ -51,7 +51,7 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
    public FileStore _provides(@NotNull final RuntimeContext<FileStore> context) throws ProviderException {
 	final String uriRootPath = context.getString(FileStoreContextBuilder.UriRootPath);
 
-	if (StringHelper.isEmpty(uriRootPath)) { throw new ContextEmptyParameterException(FileStoreContextBuilder.UriRootPath, context); }
+	if (StringHelper.isEmpty(uriRootPath)) { throw new EmptyContextParameterException(FileStoreContextBuilder.UriRootPath, context); }
 
 	return provides(uriRootPath, context);
    }

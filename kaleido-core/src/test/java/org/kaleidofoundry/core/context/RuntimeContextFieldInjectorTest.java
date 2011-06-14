@@ -39,7 +39,7 @@ public class RuntimeContextFieldInjectorTest extends Assert {
 
    @After
    public void cleanup() throws StoreException {
-	ConfigurationFactory.destroy("contextTest");
+	ConfigurationFactory.unregister("contextTest");
    }
 
    @Test

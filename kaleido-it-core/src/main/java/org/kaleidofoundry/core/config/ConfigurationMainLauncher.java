@@ -58,7 +58,7 @@ public class ConfigurationMainLauncher {
 
 	} finally {
 	   // free configuration resources
-	   ConfigurationFactory.destroy("myContext");
+	   ConfigurationFactory.unregister("myContext");
 	}
    }
 

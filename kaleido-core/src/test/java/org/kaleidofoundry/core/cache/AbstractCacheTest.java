@@ -33,9 +33,9 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Jerome RADUGET
  */
-public abstract class AbstractTestCache extends Assert {
+public abstract class AbstractCacheTest extends Assert {
 
-   protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractTestCache.class);
+   protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractCacheTest.class);
 
    /** legal cache to use, must be initialize by the concrete class test */
    protected Cache<Integer, Person> cache;

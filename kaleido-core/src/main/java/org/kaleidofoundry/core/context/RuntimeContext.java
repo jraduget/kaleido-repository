@@ -351,11 +351,11 @@ public class RuntimeContext<T> extends AbstractPropertyAccessor {
     * @param context
     * @param type
     * @return new runtime context instance, build from given annotation
-    * @throws ContextIllegalParameterException if one of {@link Context#configurations()} is not registered
+    * @throws IllegalContextParameterException if one of {@link Context#configurations()} is not registered
     */
    protected static <T> RuntimeContext<T> createFrom(@NotNull final Context context, final Class<T> type) {
 
-	if (StringHelper.isEmpty(context.value())) { throw new ContextIllegalParameterException("context.annotation.value.empty"); }
+	if (StringHelper.isEmpty(context.value())) { throw new IllegalContextParameterException("context.annotation.value.empty"); }
 
 	final RuntimeContext<T> rc;
 
@@ -364,7 +364,7 @@ public class RuntimeContext<T> extends AbstractPropertyAccessor {
 	final Configuration[] configs = new Configuration[configIds != null ? configIds.length : 0];
 	for (int i = 0; i < configs.length; i++) {
 	   configs[i] = ConfigurationFactory.getRegistry().get(configIds[i]);
-	   if (configs[i] == null) { throw new ContextIllegalParameterException("context.annotation.illegalconfig.simple", context.value(), configIds[i]); }
+	   if (configs[i] == null) { throw new IllegalContextParameterException("context.annotation.illegalconfig.simple", context.value(), configIds[i]); }
 	}
 
 	// copy static annotation parameters
@@ -393,13 +393,10 @@ public class RuntimeContext<T> extends AbstractPropertyAccessor {
     * @throws ContextException if one of {@link Context#configurations()} is not registered
     */
    protected static RuntimeContext<?> createFrom(@NotNull final Field annotatedField) {
-
 	final Context context = annotatedField.getAnnotation(Context.class);
-
 	if (context == null) { throw new IllegalArgumentException(ContextMessageBundle.getMessage("context.annotation.field.illegal", Context.class.getName())); }
 
 	final Plugin<?> plugin = PluginHelper.getInterfacePlugin(annotatedField.getDeclaringClass());
-
 	return createFrom(context, plugin != null ? plugin.getAnnotatedClass() : null);
 
    }

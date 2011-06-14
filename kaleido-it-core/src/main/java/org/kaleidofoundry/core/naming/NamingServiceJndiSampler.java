@@ -45,7 +45,7 @@ public class NamingServiceJndiSampler extends AbstractJavaSamplerClient {
    @Override
    public void teardownTest(final JavaSamplerContext context) {
 	try {
-	   ConfigurationFactory.destroy("myConfig");
+	   ConfigurationFactory.unregister("myConfig");
 	} catch (StoreException rse) {
 	   throw new IllegalStateException(rse);
 	}

@@ -24,7 +24,7 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * @author Jerome RADUGET
  */
 
-public class JbossCacheManagerTest extends AbstractTestCacheManager {
+public class JbossCacheManagerTest extends AbstractCacheManagerTest {
 
    @Override
    protected String getAvailableConfiguration() {

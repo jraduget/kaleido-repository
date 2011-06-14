@@ -91,7 +91,7 @@ public class StartupListener implements ServletContextListener {
 	// unload and unregister given configurations ids / url
 	try {
 	   LOGGER.info(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.stop.configurations"));
-	   ConfigurationFactory.destroyAll();
+	   ConfigurationFactory.unregisterAll();
 	} catch (final StoreException rse) {
 	   throw new IllegalStateException(rse);
 	}

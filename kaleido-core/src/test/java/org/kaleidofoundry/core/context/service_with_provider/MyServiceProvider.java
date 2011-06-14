@@ -20,7 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 import org.kaleidofoundry.core.context.AbstractProviderService;
-import org.kaleidofoundry.core.context.ContextEmptyParameterException;
+import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.plugin.Declare;
@@ -52,7 +52,7 @@ public class MyServiceProvider extends AbstractProviderService<MyServiceInterfac
 	final Set<Plugin<MyServiceInterface>> pluginImpls = PluginFactory.getImplementationRegistry().findByInterface(MyServiceInterface.class);
 	final String contextPluginCode = context.getString("pluginCode");
 
-	if (StringHelper.isEmpty(contextPluginCode)) { throw new ContextEmptyParameterException("pluginCode", context); }
+	if (StringHelper.isEmpty(contextPluginCode)) { throw new EmptyContextParameterException("pluginCode", context); }
 
 	// scan each @Declare MyServiceInterface implementation, to get one which match the context plugin code
 	for (final Plugin<MyServiceInterface> pi : pluginImpls) {

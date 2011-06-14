@@ -49,7 +49,7 @@ public abstract class RemoteJndiIntegrationTest extends Assert {
    @After
    public void cleanupClass() throws StoreException {
 	I18nMessagesFactory.clearCache();
-	ConfigurationFactory.destroy("myConfig");
+	ConfigurationFactory.unregister("myConfig");
    }
 
    @Test

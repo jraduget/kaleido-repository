@@ -27,7 +27,7 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * 
  * @author Jerome RADUGET
  */
-public class LocalCacheTest extends AbstractTestCache {
+public class LocalCacheTest extends AbstractCacheTest {
 
    private CacheManager cacheManager;
 

@@ -75,8 +75,8 @@ public class RuntimeContextProvidedFieldInjectorTest extends Assert {
    @After
    public void cleanup() throws StoreException {
 	// Remove all configurations
-	ConfigurationFactory.destroy("myConf");
-	ConfigurationFactory.destroy("anotherConf");
+	ConfigurationFactory.unregister("myConf");
+	ConfigurationFactory.unregister("anotherConf");
 	// re-enable i18n jpa message bundle control
 	I18nMessagesFactory.enableJpaControl();
    }
@@ -193,7 +193,7 @@ public class RuntimeContextProvidedFieldInjectorTest extends Assert {
 	   MyServiceInterface initialReference = myServiceWithRuntimeContextFromWrongConf;
 	   fail("IllegalStateException expected (see MyServiceProvider)");
 	   initialReference.getContext();
-	} catch (final ContextEmptyParameterException rcpe) {
+	} catch (final EmptyContextParameterException rcpe) {
 	   assertEquals("context.parameter.empty", rcpe.getCode());
 	   assertEquals("pluginCode", rcpe.getParameter());
 	}

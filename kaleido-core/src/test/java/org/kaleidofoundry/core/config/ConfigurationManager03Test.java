@@ -58,7 +58,7 @@ public class ConfigurationManager03Test extends AbstractConfigurationManagerTest
    @After
    public void cleanup() {
 	try {
-	   ConfigurationFactory.destroy(MyConfigurationName);
+	   ConfigurationFactory.unregister(MyConfigurationName);
 	} catch (StoreException ste) {
 	}
 
@@ -83,7 +83,7 @@ public class ConfigurationManager03Test extends AbstractConfigurationManagerTest
    public void getConfigurationModel() {
 	super.getConfigurationModel();
 
-	ConfigurationModel configModel = configurationManager.getConfigurationModel(MyConfigurationName);
+	ConfigurationModel configModel = configurationManager.getModel(MyConfigurationName);
 	assertNotNull(configModel);
 	assertNull(configModel.getId());
 	assertEquals(MyConfigurationName, configModel.getName());
@@ -104,4 +104,13 @@ public class ConfigurationManager03Test extends AbstractConfigurationManagerTest
 	assertEquals("123.45", property.getValue());
    }
 
+   @Override
+   @Test
+   public void removeConfigurationModel() {
+	try {
+	   configurationManager.removeModel(MyConfigurationName);
+	   fail();
+	} catch (ConfigurationNotFoundException cnfe) {
+	}
+   }
 }

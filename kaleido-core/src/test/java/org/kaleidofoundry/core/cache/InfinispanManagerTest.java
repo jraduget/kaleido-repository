@@ -24,7 +24,7 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * @author Jerome RADUGET
  */
 
-public class InfinispanManagerTest extends AbstractTestCacheManager {
+public class InfinispanManagerTest extends AbstractCacheManagerTest {
 
    @Override
    protected String getAvailableConfiguration() {

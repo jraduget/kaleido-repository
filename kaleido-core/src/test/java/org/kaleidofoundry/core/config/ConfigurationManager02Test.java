@@ -41,7 +41,7 @@ public class ConfigurationManager02Test extends ConfigurationManager01Test {
    public void cleanup() {
 	super.cleanup();
 	try {
-	   ConfigurationFactory.destroy(MyConfigurationName);
+	   ConfigurationFactory.unregister(MyConfigurationName);
 	} catch (StoreException ste) {
 	}
    }

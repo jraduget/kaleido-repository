@@ -56,7 +56,7 @@ public class FileStoreMainLauncher {
 	   }
 	} finally {
 	   // free configuration resources
-	   ConfigurationFactory.destroyAll();
+	   ConfigurationFactory.unregisterAll();
 	}
    }
 }

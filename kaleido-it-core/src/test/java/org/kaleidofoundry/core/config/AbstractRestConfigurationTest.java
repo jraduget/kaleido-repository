@@ -57,7 +57,7 @@ public abstract class AbstractRestConfigurationTest extends Assert {
    public abstract MediaType getMedia();
 
    @Test
-   public void notFoundConfiguration() {
+   public void getConfigurationModel() {
 	try {
 	   WebResource resource = client.resource(getBaseURI());
 	   resource.path("rest").path("configurations").path("noConfig").path("get").path("myapp.name").accept(getMedia().getType()).get(String.class);
@@ -66,10 +66,27 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	   assertEquals(404, cnfe.getResponse().getStatus());
 	   assertTrue(cnfe.getMessage().contains("noConfig"));
 	}
+
+	fail("TODO");
    }
 
    @Test
-   public void get() {
+   public void removeConfigurationModel() {
+	fail("TODO");
+   }
+
+   @Test
+   public void registerConfiguration() {
+	fail("TODO");
+   }
+
+   @Test
+   public void unregisterConfiguration() {
+	fail("TODO");
+   }
+
+   @Test
+   public void getPropertyValue() {
 	String strResponse = getBaseResource().path("get").path("myapp.name").accept(getMedia().getType()).get(String.class);
 	System.out.println(strResponse);
 	assertNotNull(strResponse);
@@ -141,7 +158,7 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	   // restore initial value
 	   getBaseResource().path("set").path("myapp.name").queryParam("value", "my new application").put();
 	   // remove created property
-	   getBaseResource().path("remove").path("newProp").delete();
+	   getBaseResource().path("removeProperty").path("newProp").delete();
 	}
 
 	// check fired event count
@@ -157,7 +174,7 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	// set initial value
 	getBaseResource().path("set").path("keyToRemove").queryParam("value", "eheh").put();
 	// remove it
-	getBaseResource().path("remove").path("keyToRemove").delete();
+	getBaseResource().path("removeProperty").path("keyToRemove").delete();
 	// check fired event count
 	FireChangesReport report = getBaseResource().path("fireChanges").accept(getMedia().getType()).get(FireChangesReport.class);
 	assertNotNull(report);
@@ -166,7 +183,7 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	assertEquals(new Integer(1), report.getRemoved());
 	// remove it
 	try {
-	   getBaseResource().path("remove").path("keyToRemove").delete();
+	   getBaseResource().path("removeProperty").path("keyToRemove").delete();
 	   fail("property keyToRemove was not removed");
 	} catch (UniformInterfaceException cnfe) {
 	   assertEquals(404, cnfe.getResponse().getStatus());

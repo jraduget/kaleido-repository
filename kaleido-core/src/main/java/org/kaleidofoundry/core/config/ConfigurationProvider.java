@@ -27,7 +27,7 @@ import java.util.Set;
 
 import org.kaleidofoundry.core.context.AbstractProviderService;
 import org.kaleidofoundry.core.context.Context;
-import org.kaleidofoundry.core.context.ContextEmptyParameterException;
+import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.ProviderService;
 import org.kaleidofoundry.core.context.RuntimeContext;
@@ -84,8 +84,8 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 	   name = runtimeContext.getName();
 	}
 
-	if (StringHelper.isEmpty(name)) { throw new ContextEmptyParameterException(Name, runtimeContext); }
-	if (StringHelper.isEmpty(resourceUri)) { throw new ContextEmptyParameterException(FileStoreUri, runtimeContext); }
+	if (StringHelper.isEmpty(name)) { throw new EmptyContextParameterException(Name, runtimeContext); }
+	if (StringHelper.isEmpty(resourceUri)) { throw new EmptyContextParameterException(FileStoreUri, runtimeContext); }
 
 	return provides(name, resourceUri != null ? URI.create(resourceUri) : null, runtimeContext);
    }

@@ -92,7 +92,7 @@ public abstract class AbstractConfigurationListenerTest extends Assert {
    @After
    public void cleanup() throws StoreException {
 	// unregister configuration
-	ConfigurationFactory.destroy("myConf");
+	ConfigurationFactory.unregister("myConf");
 	// re enable jpa i18n control
 	I18nMessagesFactory.enableJpaControl();
    }

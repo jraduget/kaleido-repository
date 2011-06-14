@@ -54,9 +54,9 @@ public class ConfigurationIntegrationTest {
    @After
    public void cleanup() throws StoreException {
 	// cleanup context configuration
-	ConfigurationFactory.destroy("myConfigCtx");
+	ConfigurationFactory.unregister("myConfigCtx");
 	// cleanup configuration
-	ConfigurationFactory.destroy("myConfig");
+	ConfigurationFactory.unregister("myConfig");
    }
 
    /**

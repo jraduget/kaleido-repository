@@ -40,7 +40,7 @@ public class CacheIntegrationTest extends Assert {
 
    @AfterClass
    public static void cleanupClass() throws StoreException {
-	ConfigurationFactory.destroy("myConfig");
+	ConfigurationFactory.unregister("myConfig");
    }
 
    @Test

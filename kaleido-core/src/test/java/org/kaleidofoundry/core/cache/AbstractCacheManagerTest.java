@@ -32,7 +32,7 @@ import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
  * 
  * @author Jerome RADUGET
  */
-public abstract class AbstractTestCacheManager extends Assert {
+public abstract class AbstractCacheManagerTest extends Assert {
 
    /** @return cache implementation code */
    protected abstract String getCacheImplementationCode();

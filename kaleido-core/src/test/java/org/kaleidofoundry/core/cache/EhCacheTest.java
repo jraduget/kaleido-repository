@@ -26,7 +26,7 @@ import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
  * 
  * @author Jerome RADUGET
  */
-public class EhCacheTest extends AbstractTestCache {
+public class EhCacheTest extends AbstractCacheTest {
 
    private CacheManager cacheManager;
 

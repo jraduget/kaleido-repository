@@ -19,7 +19,7 @@ import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheManagerRef;
 import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
 
 import org.kaleidofoundry.core.context.AbstractProviderService;
-import org.kaleidofoundry.core.context.ContextEmptyParameterException;
+import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
@@ -45,7 +45,7 @@ public class CacheProvider extends AbstractProviderService<Cache> {
    @Override
    public Cache _provides(@NotNull final RuntimeContext<Cache> context) throws ProviderException {
 	final String cacheName = context.getString(CacheName);
-	if (StringHelper.isEmpty(cacheName)) { throw new ContextEmptyParameterException(CacheName, context); }
+	if (StringHelper.isEmpty(cacheName)) { throw new EmptyContextParameterException(CacheName, context); }
 	return provides(cacheName, context);
    }
 

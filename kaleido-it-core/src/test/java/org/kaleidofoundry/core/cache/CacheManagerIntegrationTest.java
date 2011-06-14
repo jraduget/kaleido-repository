@@ -39,7 +39,7 @@ public class CacheManagerIntegrationTest {
 
    @AfterClass
    public static void cleanupClass() throws StoreException {
-	ConfigurationFactory.destroy("myConfig");
+	ConfigurationFactory.unregister("myConfig");
    }
    @Test
    public void testCacheManagerSample01() {

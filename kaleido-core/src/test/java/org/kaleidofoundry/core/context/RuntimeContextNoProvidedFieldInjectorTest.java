@@ -86,8 +86,8 @@ public class RuntimeContextNoProvidedFieldInjectorTest extends Assert {
    @After
    public void cleanup() throws StoreException {
 	// Remove all configurations
-	ConfigurationFactory.destroy("myConf");
-	ConfigurationFactory.destroy("anotherConf");
+	ConfigurationFactory.unregister("myConf");
+	ConfigurationFactory.unregister("anotherConf");
 	// re-enable i18n jpa message bundle control
 	I18nMessagesFactory.enableJpaControl();
    }

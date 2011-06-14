@@ -96,7 +96,7 @@ public abstract class ConfigurationFactory {
     * 
     * @throws StoreException
     */
-   public static final void destroyAll() throws StoreException {
+   public static final void unregisterAll() throws StoreException {
 
 	if (INIT_LOADED) {
 	   synchronized (ConfigurationFactory.class) {
@@ -112,12 +112,12 @@ public abstract class ConfigurationFactory {
    }
 
    /**
-    * Unload / Unregister / Destroy given configuration
+    * Unload / Unregister / Destroy the given configuration
     * 
     * @param configName
     * @throws StoreException
     */
-   public static final void destroy(@NotNull final String configName) throws StoreException {
+   public static final void unregister(@NotNull final String configName) throws StoreException {
 
 	final Configuration configToDestroy = getRegistry().get(configName);
 

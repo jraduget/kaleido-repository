@@ -113,7 +113,7 @@ public class ConfigurationManager01Test extends AbstractConfigurationManagerTest
    public void getConfigurationModel() {
 	super.getConfigurationModel();
 
-	ConfigurationModel configModel = configurationManager.getConfigurationModel(MyConfigurationName);
+	ConfigurationModel configModel = configurationManager.getModel(MyConfigurationName);
 	assertNotNull(configModel);
 	assertNotNull(configModel.getId());
 	assertEquals(MyConfigurationName, configModel.getName());

@@ -291,6 +291,14 @@
 						</manifest>
 					</archive>
 				</configuration>
+				<!-- build jar test in order to be reused between module -->
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>				
 			</plugin>
 			<!-- deploying -->
 			<plugin>

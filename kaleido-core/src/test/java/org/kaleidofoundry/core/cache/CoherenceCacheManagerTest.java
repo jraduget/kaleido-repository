@@ -23,7 +23,7 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * 
  * @author Jerome RADUGET
  */
-public class CoherenceCacheManagerTest extends AbstractTestCacheManager {
+public class CoherenceCacheManagerTest extends AbstractCacheManagerTest {
 
    @Override
    protected String getAvailableConfiguration() {

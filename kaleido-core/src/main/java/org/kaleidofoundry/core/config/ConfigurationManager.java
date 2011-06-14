@@ -16,7 +16,7 @@
 package org.kaleidofoundry.core.config;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Local;
 import javax.ejb.Remote;
@@ -28,26 +28,68 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.store.StoreException;
 
 /**
- * Configuration properties manager
+ * Configuration properties manager used to manage the configuration model
+ * For the following properties file (named "appConfig" in the following javadoc) implements by {@link PropertiesConfiguration} :
+ * 
+ * <pre>
+ * application.name=app
+ * application.version=1.0.0
+ * application.description=description of the application...
+ * application.date=2006-09-01T00:00:00
+ * application.librairies=dom4j.jar log4j.jar mail.jar
+ * 
+ * application.modules.sales=Sales
+ * application.modules.sales.version=1.1.0
+ * application.modules.marketing=Market.
+ * application.modules.netbusiness=
+ * </pre>
  * 
  * @author Jerome RADUGET
+ * @see Configuration
+ * @see ConfigurationProperty
  */
 @Local
 @Remote
 public interface ConfigurationManager {
 
    /**
-    * @param config
+    * register a configuration with the given name
+    * 
+    * @param config configuration name identifier
+    * @param resourceURI configuration resource uri
+    */
+   void register(String config, String resourceURI);
+
+   /**
+    * unregister the configuration with the given name
+    * 
+    * @param config configuration name identifier
+    */
+   void unregister(String config) throws StoreException;
+
+   /**
+    * get configuration model by its name
+    * 
+    * @param config configuration name identifier
     * @return the requested configuration
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @throws ConfigurationException
     */
-   ConfigurationModel getConfigurationModel(@NotNull String config) throws ConfigurationNotFoundException, ConfigurationException;
+   ConfigurationModel getModel(@NotNull String config) throws ConfigurationNotFoundException, ConfigurationException;
+
+   /**
+    * remove configuration model by its name
+    * 
+    * @param config configuration name identifier
+    * @throws ConfigurationNotFoundException
+    * @throws ConfigurationException
+    */
+   void removeModel(@NotNull final String config) throws ConfigurationNotFoundException, ConfigurationException;
 
    /**
     * get the raw property value
     * 
-    * @param config
+    * @param config configuration name identifier
     * @param property
     * @param type
     * @return the property value (converted as type T)
@@ -55,13 +97,13 @@ public interface ConfigurationManager {
     * @throws PropertyNotFoundException
     * @param <T>
     */
-   <T extends Serializable> T getPropertyValue(final String config, final String property, final Class<T> type) throws ConfigurationNotFoundException,
+   <T extends Serializable> T getPropertyValue(@NotNull final String config, final String property, final Class<T> type) throws ConfigurationNotFoundException,
 	   PropertyNotFoundException;
 
    /**
     * get the property value as a string
     * 
-    * @param config
+    * @param config configuration name identifier
     * @param property
     * @return the raw property value
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
@@ -74,7 +116,7 @@ public interface ConfigurationManager {
    /**
     * set / define / change the value of a property (but do not persist it. Call {@link #store(String)} to persist its value)
     * 
-    * @param config
+    * @param config configuration name identifier
     * @param property
     * @param value the new value to set
     * @param type the type of the value
@@ -91,7 +133,7 @@ public interface ConfigurationManager {
    /**
     * set / define / change the value of a property (but do not persist it. Call {@link #store(String)} to persist its value)
     * 
-    * @param config
+    * @param config configuration name identifier
     * @param property
     * @param value the new value to set
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
@@ -104,7 +146,7 @@ public interface ConfigurationManager {
    /**
     * get the property
     * 
-    * @param config
+    * @param config configuration name identifier
     * @param property
     * @return the raw property value
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
@@ -118,7 +160,7 @@ public interface ConfigurationManager {
    /**
     * define and persist a new property in the configuration meta model
     * 
-    * @param config
+    * @param config configuration name identifier
     * @param property
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @throws ConfigurationException
@@ -129,7 +171,7 @@ public interface ConfigurationManager {
    /**
     * remove the property from the configuration
     * 
-    * @param config
+    * @param config configuration name identifier
     * @param property
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @throws PropertyNotFoundException if property can't be found in configuration
@@ -140,33 +182,57 @@ public interface ConfigurationManager {
 	   ConfigurationException;
 
    /**
+    * @param config configuration name identifier
+    * @return a set (clone) of all the declared property keys <br/>
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
+    */
+   @NotNull
+   Set<ConfigurationProperty> getProperties(@NotNull String config) throws ConfigurationNotFoundException;
+
+   /**
+    * @param config configuration name identifier
+    * @param prefix
+    * @return a set (clone) of all the declared property keys <br/>
+    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
+    */
+   @NotNull
+   Set<ConfigurationProperty> getProperties(@NotNull String config, @NotNull String prefix) throws ConfigurationNotFoundException;
+
+   /**
     * <p>
     * For the top class properties example, implements by {@link PropertiesConfiguration} :
     * 
     * <pre>
-    * configuration.keySet()= {&quot;//application/name&quot;, &quot;//application/version&quot;, &quot;//application/description&quot;, &quot;//application/date&quot;, &quot;//application/librairies&quot;, "application.modules.sales", ...}
+    * 
+    * configurationManager.keySet(&quot;appConfig&quot;) = {&quot;//application/name&quot;, &quot;//application/version&quot;, &quot;//application/description&quot;, &quot;//application/date&quot;, &quot;//application/librairies&quot;, "application.modules.sales", ...}
     * </pre>
     * 
     * </p>
     * 
-    * @param config
+    * @param config configuration name identifier
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @return a set (clone) of all the declared property keys <br/>
     */
    @NotNull
-   List<ConfigurationProperty> properties(@NotNull String config) throws ConfigurationNotFoundException;
+   Set<String> keySet(@NotNull String config) throws ConfigurationNotFoundException;
 
    /**
-    * @param config
+    * For the top class properties example, implements by {@link PropertiesConfiguration} :
+    * 
+    * <pre>
+    * configurationManager.keySet(&quot;appConfig&quot;, &quot;application.modules&quot;)= {&quot;application.modules.sales=Sales&quot;,&quot;application.modules.sales.version=1.1.0&quot;,&quot;application.modules.marketing=Market.&quot;,&quot;application.modules.netbusiness=&quot;}
+    * </pre>
+    * 
+    * @param config configuration name identifier
     * @param prefix prefix key name filtering
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @return a set (clone) of all declared property keys filtered by prefix argument
     */
    @NotNull
-   List<ConfigurationProperty> properties(@NotNull String config, @NotNull String prefix) throws ConfigurationNotFoundException;
+   Set<String> keySet(@NotNull String config, @NotNull String prefix) throws ConfigurationNotFoundException;
 
    /**
-    * @param config
+    * @param config configuration name identifier
     * @param property property key to find
     * @return <code>true</code>if key exists, <code>false</code> otherwise
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
@@ -184,7 +250,7 @@ public interface ConfigurationManager {
    /**
     * store the changes made to the configuration
     * 
-    * @param config
+    * @param config configuration name identifier
     * @see Configuration#store()
     * @throws StoreException
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
@@ -194,7 +260,7 @@ public interface ConfigurationManager {
    /**
     * load the configuration
     * 
-    * @param config
+    * @param config configuration name identifier
     * @throws StoreException
     * @see Configuration#load()
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
@@ -204,7 +270,7 @@ public interface ConfigurationManager {
    /**
     * unload the configuration
     * 
-    * @param config
+    * @param config configuration name identifier
     * @throws StoreException
     * @see Configuration#unload()
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
@@ -214,7 +280,7 @@ public interface ConfigurationManager {
    /**
     * reload the configuration
     * 
-    * @param config
+    * @param config configuration name identifier
     * @throws StoreException
     * @see Configuration#reload()
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
@@ -222,7 +288,7 @@ public interface ConfigurationManager {
    void reload(@NotNull String config) throws ConfigurationNotFoundException, StoreException;
 
    /**
-    * @param config
+    * @param config configuration name identifier
     * @return <code>true|false</code>
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     */

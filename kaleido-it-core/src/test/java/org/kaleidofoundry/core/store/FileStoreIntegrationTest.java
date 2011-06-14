@@ -41,7 +41,7 @@ public class FileStoreIntegrationTest {
 
    @AfterClass
    public static void cleanupClass() throws StoreException {
-	ConfigurationFactory.destroyAll();
+	ConfigurationFactory.unregisterAll();
    }
 
    @Test

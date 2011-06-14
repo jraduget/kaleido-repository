@@ -22,7 +22,7 @@ import java.util.Locale;
  * 
  * @author Jerome RADUGET
  */
-public class ContextEmptyParameterException extends ContextIllegalParameterException {
+public class EmptyContextParameterException extends IllegalContextParameterException {
 
    private static final long serialVersionUID = 4225599225267075709L;
 
@@ -33,7 +33,7 @@ public class ContextEmptyParameterException extends ContextIllegalParameterExcep
     * @param context
     * @param locale
     */
-   public ContextEmptyParameterException(final String parameter, final RuntimeContext<?> context, final Locale locale) {
+   public EmptyContextParameterException(final String parameter, final RuntimeContext<?> context, final Locale locale) {
 	super("context.parameter.empty", locale, parameter, context.getName());
 	this.parameter = parameter;
    }
@@ -42,7 +42,7 @@ public class ContextEmptyParameterException extends ContextIllegalParameterExcep
     * @param parameter
     * @param context
     */
-   public ContextEmptyParameterException(final String parameter, final RuntimeContext<?> context) {
+   public EmptyContextParameterException(final String parameter, final RuntimeContext<?> context) {
 	super("context.parameter.empty", parameter, context.getName());
 	this.parameter = parameter;
    }

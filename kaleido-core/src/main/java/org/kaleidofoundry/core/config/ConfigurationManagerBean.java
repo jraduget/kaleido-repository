@@ -18,8 +18,7 @@ package org.kaleidofoundry.core.config;
 import static org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory.KaleidoPersistentContextUnitName;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.ejb.Stateless;
@@ -37,6 +36,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
@@ -63,11 +63,10 @@ import org.kaleidofoundry.core.util.StringHelper;
  * 
  * @author Jerome RADUGET
  */
-@Stateless(mappedName = "ejb/configuration")
+@Stateless(mappedName = "ejb/configuration/manager")
 @Path("/configurations/{config}")
-@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 @Task(labels = TaskLabel.Defect, comment = "restore 'implements ConfigurationManager which cause a bug' - I open a GF3.x bug for this : GLASSFISH-16199")
-public class ConfigurationManagerBean { // implements ConfigurationManager {
+public class ConfigurationManagerBean implements ConfigurationManager {
 
    /** injected and used to handle security context */
    @Context
@@ -81,25 +80,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
    @PersistenceContext(unitName = KaleidoPersistentContextUnitName)
    EntityManager em;
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.ConfigurationManager#getConfiguration(java.lang.String)
-    */
-   @GET
-   @Path("/")
-   public ConfigurationModel getConfigurationModel(final @PathParam("config") String config) throws ConfigurationNotFoundException, IllegalStateException {
-	ConfigurationModel configurationModel = findConfigurationModelByName(config, false);
-	if (em == null || configurationModel == null) {
-	   Configuration configuration = getRegisteredConfiguration(config);
-	   configurationModel = new ConfigurationModel(config, configuration.getResourceUri());
-	   for (String key : configuration.keySet()) {
-		ConfigurationProperty property = newConfigurationProperty(configuration, key);
-		property.getConfigurations().add(configurationModel);
-		configurationModel.getProperties().add(property);
-	   }
-	}
-	return configurationModel;
-   }
+   // ### Property management methods ############################################################################################
 
    /*
     * (non-Javadoc)
@@ -107,6 +88,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     */
    @GET
    @Path("get/{property}")
+   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public String getPropertyValue(final @PathParam("config") String config, final @PathParam("property") String property) {
 	try {
 	   String value = getRegisteredConfiguration(config).getString(property);
@@ -190,6 +172,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     */
    @GET
    @Path("getProperty/{property}")
+   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public ConfigurationProperty getProperty(final @PathParam("config") String config, final @PathParam("property") String property) {
 
 	ConfigurationException ce;
@@ -206,7 +189,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 	// second, build a non persistent one with the given information
 	try {
 	   ConfigurationProperty cp = getRegisteredProperty(config, property, true);
-	   ConfigurationModel cm = getConfigurationModel(config);
+	   ConfigurationModel cm = getModel(config);
 	   cp.getConfigurations().add(cm);
 	   return cp;
 	} catch (ConfigurationNotFoundException cnfe) {
@@ -230,7 +213,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 	ConfigurationProperty currentProperty = findConfigurationPropertyByName(config, property.getName(), false);
 	// meta data update
 	if (em != null) {
-	   ConfigurationModel configurationModel = getConfigurationModel(config);
+	   ConfigurationModel configurationModel = getModel(config);
 	   configurationModel.getProperties().add(property);
 	   property.getConfigurations().add(configurationModel);
 	   // if it is a new property creation
@@ -252,7 +235,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#removeProperty(java.lang.String, java.lang.String)
     */
    @DELETE
-   @Path("remove/{property}")
+   @Path("removeProperty/{property}")
    public void removeProperty(final @PathParam("config") String config, @PathParam("property") final String property) {
 	boolean foundConfiguration = false;
 	boolean foundConfigurationProperty = false;
@@ -287,8 +270,8 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.AbstractConfigurationManager#keySet(java.lang.String)
     */
-   public List<ConfigurationProperty> properties(final String config) {
-	return properties(config, null);
+   public Set<ConfigurationProperty> getProperties(final String config) {
+	return getProperties(config, null);
    }
 
    /*
@@ -297,8 +280,9 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     */
    @GET
    @Path("properties")
-   public List<ConfigurationProperty> properties(final @PathParam("config") String config, @QueryParam("prefix") final String prefix) {
-	final List<ConfigurationProperty> properties = new ArrayList<ConfigurationProperty>();
+   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+   public Set<ConfigurationProperty> getProperties(final @PathParam("config") String config, @QueryParam("prefix") final String prefix) {
+	final Set<ConfigurationProperty> properties = new HashSet<ConfigurationProperty>();
 	boolean foundConfiguration = false;
 
 	if (em != null) {
@@ -327,14 +311,120 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 	return properties;
    }
 
+   /**
+    * @param config
+    * @return properties keys of the configuration
+    * @throws ConfigurationNotFoundException
+    */
+   @GET
+   @Path("keys")
+   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+   public Response keys(@PathParam("config") final String config, @QueryParam("prefix") final String prefix) throws ConfigurationNotFoundException {
+	Set<String> result = keySet(config);
+	return Response.ok(result).build();
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#keySet(java.lang.String)
+    */
+   @Override
+   public Set<String> keySet(final String config) throws ConfigurationNotFoundException {
+	Set<String> result = new HashSet<String>();
+	for (ConfigurationProperty prop : getProperties(config)) {
+	   result.add(prop.getName());
+	}
+	return result;
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#keySet(java.lang.String, java.lang.String)
+    */
+   @Override
+   public Set<String> keySet(final String config, final String prefix) throws ConfigurationNotFoundException {
+	Set<String> result = new HashSet<String>();
+	for (ConfigurationProperty prop : getProperties(config, prefix)) {
+	   result.add(prop.getName());
+	}
+	return result;
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.AbstractConfigurationManager#containsKey(java.lang.String, java.lang.String, java.lang.String)
     */
    @GET
    @Path("contains/{property}")
+   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public boolean containsKey(final @PathParam("config") String config, @PathParam("property") final String property) {
-	return properties(config, null).contains(property);
+	return keySet(config, null).contains(property);
+   }
+
+   // ### Configuration management methods #######################################################################################
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#getModel(java.lang.String)
+    */
+   @GET
+   @Path("/")
+   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+   public ConfigurationModel getModel(final @PathParam("config") String config) throws ConfigurationNotFoundException, IllegalStateException {
+	ConfigurationModel configurationModel = findConfigurationModelByName(config, false);
+	if (em == null || configurationModel == null) {
+	   Configuration configuration = getRegisteredConfiguration(config);
+	   configurationModel = new ConfigurationModel(config, configuration.getResourceUri());
+	   for (String key : configuration.keySet()) {
+		ConfigurationProperty property = newConfigurationProperty(configuration, key);
+		property.getConfigurations().add(configurationModel);
+		configurationModel.getProperties().add(property);
+	   }
+	}
+	return configurationModel;
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#removeModel(java.lang.String)
+    */
+   @DELETE
+   @Path("delete")
+   public void removeModel(@PathParam("config") final String config) {
+	ConfigurationModel configurationModel = findConfigurationModelByName(config, true);
+	if (em != null) {
+	   // remove orphan properties
+	   for (ConfigurationProperty cp : configurationModel.getProperties()) {
+		if (cp.getConfigurations().size() == 1) {
+		   em.remove(cp);
+		}
+	   }
+	   // clean current configuration properties
+	   configurationModel.getProperties().clear();
+	   // remove configuration and flush all changes
+	   em.remove(configurationModel);
+	   em.flush();
+	}
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#register(java.lang.String, java.lang.String)
+    */
+   @PUT
+   @Path("register")
+   public void register(final @PathParam("config") String config, final @PathParam("resourceURI") String resourceURI) {
+	ConfigurationFactory.provides(config, resourceURI);
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#unregister(java.lang.String)
+    */
+   @PUT
+   @Path("unregister")
+   public void unregister(final @PathParam("config") String config) throws StoreException {
+	ConfigurationFactory.unregister(config);
    }
 
    /*
@@ -343,6 +433,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     */
    @GET
    @Path("fireChanges")
+   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public FireChangesReport fireChanges(@PathParam("config") final String config) {
 	return getRegisteredConfiguration(config).fireConfigurationChangesEvents();
    }

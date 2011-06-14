@@ -47,7 +47,7 @@ import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.config.ConfigurationChangeEvent.ConfigurationChangeType;
 import org.kaleidofoundry.core.config.entity.FireChangesReport;
-import org.kaleidofoundry.core.context.ContextEmptyParameterException;
+import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
@@ -121,8 +121,8 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
 	resourceUri = !StringHelper.isEmpty(resourceUri) ? resourceUri : context.getString(FileStoreUri);
 
 	// context check
-	if (StringHelper.isEmpty(name)) { throw new ContextEmptyParameterException(Name, context); }
-	if (StringHelper.isEmpty(resourceUri)) { throw new ContextEmptyParameterException(FileStoreUri, context); }
+	if (StringHelper.isEmpty(name)) { throw new EmptyContextParameterException(Name, context); }
+	if (StringHelper.isEmpty(resourceUri)) { throw new EmptyContextParameterException(FileStoreUri, context); }
 
 	this.context = context;
 	this.name = name;

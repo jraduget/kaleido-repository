@@ -24,8 +24,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.kaleidofoundry.core.context.AbstractProviderService;
-import org.kaleidofoundry.core.context.ContextEmptyParameterException;
-import org.kaleidofoundry.core.context.ContextIllegalParameterException;
+import org.kaleidofoundry.core.context.EmptyContextParameterException;
+import org.kaleidofoundry.core.context.IllegalContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.system.JavaSystemHelper;
@@ -63,13 +63,13 @@ public class I18nMessagesProvider extends AbstractProviderService<I18nMessages> 
 	Locale locale = null;
 
 	// managed baseName
-	if (StringHelper.isEmpty(baseName)) { throw new ContextEmptyParameterException(BaseName, context); }
+	if (StringHelper.isEmpty(baseName)) { throw new EmptyContextParameterException(BaseName, context); }
 
 	// managed classloader context
 	try {
 	   classLoader = StringHelper.isEmpty(classLoaderClass) ? null : Class.forName(classLoaderClass).getClassLoader();
 	} catch (final ClassNotFoundException cnfe) {
-	   throw new ContextIllegalParameterException(ClassLoaderClass, classLoaderClass, context, cnfe);
+	   throw new IllegalContextParameterException(ClassLoaderClass, classLoaderClass, context, cnfe);
 	}
 
 	// managed locale language & country context

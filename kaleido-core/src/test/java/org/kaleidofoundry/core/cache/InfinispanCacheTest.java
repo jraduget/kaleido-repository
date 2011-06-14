@@ -26,7 +26,7 @@ import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
  * 
  * @author Jerome RADUGET
  */
-public class InfinispanCacheTest extends AbstractTestCache {
+public class InfinispanCacheTest extends AbstractCacheTest {
 
    private CacheManager cacheManager;
 

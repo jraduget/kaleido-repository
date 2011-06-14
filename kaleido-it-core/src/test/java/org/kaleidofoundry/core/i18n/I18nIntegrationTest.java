@@ -45,7 +45,7 @@ public class I18nIntegrationTest extends Assert {
    @After
    public void cleanupClass() throws StoreException {
 	I18nMessagesFactory.clearCache();
-	ConfigurationFactory.destroy("myConfig");
+	ConfigurationFactory.unregister("myConfig");
    }
 
    /**

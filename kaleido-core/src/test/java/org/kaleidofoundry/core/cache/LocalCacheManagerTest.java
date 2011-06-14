@@ -26,7 +26,7 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * @author Jerome RADUGET
  */
 
-public class LocalCacheManagerTest extends AbstractTestCacheManager {
+public class LocalCacheManagerTest extends AbstractCacheManagerTest {
 
    @Override
    protected String getAvailableConfiguration() {

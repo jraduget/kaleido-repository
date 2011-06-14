@@ -116,17 +116,22 @@ public abstract class AbstractConfigurationTest extends Assert {
 	try {
 	   configuration.store();
 	   fail();
-	} catch (final IllegalStateException iste) {
+	} catch (final ConfigurationException ce) {
+	   assertEquals("config.load.notloaded", ce.getCode());
 	}
 
-	fail("TODO");
-	// try {
-	// configuration.store();
-	// } catch (final IllegalStateException iste) {
-	// assertTrue(iste.getMessage().contains("config.readonly.store"));
-	// }
+	configuration.load();
+	assertTrue(configuration.isLoaded());
+	try {
+	   configuration.store();
+	   if (!configuration.isStorageAllowed()) {
+		fail();
+	   }
+	} catch (final StoreException se) {
+	   assertEquals("store.readonly.illegal", se.getCode());
+	}
 
-	// then can't test store anymore
+	// can't test store anymore
 	// -> store can be a classpath resource and store method is not handled
 	// -> store() is tested in file store module
    }

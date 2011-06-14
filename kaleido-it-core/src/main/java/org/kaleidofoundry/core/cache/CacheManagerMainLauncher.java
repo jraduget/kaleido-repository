@@ -66,7 +66,7 @@ public class CacheManagerMainLauncher {
 
 	} finally {
 	   // free configuration resources
-	   ConfigurationFactory.destroy("myConfig");
+	   ConfigurationFactory.unregister("myConfig");
 	}
    }
 }
