@@ -37,13 +37,13 @@ public class RemoteJndiIntegrationTest04 extends RemoteJndiIntegrationTest {
    }
 
    @Test
-   public void checkContext() {	
+   public void checkContext() {
 	JndiNamingService ns = (JndiNamingService) getNamingServiceJndiSample().getNamingService();
 	assertNotNull(ns);
 	assertNotNull(ns.getContext());
-	assertEquals("myManualNamingCtx", ns.getContext().getName());	
+	assertEquals("myManualNamingService", ns.getContext().getName());
 	assertEquals("com.sun.enterprise.naming.SerialInitContextFactory", ns.getContext().getProperty(InitialContextFactory));
 	assertEquals("true", ns.getContext().getProperty(FailoverEnabled));
 	assertEquals("all", ns.getContext().getProperty(Caching));
-   }  
+   }
 }

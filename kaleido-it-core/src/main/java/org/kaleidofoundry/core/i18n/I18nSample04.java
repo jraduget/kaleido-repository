@@ -29,16 +29,14 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  */
 public class I18nSample04 {
 
-   private final I18nMessages messages;
+   private final I18nMessages myBundle;
 
    public I18nSample04() {
 
-	RuntimeContext<I18nMessages> context = new I18nContextBuilder("myI18nCtx", I18nMessages.class)
-	.withBaseName("i18n/messages")
-	.withLocaleLanguage("fr")
-	.build();
+	RuntimeContext<I18nMessages> context = new I18nContextBuilder("myI18nBundle", I18nMessages.class).withBaseName("i18n/messages").withLocaleLanguage("fr")
+		.build();
 
-	messages = I18nMessagesFactory.provides(context);
+	myBundle = I18nMessagesFactory.provides(context);
    }
 
    /**
@@ -55,10 +53,10 @@ public class I18nSample04 {
     */
    public void echo() throws ParseException {
 	DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
-	System.out.printf("%s\n", messages.getMessage("label.hello"));
-	System.out.printf("%s\n", messages.getMessage("label.hello.who", "Smith"));
-	System.out.printf("%s\n", messages.getMessage("label.hello.when", "Smith", df.parse("2010/10/21")));
-	System.out.printf("%s\n", messages.getMessage("label.hello.how", "Smith", df.parse("2010/10/21"), 1234.56));
+	System.out.printf("%s\n", myBundle.getMessage("label.hello"));
+	System.out.printf("%s\n", myBundle.getMessage("label.hello.who", "Smith"));
+	System.out.printf("%s\n", myBundle.getMessage("label.hello.when", "Smith", df.parse("2010/10/21")));
+	System.out.printf("%s\n", myBundle.getMessage("label.hello.how", "Smith", df.parse("2010/10/21"), 1234.56));
    }
 
    /**
@@ -67,6 +65,6 @@ public class I18nSample04 {
     * @return current messages instance
     */
    I18nMessages getMessages() {
-	return messages;
+	return myBundle;
    }
 }

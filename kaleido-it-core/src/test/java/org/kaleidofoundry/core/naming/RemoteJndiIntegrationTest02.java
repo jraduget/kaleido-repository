@@ -19,7 +19,6 @@ import org.junit.Test;
 
 /**
  * @see NamingServiceJndiSample02
- * 
  * @author Jerome RADUGET
  */
 public class RemoteJndiIntegrationTest02 extends RemoteJndiIntegrationTest {
@@ -34,9 +33,9 @@ public class RemoteJndiIntegrationTest02 extends RemoteJndiIntegrationTest {
    }
 
    @Test
-   public void checkContext() {	
-	JndiNamingService ns = (JndiNamingService) getNamingServiceJndiSample().getNamingService();	
+   public void checkContext() {
+	JndiNamingService ns = (JndiNamingService) getNamingServiceJndiSample().getNamingService();
 	assertNotNull(ns.getContext());
-	assertEquals("myNamingCtx02", ns.getContext().getName());	
+	assertEquals("myNamingService02", ns.getContext().getName());
    }
 }

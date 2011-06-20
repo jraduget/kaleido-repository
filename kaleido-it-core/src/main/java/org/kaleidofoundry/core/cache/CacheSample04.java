@@ -31,12 +31,11 @@ public class CacheSample04 {
 
    private final Cache<String, YourBean> myCache;
 
+   @SuppressWarnings({ "rawtypes", "unchecked" })
    public CacheSample04() {
 
-	RuntimeContext<Cache> context = new CacheContextBuilder("myCacheCtx", Cache.class)
-	.withCacheName("CacheSample04")
-	.withCacheManagerRef("myCacheManager")
-	.build();
+	RuntimeContext<Cache> context = new CacheContextBuilder("myCache", Cache.class).withCacheName("CacheSample04").withCacheManagerRef("myCacheManager")
+		.build();
 
 	myCache = CacheFactory.provides(context);
 

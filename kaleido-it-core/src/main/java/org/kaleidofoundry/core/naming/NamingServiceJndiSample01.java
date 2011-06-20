@@ -55,35 +55,35 @@ import org.kaleidofoundry.core.context.Context;
  * <pre>
  * # for a local naming service
  * # -> it is only an example. by default : caching and failover are disabled. Moreover no need of failover in a local context
- * naming.myNamingCtx.caching=false
- * naming.myNamingCtx.caching.strategy=none
- * naming.myNamingCtx.failover.enabled=false
+ * naming.myNamingService.caching=false
+ * naming.myNamingService.caching.strategy=none
+ * naming.myNamingService.failover.enabled=false
  * </pre>
  * 
  * <b>or in a remote environment :</b>
  * 
  * <pre>
  * # for a remote naming service (glassfish v3 server here)
- * naming.myNamingCtx.java.naming.factory.initial=com.sun.enterprise.naming.SerialInitContextFactory
- * naming.myNamingCtx.java.naming.factory.url.pkgs=com.sun.enterprise.naming
- * naming.myNamingCtx.java.naming.factory.state=com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl
- * naming.myNamingCtx.org.omg.CORBA.ORBInitialHost=127.0.0.1
- * naming.myNamingCtx.org.omg.CORBA.ORBInitialPort=3700
+ * naming.myNamingService.java.naming.factory.initial=com.sun.enterprise.naming.SerialInitContextFactory
+ * naming.myNamingService.java.naming.factory.url.pkgs=com.sun.enterprise.naming
+ * naming.myNamingService.java.naming.factory.state=com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl
+ * naming.myNamingService.org.omg.CORBA.ORBInitialHost=127.0.0.1
+ * naming.myNamingService.org.omg.CORBA.ORBInitialPort=3700
  * 
  * # caching and failover policies in a remote context
- * naming.myNamingCtx.caching=all
- * naming.myNamingCtx.caching.strategy=global
- * naming.myNamingCtx.failover.enabled=true
- * naming.myNamingCtx.failover.wait=2000
- * naming.myNamingCtx.failover.maxretry=5
+ * naming.myNamingService.caching=all
+ * naming.myNamingService.caching.strategy=global
+ * naming.myNamingService.failover.enabled=true
+ * naming.myNamingService.failover.wait=2000
+ * naming.myNamingService.failover.maxretry=5
  * </pre>
  * 
  * @author Jerome RADUGET
  */
 public class NamingServiceJndiSample01 implements NamingServiceJndiSample {
 
-   @Context("myNamingCtx")
-   protected NamingService namingService;
+   @Context
+   protected NamingService myNamingService;
 
    /*
     * (non-Javadoc)
@@ -91,7 +91,7 @@ public class NamingServiceJndiSample01 implements NamingServiceJndiSample {
     */
    @Override
    public String echoFromDatabase(final String myMessage) throws SQLException {
-	return echoFromDatabase(namingService, myMessage);
+	return echoFromDatabase(myNamingService, myMessage);
    }
 
    /*
@@ -100,7 +100,7 @@ public class NamingServiceJndiSample01 implements NamingServiceJndiSample {
     */
    @Override
    public TextMessage echoFromJMS(final String myMessage) throws JMSException {
-	return echoFromJMS(namingService, myMessage);
+	return echoFromJMS(myNamingService, myMessage);
    }
 
    /*
@@ -109,9 +109,8 @@ public class NamingServiceJndiSample01 implements NamingServiceJndiSample {
     */
    @Override
    public String echoFromEJB(final String message) {
-	return echoFromEJB(namingService, message);
+	return echoFromEJB(myNamingService, message);
    }
-
 
    // **************************************************************************************************************************************
    // commons static methods to test (these methods are used by several junit launcher)
@@ -119,7 +118,7 @@ public class NamingServiceJndiSample01 implements NamingServiceJndiSample {
 
    @Override
    public NamingService getNamingService() {
-	return namingService;
+	return myNamingService;
    }
 
    /**
@@ -224,10 +223,10 @@ public class NamingServiceJndiSample01 implements NamingServiceJndiSample {
    public static String echoFromEJB(final NamingService namingService, final String message) {
 
 	// get ejb client service (remote or local)
-	// here, the ejb bean is annotated @Stateless(mappedName="ejb/MyBean") 
+	// here, the ejb bean is annotated @Stateless(mappedName="ejb/MyBean")
 	// if there is no mappedName you can still used the global name (jee6): "java:global/kaleido-it-ear/kaleido-it-ejb/MyBean"
 	MyRemoteBean myRemoteBean = namingService.locate("ejb/MyBean", MyRemoteBean.class);
-	
+
 	// call it
 	return myRemoteBean.echo(message);
    }

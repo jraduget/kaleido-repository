@@ -24,23 +24,19 @@ import org.kaleidofoundry.core.context.Parameter;
 
 /**
  * <p>
- * <h3>Simple file store usage</h3>
- * Inject {@link FileStore} context and instance using {@link Context} annotation with parameters which overrides configuration file
+ * <h3>Simple file store usage</h3> Inject {@link FileStore} context and instance using {@link Context} annotation with parameters which
+ * overrides configuration file
  * </p>
  * 
  * @see FileStoreSample01
- * 
  * @author Jerome RADUGET
  */
 public class FileStoreSample02 {
 
-   // @Parameter overrides myStoreCtx configuration settings
-   @Context(value = "myStoreCtx", parameters = {
-	   @Parameter(name = Readonly, value = "true"),
-	   @Parameter(name = ConnectTimeout, value = "0"),
-	   @Parameter(name = ReadTimeout, value = "0")
-   })
-   protected FileStore fileStore;
+   // @Parameter overrides myStore configuration settings
+   @Context(value = "myStore", parameters = { @Parameter(name = Readonly, value = "true"), @Parameter(name = ConnectTimeout, value = "0"),
+	   @Parameter(name = ReadTimeout, value = "0") })
+   protected FileStore myStore;
 
    /**
     * <b>Example method using injected file store</b><br/>
@@ -56,12 +52,11 @@ public class FileStoreSample02 {
     * </ul>
     * 
     * @return the content of the file "http://localhost:8080/kaleido-it/store/foo.txt"
-    * 
     * @throws StoreException
     */
    public String echo() throws StoreException {
 	String storeRelativePath = "store/foo.txt";
-	String text = fileStore.get(storeRelativePath).getText("UTF8");
+	String text = myStore.get(storeRelativePath).getText("UTF8");
 	System.out.printf("file content [%s] :\n%s", storeRelativePath, text);
 	return text;
    }

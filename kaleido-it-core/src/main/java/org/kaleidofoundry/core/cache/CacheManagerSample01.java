@@ -21,8 +21,8 @@ import org.kaleidofoundry.core.context.Context;
 
 /**
  * <p>
- * <h3>Simple cache manager usage</h3> Inject {@link CacheManager} context and instance using {@link Context} annotation without
- * parameters, but using external configuration
+ * <h3>Simple cache manager usage</h3> Inject {@link CacheManager} context and instance using {@link Context} annotation without parameters,
+ * but using external configuration
  * </p>
  * <br/>
  * <b>Precondition :</b> The following java env. variable have been set
@@ -54,7 +54,7 @@ import org.kaleidofoundry.core.context.Context;
  */
 public class CacheManagerSample01 {
 
-   @Context("myCacheManagerCtx")
+   @Context
    private CacheManager myCacheManager;
 
    private final Cache<String, YourBean> myCache;
@@ -79,6 +79,7 @@ public class CacheManagerSample01 {
 
    /**
     * Feed cache with some datas
+    * 
     * @param myCache
     */
    static void feedCache(final Cache<String, YourBean> myCache) {

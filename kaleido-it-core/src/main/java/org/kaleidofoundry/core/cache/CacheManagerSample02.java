@@ -15,8 +15,8 @@
  */
 package org.kaleidofoundry.core.cache;
 
-import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ProviderCode;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreUri;
+import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ProviderCode;
 import static org.kaleidofoundry.core.cache.CacheManagerSample01.feedCache;
 
 import org.kaleidofoundry.core.context.Context;
@@ -24,19 +24,16 @@ import org.kaleidofoundry.core.context.Parameter;
 
 /**
  * <p>
- * <h3>Simple cache manager usage</h3>
- * Inject {@link CacheManager} context and instance using {@link Context} annotation with parameters, and without external configuration
+ * <h3>Simple cache manager usage</h3> Inject {@link CacheManager} context and instance using {@link Context} annotation with parameters,
+ * and without external configuration
  * </p>
  * 
  * @author Jerome RADUGET
  */
 public class CacheManagerSample02 {
 
-   @Context(value="myCacheManagerCtx02",
-	   parameters = {
-	   @Parameter(name = ProviderCode, value = "ehCache1x"),
-	   @Parameter(name = FileStoreUri, value = "classpath:/cache/ehcache.xml")   }
-   )
+   @Context(value = "myCacheManager02", parameters = { @Parameter(name = ProviderCode, value = "ehCache1x"),
+	   @Parameter(name = FileStoreUri, value = "classpath:/cache/ehcache.xml") })
    private CacheManager myCacheManager;
 
    private final Cache<String, YourBean> myCache;
@@ -59,7 +56,6 @@ public class CacheManagerSample02 {
 	System.out.printf("cache entry[%s]: %s\n", "bean1", myCache.get("bean1").toString());
 	System.out.printf("cache entry[%s]: %s\n", "bean2", myCache.get("bean2").toString());
    }
-
 
    /**
     * used only for junit assertions

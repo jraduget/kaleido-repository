@@ -25,43 +25,38 @@ import org.kaleidofoundry.core.context.Parameter;
 
 /**
  * <p>
- * <h3>Simple configuration usage</h3>
- * Inject {@link Configuration} context and instance using {@link Context} annotation with parameters which overrides configuration file
+ * <h3>Simple configuration usage</h3> Inject {@link Configuration} context and instance using {@link Context} annotation with parameters
+ * which overrides configuration file
  * </p>
  * 
  * @see ConfigurationSample01
- * 
  * @author Jerome RADUGET
  */
 public class ConfigurationSample02 {
 
-   @Context(value="myConfigCtx", parameters = {
-	   @Parameter(name=StorageAllowed, value="false"),
-	   @Parameter(name=FileStoreUri, value="http://localhost:8080/kaleido-it/config/myHttpConfig.properties"),
-	   @Parameter(name=CacheManagerRef, value="myCacheManager"),
-	   @Parameter(name=FileStoreRef, value="myConfigStore")
-   })
-   private Configuration configuration;
+   @Context(value = "myConfig", parameters = { @Parameter(name = StorageAllowed, value = "false"),
+	   @Parameter(name = FileStoreUri, value = "http://localhost:8080/kaleido-it/config/myHttpConfig.properties"),
+	   @Parameter(name = CacheManagerRef, value = "myCacheManager"), @Parameter(name = FileStoreRef, value = "myConfigStore") })
+   private Configuration myConfig;
 
    /**
     * a sample method, using injected configuration
     */
    public void echo() {
-	System.out.printf("application name: %s\n", configuration.getString("myapp.name"));
-	System.out.printf("application admin mail : %s\n", configuration.getString("myapp.admin.email"));
-	System.out.printf("date sample: %s\n", configuration.getString("myapp.sample.date"));
-	System.out.printf("date typed sample: %s\n", configuration.getDate("myapp.sample.date"));
-	System.out.printf("float sample : %s\n", configuration.getString("myapp.sample.float"));
-	System.out.printf("float typed sample : %s\n", configuration.getFloat("myapp.sample.float"));
-	System.out.printf("boolean sample : %s\n", configuration.getString("myapp.sample.boolean"));
-	System.out.printf("boolean typed sample : %s\n", configuration.getBoolean("myapp.sample.boolean"));
+	System.out.printf("application name: %s\n", myConfig.getString("myapp.name"));
+	System.out.printf("application admin mail : %s\n", myConfig.getString("myapp.admin.email"));
+	System.out.printf("date sample: %s\n", myConfig.getString("myapp.sample.date"));
+	System.out.printf("date typed sample: %s\n", myConfig.getDate("myapp.sample.date"));
+	System.out.printf("float sample : %s\n", myConfig.getString("myapp.sample.float"));
+	System.out.printf("float typed sample : %s\n", myConfig.getFloat("myapp.sample.float"));
+	System.out.printf("boolean sample : %s\n", myConfig.getString("myapp.sample.boolean"));
+	System.out.printf("boolean typed sample : %s\n", myConfig.getBoolean("myapp.sample.boolean"));
 
 	System.out.println("keys:");
-	for (final String key : configuration.keySet()) {
+	for (final String key : myConfig.keySet()) {
 	   System.out.printf("\tkey=%s\n", key);
 	}
    }
-
 
    /**
     * used only for junit assertions
@@ -69,6 +64,6 @@ public class ConfigurationSample02 {
     * @return current configuration instance
     */
    Configuration getConfiguration() {
-	return configuration;
+	return myConfig;
    }
 }

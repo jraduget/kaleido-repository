@@ -19,8 +19,8 @@ import org.kaleidofoundry.core.context.Context;
 
 /**
  * <p>
- * <h3>First simple file store usage</h3> This example will inject {@link FileStore} context and instance using {@link Context}
- * annotation without parameters
+ * <h3>First simple file store usage</h3> This example will inject {@link FileStore} context and instance using {@link Context} annotation
+ * without parameters
  * </p>
  * The following java env. variable have been set :
  * 
@@ -32,16 +32,16 @@ import org.kaleidofoundry.core.context.Context;
  * 
  * <pre>
  * # configuration http context properties
- * fileStore.myStoreCtx.uriScheme=http
- * fileStore.myStoreCtx.readonly=false
- * fileStore.myStoreCtx.connectTimeout=1500
- * fileStore.myStoreCtx.readTimeout=10000
+ * fileStore.myStore.uriScheme=http
+ * fileStore.myStore.readonly=false
+ * fileStore.myStore.connectTimeout=1500
+ * fileStore.myStore.readTimeout=10000
  * 
  * # if you need proxy settings, uncomment and configure followings :
- * #fileStore.myStoreCtx.proxySet=true
- * #fileStore.myStoreCtx.proxyHost=yourProxyHost
- * #fileStore.myStoreCtx.proxyUser=yourProxyUser
- * #fileStore.myStoreCtx.proxyPassword=proxyUserPassword
+ * #fileStore.myStore.proxySet=true
+ * #fileStore.myStore.proxyHost=yourProxyHost
+ * #fileStore.myStore.proxyUser=yourProxyUser
+ * #fileStore.myStore.proxyPassword=proxyUserPassword
  * 
  * </pre>
  * 
@@ -49,8 +49,8 @@ import org.kaleidofoundry.core.context.Context;
  */
 public class FileStoreSample01 {
 
-   @Context("myStoreCtx")
-   protected FileStore fileStore;
+   @Context
+   protected FileStore myStore;
 
    /**
     * <b>Example method using injected file store</b><br/>
@@ -70,7 +70,7 @@ public class FileStoreSample01 {
     */
    public String echo() throws StoreException {
 	String storeRelativePath = "store/foo.txt";
-	String text = fileStore.get(storeRelativePath).getText("UTF8");
+	String text = myStore.get(storeRelativePath).getText("UTF8");
 	System.out.printf("resource content [%s] :\n%s", storeRelativePath, text);
 	return text;
    }

@@ -18,10 +18,11 @@ package org.kaleidofoundry.core.cache;
 import static org.kaleidofoundry.core.cache.CacheManagerSample01.feedCache;
 
 import org.kaleidofoundry.core.context.Context;
+
 /**
  * <p>
- * <h3>Simple cache usage</h3> Inject {@link Cache} context and instance using {@link Context} annotation without
- * parameters, but using external configuration
+ * <h3>Simple cache usage</h3> Inject {@link Cache} context and instance using {@link Context} annotation without parameters, but using
+ * external configuration
  * </p>
  * <br/>
  * <b>Precondition :</b> The following java env. variable have been set
@@ -33,8 +34,8 @@ import org.kaleidofoundry.core.context.Context;
  * Resource file : "classpath:/cache/myContext.properties" contains :
  * 
  * <pre>
- * cache.myCacheCtx.cacheName=CacheSample01
- * cache.myCacheCtx.cacheManagerRef=myCacheManager
+ * cache.myCache.cacheName=CacheSample01
+ * cache.myCache.cacheManagerRef=myCacheManager
  * 
  * cacheManager.myCacheManager.providerCode=ehCache1x
  * cacheManager.myCacheManager.fileStoreUri=classpath:/cache/ehcache.xml
@@ -55,7 +56,7 @@ import org.kaleidofoundry.core.context.Context;
  */
 public class CacheSample01 {
 
-   @Context("myCacheCtx")
+   @Context
    private Cache<String, YourBean> myCache;
 
    public CacheSample01() {

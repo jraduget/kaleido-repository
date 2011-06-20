@@ -15,13 +15,14 @@
  */
 package org.kaleidofoundry.core.naming;
 
-import org.junit.Test;
+import static org.kaleidofoundry.core.naming.NamingContextBuilder.Caching;
+import static org.kaleidofoundry.core.naming.NamingContextBuilder.FailoverEnabled;
+import static org.kaleidofoundry.core.naming.NamingContextBuilder.InitialContextFactory;
 
-import static org.kaleidofoundry.core.naming.NamingContextBuilder.*;
+import org.junit.Test;
 
 /**
  * @see NamingServiceJndiSample03
- * 
  * @author Jerome RADUGET
  */
 public class RemoteJndiIntegrationTest03 extends RemoteJndiIntegrationTest {
@@ -34,16 +35,16 @@ public class RemoteJndiIntegrationTest03 extends RemoteJndiIntegrationTest {
    public NamingServiceJndiSample getNamingServiceJndiSample() {
 	return new NamingServiceJndiSample03();
    }
-   
+
    @Test
-   public void checkContext() {	
+   public void checkContext() {
 	JndiNamingService ns = (JndiNamingService) getNamingServiceJndiSample().getNamingService();
 	assertNotNull(ns);
 	assertNotNull(ns.getContext());
-	assertEquals("myNamingCtx", ns.getContext().getName());	
+	assertEquals("myNamingService", ns.getContext().getName());
 	assertEquals("com.sun.enterprise.naming.SerialInitContextFactory", ns.getContext().getProperty(InitialContextFactory));
 	assertEquals("false", ns.getContext().getProperty(FailoverEnabled));
 	assertEquals("none", ns.getContext().getProperty(Caching));
-   }   
+   }
 
 }

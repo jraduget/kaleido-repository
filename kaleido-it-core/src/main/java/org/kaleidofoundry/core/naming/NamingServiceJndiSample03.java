@@ -15,7 +15,8 @@
  */
 package org.kaleidofoundry.core.naming;
 
-import static org.kaleidofoundry.core.naming.NamingContextBuilder.*;
+import static org.kaleidofoundry.core.naming.NamingContextBuilder.Caching;
+import static org.kaleidofoundry.core.naming.NamingContextBuilder.FailoverEnabled;
 
 import java.sql.SQLException;
 
@@ -26,7 +27,7 @@ import org.kaleidofoundry.core.context.Context;
 import org.kaleidofoundry.core.context.Parameter;
 
 /**
-* <p>
+ * <p>
  * <h3>Simple JNDI naming service usage</h3> Inject {@link NamingService} context and instance using {@link Context} annotation mixing the
  * use of parameters and external configuration (Parameters have priority to the external configuration)
  * </p>
@@ -35,20 +36,17 @@ import org.kaleidofoundry.core.context.Parameter;
  */
 public class NamingServiceJndiSample03 implements NamingServiceJndiSample {
 
-   // Override external configuration for "myNamingCtx"  
-   @Context(value = "myNamingCtx", parameters=  {
-	   @Parameter(name = FailoverEnabled, value = "false"),
-	   @Parameter(name = Caching, value = "none")
-   })
-   protected NamingService namingService;
+   // Override external configuration for "myNamingService"
+   @Context(value = "myNamingService", parameters = { @Parameter(name = FailoverEnabled, value = "false"), @Parameter(name = Caching, value = "none") })
+   protected NamingService myNamingService;
 
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.naming.NamingServiceJndiSample#echoFromDatabase(java.lang.String)
     */
    @Override
-   public String echoFromDatabase(String myMessage) throws SQLException {
-	return NamingServiceJndiSample01.echoFromDatabase(namingService, myMessage);
+   public String echoFromDatabase(final String myMessage) throws SQLException {
+	return NamingServiceJndiSample01.echoFromDatabase(myNamingService, myMessage);
    }
 
    /*
@@ -56,8 +54,8 @@ public class NamingServiceJndiSample03 implements NamingServiceJndiSample {
     * @see org.kaleidofoundry.core.naming.NamingServiceJndiSample#echoFromJMS(java.lang.String)
     */
    @Override
-   public TextMessage echoFromJMS(String myMessage) throws JMSException {
-	return NamingServiceJndiSample01.echoFromJMS(namingService, myMessage);
+   public TextMessage echoFromJMS(final String myMessage) throws JMSException {
+	return NamingServiceJndiSample01.echoFromJMS(myNamingService, myMessage);
    }
 
    /*
@@ -65,14 +63,13 @@ public class NamingServiceJndiSample03 implements NamingServiceJndiSample {
     * @see org.kaleidofoundry.core.naming.NamingServiceJndiSample#echoFromEJB(java.lang.String)
     */
    @Override
-   public String echoFromEJB(String message) {
-	return NamingServiceJndiSample01.echoFromEJB(namingService, message);
-   }
-   
-   @Override
-   public NamingService getNamingService() {
-	return namingService;
+   public String echoFromEJB(final String message) {
+	return NamingServiceJndiSample01.echoFromEJB(myNamingService, message);
    }
 
+   @Override
+   public NamingService getNamingService() {
+	return myNamingService;
+   }
 
 }

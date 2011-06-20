@@ -32,27 +32,20 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 public class NamingServiceJndiSample04 implements NamingServiceJndiSample {
 
    // no context injection, it is create manually with NamingContextBuilder in constructor
-   protected NamingService namingService;
+   protected NamingService myNamingService;
 
    public NamingServiceJndiSample04() {
 
-	// create a remote jndi naming service for glassfish V3 
-	RuntimeContext<NamingService> context = 
-	   new NamingContextBuilder("myManualNamingCtx", NamingService.class)
-		.withInitialContextFactory("com.sun.enterprise.naming.SerialInitContextFactory")
-		.withUrlpkgPrefixes("com.sun.enterprise.naming")
-		.withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl")
-		.withCorbaORBInitialHost("127.0.0.1")
+	// create a remote jndi naming service for glassfish V3
+	RuntimeContext<NamingService> context = new NamingContextBuilder("myManualNamingService", NamingService.class)
+		.withInitialContextFactory("com.sun.enterprise.naming.SerialInitContextFactory").withUrlpkgPrefixes("com.sun.enterprise.naming")
+		.withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl").withCorbaORBInitialHost("127.0.0.1")
 		.withCorbaORBInitialPort("3700")
 		// caching and failover facilities
-		.withCaching("all")
-		.withCachingStrategy("thread-local")
-		.withFailoverEnabled("true")
-		.withFailoverWaitBeforeRetry("2000")
-		.withFailoverMaxRetry("5")
+		.withCaching("all").withCachingStrategy("thread-local").withFailoverEnabled("true").withFailoverWaitBeforeRetry("2000").withFailoverMaxRetry("5")
 		.build();
-	 
-	namingService = NamingServiceFactory.provides(context);
+
+	myNamingService = NamingServiceFactory.provides(context);
    }
 
    /*
@@ -60,8 +53,8 @@ public class NamingServiceJndiSample04 implements NamingServiceJndiSample {
     * @see org.kaleidofoundry.core.naming.NamingServiceJndiSample#echoFromDatabase(java.lang.String)
     */
    @Override
-   public String echoFromDatabase(String myMessage) throws SQLException {
-	return NamingServiceJndiSample01.echoFromDatabase(namingService, myMessage);
+   public String echoFromDatabase(final String myMessage) throws SQLException {
+	return NamingServiceJndiSample01.echoFromDatabase(myNamingService, myMessage);
    }
 
    /*
@@ -69,8 +62,8 @@ public class NamingServiceJndiSample04 implements NamingServiceJndiSample {
     * @see org.kaleidofoundry.core.naming.NamingServiceJndiSample#echoFromJMS(java.lang.String)
     */
    @Override
-   public TextMessage echoFromJMS(String myMessage) throws JMSException {
-	return NamingServiceJndiSample01.echoFromJMS(namingService, myMessage);
+   public TextMessage echoFromJMS(final String myMessage) throws JMSException {
+	return NamingServiceJndiSample01.echoFromJMS(myNamingService, myMessage);
    }
 
    /*
@@ -78,13 +71,13 @@ public class NamingServiceJndiSample04 implements NamingServiceJndiSample {
     * @see org.kaleidofoundry.core.naming.NamingServiceJndiSample#echoFromEJB(java.lang.String)
     */
    @Override
-   public String echoFromEJB(String message) {
-	return NamingServiceJndiSample01.echoFromEJB(namingService, message);
+   public String echoFromEJB(final String message) {
+	return NamingServiceJndiSample01.echoFromEJB(myNamingService, message);
    }
-   
+
    @Override
    public NamingService getNamingService() {
-	return namingService;
+	return myNamingService;
    }
 
 }

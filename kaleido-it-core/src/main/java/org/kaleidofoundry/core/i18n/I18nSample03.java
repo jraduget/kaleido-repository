@@ -27,8 +27,8 @@ import org.kaleidofoundry.core.context.Parameter;
 
 /**
  * <p>
- * <h3>Simple i18n usage</h3> Inject {@link I18nMessages} context and instance using {@link Context} annotation mixing the
- * use of parameters and external configuration (Parameters have priority to the external configuration)
+ * <h3>Simple i18n usage</h3> Inject {@link I18nMessages} context and instance using {@link Context} annotation mixing the use of parameters
+ * and external configuration (Parameters have priority to the external configuration)
  * </p>
  * <br/>
  * <b>Precondition :</b> The following java env. variable have been set
@@ -40,10 +40,10 @@ import org.kaleidofoundry.core.context.Parameter;
  * Resource file : "classpath:/i18n/myContext.properties" contains :
  * 
  * <pre>
- * i18n.myBundleCtx.baseName=i18n/messages
- * i18n.myBundleCtx.locale.lang=en
- * i18n.myBundleCtx.locale.country=GB
- * #i18n.myBundleCtx.cacheManagerRef=myCacheManager
+ * i18n.myBundle.baseName=i18n/messages
+ * i18n.myBundle.locale.lang=en
+ * i18n.myBundle.locale.country=GB
+ * #i18n.myBundle.cacheManagerRef=myCacheManager
  * 
  * cacheManager.myCacheManager.providerCode=ehCache1x
  * cacheManager.myCacheManager.fileStoreUri=classpath:/i18n/ehcache.xml
@@ -62,11 +62,9 @@ import org.kaleidofoundry.core.context.Parameter;
  */
 public class I18nSample03 {
 
-   @Context(value="myBundleCtx", parameters = {
-	   @Parameter(name = BaseName, value = "i18n/messages"),
-	   @Parameter(name = CacheManagerRef, value = "myCacheManager")
-   })
-   private I18nMessages messages;
+   @Context(value = "myBundle", parameters = { @Parameter(name = BaseName, value = "i18n/messages"),
+	   @Parameter(name = CacheManagerRef, value = "myCacheManager") })
+   private I18nMessages myBundle;
 
    /**
     * Stdout :
@@ -82,10 +80,10 @@ public class I18nSample03 {
     */
    public void echo() throws ParseException {
 	DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
-	System.out.printf("%s\n", messages.getMessage("label.hello"));
-	System.out.printf("%s\n", messages.getMessage("label.hello.who", "Smith"));
-	System.out.printf("%s\n", messages.getMessage("label.hello.when", "Smith", df.parse("2010/10/21")));
-	System.out.printf("%s\n", messages.getMessage("label.hello.how", "Smith", df.parse("2010/10/21"), 1234.56));
+	System.out.printf("%s\n", myBundle.getMessage("label.hello"));
+	System.out.printf("%s\n", myBundle.getMessage("label.hello.who", "Smith"));
+	System.out.printf("%s\n", myBundle.getMessage("label.hello.when", "Smith", df.parse("2010/10/21")));
+	System.out.printf("%s\n", myBundle.getMessage("label.hello.how", "Smith", df.parse("2010/10/21"), 1234.56));
    }
 
    /**
@@ -94,7 +92,7 @@ public class I18nSample03 {
     * @return current messages instance
     */
    I18nMessages getMessages() {
-	return messages;
+	return myBundle;
    }
 
 }

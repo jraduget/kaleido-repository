@@ -15,16 +15,17 @@
  */
 package org.kaleidofoundry.core.cache;
 
-import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ProviderCode;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreUri;
+import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ProviderCode;
 import static org.kaleidofoundry.core.cache.CacheManagerSample01.feedCache;
 
 import org.kaleidofoundry.core.context.Context;
 import org.kaleidofoundry.core.context.Parameter;
+
 /**
  * <p>
- * <h3>Simple cache manager usage</h3> Inject {@link CacheManager} context and instance using {@link Context} annotation mixing the
- * use of parameters and external configuration <br/>
+ * <h3>Simple cache manager usage</h3> Inject {@link CacheManager} context and instance using {@link Context} annotation mixing the use of
+ * parameters and external configuration <br/>
  * Parameters have priority to the external configuration
  * </p>
  * <br/>
@@ -56,11 +57,7 @@ import org.kaleidofoundry.core.context.Parameter;
  */
 public class CacheManagerSample03 {
 
-   @Context(value = "myCacheManagerCtx",
-	   parameters = {
-	   @Parameter(name = ProviderCode, value = "local"),
-	   @Parameter(name = FileStoreUri, value = "")
-   })
+   @Context(value = "myCacheManager", parameters = { @Parameter(name = ProviderCode, value = "local"), @Parameter(name = FileStoreUri, value = "") })
    private CacheManager myCacheManager;
 
    private final Cache<String, YourBean> myCache;

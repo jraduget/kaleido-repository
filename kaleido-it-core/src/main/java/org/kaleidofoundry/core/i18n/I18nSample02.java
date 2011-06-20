@@ -44,11 +44,8 @@ import org.kaleidofoundry.core.context.Parameter;
  */
 public class I18nSample02 {
 
-   @Context(value = "myBundleCtx2", parameters = {
-	   @Parameter(name = BaseName, value = "i18n/messages"),
-	   @Parameter(name = LocaleLanguage, value = "fr")
-   })
-   private I18nMessages messages;
+   @Context(value = "myBundle2", parameters = { @Parameter(name = BaseName, value = "i18n/messages"), @Parameter(name = LocaleLanguage, value = "fr") })
+   private I18nMessages myBundle;
 
    /**
     * Stdout :
@@ -64,10 +61,10 @@ public class I18nSample02 {
     */
    public void echo() throws ParseException {
 	DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
-	System.out.printf("%s\n", messages.getMessage("label.hello"));
-	System.out.printf("%s\n", messages.getMessage("label.hello.who", "Smith"));
-	System.out.printf("%s\n", messages.getMessage("label.hello.when", "Smith", df.parse("2010/10/21")));
-	System.out.printf("%s\n", messages.getMessage("label.hello.how", "Smith", df.parse("2010/10/21"), 1234.56));
+	System.out.printf("%s\n", myBundle.getMessage("label.hello"));
+	System.out.printf("%s\n", myBundle.getMessage("label.hello.who", "Smith"));
+	System.out.printf("%s\n", myBundle.getMessage("label.hello.when", "Smith", df.parse("2010/10/21")));
+	System.out.printf("%s\n", myBundle.getMessage("label.hello.how", "Smith", df.parse("2010/10/21"), 1234.56));
    }
 
    /**
@@ -76,7 +73,7 @@ public class I18nSample02 {
     * @return current messages instance
     */
    I18nMessages getMessages() {
-	return messages;
+	return myBundle;
    }
 
 }

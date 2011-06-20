@@ -32,7 +32,7 @@ import org.kaleidofoundry.core.context.Parameter;
  * If you want to use another {@link CacheManager} context, you can use context parameter {@link CacheContextBuilder#CacheName}, like :
  * 
  * <pre>
- * &#064;Context(value = &quot;myCacheCtx02&quot;, parameters = { @Parameter(name = CacheContextBuilder.CacheName, value = &quot;org.kaleidofoundry.core.cache.YourBean&quot;),
+ * &#064;Context(value = &quot;myCache02&quot;, parameters = { @Parameter(name = CacheContextBuilder.CacheName, value = &quot;org.kaleidofoundry.core.cache.YourBean&quot;),
  * 	&#064;Parameter(name = CacheContextBuilder.CacheManagerRef, value = &quot;myCacheManager&quot;) })
  * private Cache&lt;String, YourBean&gt; myCache;
  * </pre>
@@ -43,7 +43,7 @@ import org.kaleidofoundry.core.context.Parameter;
  */
 public class CacheSample02 {
 
-   @Context(value = "myCacheCtx02", parameters = { @Parameter(name = CacheName, value = "CacheSample02") })
+   @Context(value = "myCache02", parameters = { @Parameter(name = CacheName, value = "CacheSample02") })
    private Cache<String, YourBean> myCache;
 
    public CacheSample02() {

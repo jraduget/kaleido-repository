@@ -31,7 +31,7 @@ import org.kaleidofoundry.core.store.StoreException;
 public class ConfigurationSample03 {
 
    // no automatic context injection here
-   private final Configuration configuration;
+   private final Configuration myConfig;
 
    public ConfigurationSample03() throws StoreException {
 
@@ -43,24 +43,24 @@ public class ConfigurationSample03 {
 	.withFileStoreRef("myConfigStore")
 	.build();
 
-	configuration = ConfigurationFactory.provides(context);
+	myConfig = ConfigurationFactory.provides(context);
    }
 
    /**
     * a sample method, using injected configuration
     */
    public void echo() {
-	System.out.printf("application name: %s\n", configuration.getString("myapp.name"));
-	System.out.printf("application admin mail : %s\n", configuration.getString("myapp.admin.email"));
-	System.out.printf("date sample: %s\n", configuration.getString("myapp.sample.date"));
-	System.out.printf("date typed sample: %s\n", configuration.getDate("myapp.sample.date"));
-	System.out.printf("float sample : %s\n", configuration.getString("myapp.sample.float"));
-	System.out.printf("float typed sample : %s\n", configuration.getFloat("myapp.sample.float"));
-	System.out.printf("boolean sample : %s\n", configuration.getString("myapp.sample.boolean"));
-	System.out.printf("boolean typed sample : %s\n", configuration.getBoolean("myapp.sample.boolean"));
+	System.out.printf("application name: %s\n", myConfig.getString("myapp.name"));
+	System.out.printf("application admin mail : %s\n", myConfig.getString("myapp.admin.email"));
+	System.out.printf("date sample: %s\n", myConfig.getString("myapp.sample.date"));
+	System.out.printf("date typed sample: %s\n", myConfig.getDate("myapp.sample.date"));
+	System.out.printf("float sample : %s\n", myConfig.getString("myapp.sample.float"));
+	System.out.printf("float typed sample : %s\n", myConfig.getFloat("myapp.sample.float"));
+	System.out.printf("boolean sample : %s\n", myConfig.getString("myapp.sample.boolean"));
+	System.out.printf("boolean typed sample : %s\n", myConfig.getBoolean("myapp.sample.boolean"));
 
 	System.out.println("keys:");
-	for (final String key : configuration.keySet()) {
+	for (final String key : myConfig.keySet()) {
 	   System.out.printf("\tkey=%s\n", key);
 	}
    }
@@ -72,6 +72,6 @@ public class ConfigurationSample03 {
     * @return current configuration instance
     */
    Configuration getConfiguration() {
-	return configuration;
+	return myConfig;
    }
 }

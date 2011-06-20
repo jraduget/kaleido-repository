@@ -28,24 +28,18 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 public class FileStoreSample03 {
 
    // no automatic context injection
-   private final FileStore fileStore;
+   private final FileStore myStore;
 
    public FileStoreSample03() throws StoreException {
 
-	RuntimeContext<FileStore> context =
-	   new FileStoreContextBuilder("myManualResourceCtx", FileStore.class)
-	.withUriRootPath("http://localhost:8080/kaleido-it/")
-	.withReadonly(true)
-	.withProxySet(false)
-	// configure connect and read timeout for the java net layer 
-	.withConnectTimeout(0)
-	.withReadTimeout(0)
-	// 5 attempts, with a wait of 2 seconds between each attempt 
-	.withMaxRetryOnFailure(5)
-	.withSleepTimeBeforeRetryOnFailure(2000)
-	.build();
+	RuntimeContext<FileStore> context = new FileStoreContextBuilder("myManualStore", FileStore.class).withUriRootPath("http://localhost:8080/kaleido-it/")
+		.withReadonly(true).withProxySet(false)
+		// configure connect and read timeout for the java net layer
+		.withConnectTimeout(0).withReadTimeout(0)
+		// 5 attempts, with a wait of 2 seconds between each attempt
+		.withMaxRetryOnFailure(5).withSleepTimeBeforeRetryOnFailure(2000).build();
 
-	fileStore = FileStoreFactory.provides(context);
+	myStore = FileStoreFactory.provides(context);
 
    }
 
@@ -67,7 +61,7 @@ public class FileStoreSample03 {
     */
    public String echo() throws StoreException {
 	String resourceRelativePath = "store/foo.txt";
-	String text = fileStore.get(resourceRelativePath).getText("UTF8");
+	String text = myStore.get(resourceRelativePath).getText("UTF8");
 	System.out.printf("resource content [%s] :\n%s", resourceRelativePath, text);
 	return text;
    }
