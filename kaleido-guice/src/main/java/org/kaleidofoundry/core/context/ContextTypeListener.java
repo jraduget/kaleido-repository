@@ -70,7 +70,7 @@ class ContextMembersInjector<T> implements MembersInjector<T> {
    @Task(comment = "error management with i18n error ?")
    public void injectMembers(final T t) {
 	try {
-	   field.set(t, RuntimeContext.createFrom(field));
+	   field.set(t, RuntimeContext.createFromField(field));
 	} catch (IllegalAccessException e) {
 	   throw new RuntimeException(e);
 	}

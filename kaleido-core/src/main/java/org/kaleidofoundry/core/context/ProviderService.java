@@ -35,9 +35,10 @@ public interface ProviderService<T> {
 
    /**
     * @param context inject context annotation
+    * @param defaultName the context default name if context annotation does not provide one
     * @param genericClassInterface class of the interface for which this provider will create instance
     * @return the new instance
     * @throws ProviderException
     */
-   T provides(Context context, Class<T> genericClassInterface) throws ProviderException;
+   T provides(Context context, String defaultName, Class<T> genericClassInterface) throws ProviderException;
 }

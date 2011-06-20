@@ -42,8 +42,7 @@ import org.kaleidofoundry.core.plugin.PluginHelper;
  * @param <T>
  */
 @ThreadSafe
-@Tasks(tasks = {
-	@Task(labels = TaskLabel.Enhancement, comment = "use singletons annotation information and move default registry instance here ?"),
+@Tasks(tasks = { @Task(labels = TaskLabel.Enhancement, comment = "use singletons annotation information and move default registry instance here ?"),
 	@Task(labels = TaskLabel.Enhancement, comment = "create default method introspection which provide instance") })
 public abstract class AbstractProviderService<T> implements ProviderService<T> {
 
@@ -67,11 +66,11 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.Provider#provides(org.kaleidofoundry.core.context.Context, java.lang.Class)
+    * @see org.kaleidofoundry.core.context.Provider#provides(org.kaleidofoundry.core.context.Context, java.lang.String, java.lang.Class)
     */
    @Override
-   public final T provides(final Context context, final Class<T> genericClassInterface) throws ProviderException {
-	return provides(RuntimeContext.createFrom(context, genericClassInterface));
+   public final T provides(final Context context, final String defaultName, final Class<T> genericClassInterface) throws ProviderException {
+	return provides(RuntimeContext.createFrom(context, defaultName, genericClassInterface));
    }
 
    /*

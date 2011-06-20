@@ -43,6 +43,26 @@ public class RuntimeContextFieldInjectorTest extends Assert {
    }
 
    @Test
+   public void testUnnamedRuntimeContextInjection() {
+	final MySingleService service = new MySingleService();
+	assertNotNull(service.getDefaultNamingService());
+	assertEquals("defaultNamingService", service.getDefaultNamingService().getName());
+	assertNull(service.getDefaultNamingService().getPrefix());
+	assertEquals("localhost:123", service.getDefaultNamingService().getProperty("provider.url"));
+	assertEquals("java:comp/env", service.getDefaultNamingService().getProperty("env.prefix"));
+   }
+
+   @Test
+   public void testUnnamedTypedRuntimeContextInjection() {
+	final MySingleService service = new MySingleService();
+	assertNotNull(service.getDefaultTypedNamingService());
+	assertEquals("defaultTypedNamingService", service.getDefaultTypedNamingService().getName());
+	assertNull(service.getDefaultTypedNamingService().getPrefix());
+	assertEquals("localhost:1234", service.getDefaultTypedNamingService().getProperty("provider.url"));
+	assertEquals("java:comp/env", service.getDefaultTypedNamingService().getProperty("env.prefix"));
+   }
+
+   @Test
    public void testUntypedRuntimeContextInjection() {
 	final MySingleService service = new MySingleService();
 	assertNotNull(service.getUnTypedRuntimeContext());

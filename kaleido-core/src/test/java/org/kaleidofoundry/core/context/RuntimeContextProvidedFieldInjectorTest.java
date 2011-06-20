@@ -39,6 +39,8 @@ import org.kaleidofoundry.core.store.StoreException;
 public class RuntimeContextProvidedFieldInjectorTest extends Assert {
 
    // **** RuntimeContext is an instance variable of the following fields
+   @Context
+   protected MyServiceInterface myProvidedContext;
    @Context("myProvidedContext")
    protected MyServiceInterface myServiceWithRuntimeContext;
    @Context("myProvidedFinalContext")
@@ -79,6 +81,23 @@ public class RuntimeContextProvidedFieldInjectorTest extends Assert {
 	ConfigurationFactory.unregister("anotherConf");
 	// re-enable i18n jpa message bundle control
 	I18nMessagesFactory.enableJpaControl();
+   }
+
+   @Test
+   public void testUnnamedContextInjection() {
+
+	MyServiceInterface initialReference = myProvidedContext;
+	assertNotNull(initialReference);
+	assertTrue(initialReference instanceof MyServiceWithRuntimeContext);
+	assertSame(initialReference, myProvidedContext);
+
+	RuntimeContext<MyServiceInterface> context = initialReference.getContext();
+	assertNotNull(context);
+	assertSame(context, myProvidedContext.getContext());
+	assertEquals("myProvidedContext", context.getName());
+	assertEquals("true", context.getProperty("readonly"));
+	assertEquals("kaleido-local", context.getProperty("cache"));
+	assertEquals("myProvidedService.with.context", context.getProperty("pluginCode"));
    }
 
    @Test

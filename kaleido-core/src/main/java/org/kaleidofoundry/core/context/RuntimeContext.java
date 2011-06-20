@@ -33,6 +33,7 @@ import org.kaleidofoundry.core.config.ConfigurationRegistry;
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.lang.annotation.Nullable;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
@@ -69,8 +70,8 @@ import org.kaleidofoundry.core.util.StringHelper;
  * </ul>
  * The last way to build it using {@link Context} annotation, with static constructors :
  * <ul>
- * <li>{@link #createFrom(Field)}</li>
- * <li>{@link #createFrom(Context, Class)}</li>
+ * <li>{@link #createFromField(Field)}</li>
+ * <li>{@link #createFrom(Context, String, Class)}</li>
  * </ul>
  * </p>
  * <p>
@@ -347,15 +348,22 @@ public class RuntimeContext<T> extends AbstractPropertyAccessor {
    }
 
    /**
+    * If context annotation contain a name, the created {@link RuntimeContext} will use it, otherwise it will use the defaultName argument
+    * coming from field or argument...
+    * 
     * @param <T>
-    * @param context
+    * @param context context annotation
+    * @param defaultName default context name if {@link Context} annotation provide no one (field name, argument name, ...)
     * @param type
     * @return new runtime context instance, build from given annotation
     * @throws IllegalContextParameterException if one of {@link Context#configurations()} is not registered
     */
-   protected static <T> RuntimeContext<T> createFrom(@NotNull final Context context, final Class<T> type) {
+   protected static <T> RuntimeContext<T> createFrom(@NotNull final Context context, @Nullable final String defaultName, final Class<T> type) {
 
-	if (StringHelper.isEmpty(context.value())) { throw new IllegalContextParameterException("context.annotation.value.empty"); }
+	// name of the context
+	final String contextName = !StringHelper.isEmpty(context.value()) ? context.value() : defaultName;
+
+	if (StringHelper.isEmpty(contextName)) { throw new IllegalContextParameterException("context.annotation.value.empty"); }
 
 	final RuntimeContext<T> rc;
 
@@ -378,9 +386,9 @@ public class RuntimeContext<T> extends AbstractPropertyAccessor {
 
 	// create runtimeContext instance
 	if (type != null) {
-	   rc = new RuntimeContext<T>(context.value(), type, true, parameters, configs);
+	   rc = new RuntimeContext<T>(contextName, type, true, parameters, configs);
 	} else {
-	   rc = new RuntimeContext<T>(context.value(), (String) null, true, parameters, configs);
+	   rc = new RuntimeContext<T>(contextName, (String) null, true, parameters, configs);
 	}
 
 	return rc;
@@ -392,12 +400,12 @@ public class RuntimeContext<T> extends AbstractPropertyAccessor {
     * @throws IllegalArgumentException is the given field is not annotated {@link Context}
     * @throws ContextException if one of {@link Context#configurations()} is not registered
     */
-   protected static RuntimeContext<?> createFrom(@NotNull final Field annotatedField) {
+   protected static RuntimeContext<?> createFromField(@NotNull final Field annotatedField) {
 	final Context context = annotatedField.getAnnotation(Context.class);
 	if (context == null) { throw new IllegalArgumentException(ContextMessageBundle.getMessage("context.annotation.field.illegal", Context.class.getName())); }
 
 	final Plugin<?> plugin = PluginHelper.getInterfacePlugin(annotatedField.getDeclaringClass());
-	return createFrom(context, plugin != null ? plugin.getAnnotatedClass() : null);
+	return createFrom(context, annotatedField.getName(), plugin != null ? plugin.getAnnotatedClass() : null);
 
    }
 
@@ -406,10 +414,11 @@ public class RuntimeContext<T> extends AbstractPropertyAccessor {
     * 
     * @param <T>
     * @param context
+    * @param defaultName default context name if {@link Context} annotation provide no one (field name, argument name, ...)
     * @param contextTarget
     */
-   static <T> void createFrom(@NotNull final Context context, @NotNull final RuntimeContext<T> contextTarget) {
-	final RuntimeContext<T> newOne = createFrom(context, contextTarget.getType());
+   static <T> void createFrom(@NotNull final Context context, @Nullable final String defaultName, @NotNull final RuntimeContext<T> contextTarget) {
+	final RuntimeContext<T> newOne = createFrom(context, defaultName, contextTarget.getType());
 	copyFrom(newOne, contextTarget);
 	contextTarget.hasBeenInjectedByAnnotationProcessing = true;
    }
@@ -425,7 +434,9 @@ public class RuntimeContext<T> extends AbstractPropertyAccessor {
     */
    static void copyFrom(final RuntimeContext<?> origin, final RuntimeContext<?> target) {
 	if (!target.hasBeenInjectedByAnnotationProcessing) {
-	   target.name = origin.name;
+	   if (StringHelper.isEmpty(target.name)) {
+		target.name = origin.name;
+	   }
 	   target.prefix = origin.prefix;
 	   target.configurations = origin.configurations;
 	   target.hasBeenInjectedByAnnotationProcessing = false;

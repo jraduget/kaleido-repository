@@ -41,27 +41,29 @@ import org.kaleidofoundry.core.store.StoreException;
 public class RuntimeContextNoProvidedFieldInjectorTest extends Assert {
 
    // **** RuntimeContext is an instance variable of the following fields
-   @Context("myContext")
+   @Context
+   private MyServiceInterface myServiceContext;
+   @Context("myServiceContext")
    private MyServiceInterface myServiceWithRuntimeContext;
-   @Context("myContext")
+   @Context("myServiceContext")
    private MyServiceInterface myServiceWithFinalRuntimeContext;
-   @Context("myContext")
+   @Context("myServiceContext")
    private MyServiceInterface myServiceWithFinalNullRuntimeContext;
-   @Context("myContext")
+   @Context("myServiceContext")
    private MyServiceWithIllegalRuntimeContext myServiceWithIllegalRuntimeContext;
 
    // **** RuntimeContext is an static variable of the following fields
-   @Context("myContext")
+   @Context("myServiceContext")
    private MyServiceInterface myServiceWithStaticRuntimeContext;
-   @Context("myContext")
+   @Context("myServiceContext")
    private MyServiceInterface myServiceWithStaticFinalRuntimeContext;
 
    // **** RuntimeContext is an instance variable of the following fields, using only specific configurations
-   @Context(value = "myContext", configurations = { "myConf" })
+   @Context(value = "myServiceContext", configurations = { "myConf" })
    private MyServiceInterface myServiceWithRuntimeContextFromSpecificConf;
-   @Context(value = "myContext", configurations = { "illegalConf" })
+   @Context(value = "myServiceContext", configurations = { "illegalConf" })
    private MyServiceInterface myServiceWithRuntimeContextFromIllegalConf;
-   @Context(value = "myContext", configurations = { "anotherConf" })
+   @Context(value = "myServiceContext", configurations = { "anotherConf" })
    private MyServiceInterface myServiceWithRuntimeContextFromWrongConf;
 
    @Before
@@ -72,6 +74,7 @@ public class RuntimeContextNoProvidedFieldInjectorTest extends Assert {
 	ConfigurationFactory.provides("myConf", "classpath:/context/application.properties");
 	ConfigurationFactory.provides("anotherConf", "classpath:/context/module.properties");
 	// Services to test
+	myServiceContext = new MyServiceWithRuntimeContext();
 	myServiceWithRuntimeContext = new MyServiceWithRuntimeContext();
 	myServiceWithFinalRuntimeContext = new MyServiceWithFinalRuntimeContext();
 	myServiceWithFinalNullRuntimeContext = new MyServiceWithFinalNullRuntimeContext();
@@ -93,10 +96,19 @@ public class RuntimeContextNoProvidedFieldInjectorTest extends Assert {
    }
 
    @Test
+   public void testUnnamedContextInjection() {
+	MyServiceInterface initialReference = myServiceContext;
+	RuntimeContext<MyServiceInterface> context = initialReference.getContext();
+	commonsAssertions(initialReference, "myServiceContext");
+	assertSame(initialReference, myServiceContext);
+	assertSame(context, myServiceContext.getContext());
+   }
+
+   @Test
    public void testContextInjection() {
 	MyServiceInterface initialReference = myServiceWithRuntimeContext;
 	RuntimeContext<MyServiceInterface> context = initialReference.getContext();
-	commonsAssertions(initialReference);
+	commonsAssertions(initialReference, "myServiceContext");
 	assertSame(initialReference, myServiceWithRuntimeContext);
 	assertSame(context, myServiceWithRuntimeContext.getContext());
    }
@@ -105,7 +117,7 @@ public class RuntimeContextNoProvidedFieldInjectorTest extends Assert {
    public void testFinalContextInjection() {
 	MyServiceInterface initialReference = myServiceWithFinalRuntimeContext;
 	RuntimeContext<MyServiceInterface> context = initialReference.getContext();
-	commonsAssertions(initialReference);
+	commonsAssertions(initialReference, "myServiceContext");
 	assertSame(initialReference, myServiceWithFinalRuntimeContext);
 	assertSame(context, myServiceWithFinalRuntimeContext.getContext());
    }
@@ -114,7 +126,7 @@ public class RuntimeContextNoProvidedFieldInjectorTest extends Assert {
    public void testStaticContextInjection() {
 	MyServiceInterface initialReference = myServiceWithStaticRuntimeContext;
 	RuntimeContext<MyServiceInterface> context = initialReference.getContext();
-	commonsAssertions(initialReference);
+	commonsAssertions(initialReference, "myServiceContext");
 	assertSame(initialReference, myServiceWithStaticRuntimeContext);
 	assertSame(context, myServiceWithStaticRuntimeContext.getContext());
    }
@@ -123,7 +135,7 @@ public class RuntimeContextNoProvidedFieldInjectorTest extends Assert {
    public void testStaticFinalContextInjection() {
 	MyServiceInterface initialReference = myServiceWithStaticFinalRuntimeContext;
 	RuntimeContext<MyServiceInterface> context = initialReference.getContext();
-	commonsAssertions(initialReference);
+	commonsAssertions(initialReference, "myServiceContext");
 	assertSame(initialReference, myServiceWithStaticFinalRuntimeContext);
 	assertSame(context, myServiceWithStaticFinalRuntimeContext.getContext());
    }
@@ -152,7 +164,7 @@ public class RuntimeContextNoProvidedFieldInjectorTest extends Assert {
    public void testContextInjectionFromLegalConf() {
 	MyServiceInterface initialReference = myServiceWithRuntimeContextFromSpecificConf;
 	RuntimeContext<MyServiceInterface> context = initialReference.getContext();
-	commonsAssertions(initialReference);
+	commonsAssertions(initialReference, "myServiceContext");
 	assertSame(initialReference, myServiceWithRuntimeContextFromSpecificConf);
 	assertSame(context, myServiceWithRuntimeContextFromSpecificConf.getContext());
    }
@@ -176,12 +188,12 @@ public class RuntimeContextNoProvidedFieldInjectorTest extends Assert {
 	assertEquals("http://host/module/foo.wsdl", context.getProperty("webservice.url"));
    }
 
-   private void commonsAssertions(final MyServiceInterface myServiceInterface) {
+   private void commonsAssertions(final MyServiceInterface myServiceInterface, final String contextName) {
 	final RuntimeContext<MyServiceInterface> context = myServiceInterface.getContext();
 	assertNotNull(context);
-	assertEquals("myContext", context.getName());
-	assertEquals("true", context.getProperty("readonly")); // myService.myContext.readonly=true
-	assertEquals("kaleido-local", context.getProperty("cache")); // myService.myContext.cache=kaleido-local
+	assertEquals(contextName, context.getName());
+	assertEquals("true", context.getProperty("readonly")); // myService.myServiceContext.readonly=true
+	assertEquals("kaleido-local", context.getProperty("cache")); // myService.myServiceContext.cache=kaleido-local
 	assertSame(context, myServiceInterface.getContext());
    }
 }

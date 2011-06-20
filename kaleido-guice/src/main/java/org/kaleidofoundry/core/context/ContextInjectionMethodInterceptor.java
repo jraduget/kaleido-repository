@@ -23,7 +23,9 @@ import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.slf4j.Logger;
 
 /**
- * Interceptor used for injecting {@link RuntimeContext} information with {@link Context} annotation <br/>
+ * Interceptor used for injecting {@link RuntimeContext} information using the {@link Context} method annotation <br/>
+ * <br/>
+ * Only the first {@link RuntimeContext} argument would be processing
  * <p>
  * Context injection handle by :
  * <ul>
@@ -62,7 +64,7 @@ class ContextInjectionMethodInterceptor implements MethodInterceptor {
 	   }
 	}
 
-	// 2. if one argument instance of RuntimeContext have been fount
+	// 2. if one argument instance of RuntimeContext have been found
 	if (runtimeContextArg != null) {
 	   boolean contextInjected = false;
 	   Context contextAnnot = null;
@@ -76,7 +78,8 @@ class ContextInjectionMethodInterceptor implements MethodInterceptor {
 	   }
 	   if (contextAnnot != null) {
 		// replace context argument datas using annotation meta-datas
-		RuntimeContext.createFrom(contextAnnot, runtimeContextArg);
+		// no way to have parameter name ?
+		RuntimeContext.createFrom(contextAnnot, null, runtimeContextArg);
 		contextInjected = true;
 	   }
 
@@ -84,7 +87,8 @@ class ContextInjectionMethodInterceptor implements MethodInterceptor {
 	   if (!contextInjected) {
 		contextAnnot = invocation.getMethod().getAnnotation(Context.class);
 		if (contextAnnot != null) {
-		   RuntimeContext.createFrom(contextAnnot, runtimeContextArg);
+		   // no way to have parameter name ?
+		   RuntimeContext.createFrom(contextAnnot, null, runtimeContextArg);
 		   contextInjected = true;
 		}
 	   }

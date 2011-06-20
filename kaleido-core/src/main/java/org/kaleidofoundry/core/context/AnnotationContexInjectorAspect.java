@@ -168,7 +168,7 @@ public class AnnotationContexInjectorAspect {
 	   field.setAccessible(true);
 	   final Object currentValue = field.get(target);
 	   if (currentValue == null) {
-		final RuntimeContext<?> runtimeContext = RuntimeContext.createFrom(annotation, fs.getFieldType());
+		final RuntimeContext<?> runtimeContext = RuntimeContext.createFrom(annotation, fs.getName(), fs.getFieldType());
 		field.set(target, runtimeContext);
 		return runtimeContext;
 	   } else {
@@ -205,8 +205,7 @@ public class AnnotationContexInjectorAspect {
     */
    // track field with ProceedingJoinPoint and annotation information with @annotation(annotation)
    @Around("trackAgregatedRuntimeContextField(jp, esjp) && @annotation(annotation)")
-   @Tasks(tasks = {
-	   @Task(comment = "check and handle reflection exception ", labels = TaskLabel.Enhancement),
+   @Tasks(tasks = { @Task(comment = "check and handle reflection exception ", labels = TaskLabel.Enhancement),
 	   @Task(comment = "for provider reflection part, add static method to AbstractProvider with following code ", labels = TaskLabel.Enhancement) })
    public Object trackAgregatedRuntimeContextFieldToInject(final JoinPoint jp, final JoinPoint.EnclosingStaticPart esjp,
 	   final ProceedingJoinPoint thisJoinPoint, final Context annotation) throws Throwable {
@@ -240,10 +239,10 @@ public class AnnotationContexInjectorAspect {
 			final ProviderService<?> fieldProviderInstance = providerConstructor.newInstance(annotatedField.getType());
 
 			// invoke provides method with Context annotation meta-informations
-			final Method providesMethod = provideInfo.value().getMethod("provides", Context.class, Class.class);
+			final Method providesMethod = provideInfo.value().getMethod("provides", Context.class, String.class, Class.class);
 
 			try {
-			   fieldToInjectInstance = providesMethod.invoke(fieldProviderInstance, annotation, annotatedField.getType());
+			   fieldToInjectInstance = providesMethod.invoke(fieldProviderInstance, annotation, annotatedField.getName(), annotatedField.getType());
 			} catch (final InvocationTargetException ite) {
 			   // direct runtime exception like ContextException...
 			   throw ite.getCause() != null ? ite.getCause() : (ite.getTargetException() != null ? ite.getTargetException() : ite);
@@ -286,7 +285,7 @@ public class AnnotationContexInjectorAspect {
 				final Plugin<?> interfacePlugin = PluginHelper.getInterfacePlugin(fieldToInjectInstance);
 
 				// create a new instance of RuntimeContext<?>, using annotation information
-				final RuntimeContext<?> newRuntimeContext = RuntimeContext.createFrom(annotation,
+				final RuntimeContext<?> newRuntimeContext = RuntimeContext.createFrom(annotation, annotatedField.getName(),
 					interfacePlugin != null ? interfacePlugin.getAnnotatedClass() : null);
 
 				// inject new RuntimeContext<?> field instance to the target instance

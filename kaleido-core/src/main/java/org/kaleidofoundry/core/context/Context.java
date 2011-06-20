@@ -70,9 +70,10 @@ import org.kaleidofoundry.core.config.ConfigurationFactory;
 public @interface Context {
 
    /**
-    * @return context name identifier (used in external configuration)
+    * @return context name identifier (used in external configuration). If not set, the context name would be the field or the parameter
+    *         name
     */
-   String value();
+   String value() default "";
 
    /**
     * @return configuration identifiers, where to find the context name and properties <br/>

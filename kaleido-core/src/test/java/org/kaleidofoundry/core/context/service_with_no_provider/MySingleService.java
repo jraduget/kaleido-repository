@@ -23,13 +23,24 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  */
 public class MySingleService {
 
+   @Context
+   private RuntimeContext<?> defaultNamingService;
+
+   @Context
+   private RuntimeContext<MySingleService> defaultTypedNamingService;
+
    @Context("jndi.context.jboss")
    private RuntimeContext<?> unTypedRuntimeContext;
 
    @Context("jndi.context.jboss")
    private RuntimeContext<MySingleService> typedRuntimeContext;
 
-   public MySingleService() {
+   public RuntimeContext<?> getDefaultNamingService() {
+	return defaultNamingService;
+   }
+
+   public RuntimeContext<MySingleService> getDefaultTypedNamingService() {
+	return defaultTypedNamingService;
    }
 
    public RuntimeContext<?> getUnTypedRuntimeContext() {
