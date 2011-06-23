@@ -23,9 +23,9 @@ asadmin ping-connection-pool kaleidoIntPool
 # ear deployment
 # http://download.oracle.com/docs/cd/E19226-01/820-7695/gbxjk/index.html
 # http://download.oracle.com/docs/cd/E18930_01/html/821-2433/deploy-1.html#deploy-1
-asadmin deploy --name=kaleido-it-ear ../kaleido-it-ear/target/kaleido-it-ear-0.8.0-SNAPSHOT.ear
-asadmin deploy --name=kaleido-it-ear --dbvendorname=javadb --createtables=true  ../kaleido-it-ear/target/kaleido-it-ear-0.8.0-SNAPSHOT.ear
-asadmin deploy --name=kaleido-it-ear --dbvendorname=javadb --dropandcreatetables=true  ../kaleido-it-ear/target/kaleido-it-ear-0.8.0-SNAPSHOT.ear 
+asadmin deploy --name=kaleido-it-ear ../kaleido-it-ear/target/kaleido-it-ear-0.8.1-SNAPSHOT.ear
+asadmin deploy --name=kaleido-it-ear --dbvendorname=javadb --createtables=true  ../kaleido-it-ear/target/kaleido-it-ear-0.8.1-SNAPSHOT.ear
+asadmin deploy --name=kaleido-it-ear --dbvendorname=javadb --dropandcreatetables=true  ../kaleido-it-ear/target/kaleido-it-ear-0.8.1-SNAPSHOT.ear 
 asadmin undeploy --droptables=true kaleido-it-ear 
 asadmin undeploy kaleido-it-ear 
 

@@ -6,11 +6,11 @@
   <display-name>kaleido-it-ear</display-name>
   <description>Parent POM for all kaleido-foundry integration tests projects.</description>
   <module>
-    <ejb>kaleido-it-ejb-0.8.0-SNAPSHOT.jar</ejb>
+    <ejb>kaleido-it-ejb-${project.version}.jar</ejb>
   </module>
   <module>
     <web>
-      <web-uri>kaleido-it-war-0.8.0-SNAPSHOT.war</web-uri>
+      <web-uri>kaleido-it-war-${project.version}.war</web-uri>
       <context-root>kaleido-it</context-root>
     </web>
   </module>

@@ -66,7 +66,7 @@ import org.kaleidofoundry.core.util.StringHelper;
 @Stateless(mappedName = "ejb/configuration/manager")
 @Path("/configurations/{config}")
 @Task(labels = TaskLabel.Defect, comment = "restore 'implements ConfigurationManager which cause a bug' - I open a GF3.x bug for this : GLASSFISH-16199")
-public class ConfigurationManagerBean implements ConfigurationManager {
+public class ConfigurationManagerBean { // implements ConfigurationManager {
 
    /** injected and used to handle security context */
    @Context
@@ -328,7 +328,6 @@ public class ConfigurationManagerBean implements ConfigurationManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.ConfigurationManager#keySet(java.lang.String)
     */
-   @Override
    public Set<String> keySet(final String config) throws ConfigurationNotFoundException {
 	Set<String> result = new HashSet<String>();
 	for (ConfigurationProperty prop : getProperties(config)) {
@@ -341,7 +340,6 @@ public class ConfigurationManagerBean implements ConfigurationManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.ConfigurationManager#keySet(java.lang.String, java.lang.String)
     */
-   @Override
    public Set<String> keySet(final String config, final String prefix) throws ConfigurationNotFoundException {
 	Set<String> result = new HashSet<String>();
 	for (ConfigurationProperty prop : getProperties(config, prefix)) {
