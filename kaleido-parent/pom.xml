@@ -10,7 +10,7 @@
   	
 	<groupId>org.kaleidofoundry</groupId>
 	<artifactId>kaleido-parent</artifactId>
-	<version>0.8.0-SNAPSHOT</version>
+	<version>0.8.1-SNAPSHOT</version>
 
 	<name>KaleidoFoundry parent POM</name>
 	<url>http://code.google.com/p/kaleido-foundry/</url>
@@ -385,52 +385,6 @@
 				</configuration>
 			</plugin>
 
-			<!-- deploy artifact to google code -->
-			<plugin>
-				<groupId>com.googlecode.maven-gcu-plugin</groupId>
-				<artifactId>maven-gcu-plugin</artifactId>
-				<version>1.1</version>
-				<executions>
-					<execution>
-						<id>gcode-upload</id>
-						<phase>deploy</phase>
-						<goals>
-							<goal>upload</goal>
-						</goals>
-						<configuration>
-							<serverId>googlecode.kaleido</serverId>
-							<failsOnError>true</failsOnError>
-							<projectName>kaleido-foundry</projectName>
-							<uploads>
-								<upload>
-									<file>${project.build.directory}/${project.artifactId}-${project.version}-sources.${project.packaging}</file>
-									<summary>${project.name} sources bundle ${project.version}</summary>
-									<labels>
-										<label>Type-Sources</label>
-									</labels>
-								</upload>
-								<upload>
-									<file>${project.build.directory}/${project.artifactId}-${project.version}-javadoc.${project.packaging}</file>
-									<summary>${project.name} javadocs bundle ${project.version}</summary>
-									<labels>
-										<label>Type-Docs</label>
-									</labels>
-								</upload>
-								<upload>
-									<file>${project.build.directory}/${project.artifactId}-${project.version}.${project.packaging}</file>
-									<summary>${project.name} bundle ${project.version}</summary>
-									<labels>
-										<label>Featured</label>
-										<label>Type-Archive</label>
-										<label>OpSys-All</label>
-									</labels>
-								</upload>
-							</uploads>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-                
 			<!-- Attach sources  -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
