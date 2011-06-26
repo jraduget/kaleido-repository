@@ -43,6 +43,7 @@ public class ConfigurationManager02Test extends ConfigurationManager01Test {
 	try {
 	   ConfigurationFactory.unregister(MyConfigurationName);
 	} catch (StoreException ste) {
+	} catch (ConfigurationNotFoundException cnfe) {
 	}
    }
 

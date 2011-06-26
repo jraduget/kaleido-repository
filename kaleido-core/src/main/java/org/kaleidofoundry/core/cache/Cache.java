@@ -28,68 +28,86 @@ import org.kaleidofoundry.core.plugin.Declare;
 /**
  * Cache common interface
  * 
- * @author Jerome RADUGET
  * @param <K> Type of cache keys
  * @param <V> Type of cache values
  * @see CacheFactory
  * @see CacheContextBuilder
+ * @author Jerome RADUGET
  */
 @Declare(CachePluginName)
 @Provider(value = CacheProvider.class, singletons = true)
 public interface Cache<K extends Serializable, V extends Serializable> {
 
    /**
+    * Cache name
+    * 
     * @return cache name
     */
    @NotNull
    String getName();
 
    /**
+    * Get a value from cache
+    * 
     * @param key
     * @return get entry mapping to the key parameter
     */
    V get(@NotNull K key);
 
    /**
+    * Puts an entry in the cache (new or update)
+    * 
     * @param key key of the entity to put in cache
     * @param entity entity to put in cache
     */
    void put(@NotNull K key, @NotNull V entity);
 
    /**
+    * Remove an entry from the cache
+    * 
     * @param key
     * @return <code>true</code> if found and removed, <code>false</code> otherwise
     */
    boolean remove(@NotNull K key);
 
    /**
-    * remove all entries from cache
+    * Remove all entries from the cache
     */
    void removeAll();
 
    /**
+    * Set of keys presents in the cache
+    * 
     * @return all cache keys items
     */
    @NotNull
    Set<K> keys();
 
    /**
+    * Collection of values presents in the cache
+    * 
     * @return all cache items values
     */
    Collection<V> values();
 
    /**
+    * Number of all entries that have been put in the cache
+    * 
     * @return entries count of the cache
     */
    int size();
 
    /**
+    * Does the cache have been destroyed by a stop processing
+    * 
     * @return <code>true</code> if cache have been destroyed, <code>false</code> otherwise <br/>
     *         Can be useful when cache instance is stored in a class field...
     */
    boolean hasBeenDestroy();
 
    /**
+    * The underlying cache provider implementation
+    * 
     * @return Return the underlying provider object for the Cache
     */
    Object getDelegate();

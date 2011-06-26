@@ -19,7 +19,6 @@ asadmin ping-connection-pool kaleidoIntPool
 # mail
 # http://weblogs.java.net/blog/felipegaucho/archive/2010/03/04/glassfish-v3-resources-administration-cli-tool-asadmin
 
-
 # ear deployment
 # http://download.oracle.com/docs/cd/E19226-01/820-7695/gbxjk/index.html
 # http://download.oracle.com/docs/cd/E18930_01/html/821-2433/deploy-1.html#deploy-1
@@ -31,3 +30,8 @@ asadmin undeploy kaleido-it-ear
 
 asadmin create-jvm-options -Declipselink.logging.level=FINE
 asadmin create-jvm-options -Declipselink.logging.level=INFO
+
+
+
+  
+

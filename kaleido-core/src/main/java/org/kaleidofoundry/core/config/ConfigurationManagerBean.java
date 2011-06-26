@@ -18,7 +18,9 @@ package org.kaleidofoundry.core.config;
 import static org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory.KaleidoPersistentContextUnitName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Stateless;
@@ -271,7 +273,9 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.AbstractConfigurationManager#keySet(java.lang.String)
     */
    public Set<ConfigurationProperty> getProperties(final String config) {
-	return getProperties(config, null);
+	Set<ConfigurationProperty> result = new HashSet<ConfigurationProperty>();
+	result.addAll(getProperties(config, null));
+	return result;
    }
 
    /*
@@ -281,8 +285,8 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
    @GET
    @Path("properties")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-   public Set<ConfigurationProperty> getProperties(final @PathParam("config") String config, @QueryParam("prefix") final String prefix) {
-	final Set<ConfigurationProperty> properties = new HashSet<ConfigurationProperty>();
+   public List<ConfigurationProperty> getProperties(final @PathParam("config") String config, @QueryParam("prefix") final String prefix) {
+	final List<ConfigurationProperty> properties = new ArrayList<ConfigurationProperty>();
 	boolean foundConfiguration = false;
 
 	if (em != null) {

@@ -126,6 +126,8 @@ public abstract class ConfigurationFactory {
 		configToDestroy.unload();
 	   }
 	   getRegistry().remove(configName);
+	} else {
+	   throw new ConfigurationNotFoundException(configName);
 	}
    }
 

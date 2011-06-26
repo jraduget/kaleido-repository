@@ -44,6 +44,8 @@ import org.kaleidofoundry.core.plugin.Declare;
 public interface CacheManager {
 
    /**
+    * Get a cache instance by name
+    * 
     * @param <K> type of the cache keys
     * @param <V> type of the cache values
     * @param name name of the cache you want
@@ -52,6 +54,9 @@ public interface CacheManager {
    <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name);
 
    /**
+    * Get a cache instance by name, using a custom {@link RuntimeContext} to initialize the returned cache (the context is used only during
+    * the first call)
+    * 
     * @param <K> type of the cache keys
     * @param <V> type of the cache values
     * @param name name of the cache you want
@@ -61,6 +66,8 @@ public interface CacheManager {
    <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name, @NotNull final RuntimeContext<Cache<K, V>> context);
 
    /**
+    * Get a cache instance by name (the class name as argument)
+    * 
     * @param <K> type of the cache keys
     * @param <V> type of the cache values
     * @param cl class
@@ -69,6 +76,9 @@ public interface CacheManager {
    <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final Class<V> cl);
 
    /**
+    * Get a cache instance by name (the class name as argument), and using a custom {@link RuntimeContext} to initialize the returned cache
+    * (the context is used only during the first call)
+    * 
     * @param <K> type of the cache keys
     * @param <V> type of the cache values
     * @param cl class
@@ -78,37 +88,55 @@ public interface CacheManager {
    <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final Class<V> cl, @NotNull final RuntimeContext<Cache<K, V>> context);
 
    /**
+    * The current configuration file cache provider
+    * 
     * @return cache manager current cache configuration
     */
    String getCurrentConfiguration();
 
    /**
+    * The default configuration file cache provider (if no configuration file is set)
+    * 
     * @return cache manager default cache configuration
     */
    String getDefaultConfiguration();
 
    /**
+    * Some text meta informations of the cache manager
+    * 
     * @return cache manager implementation informations
     */
    String getMetaInformations();
 
    /**
+    * Destroy of a cache using the name as an argument
+    * 
     * @param cacheName cache name to free / destroy
     */
    void destroy(@NotNull final String cacheName);
 
    /**
+    * Destroy of a cache using the name of the class as an argument
+    * 
+    * @param cl cache name to free / destroy
+    */
+   void destroy(@NotNull final Class<?> cl);
+
+   /**
+    * Destroy all registered cache manager
     * stop / destroy / shutdown all cache factory instances
     */
    void destroyAll();
 
    /**
+    * All registered names cache
+    * 
     * @return all cache names instantiate by the factory
     */
    Set<String> getCacheNames();
 
    /**
-    * statistic dump of a cache name
+    * Statistic dump of a cache name
     * 
     * @param cacheName
     * @return statistic information of the given cache
@@ -116,16 +144,11 @@ public interface CacheManager {
    Map<String, Object> dumpStatistics(@NotNull final String cacheName);
 
    /**
-    * clear cache statistics for given cache name
+    * Clear cache statistics for given cache name
     * 
     * @param cacheName
     */
    void clearStatistics(@NotNull final String cacheName);
-
-   /**
-    * @param cl cache name to free / destroy
-    */
-   void destroy(@NotNull final Class<?> cl);
 
    /**
     * @return dump all cache statistics representation<br/>
@@ -138,12 +161,12 @@ public interface CacheManager {
    Map<String, Map<String, Object>> dumpStatistics();
 
    /**
-    * clear all cache statistics
+    * Clear all cache statistics
     */
    void clearStatistics();
 
    /**
-    * print text statistic information to the given {@link OutputStream}
+    * Print text statistic information to the given {@link OutputStream}
     * 
     * @param out
     * @throws IOException
@@ -151,7 +174,7 @@ public interface CacheManager {
    void printStatistics(@NotNull final OutputStream out) throws IOException;
 
    /**
-    * print text statistic information to the given {@link Writer}
+    * Print text statistic information to the given {@link Writer}
     * 
     * @param writer
     * @throws IOException
@@ -159,6 +182,8 @@ public interface CacheManager {
    void printStatistics(@NotNull final Writer writer) throws IOException;
 
    /**
+    * Return some staticics as text
+    * 
     * @return spring representation of the cache statistics
     * @throws IOException
     */
@@ -166,6 +191,8 @@ public interface CacheManager {
    String printStatistics() throws IOException;
 
    /**
+    * The underlying cache manager provider implementation
+    * 
     * @return Return the underlying provider object
     */
    Object getDelegate();

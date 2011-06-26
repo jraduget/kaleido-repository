@@ -16,6 +16,7 @@
 package org.kaleidofoundry.core.config;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Local;
@@ -78,7 +79,7 @@ public interface ConfigurationManager {
    ConfigurationModel getModel(@NotNull String config) throws ConfigurationNotFoundException, ConfigurationException;
 
    /**
-    * remove configuration model by its name
+    * remove configuration model by its name (but does not unregister it)
     * 
     * @param config configuration name identifier
     * @throws ConfigurationNotFoundException
@@ -196,7 +197,7 @@ public interface ConfigurationManager {
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     */
    @NotNull
-   Set<ConfigurationProperty> getProperties(@NotNull String config, @NotNull String prefix) throws ConfigurationNotFoundException;
+   List<ConfigurationProperty> getProperties(@NotNull String config, @NotNull String prefix) throws ConfigurationNotFoundException;
 
    /**
     * <p>

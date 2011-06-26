@@ -76,15 +76,16 @@ public abstract class CacheManagerFactory {
    }
 
    /**
-    * @param providerCodeCode
+    * @param providerCode
     * @return cache manager using specific providerCodeCode
     * @throws CacheConfigurationException cache configuration resource exception
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
+    * @see DefaultCacheProviderEnum for providerCode values
     */
    @NotNull
-   public static CacheManager provides(@NotNull final String providerCodeCode) {
-	return CACHEMANAGER_PROVIDER.provides(providerCodeCode);
+   public static CacheManager provides(@NotNull final String providerCode) {
+	return CACHEMANAGER_PROVIDER.provides(providerCode);
    }
 
    /**

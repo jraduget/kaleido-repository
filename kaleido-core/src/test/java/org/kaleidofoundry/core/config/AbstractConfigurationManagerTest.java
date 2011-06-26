@@ -65,8 +65,12 @@ public abstract class AbstractConfigurationManagerTest extends Assert {
 
 	// remove from database
 	configurationManager.removeModel(MyConfigurationName);
+
 	// unregister in memory configuration
-	configurationManager.unregister(MyConfigurationName);
+	try {
+	   configurationManager.unregister(MyConfigurationName);
+	} catch (ConfigurationNotFoundException cnfe) {
+	}
 
 	try {
 	   configModel = configurationManager.getModel(MyConfigurationName);
@@ -95,7 +99,10 @@ public abstract class AbstractConfigurationManagerTest extends Assert {
 	   configurationManager.unregister("test");
 	   assertFalse(ConfigurationFactory.getRegistry().containsKey("test"));
 	} finally {
-	   ConfigurationFactory.unregister("test");
+	   try {
+		ConfigurationFactory.unregister("test");
+	   } catch (ConfigurationNotFoundException cnfe) {
+	   }
 	}
    }
 

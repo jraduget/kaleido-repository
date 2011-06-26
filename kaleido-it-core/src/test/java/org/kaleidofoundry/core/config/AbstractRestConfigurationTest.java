@@ -25,6 +25,7 @@ import javax.ws.rs.core.UriBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.kaleidofoundry.core.config.entity.ConfigurationModel;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
 import org.kaleidofoundry.core.config.entity.FireChangesReport;
 
@@ -45,7 +46,7 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 
    private Client client;
 
-   private final List<String> keys = Arrays.asList("//myapp/name", "//myapp/admin/email", "//myapp/sample/date", "//myapp/sample/float",
+   private static final List<String> KEYS = Arrays.asList("//myapp/name", "//myapp/admin/email", "//myapp/sample/date", "//myapp/sample/float",
 	   "//myapp/sample/boolean");
 
    @Before
@@ -67,12 +68,28 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	   assertTrue(cnfe.getMessage().contains("noConfig"));
 	}
 
-	fail("TODO");
+	WebResource resource = client.resource(getBaseURI());
+	ConfigurationModel model = resource.path("rest").path("configurations").path("myConfig").accept(getMedia().getType()).get(ConfigurationModel.class);
+	assertNotNull(model);
+	assertNull(model.getId());
+	assertEquals("myConfig", model.getName());
+	assertEquals("classpath:/config/myConfig.properties", model.getUri());
+	assertEquals(KEYS.size(), model.getProperties().size());
    }
 
    @Test
    public void removeConfigurationModel() {
+
+	try {
+	   getBaseResource().path("delete").path("noConfig");
+	   fail("noConfig must not be registered as a valid configuration");
+	} catch (UniformInterfaceException cnfe) {
+	   assertEquals(404, cnfe.getResponse().getStatus());
+	   assertTrue(cnfe.getMessage().contains("noConfig"));
+	}
+
 	fail("TODO");
+
    }
 
    @Test
@@ -82,7 +99,13 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 
    @Test
    public void unregisterConfiguration() {
-	fail("TODO");
+	try {
+	   getBaseResource().path("unregister").path("noConfig");
+	   fail("noConfig must not be registered as a valid configuration");
+	} catch (UniformInterfaceException cnfe) {
+	   assertEquals(404, cnfe.getResponse().getStatus());
+	   assertTrue(cnfe.getMessage().contains("noConfig"));
+	}
    }
 
    @Test
@@ -201,7 +224,7 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	assertEquals(5, response.size());
 	for (ConfigurationProperty property : response) {
 	   assertNotNull(property.getName());
-	   assertTrue("can't found property" + property.getName(), keys.contains(property.getName()));
+	   assertTrue("can't found property" + property.getName(), KEYS.contains(property.getName()));
 	}
    }
 
@@ -214,7 +237,7 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	assertEquals(5, response.size());
 	for (ConfigurationProperty property : response) {
 	   assertNotNull(property.getName());
-	   assertTrue("can't found property" + property.getName(), keys.contains(property.getName()));
+	   assertTrue("can't found property" + property.getName(), KEYS.contains(property.getName()));
 	}
 
 	response = getBaseResource().path("properties").queryParam("prefix", "myapp/sample").accept(getMedia().getType())
