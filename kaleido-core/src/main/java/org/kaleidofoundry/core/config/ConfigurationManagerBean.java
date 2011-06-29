@@ -216,16 +216,24 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 	// meta data update
 	if (em != null) {
 	   ConfigurationModel configurationModel = getModel(config);
-	   configurationModel.getProperties().add(property);
-	   property.getConfigurations().add(configurationModel);
 	   // if it is a new property creation
 	   if (currentProperty == null) {
+		if (configurationModel.getProperties().contains(property)) {
+		   configurationModel.getProperties().remove(property);
+		}
+		configurationModel.getProperties().add(property);
+		property.getConfigurations().add(configurationModel);
 		em.persist(property);
 	   }
 	   // if it is an update property
 	   else {
-		property.setId(currentProperty.getId());
-		em.merge(property);
+		// configurationModel.getProperties().add(currentProperty);
+		// currentProperty.getConfigurations().add(configurationModel);
+		currentProperty.setName(property.getName());
+		currentProperty.setType(property.getType());
+		currentProperty.setValue(property.getValue());
+		currentProperty.setDescription(property.getDescription());
+		em.merge(currentProperty);
 	   }
 	   em.merge(configurationModel);
 	   em.flush();
@@ -356,11 +364,15 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.AbstractConfigurationManager#containsKey(java.lang.String, java.lang.String, java.lang.String)
     */
+   public boolean containsKey(final String config, final String property) {
+	return keySet(config, null).contains(property);
+   }
+
    @GET
    @Path("contains/{property}")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-   public boolean containsKey(final @PathParam("config") String config, @PathParam("property") final String property) {
-	return keySet(config, null).contains(property);
+   public Response containsKeyForRest(final @PathParam("config") String config, @PathParam("property") final String property) {
+	return Response.ok(containsKey(config, property)).build();
    }
 
    // ### Configuration management methods #######################################################################################
@@ -384,6 +396,21 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 	   }
 	}
 	return configurationModel;
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#isModelExists(java.lang.String)
+    */
+   public boolean isModelExists(final String config) {
+	return findConfigurationModelByName(config, false) != null;
+   }
+
+   @GET
+   @Path("exists")
+   @Produces({ MediaType.TEXT_PLAIN })
+   public Response isModelExistsForRest(final @PathParam("config") String config) {
+	return Response.ok(Boolean.valueOf(isModelExists(config)).toString()).build();
    }
 
    /*
@@ -415,7 +442,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     */
    @PUT
    @Path("register")
-   public void register(final @PathParam("config") String config, final @PathParam("resourceURI") String resourceURI) {
+   public void register(final @PathParam("config") String config, final @QueryParam("resourceURI") String resourceURI) {
 	ConfigurationFactory.provides(config, resourceURI);
    }
 
@@ -427,6 +454,21 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
    @Path("unregister")
    public void unregister(final @PathParam("config") String config) throws StoreException {
 	ConfigurationFactory.unregister(config);
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#isRegistered(java.lang.String)
+    */
+   public boolean isRegistered(final String config) {
+	return ConfigurationFactory.getRegistry().containsKey(config);
+   }
+
+   @GET
+   @Path("registered")
+   @Produces({ MediaType.TEXT_PLAIN })
+   public Response isRegisteredForRest(final @PathParam("config") String config) {
+	return Response.ok(Boolean.valueOf(isRegistered(config)).toString()).build();
    }
 
    /*
@@ -502,10 +544,15 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.ConfigurationManager#isLoaded(java.lang.String)
     */
-   @PUT
-   @Path("isLoaded")
-   public boolean isLoaded(@PathParam("config") final String config) throws ConfigurationNotFoundException {
+   public boolean isLoaded(final String config) throws ConfigurationNotFoundException {
 	return getRegisteredConfiguration(config).isLoaded();
+   }
+
+   @GET
+   @Path("isLoaded")
+   @Produces({ MediaType.TEXT_PLAIN })
+   public Response isLoadedForRest(final @PathParam("config") String config) {
+	return Response.ok(Boolean.valueOf(isLoaded(config)).toString()).build();
    }
 
    // ** private / protected part ***********************************************************************************************

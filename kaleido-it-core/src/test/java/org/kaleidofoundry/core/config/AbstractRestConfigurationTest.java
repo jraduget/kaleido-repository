@@ -51,8 +51,20 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 
    @Before
    public void setup() {
+	// client configuration
 	ClientConfig config = new DefaultClientConfig();
 	client = Client.create(config);
+	// remove myConfig items if needed
+	if (Boolean.valueOf(getMyConfigBaseResource().path("exists").get(String.class))) {
+	   getMyConfigBaseResource().path("delete").delete();
+	}
+	// remove myNewConfig items if needed
+	if (Boolean.valueOf(getBaseResource().path("myNewConfig").path("exists").get(String.class))) {
+	   getBaseResource().path("myNewConfig").path("delete").delete();
+	}
+	if (Boolean.valueOf(getBaseResource().path("myNewConfig").path("registered").get(String.class))) {
+	   getBaseResource().path("myNewConfig").path("unregister").put();
+	}
    }
 
    public abstract MediaType getMedia();
@@ -60,16 +72,14 @@ public abstract class AbstractRestConfigurationTest extends Assert {
    @Test
    public void getConfigurationModel() {
 	try {
-	   WebResource resource = client.resource(getBaseURI());
-	   resource.path("rest").path("configurations").path("noConfig").path("get").path("myapp.name").accept(getMedia().getType()).get(String.class);
+	   getBaseResource().path("noConfig").path("get").path("myapp.name").accept(getMedia().getType()).get(String.class);
 	   fail("noConfig must not be registered as a valid configuration");
 	} catch (UniformInterfaceException cnfe) {
 	   assertEquals(404, cnfe.getResponse().getStatus());
 	   assertTrue(cnfe.getMessage().contains("noConfig"));
 	}
 
-	WebResource resource = client.resource(getBaseURI());
-	ConfigurationModel model = resource.path("rest").path("configurations").path("myConfig").accept(getMedia().getType()).get(ConfigurationModel.class);
+	ConfigurationModel model = getMyConfigBaseResource().accept(getMedia().getType()).get(ConfigurationModel.class);
 	assertNotNull(model);
 	assertNull(model.getId());
 	assertEquals("myConfig", model.getName());
@@ -81,26 +91,33 @@ public abstract class AbstractRestConfigurationTest extends Assert {
    public void removeConfigurationModel() {
 
 	try {
-	   getBaseResource().path("delete").path("noConfig");
+	   getBaseResource().path("noConfig").path("delete").delete();
 	   fail("noConfig must not be registered as a valid configuration");
 	} catch (UniformInterfaceException cnfe) {
 	   assertEquals(404, cnfe.getResponse().getStatus());
 	   assertTrue(cnfe.getMessage().contains("noConfig"));
 	}
-
-	fail("TODO");
-
    }
 
    @Test
    public void registerConfiguration() {
-	fail("TODO");
+	assertFalse(Boolean.valueOf(getBaseResource().path("myNewConfig").path("registered").get(String.class)));
+
+	getBaseResource().path("myNewConfig").path("register").queryParam("resourceURI", "classpath:/config/myNewConfig.properties").put();
+
+	assertTrue(Boolean.valueOf(getBaseResource().path("myNewConfig").path("registered").get(String.class)));
+	assertEquals("my new registerd application",
+		getBaseResource().path("myNewConfig").path("get").path("myapp.name").accept(getMedia().getType()).get(String.class));
+	assertEquals("myadmin@mynewsociete.com",
+		getBaseResource().path("myNewConfig").path("get").path("myapp.admin.email").accept(getMedia().getType()).get(String.class));
+	assertEquals("54.321", getBaseResource().path("myNewConfig").path("get").path("myapp.sample.float").accept(getMedia().getType()).get(String.class));
+	assertEquals("true", getBaseResource().path("myNewConfig").path("get").path("myapp.sample.boolean").accept(getMedia().getType()).get(String.class));
    }
 
    @Test
    public void unregisterConfiguration() {
 	try {
-	   getBaseResource().path("unregister").path("noConfig");
+	   getBaseResource().path("noConfig").path("unregister").put();
 	   fail("noConfig must not be registered as a valid configuration");
 	} catch (UniformInterfaceException cnfe) {
 	   assertEquals(404, cnfe.getResponse().getStatus());
@@ -110,18 +127,18 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 
    @Test
    public void getPropertyValue() {
-	String strResponse = getBaseResource().path("get").path("myapp.name").accept(getMedia().getType()).get(String.class);
+	String strResponse = getMyConfigBaseResource().path("get").path("myapp.name").accept(getMedia().getType()).get(String.class);
 	System.out.println(strResponse);
 	assertNotNull(strResponse);
 	assertEquals("my new application", strResponse);
 
-	strResponse = getBaseResource().path("get").path("myapp.sample.float").accept(getMedia().getType()).get(String.class);
+	strResponse = getMyConfigBaseResource().path("get").path("myapp.sample.float").accept(getMedia().getType()).get(String.class);
 	System.out.println(strResponse);
 	assertNotNull(strResponse);
 	assertEquals("123.45", strResponse);
 
 	try {
-	   strResponse = getBaseResource().path("get").path("noKey").accept(getMedia().getType()).get(String.class);
+	   strResponse = getMyConfigBaseResource().path("get").path("noKey").accept(getMedia().getType()).get(String.class);
 	   fail("noKey property must not exists");
 	} catch (UniformInterfaceException cnfe) {
 	   assertEquals(404, cnfe.getResponse().getStatus());
@@ -132,14 +149,15 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 
    @Test
    public void getProperty() {
-	ConfigurationProperty response = getBaseResource().path("getProperty").path("myapp.name").accept(getMedia().getType()).get(ConfigurationProperty.class);
+	ConfigurationProperty response = getMyConfigBaseResource().path("getProperty").path("myapp.name").accept(getMedia().getType())
+		.get(ConfigurationProperty.class);
 	System.out.println(response);
 	assertNotNull(response);
 	// assertEquals("myConfig", response.getConfiguration().getName());
 	assertEquals("//myapp/name", response.getName());
 	assertEquals(ConfigurationManagerBean.DefaultDescription, response.getDescription());
 
-	response = getBaseResource().path("getProperty").path("myapp.sample.float").accept(getMedia().getType()).get(ConfigurationProperty.class);
+	response = getMyConfigBaseResource().path("getProperty").path("myapp.sample.float").accept(getMedia().getType()).get(ConfigurationProperty.class);
 	System.out.println(response);
 	assertNotNull(response);
 	// assertEquals("myConfig", response.getConfiguration().getName());
@@ -147,7 +165,7 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	assertEquals(ConfigurationManagerBean.DefaultDescription, response.getDescription());
 
 	try {
-	   response = getBaseResource().path("get").path("noKey").accept(getMedia().getType()).get(ConfigurationProperty.class);
+	   response = getMyConfigBaseResource().path("get").path("noKey").accept(getMedia().getType()).get(ConfigurationProperty.class);
 	   fail("noKey property must not exists");
 	} catch (UniformInterfaceException cnfe) {
 	   assertEquals(404, cnfe.getResponse().getStatus());
@@ -159,33 +177,33 @@ public abstract class AbstractRestConfigurationTest extends Assert {
    @Test
    public void set() {
 	// get initial value
-	String strResponse = getBaseResource().path("get").path("myapp.name").accept(getMedia().getType()).get(String.class);
+	String strResponse = getMyConfigBaseResource().path("get").path("myapp.name").accept(getMedia().getType()).get(String.class);
 	assertNotNull(strResponse);
 	assertEquals("my new application", strResponse);
 	try {
 	   // update an exiting property
-	   getBaseResource().path("set").path("myapp.name").queryParam("value", "my updated application").put();
+	   getMyConfigBaseResource().path("set").path("myapp.name").queryParam("value", "my updated application").put();
 	   // check update getting new value
-	   strResponse = getBaseResource().path("get").path("myapp.name").accept(getMedia().getType()).get(String.class);
+	   strResponse = getMyConfigBaseResource().path("get").path("myapp.name").accept(getMedia().getType()).get(String.class);
 	   assertNotNull(strResponse);
 	   assertEquals("my updated application", strResponse);
 
 	   // create a new property
-	   getBaseResource().path("set").path("newProp").queryParam("value", "my new prop value").put();
+	   getMyConfigBaseResource().path("set").path("newProp").queryParam("value", "my new prop value").put();
 	   // check update getting new value
-	   strResponse = getBaseResource().path("get").path("newProp").accept(getMedia().getType()).get(String.class);
+	   strResponse = getMyConfigBaseResource().path("get").path("newProp").accept(getMedia().getType()).get(String.class);
 	   assertNotNull(strResponse);
 	   assertEquals("my new prop value", strResponse);
 
 	} finally {
 	   // restore initial value
-	   getBaseResource().path("set").path("myapp.name").queryParam("value", "my new application").put();
+	   getMyConfigBaseResource().path("set").path("myapp.name").queryParam("value", "my new application").put();
 	   // remove created property
-	   getBaseResource().path("removeProperty").path("newProp").delete();
+	   getMyConfigBaseResource().path("removeProperty").path("newProp").delete();
 	}
 
 	// check fired event count
-	FireChangesReport report = getBaseResource().path("fireChanges").accept(getMedia().getType()).get(FireChangesReport.class);
+	FireChangesReport report = getMyConfigBaseResource().path("fireChanges").accept(getMedia().getType()).get(FireChangesReport.class);
 	assertNotNull(report);
 	assertEquals(new Integer(1), report.getCreated());
 	assertEquals(new Integer(2), report.getUpdated());
@@ -193,20 +211,20 @@ public abstract class AbstractRestConfigurationTest extends Assert {
    }
 
    @Test
-   public void remove() {
+   public void removeProperty() {
 	// set initial value
-	getBaseResource().path("set").path("keyToRemove").queryParam("value", "eheh").put();
+	getMyConfigBaseResource().path("set").path("keyToRemove").queryParam("value", "eheh").put();
 	// remove it
-	getBaseResource().path("removeProperty").path("keyToRemove").delete();
+	getMyConfigBaseResource().path("removeProperty").path("keyToRemove").delete();
 	// check fired event count
-	FireChangesReport report = getBaseResource().path("fireChanges").accept(getMedia().getType()).get(FireChangesReport.class);
+	FireChangesReport report = getMyConfigBaseResource().path("fireChanges").accept(getMedia().getType()).get(FireChangesReport.class);
 	assertNotNull(report);
 	assertEquals(new Integer(1), report.getCreated());
 	assertEquals(new Integer(0), report.getUpdated());
 	assertEquals(new Integer(1), report.getRemoved());
 	// remove it
 	try {
-	   getBaseResource().path("removeProperty").path("keyToRemove").delete();
+	   getMyConfigBaseResource().path("removeProperty").path("keyToRemove").delete();
 	   fail("property keyToRemove was not removed");
 	} catch (UniformInterfaceException cnfe) {
 	   assertEquals(404, cnfe.getResponse().getStatus());
@@ -217,7 +235,7 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 
    @Test
    public void properties() {
-	List<ConfigurationProperty> response = getBaseResource().path("properties").accept(getMedia().getType())
+	List<ConfigurationProperty> response = getMyConfigBaseResource().path("properties").accept(getMedia().getType())
 		.get(new GenericType<List<ConfigurationProperty>>() {
 		});
 	assertNotNull(response);
@@ -230,7 +248,7 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 
    @Test
    public void propertiesWithPrefix() {
-	List<ConfigurationProperty> response = getBaseResource().path("properties").queryParam("prefix", "myapp").accept(getMedia().getType())
+	List<ConfigurationProperty> response = getMyConfigBaseResource().path("properties").queryParam("prefix", "myapp").accept(getMedia().getType())
 		.get(new GenericType<List<ConfigurationProperty>>() {
 		});
 	assertNotNull(response);
@@ -240,19 +258,19 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	   assertTrue("can't found property" + property.getName(), KEYS.contains(property.getName()));
 	}
 
-	response = getBaseResource().path("properties").queryParam("prefix", "myapp/sample").accept(getMedia().getType())
+	response = getMyConfigBaseResource().path("properties").queryParam("prefix", "myapp/sample").accept(getMedia().getType())
 		.get(new GenericType<List<ConfigurationProperty>>() {
 		});
 	assertNotNull(response);
 	assertEquals(3, response.size());
 
-	response = getBaseResource().path("properties").queryParam("prefix", "myapp/admin/email").accept(getMedia().getType())
+	response = getMyConfigBaseResource().path("properties").queryParam("prefix", "myapp/admin/email").accept(getMedia().getType())
 		.get(new GenericType<List<ConfigurationProperty>>() {
 		});
 	assertNotNull(response);
 	assertEquals(1, response.size());
 
-	response = getBaseResource().path("properties").queryParam("prefix", "?").accept(getMedia().getType())
+	response = getMyConfigBaseResource().path("properties").queryParam("prefix", "?").accept(getMedia().getType())
 		.get(new GenericType<List<ConfigurationProperty>>() {
 		});
 	assertNotNull(response);
@@ -264,23 +282,33 @@ public abstract class AbstractRestConfigurationTest extends Assert {
    public void putProperty() {
 
 	// get initial value
-	ConfigurationProperty property = getBaseResource().path("getProperty").path("myapp.name").accept(getMedia().getType()).get(ConfigurationProperty.class);
+	ConfigurationProperty property = getMyConfigBaseResource().path("getProperty").path("myapp.name").accept(getMedia().getType())
+		.get(ConfigurationProperty.class);
 	assertNotNull(property);
 	assertEquals("//myapp/name", property.getName());
 	assertEquals(ConfigurationManagerBean.DefaultDescription, property.getDescription());
 
-	// update an exiting property
-	ClientResponse response = getBaseResource().path("putProperty").accept(getMedia().getType())
+	// create or update an exiting property
+	ClientResponse response = getMyConfigBaseResource().path("putProperty").accept(getMedia().getType())
 		.put(ClientResponse.class, new ConfigurationProperty("myapp.name", "my new application", String.class, "new description"));
 	assertNotNull(response);
 	assertEquals(204, response.getStatus());
 
 	// check updates
-	property = getBaseResource().path("getProperty").path("myapp.name").accept(getMedia().getType()).get(ConfigurationProperty.class);
+	property = getMyConfigBaseResource().path("getProperty").path("myapp.name").accept(getMedia().getType()).get(ConfigurationProperty.class);
 	assertNotNull(property);
 	assertEquals("//myapp/name", property.getName());
-	// assertEquals("new description", property.getDescription());
+	assertEquals("new description", property.getDescription());
 
+	// update an exiting property
+	response = getMyConfigBaseResource().path("putProperty").accept(getMedia().getType())
+		.put(ClientResponse.class, new ConfigurationProperty("myapp.name", "my new application", String.class, "new description2"));
+
+	// check updates
+	property = getMyConfigBaseResource().path("getProperty").path("myapp.name").accept(getMedia().getType()).get(ConfigurationProperty.class);
+	assertNotNull(property);
+	assertEquals("//myapp/name", property.getName());
+	assertEquals("new description2", property.getDescription());
    }
 
    private URI getBaseURI() {
@@ -289,6 +317,12 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 
    private WebResource getBaseResource() {
 	WebResource resource = client.resource(getBaseURI());
+	return resource.path("rest").path("configurations");
+   }
+
+   private WebResource getMyConfigBaseResource() {
+	WebResource resource = client.resource(getBaseURI());
 	return resource.path("rest").path("configurations").path("myConfig");
    }
+
 }

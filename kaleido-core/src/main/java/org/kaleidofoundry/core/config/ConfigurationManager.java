@@ -69,6 +69,14 @@ public interface ConfigurationManager {
    void unregister(String config) throws StoreException;
 
    /**
+    * does following configuration have been registered
+    * 
+    * @param config
+    * @return <code>true|false</code>
+    */
+   boolean isRegistered(String config);
+
+   /**
     * get configuration model by its name
     * 
     * @param config configuration name identifier
@@ -86,6 +94,14 @@ public interface ConfigurationManager {
     * @throws ConfigurationException
     */
    void removeModel(@NotNull final String config) throws ConfigurationNotFoundException, ConfigurationException;
+
+   /**
+    * does configuration model exists
+    * 
+    * @param config
+    * @return <code>true|false</code>
+    */
+   boolean isModelExists(@NotNull final String config);
 
    /**
     * get the raw property value
