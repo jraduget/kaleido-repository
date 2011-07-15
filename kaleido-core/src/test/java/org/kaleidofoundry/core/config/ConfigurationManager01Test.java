@@ -16,6 +16,8 @@
 package org.kaleidofoundry.core.config;
 
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -25,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.entity.ConfigurationModel;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
+import org.kaleidofoundry.core.lang.label.Labels;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,11 +74,11 @@ public class ConfigurationManager01Test extends AbstractConfigurationManagerTest
 
 	   ConfigurationProperty property;
 
-	   property = new ConfigurationProperty("//key01", "value01", String.class, "descr01");
+	   property = new ConfigurationProperty("//key01", "value01", String.class, "descr01", new Labels(new String[] { "APP" }));
 	   property.getConfigurations().add(configurationModel);
 	   configurationModel.getProperties().add(property);
 
-	   property = new ConfigurationProperty("//key02", 123.45f, Float.class, "descr02");
+	   property = new ConfigurationProperty("//key02", 123.45f, Float.class, "descr02", new Labels(new String[] { "APP", "VERSION" }));
 	   property.getConfigurations().add(configurationModel);
 	   configurationModel.getProperties().add(property);
 
@@ -125,6 +128,26 @@ public class ConfigurationManager01Test extends AbstractConfigurationManagerTest
 
    /*
     * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.AbstractConfigurationManagerTest#findConfigurationModel()
+    */
+   @Override
+   @Test
+   public void findConfigurationModel() {
+
+	super.findConfigurationModel();
+
+	List<ConfigurationModel> models;
+
+	// search in description
+	models = configurationManager.findModel("description");
+	assertNotNull(models);
+	assertFalse(models.isEmpty());
+	assertEquals(1, models.size());
+
+   }
+
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.AbstractConfigurationManagerTest#getProperty()
     */
    @Override
@@ -133,6 +156,20 @@ public class ConfigurationManager01Test extends AbstractConfigurationManagerTest
 	ConfigurationProperty property = configurationManager.getProperty(MyConfigurationName, "//key01");
 	assertNotNull(property.getId());
 	assertEquals("descr01", property.getDescription());
+
+	assertNotNull(property.getLabels());
+	Iterator<String> labels = property.getLabels().iterator();
+	assertEquals("APP", labels.next());
+	assertFalse(labels.hasNext());
+
+	property = configurationManager.getProperty(MyConfigurationName, "//key02");
+	assertNotNull(property.getId());
+	assertEquals("descr02", property.getDescription());
+	assertNotNull(property.getLabels());
+	labels = property.getLabels().iterator();
+	assertEquals("APP", labels.next());
+	assertEquals("VERSION", labels.next());
+	assertFalse(labels.hasNext());
    }
 
    /*
@@ -147,6 +184,20 @@ public class ConfigurationManager01Test extends AbstractConfigurationManagerTest
 	assertEquals("descr02", property.getDescription());
 	assertEquals(Float.class, property.getType());
 	assertEquals(123.45f, property.getValue());
+   }
+
+   @Override
+   @Test
+   public void findProperties() {
+	super.findProperties();
+
+	List<ConfigurationProperty> properties;
+
+	// search in description
+	properties = configurationManager.findProperties(MyConfigurationName, "descr");
+	assertNotNull(properties);
+	assertFalse(properties.isEmpty());
+	assertEquals(2, properties.size());
    }
 
    /*

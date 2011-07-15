@@ -42,6 +42,8 @@ import javax.xml.bind.annotation.XmlType;
 import org.kaleidofoundry.core.config.AbstractConfiguration;
 import org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Query_FindPropertyByName;
 import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.lang.label.LabelCategory;
+import org.kaleidofoundry.core.lang.label.Labels;
 import org.kaleidofoundry.core.util.PrimitiveTypeToStringSerializer;
 import org.kaleidofoundry.core.util.ToStringSerializer;
 
@@ -56,7 +58,7 @@ import org.kaleidofoundry.core.util.ToStringSerializer;
 @NamedQueries({ @NamedQuery(name = Query_FindPropertyByName.Name, query = Query_FindPropertyByName.Jql) })
 @XmlRootElement(name = "property")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "id", "name", "value", "type", "description" })
+@XmlType(propOrder = { "id", "name", "value", "type", "description", "labels" })
 @Task(comment = "Audit information (locale zone for the date, user information...)")
 public class ConfigurationProperty implements Serializable {
 
@@ -73,6 +75,8 @@ public class ConfigurationProperty implements Serializable {
    private String value;
    private String type;
    private String description;
+   private Labels labels;
+
    @Version
    @XmlTransient
    Integer version;
@@ -111,12 +115,24 @@ public class ConfigurationProperty implements Serializable {
     * @param description optional description
     */
    public ConfigurationProperty(final String name, final Serializable value, final Class<?> type, final String description) {
+	this(name, value, type, description, null);
+   }
+
+   /**
+    * @param name property name
+    * @param value property value
+    * @param type property type
+    * @param description optional description
+    * @param labels property labels
+    */
+   public ConfigurationProperty(final String name, final Serializable value, final Class<?> type, final String description, final Labels labels) {
 	super();
 	setName(name);
 	this.description = description;
 	this.type = type != null ? type.getName() : null;
 	this.configurations = new HashSet<ConfigurationModel>();
 	this.serializer = new PrimitiveTypeToStringSerializer();
+	setLabels(labels);
 	setValue(value);
    }
 
@@ -224,6 +240,23 @@ public class ConfigurationProperty implements Serializable {
     */
    public <T extends Serializable> void setType(final Class<T> type) {
 	this.type = type != null ? type.getName() : null;
+   }
+
+   /**
+    * @return the labels
+    */
+   public Labels getLabels() {
+	return labels;
+   }
+
+   /**
+    * @param labels the labels to set
+    */
+   public void setLabels(final Labels labels) {
+	this.labels = labels;
+	if (this.labels != null) {
+	   this.labels.setCategory(LabelCategory.Configuration);
+	}
    }
 
    /*

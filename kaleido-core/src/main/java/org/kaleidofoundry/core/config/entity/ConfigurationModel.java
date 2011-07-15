@@ -47,6 +47,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.lang.label.LabelCategory;
+import org.kaleidofoundry.core.lang.label.Labels;
 
 /**
  * @author Jerome RADUGET
@@ -77,6 +79,7 @@ public class ConfigurationModel implements Serializable {
    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
    @JoinTable(name = Table_ConfigurationProperties, joinColumns = @JoinColumn(name = "CONFIGURATION_ID"), inverseJoinColumns = @JoinColumn(name = "PROPERTY_ID"))
    private Set<ConfigurationProperty> properties;
+   private Labels labels;
    @Version
    @XmlTransient
    Integer version;
@@ -106,11 +109,22 @@ public class ConfigurationModel implements Serializable {
     * @param description
     */
    public ConfigurationModel(final String name, final String uri, final String description) {
+	this(name, uri, description, null);
+   }
+
+   /**
+    * @param name
+    * @param uri
+    * @param description
+    * @param labels
+    */
+   public ConfigurationModel(final String name, final String uri, final String description, final Labels labels) {
 	super();
 	this.name = name;
 	this.uri = uri;
 	this.description = description;
 	this.properties = new HashSet<ConfigurationProperty>();
+	setLabels(labels);
    }
 
    /**
@@ -167,6 +181,23 @@ public class ConfigurationModel implements Serializable {
     */
    public void setUri(final String uri) {
 	this.uri = uri;
+   }
+
+   /**
+    * @return the labels
+    */
+   public Labels getLabels() {
+	return labels;
+   }
+
+   /**
+    * @param labels the labels to set
+    */
+   public void setLabels(final Labels labels) {
+	this.labels = labels;
+	if (this.labels != null) {
+	   this.labels.setCategory(LabelCategory.Configuration);
+	}
    }
 
    /**

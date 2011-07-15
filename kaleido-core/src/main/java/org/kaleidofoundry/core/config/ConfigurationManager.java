@@ -96,12 +96,22 @@ public interface ConfigurationManager {
    void removeModel(@NotNull final String config) throws ConfigurationNotFoundException, ConfigurationException;
 
    /**
+    * finding configurations by using a text search in the fields {@link ConfigurationModel#getName()},
+    * {@link ConfigurationModel#getDescription()}, {@link ConfigurationModel#getLabels()}
+    * 
+    * @param text
+    * @return list of configuration properties matching the text argument
+    */
+   @NotNull
+   List<ConfigurationModel> findModel(String text);
+
+   /**
     * does configuration model exists
     * 
     * @param config
     * @return <code>true|false</code>
     */
-   boolean isModelExists(@NotNull final String config);
+   boolean exists(@NotNull final String config);
 
    /**
     * get the raw property value
@@ -207,17 +217,19 @@ public interface ConfigurationManager {
    Set<ConfigurationProperty> getProperties(@NotNull String config) throws ConfigurationNotFoundException;
 
    /**
-    * @param config configuration name identifier
-    * @param prefix
-    * @return a set (clone) of all the declared property keys <br/>
-    * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
+    * finding configuration properties by using a text search in the fields {@link ConfigurationProperty#getName()},
+    * {@link ConfigurationProperty#getDescription()}, {@link ConfigurationProperty#getLabels()}, {@link ConfigurationProperty#getValue()}
+    * 
+    * @param config configuration name identifier (not mandatory)
+    * @param text text token to search
+    * @return list of configuration properties matching the text argument
     */
    @NotNull
-   List<ConfigurationProperty> getProperties(@NotNull String config, @NotNull String prefix) throws ConfigurationNotFoundException;
+   List<ConfigurationProperty> findProperties(String config, String text);
 
    /**
     * <p>
-    * For the top class properties example, implements by {@link PropertiesConfiguration} :
+    * For the top class properties example in {@link PropertiesConfiguration} :
     * 
     * <pre>
     * 
@@ -234,19 +246,19 @@ public interface ConfigurationManager {
    Set<String> keySet(@NotNull String config) throws ConfigurationNotFoundException;
 
    /**
-    * For the top class properties example, implements by {@link PropertiesConfiguration} :
+    * For the top class properties example in {@link PropertiesConfiguration} :
     * 
     * <pre>
     * configurationManager.keySet(&quot;appConfig&quot;, &quot;application.modules&quot;)= {&quot;application.modules.sales=Sales&quot;,&quot;application.modules.sales.version=1.1.0&quot;,&quot;application.modules.marketing=Market.&quot;,&quot;application.modules.netbusiness=&quot;}
     * </pre>
     * 
     * @param config configuration name identifier
-    * @param prefix prefix key name filtering
+    * @param text text key filtering
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     * @return a set (clone) of all declared property keys filtered by prefix argument
     */
    @NotNull
-   Set<String> keySet(@NotNull String config, @NotNull String prefix) throws ConfigurationNotFoundException;
+   Set<String> keySet(String config, @NotNull String text) throws ConfigurationNotFoundException;
 
    /**
     * @param config configuration name identifier

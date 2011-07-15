@@ -47,6 +47,26 @@ public interface ConfigurationModelConstants {
 
    /**
     * Query static final informations<br/>
+    * Find configuration using a text token
+    */
+   public static interface Query_FindConfigurationByText {
+	String Name = "config.findConfigurationByText";
+	String Parameter_Text = "text";
+	String Jql = "SELECT c FROM " + Entity_Configuration + " c  WHERE " + "(c.name like :" + Parameter_Text + ") or (c.uri like :" + Parameter_Text
+		+ ") or (c.description like :" + Parameter_Text + ") or (c.labels.items like :" + Parameter_Text + ")";
+   }
+
+   /**
+    * Query static final informations<br/>
+    * Find all configuration
+    */
+   public static interface Query_FindAllConfiguration {
+	String Name = "config.findAllConfiguration";
+	String Jql = "SELECT c FROM " + Entity_Configuration;
+   }
+
+   /**
+    * Query static final informations<br/>
     * Find configuration property by name
     */
    public static interface Query_FindPropertyByName {
@@ -55,6 +75,20 @@ public interface ConfigurationModelConstants {
 	String Parameter_Name = "name";
 	String Jql = "SELECT cp FROM " + Entity_Property + " cp JOIN cp.configurations c  WHERE cp.name = :" + Parameter_Name + " AND c.name = :"
 		+ Parameter_ConfigurationName;
+   }
+
+   /**
+    * Query static final informations<br/>
+    * Find configuration property by name
+    */
+   public static interface Query_FindPropertyByText {
+	String Name = "config.findPropertyByName";
+	String Parameter_ConfigurationName = "configName";
+	String Parameter_Text = "text";
+	String Parameter_Name = "name";
+	String Jql = "SELECT cp FROM " + Entity_Property + " cp JOIN cp.configurations c  WHERE " + "(c.name = :" + Parameter_ConfigurationName + " or :"
+		+ Parameter_ConfigurationName + " IS NULL) " + "and ((cp.name like :" + Parameter_Text + ") or (cp.value like :" + Parameter_Text
+		+ ") or (cp.description like :" + Parameter_Text + ") or (cp.labels.items like :" + Parameter_Text + "))";
    }
 
 }

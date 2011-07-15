@@ -88,6 +88,11 @@ public abstract class AbstractRestConfigurationTest extends Assert {
    }
 
    @Test
+   public void findConfigurationModel() {
+	fail("TODO");
+   }
+
+   @Test
    public void removeConfigurationModel() {
 
 	try {
@@ -234,8 +239,8 @@ public abstract class AbstractRestConfigurationTest extends Assert {
    }
 
    @Test
-   public void properties() {
-	List<ConfigurationProperty> response = getMyConfigBaseResource().path("properties").accept(getMedia().getType())
+   public void findPropertiesByConfig() {
+	List<ConfigurationProperty> response = getBaseResource().path("findProperties").queryParam("config", "myConfig").accept(getMedia().getType())
 		.get(new GenericType<List<ConfigurationProperty>>() {
 		});
 	assertNotNull(response);
@@ -247,9 +252,9 @@ public abstract class AbstractRestConfigurationTest extends Assert {
    }
 
    @Test
-   public void propertiesWithPrefix() {
-	List<ConfigurationProperty> response = getMyConfigBaseResource().path("properties").queryParam("prefix", "myapp").accept(getMedia().getType())
-		.get(new GenericType<List<ConfigurationProperty>>() {
+   public void findPropertiesByText() {
+	List<ConfigurationProperty> response = getBaseResource().path("findProperties").queryParam("config", "myConfig").queryParam("text", "myapp")
+		.accept(getMedia().getType()).get(new GenericType<List<ConfigurationProperty>>() {
 		});
 	assertNotNull(response);
 	assertEquals(5, response.size());
@@ -258,19 +263,19 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	   assertTrue("can't found property" + property.getName(), KEYS.contains(property.getName()));
 	}
 
-	response = getMyConfigBaseResource().path("properties").queryParam("prefix", "myapp/sample").accept(getMedia().getType())
+	response = getBaseResource().path("findProperties").queryParam("config", "myConfig").queryParam("text", "myapp/sample").accept(getMedia().getType())
 		.get(new GenericType<List<ConfigurationProperty>>() {
 		});
 	assertNotNull(response);
 	assertEquals(3, response.size());
 
-	response = getMyConfigBaseResource().path("properties").queryParam("prefix", "myapp/admin/email").accept(getMedia().getType())
+	response = getBaseResource().path("findProperties").queryParam("config", "myConfig").queryParam("text", "myapp/admin/email").accept(getMedia().getType())
 		.get(new GenericType<List<ConfigurationProperty>>() {
 		});
 	assertNotNull(response);
 	assertEquals(1, response.size());
 
-	response = getMyConfigBaseResource().path("properties").queryParam("prefix", "?").accept(getMedia().getType())
+	response = getBaseResource().path("findProperties").queryParam("config", "myConfig").queryParam("text", "?").accept(getMedia().getType())
 		.get(new GenericType<List<ConfigurationProperty>>() {
 		});
 	assertNotNull(response);

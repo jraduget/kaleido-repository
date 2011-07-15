@@ -41,7 +41,8 @@ public class ConfigurationManager03Test extends AbstractConfigurationManagerTest
    protected EntityManagerFactory emf;
 
    @Before
-   public void setup() {
+   public void setup() throws StoreException {
+
 	// register configuration
 	ConfigurationFactory.provides(MyConfigurationName, MyConfigurationUri);
 

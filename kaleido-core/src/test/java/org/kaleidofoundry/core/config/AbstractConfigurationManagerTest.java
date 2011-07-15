@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.core.config;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.entity.ConfigurationModel;
@@ -47,6 +49,26 @@ public abstract class AbstractConfigurationManagerTest extends Assert {
 	assertNotNull(configModel);
 	assertEquals(MyConfigurationName, configModel.getName());
 	assertEquals(MyConfigurationUri, configModel.getUri());
+   }
+
+   @Test
+   public void findConfigurationModel() {
+	List<ConfigurationModel> models;
+	models = configurationManager.findModel("unknown");
+	assertNotNull(models);
+	assertTrue(models.isEmpty());
+
+	// search by name
+	models = configurationManager.findModel("Named");
+	assertNotNull(models);
+	assertFalse(models.isEmpty());
+	assertEquals(1, models.size());
+
+	// search by uri
+	models = configurationManager.findModel("config/");
+	assertNotNull(models);
+	assertFalse(models.isEmpty());
+	assertEquals(1, models.size());
    }
 
    @Test
@@ -146,6 +168,33 @@ public abstract class AbstractConfigurationManagerTest extends Assert {
 	assertEquals("//key02", property.getName());
 	assertNotNull(property.getConfigurations());
 	assertEquals(1, property.getConfigurations().size());
+   }
+
+   @Test
+   public void findProperties() {
+	List<ConfigurationProperty> properties;
+
+	try {
+	   configurationManager.findProperties("unknown", "key01");
+	   fail();
+	} catch (ConfigurationNotFoundException cnfe) {
+	}
+
+	properties = configurationManager.findProperties(MyConfigurationName, "unknown");
+	assertNotNull(properties);
+	assertTrue(properties.isEmpty());
+
+	// search in name
+	properties = configurationManager.findProperties(MyConfigurationName, "key0");
+	assertNotNull(properties);
+	assertFalse(properties.isEmpty());
+	assertEquals(2, properties.size());
+
+	// search in value
+	properties = configurationManager.findProperties(MyConfigurationName, "value01");
+	assertNotNull(properties);
+	assertFalse(properties.isEmpty());
+	assertEquals(1, properties.size());
    }
 
    @Test

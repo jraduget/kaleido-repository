@@ -17,6 +17,7 @@ package org.kaleidofoundry.core.config;
 
 import junit.framework.Assert;
 
+import org.junit.After;
 import org.junit.Test;
 import org.kaleidofoundry.core.store.StoreException;
 
@@ -24,6 +25,11 @@ import org.kaleidofoundry.core.store.StoreException;
  * @author Jerome RADUGET
  */
 public class ConfigurationFactoryTest extends Assert {
+
+   @After
+   public void cleanup() throws StoreException {
+	ConfigurationFactory.unregisterAll();
+   }
 
    @Test
    public void providePropertiesConfiguration() throws StoreException {

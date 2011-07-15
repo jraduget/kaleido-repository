@@ -98,16 +98,12 @@ public abstract class ConfigurationFactory {
     */
    public static final void unregisterAll() throws StoreException {
 
-	if (INIT_LOADED) {
-	   synchronized (ConfigurationFactory.class) {
-		for (final Configuration configuration : getRegistry().values()) {
-		   configuration.unload();
-		}
-
-		getRegistry().clear();
-
-		INIT_LOADED = false;
+	synchronized (ConfigurationFactory.class) {
+	   for (final Configuration configuration : getRegistry().values()) {
+		configuration.unload();
 	   }
+
+	   getRegistry().clear();
 	}
    }
 

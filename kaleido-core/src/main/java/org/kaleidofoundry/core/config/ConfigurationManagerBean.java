@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.ejb.Stateless;
@@ -43,7 +44,9 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import org.kaleidofoundry.core.config.entity.ConfigurationModel;
+import org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Query_FindAllConfiguration;
 import org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Query_FindConfigurationByName;
+import org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Query_FindConfigurationByText;
 import org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Query_FindPropertyByName;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
 import org.kaleidofoundry.core.config.entity.FireChangesReport;
@@ -66,9 +69,9 @@ import org.kaleidofoundry.core.util.StringHelper;
  * @author Jerome RADUGET
  */
 @Stateless(mappedName = "ejb/configuration/manager")
-@Path("/configurations/{config}")
+@Path("/configurations/")
 @Task(labels = TaskLabel.Defect, comment = "restore 'implements ConfigurationManager which cause a bug' - I open a GF3.x bug for this : GLASSFISH-16199")
-public class ConfigurationManagerBean { // implements ConfigurationManager {
+public class ConfigurationManagerBean implements ConfigurationManager {
 
    /** injected and used to handle security context */
    @Context
@@ -89,7 +92,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#getProperty(java.lang.String, java.lang.String)
     */
    @GET
-   @Path("get/{property}")
+   @Path("{config}/get/{property}")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public String getPropertyValue(final @PathParam("config") String config, final @PathParam("property") String property) {
 	try {
@@ -120,7 +123,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#setPropertyValue(java.lang.String, java.lang.String, java.lang.String)
     */
    @PUT
-   @Path("set/{property}")
+   @Path("{config}/set/{property}")
    public void setPropertyValue(final @PathParam("config") String config, @PathParam("property") final String property, @QueryParam("value") final String value) {
 	setPropertyValue(config, property, value, String.class);
    }
@@ -173,7 +176,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#getProperty(java.lang.String, java.lang.String)
     */
    @GET
-   @Path("getProperty/{property}")
+   @Path("{config}/getProperty/{property}")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public ConfigurationProperty getProperty(final @PathParam("config") String config, final @PathParam("property") String property) {
 
@@ -209,7 +212,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#putProperty(java.lang.String, ConfigurationProperty)
     */
    @PUT
-   @Path("putProperty")
+   @Path("{config}/putProperty")
    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
    public void putProperty(final @PathParam("config") String config, final ConfigurationProperty property) {
 	ConfigurationProperty currentProperty = findConfigurationPropertyByName(config, property.getName(), false);
@@ -245,7 +248,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#removeProperty(java.lang.String, java.lang.String)
     */
    @DELETE
-   @Path("removeProperty/{property}")
+   @Path("{config}/removeProperty/{property}")
    public void removeProperty(final @PathParam("config") String config, @PathParam("property") final String property) {
 	boolean foundConfiguration = false;
 	boolean foundConfigurationProperty = false;
@@ -278,60 +281,100 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.AbstractConfigurationManager#keySet(java.lang.String)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#getProperties(java.lang.String)
     */
    public Set<ConfigurationProperty> getProperties(final String config) {
-	Set<ConfigurationProperty> result = new HashSet<ConfigurationProperty>();
-	result.addAll(getProperties(config, null));
-	return result;
+	// Set<ConfigurationProperty> result = new HashSet<ConfigurationProperty>();
+	// result.addAll(findProperties(config, null));
+	// return result;
+	return getModel(config).getProperties();
    }
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.AbstractConfigurationManager#keySet(java.lang.String, java.lang.String)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#findProperties(java.lang.String, java.lang.String)
     */
    @GET
-   @Path("properties")
+   @Path("findProperties")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-   public List<ConfigurationProperty> getProperties(final @PathParam("config") String config, @QueryParam("prefix") final String prefix) {
+   public List<ConfigurationProperty> findProperties(final @QueryParam("config") String config, @QueryParam("text") final String text) {
 	final List<ConfigurationProperty> properties = new ArrayList<ConfigurationProperty>();
 	boolean foundConfiguration = false;
 
-	if (em != null) {
+	// if a config argument is defined
+	if (!StringHelper.isEmpty(config)) {
 	   // first attempt in the configuration model
-	   String normalizePrefix = !StringHelper.isEmpty(prefix) ? AbstractConfiguration.normalizeKey(prefix) : prefix;
-	   ConfigurationModel model = findConfigurationModelByName(config, false);
-	   if (model != null) {
-		foundConfiguration = true;
-		for (ConfigurationProperty p : model.getProperties()) {
-		   if (!StringHelper.isEmpty(p.getName()) && (StringHelper.isEmpty(prefix) || p.getName().startsWith(normalizePrefix))) {
+	   if (em != null) {
+		ConfigurationModel model = findConfigurationModelByName(config, false);
+		if (model != null) {
+		   foundConfiguration = true;
+		   for (ConfigurationProperty p : model.getProperties()) {
 			properties.add(p);
 		   }
 		}
 	   }
-	}
 
-	if (!foundConfiguration) {
-	   // second attempt in the registered configuration
-	   Configuration configuration = getRegisteredConfiguration(config);
-	   Set<String> keys = StringHelper.isEmpty(prefix) ? getRegisteredConfiguration(config).keySet() : getRegisteredConfiguration(config).keySet(prefix);
-	   for (String key : keys) {
-		properties.add(newConfigurationProperty(configuration, key));
+	   // second attempt in the registered configurations, if a config argument is defined
+	   if (!foundConfiguration) {
+		Configuration configuration = getRegisteredConfiguration(config);
+		for (String key : getRegisteredConfiguration(config).keySet()) {
+		   properties.add(newConfigurationProperty(configuration, key));
+		}
 	   }
+
+	}
+	// if no config argument is given, we collect all persistent and registered properties
+	else {
+
+	   // properties from configuration model
+	   for (ConfigurationModel model : findModel(text)) {
+		for (ConfigurationProperty p : model.getProperties()) {
+		   properties.add(p);
+		}
+	   }
+
+	   // properties from registered configuration
+	   for (Configuration configuration : ConfigurationFactory.getRegistry().values()) {
+		for (String key : configuration.keySet()) {
+		   properties.add(newConfigurationProperty(configuration, key));
+		}
+	   }
+
 	}
 
-	return properties;
+	// filter properties using text on : name, labels, description and value
+	final List<ConfigurationProperty> filterProperties = new ArrayList<ConfigurationProperty>();
+
+	if (!StringHelper.isEmpty(text)) {
+	   for (ConfigurationProperty property : properties) {
+		String normalizePrefix = AbstractConfiguration.normalizeKey(text);
+		if (!StringHelper.isEmpty(property.getName()) && property.getName().contains(normalizePrefix)) {
+		   filterProperties.add(property);
+		} else if (property.getDescription() != null && property.getDescription().contains(text)) {
+		   filterProperties.add(property);
+		} else if (String.valueOf(property.getValue()).contains(text)) {
+		   filterProperties.add(property);
+		} else if (property.getLabels() != null && property.getLabels().contains(text)) {
+		   filterProperties.add(property);
+		}
+	   }
+	} else {
+	   filterProperties.addAll(properties);
+	}
+
+	return filterProperties;
    }
 
    /**
     * @param config
+    * @param text text token to search
     * @return properties keys of the configuration
     * @throws ConfigurationNotFoundException
     */
    @GET
-   @Path("keys")
+   @Path("{config}/keys")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-   public Response keys(@PathParam("config") final String config, @QueryParam("prefix") final String prefix) throws ConfigurationNotFoundException {
+   public Response keys(@PathParam("config") final String config, @QueryParam("text") final String text) throws ConfigurationNotFoundException {
 	Set<String> result = keySet(config);
 	return Response.ok(result).build();
    }
@@ -354,7 +397,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     */
    public Set<String> keySet(final String config, final String prefix) throws ConfigurationNotFoundException {
 	Set<String> result = new HashSet<String>();
-	for (ConfigurationProperty prop : getProperties(config, prefix)) {
+	for (ConfigurationProperty prop : findProperties(config, prefix)) {
 	   result.add(prop.getName());
 	}
 	return result;
@@ -362,14 +405,14 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.AbstractConfigurationManager#containsKey(java.lang.String, java.lang.String, java.lang.String)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#containsKey(java.lang.String, java.lang.String)
     */
    public boolean containsKey(final String config, final String property) {
 	return keySet(config, null).contains(property);
    }
 
    @GET
-   @Path("contains/{property}")
+   @Path("{config}/contains/{property}")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public Response containsKeyForRest(final @PathParam("config") String config, @PathParam("property") final String property) {
 	return Response.ok(containsKey(config, property)).build();
@@ -382,7 +425,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#getModel(java.lang.String)
     */
    @GET
-   @Path("/")
+   @Path("{config}/")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public ConfigurationModel getModel(final @PathParam("config") String config) throws ConfigurationNotFoundException, IllegalStateException {
 	ConfigurationModel configurationModel = findConfigurationModelByName(config, false);
@@ -400,17 +443,56 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.ConfigurationManager#isModelExists(java.lang.String)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#findModel(java.lang.String)
     */
-   public boolean isModelExists(final String config) {
+   @SuppressWarnings("unchecked")
+   @Override
+   @Path("find")
+   public List<ConfigurationModel> findModel(final String text) {
+
+	Set<ConfigurationModel> configurationModels = new HashSet<ConfigurationModel>();
+
+	// first check in the database model
+	if (em != null) {
+
+	   final Query query;
+	   if (!StringHelper.isEmpty(text)) {
+		// JPA 1.x for jee5 compatibility
+		query = em.createQuery(Query_FindConfigurationByText.Jql);
+		query.setParameter(Query_FindConfigurationByText.Parameter_Text, "%" + text + "%");
+	   } else {
+		query = em.createQuery(Query_FindAllConfiguration.Jql);
+	   }
+
+	   try {
+		configurationModels.addAll(query.getResultList());
+	   } catch (NoResultException nre) {
+	   }
+	}
+
+	// second check in memory registry
+	for (Entry<String, Configuration> entry : ConfigurationFactory.getRegistry().entrySet()) {
+	   if (entry.getValue().getName().contains(text) || entry.getValue().getResourceUri().contains(text)) {
+		configurationModels.add(getModel(entry.getKey()));
+	   }
+	}
+
+	return new ArrayList<ConfigurationModel>(configurationModels);
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.config.ConfigurationManager#exists(java.lang.String)
+    */
+   public boolean exists(final String config) {
 	return findConfigurationModelByName(config, false) != null;
    }
 
    @GET
-   @Path("exists")
+   @Path("{config}/exists")
    @Produces({ MediaType.TEXT_PLAIN })
-   public Response isModelExistsForRest(final @PathParam("config") String config) {
-	return Response.ok(Boolean.valueOf(isModelExists(config)).toString()).build();
+   public Response existsForRest(final @PathParam("config") String config) {
+	return Response.ok(Boolean.valueOf(exists(config)).toString()).build();
    }
 
    /*
@@ -418,7 +500,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#removeModel(java.lang.String)
     */
    @DELETE
-   @Path("delete")
+   @Path("{config}/delete")
    public void removeModel(@PathParam("config") final String config) {
 	ConfigurationModel configurationModel = findConfigurationModelByName(config, true);
 	if (em != null) {
@@ -441,7 +523,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#register(java.lang.String, java.lang.String)
     */
    @PUT
-   @Path("register")
+   @Path("{config}/register")
    public void register(final @PathParam("config") String config, final @QueryParam("resourceURI") String resourceURI) {
 	ConfigurationFactory.provides(config, resourceURI);
    }
@@ -451,7 +533,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#unregister(java.lang.String)
     */
    @PUT
-   @Path("unregister")
+   @Path("{config}/unregister")
    public void unregister(final @PathParam("config") String config) throws StoreException {
 	ConfigurationFactory.unregister(config);
    }
@@ -465,7 +547,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
    }
 
    @GET
-   @Path("registered")
+   @Path("{config}/registered")
    @Produces({ MediaType.TEXT_PLAIN })
    public Response isRegisteredForRest(final @PathParam("config") String config) {
 	return Response.ok(Boolean.valueOf(isRegistered(config)).toString()).build();
@@ -476,7 +558,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#fireChanges(java.lang.String)
     */
    @GET
-   @Path("fireChanges")
+   @Path("{config}/fireChanges")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public FireChangesReport fireChanges(@PathParam("config") final String config) {
 	return getRegisteredConfiguration(config).fireConfigurationChangesEvents();
@@ -487,7 +569,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#store(java.lang.String)
     */
    @PUT
-   @Path("store")
+   @Path("{config}/store")
    public void store(@PathParam("config") final String config) throws StoreException {
 	// store configuration resource file
 	Configuration configuration = getRegisteredConfiguration(config);
@@ -515,7 +597,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#load(java.lang.String)
     */
    @PUT
-   @Path("load")
+   @Path("{config}/load")
    public void load(@PathParam("config") final String config) throws StoreException {
 	getRegisteredConfiguration(config).load();
    }
@@ -525,7 +607,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#unload(java.lang.String)
     */
    @PUT
-   @Path("unload")
+   @Path("{config}/unload")
    public void unload(@PathParam("config") final String config) throws StoreException {
 	getRegisteredConfiguration(config).unload();
    }
@@ -535,7 +617,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#reload(java.lang.String)
     */
    @PUT
-   @Path("reload")
+   @Path("{config}/reload")
    public void reload(@PathParam("config") final String config) throws StoreException {
 	getRegisteredConfiguration(config).reload();
    }
@@ -549,7 +631,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
    }
 
    @GET
-   @Path("isLoaded")
+   @Path("{config}/loaded")
    @Produces({ MediaType.TEXT_PLAIN })
    public Response isLoadedForRest(final @PathParam("config") String config) {
 	return Response.ok(Boolean.valueOf(isLoaded(config)).toString()).build();
