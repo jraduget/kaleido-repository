@@ -55,7 +55,7 @@ import org.kaleidofoundry.core.context.Parameter;
  * label.hello=Hello world!
  * label.hello.who=Hello Mr {0}
  * label.hello.when=Hello Mr {0}, your last connection was the {1,date,yyyy-MM-dd}
- * label.hello.how=Hello Mr {0}, your last connection was the {1,date,yyyy-MM-dd} and you have win {2,number,#.##£}
+ * label.hello.how=Hello Mr {0}, your last connection was the {1,date,yyyy-MM-dd} and you have win {2,number,#.##}
  * </pre>
  * 
  * @author Jerome RADUGET
@@ -73,7 +73,7 @@ public class I18nSample03 {
     * Hello world!
     * Hello Mr Smith
     * Hello Mr Smith, your last connection was the 2010-10-21
-    * Hello Mr Smith, your last connection was the 2010-10-21 and you have win 1234.56£
+    * Hello Mr Smith, your last connection was the 2010-10-21 and you have win 1234.56
     * </pre>
     * 
     * @throws ParseException

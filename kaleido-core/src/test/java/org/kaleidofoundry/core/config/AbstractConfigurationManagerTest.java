@@ -58,6 +58,12 @@ public abstract class AbstractConfigurationManagerTest extends Assert {
 	assertNotNull(models);
 	assertTrue(models.isEmpty());
 
+	// search all
+	models = configurationManager.findModel(null);
+	assertNotNull(models);
+	assertFalse(models.isEmpty());
+	assertEquals(1, models.size());
+
 	// search by name
 	models = configurationManager.findModel("Named");
 	assertNotNull(models);
@@ -179,6 +185,16 @@ public abstract class AbstractConfigurationManagerTest extends Assert {
 	   fail();
 	} catch (ConfigurationNotFoundException cnfe) {
 	}
+
+	properties = configurationManager.findProperties(null, null);
+	assertNotNull(properties);
+	assertFalse(properties.isEmpty());
+	assertEquals(2, properties.size());
+
+	properties = configurationManager.findProperties(null, "key0");
+	assertNotNull(properties);
+	assertFalse(properties.isEmpty());
+	assertEquals(2, properties.size());
 
 	properties = configurationManager.findProperties(MyConfigurationName, "unknown");
 	assertNotNull(properties);

@@ -98,7 +98,7 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
 	// for each declared configuration
 	for (final Configuration configuration : ConfigurationFactory.getRegistry().values()) {
 
-	   if (configuration.isUpdateAllowed()) {
+	   if (configuration.isUpdateable()) {
 
 		// clear existing listeners
 		cleanupConfigurationsListeners(configuration);

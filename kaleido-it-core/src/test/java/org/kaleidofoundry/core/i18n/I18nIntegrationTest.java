@@ -77,6 +77,7 @@ public class I18nIntegrationTest extends Assert {
 
    /**
     * test with overriding some external configuration
+    * 
     * @throws ParseException
     */
    @Test
@@ -86,10 +87,10 @@ public class I18nIntegrationTest extends Assert {
 	sample.echo();
 	assertEn(sample.getMessages());
 	assertTrue(sample.getMessages() instanceof DefaultMessageBundle);
-	
+
 	// we have to use ehcache here (see configuration)
-	Cache<?,?> internalCache = ((DefaultMessageBundle) sample.getMessages()).resourceBundleCache;
-	assertNotNull(internalCache);	
+	Cache<?, ?> internalCache = ((DefaultMessageBundle) sample.getMessages()).resourceBundleCache;
+	assertNotNull(internalCache);
 	assertEquals(EhCache1xImpl.class.getName(), internalCache.getClass().getName());
 	assertTrue(internalCache.getDelegate() instanceof Ehcache);
 	assertEquals(4, internalCache.size());
@@ -98,9 +99,10 @@ public class I18nIntegrationTest extends Assert {
 	assertTrue(internalCache.keys().contains("label.hello.when"));
 	assertTrue(internalCache.keys().contains("label.hello.how"));
    }
-   
+
    /**
     * test with manual context injection (codings)
+    * 
     * @throws ParseException
     */
    @Test
@@ -110,8 +112,8 @@ public class I18nIntegrationTest extends Assert {
 	sample.echo();
 	assertFr(sample.getMessages());
    }
-   
-   void assertFr(I18nMessages messages) throws ParseException {
+
+   void assertFr(final I18nMessages messages) throws ParseException {
 	DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 
 	assertEquals("Bonjour tout le monde!", messages.getMessage("label.hello"));
@@ -122,12 +124,12 @@ public class I18nIntegrationTest extends Assert {
 		messages.getMessage("label.hello.how", "Smith", df.parse("2010/10/21"), 12345.67));
    }
 
-   void assertEn(I18nMessages messages) throws ParseException {
+   void assertEn(final I18nMessages messages) throws ParseException {
 	DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 	assertEquals("Hello world!", messages.getMessage("label.hello"));
 	assertEquals("Hello Mr Smith", messages.getMessage("label.hello.who", "Smith"));
 	assertEquals("Hello Mr Smith, your last connection was the 2010-10-21", messages.getMessage("label.hello.when", "Smith", df.parse("2010/10/21")));
-	assertEquals("Hello Mr Smith, your last connection was the 2010-10-21 and you have win 12345.67£",
+	assertEquals("Hello Mr Smith, your last connection was the 2010-10-21 and you have win 12345.67Â£",
 		messages.getMessage("label.hello.how", "Smith", df.parse("2010/10/21"), 12345.67));
    }
 }

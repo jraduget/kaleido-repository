@@ -161,7 +161,6 @@ public abstract class FileHelper {
 
 	int pos = -1;
 
-	// On supprime à la fin, le separateur de repertoire eventuel
 	path = path.substring(0, path.length() - 1);
 
 	if (pos < 0) {

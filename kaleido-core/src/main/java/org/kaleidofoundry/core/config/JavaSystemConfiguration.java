@@ -115,7 +115,7 @@ public class JavaSystemConfiguration extends AbstractConfiguration implements Co
     * @see org.kaleidofoundry.core.config.AbstractConfiguration#isStorageAllowed()
     */
    @Override
-   public boolean isStorageAllowed() {
+   public boolean isStorable() {
 	return false;
    }
 

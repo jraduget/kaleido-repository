@@ -25,9 +25,9 @@ import org.junit.Test;
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.lang.annotation.Task;
-import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.FileStoreConstants;
+import org.kaleidofoundry.core.store.StoreException;
 
 /**
  * @author Jerome RADUGET
@@ -42,7 +42,6 @@ public class RuntimeContextTest extends Assert {
 
    @Before
    public void setup() throws IOException, StoreException {
-
 	// runtimeContext create with Configuration
 	configuration = ConfigurationFactory.provides("contextTest", "classpath:/context/context.properties");
 
@@ -51,7 +50,7 @@ public class RuntimeContextTest extends Assert {
    @After
    public void cleanup() throws StoreException {
 	if (configuration != null) {
-	   configuration.unload();
+	   ConfigurationFactory.unregister("contextTest");
 	}
    }
 

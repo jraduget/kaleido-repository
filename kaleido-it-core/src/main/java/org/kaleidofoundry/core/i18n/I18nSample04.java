@@ -45,8 +45,8 @@ public class I18nSample04 {
     * <pre>
     * Bonjour tout le monde!
     * Bonjour M. Smith
-    * Bonjour M. Smith, votre dernière connexion a été le 21/10/2010
-    * Bonjour M. Smith, votre dernière connexion a été le 21/10/2010 et vous avez gagné 1234,56euros
+    * Bonjour M. Smith, votre derniÃ¨re connexion a Ã©tÃ© le 21/10/2010
+    * Bonjour M. Smith, votre derniÃ¨re connexion a Ã©tÃ© le 21/10/2010 et vous avez gagnÃ© 1234,56euros
     * </pre>
     * 
     * @throws ParseException

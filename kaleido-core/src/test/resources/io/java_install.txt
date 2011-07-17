@@ -1,5 +1,3 @@
-cmdline = "E:\DevProgram\jre\jre-6u11\core.zip" "E:\DevProgram\jre\jre-6u11\" "D:\Temp\App\java_install.log"
-Archive: E:\DevProgram\jre\jre-6u11\core.zip
   extracting: bin/
   extracting: bin/awt.dll
   extracting: bin/deploy.dll

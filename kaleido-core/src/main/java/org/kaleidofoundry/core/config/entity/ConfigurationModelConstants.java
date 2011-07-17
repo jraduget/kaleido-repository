@@ -62,7 +62,7 @@ public interface ConfigurationModelConstants {
     */
    public static interface Query_FindAllConfiguration {
 	String Name = "config.findAllConfiguration";
-	String Jql = "SELECT c FROM " + Entity_Configuration;
+	String Jql = "SELECT c FROM " + Entity_Configuration + " c";
    }
 
    /**

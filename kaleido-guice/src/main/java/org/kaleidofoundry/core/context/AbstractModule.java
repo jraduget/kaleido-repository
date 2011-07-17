@@ -103,7 +103,7 @@ public abstract class AbstractModule<T> extends com.google.inject.AbstractModule
 	// ** interceptor ************************************************************************************************
 
 	// interceptor for constructors ****
-	// bindInterceptor(ConstructorInterceptorà doesn't exists (use ProvisionInterception in guice 2.1)
+	// bindInterceptor(ConstructorInterceptor doesn't exists (use ProvisionInterception in guice 2.1)
 	// ContextInjectionConstructorInterceptor constructorContextInterceptor = new ContextInjectionConstructorInterceptor();
 	// requestInjection(constructorContextInterceptor);
 	// bindInterceptor(Matchers.any(), Matchers.annotatedWith(Context.class), constructorContextInterceptor);

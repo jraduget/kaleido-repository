@@ -124,7 +124,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 	assertTrue(configuration.isLoaded());
 	try {
 	   configuration.store();
-	   if (!configuration.isStorageAllowed()) {
+	   if (!configuration.isStorable()) {
 		fail();
 	   }
 	} catch (final StoreException se) {

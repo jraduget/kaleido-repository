@@ -63,9 +63,9 @@ public class JavaSystemConfigurationTest extends AbstractConfigurationTest {
    }
 
    @Test
-   public void isStorageAllowed() {
+   public void isStorable() {
 	assertNotNull(configuration);
-	assertFalse(configuration.isStorageAllowed());
+	assertFalse(configuration.isStorable());
    }
 
    @Override

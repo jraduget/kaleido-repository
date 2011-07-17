@@ -80,6 +80,9 @@ public class ConfigurationModel implements Serializable {
    @JoinTable(name = Table_ConfigurationProperties, joinColumns = @JoinColumn(name = "CONFIGURATION_ID"), inverseJoinColumns = @JoinColumn(name = "PROPERTY_ID"))
    private Set<ConfigurationProperty> properties;
    private Labels labels;
+   private boolean loaded;
+   private boolean storable;
+   private boolean updateable;
    @Version
    @XmlTransient
    Integer version;
@@ -215,6 +218,54 @@ public class ConfigurationModel implements Serializable {
    }
 
    /**
+    * configuration is loaded ?
+    * 
+    * @return <code>true|false</code>
+    */
+   public boolean isLoaded() {
+	return loaded;
+   }
+
+   /**
+    * @param loaded the loaded to set
+    */
+   public void setLoaded(final boolean loaded) {
+	this.loaded = loaded;
+   }
+
+   /**
+    * the configuration allows to be stored ?
+    * 
+    * @return <code>true|false</code>
+    */
+   public boolean isStorable() {
+	return storable;
+   }
+
+   /**
+    * @param storable the storable to set
+    */
+   public void setStorable(final boolean storable) {
+	this.storable = storable;
+   }
+
+   /**
+    * the configuration allows update ?
+    * 
+    * @return <code>true|false</code>
+    */
+   public boolean isUpdateable() {
+	return updateable;
+   }
+
+   /**
+    * @param updateable the updateable to set
+    */
+   public void setUpdateable(final boolean updateable) {
+	this.updateable = updateable;
+   }
+
+   /**
     * @return properties by name
     */
    public Map<String, ConfigurationProperty> getPropertiesByName() {
@@ -261,7 +312,14 @@ public class ConfigurationModel implements Serializable {
     */
    @Override
    public String toString() {
-	return "ConfigurationEntity [uri=" + uri + ", name=" + name + ", description=" + description + ", id=" + id + "]";
+	StringBuilder result = new StringBuilder();
+	result.append("ConfigurationModel [");
+	result.append("name=").append(name).append(",");
+	result.append("uri=").append(uri).append(",");
+	result.append("description=").append(description).append(",");
+	result.append("id=").append(id).append("");
+	result.append("]");
+	return result.toString();
    }
 
 }

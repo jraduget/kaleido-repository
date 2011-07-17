@@ -69,7 +69,7 @@ public class ConfigurationIntegrationTest {
 	ConfigurationSample01 confSample = new ConfigurationSample01();
 	confSample.echo();
 	assertions(confSample.getConfiguration());
-	assertTrue(confSample.getConfiguration().isStorageAllowed());
+	assertTrue(confSample.getConfiguration().isStorable());
 	assertNull(confSample.getConfiguration().getBoolean("myapp.sample.http"));
    }
 
@@ -83,7 +83,7 @@ public class ConfigurationIntegrationTest {
 	ConfigurationSample02 confSample = new ConfigurationSample02();
 	confSample.echo();
 	assertions(confSample.getConfiguration());
-	assertFalse(confSample.getConfiguration().isStorageAllowed());
+	assertFalse(confSample.getConfiguration().isStorable());
 	assertEquals(Boolean.TRUE, confSample.getConfiguration().getBoolean("myapp.sample.http"));
 
 	// assert that ehcache instance are right been created and feeded
@@ -116,7 +116,7 @@ public class ConfigurationIntegrationTest {
 	ConfigurationSample03 confSample = new ConfigurationSample03();
 	confSample.echo();
 	assertions(confSample.getConfiguration());
-	assertFalse(confSample.getConfiguration().isStorageAllowed());
+	assertFalse(confSample.getConfiguration().isStorable());
 	assertEquals(Boolean.TRUE, confSample.getConfiguration().getBoolean("myapp.sample.http"));
    }
 

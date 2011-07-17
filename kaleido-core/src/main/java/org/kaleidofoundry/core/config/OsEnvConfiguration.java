@@ -94,7 +94,7 @@ public class OsEnvConfiguration extends AbstractConfiguration implements Configu
    }
 
    @Override
-   public boolean isStorageAllowed() {
+   public boolean isStorable() {
 	return false;
    }
 

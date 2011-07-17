@@ -110,6 +110,9 @@ public class JpaModelConfiguration extends AbstractConfiguration {
 	   configurationModel = (ConfigurationModel) query.getSingleResult();
 	} catch (NoResultException nre) {
 	   configurationModel = new ConfigurationModel(getName(), getResourceUri());
+	   configurationModel.setLoaded(isLoaded());
+	   configurationModel.setUpdateable(isUpdateable());
+	   configurationModel.setStorable(isStorable());
 	}
 
 	// create configuration model if needed

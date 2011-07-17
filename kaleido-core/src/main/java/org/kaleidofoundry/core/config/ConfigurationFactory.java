@@ -54,7 +54,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  */
 public abstract class ConfigurationFactory {
 
-   // does default initConfigurations() have occurred
+   // does default init Configurations have occurred
    private static boolean INIT_LOADED = false;
 
    // configuration provider used by the factory
@@ -68,27 +68,25 @@ public abstract class ConfigurationFactory {
     * @throws StoreException
     * @see ConfigurationConstants#JavaEnvProperties
     */
-   public static final void init() throws StoreException {
+   public static synchronized final void init() throws StoreException {
 
 	if (!INIT_LOADED) {
-	   synchronized (ConfigurationFactory.class) {
-
-		final StringTokenizer strConfigToken = new StringTokenizer(System.getProperty(JavaEnvProperties), JavaEnvPropertiesSeparator);
-		while (strConfigToken.hasMoreTokens()) {
-		   final String configItemStr = strConfigToken.nextToken();
-		   final String[] configItem = StringHelper.split(configItemStr, JavaEnvPropertiesValueSeparator);
-		   // named declaration
-		   if (configItem.length == 2) {
-			provides(configItem[0], configItem[1]);
-		   }
-		   // anonymous declaration
-		   else if (configItem.length == 1) {
-			provides(configItem[0], configItem[0]);
-		   }
+	   final StringTokenizer strConfigToken = new StringTokenizer(System.getProperty(JavaEnvProperties), JavaEnvPropertiesSeparator);
+	   while (strConfigToken.hasMoreTokens()) {
+		final String configItemStr = strConfigToken.nextToken();
+		final String[] configItem = StringHelper.split(configItemStr, JavaEnvPropertiesValueSeparator);
+		// named declaration
+		if (configItem.length == 2) {
+		   provides(configItem[0], configItem[1]);
 		}
-		INIT_LOADED = true;
+		// anonymous declaration
+		else if (configItem.length == 1) {
+		   provides(configItem[0], configItem[0]);
+		}
 	   }
+	   INIT_LOADED = true;
 	}
+
    }
 
    /**
@@ -96,15 +94,16 @@ public abstract class ConfigurationFactory {
     * 
     * @throws StoreException
     */
-   public static final void unregisterAll() throws StoreException {
+   public static synchronized final void unregisterAll() throws StoreException {
 
-	synchronized (ConfigurationFactory.class) {
-	   for (final Configuration configuration : getRegistry().values()) {
-		configuration.unload();
-	   }
-
-	   getRegistry().clear();
+	for (final Configuration configuration : getRegistry().values()) {
+	   configuration.unload();
 	}
+
+	getRegistry().clear();
+
+	INIT_LOADED = false;
+
    }
 
    /**

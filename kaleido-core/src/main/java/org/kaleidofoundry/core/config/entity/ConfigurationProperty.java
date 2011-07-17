@@ -76,7 +76,6 @@ public class ConfigurationProperty implements Serializable {
    private String type;
    private String description;
    private Labels labels;
-
    @Version
    @XmlTransient
    Integer version;
@@ -309,7 +308,15 @@ public class ConfigurationProperty implements Serializable {
     */
    @Override
    public String toString() {
-	return "ConfigurationProperty [name=" + name + ", value=" + value + ", type=" + type + ", description=" + description + ", id=" + id + "]";
+	StringBuilder result = new StringBuilder();
+	result.append("ConfigurationProperty [");
+	result.append("name=").append(name).append(",");
+	result.append("value=").append(value).append(",");
+	result.append("type=").append(type).append(",");
+	result.append("description=").append(description).append(",");
+	result.append("configurations=").append(configurations).append("");
+	result.append("]");
+	return result.toString();
    }
 
 }

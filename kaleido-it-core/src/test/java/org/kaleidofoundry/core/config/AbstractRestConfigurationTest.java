@@ -89,12 +89,25 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 
    @Test
    public void findConfigurationModel() {
-	fail("TODO");
+	List<ConfigurationModel> response = getBaseResource().path("find").accept(getMedia().getType()).get(new GenericType<List<ConfigurationModel>>() {
+	});
+	assertNotNull(response);
+	assertEquals(3, response.size());
+
+	response = getBaseResource().path("find").queryParam("text", "my").accept(getMedia().getType()).get(new GenericType<List<ConfigurationModel>>() {
+	});
+	assertNotNull(response);
+	assertEquals(3, response.size());
+
+	response = getBaseResource().path("find").queryParam("text", "myCacheConfig").accept(getMedia().getType())
+		.get(new GenericType<List<ConfigurationModel>>() {
+		});
+	assertNotNull(response);
+	assertEquals(1, response.size());
    }
 
    @Test
    public void removeConfigurationModel() {
-
 	try {
 	   getBaseResource().path("noConfig").path("delete").delete();
 	   fail("noConfig must not be registered as a valid configuration");

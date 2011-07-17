@@ -512,14 +512,14 @@ public interface Configuration {
    void store() throws StoreException, ConfigurationException;
 
    /**
-    * @return does configuration allowed the storage
+    * @return does configuration allowed storage
     */
-   boolean isStorageAllowed();
+   boolean isStorable();
 
    /**
     * @return does configuration allowed item updates
     */
-   boolean isUpdateAllowed();
+   boolean isUpdateable();
 
    // **************************************************************************
    // -> Property value accessors

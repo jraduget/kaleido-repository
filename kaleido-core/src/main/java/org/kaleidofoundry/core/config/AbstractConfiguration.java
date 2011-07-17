@@ -201,7 +201,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#isStorageAllowed()
     */
-   public boolean isStorageAllowed() {
+   public boolean isStorable() {
 	if (StringHelper.isEmpty(context.getString(StorageAllowed))) {
 	   return true;
 	} else {
@@ -213,7 +213,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#isUpdateAllowed()
     */
-   public boolean isUpdateAllowed() {
+   public boolean isUpdateable() {
 	if (StringHelper.isEmpty(context.getString(UpdateAllowed))) {
 	   return true;
 	} else {
@@ -256,7 +256,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
    @Override
    public final synchronized void store() throws StoreException {
 	if (!isLoaded()) { throw new ConfigurationException("config.load.notloaded", name); }
-	if (!isStorageAllowed()) { throw new ConfigurationException("config.readonly.store", name); }
+	if (!isStorable()) { throw new ConfigurationException("config.readonly.store", name); }
 
 	singleFileStore.store();
    }
@@ -579,7 +579,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     */
    @Override
    public void setProperty(@NotNull final String key, @NotNull final Serializable newValue) {
-	if (!isUpdateAllowed()) { throw new ConfigurationException("config.readonly.update", name); }
+	if (!isUpdateable()) { throw new ConfigurationException("config.readonly.update", name); }
 	// normalize the given key
 	final String fullKey = normalizeKey(key);
 	// is it a new property ?
@@ -602,7 +602,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     */
    @Override
    public void removeProperty(@NotNull final String key) {
-	if (!isUpdateAllowed()) { throw new ConfigurationException("config.readonly.update", name); }
+	if (!isUpdateable()) { throw new ConfigurationException("config.readonly.update", name); }
 	// normalize the given key
 	final String fullKey = normalizeKey(key);
 	// memorize old value for fire event

@@ -57,6 +57,7 @@ public class PluginFactoryTest extends Assert {
 
 	final Plugin<?> newPlugin = pluginRegistry.get(declarePlugin.value());
 
+	assertNotNull(newPlugin);
 	assertEquals(declarePlugin.value(), newPlugin.getName());
 	assertEquals(declarePlugin.description(), newPlugin.getDescription());
 	assertEquals(declarePlugin.version(), newPlugin.getVersion());
@@ -91,6 +92,7 @@ public class PluginFactoryTest extends Assert {
 
 	final Plugin<?> newPluginImpl = pluginRegistryImpl.get(declarePluginImpl.value());
 
+	assertNotNull(declarePluginImpl);
 	assertEquals(declarePluginImpl.value(), newPluginImpl.getName());
 	assertEquals(declarePluginImpl.version(), newPluginImpl.getVersion());
 	assertEquals(declarePluginImpl.description(), newPluginImpl.getDescription());
@@ -101,6 +103,7 @@ public class PluginFactoryTest extends Assert {
 
 	final Plugin<?> newPluginImpl2 = pluginRegistryImpl.get(declarePluginImpl2.value());
 
+	assertNotNull(newPluginImpl2);
 	assertEquals(declarePluginImpl2.value(), newPluginImpl2.getName());
 	assertEquals(declarePluginImpl2.version(), newPluginImpl2.getVersion());
 	assertEquals(declarePluginImpl2.description(), newPluginImpl2.getDescription());

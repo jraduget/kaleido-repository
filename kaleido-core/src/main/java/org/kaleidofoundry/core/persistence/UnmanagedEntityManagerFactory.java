@@ -56,7 +56,7 @@ public abstract class UnmanagedEntityManagerFactory {
    public static final String KaleidoPersistentContextUnitName = "kaleido";
 
    // default kaleidofoundry EntityManagerFactory
-   private static EntityManagerFactory DefaultEmf;
+   private static volatile EntityManagerFactory DefaultEmf;
 
    // default kaleidofoundry threadlocal EntityManager
    private static final ThreadLocal<EntityManager> DefaultEm = new ThreadLocal<EntityManager>();

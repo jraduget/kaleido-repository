@@ -71,7 +71,7 @@ import org.kaleidofoundry.core.util.StringHelper;
 @Stateless(mappedName = "ejb/configuration/manager")
 @Path("/configurations/")
 @Task(labels = TaskLabel.Defect, comment = "restore 'implements ConfigurationManager which cause a bug' - I open a GF3.x bug for this : GLASSFISH-16199")
-public class ConfigurationManagerBean implements ConfigurationManager {
+public class ConfigurationManagerBean { // implements ConfigurationManager {
 
    /** injected and used to handle security context */
    @Context
@@ -284,9 +284,6 @@ public class ConfigurationManagerBean implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#getProperties(java.lang.String)
     */
    public Set<ConfigurationProperty> getProperties(final String config) {
-	// Set<ConfigurationProperty> result = new HashSet<ConfigurationProperty>();
-	// result.addAll(findProperties(config, null));
-	// return result;
 	return getModel(config).getProperties();
    }
 
@@ -326,17 +323,10 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 	// if no config argument is given, we collect all persistent and registered properties
 	else {
 
-	   // properties from configuration model
-	   for (ConfigurationModel model : findModel(text)) {
+	   // properties from configuration model (and registry)
+	   for (ConfigurationModel model : findModel(null)) {
 		for (ConfigurationProperty p : model.getProperties()) {
 		   properties.add(p);
-		}
-	   }
-
-	   // properties from registered configuration
-	   for (Configuration configuration : ConfigurationFactory.getRegistry().values()) {
-		for (String key : configuration.keySet()) {
-		   properties.add(newConfigurationProperty(configuration, key));
 		}
 	   }
 
@@ -432,6 +422,9 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 	if (em == null || configurationModel == null) {
 	   Configuration configuration = getRegisteredConfiguration(config);
 	   configurationModel = new ConfigurationModel(config, configuration.getResourceUri());
+	   configurationModel.setLoaded(configuration.isLoaded());
+	   configurationModel.setUpdateable(configuration.isUpdateable());
+	   configurationModel.setStorable(configuration.isStorable());
 	   for (String key : configuration.keySet()) {
 		ConfigurationProperty property = newConfigurationProperty(configuration, key);
 		property.getConfigurations().add(configurationModel);
@@ -445,10 +438,11 @@ public class ConfigurationManagerBean implements ConfigurationManager {
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.ConfigurationManager#findModel(java.lang.String)
     */
-   @SuppressWarnings("unchecked")
-   @Override
+   @GET
    @Path("find")
-   public List<ConfigurationModel> findModel(final String text) {
+   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+   @SuppressWarnings("unchecked")
+   public List<ConfigurationModel> findModel(final @QueryParam("text") String text) {
 
 	Set<ConfigurationModel> configurationModels = new HashSet<ConfigurationModel>();
 
@@ -472,7 +466,7 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 
 	// second check in memory registry
 	for (Entry<String, Configuration> entry : ConfigurationFactory.getRegistry().entrySet()) {
-	   if (entry.getValue().getName().contains(text) || entry.getValue().getResourceUri().contains(text)) {
+	   if (StringHelper.isEmpty(text) || entry.getValue().getName().contains(text) || entry.getValue().getResourceUri().contains(text)) {
 		configurationModels.add(getModel(entry.getKey()));
 	   }
 	}
@@ -650,11 +644,7 @@ public class ConfigurationManagerBean implements ConfigurationManager {
 	if (config == null) {
 	   throw new ConfigurationNotFoundException(configName);
 	} else {
-	   if (!config.isLoaded()) {
-		throw new ConfigurationException("config.load.notloaded", configName);
-	   } else {
-		return config;
-	   }
+	   return config;
 	}
    }
 

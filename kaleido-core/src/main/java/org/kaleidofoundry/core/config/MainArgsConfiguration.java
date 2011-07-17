@@ -112,7 +112,7 @@ public class MainArgsConfiguration extends AbstractConfiguration implements Conf
     * @see org.kaleidofoundry.core.config.AbstractConfiguration#isStorageAllowed()
     */
    @Override
-   public boolean isStorageAllowed() {
+   public boolean isStorable() {
 	return false;
    }
 
