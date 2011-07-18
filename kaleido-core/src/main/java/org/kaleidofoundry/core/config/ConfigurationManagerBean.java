@@ -56,8 +56,28 @@ import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
- * Configuration manager (REST or JPA) used to managed configuration properties <br/>
+ * Configuration manager is used to manage the configuration model and properties <br/>
+ * It expose manager as REST Web service or as an EJB / JPA managed bean <br/>
+ * <br/>
  * <p>
+ * For the following properties file (named "appConfig" in the following javadoc) implements by {@link PropertiesConfiguration} :
+ * 
+ * <pre>
+ * application.name=app
+ * application.version=1.0.0
+ * application.description=description of the application...
+ * application.date=2006-09-01T00:00:00
+ * application.librairies=dom4j.jar log4j.jar mail.jar
+ * 
+ * application.modules.sales=Sales
+ * application.modules.sales.version=1.1.0
+ * application.modules.marketing=Market.
+ * application.modules.netbusiness=
+ * </pre>
+ * 
+ * </p>
+ * <p>
+ * For more informations about JAXRS (REST)
  * <ul>
  * <li>jee5 : http://blogs.sun.com/enterprisetechtips/entry/implementing_restful_web_services_in</li>
  * <li>jee6 : http://java.sun.com/developer/technicalArticles/WebServices/jax-rs/index.html</li>
@@ -67,6 +87,8 @@ import org.kaleidofoundry.core.util.StringHelper;
  * </p>
  * 
  * @author Jerome RADUGET
+ * @see Configuration
+ * @see ConfigurationProperty
  */
 @Stateless(mappedName = "ejb/configuration/manager")
 @Path("/configurations/")
@@ -657,7 +679,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @throws PropertyNotFoundException if checkPropExists is true and if configuration property can't be found in current registry
     */
    protected ConfigurationProperty getRegisteredProperty(final String configName, final String propertyName, final boolean checkPropExists)
-	   throws ConfigurationNotFoundException, PropertyNotFoundException {
+   throws ConfigurationNotFoundException, PropertyNotFoundException {
 	Configuration configuration = getRegisteredConfiguration(configName);
 	if (checkPropExists) {
 	   if (!configuration.containsKey(propertyName)) { throw new PropertyNotFoundException(configName, propertyName); }
@@ -704,7 +726,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @throws PropertyNotFoundException
     */
    protected ConfigurationProperty findConfigurationPropertyByName(final String config, final String propertyName, final boolean checkPropExists)
-	   throws ConfigurationNotFoundException, PropertyNotFoundException {
+   throws ConfigurationNotFoundException, PropertyNotFoundException {
 
 	// check that configuration is registered or have been persist
 	try {

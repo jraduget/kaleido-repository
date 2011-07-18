@@ -24,21 +24,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * {@link ConsoleManager} Tests
+ * {@link ConsoleManagerBean} Tests
  * 
  * @author Jerome RADUGET
  */
 public class ConsoleManagerTest extends Assert {
 
-   static final Logger LOGGER = LoggerFactory.getLogger(ConsoleManager.class);
+   static final Logger LOGGER = LoggerFactory.getLogger(ConsoleManagerBean.class);
 
    static final String ClassPathResource = "io/java_install.txt";
 
-   private ConsoleManager console;
+   private ConsoleManagerBean console;
 
    @Before
    public void setUp() {
-	console = new ConsoleManager();
+	console = new ConsoleManagerBean();
    }
 
    /**

@@ -29,7 +29,8 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.store.StoreException;
 
 /**
- * Configuration properties manager used to manage the configuration model
+ * Configuration manager is used to manage the configuration model and properties <br/>
+ * <br/>
  * For the following properties file (named "appConfig" in the following javadoc) implements by {@link PropertiesConfiguration} :
  * 
  * <pre>
@@ -125,7 +126,7 @@ public interface ConfigurationManager {
     * @param <T>
     */
    <T extends Serializable> T getPropertyValue(@NotNull final String config, final String property, final Class<T> type) throws ConfigurationNotFoundException,
-	   PropertyNotFoundException;
+   PropertyNotFoundException;
 
    /**
     * get the property value as a string
@@ -138,7 +139,7 @@ public interface ConfigurationManager {
     * @throws ConfigurationException if configuration is not yet loaded
     */
    String getPropertyValue(@NotNull String config, @NotNull String property) throws ConfigurationNotFoundException, PropertyNotFoundException,
-	   ConfigurationException;
+   ConfigurationException;
 
    /**
     * set / define / change the value of a property (but do not persist it. Call {@link #store(String)} to persist its value)
@@ -155,7 +156,7 @@ public interface ConfigurationManager {
     * @param <T>
     */
    <T extends Serializable> T setPropertyValue(@NotNull String config, @NotNull String property, T value, Class<T> type) throws ConfigurationNotFoundException,
-	   PropertyNotFoundException, ConfigurationException;
+   PropertyNotFoundException, ConfigurationException;
 
    /**
     * set / define / change the value of a property (but do not persist it. Call {@link #store(String)} to persist its value)
@@ -182,7 +183,7 @@ public interface ConfigurationManager {
     */
    @NotNull
    ConfigurationProperty getProperty(@NotNull String config, @NotNull String property) throws ConfigurationNotFoundException, PropertyNotFoundException,
-	   ConfigurationException;
+   ConfigurationException;
 
    /**
     * define and persist a new property in the configuration meta model
@@ -206,7 +207,7 @@ public interface ConfigurationManager {
     */
    @NotNull
    void removeProperty(@NotNull String config, @NotNull String property) throws ConfigurationNotFoundException, PropertyNotFoundException,
-	   ConfigurationException;
+   ConfigurationException;
 
    /**
     * @param config configuration name identifier
