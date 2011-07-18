@@ -48,7 +48,7 @@ import org.kaleidofoundry.core.lang.annotation.Task;
  */
 @Stateless(mappedName = "ejb/console/manager")
 @Path("/consoles/")
-public class ConsoleManagerBean {
+public class ConsoleManager {
 
    /** Argument to specify index of begin line */
    public static final String BEGINLINE_ARGS = "beginLine";
@@ -349,7 +349,7 @@ public class ConsoleManagerBean {
 	// search in console resource registry first
 
 	// search in the classpath if not found
-	final InputStream classpathFileToMonitorIn = ConsoleManagerBean.class.getClassLoader().getResourceAsStream(resourcePath);
+	final InputStream classpathFileToMonitorIn = ConsoleManager.class.getClassLoader().getResourceAsStream(resourcePath);
 	final InputStream fileToMonitorIn = classpathFileToMonitorIn != null ? classpathFileToMonitorIn : new FileInputStream(resourcePath);
 	return fileToMonitorIn;
 
