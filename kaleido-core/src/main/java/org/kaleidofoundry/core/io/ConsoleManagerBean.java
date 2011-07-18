@@ -35,6 +35,7 @@ import java.util.TreeSet;
 
 import javax.ejb.Stateless;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -45,6 +46,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * Simulate some Unix command (like head, tail, ..) on a text file content (like logging, traces...) <br/>
@@ -82,7 +84,7 @@ public class ConsoleManagerBean {
    /** Argument to specify the highlight of a text in the output */
    public static final String HIGHLIGHT_ARGS = "highLight";
    /** Argument to specify if we add the line count as prefix to the output */
-   public static final String LINECOUNT_ARGS = "lineCount";
+   public static final String COUNTLINE_ARGS = "countLine";
    /** Argument to specify how to cut the line length */
    public static final String CUT_ARGS = "cut";
 
@@ -92,6 +94,8 @@ public class ConsoleManagerBean {
    /** Set of all parameters names */
    public static final Set<String> ARGS = Collections.synchronizedSet(new TreeSet<String>());
 
+   /** Map of all registered resource uri by name */
+   public static final Map<String, String> RESOURCES = Collections.synchronizedMap(new HashMap<String, String>());
 
    static {
 	ARGS.add(BEGINLINE_ARGS);
@@ -102,7 +106,6 @@ public class ConsoleManagerBean {
 	ARGS.add(CUT_ARGS);
    }
 
-
    /** injected and used to handle security context */
    @Context
    SecurityContext securityContext;
@@ -111,6 +114,9 @@ public class ConsoleManagerBean {
    @Context
    UriInfo uriInfo;
 
+   /**
+    * @return console informations
+    */
    @GET
    @Path("info")
    @Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_HTML })
@@ -119,18 +125,34 @@ public class ConsoleManagerBean {
 	str.append("<p>");
 	str.append("<h2>Query parameters:</h2>");
 	str.append("<ul>");
-	str.append("<li>" + HIGHLIGHT_ARGS).append("=...text to highlight...</li>");
-	str.append("<li>" + ENCODING_ARGS).append("=UTF-8|ISO-8859-1|...</li>");
-	str.append("<li>" + LINECOUNT_ARGS).append("=true|false</li>");
-	str.append("<li>" + CUT_ARGS).append("=120</li>");
+	str.append("<li>").append(HIGHLIGHT_ARGS).append("=...text to highlight...</li>");
+	str.append("<li>").append(ENCODING_ARGS).append("=UTF-8|ISO-8859-1|...</li>");
+	str.append("<li>").append(COUNTLINE_ARGS).append("=true|false</li>");
+	str.append("<li>").append(CUT_ARGS).append("=120</li>");
 	str.append("</ul>");
 	str.append("</p>");
 
 	str.append("<p>");
 	str.append("<h2>Registered resources:</h2>");
-	// TODO
+	str.append("<ul>");
+	for (Entry<String, String> entry : RESOURCES.entrySet()) {
+	   str.append("<li>").append(entry.getKey()).append(" : ").append(entry.getValue()).append("</li>");
+	}
+	str.append("</ul>");
 	str.append("</p>");
 	return str.toString();
+   }
+
+   /**
+    * add the resource to the console registry
+    * 
+    * @param name
+    * @param uri
+    */
+   @PUT
+   @Path("register")
+   public void putResource(@QueryParam("name") final String name, @QueryParam("uri") final String uri) {
+	RESOURCES.put(name, uri);
    }
 
    /**
@@ -185,13 +207,15 @@ public class ConsoleManagerBean {
 	BufferedReader buffReader = null;
 
 	try {
+	   long index = 0;
 	   String currentLine;
 	   buffReader = new BufferedReader(reader);
 	   while ((currentLine = buffReader.readLine()) != null && queue.size() < maxLine) {
 		queue.add(currentLine);
+		index++;
 	   }
 
-	   return format(queue, typedParameters).toString();
+	   return format(queue, typedParameters, index - queue.size()).toString();
 	} finally {
 	   if (buffReader != null) {
 		buffReader.close();
@@ -252,6 +276,7 @@ public class ConsoleManagerBean {
 	BufferedReader buffReader = null;
 
 	try {
+	   int index = 0;
 	   String currentLine;
 	   LinkedList<String> queue = new LinkedList<String>();
 	   buffReader = new BufferedReader(reader);
@@ -260,9 +285,10 @@ public class ConsoleManagerBean {
 		   queue.remove();
 		}
 		queue.offerLast(currentLine);
+		index++;
 	   }
 
-	   return format(queue, typedParameters).toString();
+	   return format(queue, typedParameters, index - queue.size()).toString();
 	} finally {
 	   if (buffReader != null) {
 		buffReader.close();
@@ -318,18 +344,18 @@ public class ConsoleManagerBean {
 
 	try {
 	   String currentLine;
-	   long currentLineCount = 1;
+	   long index = 1;
 	   LinkedList<String> queue = new LinkedList<String>();
 	   buffReader = new BufferedReader(reader);
 
-	   while ((currentLine = buffReader.readLine()) != null && currentLineCount < beginLine + maxLine) {
-		if (currentLineCount >= beginLine) {
+	   while ((currentLine = buffReader.readLine()) != null && index < beginLine + maxLine) {
+		if (index >= beginLine) {
 		   queue.add(currentLine);
 		}
-		currentLineCount++;
+		index++;
 	   }
 
-	   return format(queue, typepParameters).toString();
+	   return format(queue, typepParameters, index - 1 - queue.size()).toString();
 	} finally {
 	   if (buffReader != null) {
 		buffReader.close();
@@ -427,18 +453,18 @@ public class ConsoleManagerBean {
 
 	// Add line count
 	{
-	   final Serializable countLines = parameters.get(LINECOUNT_ARGS);
+	   final Serializable countLines = parameters.get(COUNTLINE_ARGS);
 	   if (countLines != null) {
 		if (countLines instanceof Boolean) {
 		   isOk = true;
-		   typedParameters.put(LINECOUNT_ARGS, countLines);
+		   typedParameters.put(COUNTLINE_ARGS, countLines);
 		} else {
 		   if (countLines instanceof String) {
-			typedParameters.put(LINECOUNT_ARGS, Boolean.valueOf((String) countLines));
+			typedParameters.put(COUNTLINE_ARGS, Boolean.valueOf((String) countLines));
 			isOk = true;
 		   } else {
 			isOk = false;
-			msgErr = "Parameter '" + LINECOUNT_ARGS + "' must be java.lang.Boolean instance.";
+			msgErr = "Parameter '" + COUNTLINE_ARGS + "' must be java.lang.Boolean instance.";
 		   }
 		}
 
@@ -478,10 +504,14 @@ public class ConsoleManagerBean {
     * @throws FileNotFoundException
     */
    @Task(comment = "use file store plugin instead of classpath input stream")
-   protected InputStream in(final String resource, final Map<String, Serializable> typedParameters) throws FileNotFoundException {
+   protected InputStream in(String resource, final Map<String, Serializable> typedParameters) throws FileNotFoundException {
 
 	// search in console resource registry first
 	// TODO
+	resource = RESOURCES.get(resource);
+
+	// map FileNotFound .. to ResourceNotFound rest exception
+	// FileStoreFactory.provides("/").get(resourceRelativePath);
 
 	// search in the classpath if not found
 	final InputStream classpathFileToMonitorIn = ConsoleManagerBean.class.getClassLoader().getResourceAsStream(resource);
@@ -494,13 +524,24 @@ public class ConsoleManagerBean {
     * format output queue
     * 
     * @param queue
-    * @param typedParameters
+    * @param parameters
+    * @param fromIndex
     * @return formated output (highlight, line count, encoding, cut parameter)
     */
-   @Task(comment = "formated output : highlight, encoding, line count, encoding, cut parameter")
-   protected StringBuilder format(final LinkedList<String> queue, final Map<String, Serializable> typedParameters) {
+   @Task(comment = "formated output : highlight, encoding, cut parameter")
+   protected StringBuilder format(final LinkedList<String> queue, final Map<String, Serializable> parameters, final long fromIndex) {
 	final StringBuilder buffer = new StringBuilder();
+	Boolean countLine = (Boolean) parameters.get(COUNTLINE_ARGS);
+	int prefixLength = String.valueOf(fromIndex + queue.size()).length();
+
+	if (countLine == null) {
+	   countLine = Boolean.FALSE;
+	}
+
 	for (String line : queue) {
+	   if (countLine) {
+		buffer.append(StringHelper.leftPad(String.valueOf(fromIndex), prefixLength, '0'));
+	   }
 	   buffer.append(line).append("\n");
 	}
 	return buffer;
@@ -509,7 +550,7 @@ public class ConsoleManagerBean {
    /**
     * add uri parameter (if needed)
     * 
-    * @return
+    * @return enriched the input parameters with url parameters
     */
    protected Map<String, Serializable> addUriParameters(final Map<String, Serializable> parameters) {
 	if (uriInfo != null) {

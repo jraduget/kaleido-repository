@@ -306,6 +306,7 @@
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
 					<complianceLevel>${jdk.version}</complianceLevel>
+					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 				<executions>
 					<execution>
