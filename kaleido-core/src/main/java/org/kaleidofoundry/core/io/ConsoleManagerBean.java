@@ -22,20 +22,32 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
 import javax.ejb.Stateless;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 
 import org.kaleidofoundry.core.lang.annotation.Task;
 
 /**
- * Simulate some unix command (like head, tail, ..) on a text file content (like logging, traces...) <br/>
+ * Simulate some Unix command (like head, tail, ..) on a text file content (like logging, traces...) <br/>
  * <br/>
  * It can be used as :
  * <ul>
@@ -50,24 +62,36 @@ import org.kaleidofoundry.core.lang.annotation.Task;
 @Path("/consoles/")
 public class ConsoleManagerBean {
 
+   /**
+    * Enumeration of console operation
+    */
+   public static enum Operation {
+	Head,
+	Tail,
+	Extract
+   }
+
+   /** Argument to specify the operation type */
+   public static final String OPERATION_ARGS = "operation";
    /** Argument to specify index of begin line */
    public static final String BEGINLINE_ARGS = "beginLine";
    /** Argument to specify index of end line */
    public static final String MAXLINE_COUNT_ARGS = "maxLineCount";
    /** Argument to specify the input encoding */
    public static final String ENCODING_ARGS = "encoding";
-   /** Argument to specify the output type */
-   public static final String HIGHLIGHT_ARGS = "highlight";
-   /** Argument to specify the operation type */
-   public static final String OPERATION_ARGS = "operation";
+   /** Argument to specify the highlight of a text in the output */
+   public static final String HIGHLIGHT_ARGS = "highLight";
+   /** Argument to specify if we add the line count as prefix to the output */
+   public static final String LINECOUNT_ARGS = "lineCount";
    /** Argument to specify how to cut the line length */
    public static final String CUT_ARGS = "cut";
 
    /** The default line count result of a tail command. it will be used if {@link #MAXLINE_COUNT_ARGS} is not specified, */
    public static final Long DEFAULT_MAXLINE_COUNT = 10L;
 
-   /** Set of all arguments names */
+   /** Set of all parameters names */
    public static final Set<String> ARGS = Collections.synchronizedSet(new TreeSet<String>());
+
 
    static {
 	ARGS.add(BEGINLINE_ARGS);
@@ -78,62 +102,85 @@ public class ConsoleManagerBean {
 	ARGS.add(CUT_ARGS);
    }
 
-   /**
-    * Operation
-    */
-   public static enum Operation {
-	Head,
-	Tail,
-	Extract
+
+   /** injected and used to handle security context */
+   @Context
+   SecurityContext securityContext;
+
+   /** injected and used to handle URIs */
+   @Context
+   UriInfo uriInfo;
+
+   @GET
+   @Path("info")
+   @Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_HTML })
+   public String info() {
+	StringBuilder str = new StringBuilder();
+	str.append("<p>");
+	str.append("<h2>Query parameters:</h2>");
+	str.append("<ul>");
+	str.append("<li>" + HIGHLIGHT_ARGS).append("=...text to highlight...</li>");
+	str.append("<li>" + ENCODING_ARGS).append("=UTF-8|ISO-8859-1|...</li>");
+	str.append("<li>" + LINECOUNT_ARGS).append("=true|false</li>");
+	str.append("<li>" + CUT_ARGS).append("=120</li>");
+	str.append("</ul>");
+	str.append("</p>");
+
+	str.append("<p>");
+	str.append("<h2>Registered resources:</h2>");
+	// TODO
+	str.append("</p>");
+	return str.toString();
    }
 
    /**
     * head command on a file resource
     * 
-    * @param resourcePath the resource which we want to extract the contents
+    * @param resource the resource which we want to extract the contents
     * @return head of the file
     * @throws IOException
     */
-   public String head(final String resourcePath) throws IOException {
-	return head(resourcePath, DEFAULT_MAXLINE_COUNT);
-
+   @GET
+   @Path("{resource}/head")
+   @Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_HTML })
+   public String head(@PathParam("resource") final String resource) throws IOException {
+	Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+	parameters.put(MAXLINE_COUNT_ARGS, DEFAULT_MAXLINE_COUNT);
+	return head(resource, addUriParameters(parameters));
    }
 
    /**
     * head command on a file resource
     * 
-    * @param resourcePath the resource which we want to extract the contents
+    * @param resource the resource which we want to extract the contents
     * @param maxLineCount
     * @return head of the file
     * @throws IOException
     */
-   public String head(final String resourcePath, final long maxLineCount) throws IOException {
-	final Map<String, Object> args = new HashMap<String, Object>();
-
-	args.put(OPERATION_ARGS, Operation.Tail);
-
+   public String head(final String resource, final long maxLineCount) throws IOException {
+	final Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+	parameters.put(OPERATION_ARGS, Operation.Tail);
 	if (maxLineCount >= 0) {
-	   args.put(MAXLINE_COUNT_ARGS, Long.valueOf(maxLineCount));
+	   parameters.put(MAXLINE_COUNT_ARGS, Long.valueOf(maxLineCount));
 	}
-
-	return head(resourcePath, args);
+	return head(resource, addUriParameters(parameters));
    }
 
    /**
     * head command on a file resource
     * 
-    * @param resourcePath the resource which we want to extract the contents
-    * @param args
+    * @param resource the resource which we want to extract the contents
+    * @param parameters
     * @return head of the file
     * @throws FileNotFoundException
     * @throws IOException
     */
-   public String head(final String resourcePath, final Map<String, Object> args) throws FileNotFoundException, IOException {
-	final Map<String, Object> typepArgs = typeArgs(args);
-	final Number maxLineCountArg = (Number) typepArgs.get(MAXLINE_COUNT_ARGS);
+   public String head(final String resource, final Map<String, Serializable> parameters) throws FileNotFoundException, IOException {
+	final Map<String, Serializable> typedParameters = typedParameters(parameters);
+	final Number maxLineCountArg = (Number) typedParameters.get(MAXLINE_COUNT_ARGS);
 	final long maxLine = maxLineCountArg != null ? maxLineCountArg.longValue() : DEFAULT_MAXLINE_COUNT;
 
-	final Reader reader = new InputStreamReader(in(resourcePath, typepArgs));
+	final Reader reader = new InputStreamReader(in(resource, typedParameters));
 	final LinkedList<String> queue = new LinkedList<String>();
 	BufferedReader buffReader = null;
 
@@ -144,7 +191,7 @@ public class ConsoleManagerBean {
 		queue.add(currentLine);
 	   }
 
-	   return format(queue, typepArgs).toString();
+	   return format(queue, typedParameters).toString();
 	} finally {
 	   if (buffReader != null) {
 		buffReader.close();
@@ -156,52 +203,52 @@ public class ConsoleManagerBean {
    /**
     * tail command on a file resource
     * 
-    * @param resourcePath the resource which we want to extract the contents
+    * @param resource the resource which we want to extract the contents
     * @return tail of the file
     * @throws IOException
     */
-   public String tail(final String resourcePath) throws IOException {
-	return tail(resourcePath, DEFAULT_MAXLINE_COUNT);
+   @GET
+   @Path("{resource}/tail")
+   @Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_HTML })
+   public String tail(@PathParam("resource") final String resource) throws IOException {
+	Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+	parameters.put(MAXLINE_COUNT_ARGS, DEFAULT_MAXLINE_COUNT);
+	return tail(resource, addUriParameters(parameters));
    }
 
    /**
     * tail command on a file resource
     * 
-    * @param resourcePath the resource which we want to extract the contents
+    * @param resource the resource which we want to extract the contents
     * @param maxLineCount number of line you wish to keep in result buffer
     * @return list of n last line of the buffer
     * @throws IOException
     */
-   public String tail(final String resourcePath, final long maxLineCount) throws IOException {
-	final Map<String, Object> args = new HashMap<String, Object>();
-
+   public String tail(final String resource, final long maxLineCount) throws IOException {
+	final Map<String, Serializable> args = new HashMap<String, Serializable>();
 	args.put(OPERATION_ARGS, Operation.Tail);
-
 	if (maxLineCount >= 0) {
 	   args.put(MAXLINE_COUNT_ARGS, Long.valueOf(maxLineCount));
 	}
-
-	return tail(resourcePath, args);
+	return tail(resource, addUriParameters(args));
    }
 
    /**
     * tail command on a file resource
     * 
-    * @param resourcePath the resource which we want to extract the contents
-    * @param args
+    * @param resource the resource which we want to extract the contents
+    * @param parameters
     * @return line of the buffer filter by args arguments
     * @throws IOException
     * @see #BEGINLINE_ARGS
     * @see #MAXLINE_COUNT_ARGS
     * @throws FileNotFoundException
     */
-   public String tail(final String resourcePath, final Map<String, Object> args) throws FileNotFoundException, IOException {
-
-	final Map<String, Object> typepArgs = typeArgs(args);
-	final Number maxLineCountArg = (Number) typepArgs.get(MAXLINE_COUNT_ARGS);
+   public String tail(final String resource, final Map<String, Serializable> parameters) throws FileNotFoundException, IOException {
+	final Map<String, Serializable> typedParameters = typedParameters(parameters);
+	final Number maxLineCountArg = (Number) typedParameters.get(MAXLINE_COUNT_ARGS);
 	final long maxLine = maxLineCountArg != null ? maxLineCountArg.longValue() : DEFAULT_MAXLINE_COUNT;
-
-	final Reader reader = new InputStreamReader(in(resourcePath, typepArgs));
+	final Reader reader = new InputStreamReader(in(resource, typedParameters));
 	BufferedReader buffReader = null;
 
 	try {
@@ -215,7 +262,7 @@ public class ConsoleManagerBean {
 		queue.offerLast(currentLine);
 	   }
 
-	   return format(queue, typepArgs).toString();
+	   return format(queue, typedParameters).toString();
 	} finally {
 	   if (buffReader != null) {
 		buffReader.close();
@@ -225,44 +272,48 @@ public class ConsoleManagerBean {
    }
 
    /**
-    * @param resourcePath the resource which we want to extract the contents
+    * @param resource the resource which we want to extract the contents
     * @param beginLine index of beginning line of file you wish
     * @param maxLineCount index of the last line of file you wish
     * @return list of n last line of the buffer
     * @throws IOException
     */
-   public String extract(final String resourcePath, final long beginLine, final long maxLineCount) throws IOException {
-	final Map<String, Object> args = new HashMap<String, Object>();
+   @GET
+   @Path("{resource}/extract")
+   @Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_HTML })
+   public String extract(@PathParam("resource") final String resource, @QueryParam(BEGINLINE_ARGS) final long beginLine,
+	   @QueryParam(MAXLINE_COUNT_ARGS) final long maxLineCount) throws IOException {
+	final Map<String, Serializable> parameters = new HashMap<String, Serializable>();
 
-	args.put(OPERATION_ARGS, Operation.Extract);
+	parameters.put(OPERATION_ARGS, Operation.Extract);
 
 	if (beginLine >= 0) {
-	   args.put(BEGINLINE_ARGS, Long.valueOf(beginLine));
+	   parameters.put(BEGINLINE_ARGS, Long.valueOf(beginLine));
 	}
 	if (maxLineCount >= 0) {
-	   args.put(MAXLINE_COUNT_ARGS, Long.valueOf(maxLineCount));
+	   parameters.put(MAXLINE_COUNT_ARGS, Long.valueOf(maxLineCount));
 	}
 
-	return extract(resourcePath, args);
+	return extract(resource, addUriParameters(parameters));
    }
 
    /**
-    * @param resourcePath the resource which we want to extract the contents
-    * @param args
+    * @param resource the resource which we want to extract the contents
+    * @param parameters
     * @return extract of the file
     * @throws FileNotFoundException
     * @throws IOException
     */
-   public String extract(final String resourcePath, final Map<String, Object> args) throws FileNotFoundException, IOException {
+   public String extract(final String resource, final Map<String, Serializable> parameters) throws FileNotFoundException, IOException {
 
-	final Map<String, Object> typepArgs = typeArgs(args);
-	final Number beginLineArg = (Number) typepArgs.get(BEGINLINE_ARGS);
-	final Number maxLineCountArg = (Number) typepArgs.get(MAXLINE_COUNT_ARGS);
+	final Map<String, Serializable> typepParameters = typedParameters(parameters);
+	final Number beginLineArg = (Number) typepParameters.get(BEGINLINE_ARGS);
+	final Number maxLineCountArg = (Number) typepParameters.get(MAXLINE_COUNT_ARGS);
 
 	final long beginLine = beginLineArg != null && beginLineArg.longValue() > 0 ? beginLineArg.longValue() : 1;
 	final long maxLine = maxLineCountArg != null ? maxLineCountArg.longValue() : DEFAULT_MAXLINE_COUNT;
 
-	final Reader reader = new InputStreamReader(in(resourcePath, typepArgs));
+	final Reader reader = new InputStreamReader(in(resource, typepParameters));
 	BufferedReader buffReader = null;
 
 	try {
@@ -278,7 +329,7 @@ public class ConsoleManagerBean {
 		currentLineCount++;
 	   }
 
-	   return format(queue, typepArgs).toString();
+	   return format(queue, typepParameters).toString();
 	} finally {
 	   if (buffReader != null) {
 		buffReader.close();
@@ -288,69 +339,153 @@ public class ConsoleManagerBean {
    }
 
    /**
-    * @param args the resource which we want to extract the contents
+    * Type the parameters input
+    * 
+    * @param parameters the resource which we want to extract the contents
     * @return Arguments correctly typed
     * @throws IllegalArgumentException
     */
-   protected Map<String, Object> typeArgs(final Map<String, Object> args) throws IllegalArgumentException {
+   protected Map<String, Serializable> typedParameters(final Map<String, Serializable> parameters) throws IllegalArgumentException {
 	boolean isOk = false;
 	String msgErr = null;
-	final Map<String, Object> argsResult = new HashMap<String, Object>();
+	final Map<String, Serializable> typedParameters = new HashMap<String, Serializable>();
 
 	// Begin line (optional)
 	{
-	   final Object beginLine = args.get(BEGINLINE_ARGS);
-	   if (beginLine == null || beginLine instanceof Number) {
-		isOk = true;
-		argsResult.put(BEGINLINE_ARGS, beginLine);
-	   } else if (beginLine instanceof String) {
-		try {
-		   argsResult.put(BEGINLINE_ARGS, Long.valueOf((String) beginLine));
+	   final Serializable beginLine = parameters.get(BEGINLINE_ARGS);
+	   if (beginLine != null) {
+		if (beginLine instanceof Number) {
 		   isOk = true;
-		} catch (final NumberFormatException nbe) {
-		   msgErr = "Argument '" + BEGINLINE_ARGS + "' must be java.lang.Number instance.";
+		   typedParameters.put(BEGINLINE_ARGS, beginLine);
+		} else if (beginLine instanceof String) {
+		   try {
+			typedParameters.put(BEGINLINE_ARGS, Long.valueOf((String) beginLine));
+			isOk = true;
+		   } catch (final NumberFormatException nbe) {
+			isOk = false;
+			msgErr = "Parameter '" + BEGINLINE_ARGS + "' must be java.lang.Number instance.";
+		   }
 		}
-	   }
 
-	   if (!isOk) { throw new IllegalArgumentException(msgErr); }
+		if (!isOk) { throw new IllegalArgumentException(msgErr); }
+	   }
 	}
 
 	// Max n line
 	{
-	   final Object lastLineCount = args.get(MAXLINE_COUNT_ARGS);
-	   if (lastLineCount instanceof Number) {
-		isOk = true;
-		argsResult.put(MAXLINE_COUNT_ARGS, lastLineCount);
-	   } else if (lastLineCount instanceof String) {
-		try {
-		   argsResult.put(MAXLINE_COUNT_ARGS, Long.valueOf((String) lastLineCount));
+	   final Serializable lastLineCount = parameters.get(MAXLINE_COUNT_ARGS);
+	   if (lastLineCount != null) {
+		if (lastLineCount instanceof Number) {
 		   isOk = true;
-		} catch (final NumberFormatException nbe) {
-		   msgErr = "Argument '" + MAXLINE_COUNT_ARGS + "' must be java.lang.Number instance.";
+		   typedParameters.put(MAXLINE_COUNT_ARGS, lastLineCount);
+		} else if (lastLineCount instanceof String) {
+		   try {
+			typedParameters.put(MAXLINE_COUNT_ARGS, Long.valueOf((String) lastLineCount));
+			isOk = true;
+		   } catch (final NumberFormatException nbe) {
+			isOk = false;
+			msgErr = "Parameter '" + MAXLINE_COUNT_ARGS + "' must be java.lang.Number instance.";
+		   }
 		}
-	   }
 
-	   if (!isOk) { throw new IllegalArgumentException(msgErr); }
+		if (!isOk) { throw new IllegalArgumentException(msgErr); }
+	   }
 	}
 
-	return argsResult;
+	// Highlight text
+	{
+	   final Serializable highlight = parameters.get(HIGHLIGHT_ARGS);
+	   if (highlight != null) {
+		if (highlight instanceof String) {
+		   typedParameters.put(HIGHLIGHT_ARGS, highlight);
+		   isOk = true;
+		} else {
+		   isOk = false;
+		   msgErr = "Parameter '" + HIGHLIGHT_ARGS + "' must be java.lang.String instance.";
+		}
+
+		if (!isOk) { throw new IllegalArgumentException(msgErr); }
+	   }
+	}
+
+	// Encoding
+	{
+	   final Serializable encoding = parameters.get(ENCODING_ARGS);
+	   if (encoding != null) {
+		if (encoding instanceof String) {
+		   Charset.forName((String) encoding); // throw sillegal charset name if needed
+		   typedParameters.put(ENCODING_ARGS, encoding);
+		   isOk = true;
+		} else {
+		   isOk = false;
+		   msgErr = "Parameter '" + ENCODING_ARGS + "' must be java.lang.String instance.";
+		}
+
+		if (!isOk) { throw new IllegalArgumentException(msgErr); }
+	   }
+	}
+
+	// Add line count
+	{
+	   final Serializable countLines = parameters.get(LINECOUNT_ARGS);
+	   if (countLines != null) {
+		if (countLines instanceof Boolean) {
+		   isOk = true;
+		   typedParameters.put(LINECOUNT_ARGS, countLines);
+		} else {
+		   if (countLines instanceof String) {
+			typedParameters.put(LINECOUNT_ARGS, Boolean.valueOf((String) countLines));
+			isOk = true;
+		   } else {
+			isOk = false;
+			msgErr = "Parameter '" + LINECOUNT_ARGS + "' must be java.lang.Boolean instance.";
+		   }
+		}
+
+		if (!isOk) { throw new IllegalArgumentException(msgErr); }
+	   }
+	}
+
+	// Cut parameter
+	{
+	   final Serializable cutNumber = parameters.get(CUT_ARGS);
+	   if (cutNumber != null) {
+		if (cutNumber instanceof Number) {
+		   isOk = true;
+		   typedParameters.put(CUT_ARGS, cutNumber);
+		} else {
+		   if (cutNumber instanceof String) {
+			typedParameters.put(CUT_ARGS, Integer.valueOf((String) cutNumber));
+		   } else {
+			isOk = false;
+			msgErr = "Parameter '" + CUT_ARGS + "' must be java.lang.Integer instance.";
+		   }
+		}
+
+		if (!isOk) { throw new IllegalArgumentException(msgErr); }
+	   }
+	}
+
+	return typedParameters;
    }
 
    /**
     * resource input stream
     * 
-    * @param resourcePath the resource which we want to extract the contents
+    * @param resource the resource which we want to extract the contents
+    * @param typedParameters
     * @return input stream of the resource
     * @throws FileNotFoundException
     */
    @Task(comment = "use file store plugin instead of classpath input stream")
-   protected InputStream in(final String resourcePath, final Map<String, Object> typepArg) throws FileNotFoundException {
+   protected InputStream in(final String resource, final Map<String, Serializable> typedParameters) throws FileNotFoundException {
 
 	// search in console resource registry first
+	// TODO
 
 	// search in the classpath if not found
-	final InputStream classpathFileToMonitorIn = ConsoleManagerBean.class.getClassLoader().getResourceAsStream(resourcePath);
-	final InputStream fileToMonitorIn = classpathFileToMonitorIn != null ? classpathFileToMonitorIn : new FileInputStream(resourcePath);
+	final InputStream classpathFileToMonitorIn = ConsoleManagerBean.class.getClassLoader().getResourceAsStream(resource);
+	final InputStream fileToMonitorIn = classpathFileToMonitorIn != null ? classpathFileToMonitorIn : new FileInputStream(resource);
 	return fileToMonitorIn;
 
    }
@@ -359,15 +494,29 @@ public class ConsoleManagerBean {
     * format output queue
     * 
     * @param queue
-    * @param typepArg
+    * @param typedParameters
     * @return formated output (highlight, line count, encoding, cut parameter)
     */
-   @Task(comment = "formated output : highlight, line count, encoding, cut parameter")
-   protected StringBuilder format(final LinkedList<String> queue, final Map<String, Object> typepArg) {
+   @Task(comment = "formated output : highlight, encoding, line count, encoding, cut parameter")
+   protected StringBuilder format(final LinkedList<String> queue, final Map<String, Serializable> typedParameters) {
 	final StringBuilder buffer = new StringBuilder();
 	for (String line : queue) {
 	   buffer.append(line).append("\n");
 	}
 	return buffer;
+   }
+
+   /**
+    * add uri parameter (if needed)
+    * 
+    * @return
+    */
+   protected Map<String, Serializable> addUriParameters(final Map<String, Serializable> parameters) {
+	if (uriInfo != null) {
+	   for (Entry<String, List<String>> queryParam : uriInfo.getQueryParameters().entrySet()) {
+		parameters.put(queryParam.getKey(), String.valueOf(queryParam.getValue()));
+	   }
+	}
+	return parameters;
    }
 }
