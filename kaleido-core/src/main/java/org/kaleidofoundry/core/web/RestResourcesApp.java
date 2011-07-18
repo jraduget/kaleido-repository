@@ -21,6 +21,7 @@ import java.util.Set;
 import javax.ws.rs.core.Application;
 
 import org.kaleidofoundry.core.config.ConfigurationManagerBean;
+import org.kaleidofoundry.core.io.ConsoleManagerBean;
 
 /**
  * Rest application servlet used to exposed REST resources
@@ -32,9 +33,12 @@ public class RestResourcesApp extends Application {
    @Override
    public Set<Class<?>> getClasses() {
 	Set<Class<?>> s = new HashSet<Class<?>>();
+	// configuration module
 	s.add(ConfigurationManagerBean.class);
 	s.add(RestConfigurationNotFoundMapper.class);
 	s.add(RestPropertyNotFoundMapper.class);
+	// console module
+	s.add(ConsoleManagerBean.class);
 	return s;
    }
 

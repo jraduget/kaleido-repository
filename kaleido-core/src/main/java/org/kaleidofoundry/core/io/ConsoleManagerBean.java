@@ -22,24 +22,33 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.kaleidofoundry.core.lang.annotation.Stateless;
+import javax.ejb.Stateless;
+import javax.ws.rs.Path;
+
 import org.kaleidofoundry.core.lang.annotation.Task;
-import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 
 /**
  * Simulate some unix command (like head, tail, ..) on a text file content (like logging, traces...) <br/>
+ * <br/>
+ * It can be used as :
+ * <ul>
+ * <li>a classic class, that you instantiate</li>
+ * <li>an EJB service, then you benefit from the JavaEE resource injection</li>
+ * <li>as a rest web service, then you benefit from a portable rest web service</li>
+ * </ul>
  * 
  * @author Jerome RADUGET
  */
-@Stateless
-@ThreadSafe
-public class ConsoleService {
+@Stateless(mappedName = "ejb/console/manager")
+@Path("/consoles/")
+public class ConsoleManagerBean {
 
    /** Argument to specify index of begin line */
    public static final String BEGINLINE_ARGS = "beginLine";
@@ -58,7 +67,7 @@ public class ConsoleService {
    public static final Long DEFAULT_MAXLINE_COUNT = 10L;
 
    /** Set of all arguments names */
-   public static final Set<String> ARGS = new TreeSet<String>();
+   public static final Set<String> ARGS = Collections.synchronizedSet(new TreeSet<String>());
 
    static {
 	ARGS.add(BEGINLINE_ARGS);
@@ -336,7 +345,11 @@ public class ConsoleService {
     */
    @Task(comment = "use file store plugin instead of classpath input stream")
    protected InputStream in(final String resourcePath, final Map<String, Object> typepArg) throws FileNotFoundException {
-	final InputStream classpathFileToMonitorIn = ConsoleService.class.getClassLoader().getResourceAsStream(resourcePath);
+
+	// search in console resource registry first
+
+	// search in the classpath if not found
+	final InputStream classpathFileToMonitorIn = ConsoleManagerBean.class.getClassLoader().getResourceAsStream(resourcePath);
 	final InputStream fileToMonitorIn = classpathFileToMonitorIn != null ? classpathFileToMonitorIn : new FileInputStream(resourcePath);
 	return fileToMonitorIn;
 
