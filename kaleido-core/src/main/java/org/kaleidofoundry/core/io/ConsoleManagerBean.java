@@ -80,17 +80,19 @@ public class ConsoleManagerBean {
    /** Argument to specify the operation type */
    public static final String OPERATION_ARGS = "operation";
    /** Argument to specify index of begin line */
-   public static final String BEGINLINE_ARGS = "beginLine";
+   public static final String BEGINLINE_ARGS = "begin";
    /** Argument to specify index of end line */
-   public static final String MAXLINE_COUNT_ARGS = "maxLineCount";
+   public static final String MAXLINE_COUNT_ARGS = "max";
    /** Argument to specify the Charset encoding */
    public static final String CHARSET_ARGS = "charset";
    /** Argument to specify the highlight of a text in the output */
-   public static final String HIGHLIGHT_ARGS = "highLight";
+   public static final String HIGHLIGHT_ARGS = "highlight";
    /** Argument to specify if we add the line count as prefix to the output */
-   public static final String COUNTLINE_ARGS = "countLine";
+   public static final String COUNTLINE_ARGS = "count";
    /** Argument to specify how to cut the line length */
-   public static final String CUT_ARGS = "cut";
+   public static final String CUTLINE_ARGS = "cut";
+   /** Argument to specify if output must be rendered as html */
+   public static final String HTML_ARGS = "html";
 
    /** The default line count result of a tail command. it will be used if {@link #MAXLINE_COUNT_ARGS} is not specified, */
    public static final Long DEFAULT_MAXLINE_COUNT = 10L;
@@ -107,7 +109,8 @@ public class ConsoleManagerBean {
 	ARGS.add(MAXLINE_COUNT_ARGS);
 	ARGS.add(HIGHLIGHT_ARGS);
 	ARGS.add(OPERATION_ARGS);
-	ARGS.add(CUT_ARGS);
+	ARGS.add(CUTLINE_ARGS);
+	ARGS.add(HTML_ARGS);
    }
 
    /** injected and used to handle security context */
@@ -132,7 +135,8 @@ public class ConsoleManagerBean {
 	str.append("<li>").append(HIGHLIGHT_ARGS).append("=...text to highlight...</li>");
 	str.append("<li>").append(CHARSET_ARGS).append("=UTF-8|ISO-8859-1|...</li>");
 	str.append("<li>").append(COUNTLINE_ARGS).append("=true|false</li>");
-	str.append("<li>").append(CUT_ARGS).append("=120</li>");
+	str.append("<li>").append(CUTLINE_ARGS).append("=120</li>");
+	str.append("<li>").append(HTML_ARGS).append("=true|false</li>");
 	str.append("</ul>");
 	str.append("</p>");
 
@@ -554,17 +558,37 @@ public class ConsoleManagerBean {
 
 	// Cut parameter
 	{
-	   final Serializable cutNumber = parameters.get(CUT_ARGS);
+	   final Serializable cutNumber = parameters.get(CUTLINE_ARGS);
 	   if (cutNumber != null) {
 		if (cutNumber instanceof Number) {
 		   isOk = true;
-		   typedParameters.put(CUT_ARGS, cutNumber);
+		   typedParameters.put(CUTLINE_ARGS, cutNumber);
 		} else {
 		   if (cutNumber instanceof String) {
-			typedParameters.put(CUT_ARGS, Integer.valueOf((String) cutNumber));
+			typedParameters.put(CUTLINE_ARGS, Integer.valueOf((String) cutNumber));
 		   } else {
 			isOk = false;
-			msgErr = "Parameter '" + CUT_ARGS + "' must be java.lang.Integer instance.";
+			msgErr = "Parameter '" + CUTLINE_ARGS + "' must be java.lang.Integer instance.";
+		   }
+		}
+
+		if (!isOk) { throw new IllegalArgumentException(msgErr); }
+	   }
+	}
+
+	{
+	   final Serializable html = parameters.get(HTML_ARGS);
+	   if (html != null) {
+		if (html instanceof Boolean) {
+		   isOk = true;
+		   typedParameters.put(HTML_ARGS, html);
+		} else {
+		   if (html instanceof String) {
+			typedParameters.put(HTML_ARGS, Boolean.valueOf((String) html));
+			isOk = true;
+		   } else {
+			isOk = false;
+			msgErr = "Parameter '" + HTML_ARGS + "' must be java.lang.Boolean instance.";
 		   }
 		}
 
@@ -615,20 +639,32 @@ public class ConsoleManagerBean {
     * @return formated output (highlight, line count, encoding, cut parameter)
     */
    @Task(comment = "formated output : highlight, cut parameter")
-   protected StringBuilder format(final LinkedList<String> queue, final Map<String, Serializable> parameters, final long fromIndex) {
+   protected StringBuilder format(final LinkedList<String> queue, final Map<String, Serializable> parameters, long fromIndex) {
 	final StringBuilder buffer = new StringBuilder();
 	Boolean countLine = (Boolean) parameters.get(COUNTLINE_ARGS);
-	int prefixLength = String.valueOf(fromIndex + queue.size()).length();
+	String highlightText = (String) parameters.get(HIGHLIGHT_ARGS);
+	int prefixLength = String.valueOf(fromIndex + queue.size()).length() + 1;
+	boolean highlight = !StringHelper.isEmpty(highlightText);
+	Number cutLine = (Number) parameters.get(CUTLINE_ARGS);
+	Boolean html = (Boolean) parameters.get(HTML_ARGS);
 
 	if (countLine == null) {
 	   countLine = Boolean.FALSE;
 	}
 
+	if (html == null) {
+	   html = Boolean.FALSE;
+	}
+
 	for (String line : queue) {
 	   if (countLine) {
-		buffer.append(StringHelper.leftPad(String.valueOf(fromIndex), prefixLength, '0'));
+		buffer.append(StringHelper.leftPad(String.valueOf(++fromIndex), prefixLength, '0')).append(" ");
 	   }
-	   buffer.append(line).append("\n");
+	   if (highlight && html) {
+		line = StringHelper.replaceAll(line, highlightText, "<span style=\"background-color:yellow;\">" + highlightText + "</span>");
+	   }
+	   buffer.append(cutLine == null ? line : StringHelper.truncate(line, cutLine.intValue()));
+	   buffer.append(html ? "<br/>" : "\n");
 	}
 	return buffer;
    }
