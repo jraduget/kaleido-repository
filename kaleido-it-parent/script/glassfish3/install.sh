@@ -11,6 +11,8 @@ asadmin create-jms-resource --restype=javax.jms.Queue --description="kaleido int
 asadmin --user admin list-jms-resources
 
 # databases datasources
+asadmin delete-jdbc-resource jdbc/kaleido
+asadmin delete-jdbc-connection-pool kaleidoIntPool
 asadmin create-jdbc-connection-pool --datasourceclassname org.apache.derby.jdbc.ClientDataSource --restype javax.sql.XADataSource --property portNumber=1527:password=APP:user=APP:serverName=localhost:databaseName=kaleidoInt:connectionAttributes=\;create\\=true  kaleidoIntPool
 asadmin create-jdbc-resource --connectionpoolid kaleidoIntPool jdbc/kaleido
 asadmin list-jdbc-connection-pools

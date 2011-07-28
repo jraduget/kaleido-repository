@@ -45,6 +45,14 @@ public class MemoryFileStore extends AbstractFileStore {
 	super(context);
    }
 
+   /**
+    * @param baseUri
+    * @param context
+    */
+   public MemoryFileStore(final String baseUri, final RuntimeContext<FileStore> context) {
+	super(baseUri, context);
+   }
+
    @Override
    protected FileHandler doGet(final URI resourceUri) throws ResourceNotFoundException, StoreException {
 	FileHandler rh = memoryResources.get(resourceUri);

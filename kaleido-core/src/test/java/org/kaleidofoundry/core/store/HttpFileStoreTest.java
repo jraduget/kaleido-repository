@@ -68,7 +68,7 @@ public class HttpFileStoreTest extends AbstractFileStoreTest {
 	super.setup();
 
 	// be-careful, there is no-proxy settings for this test ;-)
-	final RuntimeContext<FileStore> context = new FileStoreContextBuilder().withUriRootPath("http://localhost:9090/test/").build();
+	final RuntimeContext<FileStore> context = new FileStoreContextBuilder().withBaseUri("http://localhost:9090/test/").build();
 	fileStore = new HttpFileStore(context);
 
 	existingResources.put("kaleidofoundry/it/store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);

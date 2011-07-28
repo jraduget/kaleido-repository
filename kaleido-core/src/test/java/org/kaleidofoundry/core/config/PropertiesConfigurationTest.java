@@ -31,9 +31,7 @@ public class PropertiesConfigurationTest extends AbstractConfigurationTest {
 
    @Override
    protected Configuration newInstance() throws StoreException, URISyntaxException {
-
-	return new PropertiesConfiguration("propCpConfig", "classpath:/config/test.properties", new RuntimeContext<org.kaleidofoundry.core.config.Configuration>(
-		Configuration.class));
+	return new PropertiesConfiguration("propCpConfig", "classpath:/config/test.properties", new RuntimeContext<Configuration>(Configuration.class));
    }
 
 }

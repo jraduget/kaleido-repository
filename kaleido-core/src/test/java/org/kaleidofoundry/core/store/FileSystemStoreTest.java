@@ -42,7 +42,7 @@ public class FileSystemStoreTest extends AbstractFileStoreTest {
 	final String tempPath = tmpFile.getCanonicalPath().substring(0, tmpFile.getCanonicalPath().lastIndexOf(File.separator));
 	filesToDelete.add(tmpFile);
 
-	final RuntimeContext<FileStore> context = new FileStoreContextBuilder().withUriRootPath("file:/" + FileHelper.buildUnixAppPath(tempPath)).build();
+	final RuntimeContext<FileStore> context = new FileStoreContextBuilder().withBaseUri("file:/" + FileHelper.buildUnixAppPath(tempPath)).build();
 	fileStore = new FileSystemStore(context);
 
 	// 1. existing resources (to get) - create temp file as mock

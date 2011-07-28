@@ -23,9 +23,10 @@ import java.io.InputStream;
 
 import junit.framework.Assert;
 
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * IOHelper test cases
@@ -34,24 +35,19 @@ import org.junit.Test;
  */
 public class IOHelperTest extends Assert {
 
-   private File tempFile;
+   @Rule
+   public TemporaryFolder tempFolder = new TemporaryFolder();
+
    private String tempFilename;
 
    @Before
    public void setup() throws IOException {
-	tempFile = File.createTempFile("iohelper-", ".test");
+	File tempFile = tempFolder.newFile("iohelper.test");
 	tempFilename = tempFile.getCanonicalPath();
 
 	final FileWriter writer = new FileWriter(tempFile);
 	writer.append("foo");
 	writer.close();
-   }
-
-   @After
-   public void cleanup() {
-	if (tempFile != null) {
-	   tempFile.delete();
-	}
    }
 
    // ** Test methods ************************************************************************************************

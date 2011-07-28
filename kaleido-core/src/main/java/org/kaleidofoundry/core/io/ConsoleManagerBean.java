@@ -16,16 +16,16 @@
 package org.kaleidofoundry.core.io;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Serializable;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +35,7 @@ import java.util.TreeSet;
 
 import javax.ejb.Stateless;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -45,7 +43,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.store.FileHandler;
+import org.kaleidofoundry.core.store.FileStore;
+import org.kaleidofoundry.core.store.FileStoreFactory;
+import org.kaleidofoundry.core.store.ResourceNotFoundException;
+import org.kaleidofoundry.core.store.StoreException;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -79,8 +83,8 @@ public class ConsoleManagerBean {
    public static final String BEGINLINE_ARGS = "beginLine";
    /** Argument to specify index of end line */
    public static final String MAXLINE_COUNT_ARGS = "maxLineCount";
-   /** Argument to specify the input encoding */
-   public static final String ENCODING_ARGS = "encoding";
+   /** Argument to specify the Charset encoding */
+   public static final String CHARSET_ARGS = "charset";
    /** Argument to specify the highlight of a text in the output */
    public static final String HIGHLIGHT_ARGS = "highLight";
    /** Argument to specify if we add the line count as prefix to the output */
@@ -94,12 +98,12 @@ public class ConsoleManagerBean {
    /** Set of all parameters names */
    public static final Set<String> ARGS = Collections.synchronizedSet(new TreeSet<String>());
 
-   /** Map of all registered resource uri by name */
-   public static final Map<String, String> RESOURCES = Collections.synchronizedMap(new HashMap<String, String>());
+   /** All registered resources */
+   public static final Set<String> REGISTERED_RESOURCES = Collections.synchronizedSet(new HashSet<String>());
 
    static {
 	ARGS.add(BEGINLINE_ARGS);
-	ARGS.add(ENCODING_ARGS);
+	ARGS.add(CHARSET_ARGS);
 	ARGS.add(MAXLINE_COUNT_ARGS);
 	ARGS.add(HIGHLIGHT_ARGS);
 	ARGS.add(OPERATION_ARGS);
@@ -126,7 +130,7 @@ public class ConsoleManagerBean {
 	str.append("<h2>Query parameters:</h2>");
 	str.append("<ul>");
 	str.append("<li>").append(HIGHLIGHT_ARGS).append("=...text to highlight...</li>");
-	str.append("<li>").append(ENCODING_ARGS).append("=UTF-8|ISO-8859-1|...</li>");
+	str.append("<li>").append(CHARSET_ARGS).append("=UTF-8|ISO-8859-1|...</li>");
 	str.append("<li>").append(COUNTLINE_ARGS).append("=true|false</li>");
 	str.append("<li>").append(CUT_ARGS).append("=120</li>");
 	str.append("</ul>");
@@ -135,8 +139,8 @@ public class ConsoleManagerBean {
 	str.append("<p>");
 	str.append("<h2>Registered resources:</h2>");
 	str.append("<ul>");
-	for (Entry<String, String> entry : RESOURCES.entrySet()) {
-	   str.append("<li>").append(entry.getKey()).append(" : ").append(entry.getValue()).append("</li>");
+	for (String resource : REGISTERED_RESOURCES) {
+	   str.append("<li>").append(resource).append("</li>");
 	}
 	str.append("</ul>");
 	str.append("</p>");
@@ -144,15 +148,79 @@ public class ConsoleManagerBean {
    }
 
    /**
-    * add the resource to the console registry
+    * add a resource to the console registry
     * 
-    * @param name
-    * @param uri
+    * @param resource resource {@link URI}
+    * @throws ResourceNotFoundException
     */
-   @PUT
+   public synchronized void register(final @NotNull URI resource) throws ResourceNotFoundException {
+	register(resource.toString());
+   }
+
+   /**
+    * add a resource to the console registry
+    * 
+    * @param resource resource {@link URI}
+    * @throws ResourceNotFoundException
+    */
+   @GET
    @Path("register")
-   public void putResource(@QueryParam("name") final String name, @QueryParam("uri") final String uri) {
-	RESOURCES.put(name, uri);
+   @Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_HTML })
+   public synchronized String register(@QueryParam("resource") final String resource) throws ResourceNotFoundException {
+
+	if (!REGISTERED_RESOURCES.contains(resource)) {
+	   boolean found = false;
+	   // looking at registered file store
+	   for (Entry<String, List<FileStore>> storeEntry : FileStoreFactory.getRegistry().entrySet()) {
+		if (resource.toLowerCase().contains(storeEntry.getKey().toLowerCase())) {
+		   for (FileStore store : storeEntry.getValue()) {
+			if (store.isUriManageable(resource)) {
+			   found = true;
+			   break;
+			}
+		   }
+		}
+	   }
+
+	   if (found) {
+		REGISTERED_RESOURCES.add(resource);
+	   } else {
+
+		// if no file store found try to create a new one
+		int localResourcePos = resource.lastIndexOf("/");
+
+		if (localResourcePos >= 0) {
+		   // register a new file store to handle this resource
+		   FileStoreFactory.provides(resource.substring(0, localResourcePos));
+		   // the input console resource is register in console manager
+		   REGISTERED_RESOURCES.add(resource);
+		} else {
+		   throw new ResourceNotFoundException(resource);
+		}
+	   }
+	}
+
+	return info();
+   }
+
+   /**
+    * remove a resource to the console registry
+    * 
+    * @param resource
+    * @throws ResourceNotFoundException
+    */
+   @GET
+   @Path("unregister")
+   @Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_HTML })
+   public synchronized String unregister(@QueryParam("resource") final String resource) throws ResourceNotFoundException {
+
+	if (!REGISTERED_RESOURCES.contains(resource)) {
+	   REGISTERED_RESOURCES.remove(resource);
+	   return info();
+	} else {
+	   throw new ResourceNotFoundException(resource);
+	}
+
    }
 
    /**
@@ -160,12 +228,13 @@ public class ConsoleManagerBean {
     * 
     * @param resource the resource which we want to extract the contents
     * @return head of the file
+    * @throws StoreException
     * @throws IOException
     */
    @GET
-   @Path("{resource}/head")
+   @Path("head")
    @Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_HTML })
-   public String head(@PathParam("resource") final String resource) throws IOException {
+   public String head(@QueryParam("resource") final String resource) throws StoreException, IOException {
 	Map<String, Serializable> parameters = new HashMap<String, Serializable>();
 	parameters.put(MAXLINE_COUNT_ARGS, DEFAULT_MAXLINE_COUNT);
 	return head(resource, addUriParameters(parameters));
@@ -177,9 +246,10 @@ public class ConsoleManagerBean {
     * @param resource the resource which we want to extract the contents
     * @param maxLineCount
     * @return head of the file
+    * @throws StoreException
     * @throws IOException
     */
-   public String head(final String resource, final long maxLineCount) throws IOException {
+   public String head(final String resource, final long maxLineCount) throws StoreException, IOException {
 	final Map<String, Serializable> parameters = new HashMap<String, Serializable>();
 	parameters.put(OPERATION_ARGS, Operation.Tail);
 	if (maxLineCount >= 0) {
@@ -194,15 +264,15 @@ public class ConsoleManagerBean {
     * @param resource the resource which we want to extract the contents
     * @param parameters
     * @return head of the file
-    * @throws FileNotFoundException
+    * @throws StoreException
     * @throws IOException
     */
-   public String head(final String resource, final Map<String, Serializable> parameters) throws FileNotFoundException, IOException {
+   public String head(final String resource, final Map<String, Serializable> parameters) throws StoreException, IOException {
 	final Map<String, Serializable> typedParameters = typedParameters(parameters);
 	final Number maxLineCountArg = (Number) typedParameters.get(MAXLINE_COUNT_ARGS);
 	final long maxLine = maxLineCountArg != null ? maxLineCountArg.longValue() : DEFAULT_MAXLINE_COUNT;
 
-	final Reader reader = new InputStreamReader(in(resource, typedParameters));
+	final Reader reader = new InputStreamReader(in(resource, typedParameters).getInputStream());
 	final LinkedList<String> queue = new LinkedList<String>();
 	BufferedReader buffReader = null;
 
@@ -229,12 +299,13 @@ public class ConsoleManagerBean {
     * 
     * @param resource the resource which we want to extract the contents
     * @return tail of the file
+    * @throws StoreException
     * @throws IOException
     */
    @GET
-   @Path("{resource}/tail")
+   @Path("tail")
    @Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_HTML })
-   public String tail(@PathParam("resource") final String resource) throws IOException {
+   public String tail(@QueryParam("resource") final String resource) throws StoreException, IOException {
 	Map<String, Serializable> parameters = new HashMap<String, Serializable>();
 	parameters.put(MAXLINE_COUNT_ARGS, DEFAULT_MAXLINE_COUNT);
 	return tail(resource, addUriParameters(parameters));
@@ -247,8 +318,9 @@ public class ConsoleManagerBean {
     * @param maxLineCount number of line you wish to keep in result buffer
     * @return list of n last line of the buffer
     * @throws IOException
+    * @throws StoreException
     */
-   public String tail(final String resource, final long maxLineCount) throws IOException {
+   public String tail(final String resource, final long maxLineCount) throws StoreException, IOException {
 	final Map<String, Serializable> args = new HashMap<String, Serializable>();
 	args.put(OPERATION_ARGS, Operation.Tail);
 	if (maxLineCount >= 0) {
@@ -264,15 +336,15 @@ public class ConsoleManagerBean {
     * @param parameters
     * @return line of the buffer filter by args arguments
     * @throws IOException
+    * @throws StoreException
     * @see #BEGINLINE_ARGS
     * @see #MAXLINE_COUNT_ARGS
-    * @throws FileNotFoundException
     */
-   public String tail(final String resource, final Map<String, Serializable> parameters) throws FileNotFoundException, IOException {
+   public String tail(final String resource, final Map<String, Serializable> parameters) throws StoreException, IOException {
 	final Map<String, Serializable> typedParameters = typedParameters(parameters);
 	final Number maxLineCountArg = (Number) typedParameters.get(MAXLINE_COUNT_ARGS);
 	final long maxLine = maxLineCountArg != null ? maxLineCountArg.longValue() : DEFAULT_MAXLINE_COUNT;
-	final Reader reader = new InputStreamReader(in(resource, typedParameters));
+	final Reader reader = new InputStreamReader(in(resource, typedParameters).getInputStream());
 	BufferedReader buffReader = null;
 
 	try {
@@ -302,13 +374,14 @@ public class ConsoleManagerBean {
     * @param beginLine index of beginning line of file you wish
     * @param maxLineCount index of the last line of file you wish
     * @return list of n last line of the buffer
+    * @throws StoreException
     * @throws IOException
     */
    @GET
-   @Path("{resource}/extract")
+   @Path("extract")
    @Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_HTML })
-   public String extract(@PathParam("resource") final String resource, @QueryParam(BEGINLINE_ARGS) final long beginLine,
-	   @QueryParam(MAXLINE_COUNT_ARGS) final long maxLineCount) throws IOException {
+   public String extract(@QueryParam("resource") final String resource, @QueryParam(BEGINLINE_ARGS) final long beginLine,
+	   @QueryParam(MAXLINE_COUNT_ARGS) final long maxLineCount) throws StoreException, IOException {
 	final Map<String, Serializable> parameters = new HashMap<String, Serializable>();
 
 	parameters.put(OPERATION_ARGS, Operation.Extract);
@@ -327,10 +400,10 @@ public class ConsoleManagerBean {
     * @param resource the resource which we want to extract the contents
     * @param parameters
     * @return extract of the file
-    * @throws FileNotFoundException
+    * @throws StoreException
     * @throws IOException
     */
-   public String extract(final String resource, final Map<String, Serializable> parameters) throws FileNotFoundException, IOException {
+   public String extract(final String resource, final Map<String, Serializable> parameters) throws StoreException, IOException {
 
 	final Map<String, Serializable> typepParameters = typedParameters(parameters);
 	final Number beginLineArg = (Number) typepParameters.get(BEGINLINE_ARGS);
@@ -338,14 +411,21 @@ public class ConsoleManagerBean {
 
 	final long beginLine = beginLineArg != null && beginLineArg.longValue() > 0 ? beginLineArg.longValue() : 1;
 	final long maxLine = maxLineCountArg != null ? maxLineCountArg.longValue() : DEFAULT_MAXLINE_COUNT;
+	final Charset charset = (Charset) typepParameters.get(CHARSET_ARGS);
 
-	final Reader reader = new InputStreamReader(in(resource, typepParameters));
+	Reader reader = null;
 	BufferedReader buffReader = null;
 
 	try {
 	   String currentLine;
 	   long index = 1;
 	   LinkedList<String> queue = new LinkedList<String>();
+
+	   if (charset == null) {
+		reader = new InputStreamReader(in(resource, typepParameters).getInputStream());
+	   } else {
+		reader = new InputStreamReader(in(resource, typepParameters).getInputStream(), charset);
+	   }
 	   buffReader = new BufferedReader(reader);
 
 	   while ((currentLine = buffReader.readLine()) != null && index < beginLine + maxLine) {
@@ -436,15 +516,15 @@ public class ConsoleManagerBean {
 
 	// Encoding
 	{
-	   final Serializable encoding = parameters.get(ENCODING_ARGS);
-	   if (encoding != null) {
-		if (encoding instanceof String) {
-		   Charset.forName((String) encoding); // throw sillegal charset name if needed
-		   typedParameters.put(ENCODING_ARGS, encoding);
+	   final Serializable charset = parameters.get(CHARSET_ARGS);
+	   if (charset != null) {
+		if (charset instanceof String) {
+		   Charset.forName((String) charset); // throws illegal charset name if needed
+		   typedParameters.put(CHARSET_ARGS, charset);
 		   isOk = true;
 		} else {
 		   isOk = false;
-		   msgErr = "Parameter '" + ENCODING_ARGS + "' must be java.lang.String instance.";
+		   msgErr = "Parameter '" + CHARSET_ARGS + "' must be java.lang.String instance.";
 		}
 
 		if (!isOk) { throw new IllegalArgumentException(msgErr); }
@@ -496,28 +576,34 @@ public class ConsoleManagerBean {
    }
 
    /**
-    * resource input stream
+    * resource input stream handler
     * 
     * @param resource the resource which we want to extract the contents
     * @param typedParameters
-    * @return input stream of the resource
-    * @throws FileNotFoundException
+    * @return handler on the resource
+    * @throws StoreException
     */
-   @Task(comment = "use file store plugin instead of classpath input stream")
-   protected InputStream in(String resource, final Map<String, Serializable> typedParameters) throws FileNotFoundException {
+   protected FileHandler in(final String resource, final Map<String, Serializable> typedParameters) throws StoreException {
 
-	// search in console resource registry first
-	// TODO
-	resource = RESOURCES.get(resource);
+	// search in console resource registry
+	if (REGISTERED_RESOURCES.contains(resource)) {
+	   // looking at registered file store
+	   for (Entry<String, List<FileStore>> storeEntry : FileStoreFactory.getRegistry().entrySet()) {
+		if (resource.toLowerCase().contains(storeEntry.getKey().toLowerCase())) {
+		   Iterator<FileStore> stores = storeEntry.getValue().iterator();
 
-	// map FileNotFound .. to ResourceNotFound rest exception
-	// FileStoreFactory.provides("/").get(resourceRelativePath);
+		   while (stores.hasNext()) {
+			try {
+			   return stores.next().get(resource.substring(storeEntry.getKey().length()));
+			} catch (ResourceNotFoundException rnfe) {
+			   if (!stores.hasNext()) { throw rnfe; }
+			}
+		   }
+		}
+	   }
+	}
 
-	// search in the classpath if not found
-	final InputStream classpathFileToMonitorIn = ConsoleManagerBean.class.getClassLoader().getResourceAsStream(resource);
-	final InputStream fileToMonitorIn = classpathFileToMonitorIn != null ? classpathFileToMonitorIn : new FileInputStream(resource);
-	return fileToMonitorIn;
-
+	throw new ResourceNotFoundException(resource);
    }
 
    /**
@@ -528,7 +614,7 @@ public class ConsoleManagerBean {
     * @param fromIndex
     * @return formated output (highlight, line count, encoding, cut parameter)
     */
-   @Task(comment = "formated output : highlight, encoding, cut parameter")
+   @Task(comment = "formated output : highlight, cut parameter")
    protected StringBuilder format(final LinkedList<String> queue, final Map<String, Serializable> parameters, final long fromIndex) {
 	final StringBuilder buffer = new StringBuilder();
 	Boolean countLine = (Boolean) parameters.get(COUNTLINE_ARGS);
@@ -555,7 +641,11 @@ public class ConsoleManagerBean {
    protected Map<String, Serializable> addUriParameters(final Map<String, Serializable> parameters) {
 	if (uriInfo != null) {
 	   for (Entry<String, List<String>> queryParam : uriInfo.getQueryParameters().entrySet()) {
-		parameters.put(queryParam.getKey(), String.valueOf(queryParam.getValue()));
+		if (queryParam.getValue().size() == 1) {
+		   parameters.put(queryParam.getKey(), queryParam.getValue().get(0));
+		} else {
+		   parameters.put(queryParam.getKey(), String.valueOf(queryParam.getValue()));
+		}
 	   }
 	}
 	return parameters;

@@ -37,6 +37,11 @@ import org.kaleidofoundry.core.util.StringHelper;
 public class FileStoreProvider extends AbstractProviderService<FileStore> {
 
    /**
+    * files store internal registry
+    */
+   static final FileStoreRegistry FILE_STORE_REGISTRY = new FileStoreRegistry();
+
+   /**
     * @param genericClass
     */
    public FileStoreProvider(final Class<FileStore> genericClass) {
@@ -49,16 +54,16 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
     */
    @Override
    public FileStore _provides(@NotNull final RuntimeContext<FileStore> context) throws ProviderException {
-	final String uriRootPath = context.getString(FileStoreContextBuilder.UriRootPath);
+	final String baseUri = context.getString(FileStoreContextBuilder.BaseUri);
 
-	if (StringHelper.isEmpty(uriRootPath)) { throw new EmptyContextParameterException(FileStoreContextBuilder.UriRootPath, context); }
+	if (StringHelper.isEmpty(baseUri)) { throw new EmptyContextParameterException(FileStoreContextBuilder.BaseUri, context); }
 
-	return provides(uriRootPath, context);
+	return provides(baseUri, context);
    }
 
    /**
-    * @param uriRootPath
-    *           file store uri root path, looks like (path is optional) :
+    * @param baseUri
+    *           file store root path uri, which looks like (path is optional) :
     *           <ul>
     *           <li><code>http://host/</code> <b>or</b> <code>http://host/path</code></li>
     *           <li><code>ftp://host/</code> <b>or</b> <code>ftp://host/path</code></li>
@@ -72,16 +77,16 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
-   public FileStore provides(final String uriRootPath) throws ProviderException {
-	return provides(uriRootPath, new RuntimeContext<FileStore>(FileStore.class));
+   public FileStore provides(final String baseUri) throws ProviderException {
+	return provides(baseUri, new FileStoreContextBuilder().withBaseUri(baseUri).build());
    }
 
    /**
     * create a instance of {@link FileStore} analyzing a given {@link URI}<br/>
     * scheme of the uri is used to get the registered file store implementation.
     * 
-    * @param uriRootPath <br/>
-    *           file store uri root path, looks like (path is optional) :
+    * @param baseUri <br/>
+    *           file store root path uri, which looks like (path is optional) :
     *           <ul>
     *           <li><code>http://host/</code> <b>or</b> <code>http://host/path</code></li>
     *           <li><code>ftp://host/</code> <b>or</b> <code>ftp://host/path</code></li>
@@ -96,25 +101,28 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
-   public FileStore provides(@NotNull final String uriRootPath, @NotNull final RuntimeContext<FileStore> context) throws ProviderException {
+   public FileStore provides(@NotNull final String baseUri, @NotNull final RuntimeContext<FileStore> context) throws ProviderException {
 
-	final URI resourceUri = createURI(uriRootPath);
-	final FileStoreType rse = FileStoreTypeEnum.match(resourceUri);
+	final URI baseURI = createURI(baseUri);
+	final FileStoreType fileStoreType = FileStoreTypeEnum.match(baseURI);
 
-	if (rse != null) {
+	if (fileStoreType != null) {
 
 	   final Set<Plugin<FileStore>> pluginImpls = PluginFactory.getImplementationRegistry().findByInterface(FileStore.class);
 	   // scan each @Declare file store implementation, to get one which handle the uri scheme
 	   for (final Plugin<FileStore> pi : pluginImpls) {
 		final Class<? extends FileStore> impl = pi.getAnnotatedClass();
 		try {
-		   final Constructor<? extends FileStore> constructor = impl.getConstructor(context.getClass());
-		   final FileStore fileStore = constructor.newInstance(context);
+		   final Constructor<? extends FileStore> constructor = impl.getConstructor(String.class, context.getClass());
+		   final FileStore fileStore = constructor.newInstance(baseUri, context);
 
 		   try {
-			if (fileStore.isUriManageable(resourceUri.toString())) { return fileStore; }
+			if (fileStore.isUriManageable(baseUri.toString())) { return fileStore; }
 		   } catch (final Throwable th) {
 		   }
+
+		   // unregister wrong file store
+		   FileStoreFactory.getRegistry().get(baseUri).remove(fileStore);
 
 		} catch (final NoSuchMethodException e) {
 		   throw new ProviderException("context.provider.error.NoSuchConstructorException", impl.getName(), "RuntimeContext<FileStore> context");
@@ -126,16 +134,16 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 		   if (e.getCause() instanceof StoreException) {
 			throw new ProviderException(e.getCause());
 		   } else {
-			throw new ProviderException("context.provider.error.InvocationTargetException", impl.getName(), "RuntimeContext<FileStore> context", e
-				.getCause().getClass().getName(), e.getMessage());
+			throw new ProviderException("context.provider.error.InvocationTargetException", e.getCause(), impl.getName(),
+				"RuntimeContext<FileStore> context", e.getCause().getClass().getName(), e.getCause().getMessage());
 		   }
 		}
 	   }
 
-	   throw new ProviderException(new StoreException("store.uri.custom.notmanaged", resourceUri.getScheme(), resourceUri.toString()));
+	   throw new ProviderException(new StoreException("store.uri.custom.notmanaged", baseURI.getScheme(), baseUri.toString()));
 	}
 
-	throw new ProviderException(new StoreException("store.uri.notmanaged", resourceUri.getScheme(), resourceUri.toString()));
+	throw new ProviderException(new StoreException("store.uri.notmanaged", baseURI.getScheme(), baseUri.toString()));
 
    }
 

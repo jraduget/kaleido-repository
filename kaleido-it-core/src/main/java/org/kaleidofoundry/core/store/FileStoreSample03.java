@@ -32,7 +32,7 @@ public class FileStoreSample03 {
 
    public FileStoreSample03() throws StoreException {
 
-	RuntimeContext<FileStore> context = new FileStoreContextBuilder("myManualStore", FileStore.class).withUriRootPath("http://localhost:8080/kaleido-it/")
+	RuntimeContext<FileStore> context = new FileStoreContextBuilder("myManualStore", FileStore.class).withBaseUri("http://localhost:8080/kaleido-it/")
 		.withReadonly(true).withProxySet(false)
 		// configure connect and read timeout for the java net layer
 		.withConnectTimeout(0).withReadTimeout(0)

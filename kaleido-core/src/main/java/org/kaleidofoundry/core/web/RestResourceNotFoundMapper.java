@@ -15,32 +15,22 @@
  */
 package org.kaleidofoundry.core.web;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
-import javax.ws.rs.core.Application;
-
-import org.kaleidofoundry.core.config.ConfigurationManagerBean;
-import org.kaleidofoundry.core.io.ConsoleManagerBean;
+import org.kaleidofoundry.core.store.ResourceNotFoundException;
 
 /**
- * Rest application servlet used to exposed REST resources
+ * rest exception mapper for {@link ResourceNotFoundException}
  * 
  * @author Jerome RADUGET
  */
-public class RestResourcesApp extends Application {
+@Provider
+public class RestResourceNotFoundMapper implements ExceptionMapper<ResourceNotFoundException> {
 
-   @Override
-   public Set<Class<?>> getClasses() {
-	Set<Class<?>> s = new HashSet<Class<?>>();
-	// exception handler
-	s.add(ConfigurationManagerBean.class);
-	s.add(RestConfigurationNotFoundMapper.class);
-	s.add(RestResourceNotFoundMapper.class);
-	s.add(RestPropertyNotFoundMapper.class);
-	// manager module
-	s.add(ConsoleManagerBean.class);
-	return s;
+   public Response toResponse(final ResourceNotFoundException ex) {
+	return Response.status(404).entity(ex.getMessage()).type("text/plain").build();
    }
 
 }

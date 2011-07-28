@@ -46,7 +46,7 @@ public class FtpStoreTest extends AbstractFileStoreTest {
 	fakeFtpServer.start();
 	// end ftp mock setip
 
-	final RuntimeContext<FileStore> context = new FileStoreContextBuilder().withUriRootPath("ftp://anonymous:anonymous@localhost:43120/").build();
+	final RuntimeContext<FileStore> context = new FileStoreContextBuilder().withBaseUri("ftp://anonymous:anonymous@localhost:43120/").build();
 	fileStore = new FtpStore(context);
 
 	// anonymous account : ftp://hostname/resourcepath

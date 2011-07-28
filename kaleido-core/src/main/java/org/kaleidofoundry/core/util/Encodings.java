@@ -28,7 +28,7 @@ package org.kaleidofoundry.core.util;
  * 
  * @author Jerome RADUGET
  */
-public enum Encoding {
+public enum Encodings {
 
    /**
     * UTF-8 is an 8-bit encoding scheme. Characters from the English-language alphabet are all encoded using an 8-bit byte. Characters
@@ -65,7 +65,7 @@ public enum Encoding {
 
    private final String code;
 
-   Encoding(final String code) {
+   Encodings(final String code) {
 	this.code = code;
    }
 

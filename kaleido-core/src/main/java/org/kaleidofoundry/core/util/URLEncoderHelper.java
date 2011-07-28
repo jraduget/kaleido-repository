@@ -19,7 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 /**
- * Helper for url encoding
+ * Helper for encoding url get parameter
  * 
  * @author Jerome RADUGET
  */
@@ -39,7 +39,7 @@ public abstract class URLEncoderHelper {
    public static String encode(final String s) {
 	if (s == null) { return null; }
 	try {
-	   return java.net.URLEncoder.encode(s, Encoding.UTF_8.getCode());
+	   return java.net.URLEncoder.encode(s, Encodings.UTF_8.getCode());
 	} catch (final UnsupportedEncodingException uee) {
 	   return s;
 	}
@@ -50,7 +50,7 @@ public abstract class URLEncoderHelper {
     * @param enc encoding to use: {@link URLEncoderHelper}.UTF8_ENCODING, {@link URLEncoderHelper}.FR1_ENCODING, ...
     * @return encoded string (null is string is null or encoding is null)
     */
-   public static String encode(final String s, final Encoding enc) {
+   public static String encode(final String s, final Encodings enc) {
 	if (s == null || enc == null) { return null; }
 	try {
 	   return java.net.URLEncoder.encode(s, enc.getCode());
@@ -66,7 +66,7 @@ public abstract class URLEncoderHelper {
    public static String decode(final String s) {
 	if (s == null) { return null; }
 	try {
-	   return URLDecoder.decode(s, Encoding.UTF_8.getCode());
+	   return URLDecoder.decode(s, Encodings.UTF_8.getCode());
 	} catch (final UnsupportedEncodingException uee) {
 	   return s;
 	}
@@ -77,7 +77,7 @@ public abstract class URLEncoderHelper {
     * @param enc encoding to use: {@link URLEncoderHelper}.UTF8_ENCODING, {@link URLEncoderHelper}.FR1_ENCODING, ....
     * @return string decoding (null is string is null)
     */
-   public static String decode(final String s, final Encoding enc) {
+   public static String decode(final String s, final Encodings enc) {
 	if (s == null || enc == null) { return null; }
 	try {
 	   return URLDecoder.decode(s, enc.getCode());

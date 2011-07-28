@@ -47,6 +47,14 @@ public class FileSystemStore extends AbstractFileStore implements FileStore {
 	super(context);
    }
 
+   /**
+    * @param baseUri
+    * @param context
+    */
+   public FileSystemStore(final String baseUri, final RuntimeContext<FileStore> context) {
+	super(baseUri, context);
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.store.AbstractFileStore#doLoad(java.net.URI)

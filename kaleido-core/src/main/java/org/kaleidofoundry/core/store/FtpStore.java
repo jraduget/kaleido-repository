@@ -56,6 +56,14 @@ public class FtpStore extends AbstractFileStore implements FileStore {
 	super(context);
    }
 
+   /**
+    * @param baseUri
+    * @param context
+    */
+   public FtpStore(final String baseUri, final RuntimeContext<FileStore> context) {
+	super(baseUri, context);
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.store.AbstractFileStore#getStoreType()

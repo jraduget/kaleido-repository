@@ -32,8 +32,15 @@ public abstract class FileStoreFactory {
    private static final FileStoreProvider FILE_STORE_PROVIDER = new FileStoreProvider(FileStore.class);
 
    /**
-    * @param uriRootPath
-    *           file store uri root path, looks like (path is optional) :
+    * @return File store instances
+    */
+   public static FileStoreRegistry getRegistry() {
+	return FileStoreProvider.FILE_STORE_REGISTRY;
+   }
+
+   /**
+    * @param baseUri
+    *           file store root path uri, which looks like (path is optional) :
     *           <ul>
     *           <li><code>http://host/</code> <b>or</b> <code>http://host/path</code></li>
     *           <li><code>ftp://host/</code> <b>or</b> <code>ftp://host/path</code></li>
@@ -47,13 +54,13 @@ public abstract class FileStoreFactory {
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
-   public static FileStore provides(final String uriRootPath) throws ProviderException {
-	return FILE_STORE_PROVIDER.provides(uriRootPath);
+   public static FileStore provides(final String baseUri) throws ProviderException {
+	return FILE_STORE_PROVIDER.provides(baseUri);
    }
 
    /**
-    * @param uriRootPath
-    *           file store uri root path, looks like (path is optional) :
+    * @param baseUri
+    *           file store root path uri, looks like (path is optional) :
     *           <ul>
     *           <li><code>http://host/</code> <b>or</b> <code>http://host/path</code></li>
     *           <li><code>ftp://host/</code> <b>or</b> <code>ftp://host/path</code></li>
@@ -68,8 +75,8 @@ public abstract class FileStoreFactory {
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
-   public static FileStore provides(@NotNull final String uriRootPath, @NotNull final RuntimeContext<FileStore> context) throws ProviderException {
-	return FILE_STORE_PROVIDER.provides(uriRootPath, context);
+   public static FileStore provides(@NotNull final String baseUri, @NotNull final RuntimeContext<FileStore> context) throws ProviderException {
+	return FILE_STORE_PROVIDER.provides(baseUri, context);
    }
 
    /**

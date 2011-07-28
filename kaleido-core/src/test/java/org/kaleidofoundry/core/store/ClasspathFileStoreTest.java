@@ -32,13 +32,14 @@ public class ClasspathFileStoreTest extends AbstractFileStoreTest {
 
 	super.setup();
 
-	final RuntimeContext<FileStore> context = new FileStoreContextBuilder().withUriRootPath("classpath:/").build();
+	final RuntimeContext<FileStore> context = new FileStoreContextBuilder().withBaseUri("classpath:/").build();
 	fileStore = new ClasspathFileStore(context);
 
 	existingResources.put("store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
 	existingResources.put("/store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
 
 	nonExistingResources.add("classpath:/store/foo");
+	nonExistingResources.add("store/foo");
 
    }
 

@@ -48,6 +48,14 @@ public class WebappFileStore extends AbstractFileStore implements FileStore {
 	super(context);
    }
 
+   /**
+    * @param baseUri
+    * @param context
+    */
+   public WebappFileStore(final String baseUri, final RuntimeContext<FileStore> context) {
+	super(baseUri, context);
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.store.AbstractFileStore#getStoreType()

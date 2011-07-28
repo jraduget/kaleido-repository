@@ -16,17 +16,19 @@
 package org.kaleidofoundry.core.store;
 
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.StoreMessageBundle;
+import static org.kaleidofoundry.core.store.FileStoreContextBuilder.BaseUri;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.ConnectTimeout;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.MaxRetryOnFailure;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.ReadTimeout;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.Readonly;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.SleepTimeBeforeRetryOnFailure;
-import static org.kaleidofoundry.core.store.FileStoreContextBuilder.UriRootPath;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.UseCaches;
+import static org.kaleidofoundry.core.store.FileStoreProvider.FILE_STORE_REGISTRY;
 
 import java.net.URI;
 import java.net.URLConnection;
 
+import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
@@ -56,14 +58,40 @@ public abstract class AbstractFileStore implements FileStore {
 
    protected final Logger logger;
 
+   protected final String baseUri;
+
    /**
-    * runtime context injection by constructor
+    * runtime context injection by constructor<br/>
+    * the file store will be registered in {@link FileStoreFactory#getRegistry()}
     * 
     * @param context
+    * @see FileStoreRegistry
     */
    public AbstractFileStore(@NotNull final RuntimeContext<FileStore> context) {
+	this(null, context);
+   }
+
+   /**
+    * runtime context injection by constructor<br/>
+    * the file store will be registered in {@link FileStoreFactory#getRegistry()}
+    * 
+    * @param baseUri
+    * @param context
+    * @see FileStoreRegistry
+    */
+   public AbstractFileStore(String baseUri, @NotNull final RuntimeContext<FileStore> context) {
+
+	// base uri parameter
+	baseUri = !StringHelper.isEmpty(baseUri) ? baseUri : context.getString(BaseUri);
+
+	// context check
+	if (StringHelper.isEmpty(baseUri)) { throw new EmptyContextParameterException(BaseUri, context); }
+
 	this.context = context;
 	this.logger = LoggerFactory.getLogger(this.getClass());
+	this.baseUri = baseUri;
+	// register the file store instance
+	FILE_STORE_REGISTRY.put(getBaseUri(), this);
    }
 
    /**
@@ -117,23 +145,41 @@ public abstract class AbstractFileStore implements FileStore {
     */
    protected String buildResourceURi(final String resourceRelativePath) {
 
-	final String resourceRootUri = context.getString(UriRootPath);
-	final StringBuilder resourceUri = new StringBuilder(resourceRootUri != null ? resourceRootUri : "");
+	boolean appendBaseUri = false;
+	final String baseUri = getBaseUri();
+	final StringBuilder resourceUri = new StringBuilder();
 
-	// remove '/' is UriRootPath ends with '/' and resourceRelativePath starts with a '/'
-	if (resourceRootUri != null && resourceRootUri.endsWith("/") && resourceRelativePath != null && resourceRelativePath.startsWith("/")) {
+	if (resourceRelativePath != null && !resourceRelativePath.startsWith(baseUri)) {
+	   appendBaseUri = true;
+	   resourceUri.append(baseUri);
+	} else {
+	   resourceUri.append(resourceRelativePath);
+	}
+
+	// remove '/' is baseUri ends with '/' and resourceRelativePath starts with a '/'
+	if (appendBaseUri && baseUri != null && baseUri.endsWith("/") && resourceRelativePath != null && resourceRelativePath.startsWith("/")) {
 	   resourceUri.deleteCharAt(resourceUri.length() - 1);
 	} else {
-
 	   // add '/' if needed
-	   if (resourceRootUri != null && !resourceRootUri.endsWith("/") && resourceRelativePath != null && !resourceRelativePath.startsWith("/")) {
+	   if (appendBaseUri && baseUri != null && !baseUri.endsWith("/") && resourceRelativePath != null && !resourceRelativePath.startsWith("/")) {
 		resourceUri.append("/");
 	   }
 	}
 
-	resourceUri.append(resourceRelativePath);
+	if (appendBaseUri) {
+	   resourceUri.append(resourceRelativePath);
+	}
 
 	return resourceUri.toString();
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.store.FileStore#getBaseUri()
+    */
+   @NotNull
+   public String getBaseUri() {
+	return baseUri;
    }
 
    /*

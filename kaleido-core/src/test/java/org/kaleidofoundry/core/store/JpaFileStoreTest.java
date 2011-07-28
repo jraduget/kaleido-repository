@@ -53,7 +53,7 @@ public class JpaFileStoreTest extends AbstractFileStoreTest {
 	   em = UnmanagedEntityManagerFactory.currentEntityManager();
 
 	   // file store creation
-	   final RuntimeContext<FileStore> context = new FileStoreContextBuilder().withUriRootPath("jpa:/").build();
+	   final RuntimeContext<FileStore> context = new FileStoreContextBuilder().withBaseUri("jpa:/").build();
 	   fileStore = new JpaFileStore(context);
 
 	   // begin transaction

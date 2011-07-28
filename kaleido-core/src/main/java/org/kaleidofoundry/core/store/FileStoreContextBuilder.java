@@ -34,7 +34,7 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <th>Description</th>
  * </tr>
  * <tr>
- * <td>uriRootPath</td>
+ * <td>baseUri</td>
  * <td>all</td>
  * <td>file store uri root path, looks like (path is optional) :
  * <ul>
@@ -163,7 +163,7 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
 
    // * commons settings property name ****************
    /**
-    * file store uri root path, looks like (path is optional) :
+    * file store root path uri, which looks like (path is optional) :
     * <ul>
     * <li><code>http://host/</code> <b>or</b> <code>http://host/path</code></li>
     * <li><code>ftp://host/</code> <b>or</b> <code>ftp://host/path</code></li>
@@ -174,7 +174,7 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
     * </ul>
     * <b>uri schemes handled</b>: <code>http|https|ftp|file|classpath|webapp|...</code>
     */
-   public static final String UriRootPath = "uriRootPath";
+   public static final String BaseUri = "baseUri";
 
    /** file store read-only usage <code>true|false</code> */
    public static final String Readonly = "readonly";
@@ -332,12 +332,12 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
    // ** builder methods **************************
 
    /**
-    * @param uriRootPath
+    * @param baseUri
     * @return current builder instance
-    * @see FileStoreContextBuilder#UriRootPath
+    * @see FileStoreContextBuilder#BaseUri
     */
-   public FileStoreContextBuilder withUriRootPath(final String uriRootPath) {
-	getContextParameters().put(UriRootPath, uriRootPath);
+   public FileStoreContextBuilder withBaseUri(final String baseUri) {
+	getContextParameters().put(BaseUri, baseUri);
 	return this;
    }
 

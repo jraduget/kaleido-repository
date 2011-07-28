@@ -47,6 +47,14 @@ public class ClasspathFileStore extends AbstractFileStore implements FileStore {
    }
 
    /**
+    * @param baseUri
+    * @param context
+    */
+   public ClasspathFileStore(final String baseUri, final RuntimeContext<FileStore> context) {
+	super(baseUri, context);
+   }
+
+   /**
     * @return class classLoader to use
     */
    @NotNull

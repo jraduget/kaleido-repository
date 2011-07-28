@@ -18,7 +18,7 @@ package org.kaleidofoundry.core.spring.aop;
 import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreUri;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ProviderCode;
-import static org.kaleidofoundry.core.store.FileStoreContextBuilder.UriRootPath;
+import static org.kaleidofoundry.core.store.FileStoreContextBuilder.BaseUri;
 
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
@@ -36,7 +36,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 @Configurable
 public class MySpringBean {
 
-   @Context(value = "myStoreCtx", parameters = { @Parameter(name = UriRootPath, value = "classpath:/store") })
+   @Context(value = "myStoreCtx", parameters = { @Parameter(name = BaseUri, value = "classpath:/store") })
    private FileStore store;
 
    @Context(value = "myCacheManagerCtx", parameters = { @Parameter(name = ProviderCode, value = "ehCache1x"),

@@ -55,6 +55,12 @@ import org.kaleidofoundry.core.plugin.Declare;
 public interface FileStore extends Store<String, FileHandler> {
 
    /**
+    * @return root (base) path URI
+    */
+   @NotNull
+   String getBaseUri();
+
+   /**
     * Get a given resource <br/>
     * 
     * @param resourceRelativePath relative resource path (relative from the file store root uri)

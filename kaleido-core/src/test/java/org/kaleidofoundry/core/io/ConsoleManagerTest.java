@@ -20,6 +20,9 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
+import org.kaleidofoundry.core.store.ResourceNotFoundException;
+import org.kaleidofoundry.core.store.StoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,20 +35,23 @@ public class ConsoleManagerTest extends Assert {
 
    static final Logger LOGGER = LoggerFactory.getLogger(ConsoleManagerBean.class);
 
-   static final String ClassPathResource = "io/java_install.txt";
+   static final String ClassPathResource = "classpath:/io/java_install.txt";
 
    private ConsoleManagerBean console;
 
    @Before
-   public void setUp() {
+   public void setUp() throws ResourceNotFoundException {
+	I18nMessagesFactory.disableJpaControl();
 	console = new ConsoleManagerBean();
+	console.register("classpath:/io/java_install.txt");
    }
 
    /**
     * @throws IOException
+    * @throws StoreException
     */
    @Test
-   public void head() throws IOException {
+   public void head() throws IOException, StoreException {
 	String result;
 	StringBuilder bufferResult;
 
@@ -65,9 +71,10 @@ public class ConsoleManagerTest extends Assert {
 
    /**
     * @throws IOException
+    * @throws StoreException
     */
    @Test
-   public void tail() throws IOException {
+   public void tail() throws IOException, StoreException {
 	String result;
 	StringBuilder bufferResult;
 
@@ -88,9 +95,10 @@ public class ConsoleManagerTest extends Assert {
 
    /**
     * @throws IOException
+    * @throws StoreException
     */
    @Test
-   public void extract() throws IOException {
+   public void extract() throws IOException, StoreException {
 
 	String result;
 	StringBuilder bufferResult;
