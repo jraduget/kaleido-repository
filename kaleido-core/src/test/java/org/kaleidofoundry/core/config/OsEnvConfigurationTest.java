@@ -19,9 +19,11 @@ import java.net.URISyntaxException;
 
 import junit.framework.Assert;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.store.StoreException;
 
 /**
@@ -33,8 +35,14 @@ public class OsEnvConfigurationTest extends Assert {
 
    @Before
    public void setup() throws StoreException {
+	I18nMessagesFactory.disableJpaControl();
 	configuration = new OsEnvConfiguration("osEnv", new RuntimeContext<Configuration>(Configuration.class));
 	configuration.load();
+   }
+
+   @After
+   public void cleanup() {
+	I18nMessagesFactory.enableJpaControl();
    }
 
    @Test

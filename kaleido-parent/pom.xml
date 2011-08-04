@@ -89,10 +89,6 @@
 		<module>../kaleido-jee6</module>
 		<module>../kaleido-spring</module>
 		<module>../kaleido-guice</module>
-
-		<!-- integration tests modules  -->	
-		<module>../kaleido-it-parent</module>
-			
 	</modules>
 
 	<dependencies>
@@ -141,24 +137,15 @@
 		</repository>
 		<!-- Glassfish -->
 		<repository>
-			<id>maven2-glassfish-repository.dev.java.net</id>
+			<id>maven-glassfish-repository.dev.java.net</id>
 			<name>Java.net Repository for Maven</name>
 			<url>http://download.java.net/maven/glassfish/</url>
 			<layout>default</layout>
 		</repository>
-		<!-- RichFaces, Seam, ... -->
-		<repository>
-			<id>jboss.maven2</id>
-			<name>Jboss Maven 2</name>
-			<url>http://repository.jboss.com/maven2/</url>
-			<layout>default</layout>
-		</repository>
 		<!-- JPA eclipse link provider -->
 		<repository>
-			<id>EclipseLink Repo</id>
-			<!-- it is not the official eclipse, but the redirection works bad with maven 
-			<url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url> -->
-			<url>http://eclipse.ialto.org/rt/eclipselink/maven.repo/</url>
+			<id>eclipse-link-repo</id>
+			<url>http://download.eclipse.org/rt/eclipselink/maven.repo/</url>
 			<layout>default</layout>
 		</repository>
 	</repositories>
@@ -344,11 +331,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
-			</plugin>
-			<!-- releasing -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
+				<version>2.6</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -607,7 +590,7 @@
 	</build>
 
 	<profiles>
-		<!-- JavaEE 5 profile - Ejb 3.0, JPA 1.x, ... -->
+		<!-- JavaEE 5 profile - Ejb 3.0, JPA 1.x, JMS 1.1 ... -->
 		<profile>
 			<id>javaee5</id>
 			<activation>
@@ -618,8 +601,7 @@
 				</property>
 			</activation>
 			<dependencies>
-				<!-- persistence api - used only for testing (have to be before javax.persistence 
-					in classpath) -->
+				<!-- jpa api - it is only used for testing (it have to be before javax.persistence in classpath) -->
 				<dependency>
 					<groupId>org.eclipse.persistence</groupId>
 					<artifactId>eclipselink</artifactId>
@@ -632,30 +614,31 @@
 					<version>1.2.0</version>
 					<scope>test</scope>
 				</dependency>
+				<!-- jpa api -->
 				<dependency>
-					<groupId>javax.persistence</groupId>
-					<artifactId>persistence-api</artifactId>
-					<version>1.0</version>
+					<groupId>org.apache.geronimo.specs</groupId>
+					<artifactId>geronimo-jpa_1.0_spec</artifactId>
+					<version>1.1.2</version>
 					<scope>provided</scope>
 				</dependency>
 				<!-- web api -->
 				<dependency>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-					<version>2.5</version>
+					<groupId>org.apache.geronimo.specs</groupId>
+					<artifactId>geronimo-servlet_2.5_spec</artifactId>
+					<version>1.2</version>
 					<scope>provided</scope>
 				</dependency>
-				<!-- ejb api -->
+				<!--  ejb api -->
 				<dependency>
-					<groupId>javax.ejb</groupId>
-					<artifactId>ejb-api</artifactId>
-					<version>3.0</version>
-					<scope>provided</scope>
+    				<groupId>org.apache.geronimo.specs</groupId>
+    				<artifactId>geronimo-ejb_3.0_spec</artifactId>
+    				<version>1.0</version>
+    				<scope>provided</scope>
 				</dependency>
 				<!-- jms api -->
 				<dependency>
-					<groupId>javax.jms</groupId>
-					<artifactId>jms</artifactId>
+					<groupId>org.apache.geronimo.specs</groupId>
+					<artifactId>geronimo-jms_1.1_spec</artifactId>
 					<version>1.1</version>
 					<scope>provided</scope>
 				</dependency>

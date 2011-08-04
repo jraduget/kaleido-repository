@@ -23,10 +23,12 @@ import java.io.InputStream;
 
 import junit.framework.Assert;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 
 /**
  * IOHelper test cases
@@ -42,12 +44,18 @@ public class IOHelperTest extends Assert {
 
    @Before
    public void setup() throws IOException {
+	I18nMessagesFactory.disableJpaControl();
 	File tempFile = tempFolder.newFile("iohelper.test");
 	tempFilename = tempFile.getCanonicalPath();
 
 	final FileWriter writer = new FileWriter(tempFile);
 	writer.append("foo");
 	writer.close();
+   }
+
+   @After
+   public void cleanup() {
+	I18nMessagesFactory.enableJpaControl();
    }
 
    // ** Test methods ************************************************************************************************

@@ -24,6 +24,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
+ * you need to enable aspectj load time weaving (only for spring compatible aspect !! <br/>
+ * to use with :<br/>
+ * <br/>
+ * -javaagent:${M2_REPO}/org/springframework/spring-instrument/3.0.4.RELEASE/spring-instrument-3.0.4.RELEASE.jar
+ * or
+ * -javaagent:${M2_REPO}/org/aspectj/aspectjweaver/1.6.9/aspectjweaver-1.6.9.jar
+ * 
  * @author Jerome RADUGET
  */
 @RunWith(SpringJUnit4ClassRunner.class)

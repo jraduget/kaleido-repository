@@ -27,9 +27,6 @@ import org.kaleidofoundry.core.config.ConfigurationAdapter;
 import org.kaleidofoundry.core.config.ConfigurationChangeEvent;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.config.ConfigurationListener;
-import org.kaleidofoundry.core.lang.annotation.Task;
-import org.kaleidofoundry.core.lang.annotation.TaskLabel;
-import org.kaleidofoundry.core.lang.annotation.Tasks;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginHelper;
@@ -42,8 +39,6 @@ import org.kaleidofoundry.core.plugin.PluginHelper;
  * @param <T>
  */
 @ThreadSafe
-@Tasks(tasks = { @Task(labels = TaskLabel.Enhancement, comment = "use singletons annotation information and move default registry instance here ?"),
-	@Task(labels = TaskLabel.Enhancement, comment = "create default method introspection which provide instance") })
 public abstract class AbstractProviderService<T> implements ProviderService<T> {
 
    protected final Class<T> genericClassInterface;
@@ -54,6 +49,8 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
    /** created configurations listeners instances by configuration */
    protected final Map<String, ConfigurationListener> configurationsListeners;
 
+   protected final Plugin<?> currentPlugin;
+
    /**
     * @param genericClassInterface
     */
@@ -61,6 +58,8 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
 	this.genericClassInterface = genericClassInterface;
 	this.dynamicsRegisterContext = Collections.synchronizedList(new ArrayList<RuntimeContext<T>>());
 	this.configurationsListeners = new ConcurrentHashMap<String, ConfigurationListener>();
+	this.currentPlugin = PluginHelper.getInterfacePlugin(genericClassInterface);
+
 	registerConfigurationsListeners();
    }
 
@@ -109,7 +108,6 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
 		   public void propertiesChanges(final LinkedHashSet<ConfigurationChangeEvent> events) {
 
 			boolean fireChanges = false;
-			final Plugin<?> currentPlugin = PluginHelper.getInterfacePlugin(genericClassInterface);
 
 			// if one event is bound to current plugin (property name start by the plugin code) -> fire changes to runtime contexts
 			for (final ConfigurationChangeEvent evt : events) {

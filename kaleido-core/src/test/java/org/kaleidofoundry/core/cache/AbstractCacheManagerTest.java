@@ -18,10 +18,8 @@ package org.kaleidofoundry.core.cache;
 import java.text.DateFormat;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
@@ -48,24 +46,9 @@ public abstract class AbstractCacheManagerTest extends Assert {
    // ** init & clean
    // **************************************************************************************************
 
-   /**
-    * disable i18n message bundle control to speed up test (no need of a local derby instance startup)
-    */
-   @BeforeClass
-   public static void setupClass() {
-	I18nMessagesFactory.disableJpaControl();
-   }
-
-   /**
-    * re-enable i18n message bundle control
-    */
-   @AfterClass
-   public static void cleanupClass() {
-	I18nMessagesFactory.enableJpaControl();
-   }
-
    @Before
    public void setup() {
+	I18nMessagesFactory.disableJpaControl();
 	cacheManager = CacheManagerFactory.provides(getCacheImplementationCode(), getAvailableConfiguration(), getCacheManagerContext());
    }
 
@@ -77,6 +60,7 @@ public abstract class AbstractCacheManagerTest extends Assert {
 	if (cacheManager != null) {
 	   cacheManager.destroyAll();
 	}
+	I18nMessagesFactory.enableJpaControl();
    }
 
    // ** tests *********************************************************************************************************
@@ -84,15 +68,15 @@ public abstract class AbstractCacheManagerTest extends Assert {
    @Test
    public void defaultConfiguration() {
 	CacheManager defaultCacheManager = CacheManagerFactory.provides(getCacheImplementationCode(), null, getCacheManagerContext());
-	
+
 	_testCacheFactory(defaultCacheManager);
-	
+
 	// same instance have to be provided the second / third / ... times
 	assertSame(defaultCacheManager, CacheManagerFactory.provides(getCacheImplementationCode(), null, getCacheManagerContext()));
 	assertSame(defaultCacheManager, CacheManagerFactory.provides(getCacheImplementationCode(), null, getCacheManagerContext()));
 	assertSame(defaultCacheManager, CacheManagerFactory.provides(getCacheImplementationCode(), null, getCacheManagerContext()));
-	
-	// not same instance as default instance 
+
+	// not same instance as default instance
 	assertNotSame(defaultCacheManager, cacheManager);
    }
 
@@ -139,7 +123,7 @@ public abstract class AbstractCacheManagerTest extends Assert {
     */
    protected static void _testCacheFactory(final CacheManager cacheManager) {
 	assertNotNull(cacheManager);
-	
+
 	// some cache basic test
 	final Cache<Integer, Person> cache = cacheManager.getCache(Person.class);
 

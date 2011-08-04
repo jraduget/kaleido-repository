@@ -58,7 +58,7 @@ public class FtpStoreTest extends AbstractFileStoreTest {
    @After
    @Override
    public void cleanup() throws Throwable {
-	super.cleanup();
 	fakeFtpServer.stop();
+	super.cleanup();
    }
 }
