@@ -142,12 +142,27 @@
 			<url>http://download.java.net/maven/glassfish/</url>
 			<layout>default</layout>
 		</repository>
-		<!-- JPA eclipse link provider -->
+		<!-- Eclipse link for JPA provider -->
 		<repository>
 			<id>eclipse-link-repo</id>
 			<url>http://download.eclipse.org/rt/eclipselink/maven.repo/</url>
 			<layout>default</layout>
 		</repository>
+		<!-- Jboss public repository -->
+        <repository>
+          <id>jboss-public-repository-group</id>
+          <name>JBoss Public Maven Repository Group</name>
+          <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+          <layout>default</layout>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </snapshots>
+        </repository>      
 	</repositories>
 
 	<pluginRepositories>
