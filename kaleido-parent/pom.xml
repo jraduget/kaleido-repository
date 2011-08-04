@@ -303,6 +303,20 @@
 						</goals>
 					</execution>
 				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjrt</artifactId>
+						<version>${aspectj.version}</version>
+						<scope>compile</scope>
+					</dependency>				
+				<dependency>
+              		<groupId>org.aspectj</groupId>
+              		<artifactId>aspectjtools</artifactId>
+              		<version>${aspectj.version}</version>
+              		<scope>compile</scope>
+        		</dependency>						 					
+				</dependencies>
 			</plugin>
 			<!-- packaging -->
 			<plugin>
