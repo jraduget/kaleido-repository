@@ -67,6 +67,13 @@ public class MainArgsConfiguration extends AbstractConfiguration implements Conf
 	this(name, (String) null, runtimeContext);
    }
 
+   /**
+    * @see AbstractConfiguration#AbstractConfiguration()
+    */
+   MainArgsConfiguration() {
+	super();
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.AbstractConfiguration#loadProperties(org.kaleidofoundry.core.store.ResourceHandler,

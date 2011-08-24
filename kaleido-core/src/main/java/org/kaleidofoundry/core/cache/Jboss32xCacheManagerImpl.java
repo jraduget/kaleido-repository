@@ -27,7 +27,6 @@ import java.util.Map;
 import org.jboss.cache.CacheFactory;
 import org.jboss.cache.DefaultCacheFactory;
 import org.jboss.cache.config.ConfigurationException;
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Task;
@@ -81,6 +80,14 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
 	destroy(initTestCacheName);
    }
 
+   /**
+    * @see AbstractCacheManager#AbstractCacheManager()
+    */
+   Jboss32xCacheManagerImpl() {
+	super();
+	cacheManager = null;
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheManager#getDefaultConfiguration()
@@ -108,7 +115,7 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
    public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
 	Cache<K, V> cache = cachesByName.get(name);
 	if (cache == null) {
-	   cache = new Jboss32xCacheImpl<K, V>(name, context);
+	   cache = new Jboss32xCacheImpl<K, V>(name, this, context);
 	   cachesByName.put(name, cache);
 	}
 	return cache;
@@ -138,10 +145,6 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
 	   LOGGER.info(CacheMessageBundle.getMessage("cache.destroy.info", getMetaInformations(), name));
 	   destroy(name);
 	}
-
-	// unregister cache manager instance
-	CacheManagerProvider.getRegistry()
-		.remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.jbossCache3x.name(), getCurrentConfiguration()));
    }
 
    /*

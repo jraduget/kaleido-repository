@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	id="WebApp_ID" version="2.5">
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_${webapp.xsd.version}.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_${webapp.xsd.version}.xsd"
+	id="WebApp_ID" version="${webapp.version}">
 	<display-name>kaleido-it-war</display-name>
 
 	<context-param>
@@ -14,7 +14,7 @@
 	<context-param>
 		<description>the configurations to load separated by a comma</description>
 		<param-name>kaleido.configurations</param-name>
-		<param-value>myConfig=classpath:/config/myConfig.properties,myCacheConfig=classpath:/cache/myContext.properties,myI18nConfig=classpath:/i18n/myContext.properties</param-value>
+		<param-value>myConfig=classpath:/config/myConfig.properties,myCacheConfig=classpath:/cache/myContext.properties,myI18nConfig=classpath:/i18n/myContext.properties,myStore=classpath:/store/myContext.properties</param-value>
 	</context-param>
 
 	<listener>

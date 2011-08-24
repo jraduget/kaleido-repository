@@ -16,8 +16,8 @@
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.DefaultLocalCachePluginName;
-import static org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum.local;
 import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
+import static org.kaleidofoundry.core.cache.CacheProvidersEnum.local;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -98,6 +98,13 @@ public class LocalCacheImpl<K extends Serializable, V extends Serializable> exte
 
    }
 
+   /**
+    * @see AbstractCache#AbstractCache()
+    */
+   LocalCacheImpl() {
+	this.cacheManager = null;
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.AbstractCache#doGet(java.io.Serializable)
@@ -174,11 +181,10 @@ public class LocalCacheImpl<K extends Serializable, V extends Serializable> exte
 	return CacheableMap;
    }
 
-   /**
-    * Stop and destroy cache instance
-    */
+   @Override
    void destroy() {
 	CacheableMap.clear();
-	hasBeenDestroy = true;
+	cacheManager.cachesByName.remove(getName());
+	super.destroy();
    }
 }

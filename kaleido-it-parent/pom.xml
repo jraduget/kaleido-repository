@@ -16,10 +16,15 @@
 
 	<modules>
 		<module>../kaleido-it-core</module>
-		<module>../kaleido-it-ejb</module>
+		<module>../kaleido-it-jee5</module>
+		<module>../kaleido-it-jee6</module>
 		<module>../kaleido-it-war</module>
 		<module>../kaleido-it-ear</module>
 	</modules>
+	
+	<properties>
+		<jboss-infinispan.version>4.0.0.FINAL</jboss-infinispan.version>
+	</properties>
 	
 	<dependencies>
 		<!-- jmeter have no maven artifact in repository - define ${jmeter.home} in your ~/.m2/settings.xml -->

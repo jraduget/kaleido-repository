@@ -16,6 +16,8 @@
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.CACHE_PROVIDER_ENV;
+import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreUri;
+import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ProviderCode;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.CacheMessageBundle;
 
 import java.lang.reflect.Constructor;
@@ -24,7 +26,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.context.AbstractProviderService;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
@@ -53,29 +54,41 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
    /**
     * main configuration registry instance (shared between providers instances)
     */
-   private static final Registry<Integer, CacheManager> REGISTRY = new Registry<Integer, CacheManager>();
+   private static final Registry<String, CacheManager> REGISTRY = new Registry<String, CacheManager>();
 
    // default cache provider code to use
-   private static final String DEFAULT_CACHE_PROVIDER;
+   static String DEFAULT_CACHE_PROVIDER;
    // set of reserved cache name
-   private static final Set<String> RESERVED_CACHE_NAME;
+   static Set<String> RESERVED_CACHE_NAME;
 
    static {
-	final String userCacheImpl = System.getProperty(CACHE_PROVIDER_ENV);
+	// try to get java env variable : -Dcache.provider=local|ehCache2x|jbossCache3x|coherence3x|infinispan4x
+	init(System.getProperties().getProperty(CACHE_PROVIDER_ENV));
+   }
+
+   /**
+    * load the default cache provider to use
+    * 
+    * @param cacheProviderCode
+    * @see CacheProvidersEnum
+    */
+   static synchronized void init(final String cacheProviderCode) {
+
 	Plugin<CacheManager> defaultCachePlugin = null;
 	boolean userCacheImplNotFound = false;
 
-	if (userCacheImpl != null && !"".equals(userCacheImpl.trim())) {
-	   defaultCachePlugin = findCacheManagerByPluginCode(userCacheImpl);
+	if (cacheProviderCode != null && !"".equals(cacheProviderCode.trim())) {
+	   defaultCachePlugin = findCacheManagerByPluginCode(CacheConstants.CacheManagerPluginName + "." + cacheProviderCode);
 	   if (defaultCachePlugin == null) {
 		userCacheImplNotFound = true;
 	   }
 	}
-	DEFAULT_CACHE_PROVIDER = defaultCachePlugin != null ? defaultCachePlugin.getName() : DefaultCacheProviderEnum.local.name();
+	DEFAULT_CACHE_PROVIDER = defaultCachePlugin != null ? defaultCachePlugin.getName() : CacheConstants.CacheManagerPluginName + "."
+		+ CacheProvidersEnum.local.name();
 	RESERVED_CACHE_NAME = Collections.synchronizedSet(new HashSet<String>());
 
 	if (userCacheImplNotFound) {
-	   LOGGER.warn(CacheMessageBundle.getMessage("cache.provider.notfound", userCacheImpl));
+	   LOGGER.warn(CacheMessageBundle.getMessage("cache.provider.notfound", cacheProviderCode));
 	}
 
 	LOGGER.info(CacheMessageBundle.getMessage("cache.provider.default", DEFAULT_CACHE_PROVIDER));
@@ -96,7 +109,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
     */
    @NotNull
    public CacheManager provides() throws ProviderException {
-	return provides(DEFAULT_CACHE_PROVIDER, null, new RuntimeContext<CacheManager>(CacheManager.class));
+	return provides(DEFAULT_CACHE_PROVIDER);
    }
 
    /**
@@ -107,7 +120,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
     */
    @NotNull
    public CacheManager provides(@NotNull final String providerCodeCode) throws ProviderException {
-	return provides(providerCodeCode, null, new RuntimeContext<CacheManager>(CacheManager.class));
+	return provides(providerCodeCode, null, new RuntimeContext<CacheManager>(providerCodeCode, CacheManager.class));
    }
 
    /**
@@ -120,12 +133,8 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
    @NotNull
    @Override
    public CacheManager _provides(final RuntimeContext<CacheManager> context) throws ProviderException {
-	String providerCode = context.getString(CacheManagerContextBuilder.ProviderCode);
-	final String providerConfiguration = context.getString(CacheManagerContextBuilder.FileStoreUri);
-
-	if (StringHelper.isEmpty(providerCode)) {
-	   providerCode = DEFAULT_CACHE_PROVIDER;
-	}
+	final String providerCode = context.getString(ProviderCode, DEFAULT_CACHE_PROVIDER);
+	final String providerConfiguration = context.getString(FileStoreUri);
 	return provides(providerCode, providerConfiguration, context);
    }
 
@@ -139,7 +148,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
     */
    @NotNull
    public CacheManager provides(@NotNull final String providerCode, final String configuration) throws ProviderException {
-	return provides(providerCode, configuration, new RuntimeContext<CacheManager>(CacheManager.class));
+	return provides(providerCode, configuration, new RuntimeContext<CacheManager>(providerCode, CacheManager.class));
    }
 
    /**
@@ -153,13 +162,12 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
    @NotNull
    public CacheManager provides(@NotNull final String providerCode, final String configuration, @NotNull final RuntimeContext<CacheManager> context)
 	   throws ProviderException {
-
-	final Integer cacheManagerId = getCacheManagerId(providerCode, configuration);
-	CacheManager cacheManager = REGISTRY.get(cacheManagerId);
+	final String contextName = !StringHelper.isEmpty(context.getName()) ? context.getName() : DEFAULT_CACHE_PROVIDER;
+	CacheManager cacheManager = REGISTRY.get(contextName);
 
 	if (cacheManager == null) {
 	   cacheManager = create(providerCode, configuration, context);
-	   REGISTRY.put(cacheManagerId, cacheManager);
+	   REGISTRY.put(contextName, cacheManager);
 	}
 
 	return cacheManager;
@@ -168,7 +176,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
    /**
     * @return cache manager registry. each instance provided will be registered here
     */
-   public static Registry<Integer, CacheManager> getRegistry() {
+   public static Registry<String, CacheManager> getRegistry() {
 	return REGISTRY;
    }
 
@@ -181,13 +189,10 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
    }
 
    /**
-    * @param providerCode
-    * @param configuration
-    * @return unique cache manager identifier
+    * @param contextName
     */
-   public static Integer getCacheManagerId(@NotNull final String providerCode, final String configuration) {
-	return (providerCode.hashCode() * 128) + (configuration != null ? configuration.hashCode() : 0);
-
+   static void removeFromRegistry(final String contextName) {
+	getRegistry().remove(!StringHelper.isEmpty(contextName) ? contextName : DEFAULT_CACHE_PROVIDER);
    }
 
    /**
@@ -202,13 +207,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 	   @NotNull final RuntimeContext<CacheManager> context) throws ProviderException {
 
 	// only for optimization reasons
-	if (providerCode.equalsIgnoreCase(DefaultCacheProviderEnum.local.name())) { return new LocalCacheManagerImpl(configuration, context); }
-	if (providerCode.equalsIgnoreCase(DefaultCacheProviderEnum.ehCache1x.name())) { return new EhCache1xManagerImpl(configuration, context); }
-	if (providerCode.equalsIgnoreCase(DefaultCacheProviderEnum.coherence3x.name())) { return new Coherence3xCacheManagerImpl(configuration, context); }
-	if (providerCode.equalsIgnoreCase(DefaultCacheProviderEnum.infinispan4x.name())) { return new Infinispan4xCacheManagerImpl(configuration, context); }
-	if (providerCode.equalsIgnoreCase(DefaultCacheProviderEnum.jbossCache3x.name())) { return new Jboss32xCacheManagerImpl(configuration, context); }
-	// if (providerCode.equalsIgnoreCase(DefaultCacheEnum.gigaspace7x.name())) { return new GigaSpaceManager7xImpl(configuration,
-	// context); }
+	if (providerCode.equalsIgnoreCase(CacheProvidersEnum.local.name())) { return new LocalCacheManagerImpl(configuration, context); }
 
 	// dynamic lookup into register plugin
 	final Set<Plugin<CacheManager>> pluginImpls = PluginFactory.getImplementationRegistry().findByInterface(CacheManager.class);
@@ -220,7 +219,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 
 		final Declare declarePlugin = impl.getAnnotation(Declare.class);
 
-		if (providerCode.equalsIgnoreCase(declarePlugin.value())) {
+		if (declarePlugin.value().endsWith(providerCode)) {
 		   final Constructor<? extends CacheManager> constructor = impl.getConstructor(String.class, RuntimeContext.class);
 		   return constructor.newInstance(configuration, context);
 		}
@@ -235,7 +234,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 			"String configuration, RuntimeContext<CacheManager> context");
 	   } catch (final InvocationTargetException e) {
 		if (e.getCause() instanceof CacheConfigurationException) {
-		   throw new ProviderException(e.getCause());
+		   throw (CacheConfigurationException) e.getCause();
 		} else {
 		   throw new ProviderException("context.provider.error.InvocationTargetException", impl.getName(),
 			   "String configuration, RuntimeContext<CacheManager> context", e.getCause().getClass().getName(), e.getMessage());

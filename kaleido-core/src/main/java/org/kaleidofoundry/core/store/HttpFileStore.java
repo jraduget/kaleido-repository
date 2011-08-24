@@ -71,6 +71,13 @@ public class HttpFileStore extends AbstractFileStore implements FileStore {
 	super(baseUri, context);
    }
 
+   /**
+    * @see AbstractFileStore#AbstractFileStore()
+    */
+   HttpFileStore() {
+	super();
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.store.AbstractFileStore#getStoreType()

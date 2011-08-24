@@ -75,13 +75,13 @@ public class DefaultMessageBundle extends ResourceBundle implements I18nMessages
 
 	// internal kaleidofoundry resource bundle, does not use internal cache
 	if (InternalBundleEnum.isInternalBundle(resourceName)) {
-	   LOGGER.debug("Create message bundle (without cache) for '{}'", resourceName);
+	   LOGGER.debug("Create message bundle with no cache provider for '{}'", resourceName);
 	   resourceBundleNoCache = properties;
 	   resourceBundleCache = null;
 	}
 	// user resource bundle, does use internal cache
 	else {
-	   LOGGER.debug("Create message bundle (with cacheManager) for '{}'", resourceName);
+	   LOGGER.debug("Create message bundle with cache provider for '{}'", resourceName);
 	   final CacheManager cacheManager;
 	   final String cacheManagerContextRef = context.getString(I18nContextBuilder.CacheManagerRef);
 
@@ -99,6 +99,17 @@ public class DefaultMessageBundle extends ResourceBundle implements I18nMessages
 	}
 
 	this.resourceName = resourceName;
+   }
+
+   /**
+    * don't use it,
+    * this constructor is only needed and used by some IOC framework like spring.
+    */
+   DefaultMessageBundle() {
+	this.resourceName = null;
+	this.context = null;
+	this.resourceBundleCache = null;
+	this.resourceBundleNoCache = null;
    }
 
    /*

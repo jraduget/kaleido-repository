@@ -13,9 +13,9 @@
 	<name>KaleidoFoundry integration tests webapp</name>
 	<packaging>war</packaging>
 
-	<build>		
+	<build>
 		<plugins>
-			<!-- Enable aspectJ AOP for @NotNull, @InjectContext, ... -->
+			<!-- Enable aspectJ AOP for @NotNull, @Context, ... -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
@@ -37,6 +37,23 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+				<configuration>
+					<webResources>
+						<resource>							
+							<filtering>true</filtering>
+							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
+							<targetPath>WEB-INF</targetPath>
+							<includes>
+                				<include>web.xml</include>
+                			</includes>							
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -48,20 +65,24 @@
 			<artifactId>kaleido-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
-		<!-- Core integration testing  -->
+
+		<!-- Core integration testing -->
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
 			<artifactId>kaleido-it-core</artifactId>
 			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
-          			<groupId>org.kaleidofoundry</groupId>
-          			<artifactId>kaleido-it-ejb</artifactId>
-        		</exclusion>
+					<groupId>org.kaleidofoundry</groupId>
+					<artifactId>kaleido-it-jee5</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.kaleidofoundry</groupId>
+					<artifactId>kaleido-it-jee6</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<!-- Framework for logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -72,7 +93,7 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>${log4j.version}</version>
-		</dependency>		
+		</dependency>
 
 	</dependencies>
 

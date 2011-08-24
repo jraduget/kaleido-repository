@@ -36,6 +36,7 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Nullable;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.lang.annotation.TaskLabel;
+import org.kaleidofoundry.core.lang.annotation.Tasks;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginHelper;
@@ -159,7 +160,9 @@ import org.kaleidofoundry.core.util.StringHelper;
  */
 @Immutable(comment = "instance which have been injected using @Context are immutable after injection")
 @ThreadSafe
-@Task(comment = "comment and review interaction between configuration and runtime context... use case, creation, event handling... have to be thread safe...", labels = TaskLabel.Review)
+@Tasks(tasks = {
+	@Task(comment = "comment and review interaction between configuration and runtime context... use case, creation, event handling... have to be thread safe...", labels = TaskLabel.Review),
+	@Task(comment = "implements Serializeable, check Configuration[] fields transiant.", labels = TaskLabel.Enhancement) })
 public class RuntimeContext<T> extends AbstractPropertyAccessor {
 
    /** Context property name, used to enable the component listening of configuration parameters changes */
@@ -312,6 +315,18 @@ public class RuntimeContext<T> extends AbstractPropertyAccessor {
    }
 
    /**
+    * create named {@link RuntimeContext}, with the given type prefix and using given runtime context configurations
+    * 
+    * @param name context name
+    * @param type if type is annotated {@link Plugin}, the current prefix will be the plugin code, otherwise the type package
+    * @param parameters optional static parameters
+    * @param context
+    */
+   public RuntimeContext(final String name, final Class<T> type, final ConcurrentMap<String, Serializable> parameters, @NotNull final RuntimeContext<?> context) {
+	this(name, type, false, parameters, context.getConfigurations());
+   }
+
+   /**
     * @param name context name
     * @param prefix prefix an optional prefix for the properties name (it can be used to categorized your own
     *           RuntimeContext)
@@ -358,7 +373,7 @@ public class RuntimeContext<T> extends AbstractPropertyAccessor {
     * @return new runtime context instance, build from given annotation
     * @throws IllegalContextParameterException if one of {@link Context#configurations()} is not registered
     */
-   protected static <T> RuntimeContext<T> createFrom(@NotNull final Context context, @Nullable final String defaultName, final Class<T> type) {
+   public static <T> RuntimeContext<T> createFrom(@NotNull final Context context, @Nullable final String defaultName, final Class<T> type) {
 
 	// name of the context
 	final String contextName = !StringHelper.isEmpty(context.value()) ? context.value() : defaultName;
@@ -400,9 +415,9 @@ public class RuntimeContext<T> extends AbstractPropertyAccessor {
     * @throws IllegalArgumentException is the given field is not annotated {@link Context}
     * @throws ContextException if one of {@link Context#configurations()} is not registered
     */
-   protected static RuntimeContext<?> createFromField(@NotNull final Field annotatedField) {
+   public static RuntimeContext<?> createFromField(@NotNull final Field annotatedField) {
 	final Context context = annotatedField.getAnnotation(Context.class);
-	if (context == null) { throw new IllegalArgumentException(ContextMessageBundle.getMessage("context.annotation.field.illegal", Context.class.getName())); }
+	if (context == null) { throw new IllegalArgumentException(ContextMessageBundle.getMessage("context.annotation.missing", annotatedField.getName())); }
 
 	final Plugin<?> plugin = PluginHelper.getInterfacePlugin(annotatedField.getDeclaringClass());
 	return createFrom(context, annotatedField.getName(), plugin != null ? plugin.getAnnotatedClass() : null);
@@ -417,7 +432,7 @@ public class RuntimeContext<T> extends AbstractPropertyAccessor {
     * @param defaultName default context name if {@link Context} annotation provide no one (field name, argument name, ...)
     * @param contextTarget
     */
-   static <T> void createFrom(@NotNull final Context context, @Nullable final String defaultName, @NotNull final RuntimeContext<T> contextTarget) {
+   public static <T> void createFrom(@NotNull final Context context, @Nullable final String defaultName, @NotNull final RuntimeContext<T> contextTarget) {
 	final RuntimeContext<T> newOne = createFrom(context, defaultName, contextTarget.getType());
 	copyFrom(newOne, contextTarget);
 	contextTarget.hasBeenInjectedByAnnotationProcessing = true;
@@ -432,7 +447,7 @@ public class RuntimeContext<T> extends AbstractPropertyAccessor {
     * @param target
     * @throws IllegalStateException is current context have already been injected
     */
-   static void copyFrom(final RuntimeContext<?> origin, final RuntimeContext<?> target) {
+   public static void copyFrom(final RuntimeContext<?> origin, final RuntimeContext<?> target) {
 	if (!target.hasBeenInjectedByAnnotationProcessing) {
 	   if (StringHelper.isEmpty(target.name)) {
 		target.name = origin.name;

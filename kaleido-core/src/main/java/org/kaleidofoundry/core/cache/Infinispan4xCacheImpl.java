@@ -16,8 +16,8 @@
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.InfinispanCachePluginName;
-import static org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum.infinispan4x;
 import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
+import static org.kaleidofoundry.core.cache.CacheProvidersEnum.infinispan4x;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -101,6 +101,14 @@ public class Infinispan4xCacheImpl<K extends Serializable, V extends Serializabl
 	this.cacheManager.cachesByName.put(name, this);
    }
 
+   /**
+    * @see AbstractCache#AbstractCache()
+    */
+   Infinispan4xCacheImpl() {
+	this.cache = null;
+	this.cacheManager = null;
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.AbstractCache#doGet(java.io.Serializable)
@@ -179,6 +187,18 @@ public class Infinispan4xCacheImpl<K extends Serializable, V extends Serializabl
     */
    protected Cache<K, V> getInfinispanCache() {
 	return cache;
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.AbstractCache#destroy()
+    */
+   @Override
+   void destroy() {
+	cache.clear();
+	cache.stop();
+	cacheManager.cachesByName.remove(getName());
+	super.destroy();
    }
 
 }

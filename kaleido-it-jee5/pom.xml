@@ -1,0 +1,92 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.kaleidofoundry</groupId>
+		<artifactId>kaleido-it-parent</artifactId>
+		<version>0.8.1-SNAPSHOT</version>
+		<relativePath>../kaleido-it-parent/pom.xml</relativePath>
+	</parent>
+
+	<artifactId>kaleido-it-jee5</artifactId>
+	<name>KaleidoFoundry integration tests jee5</name>
+	<packaging>ejb</packaging>
+
+	<build>
+		<plugins>
+			<!-- Enable aspectJ AOP for @NotNull, @Context, ... -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>aspectj-maven-plugin</artifactId>
+				<version>1.3.1</version>
+				<configuration>
+					<aspectLibraries>
+						<aspectLibrary>
+							<groupId>org.kaleidofoundry</groupId>
+							<artifactId>kaleido-core</artifactId>
+						</aspectLibrary>
+					</aspectLibraries>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+							<goal>test-compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- EJB3 maven plugin  -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ejb-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<ejbVersion>3.0</ejbVersion>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.kaleidofoundry</groupId>
+			<artifactId>kaleido-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-core</artifactId>
+			<version>${jboss-infinispan.version}</version>
+		</dependency>		
+		
+		<!-- Glassfish client - need system path in order to work (glassfish install) -->
+		<dependency>
+			<groupId>org.glassfish.appclient</groupId>
+			<artifactId>gf-client</artifactId>
+			<version>3.0.1</version>
+			<systemPath>${glassfishv3.home}/glassfish/modules/gf-client.jar</systemPath>
+			<optional>true</optional>
+			<scope>system</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.kaleidofoundry</groupId>
+			<artifactId>kaleido-core</artifactId>
+			<version>${project.version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>			
+		</dependency>
+				
+	</dependencies>
+
+</project>

@@ -38,7 +38,7 @@ import org.kaleidofoundry.core.context.Parameter;
  * Resource file : "classpath:/cache/myContext.properties" contains :
  * 
  * <pre>
- * cacheManager.myCacheManager.providerCode=ehCache1x
+ * cacheManager.myCacheManager.providerCode=ehCache2x
  * cacheManager.myCacheManager.fileStoreUri=classpath:/cache/ehcache.xml
  * 
  * # sample if your cache configuration is accessible from an external file store

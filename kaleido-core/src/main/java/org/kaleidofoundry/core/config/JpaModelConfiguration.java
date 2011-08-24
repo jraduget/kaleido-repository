@@ -65,6 +65,13 @@ public class JpaModelConfiguration extends AbstractConfiguration {
 	super(name, resourceUri, context);
    }
 
+   /**
+    * @see AbstractConfiguration#AbstractConfiguration()
+    */
+   JpaModelConfiguration() {
+	super();
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.AbstractConfiguration#loadProperties(org.kaleidofoundry.core.store.FileHandler,

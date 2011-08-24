@@ -22,22 +22,6 @@ package org.kaleidofoundry.core.cache;
  */
 public interface CacheConstants {
 
-   /**
-    * Default cache enum code.
-    * 
-    * @author Jerome RADUGET
-    */
-   static enum DefaultCacheProviderEnum {
-
-	/* If you change an enum name, please changed below ;-) */
-	ehCache1x,
-	jbossCache3x,
-	infinispan4x,
-	coherence3x,
-	gigaspace7x,
-	local;
-   }
-
    /** Java system environment variable to set default cache provider to use */
    String CACHE_PROVIDER_ENV = "cache.provider";
 
@@ -54,10 +38,10 @@ public interface CacheConstants {
    String DefaultLocalCachePluginName = "cache.local";
 
    /** EhCache cache manager implementation declare plugin name */
-   String EhCacheManagerPluginName = "cacheManager.ehCache1x";
+   String EhCacheManagerPluginName = "cacheManager.ehCache2x";
 
    /** EhCache implementation declare plugin name */
-   String EhCachePluginName = "cache.ehCache1x";
+   String EhCachePluginName = "cache.ehCache2x";
 
    /** JbossCache implementation declare plugin name */
    String JbossCachePluginName = "cache.jbossCache3x";

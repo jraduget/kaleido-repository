@@ -16,8 +16,8 @@
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.JbossCachePluginName;
-import static org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum.jbossCache3x;
 import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
+import static org.kaleidofoundry.core.cache.CacheProvidersEnum.jbossCache3x;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -109,6 +109,15 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
    }
 
    /**
+    * @see AbstractCache#AbstractCache()
+    */
+   Jboss32xCacheImpl() {
+	this.cache = null;
+	this.root = null;
+	this.cacheManager = null;
+   }
+
+   /**
     * @return new jboss started cache instance
     */
    protected Node<K, V> createAndStartIt() {
@@ -172,10 +181,12 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
    /**
     * Stop and destroy cache instance
     */
+   @Override
    void destroy() {
 	cache.stop();
 	cache.destroy();
-	hasBeenDestroy = true;
+	cacheManager.cachesByName.remove(getName());
+	super.destroy();
    }
 
    /*

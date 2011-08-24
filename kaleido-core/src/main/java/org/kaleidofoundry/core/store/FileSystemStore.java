@@ -55,6 +55,13 @@ public class FileSystemStore extends AbstractFileStore implements FileStore {
 	super(baseUri, context);
    }
 
+   /**
+    * @see AbstractFileStore#AbstractFileStore()
+    */
+   FileSystemStore() {
+	super();
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.store.AbstractFileStore#doLoad(java.net.URI)

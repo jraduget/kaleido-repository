@@ -87,6 +87,13 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
 	super(name, resourceUri, context);
    }
 
+   /**
+    * @see AbstractConfiguration#AbstractConfiguration()
+    */
+   XmlConfiguration() {
+	super();
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.AbstractConfiguration#loadProperties(org.kaleidofoundry.core.store.ResourceHandler,

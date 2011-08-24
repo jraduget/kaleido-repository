@@ -13,34 +13,13 @@
 	<name>KaleidoFoundry integration tests ear</name>
 	<packaging>ear</packaging>
 
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-ear-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<filtering>true</filtering>
-					<modules>
-						<jarModule>
-							<groupId>org.kaleidofoundry</groupId>
-							<artifactId>kaleido-it-core</artifactId>							
-						</jarModule>
-						<ejbModule>
-							<groupId>org.kaleidofoundry</groupId>
-							<artifactId>kaleido-it-ejb</artifactId>
-						</ejbModule>
-						<webModule>
-							<groupId>org.kaleidofoundry</groupId>
-							<artifactId>kaleido-it-war</artifactId>
-							<contextRoot>kaleido-it</contextRoot>
-						</webModule>
-					</modules>
-				</configuration>
-			</plugin>
-		</plugins>		
-	</build>
-
 	<dependencies>
+		<dependency>
+			<groupId>org.kaleidofoundry</groupId>
+			<artifactId>kaleido-core</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
 			<artifactId>kaleido-it-core</artifactId>
@@ -49,7 +28,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
-			<artifactId>kaleido-it-ejb</artifactId>
+			<artifactId>kaleido-it-jee5</artifactId>
 			<version>${project.version}</version>
 			<type>ejb</type>
 		</dependency>
@@ -59,7 +38,121 @@
 			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
-	</dependencies>	
-	
+		<dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-core</artifactId>
+			<version>${jboss-infinispan.version}</version>
+			<type>jar</type>
+		</dependency>		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<type>jar</type>
+		</dependency>
+	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>javaee5</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>javaee</name>
+					<value>5</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-ear-plugin</artifactId>
+						<version>2.6</version>
+						<configuration>
+							<filtering>true</filtering>
+							<defaultLibBundleDir>lib</defaultLibBundleDir>
+							<modules>
+								<jarModule>
+									<groupId>org.kaleidofoundry</groupId>
+									<artifactId>kaleido-core</artifactId>
+								</jarModule>
+								<jarModule>
+									<groupId>org.kaleidofoundry</groupId>
+									<artifactId>kaleido-it-core</artifactId>
+								</jarModule>	
+								<ejbModule>
+									<groupId>org.kaleidofoundry</groupId>
+									<artifactId>kaleido-it-jee5</artifactId>
+								</ejbModule>
+								<webModule>
+									<groupId>org.kaleidofoundry</groupId>
+									<artifactId>kaleido-it-war</artifactId>
+									<contextRoot>kaleido-it</contextRoot>
+								</webModule>
+							</modules>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>javaee6</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>javaee</name>
+					<value>6</value>
+				</property>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>org.kaleidofoundry</groupId>
+					<artifactId>kaleido-it-jee6</artifactId>
+					<version>${project.version}</version>
+					<type>ejb</type>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-ear-plugin</artifactId>
+						<version>2.6</version>
+						<configuration>
+							<filtering>true</filtering>
+							<defaultLibBundleDir>lib</defaultLibBundleDir>
+							<modules>
+								<jarModule>
+									<groupId>org.kaleidofoundry</groupId>
+									<artifactId>kaleido-core</artifactId>
+								</jarModule>
+								<jarModule>
+									<groupId>org.kaleidofoundry</groupId>
+									<artifactId>kaleido-it-core</artifactId>
+								</jarModule>
+								<ejbModule>
+									<groupId>org.kaleidofoundry</groupId>
+									<artifactId>kaleido-it-jee5</artifactId>
+								</ejbModule>
+								<ejbModule>
+									<groupId>org.kaleidofoundry</groupId>
+									<artifactId>kaleido-it-jee6</artifactId>
+								</ejbModule>
+								<webModule>
+									<groupId>org.kaleidofoundry</groupId>
+									<artifactId>kaleido-it-war</artifactId>
+									<contextRoot>kaleido-it</contextRoot>
+								</webModule>
+							</modules>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>

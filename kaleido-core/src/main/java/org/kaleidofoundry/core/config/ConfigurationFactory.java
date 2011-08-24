@@ -127,6 +127,16 @@ public abstract class ConfigurationFactory {
    }
 
    /**
+    * does configuration is registered
+    * 
+    * @param config
+    * @return <code>true|false</code>
+    */
+   public static boolean isRegistered(final String config) {
+	return ConfigurationFactory.getRegistry().containsKey(config);
+   }
+
+   /**
     * @return shortcut to main configuration registry stored in {@link ConfigurationProvider}
     */
    public static final ConfigurationRegistry getRegistry() {

@@ -15,7 +15,6 @@
  */
 package org.kaleidofoundry.core.cache;
 
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
@@ -32,12 +31,12 @@ public class CoherenceCacheManagerTest extends AbstractCacheManagerTest {
 
    @Override
    protected String getCacheImplementationCode() {
-	return DefaultCacheProviderEnum.coherence3x.name();
+	return CacheProvidersEnum.coherence3x.name();
    }
 
    @Override
    protected RuntimeContext<CacheManager> getCacheManagerContext() {
-	return new RuntimeContext<CacheManager>(CacheManager.class);
+	return new RuntimeContext<CacheManager>("coherenceCacheManager", CacheManager.class);
    }
 
 }

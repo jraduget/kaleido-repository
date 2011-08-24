@@ -29,11 +29,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.cache.Cache;
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
-import org.kaleidofoundry.core.cache.CacheManagerProvider;
-import org.kaleidofoundry.core.cache.EhCache1xImpl;
+import org.kaleidofoundry.core.cache.EhCache2xImpl;
 import org.kaleidofoundry.core.store.StoreException;
 
 /**
@@ -57,6 +55,10 @@ public class ConfigurationIntegrationTest {
 	ConfigurationFactory.unregister("myConfigCtx");
 	// cleanup configuration
 	ConfigurationFactory.unregister("myConfig");
+	// cleanup cache manager
+	if (CacheManagerFactory.getRegistry().containsKey("myCacheManager")) {
+	   CacheManagerFactory.getRegistry().get("myCacheManager").destroyAll();
+	}
    }
 
    /**
@@ -86,13 +88,12 @@ public class ConfigurationIntegrationTest {
 	assertFalse(confSample.getConfiguration().isStorable());
 	assertEquals(Boolean.TRUE, confSample.getConfiguration().getBoolean("myapp.sample.http"));
 
-	// assert that ehcache instance are right been created and feeded
-	Integer cacheManagerRegistryId = CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.ehCache1x.name(), "classpath:/config/ehcache.xml");
-	CacheManager cacheManager = CacheManagerFactory.getRegistry().get(cacheManagerRegistryId);
+	// assert that ehcache instance are right been created and feededs
+	CacheManager cacheManager = CacheManagerFactory.getRegistry().get("myCacheManager");
 	assertNotNull(cacheManager);
 	Cache<String, String> currentConfigurationCache = cacheManager.getCache("kaleidofoundry/configuration/myConfig");
 
-	assertTrue(currentConfigurationCache instanceof EhCache1xImpl<?, ?>);
+	assertTrue(currentConfigurationCache instanceof EhCache2xImpl<?, ?>);
 	assertTrue(currentConfigurationCache.getDelegate() instanceof net.sf.ehcache.Cache);
 	net.sf.ehcache.Cache ehCacheConfInstance = (net.sf.ehcache.Cache) currentConfigurationCache.getDelegate();
 

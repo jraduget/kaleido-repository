@@ -44,7 +44,10 @@ public class CacheProvider extends AbstractProviderService<Cache> {
     */
    @Override
    public Cache _provides(@NotNull final RuntimeContext<Cache> context) throws ProviderException {
-	final String cacheName = context.getString(CacheName);
+	String cacheName = context.getString(CacheName);
+	if (StringHelper.isEmpty(cacheName)) {
+	   cacheName = context.getName();
+	}
 	if (StringHelper.isEmpty(cacheName)) { throw new EmptyContextParameterException(CacheName, context); }
 	return provides(cacheName, context);
    }
@@ -60,7 +63,7 @@ public class CacheProvider extends AbstractProviderService<Cache> {
 	final RuntimeContext<CacheManager> cacheManagerContext;
 
 	if (StringHelper.isEmpty(cacheManagerRef)) {
-	   cacheManagerContext = new RuntimeContext<CacheManager>();
+	   cacheManagerContext = new RuntimeContext<CacheManager>(CacheManagerProvider.DEFAULT_CACHE_PROVIDER);
 	} else {
 	   cacheManagerContext = new RuntimeContext<CacheManager>(cacheManagerRef, CacheManager.class, context);
 	}

@@ -18,6 +18,7 @@ package org.kaleidofoundry.core.util;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.kaleidofoundry.core.lang.Charsets;
 
 /**
  * @author Jerome RADUGET
@@ -37,10 +38,10 @@ public class URLEncoderHelperTest extends Assert {
    public void testEncode() {
 	assertNull(URLEncoderHelper.encode(null, null));
 
-	assertEquals(TEST_STRING_UTF8_ENCODED, URLEncoderHelper.encode(TEST_STRING_TO_ENCODE, Encodings.UTF_8));
-	assertEquals("123%FE%FF%00%E9%00%E0%00%E8abcb%FE%FF%00%EF%00%EE", URLEncoderHelper.encode(TEST_STRING_TO_ENCODE, Encodings.UTF_16));
-	assertEquals("123%E9%E0%E8abcb%EF%EE", URLEncoderHelper.encode(TEST_STRING_TO_ENCODE, Encodings.ISO_8859_1));
-	assertEquals("123%3F%3F%3Fabcb%3F%3F", URLEncoderHelper.encode(TEST_STRING_TO_ENCODE, Encodings.US_ASCII));
+	assertEquals(TEST_STRING_UTF8_ENCODED, URLEncoderHelper.encode(TEST_STRING_TO_ENCODE, Charsets.UTF_8));
+	assertEquals("123%FE%FF%00%E9%00%E0%00%E8abcb%FE%FF%00%EF%00%EE", URLEncoderHelper.encode(TEST_STRING_TO_ENCODE, Charsets.UTF_16));
+	assertEquals("123%E9%E0%E8abcb%EF%EE", URLEncoderHelper.encode(TEST_STRING_TO_ENCODE, Charsets.ISO_8859_1));
+	assertEquals("123%3F%3F%3Fabcb%3F%3F", URLEncoderHelper.encode(TEST_STRING_TO_ENCODE, Charsets.US_ASCII));
 
    }
 
@@ -56,10 +57,10 @@ public class URLEncoderHelperTest extends Assert {
 	assertNull(URLEncoderHelper.decode(null));
 	assertEquals(TEST_STRING_UTF8_ENCODED, URLEncoderHelper.encode(URLEncoderHelper.decode(TEST_STRING_UTF8_ENCODED)));
 
-	assertEquals(TEST_STRING_TO_ENCODE, URLEncoderHelper.decode(TEST_STRING_UTF8_ENCODED, Encodings.UTF_8));
-	assertEquals(TEST_STRING_TO_ENCODE, URLEncoderHelper.decode("123%FE%FF%00%E9%00%E0%00%E8abcb%FE%FF%00%EF%00%EE", Encodings.UTF_16));
-	assertEquals(TEST_STRING_TO_ENCODE, URLEncoderHelper.decode("123%E9%E0%E8abcb%EF%EE", Encodings.ISO_8859_1));
-	assertEquals("123???abcb??", URLEncoderHelper.decode("123???abcb??", Encodings.US_ASCII));
+	assertEquals(TEST_STRING_TO_ENCODE, URLEncoderHelper.decode(TEST_STRING_UTF8_ENCODED, Charsets.UTF_8));
+	assertEquals(TEST_STRING_TO_ENCODE, URLEncoderHelper.decode("123%FE%FF%00%E9%00%E0%00%E8abcb%FE%FF%00%EF%00%EE", Charsets.UTF_16));
+	assertEquals(TEST_STRING_TO_ENCODE, URLEncoderHelper.decode("123%E9%E0%E8abcb%EF%EE", Charsets.ISO_8859_1));
+	assertEquals("123???abcb??", URLEncoderHelper.decode("123???abcb??", Charsets.US_ASCII));
    }
 
 }

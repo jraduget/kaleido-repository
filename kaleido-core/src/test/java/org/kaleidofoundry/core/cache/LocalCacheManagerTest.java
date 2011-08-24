@@ -17,7 +17,6 @@ package org.kaleidofoundry.core.cache;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
@@ -35,12 +34,12 @@ public class LocalCacheManagerTest extends AbstractCacheManagerTest {
 
    @Override
    protected String getCacheImplementationCode() {
-	return DefaultCacheProviderEnum.local.name();
+	return CacheProvidersEnum.local.name();
    }
 
    @Override
    protected RuntimeContext<CacheManager> getCacheManagerContext() {
-	return new RuntimeContext<CacheManager>(CacheManager.class);
+	return new RuntimeContext<CacheManager>("localCacheManager", CacheManager.class);
    }
 
    @Ignore

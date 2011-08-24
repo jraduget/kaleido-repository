@@ -11,3 +11,4 @@ serializable
 locale
 deserialize
 throwable
+autowired

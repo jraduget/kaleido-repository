@@ -156,6 +156,19 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
    }
 
    /**
+    * don't use it,
+    * this constructor is only needed and used by some IOC framework like spring.
+    */
+   AbstractConfiguration() {
+	this.name = null;
+	this.listeners = null;
+	this.cacheProperties = null;
+	this.context = null;
+	this.singleFileStore = null;
+	this.changesEvents = null;
+   }
+
+   /**
     * you don't need to release resourceHandler argument, it is done by agregator <br/>
     * <b>be careful, if you use {@link #setProperty(String, Serializable)}, event will be fired...</b> a preferred way is to use
     * properties.put(normalizeKey(key), value)

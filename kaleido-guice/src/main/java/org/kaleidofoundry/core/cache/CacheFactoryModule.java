@@ -34,7 +34,7 @@ public class CacheFactoryModule extends AbstractModule<CacheManager> {
     */
    @Override
    public Class<? extends CacheManager> getUnnamedImplementation() {
-	return EhCache1xManagerImpl.class;
+	return EhCache2xManagerImpl.class;
    }
 
    /*
@@ -46,12 +46,12 @@ public class CacheFactoryModule extends AbstractModule<CacheManager> {
 	super.configure();
 
 	// default implementation
-	bind(CacheManager.class).to(EhCache1xManagerImpl.class);
+	bind(CacheManager.class).to(EhCache2xManagerImpl.class);
 
 	// bind custom annotation
-	bind(CacheManager.class).annotatedWith(EhCache.class).to(EhCache1xManagerImpl.class).in(scope(EhCache1xManagerImpl.class));
-	bind(CacheManager.class).annotatedWith(JbossCache.class).to(Jboss32xCacheManagerImpl.class).in(scope(EhCache1xManagerImpl.class));
-	bind(CacheManager.class).annotatedWith(InfinispanCache.class).to(Infinispan4xCacheManagerImpl.class).in(scope(EhCache1xManagerImpl.class));
-	bind(CacheManager.class).annotatedWith(CoherenceCache.class).to(Coherence3xCacheManagerImpl.class).in(scope(EhCache1xManagerImpl.class));
+	bind(CacheManager.class).annotatedWith(EhCache.class).to(EhCache2xManagerImpl.class).in(scope(EhCache2xManagerImpl.class));
+	bind(CacheManager.class).annotatedWith(JbossCache.class).to(Jboss32xCacheManagerImpl.class).in(scope(EhCache2xManagerImpl.class));
+	bind(CacheManager.class).annotatedWith(InfinispanCache.class).to(Infinispan4xCacheManagerImpl.class).in(scope(EhCache2xManagerImpl.class));
+	bind(CacheManager.class).annotatedWith(CoherenceCache.class).to(Coherence3xCacheManagerImpl.class).in(scope(EhCache2xManagerImpl.class));
    }
 }

@@ -16,7 +16,6 @@
 package org.kaleidofoundry.core.cache;
 
 import org.junit.Test;
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
@@ -34,12 +33,12 @@ public class EhCacheManagerTest extends AbstractCacheManagerTest {
 
    @Override
    protected String getCacheImplementationCode() {
-	return DefaultCacheProviderEnum.ehCache1x.name();
+	return CacheProvidersEnum.ehCache2x.name();
    }
 
    @Override
    protected RuntimeContext<CacheManager> getCacheManagerContext() {
-	return new RuntimeContext<CacheManager>(CacheManager.class);
+	return new RuntimeContext<CacheManager>("ehCacheManager", CacheManager.class);
    }
 
    @Test(expected = CacheDefinitionNotFoundException.class)

@@ -18,7 +18,6 @@ package org.kaleidofoundry.core.cache;
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentMap;
 
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
 import org.kaleidofoundry.core.context.RuntimeContext;
@@ -36,8 +35,8 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * </tr>
  * <tr>
  * <td>providerCode</td>
- * <td>cache provider code to use (see {@link DefaultCacheProviderEnum}):
- * <code>ehCache1x|jbossCache3x|infinispan4x|coherence3x|gigaspace7x|local</code></td>
+ * <td>cache provider code to use (see {@link CacheProvidersEnum}):
+ * <code>ehCache2x|jbossCache3x|infinispan4x|coherence3x|gigaspace7x|local</code></td>
  * </tr>
  * <tr>
  * <td>classloader</td>
@@ -59,8 +58,8 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 public class CacheManagerContextBuilder extends AbstractRuntimeContextBuilder<CacheManager> {
 
    /**
-    * cache provider code to use (see {@link DefaultCacheProviderEnum}):
-    * <code>ehCache1x|jbossCache3x|infinispan4x|coherence3x|gigaspace7x|local</code>
+    * cache provider code to use (see {@link CacheProvidersEnum}):
+    * <code>ehCache2x|jbossCache3x|infinispan4x|coherence3x|gigaspace7x|local</code>
     */
    public static final String ProviderCode = "providerCode";
    /** full class name, which will give the class loader to use */

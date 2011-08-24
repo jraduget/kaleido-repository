@@ -55,6 +55,13 @@ public class ClasspathFileStore extends AbstractFileStore implements FileStore {
    }
 
    /**
+    * @see AbstractFileStore#AbstractFileStore()
+    */
+   ClasspathFileStore() {
+	super();
+   }
+
+   /**
     * @return class classLoader to use
     */
    @NotNull

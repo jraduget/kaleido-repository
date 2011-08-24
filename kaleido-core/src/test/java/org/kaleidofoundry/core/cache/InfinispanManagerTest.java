@@ -15,7 +15,6 @@
  */
 package org.kaleidofoundry.core.cache;
 
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
@@ -33,11 +32,11 @@ public class InfinispanManagerTest extends AbstractCacheManagerTest {
 
    @Override
    protected String getCacheImplementationCode() {
-	return DefaultCacheProviderEnum.infinispan4x.name();
+	return CacheProvidersEnum.infinispan4x.name();
    }
 
    @Override
    protected RuntimeContext<CacheManager> getCacheManagerContext() {
-	return new RuntimeContext<CacheManager>(CacheManager.class);
+	return new RuntimeContext<CacheManager>("infiniCacheManager", CacheManager.class);
    }
 }

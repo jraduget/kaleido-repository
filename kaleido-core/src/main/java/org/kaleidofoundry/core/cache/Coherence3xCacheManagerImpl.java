@@ -26,7 +26,6 @@ import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Task;
@@ -104,6 +103,14 @@ public class Coherence3xCacheManagerImpl extends AbstractCacheManager {
 	}
    }
 
+   /**
+    * @see AbstractCacheManager#AbstractCacheManager()
+    */
+   Coherence3xCacheManagerImpl() {
+	super();
+	configurableCacheFactory = null;
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheManager#getDefaultConfiguration()
@@ -167,9 +174,6 @@ public class Coherence3xCacheManagerImpl extends AbstractCacheManager {
 	   destroy(name);
 	}
 	com.tangosol.net.CacheFactory.shutdown();
-
-	// unregister cacheManager
-	CacheManagerProvider.getRegistry().remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.coherence3x.name(), getCurrentConfiguration()));
    }
 
    /*

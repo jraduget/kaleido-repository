@@ -55,6 +55,14 @@ public class JndiNamingService implements NamingService {
 	this.context = context;
    }
 
+   /**
+    * don't use it,
+    * this constructor is only needed and used by some IOC framework like spring.
+    */
+   JndiNamingService() {
+	this.context = null;
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.naming.NamingService#lookup(java.lang.String, java.lang.Class)

@@ -559,7 +559,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @see org.kaleidofoundry.core.config.ConfigurationManager#isRegistered(java.lang.String)
     */
    public boolean isRegistered(final String config) {
-	return ConfigurationFactory.getRegistry().containsKey(config);
+	return ConfigurationFactory.isRegistered(config);
    }
 
    @GET
@@ -679,7 +679,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @throws PropertyNotFoundException if checkPropExists is true and if configuration property can't be found in current registry
     */
    protected ConfigurationProperty getRegisteredProperty(final String configName, final String propertyName, final boolean checkPropExists)
-   throws ConfigurationNotFoundException, PropertyNotFoundException {
+	   throws ConfigurationNotFoundException, PropertyNotFoundException {
 	Configuration configuration = getRegisteredConfiguration(configName);
 	if (checkPropExists) {
 	   if (!configuration.containsKey(propertyName)) { throw new PropertyNotFoundException(configName, propertyName); }
@@ -726,7 +726,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     * @throws PropertyNotFoundException
     */
    protected ConfigurationProperty findConfigurationPropertyByName(final String config, final String propertyName, final boolean checkPropExists)
-   throws ConfigurationNotFoundException, PropertyNotFoundException {
+	   throws ConfigurationNotFoundException, PropertyNotFoundException {
 
 	// check that configuration is registered or have been persist
 	try {

@@ -71,6 +71,13 @@ public class JavaSystemConfiguration extends AbstractConfiguration implements Co
 	this(name, (String) null, context);
    }
 
+   /**
+    * @see AbstractConfiguration#AbstractConfiguration()
+    */
+   JavaSystemConfiguration() {
+	super();
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.AbstractConfiguration#loadProperties(org.kaleidofoundry.core.store.ResourceHandler,

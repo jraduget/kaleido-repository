@@ -19,7 +19,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
@@ -38,7 +37,7 @@ import org.kaleidofoundry.core.util.Registry;
  * </ul>
  * where cacheImplCode can be :
  * <ul>
- * <li>'ehCache1x' -> terracotta ehcache (c)</li>
+ * <li>'ehCache2x' -> terracotta ehcache (c)</li>
  * <li>'jbossCache3x' -> jboss cache (c)</li>
  * <li>'infinispan4x' -> jboss infinispan (c)</li>
  * <li>'coherence3x' -> oracle coherence (c)</li>
@@ -60,7 +59,7 @@ import org.kaleidofoundry.core.util.Registry;
  * </pre>
  * 
  * @author Jerome RADUGET
- * @see DefaultCacheProviderEnum
+ * @see CacheProvidersEnum
  */
 @ThreadSafe
 public abstract class CacheManagerFactory {
@@ -81,7 +80,7 @@ public abstract class CacheManagerFactory {
     * @throws CacheConfigurationException cache configuration resource exception
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
-    * @see DefaultCacheProviderEnum for providerCode values
+    * @see CacheProvidersEnum for providerCode values
     */
    @NotNull
    public static CacheManager provides(@NotNull final String providerCode) {
@@ -152,7 +151,7 @@ public abstract class CacheManagerFactory {
    /**
     * @return cache manager registry. each instance provided will be registered here
     */
-   public static Registry<Integer, CacheManager> getRegistry() {
+   public static Registry<String, CacheManager> getRegistry() {
 	return CacheManagerProvider.getRegistry();
    }
 

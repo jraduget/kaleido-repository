@@ -37,7 +37,7 @@ public class CacheManagerSample04 {
    public CacheManagerSample04() {
 
 	RuntimeContext<CacheManager> context = new CacheManagerContextBuilder("myCacheManager", CacheManager.class)
-	.withProviderCode("ehCache1x")
+	.withProviderCode("ehCache2x")
 	.withFileStoreUri("classpath:/cache/ehcache.xml")
 	.build();
 

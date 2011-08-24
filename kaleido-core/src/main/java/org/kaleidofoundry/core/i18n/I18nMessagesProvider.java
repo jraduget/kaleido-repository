@@ -54,13 +54,18 @@ public class I18nMessagesProvider extends AbstractProviderService<I18nMessages> 
    @Override
    public I18nMessages _provides(@NotNull final RuntimeContext<I18nMessages> context) {
 
-	final String baseName = context.getString(BaseName);
+	String baseName = context.getString(BaseName);
 	final String localeLanguageCode = context.getString(LocaleLanguage);
 	final String countryLanguageCode = context.getString(LocaleCountry);
 	final String classLoaderClass = context.getString(ClassLoaderClass);
 
 	ClassLoader classLoader = null;
 	Locale locale = null;
+
+	// default baseName is not defined
+	if (StringHelper.isEmpty(baseName)) {
+	   baseName = context.getName();
+	}
 
 	// managed baseName
 	if (StringHelper.isEmpty(baseName)) { throw new EmptyContextParameterException(BaseName, context); }
@@ -90,6 +95,15 @@ public class I18nMessagesProvider extends AbstractProviderService<I18nMessages> 
     */
    public I18nMessages provides(@NotNull final String baseName) {
 	return getBundle(baseName, null, null, null, new RuntimeContext<I18nMessages>(I18nMessages.class));
+   }
+
+   /**
+    * @param baseName name of the resource
+    * @param context runtime context
+    * @return ResourceBundle with server default locale, and with properties loaded from the same classLoader than ResourceBundle class
+    */
+   public I18nMessages provides(@NotNull final String baseName, final RuntimeContext<I18nMessages> context) {
+	return getBundle(baseName, null, null, null, context);
    }
 
    /**
@@ -208,6 +222,7 @@ public class I18nMessagesProvider extends AbstractProviderService<I18nMessages> 
     * @param locale specified locale
     * @param loader target class loader
     * @param parent resourceBundle parent
+    * @param context runtime context
     * @return ResourceBundle build with given locale, and having a parent resource bundle
     */
    static I18nMessages getBundle(@NotNull final String baseName, final Locale locale, final ClassLoader loader, final ResourceBundle parent,

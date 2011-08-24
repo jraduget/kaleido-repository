@@ -19,6 +19,7 @@ import java.io.Serializable;
 
 import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.util.StringHelper;
 
@@ -41,7 +42,7 @@ public abstract class AbstractCache<K extends Serializable, V extends Serializab
     * <code>true</code> if cache have been destroyed, <code>false</code> otherwise <br/>
     * Can be useful when cache instance is stored in a class field...
     */
-   boolean hasBeenDestroy = false;
+   private boolean hasBeenDestroy = false;
 
    /**
     * @param context
@@ -62,10 +63,22 @@ public abstract class AbstractCache<K extends Serializable, V extends Serializab
     * @param context
     * @param name
     */
-   public AbstractCache(final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
+   public AbstractCache(String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
+	if (StringHelper.isEmpty(name)) {
+	   name = context.getName();
+	}
 	if (StringHelper.isEmpty(name)) { throw new EmptyContextParameterException(CacheContextBuilder.CacheName, context); }
 	this.name = name;
 	this.context = context;
+   }
+
+   /**
+    * don't use it,
+    * this constructor is only needed and used by some IOC framework like spring.
+    */
+   AbstractCache() {
+	this.context = null;
+	this.name = null;
    }
 
    /**
@@ -140,9 +153,16 @@ public abstract class AbstractCache<K extends Serializable, V extends Serializab
    }
 
    /**
+    * Stop and destroy cache instance
+    */
+   void destroy() {
+	hasBeenDestroy = true;
+   }
+
+   /**
     * @throws IllegalStateException
     */
    void checkCacheState() throws IllegalStateException {
-	if (hasBeenDestroy) { throw new IllegalStateException("This cache was destroyed, you can not access it"); }
+	if (hasBeenDestroy) { throw new IllegalStateException(InternalBundleHelper.CacheMessageBundle.getMessage("cache.destroy.access", getName())); }
    }
 }

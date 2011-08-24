@@ -15,7 +15,7 @@
 
 	<build>
 		<plugins>
-			<!-- Enable aspectJ AOP for @NotNull, @InjectContext, ... -->
+			<!-- Enable aspectJ AOP for @NotNull, @Context, ... -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
@@ -48,10 +48,10 @@
 			<artifactId>kaleido-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
-			<artifactId>kaleido-it-ejb</artifactId>
+			<artifactId>kaleido-it-jee5</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

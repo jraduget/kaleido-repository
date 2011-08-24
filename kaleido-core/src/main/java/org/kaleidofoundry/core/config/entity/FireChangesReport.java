@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.core.config.entity;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -24,7 +26,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "changes")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class FireChangesReport {
+public class FireChangesReport implements Serializable {
+
+   private static final long serialVersionUID = 2164058195572003500L;
 
    private final String configId;
    private final String configUri;

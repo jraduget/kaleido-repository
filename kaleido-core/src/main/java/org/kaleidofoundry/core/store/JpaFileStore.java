@@ -83,6 +83,13 @@ public class JpaFileStore extends AbstractFileStore implements FileStore {
 	super(baseUri, context);
    }
 
+   /**
+    * @see AbstractFileStore#AbstractFileStore()
+    */
+   JpaFileStore() {
+	super();
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.store.AbstractFileStore#getStoreType()

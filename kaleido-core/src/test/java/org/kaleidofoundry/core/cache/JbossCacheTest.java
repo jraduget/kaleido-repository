@@ -19,7 +19,6 @@ import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 
 /**
  * Test Jboss Cache (c) Manager
@@ -32,7 +31,7 @@ public class JbossCacheTest extends AbstractCacheTest {
 
    @Before
    public void setup() {
-	cacheManager = CacheManagerFactory.provides(DefaultCacheProviderEnum.jbossCache3x.name(), "classpath:/cache/jboss-local.xml");
+	cacheManager = CacheManagerFactory.provides(CacheProvidersEnum.jbossCache3x.name(), "classpath:/cache/jboss-local.xml");
 	cache = cacheManager.getCache(Person.class.getName());
    }
 

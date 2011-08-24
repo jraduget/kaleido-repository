@@ -28,7 +28,6 @@ import java.util.Map;
 import org.infinispan.config.ConfigurationException;
 import org.infinispan.manager.CacheManager;
 import org.infinispan.manager.DefaultCacheManager;
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Task;
@@ -90,6 +89,14 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
 	}
    }
 
+   /**
+    * @see AbstractCacheManager#AbstractCacheManager()
+    */
+   Infinispan4xCacheManagerImpl() {
+	super();
+	infiniSpanCacheManager = null;
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheManager#getDefaultConfiguration()
@@ -117,7 +124,7 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
    public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
 	Cache<K, V> cache = cachesByName.get(name);
 	if (cache == null) {
-	   cache = new Infinispan4xCacheImpl(name, context);
+	   cache = new Infinispan4xCacheImpl(name, this, context);
 	   cachesByName.put(name, cache);
 	}
 	return cache;
@@ -131,8 +138,8 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
    public synchronized void destroy(final String cacheName) {
 	final Cache<?, ?> cache = cachesByName.get(cacheName);
 	if (cache != null) {
-	   ((Infinispan4xCacheImpl<?, ?>) cache).getInfinispanCache().getCacheManager().stop();
-	   ((Infinispan4xCacheImpl<?, ?>) cache).hasBeenDestroy = true;
+	   cache.removeAll();
+	   ((Infinispan4xCacheImpl<?, ?>) cache).destroy();
 	   cachesByName.remove(cacheName);
 	}
    }
@@ -149,10 +156,6 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
 	   destroy(name);
 	}
 	infiniSpanCacheManager.stop();
-
-	// unregister cacheManager
-	CacheManagerProvider.getRegistry()
-		.remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.infinispan4x.name(), getCurrentConfiguration()));
    }
 
    /*

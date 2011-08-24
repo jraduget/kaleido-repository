@@ -55,6 +55,13 @@ public class PropertiesConfiguration extends AbstractConfiguration {
 	super(name, resourceUri, context);
    }
 
+   /**
+    * @see AbstractConfiguration#AbstractConfiguration()
+    */
+   PropertiesConfiguration() {
+	super();
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.AbstractConfiguration#loadProperties(org.kaleidofoundry.core.store.ResourceHandler,

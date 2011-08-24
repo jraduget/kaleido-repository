@@ -17,13 +17,16 @@ package org.kaleidofoundry.core.cache;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 
 /**
  * Testing getting cacheFactory and cache with java env. variable : <br/>
  * <ul>
- * <li>-Dcache.provider=kaleidoLocalCache</li>
- * <li>-Dcache.provider=ehCache1x</li>
+ * <li>-Dcache.provider=local</li>
+ * <li>-Dcache.provider=ehCache2x</li>
  * <li>-Dcache.provider=jbossCache3x</li>
  * <li>-Dcache.provider=coherence3x</li>
  * <li>-Dcache.provider=infinispan4x</li>
@@ -34,16 +37,59 @@ import org.junit.Test;
  */
 public class CacheFactoryDefaultTest extends Assert {
 
-   @Test
-   public void defaultCacheFactoryImplementation() {
-
-	final CacheManager cacheFactory = CacheManagerFactory.provides();
-	assertNotNull(cacheFactory);
-	assertTrue(cacheFactory instanceof LocalCacheManagerImpl);
-
-	final Cache<Integer, Person> cache = cacheFactory.getCache(Person.class);
-	assertTrue(cache instanceof LocalCacheImpl<?, ?>);
-
+   @Before
+   public void setup() {
+	I18nMessagesFactory.disableJpaControl();
    }
 
+   @After
+   public void cleanup() {
+	CacheManagerProvider.init(null);
+	I18nMessagesFactory.enableJpaControl();
+   }
+
+   @Test
+   public void defaultCacheFactoryImplementation() {
+	testCacheFactory(null, LocalCacheManagerImpl.class, LocalCacheImpl.class);
+   }
+
+   @Test
+   public void localCacheFactoryImplementation() {
+	testCacheFactory(CacheProvidersEnum.local, LocalCacheManagerImpl.class, LocalCacheImpl.class);
+   }
+
+   @Test
+   public void infinispanFactoryImplementation() {
+	testCacheFactory(CacheProvidersEnum.infinispan4x, Infinispan4xCacheManagerImpl.class, Infinispan4xCacheImpl.class);
+   }
+
+   @Test(expected = CacheDefinitionNotFoundException.class)
+   public void ehCacheFactoryImplementation() {
+	testCacheFactory(CacheProvidersEnum.ehCache2x, EhCache2xManagerImpl.class, EhCache2xImpl.class);
+   }
+
+   @Test
+   public void jbossFactoryImplementation() {
+	testCacheFactory(CacheProvidersEnum.jbossCache3x, Jboss32xCacheManagerImpl.class, Jboss32xCacheImpl.class);
+   }
+
+   @SuppressWarnings("rawtypes")
+   void testCacheFactory(final CacheProvidersEnum provider, final Class<? extends CacheManager> cacheManagerClass, final Class<? extends Cache> cacheClass) {
+
+	CacheManager cacheFactory = null;
+	CacheManagerProvider.init(provider != null ? provider.name() : null);
+
+	try {
+	   cacheFactory = CacheManagerFactory.provides();
+	   assertNotNull(cacheFactory);
+	   assertEquals(cacheManagerClass.getName(), cacheFactory.getClass().getName());
+
+	   final Cache<Integer, Person> cache = cacheFactory.getCache(Person.class);
+	   assertEquals(cacheClass.getName(), cache.getClass().getName());
+	} finally {
+	   if (cacheFactory != null) {
+		cacheFactory.destroyAll();
+	   }
+	}
+   }
 }

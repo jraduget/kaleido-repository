@@ -224,7 +224,7 @@ public class NamingServiceJndiSample01 implements NamingServiceJndiSample {
 
 	// get ejb client service (remote or local)
 	// here, the ejb bean is annotated @Stateless(mappedName="ejb/MyBean")
-	// if there is no mappedName you can still used the global name (jee6): "java:global/kaleido-it-ear/kaleido-it-ejb/MyBean"
+	// if there is no mappedName you can still used the global name (jee6): "java:global/kaleido-it-ear/kaleido-it-jee5/MyBean"
 	MyRemoteBean myRemoteBean = namingService.locate("ejb/MyBean", MyRemoteBean.class);
 
 	// call it

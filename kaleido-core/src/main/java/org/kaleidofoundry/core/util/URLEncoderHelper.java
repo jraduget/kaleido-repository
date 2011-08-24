@@ -18,15 +18,18 @@ package org.kaleidofoundry.core.util;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
+import org.kaleidofoundry.core.lang.Charsets;
+
 /**
  * Helper for encoding url get parameter
  * 
  * @author Jerome RADUGET
+ * @see Charsets
  */
 public abstract class URLEncoderHelper {
 
    /**
-    * string decoding
+    * string UTF-8 encoding
     * 
     * @param s string to encode
     * @return UTF-8 string encoding. (null is string is null or encoding is null)<br/>
@@ -39,48 +42,54 @@ public abstract class URLEncoderHelper {
    public static String encode(final String s) {
 	if (s == null) { return null; }
 	try {
-	   return java.net.URLEncoder.encode(s, Encodings.UTF_8.getCode());
+	   return java.net.URLEncoder.encode(s, Charsets.UTF_8.getCode());
 	} catch (final UnsupportedEncodingException uee) {
 	   return s;
 	}
    }
 
    /**
+    * string custom encoding
+    * 
     * @param s string to encode
-    * @param enc encoding to use: {@link URLEncoderHelper}.UTF8_ENCODING, {@link URLEncoderHelper}.FR1_ENCODING, ...
+    * @param charset charset to use for encoding
     * @return encoded string (null is string is null or encoding is null)
     */
-   public static String encode(final String s, final Encodings enc) {
-	if (s == null || enc == null) { return null; }
+   public static String encode(final String s, final Charsets charset) {
+	if (s == null || charset == null) { return null; }
 	try {
-	   return java.net.URLEncoder.encode(s, enc.getCode());
+	   return java.net.URLEncoder.encode(s, charset.getCode());
 	} catch (final UnsupportedEncodingException uee) {
 	   return s;
 	}
    }
 
    /**
+    * string UTF-8 decoding
+    * 
     * @param s string to decode (UTF-8 encoding)
     * @return string decoding (null is string is null)
     */
    public static String decode(final String s) {
 	if (s == null) { return null; }
 	try {
-	   return URLDecoder.decode(s, Encodings.UTF_8.getCode());
+	   return URLDecoder.decode(s, Charsets.UTF_8.getCode());
 	} catch (final UnsupportedEncodingException uee) {
 	   return s;
 	}
    }
 
    /**
+    * string custom decoding
+    * 
     * @param s s string to decode
-    * @param enc encoding to use: {@link URLEncoderHelper}.UTF8_ENCODING, {@link URLEncoderHelper}.FR1_ENCODING, ....
+    * @param charset charset to use for decoding
     * @return string decoding (null is string is null)
     */
-   public static String decode(final String s, final Encodings enc) {
-	if (s == null || enc == null) { return null; }
+   public static String decode(final String s, final Charsets charset) {
+	if (s == null || charset == null) { return null; }
 	try {
-	   return URLDecoder.decode(s, enc.getCode());
+	   return URLDecoder.decode(s, charset.getCode());
 	} catch (final UnsupportedEncodingException uee) {
 	   return s;
 	}

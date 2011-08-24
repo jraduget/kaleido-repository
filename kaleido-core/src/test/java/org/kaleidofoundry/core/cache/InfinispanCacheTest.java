@@ -19,10 +19,9 @@ import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 
 /**
- * Test Jboss Ininispan (c) Cache Manager
+ * Test Jboss Infinispan (c) Cache Manager
  * 
  * @author Jerome RADUGET
  */
@@ -32,12 +31,8 @@ public class InfinispanCacheTest extends AbstractCacheTest {
 
    @Before
    public void setup() {
-	try {
-	   cacheManager = CacheManagerFactory.provides(DefaultCacheProviderEnum.infinispan4x.name(), "classpath:/cache/infinispan-local.xml");
-	   cache = cacheManager.getCache(Person.class.getName());
-	} catch (Throwable th) {
-	   th.printStackTrace();
-	}
+	cacheManager = CacheManagerFactory.provides(CacheProvidersEnum.infinispan4x.name(), "classpath:/cache/infinispan-local.xml");
+	cache = cacheManager.getCache(Person.class.getName());
    }
 
    @After

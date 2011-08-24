@@ -19,7 +19,7 @@ import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
+import org.kaleidofoundry.core.cache.CacheProvidersEnum;
 
 /**
  * Test Oracle Coherence (c) Cache manager
@@ -32,7 +32,7 @@ public class CoherenceCacheTest extends AbstractCacheTest {
 
    @Before
    public void setup() {
-	cacheManager = CacheManagerFactory.provides(DefaultCacheProviderEnum.coherence3x.name(), "classpath:/cache/coherence-cache-config.xml");
+	cacheManager = CacheManagerFactory.provides(CacheProvidersEnum.coherence3x.name(), "classpath:/cache/coherence-cache-config.xml");
 	cache = cacheManager.getCache(Person.class.getName());
    }
 

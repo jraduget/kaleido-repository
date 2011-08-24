@@ -19,7 +19,6 @@ import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.context.RuntimeContext;
 
 /**
@@ -33,8 +32,7 @@ public class LocalCacheTest extends AbstractCacheTest {
 
    @Before
    public void setup() {
-	cacheManager = CacheManagerFactory.provides(DefaultCacheProviderEnum.local.name(), "classpath:/noneed", new RuntimeContext<CacheManager>(
-		CacheManager.class));
+	cacheManager = CacheManagerFactory.provides(CacheProvidersEnum.local.name(), new RuntimeContext<CacheManager>("localCacheManager"));
 	cache = cacheManager.getCache(Person.class.getName());
    }
 

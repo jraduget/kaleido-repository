@@ -16,8 +16,8 @@
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.CoherenceCachePluginName;
-import static org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum.coherence3x;
 import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
+import static org.kaleidofoundry.core.cache.CacheProvidersEnum.coherence3x;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -101,6 +101,14 @@ public class Coherence3xCacheImpl<K extends Serializable, V extends Serializable
 
 	// registered it to cache manager (needed by spring or guice direct injection)
 	this.cacheManager.cachesByName.put(name, this);
+   }
+
+   /**
+    * @see AbstractCache#AbstractCache()
+    */
+   Coherence3xCacheImpl() {
+	this.namedCache = null;
+	this.cacheManager = null;
    }
 
    /*
@@ -193,9 +201,11 @@ public class Coherence3xCacheImpl<K extends Serializable, V extends Serializable
    /**
     * Stop and destroy cache instance
     */
+   @Override
    void destroy() {
 	com.tangosol.net.CacheFactory.destroyCache(namedCache);
-	hasBeenDestroy = true;
+	cacheManager.cachesByName.remove(getName());
+	super.destroy();
    }
 
    /**

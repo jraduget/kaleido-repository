@@ -70,6 +70,8 @@
 		<log4j.version>1.2.16</log4j.version>
 		<junit.version>4.8.1</junit.version>
 		<mockito.version>1.8.5</mockito.version>
+		<!--  Spring integration version -->
+		<spring.version>3.0.4.RELEASE</spring.version>
 		<!-- integration url properties -->
 		<sonar.host.url>http://localhost:8080/sonar</sonar.host.url>
 		<hudson.host.url>http://localhost:8080/hudson</hudson.host.url>
@@ -325,12 +327,12 @@
 						<version>${aspectj.version}</version>
 						<scope>compile</scope>
 					</dependency>				
-				<dependency>
-              		<groupId>org.aspectj</groupId>
-              		<artifactId>aspectjtools</artifactId>
-              		<version>${aspectj.version}</version>
-              		<scope>compile</scope>
-        		</dependency>						 					
+					<dependency>
+              			<groupId>org.aspectj</groupId>
+              			<artifactId>aspectjtools</artifactId>
+              			<version>${aspectj.version}</version>
+              			<scope>compile</scope>
+        			</dependency>						 					
 				</dependencies>
 			</plugin>
 			<!-- packaging -->
@@ -346,15 +348,7 @@
 							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 						</manifest>
 					</archive>
-				</configuration>
-				<!-- build jar test in order to be reused between module -->
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>				
+				</configuration>			
 			</plugin>
 			<!-- deploying -->
 			<plugin>
@@ -415,6 +409,50 @@
 					</execution>
 				</executions>							       	
 			</plugin>			
+			<!-- deploy artifact to google code -->
+			<plugin>
+				<groupId>com.googlecode.maven-gcu-plugin</groupId>
+				<artifactId>maven-gcu-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>gcode-upload</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>upload</goal>
+						</goals>
+						<configuration>
+							<serverId>googlecode.kaleido</serverId>
+							<failsOnError>true</failsOnError>
+							<projectName>kaleido-foundry</projectName>
+							<uploads>
+								<upload>
+									<file>${project.build.directory}/${project.artifactId}-${project.version}-sources.${project.packaging}</file>
+									<summary>${project.name} sources bundle ${project.version}</summary>
+									<labels>
+										<label>Type-Sources</label>
+									</labels>
+								</upload>
+								<upload>
+									<file>${project.build.directory}/${project.artifactId}-${project.version}-javadoc.${project.packaging}</file>
+									<summary>${project.name} javadocs bundle ${project.version}</summary>
+									<labels>
+										<label>Type-Docs</label>
+									</labels>
+								</upload>
+								<upload>
+									<file>${project.build.directory}/${project.artifactId}-${project.version}.${project.packaging}</file>
+									<summary>${project.name} bundle ${project.version}</summary>
+									<labels>
+										<label>Featured</label>
+										<label>Type-Archive</label>
+										<label>OpSys-All</label>
+									</labels>
+								</upload>
+							</uploads>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>					
 			<!-- ide -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -629,6 +667,10 @@
 					<value>5</value>
 				</property>
 			</activation>
+			<properties>
+				<webapp.version>2.5</webapp.version>
+				<webapp.xsd.version>2_5</webapp.xsd.version>
+			</properties>			
 			<dependencies>
 				<!-- jpa api - it is only used for testing (it have to be before javax.persistence in classpath) -->
 				<dependency>
@@ -696,11 +738,14 @@
 				<property>
 					<name>javaee</name>
 					<value>6</value>
-				</property>
-			</activation>
+				</property>				
+			</activation>		
+			<properties>
+				<webapp.version>3.0</webapp.version>
+				<webapp.xsd.version>3_0</webapp.xsd.version>
+			</properties>			
 			<dependencies>
-				<!-- persistence api - used only for testing (have to be before javaee-api 
-					in classpath) -->
+				<!-- persistence api - used only for testing (have to be before javaee-api in classpath) -->
 				<dependency>
 					<groupId>org.eclipse.persistence</groupId>
 					<artifactId>eclipselink</artifactId>

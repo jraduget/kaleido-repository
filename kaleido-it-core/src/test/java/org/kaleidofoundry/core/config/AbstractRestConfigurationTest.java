@@ -92,12 +92,12 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	List<ConfigurationModel> response = getBaseResource().path("find").accept(getMedia().getType()).get(new GenericType<List<ConfigurationModel>>() {
 	});
 	assertNotNull(response);
-	assertEquals(3, response.size());
+	assertEquals(4, response.size());
 
 	response = getBaseResource().path("find").queryParam("text", "my").accept(getMedia().getType()).get(new GenericType<List<ConfigurationModel>>() {
 	});
 	assertNotNull(response);
-	assertEquals(3, response.size());
+	assertEquals(4, response.size());
 
 	response = getBaseResource().path("find").queryParam("text", "myCacheConfig").accept(getMedia().getType())
 		.get(new GenericType<List<ConfigurationModel>>() {

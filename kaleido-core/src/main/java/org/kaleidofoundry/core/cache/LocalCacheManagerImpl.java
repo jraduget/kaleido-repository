@@ -22,7 +22,6 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
@@ -53,6 +52,13 @@ public class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
     */
    public LocalCacheManagerImpl(final String configuration, final RuntimeContext<CacheManager> context) {
 	super(configuration, context);
+   }
+
+   /**
+    * @see AbstractCacheManager#AbstractCacheManager()
+    */
+   LocalCacheManagerImpl() {
+	super();
    }
 
    /*
@@ -116,10 +122,6 @@ public class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
 	   LOGGER.info(CacheMessageBundle.getMessage("cache.destroy.info", getMetaInformations(), name));
 	   destroy(name);
 	}
-
-	// unregister cache manager instance
-	CacheManagerProvider.getRegistry().remove(CacheManagerProvider.getCacheManagerId(DefaultCacheProviderEnum.local.name(), getCurrentConfiguration()));
-
    }
 
    /*

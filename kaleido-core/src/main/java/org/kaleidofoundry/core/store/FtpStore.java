@@ -33,14 +33,19 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
-import org.kaleidofoundry.core.lang.annotation.Task;
-import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
- * ftp store implementation
+ * FTP read only store implementation <br/>
+ * <b>This implementation is only for read only use</b> - the methods store, remove, move will throws {@link StoreException}<br/>
+ * <br/>
+ * You can create your own store, by extending this class and overriding methods :
+ * <ul>
+ * <li>{@link #doRemove(URI)}</li>
+ * <li>{@link #doStore(URI, FileHandler)}</li>
+ * </ul>
+ * Then, annotate {@link Declare} your new class to register your implementation
  * 
  * @author Jerome RADUGET
  * @see FileStoreContextBuilder enum of context configuration properties available
@@ -64,6 +69,13 @@ public class FtpStore extends AbstractFileStore implements FileStore {
 	super(baseUri, context);
    }
 
+   /**
+    * @see AbstractFileStore#AbstractFileStore()
+    */
+   FtpStore() {
+	super();
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.store.AbstractFileStore#getStoreType()
@@ -71,6 +83,15 @@ public class FtpStore extends AbstractFileStore implements FileStore {
    @Override
    public FileStoreType[] getStoreType() {
 	return new FileStoreType[] { FileStoreTypeEnum.ftp };
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.store.AbstractFileStore#isReadOnly()
+    */
+   @Override
+   public boolean isReadOnly() {
+	return true;
    }
 
    /*
@@ -163,10 +184,8 @@ public class FtpStore extends AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.store.AbstractFileStore#doRemove(java.net.URI)
     */
    @Override
-   @NotYetImplemented
-   @Task(comment = "ftp do remove", labels = TaskLabel.ImplementIt)
    protected void doRemove(final URI resourceUri) throws ResourceNotFoundException, StoreException {
-	return; // annotation @NotYetImplemented handle throw new NotYetImplementedException()...
+	throw new StoreException("store.readonly.illegal", context.getName());
    }
 
    /*
@@ -174,10 +193,8 @@ public class FtpStore extends AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.store.AbstractFileStore#doStore(java.net.URI, org.kaleidofoundry.core.store.FileHandler)
     */
    @Override
-   @NotYetImplemented
-   @Task(comment = "ftp do store", labels = TaskLabel.ImplementIt)
    protected void doStore(final URI resourceUri, final FileHandler resource) throws StoreException {
-	return; // annotation @NotYetImplemented handle throw new NotYetImplementedException()...
+	throw new StoreException("store.readonly.illegal", context.getName());
    }
 
 }

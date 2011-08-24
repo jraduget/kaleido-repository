@@ -15,7 +15,10 @@
  */
 package org.kaleidofoundry.core.context;
 
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.io.Serializable;
+import java.lang.annotation.Retention;
 
 /**
  * Static parameter that can be join to a {@link Context}, in order to inject it to {@link RuntimeContext} <br/>
@@ -26,6 +29,7 @@ import java.io.Serializable;
  * 
  * @author Jerome RADUGET
  */
+@Retention(RUNTIME)
 public @interface Parameter {
 
    /** context parameter name */

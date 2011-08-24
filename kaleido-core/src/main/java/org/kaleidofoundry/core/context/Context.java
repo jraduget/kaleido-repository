@@ -25,8 +25,8 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import org.infinispan.config.ConfigurationRegistry;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
+import org.kaleidofoundry.core.config.ConfigurationRegistry;
 
 /**
  * {@link Context} annotation can be used on a class field in order to provide / inject a {@link RuntimeContext} configuration instance to

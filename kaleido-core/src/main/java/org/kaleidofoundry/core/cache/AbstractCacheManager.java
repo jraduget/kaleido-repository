@@ -123,6 +123,17 @@ public abstract class AbstractCacheManager implements CacheManager {
 	cachesByName = new Registry<String, Cache>();
    }
 
+   /**
+    * don't use it,
+    * this constructor is only needed and used by some IOC framework like spring.
+    */
+   AbstractCacheManager() {
+	this.context = null;
+	this.singleFileStore = null;
+	this.cachesByName = null;
+	this.forcedConfiguration = null;
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.CacheManager#getCache(java.lang.Class)
@@ -175,13 +186,15 @@ public abstract class AbstractCacheManager implements CacheManager {
     */
    @Override
    public void destroyAll() {
-
 	try {
 	   if (singleFileStore != null) {
 		singleFileStore.unload();
 	   }
 	} catch (final StoreException rse) {
 	   LOGGER.error(InternalBundleHelper.CacheMessageBundle.getMessage("cache.destroyall.store.error"), rse);
+	} finally {
+	   // unregister cacheManager from registry
+	   CacheManagerProvider.removeFromRegistry(context.getName());
 	}
    }
 

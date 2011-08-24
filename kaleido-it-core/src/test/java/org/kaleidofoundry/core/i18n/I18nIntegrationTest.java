@@ -26,7 +26,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.cache.Cache;
-import org.kaleidofoundry.core.cache.EhCache1xImpl;
+import org.kaleidofoundry.core.cache.CacheManagerFactory;
+import org.kaleidofoundry.core.cache.EhCache2xImpl;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.store.StoreException;
 
@@ -46,6 +47,10 @@ public class I18nIntegrationTest extends Assert {
    public void cleanupClass() throws StoreException {
 	I18nMessagesFactory.clearCache();
 	ConfigurationFactory.unregister("myConfig");
+	// cleanup used cache manager
+	if (CacheManagerFactory.getRegistry().containsKey("myCacheManager")) {
+	   CacheManagerFactory.getRegistry().get("myCacheManager").destroyAll();
+	}
    }
 
    /**
@@ -91,7 +96,7 @@ public class I18nIntegrationTest extends Assert {
 	// we have to use ehcache here (see configuration)
 	Cache<?, ?> internalCache = ((DefaultMessageBundle) sample.getMessages()).resourceBundleCache;
 	assertNotNull(internalCache);
-	assertEquals(EhCache1xImpl.class.getName(), internalCache.getClass().getName());
+	assertEquals(EhCache2xImpl.class.getName(), internalCache.getClass().getName());
 	assertTrue(internalCache.getDelegate() instanceof Ehcache);
 	assertEquals(4, internalCache.size());
 	assertTrue(internalCache.keys().contains("label.hello"));

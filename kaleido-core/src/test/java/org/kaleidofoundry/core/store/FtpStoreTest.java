@@ -15,8 +15,11 @@
  */
 package org.kaleidofoundry.core.store;
 
+import java.io.ByteArrayInputStream;
+
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.mockftpserver.fake.FakeFtpServer;
 import org.mockftpserver.fake.UserAccount;
@@ -60,5 +63,39 @@ public class FtpStoreTest extends AbstractFileStoreTest {
    public void cleanup() throws Throwable {
 	fakeFtpServer.stop();
 	super.cleanup();
+   }
+
+   @Test
+   @Override
+   public void store() throws StoreException {
+	try {
+	   fileStore.store("kaleidofoundry/it/store/toStore.txt",
+		   new FileHandlerBean("kaleidofoundry/it/store/toStore.txt", new ByteArrayInputStream("foo".getBytes())));
+	   fail();
+	} catch (final StoreException rse) {
+	   assertEquals("store.readonly.illegal", rse.getCode());
+	}
+   }
+
+   @Test
+   @Override
+   public void move() throws StoreException {
+	try {
+	   fileStore.move("kaleidofoundry/it/store/foo.txt", "kaleidofoundry/it/store/foo.old");
+	   fail();
+	} catch (final StoreException rse) {
+	   assertEquals("store.readonly.illegal", rse.getCode());
+	}
+   }
+
+   @Test
+   @Override
+   public void remove() throws StoreException {
+	try {
+	   fileStore.remove("kaleidofoundry/it/store/toRemove.txt");
+	   fail();
+	} catch (final StoreException rse) {
+	   assertEquals("store.readonly.illegal", rse.getCode());
+	}
    }
 }

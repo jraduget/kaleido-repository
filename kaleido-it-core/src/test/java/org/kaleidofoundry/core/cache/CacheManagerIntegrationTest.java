@@ -19,6 +19,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,6 +42,18 @@ public class CacheManagerIntegrationTest {
    public static void cleanupClass() throws StoreException {
 	ConfigurationFactory.unregister("myConfig");
    }
+
+   @After
+   public void cleanup() {
+	// cleanup used cache manager
+	if (CacheManagerFactory.getRegistry().containsKey("myCacheManager")) {
+	   CacheManagerFactory.getRegistry().get("myCacheManager").destroyAll();
+	}
+	if (CacheManagerFactory.getRegistry().containsKey("myCacheManager02")) {
+	   CacheManagerFactory.getRegistry().get("myCacheManager02").destroyAll();
+	}
+   }
+
    @Test
    public void testCacheManagerSample01() {
 	CacheManagerSample01 cacheManager = new CacheManagerSample01();

@@ -94,6 +94,16 @@ public abstract class AbstractFileStore implements FileStore {
 	FILE_STORE_REGISTRY.put(getBaseUri(), this);
    }
 
+   /*
+    * don't use it,
+    * this constructor is only needed and used by some IOC framework like spring.
+    */
+   AbstractFileStore() {
+	this.context = null;
+	this.baseUri = null;
+	this.logger = LoggerFactory.getLogger(this.getClass());
+   }
+
    /**
     * @return runtime context of the instance
     */

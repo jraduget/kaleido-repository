@@ -19,7 +19,6 @@ import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
-import org.kaleidofoundry.core.cache.CacheConstants.DefaultCacheProviderEnum;
 
 /**
  * Test ehCache(c) Cache Manager
@@ -32,7 +31,7 @@ public class EhCacheTest extends AbstractCacheTest {
 
    @Before
    public void setup() {
-	cacheManager = CacheManagerFactory.provides(DefaultCacheProviderEnum.ehCache1x.name(), "classpath:/cache/ehcache-local.xml");
+	cacheManager = CacheManagerFactory.provides(CacheProvidersEnum.ehCache2x.name(), "classpath:/cache/ehcache-local.xml");
 	cache = cacheManager.getCache(Person.class.getName());
    }
 

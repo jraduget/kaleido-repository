@@ -50,7 +50,7 @@ import org.kaleidofoundry.core.context.Context;
  * 
  * # simple configuration context (optional) - used for cache manager policies
  * #configuration.myConfig.cacheManagerRef=myCacheManager
- * cacheManager.myCacheManager.providerCode=ehCache1x
+ * cacheManager.myCacheManager.providerCode=ehCache2x
  * cacheManager.myCacheManager.fileStoreUri=classpath:/config/ehcache.xml
  * 
  * 

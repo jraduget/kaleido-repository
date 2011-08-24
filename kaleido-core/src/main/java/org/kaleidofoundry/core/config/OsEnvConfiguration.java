@@ -62,6 +62,13 @@ public class OsEnvConfiguration extends AbstractConfiguration implements Configu
 	this(name, (String) null, context);
    }
 
+   /**
+    * @see AbstractConfiguration#AbstractConfiguration()
+    */
+   OsEnvConfiguration() {
+	super();
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.AbstractConfiguration#loadProperties(org.kaleidofoundry.core.store.ResourceHandler,

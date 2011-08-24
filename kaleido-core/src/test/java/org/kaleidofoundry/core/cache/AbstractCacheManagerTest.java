@@ -57,32 +57,49 @@ public abstract class AbstractCacheManagerTest extends Assert {
     */
    @After
    public void destroyAll() {
-	if (cacheManager != null) {
-	   cacheManager.destroyAll();
+	try {
+	   if (cacheManager != null) {
+		cacheManager.destroyAll();
+	   }
+	} finally {
+	   I18nMessagesFactory.enableJpaControl();
 	}
-	I18nMessagesFactory.enableJpaControl();
+	System.out.println(CacheManagerFactory.getRegistry() + "\n\n");
+
    }
 
    // ** tests *********************************************************************************************************
 
    @Test
    public void defaultConfiguration() {
-	CacheManager defaultCacheManager = CacheManagerFactory.provides(getCacheImplementationCode(), null, getCacheManagerContext());
 
-	_testCacheFactory(defaultCacheManager);
+	CacheManager defaultCacheManager = null;
 
-	// same instance have to be provided the second / third / ... times
-	assertSame(defaultCacheManager, CacheManagerFactory.provides(getCacheImplementationCode(), null, getCacheManagerContext()));
-	assertSame(defaultCacheManager, CacheManagerFactory.provides(getCacheImplementationCode(), null, getCacheManagerContext()));
-	assertSame(defaultCacheManager, CacheManagerFactory.provides(getCacheImplementationCode(), null, getCacheManagerContext()));
+	try {
+	   defaultCacheManager = CacheManagerFactory.provides(getCacheImplementationCode());
 
-	// not same instance as default instance
-	assertNotSame(defaultCacheManager, cacheManager);
+	   _testCacheFactory(defaultCacheManager);
+
+	   // same instance have to be provided the second / third / ... times
+	   assertSame(defaultCacheManager, CacheManagerFactory.provides(getCacheImplementationCode()));
+	   assertSame(defaultCacheManager, CacheManagerFactory.provides(getCacheImplementationCode()));
+	   assertSame(defaultCacheManager, CacheManagerFactory.provides(getCacheImplementationCode()));
+
+	   // not same instance as default instance
+	   assertNotSame(defaultCacheManager, cacheManager);
+
+	} finally {
+	   if (defaultCacheManager != null) {
+		defaultCacheManager.destroyAll();
+	   }
+	}
    }
 
    @Test
    public void legalConfiguration() {
+
 	_testCacheFactory(cacheManager);
+
 	// same instance have to be provided the second / third / ... times
 	assertSame(cacheManager, CacheManagerFactory.provides(getCacheImplementationCode(), getAvailableConfiguration(), getCacheManagerContext()));
 	assertSame(cacheManager, CacheManagerFactory.provides(getCacheImplementationCode(), getAvailableConfiguration(), getCacheManagerContext()));
@@ -92,7 +109,7 @@ public abstract class AbstractCacheManagerTest extends Assert {
    @Test(expected = CacheConfigurationException.class)
    public void illegalConfiguration() {
 	try {
-	   CacheManagerFactory.provides(getCacheImplementationCode(), "classpath:/cache/illegal-configuration.txt", getCacheManagerContext());
+	   CacheManagerFactory.provides(getCacheImplementationCode(), "classpath:/cache/illegal-configuration.txt");
 	} catch (final CacheConfigurationNotFoundException cnfe) {
 	   fail("except CacheConfigurationException not CacheConfigurationNotFoundException");
 	}
@@ -101,7 +118,7 @@ public abstract class AbstractCacheManagerTest extends Assert {
    @Test(expected = CacheConfigurationException.class)
    public void invalidConfiguration() {
 	try {
-	   CacheManagerFactory.provides(getCacheImplementationCode(), "classpath:/cache/invalid-configuration.xml", getCacheManagerContext());
+	   CacheManagerFactory.provides(getCacheImplementationCode(), "classpath:/cache/invalid-configuration.xml");
 	} catch (final CacheConfigurationNotFoundException cnfe) {
 	   fail("except CacheConfigurationException not CacheConfigurationNotFoundException");
 	}
@@ -109,7 +126,7 @@ public abstract class AbstractCacheManagerTest extends Assert {
 
    @Test(expected = CacheConfigurationNotFoundException.class)
    public void configurationNotFoundException() {
-	CacheManagerFactory.provides(getCacheImplementationCode(), "classpath:/cache/unknown.xml", getCacheManagerContext());
+	CacheManagerFactory.provides(getCacheImplementationCode(), "classpath:/cache/unknown.xml");
    }
 
    @Ignore
