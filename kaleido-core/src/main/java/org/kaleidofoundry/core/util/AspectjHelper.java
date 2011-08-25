@@ -39,7 +39,7 @@ public abstract class AspectjHelper {
 	if (logger.isDebugEnabled()) {
 	   logger.debug("\t<joinPoint.description>\t\t{} ", jp.toString());
 	   logger.debug("\t<joinpoint.static.signature>\t{}", jp.getStaticPart().getSignature());
-	   logger.debug("\t<joinpoint.target.instance>\t{}", jp.getTarget());
+	   // logger.debug("\t<joinpoint.target.instance>\t{}", jp.getTarget());
 
 	   if (jp.getSignature() instanceof FieldSignature) {
 		FieldSignature fs = (FieldSignature) jp.getSignature();

@@ -19,6 +19,7 @@ import java.text.ParseException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.context.jee6.MyServiceRemoteBean;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
@@ -30,7 +31,7 @@ import org.kaleidofoundry.core.store.StoreException;
 /**
  * @author Jerome RADUGET
  */
-public class MyServiceJavaEE6EJBTest extends AbstractMyServiceTest {
+public class MyServiceJavaEE6EJBTest implements MyServiceTest {
 
    // the remote naming service use to lookup the remote ejb
    private NamingService myNamingService;
@@ -69,73 +70,42 @@ public class MyServiceJavaEE6EJBTest extends AbstractMyServiceTest {
 	I18nMessagesFactory.enableJpaControl();
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee6.MyServiceInjectionTest#getMyService()
-    */
-   @Override
-   public MyService getMyService() {
-	return myRemoteJavaEE6Bean;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee6.AbstractMyServiceTest#runtimeContextInjectionTest()
-    */
-   @Override
+   @Test
    public void runtimeContextInjectionTest() {
 	if (!jee6Profil) { return; }
-	super.runtimeContextInjectionTest();
+	myRemoteJavaEE6Bean.runtimeContextInjectionAssertions();
+
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee6.AbstractMyServiceTest#configurationInjectionTest()
-    */
-   @Override
+   @Test
    public void configurationInjectionTest() throws ParseException {
 	if (!jee6Profil) { return; }
-	super.configurationInjectionTest();
+	myRemoteJavaEE6Bean.configurationInjectionAssertions();
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee6.AbstractMyServiceTest#cacheManagerInjectionTest()
-    */
-   @Override
+   @Test
    public void cacheManagerInjectionTest() {
 	if (!jee6Profil) { return; }
-	super.cacheManagerInjectionTest();
+	myRemoteJavaEE6Bean.cacheManagerInjectionAssertions();
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee6.AbstractMyServiceTest#cacheInjectionTest()
-    */
-   @Override
+   @Test
    public void cacheInjectionTest() {
 	if (!jee6Profil) { return; }
-	super.cacheInjectionTest();
+	myRemoteJavaEE6Bean.cacheInjectionAssertions();
+
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee6.AbstractMyServiceTest#i18nMessagesInjectionTest()
-    */
-   @Override
+   @Test
    public void i18nMessagesInjectionTest() {
 	if (!jee6Profil) { return; }
-	super.i18nMessagesInjectionTest();
+	myRemoteJavaEE6Bean.i18nMessagesInjectionAssertions();
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee6.AbstractMyServiceTest#namingServiceInjectionTest()
-    */
-   @Override
+   @Test
    public void namingServiceInjectionTest() {
 	if (!jee6Profil) { return; }
-	super.namingServiceInjectionTest();
+	myRemoteJavaEE6Bean.namingServiceInjectionAssertions();
    }
 
 }

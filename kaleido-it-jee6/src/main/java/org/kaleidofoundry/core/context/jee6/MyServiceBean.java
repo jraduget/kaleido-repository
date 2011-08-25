@@ -21,8 +21,13 @@ import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ProviderC
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.FileStoreUri;
 import static org.kaleidofoundry.core.i18n.I18nContextBuilder.BaseName;
 
+import java.text.ParseException;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.PostLoad;
 
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
@@ -30,10 +35,13 @@ import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.cache.CacheProvidersEnum;
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.context.Context;
+import org.kaleidofoundry.core.context.MyServiceAssertions;
 import org.kaleidofoundry.core.context.Parameter;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.I18nMessages;
 import org.kaleidofoundry.core.naming.NamingService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jerome RADUGET
@@ -41,16 +49,18 @@ import org.kaleidofoundry.core.naming.NamingService;
 @Stateless(mappedName = "ejb/MyServiceBean6")
 public class MyServiceBean implements MyServiceRemoteBean {
 
+   private final static Logger LOGGER = LoggerFactory.getLogger(MyServiceBean.class);
+
    public MyServiceBean() {
 	// the fields injection order is not guaranteed with CDI... something myCustomCacheManager is processed after myCustomCache
 	CacheManagerFactory.provides(CacheProvidersEnum.infinispan4x.name(), new RuntimeContext<CacheManager>("myCustomCacheManager"));
    }
 
-   @Inject
+   // @Inject
    @Context
    private RuntimeContext<?> myContext;
 
-   @Inject
+   // @Inject
    @Context("namedCtx")
    private RuntimeContext<?> myNamedContext;
 
@@ -58,122 +68,133 @@ public class MyServiceBean implements MyServiceRemoteBean {
    @Context(parameters = { @Parameter(name = FileStoreUri, value = "classpath:/config/myConfig.properties") })
    private Configuration myConfig;
 
-   @Inject
+   // @Inject
    @Context
    private CacheManager myDefaultCacheManager;
 
-   @Inject
+   // @Inject
    @Context(parameters = { @Parameter(name = ProviderCode, value = "infinispan4x") })
    private CacheManager myCustomCacheManager;
 
-   @Inject
+   // @Inject
    @Context
    private Cache<Integer, String> myDefaultCache;
 
-   @Inject
+   // @Inject
    @Context(parameters = { @Parameter(name = CacheName, value = "myNamedCache"), @Parameter(name = CacheManagerRef, value = "myCustomCacheManager") })
    private Cache<Integer, String> myCustomCache;
 
-   @Inject
+   // @Inject
    @Context
    private I18nMessages myDefaultMessages;
 
-   @Inject
+   // @Inject
    @Context(parameters = { @Parameter(name = BaseName, value = "i18n/messages") })
    private I18nMessages myBaseMessages;
 
-   @Inject
+   // @Inject
    @Context
    private NamingService myNamingService;
 
+   //
+   @PostConstruct
+   public void postConstruct() {
+	LOGGER.info("@PostConstruct " + toString());
+   }
+
+   @PreDestroy
+   public void preDestroy() {
+	LOGGER.info("@PreDestroy " + toString());
+   }
+
+   @PostLoad
+   public void postLoad() {
+	LOGGER.info("@PostLoad " + toString());
+   }
+
+   // @PrePassivate
+   // public void preActivate() {
+   // LOGGER.info("@PrePassivate " + toString());
+   // }
+   //
+   // @PostActivate
+   // public void postActivate() {
+   // LOGGER.info("@PostActivate " + toString());
+   // }
+
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee6.MyService#getMyContext()
+    * @see org.kaleidofoundry.core.context.jee5.MyServiceLocalBean#runtimeContextInjectionAssertions()
     */
    @Override
-   public RuntimeContext<?> getMyContext() {
-	return myContext;
+   public void runtimeContextInjectionAssertions() {
+	MyServiceAssertions.runtimeContextInjectionAssertions(myContext, myNamedContext);
    }
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee6.MyService#getMyNamedContext()
+    * @see org.kaleidofoundry.core.context.jee5.MyServiceLocalBean#configurationInjectionAssertions()
     */
    @Override
-   public RuntimeContext<?> getMyNamedContext() {
-	return myNamedContext;
+   public void configurationInjectionAssertions() throws ParseException {
+	MyServiceAssertions.configurationInjectionAssertions(myConfig);
    }
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee6.MyService#getMyConfig()
+    * @see org.kaleidofoundry.core.context.jee5.MyServiceLocalBean#cacheManagerInjectionAssertions()
     */
    @Override
-   public Configuration getMyConfig() {
-	return myConfig;
+   public void cacheManagerInjectionAssertions() {
+	MyServiceAssertions.cacheManagerInjectionAssertions(myDefaultCacheManager, myCustomCacheManager);
    }
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee6.MyService#getMyDefaultCacheManager()
+    * @see org.kaleidofoundry.core.context.jee5.MyServiceLocalBean#cacheInjectionAssertions()
     */
    @Override
-   public CacheManager getMyDefaultCacheManager() {
-	return myDefaultCacheManager;
+   public void cacheInjectionAssertions() {
+	MyServiceAssertions.cacheInjectionAssertions(myDefaultCache, myCustomCache);
    }
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee6.MyService#getMyCustomCacheManager()
+    * @see org.kaleidofoundry.core.context.jee5.MyServiceLocalBean#i18nMessagesInjectionAssertions()
     */
    @Override
-   public CacheManager getMyCustomCacheManager() {
-	return myCustomCacheManager;
+   public void i18nMessagesInjectionAssertions() {
+	MyServiceAssertions.i18nMessagesInjectionAssertions(myDefaultMessages, myBaseMessages);
    }
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee6.MyService#getMyDefaultCache()
+    * @see org.kaleidofoundry.core.context.jee5.MyServiceLocalBean#namingServiceInjectionAssertions()
     */
    @Override
-   public Cache<Integer, String> getMyDefaultCache() {
-	return myDefaultCache;
+   public void namingServiceInjectionAssertions() {
+	MyServiceAssertions.namingServiceInjectionAssertions(myNamingService);
    }
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee6.MyService#getMyCustomCache()
+    * @see java.lang.Object#toString()
     */
    @Override
-   public Cache<Integer, String> getMyCustomCache() {
-	return myCustomCache;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee6.MyService#getMyDefaultMessages()
-    */
-   @Override
-   public I18nMessages getMyDefaultMessages() {
-	return myDefaultMessages;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee6.MyService#getMyBaseMessages()
-    */
-   @Override
-   public I18nMessages getMyBaseMessages() {
-	return myBaseMessages;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee6.MyService#getMyNamingService()
-    */
-   @Override
-   public NamingService getMyNamingService() {
-	return myNamingService;
+   public String toString() {
+	StringBuilder str = new StringBuilder();
+	str.append("\n\t").append(super.toString());
+	str.append("\n\tmyNamingService=").append(myNamingService != null ? myNamingService.toString() : "null");
+	str.append("\n\tmyDefaultMessages=").append(myDefaultMessages != null ? myDefaultMessages.toString() : "null");
+	str.append("\n\tmyBaseMessages=").append(myBaseMessages != null ? myBaseMessages.toString() : "null");
+	str.append("\n\tmyDefaultCache=").append(myDefaultCache != null ? myDefaultCache.toString() : "null");
+	str.append("\n\tmyCustomCache=").append(myCustomCache != null ? myCustomCache.toString() : "null");
+	str.append("\n\tmyDefaultCacheManager=").append(myDefaultCacheManager != null ? myDefaultCacheManager.toString() : "null");
+	str.append("\n\tmyCustomCacheManager=").append(myCustomCacheManager != null ? myCustomCacheManager.toString() : "null");
+	str.append("\n\tmyConfig=").append(myConfig != null ? myConfig.toString() : "null");
+	str.append("\n\tmyContext=").append(myContext != null ? myContext.toString() : "null");
+	str.append("\n\tmyNamedContext=").append(myNamedContext != null ? myNamedContext.toString() : "null");
+	return str.toString();
    }
 
 }

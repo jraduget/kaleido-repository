@@ -15,11 +15,23 @@
  */
 package org.kaleidofoundry.core.context.jee6;
 
+import java.text.ParseException;
+
 import javax.ejb.Local;
 
-import org.kaleidofoundry.core.context.MyService;
-
 @Local
-public interface MyServiceLocalBean extends MyService {
+public interface MyServiceLocalBean {
+
+   void runtimeContextInjectionAssertions();
+
+   void configurationInjectionAssertions() throws ParseException;
+
+   void cacheManagerInjectionAssertions();
+
+   void cacheInjectionAssertions();
+
+   void i18nMessagesInjectionAssertions();
+
+   void namingServiceInjectionAssertions();
 
 }

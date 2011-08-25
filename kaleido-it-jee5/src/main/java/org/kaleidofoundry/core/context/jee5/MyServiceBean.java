@@ -30,6 +30,8 @@ import javax.persistence.PostLoad;
 
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
+import org.kaleidofoundry.core.cache.CacheManagerFactory;
+import org.kaleidofoundry.core.cache.CacheProvidersEnum;
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.context.Context;
 import org.kaleidofoundry.core.context.MyServiceAssertions;
@@ -47,6 +49,11 @@ import org.slf4j.LoggerFactory;
 public class MyServiceBean implements MyServiceRemoteBean {
 
    private final static Logger LOGGER = LoggerFactory.getLogger(MyServiceBean.class);
+
+   public MyServiceBean() {
+	// the fields injection order is not guaranteed with CDI... something myCustomCacheManager is processed after myCustomCache
+	CacheManagerFactory.provides(CacheProvidersEnum.infinispan4x.name(), new RuntimeContext<CacheManager>("myCustomCacheManager"));
+   }
 
    @Context
    private RuntimeContext<?> myContext;
@@ -164,20 +171,18 @@ public class MyServiceBean implements MyServiceRemoteBean {
     */
    @Override
    public String toString() {
-
 	StringBuilder str = new StringBuilder();
-	str.append(super.toString());
-	str.append("\n\tmyNamingService").append(myNamingService != null ? myNamingService.toString() : "null");
-	str.append("\n\tmyDefaultMessages").append(myDefaultMessages != null ? myDefaultMessages.toString() : "null");
-	str.append("\n\tmyBaseMessages").append(myBaseMessages != null ? myBaseMessages.toString() : "null");
-	str.append("\n\tmyDefaultCache").append(myDefaultCache != null ? myDefaultCache.toString() : "null");
-	str.append("\n\tmyCustomCache").append(myCustomCache != null ? myCustomCache.toString() : "null");
-	str.append("\n\tmyDefaultCacheManager").append(myDefaultCacheManager != null ? myDefaultCacheManager.toString() : "null");
-	str.append("\n\tmyCustomCacheManager").append(myCustomCacheManager != null ? myCustomCacheManager.toString() : "null");
-	str.append("\n\tmyConfig").append(myConfig != null ? myConfig.toString() : "null");
-	str.append("\n\tmyContext").append(myContext != null ? myContext.toString() : "null");
-	str.append("\n\tmyNamedContext").append(myNamedContext != null ? myNamedContext.toString() : "null");
-
+	str.append("\n\t").append(super.toString());
+	str.append("\n\tmyNamingService=").append(myNamingService != null ? myNamingService.toString() : "null");
+	str.append("\n\tmyDefaultMessages=").append(myDefaultMessages != null ? myDefaultMessages.toString() : "null");
+	str.append("\n\tmyBaseMessages=").append(myBaseMessages != null ? myBaseMessages.toString() : "null");
+	str.append("\n\tmyDefaultCache=").append(myDefaultCache != null ? myDefaultCache.toString() : "null");
+	str.append("\n\tmyCustomCache=").append(myCustomCache != null ? myCustomCache.toString() : "null");
+	str.append("\n\tmyDefaultCacheManager=").append(myDefaultCacheManager != null ? myDefaultCacheManager.toString() : "null");
+	str.append("\n\tmyCustomCacheManager=").append(myCustomCacheManager != null ? myCustomCacheManager.toString() : "null");
+	str.append("\n\tmyConfig=").append(myConfig != null ? myConfig.toString() : "null");
+	str.append("\n\tmyContext=").append(myContext != null ? myContext.toString() : "null");
+	str.append("\n\tmyNamedContext=").append(myNamedContext != null ? myNamedContext.toString() : "null");
 	return str.toString();
    }
 

@@ -15,11 +15,15 @@
  */
 package org.kaleidofoundry.core.context;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import org.junit.Assert;
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.Infinispan4xCacheImpl;
@@ -35,7 +39,7 @@ import org.kaleidofoundry.core.naming.NamingService;
 /**
  * @author Jerome RADUGET
  */
-public class MyServiceAssertions extends Assert {
+public class MyServiceAssertions {
 
    public static void runtimeContextInjectionAssertions(final RuntimeContext<?> myContext, final RuntimeContext<?> myNamedContext) {
 	assertNotNull(myContext);
