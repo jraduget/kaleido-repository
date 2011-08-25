@@ -19,7 +19,6 @@ import static org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory.
 
 import java.io.Serializable;
 
-import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -38,7 +37,7 @@ import org.kaleidofoundry.core.store.StoreException;
 /**
  * @author Jerome RADUGET
  */
-@Stateful(mappedName = "ejb/configuration/model")
+// @Stateful(mappedName = "ejb/configuration/model")
 // @Singleton
 @Declare(ConfigurationConstants.JpaModelConfigurationPluginName)
 public class JpaModelConfiguration extends AbstractConfiguration {
