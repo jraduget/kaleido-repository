@@ -27,7 +27,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.PostLoad;
 
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
@@ -56,11 +55,11 @@ public class MyServiceBean implements MyServiceRemoteBean {
 	CacheManagerFactory.provides(CacheProvidersEnum.infinispan4x.name(), new RuntimeContext<CacheManager>("myCustomCacheManager"));
    }
 
-   // @Inject
+   @Inject
    @Context
    private RuntimeContext<?> myContext;
 
-   // @Inject
+   @Inject
    @Context("namedCtx")
    private RuntimeContext<?> myNamedContext;
 
@@ -68,35 +67,34 @@ public class MyServiceBean implements MyServiceRemoteBean {
    @Context(parameters = { @Parameter(name = FileStoreUri, value = "classpath:/config/myConfig.properties") })
    private Configuration myConfig;
 
-   // @Inject
+   @Inject
    @Context
    private CacheManager myDefaultCacheManager;
 
-   // @Inject
+   @Inject
    @Context(parameters = { @Parameter(name = ProviderCode, value = "infinispan4x") })
    private CacheManager myCustomCacheManager;
 
-   // @Inject
+   @Inject
    @Context
    private Cache<Integer, String> myDefaultCache;
 
-   // @Inject
+   @Inject
    @Context(parameters = { @Parameter(name = CacheName, value = "myNamedCache"), @Parameter(name = CacheManagerRef, value = "myCustomCacheManager") })
    private Cache<Integer, String> myCustomCache;
 
-   // @Inject
+   @Inject
    @Context
    private I18nMessages myDefaultMessages;
 
-   // @Inject
+   @Inject
    @Context(parameters = { @Parameter(name = BaseName, value = "i18n/messages") })
    private I18nMessages myBaseMessages;
 
-   // @Inject
+   @Inject
    @Context
    private NamingService myNamingService;
 
-   //
    @PostConstruct
    public void postConstruct() {
 	LOGGER.info("@PostConstruct " + toString());
@@ -106,21 +104,6 @@ public class MyServiceBean implements MyServiceRemoteBean {
    public void preDestroy() {
 	LOGGER.info("@PreDestroy " + toString());
    }
-
-   @PostLoad
-   public void postLoad() {
-	LOGGER.info("@PostLoad " + toString());
-   }
-
-   // @PrePassivate
-   // public void preActivate() {
-   // LOGGER.info("@PrePassivate " + toString());
-   // }
-   //
-   // @PostActivate
-   // public void postActivate() {
-   // LOGGER.info("@PostActivate " + toString());
-   // }
 
    /*
     * (non-Javadoc)

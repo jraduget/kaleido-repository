@@ -30,13 +30,13 @@
 	</build>
 
 	<dependencies>
-
+	
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
-			<artifactId>kaleido-core</artifactId>
+			<artifactId>kaleido-jee6</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-core</artifactId>
