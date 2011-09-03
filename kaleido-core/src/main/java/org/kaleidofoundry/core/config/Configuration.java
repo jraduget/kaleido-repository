@@ -524,6 +524,7 @@ public interface Configuration {
    // **************************************************************************
    // -> Property value accessors
    // **************************************************************************
+
    /**
     * @param key requested property key
     * @return value of the property requested (null if not defined)
@@ -549,6 +550,28 @@ public interface Configuration {
    // **************************************************************************
    // -> Typed property value accessors
    // **************************************************************************
+
+   /**
+    * @param key requested property key
+    * @return value of the property requested (null if not defined)
+    */
+   @Nullable
+   Character getCharacter(@NotNull String key);
+
+   /**
+    * @param key requested property key
+    * @param defaultValue Default value if property content is null
+    * @return value of the property requested if defined, otherwise defaultValue argument
+    */
+   @Nullable
+   Character getCharacter(@NotNull String key, Character defaultValue);
+
+   /**
+    * @param key requested property key
+    * @return values of the property requested
+    */
+   @Nullable
+   List<Character> getCharacterList(@NotNull String key);
 
    /**
     * @param key requested property key

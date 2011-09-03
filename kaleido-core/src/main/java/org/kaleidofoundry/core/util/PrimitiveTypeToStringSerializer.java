@@ -110,6 +110,8 @@ public class PrimitiveTypeToStringSerializer implements ToStringSerializer {
 
 	if (String.class.isAssignableFrom(type)) { return (T) (StringHelper.isEmpty(value) ? "" : value); }
 
+	if (Character.class.isAssignableFrom(type)) { return (T) (StringHelper.isEmpty(value) ? null : Character.valueOf(value.charAt(0))); }
+
 	throw new IllegalStateException(UtilMessageBundle.getMessage("serializer.illegal.class", type.getName()));
 
    }
@@ -154,6 +156,8 @@ public class PrimitiveTypeToStringSerializer implements ToStringSerializer {
 
 	if (String.class.isAssignableFrom(type)) { return (String) value; }
 
+	if (Character.class.isAssignableFrom(type)) { return value.toString(); }
+
 	throw new IllegalStateException(UtilMessageBundle.getMessage("serializer.illegal.class", type.getName()));
 
    }
@@ -171,10 +175,10 @@ public class PrimitiveTypeToStringSerializer implements ToStringSerializer {
 
 	if (value == null) { return null; }
 
-	if (value instanceof String) {
-	   return deserialize((String) value, type);
-	} else if (value.getClass().isAssignableFrom(type)) {
+	if (value.getClass().isAssignableFrom(type)) {
 	   return (T) value;
+	} else if (value instanceof String) {
+	   return deserialize((String) value, type);
 	} else {
 	   throw new IllegalArgumentException(UtilMessageBundle.getMessage("serializer.illegal.argument", value.getClass().getName(), type.getName()));
 	}

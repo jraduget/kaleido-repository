@@ -166,6 +166,31 @@ public abstract class AbstractConfigurationTest extends Assert {
    }
 
    @Test
+   public void getCharacter() {
+	assertNotNull(configuration);
+	assertEquals(Character.valueOf('a'), configuration.getCharacter("//application/name"));
+	assertEquals(Character.valueOf('1'), configuration.getCharacter("//application/version"));
+	assertEquals(Character.valueOf('d'), configuration.getCharacter("//application/description"));
+	assertNull(configuration.getCharacter("//application/modules/netbusiness/name"));
+	// test unknown key
+	assertNull(configuration.getCharacter("foo"));
+	assertEquals(Character.valueOf('e'), configuration.getCharacter("foo", 'e'));
+   }
+
+   @Test
+   public void getCharacterList() {
+	assertNotNull(configuration);
+	final List<Character> values = configuration.getCharacterList("//application/librairies");
+	assertNotNull(values);
+	assertEquals(3, values.size());
+	assertEquals(Character.valueOf('d'), values.get(0));
+	assertEquals(Character.valueOf('l'), values.get(1));
+	assertEquals(Character.valueOf('m'), values.get(2));
+	// test unknown key
+	assertNull(configuration.getCharacterList("foo"));
+   }
+
+   @Test
    public void getString() {
 	assertNotNull(configuration);
 	assertEquals("app", configuration.getString("//application/name"));
