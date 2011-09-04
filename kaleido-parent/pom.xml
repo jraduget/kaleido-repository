@@ -422,7 +422,7 @@
 						</goals>
 						<configuration>
 							<serverId>googlecode.kaleido</serverId>
-							<failsOnError>true</failsOnError>
+							<failsOnError>false</failsOnError>
 							<projectName>kaleido-foundry</projectName>
 							<uploads>
 								<upload>
@@ -476,7 +476,7 @@
 				<executions>
 					<execution>
 						<inherited>true</inherited>
-						<phase>deploy</phase>
+						<phase>install</phase>
 						<goals>
 							<goal>jar-no-fork</goal>
 						</goals>
