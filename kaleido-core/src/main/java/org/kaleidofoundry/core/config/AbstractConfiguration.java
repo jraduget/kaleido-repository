@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,6 +116,9 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     */
    protected AbstractConfiguration(String name, String resourceUri, @NotNull final RuntimeContext<Configuration> context) throws StoreException {
 
+	super(context.getString(ConfigurationContextBuilder.MultiValuesSeparator), context.getString(ConfigurationContextBuilder.DateTimeFormat), context
+		.getString(ConfigurationContextBuilder.NumberFormat));
+
 	// argument & context inputs
 	name = !StringHelper.isEmpty(name) ? name : (!StringHelper.isEmpty(context.getString(Name)) ? context.getString(Name) : context.getName());
 	resourceUri = !StringHelper.isEmpty(resourceUri) ? resourceUri : context.getString(FileStoreUri);
@@ -160,12 +163,12 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * this constructor is only needed and used by some IOC framework like spring.
     */
    AbstractConfiguration() {
-	this.name = null;
-	this.listeners = null;
-	this.cacheProperties = null;
-	this.context = null;
-	this.singleFileStore = null;
-	this.changesEvents = null;
+	name = null;
+	listeners = null;
+	cacheProperties = null;
+	context = null;
+	singleFileStore = null;
+	changesEvents = null;
    }
 
    /**
@@ -180,7 +183,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * @throws ConfigurationException
     */
    protected abstract Cache<String, Serializable> loadProperties(FileHandler resourceHandler, Cache<String, Serializable> properties) throws StoreException,
-	   ConfigurationException;
+   ConfigurationException;
 
    /**
     * you don't need to release resourceHandler argument, it is done by agregator
@@ -192,12 +195,13 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * @throws ConfigurationException
     */
    protected abstract Cache<String, Serializable> storeProperties(Cache<String, Serializable> properties, SingleFileStore fileStore) throws StoreException,
-	   ConfigurationException;
+   ConfigurationException;
 
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#getName()
     */
+   @Override
    public String getName() {
 	return name;
    }
@@ -206,6 +210,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#getResourceUri()
     */
+   @Override
    public String getResourceUri() {
 	return singleFileStore.getResourceBinding();
    }
@@ -214,6 +219,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#isStorageAllowed()
     */
+   @Override
    public boolean isStorable() {
 	if (StringHelper.isEmpty(context.getString(StorageAllowed))) {
 	   return true;
@@ -226,6 +232,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#isUpdateAllowed()
     */
+   @Override
    public boolean isUpdateable() {
 	if (StringHelper.isEmpty(context.getString(UpdateAllowed))) {
 	   return true;
@@ -242,6 +249,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#isLoaded()
     */
+   @Override
    public boolean isLoaded() {
 	return singleFileStore.isLoaded();
    }
@@ -336,16 +344,18 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#addConfigurationChangeListener(java.beans.PropertyChangeListener)
     */
+   @Override
    public void addConfigurationListener(final ConfigurationListener listener) {
-	this.listeners.add(ConfigurationListener.class, listener);
+	listeners.add(ConfigurationListener.class, listener);
    }
 
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#removeConfigurationChangeListener(java.beans.PropertyChangeListener)
     */
+   @Override
    public void removeConfigurationListener(final ConfigurationListener listener) {
-	this.listeners.remove(ConfigurationListener.class, listener);
+	listeners.remove(ConfigurationListener.class, listener);
    }
 
    /**
@@ -387,6 +397,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#fireConfigurationChangesEvents()
     */
+   @Override
    public FireChangesReport fireConfigurationChangesEvents() {
 
 	int created = 0;
@@ -455,6 +466,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#getRoots()
     */
+   @Override
    public Set<String> roots() {
 	return roots(KeyRoot);
    }
@@ -463,6 +475,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#getRoots(java.lang.String)
     */
+   @Override
    public Set<String> roots(final String prefix) {
 
 	final String fullKey = normalizeKey(prefix);
@@ -490,6 +503,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#containsRoot(java.lang. String, java.lang.String)
     */
+   @Override
    public boolean containsRoot(final String rootKey, final String prefixRoot) {
 	return roots(prefixRoot).contains(rootKey);
    }
@@ -498,6 +512,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#getRootsIterator()
     */
+   @Override
    public Iterator<String> rootsIterator() {
 	return roots().iterator();
    }
@@ -506,6 +521,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#getRootsIterator(java.lang .String)
     */
+   @Override
    public Iterator<String> rootsIterator(final String prefix) {
 	return roots(prefix).iterator();
    }
@@ -553,6 +569,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.config.Configuration#containsKey(java .lang.String)
     */
+   @Override
    public boolean containsKey(final String key, final String prefix) {
 	return keySet(prefix).contains(normalizeKey(key));
    }
@@ -561,6 +578,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.config.Configuration#getKeysIterator()
     */
+   @Override
    public Iterator<String> keysIterator() {
 	return keySet().iterator();
    }
@@ -569,6 +587,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.config.Configuration#getKeysIterator( java.lang.String)
     */
+   @Override
    public Iterator<String> keysIterator(final String prefix) {
 	return keySet(prefix).iterator();
    }
@@ -630,6 +649,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#toProperties(java.lang.String)
     */
+   @Override
    public Properties toProperties(final String rootPrefix) {
 
 	final Properties prop = new Properties();
@@ -657,6 +677,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#toProperties()
     */
+   @Override
    public Properties toProperties() {
 	return toProperties(KeyRoot);
    }
@@ -665,6 +686,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.Configuration#addConfiguration(org.kaleidofoundry.core.config.Configuration)
     */
+   @Override
    public Configuration addConfiguration(final Configuration config) {
 
 	if (config != null) {
@@ -683,6 +705,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * @see org.kaleidofoundry.core.config.Configuration#extractConfiguration(java.lang.String,
     * org.kaleidofoundry.core.config.Configuration)
     */
+   @Override
    public Configuration extractConfiguration(@NotNull String prefix, @NotNull final Configuration outConfiguration) {
 
 	prefix = normalizeKey(prefix);
