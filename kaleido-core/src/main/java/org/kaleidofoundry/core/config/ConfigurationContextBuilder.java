@@ -315,7 +315,7 @@ public class ConfigurationContextBuilder extends AbstractRuntimeContextBuilder<C
    }
 
    /**
-    * @param separator
+    * @param multiValuesSeparator
     * @return set main args separator context parameter
     */
    public ConfigurationContextBuilder withMultiValuesSeparator(final String multiValuesSeparator) {
@@ -324,7 +324,7 @@ public class ConfigurationContextBuilder extends AbstractRuntimeContextBuilder<C
    }
 
    /**
-    * @param separator
+    * @param dateTimeFormat
     * @return set main args separator context parameter
     */
    public ConfigurationContextBuilder withDateTimeFormat(final String dateTimeFormat) {
@@ -333,7 +333,7 @@ public class ConfigurationContextBuilder extends AbstractRuntimeContextBuilder<C
    }
 
    /**
-    * @param separator
+    * @param numberFormat
     * @return set main args separator context parameter
     */
    public ConfigurationContextBuilder withNumberFormat(final String numberFormat) {

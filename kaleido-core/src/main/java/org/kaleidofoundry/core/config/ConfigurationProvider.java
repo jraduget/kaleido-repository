@@ -99,7 +99,7 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
    public Configuration provides(@NotNull final String name, @NotNull final String resourceURI) throws ProviderException {
-	return provides(name, resourceURI, new RuntimeContext<Configuration>(Configuration.class));
+	return provides(name, resourceURI, new RuntimeContext<Configuration>(name, Configuration.class));
    }
 
    /**
