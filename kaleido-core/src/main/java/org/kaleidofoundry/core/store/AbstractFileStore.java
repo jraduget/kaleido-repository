@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ public abstract class AbstractFileStore implements FileStore {
 	if (StringHelper.isEmpty(baseUri)) { throw new EmptyContextParameterException(BaseUri, context); }
 
 	this.context = context;
-	this.logger = LoggerFactory.getLogger(this.getClass());
+	logger = LoggerFactory.getLogger(this.getClass());
 	this.baseUri = baseUri;
 	// register the file store instance
 	FILE_STORE_REGISTRY.put(getBaseUri(), this);
@@ -99,9 +99,9 @@ public abstract class AbstractFileStore implements FileStore {
     * this constructor is only needed and used by some IOC framework like spring.
     */
    AbstractFileStore() {
-	this.context = null;
-	this.baseUri = null;
-	this.logger = LoggerFactory.getLogger(this.getClass());
+	context = null;
+	baseUri = null;
+	logger = LoggerFactory.getLogger(this.getClass());
    }
 
    /**
@@ -180,13 +180,15 @@ public abstract class AbstractFileStore implements FileStore {
 	   resourceUri.append(resourceRelativePath);
 	}
 
-	return resourceUri.toString();
+	// handle spaces in the uri -> replace them by %20
+	return StringHelper.replaceAll(resourceUri.toString(), " ", "%20");
    }
 
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.store.FileStore#getBaseUri()
     */
+   @Override
    @NotNull
    public String getBaseUri() {
 	return baseUri;

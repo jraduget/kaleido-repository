@@ -65,6 +65,21 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td>cache manager context name to use, if not specify default will be used (see {@link CacheManagerFactory})</td>
  * </tr>
  * <tr>
+ * <td>multiValuesSeparator</td>
+ * <td>all</td>
+ * <td>separator used for property having multi-values : <code>;|,| </code></td>
+ * </tr>
+ * <tr>
+ * <td>dateTimeFormat</td>
+ * <td>all</td>
+ * <td>used for property having a date time format : <code>yyyy-MM-dd'T'hh:mm:ss</code></td>
+ * </tr>
+ * <tr>
+ * <td>numberFormat</td>
+ * <td>all</td>
+ * <td>used for property having a number format : <code>##0.0####</code></td>
+ * </tr>
+ * <tr>
  * <td><b>Property name</b></td>
  * <td><b>Perimeter</b></td>
  * <td><b>Property description</b></td>
@@ -102,6 +117,13 @@ public class ConfigurationContextBuilder extends AbstractRuntimeContextBuilder<C
    public static final String FileStoreRef = "fileStoreRef";
    /** common configuration context property - cache manager context name to use */
    public static final String CacheManagerRef = "cacheManagerRef";
+
+   /** common - separator used for property having multi-values : <code>;|,| </code> */
+   public static final String MultiValuesSeparator = "multiValuesSeparator";
+   /** common - used for property having a date format : <code>yyyy-MM-dd'T'hh:mm:ss */
+   public static final String DateTimeFormat = "dateTimeFormat";
+   /** common - used for property having a number format : <code>##0.0#### */
+   public static final String NumberFormat = "numberFormat";
 
    /**
     * {@link MainArgsConfiguration} configuration context property - string representation parameters of the main arguments array
@@ -289,6 +311,33 @@ public class ConfigurationContextBuilder extends AbstractRuntimeContextBuilder<C
     */
    public ConfigurationContextBuilder withMainArgsSeparator(final String separator) {
 	getContextParameters().put(ArgsSeparator, separator);
+	return this;
+   }
+
+   /**
+    * @param separator
+    * @return set main args separator context parameter
+    */
+   public ConfigurationContextBuilder withMultiValuesSeparator(final String multiValuesSeparator) {
+	getContextParameters().put(MultiValuesSeparator, multiValuesSeparator);
+	return this;
+   }
+
+   /**
+    * @param separator
+    * @return set main args separator context parameter
+    */
+   public ConfigurationContextBuilder withDateTimeFormat(final String dateTimeFormat) {
+	getContextParameters().put(DateTimeFormat, dateTimeFormat);
+	return this;
+   }
+
+   /**
+    * @param separator
+    * @return set main args separator context parameter
+    */
+   public ConfigurationContextBuilder withNumberFormat(final String numberFormat) {
+	getContextParameters().put(NumberFormat, numberFormat);
 	return this;
    }
 
