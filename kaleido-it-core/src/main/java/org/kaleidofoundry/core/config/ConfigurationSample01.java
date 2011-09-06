@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.core.config;
 
+import static java.lang.System.out;
+
 import org.kaleidofoundry.core.context.Context;
 
 /**
@@ -90,18 +92,18 @@ public class ConfigurationSample01 {
    public void echo() {
 
 	// you can use several configuration key syntax like : { "myapp.name" , "//myapp/name" , "myapp/name" }
-	System.out.printf("application name: %s\n", myConfig.getString("myapp.name"));
-	System.out.printf("application admin mail : %s\n", myConfig.getString("myapp.admin.email"));
-	System.out.printf("date sample: %s\n", myConfig.getString("myapp.sample.date"));
-	System.out.printf("date typed sample: %s\n", myConfig.getDate("myapp.sample.date"));
-	System.out.printf("float sample : %s\n", myConfig.getString("myapp.sample.float"));
-	System.out.printf("float typed sample : %s\n", myConfig.getFloat("myapp.sample.float"));
-	System.out.printf("boolean sample : %s\n", myConfig.getString("myapp.sample.boolean"));
-	System.out.printf("boolean typed sample : %s\n", myConfig.getBoolean("myapp.sample.boolean"));
+	out.printf("application name: %s\n", myConfig.getString("myapp.name"));
+	out.printf("application admin mail : %s\n", myConfig.getString("myapp.admin.email"));
+	out.printf("date sample: %s\n", myConfig.getString("myapp.sample.date"));
+	out.printf("date typed sample: %s\n", myConfig.getDate("myapp.sample.date"));
+	out.printf("float sample : %s\n", myConfig.getString("myapp.sample.float"));
+	out.printf("float typed sample : %s\n", myConfig.getFloat("myapp.sample.float"));
+	out.printf("boolean sample : %s\n", myConfig.getString("myapp.sample.boolean"));
+	out.printf("boolean typed sample : %s\n", myConfig.getBoolean("myapp.sample.boolean"));
 
-	System.out.println("keys:");
+	out.println("keys:");
 	for (final String key : myConfig.keySet()) {
-	   System.out.printf("\tkey=%s\n", key);
+	   out.printf("\tkey=%s\n", key);
 	}
    }
 
