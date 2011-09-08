@@ -40,13 +40,13 @@ import org.kaleidofoundry.core.context.Parameter;
  * Resource file : "classpath:/i18n/myContext.properties" contains :
  * 
  * <pre>
- * i18n.myBundle.baseName=i18n/messages
- * i18n.myBundle.locale.lang=en
- * i18n.myBundle.locale.country=GB
- * #i18n.myBundle.cacheManagerRef=myCacheManager
+ * i18ns.myBundle.baseName=i18n/messages
+ * i18ns.myBundle.locale.lang=en
+ * i18ns.myBundle.locale.country=GB
+ * #i18ns.myBundle.cacheManagerRef=myCacheManager
  * 
- * cacheManager.myCacheManager.providerCode=ehCache2x
- * cacheManager.myCacheManager.fileStoreUri=classpath:/i18n/ehcache.xml
+ * cacheManagers.myCacheManager.providerCode=ehCache2x
+ * cacheManagers.myCacheManager.fileStoreUri=classpath:/i18n/ehcache.xml
  * </pre>
  * 
  * Message file : "classpath:/i18n/messages_fr.properties" contains :

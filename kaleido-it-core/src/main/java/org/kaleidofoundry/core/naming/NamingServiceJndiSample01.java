@@ -55,27 +55,27 @@ import org.kaleidofoundry.core.context.Context;
  * <pre>
  * # for a local naming service
  * # -> it is only an example. by default : caching and failover are disabled. Moreover no need of failover in a local context
- * naming.myNamingService.caching=false
- * naming.myNamingService.caching.strategy=none
- * naming.myNamingService.failover.enabled=false
+ * namingServices.myNamingService.caching=false
+ * namingServices.myNamingService.caching.strategy=none
+ * namingServices.myNamingService.failover.enabled=false
  * </pre>
  * 
  * <b>or in a remote environment :</b>
  * 
  * <pre>
  * # for a remote naming service (glassfish v3 server here)
- * naming.myNamingService.java.naming.factory.initial=com.sun.enterprise.naming.SerialInitContextFactory
- * naming.myNamingService.java.naming.factory.url.pkgs=com.sun.enterprise.naming
- * naming.myNamingService.java.naming.factory.state=com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl
- * naming.myNamingService.org.omg.CORBA.ORBInitialHost=127.0.0.1
- * naming.myNamingService.org.omg.CORBA.ORBInitialPort=3700
+ * namingServices.myNamingService.java.naming.factory.initial=com.sun.enterprise.naming.SerialInitContextFactory
+ * namingServices.myNamingService.java.naming.factory.url.pkgs=com.sun.enterprise.naming
+ * namingServices.myNamingService.java.naming.factory.state=com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl
+ * namingServices.myNamingService.org.omg.CORBA.ORBInitialHost=127.0.0.1
+ * namingServices.myNamingService.org.omg.CORBA.ORBInitialPort=3700
  * 
  * # caching and failover policies in a remote context
- * naming.myNamingService.caching=all
- * naming.myNamingService.caching.strategy=global
- * naming.myNamingService.failover.enabled=true
- * naming.myNamingService.failover.wait=2000
- * naming.myNamingService.failover.maxretry=5
+ * namingServices.myNamingService.caching=all
+ * namingServices.myNamingService.caching.strategy=global
+ * namingServices.myNamingService.failover.enabled=true
+ * namingServices.myNamingService.failover.wait=2000
+ * namingServices.myNamingService.failover.maxretry=5
  * </pre>
  * 
  * @author Jerome RADUGET

@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,22 +66,22 @@ public interface ConfigurationConstants {
    }
 
    /** configuration interface plugin name */
-   String ConfigurationPluginName = "configuration";
+   String ConfigurationPluginName = "configurations";
    /** classic properties implementation configuration plugin name - configuration resource uri have to end with '.properties' */
-   String PropertiesConfigurationPluginName = "configuration.properties";
+   String PropertiesConfigurationPluginName = "configurations.properties";
    /** xml properties implementation configuration plugin name - configuration resource uri have to end with '.xmlproperties' */
-   String XmlPropertiesConfigurationPluginName = "configuration.properties.xml";
+   String XmlPropertiesConfigurationPluginName = "configurations.properties.xml";
    /** xml implementation configuration plugin name - configuration resource uri have to end with '.xml' */
-   String XmlConfigurationPluginName = "configuration.xml";
+   String XmlConfigurationPluginName = "configurations.xml";
    /** jpa model implementation for configuration, plugin name */
-   String JpaModelConfigurationPluginName = "configuration.model";
+   String JpaModelConfigurationPluginName = "configurations.model";
 
    /** java env variable implementation configuration plugin name - configuration resource uri have to end with '.javasystem' */
-   String JavaSystemConfigurationPluginName = "configuration.javasystem";
+   String JavaSystemConfigurationPluginName = "configurations.javasystem";
    /** operating system env variable implementation configuration plugin name - configuration resource uri have to end with '.osenv' */
-   String OsEnvConfigurationPluginName = "configuration.osenv";
+   String OsEnvConfigurationPluginName = "configurations.osenv";
    /** operating system env variable implementation configuration plugin name - configuration resource uri have to end with '.mainargs' */
-   String MainArgsConfigurationPluginName = "configuration.mainargs";
+   String MainArgsConfigurationPluginName = "configurations.mainargs";
 
    // ** Key and property serialization part ***************************************************************************
 

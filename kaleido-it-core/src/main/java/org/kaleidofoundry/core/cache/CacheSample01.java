@@ -34,21 +34,21 @@ import org.kaleidofoundry.core.context.Context;
  * Resource file : "classpath:/cache/myContext.properties" contains :
  * 
  * <pre>
- * cache.myCache.cacheName=CacheSample01
- * cache.myCache.cacheManagerRef=myCacheManager
+ * caches.myCache.cacheName=CacheSample01
+ * caches.myCache.cacheManagerRef=myCacheManager
  * 
- * cacheManager.myCacheManager.providerCode=ehCache2x
- * cacheManager.myCacheManager.fileStoreUri=classpath:/cache/ehcache.xml
+ * cacheManagers.myCacheManager.providerCode=ehCache2x
+ * cacheManagers.myCacheManager.fileStoreUri=classpath:/cache/ehcache.xml
  * 
  * # sample if your cache configuration is accessible from an external file store
- * #cacheManager.myCacheManager.fileStoreUri=http://localhost:8080/kaleido-it/cache/ehcache.xml
- * #cacheManager.myCacheManager.fileStoreRef=myHttpCtx
+ * #cacheManagers.myCacheManager.fileStoreUri=http://localhost:8080/kaleido-it/cache/ehcache.xml
+ * #cacheManagers.myCacheManager.fileStoreRef=myHttpCtx
  * 
  * # sample if you need proxy settings, uncomment and configure followings :
- * #fileStore.myHttp.proxySet=true
- * #fileStore.myHttp.proxyHost=yourProxyHost
- * #fileStore.myHttp.proxyUser=yourProxyUser
- * #fileStore.myHttp.proxyPassword=proxyUserPassword
+ * #fileStores.myHttp.proxySet=true
+ * #fileStores.myHttp.proxyHost=yourProxyHost
+ * #fileStores.myHttp.proxyUser=yourProxyUser
+ * #fileStores.myHttp.proxyPassword=proxyUserPassword
  * 
  * </pre>
  * 

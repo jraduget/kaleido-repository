@@ -47,31 +47,31 @@ import org.kaleidofoundry.core.context.Context;
  * <pre>
  * 
  * # simple configuration context properties
- * configuration.myConfig.readonly=true
- * configuration.myConfig.fileStoreUri=classpath:/config/myConfig.properties
+ * configurations.myConfig.readonly=true
+ * configurations.myConfig.fileStoreUri=classpath:/config/myConfig.properties
  * 
  * # simple configuration context (optional) - used for cache manager policies
- * #configuration.myConfig.cacheManagerRef=myCacheManager
- * cacheManager.myCacheManager.providerCode=ehCache2x
- * cacheManager.myCacheManager.fileStoreUri=classpath:/config/ehcache.xml
+ * #configurations.myConfig.cacheManagerRef=myCacheManager
+ * cacheManagers.myCacheManager.providerCode=ehCache2x
+ * cacheManagers.myCacheManager.fileStoreUri=classpath:/config/ehcache.xml
  * 
  * 
  * 
  * 
  * 
  * # http configuration context properties
- * configuration.myHttpConfig.readonly=true
- * configuration.myHttpConfig.fileStoreUri=http://localhost:8080/kaleido-it/config/myHttpConfig.properties
+ * configurations.myHttpConfig.readonly=true
+ * configurations.myHttpConfig.fileStoreUri=http://localhost:8080/kaleido-it/config/myHttpConfig.properties
  * 
  * # http configuration context (optional) - used for file store (proxy or other parameters...)
- * #configuration.myHttpConfig.fileStoreRef=myConfigStore
- * fileStore.myConfigStore.readonly=false
- * fileStore.myConfigStore.connectTimeout=1500
- * fileStore.myConfigStore.readTimeout=10000
- * fileStore.myConfigStore.proxySet=false
- * #fileStore.myConfigStore.proxyHost=yourProxyHost
- * #fileStore.myConfigStore.proxyUser=yourProxyUser
- * #fileStore.myConfigStore.proxyPassword=proxyUserPassword
+ * #configurations.myHttpConfig.fileStoreRef=myConfigStore
+ * fileStores.myConfigStore.readonly=false
+ * fileStores.myConfigStore.connectTimeout=1500
+ * fileStores.myConfigStore.readTimeout=10000
+ * fileStores.myConfigStore.proxySet=false
+ * #fileStores.myConfigStore.proxyHost=yourProxyHost
+ * #fileStores.myConfigStore.proxyUser=yourProxyUser
+ * #fileStores.myConfigStore.proxyPassword=proxyUserPassword
  * 
  * 
  * </pre>

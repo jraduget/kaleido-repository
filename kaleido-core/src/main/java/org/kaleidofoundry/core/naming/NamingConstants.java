@@ -21,9 +21,9 @@ package org.kaleidofoundry.core.naming;
 public interface NamingConstants {
 
    /** interface naming declare plugin name */
-   String NamingPluginName = "naming";
+   String NamingPluginName = "namingServices";
 
    /** jndi naming implementation plugin name */
-   String JndiNamingPluginName = "naming.jndi";
+   String JndiNamingPluginName = "namingServices.jndi";
 
 }

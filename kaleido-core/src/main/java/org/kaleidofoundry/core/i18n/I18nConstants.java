@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ public interface I18nConstants {
    String ENABLE_JPA_PROPERTY = "kaleidofoundry.i18n.jpa.enabled";
 
    /** i18n message bundle interface plugin name */
-   String I18nMessageBundlePluginName = "i18n";
+   String I18nMessageBundlePluginName = "i18ns";
    /** i18n message bundle default implementation plugin name */
-   String I18nDefaultMessageBundlePluginName = "i18n.default";
+   String I18nDefaultMessageBundlePluginName = "i18ns.default";
 
 }

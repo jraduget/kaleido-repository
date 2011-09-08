@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,23 +21,23 @@ package org.kaleidofoundry.core.store;
 public interface FileStoreConstants {
 
    /** interface store declare plugin name */
-   String FileStorePluginName = "fileStore";
+   String FileStorePluginName = "fileStores";
 
    /** classpath implementation store plugin name */
-   String ClasspathStorePluginName = "fileStore.classpath";
+   String ClasspathStorePluginName = "fileStores.classpath";
    /** file system implementation store plugin name */
-   String FileSystemStorePluginName = "fileStore.filesystem";
+   String FileSystemStorePluginName = "fileStores.filesystem";
    /** http implementation store plugin name */
-   String HttpStorePluginName = "fileStore.http";
+   String HttpStorePluginName = "fileStores.http";
    /** ftp implementation store plugin name */
-   String FtpStorePluginName = "fileStore.ftp";
+   String FtpStorePluginName = "fileStores.ftp";
    /** webapp implementation store plugin name */
-   String WebappStorePluginName = "fileStore.webapp";
+   String WebappStorePluginName = "fileStores.webapp";
    /** jdbc implementation blob store plugin name */
-   String ClobJdbcStorePluginName = "fileStore.jdbc";
+   String ClobJdbcStorePluginName = "fileStores.jdbc";
    /** jpa implementation blob store plugin name */
-   String ClobJpaStorePluginName = "fileStore.jpa";
+   String ClobJpaStorePluginName = "fileStores.jpa";
    /** mocked in memory implementation plugin name */
-   String MemoryStorePluginName = "fileStore.memory";
+   String MemoryStorePluginName = "fileStores.memory";
 
 }

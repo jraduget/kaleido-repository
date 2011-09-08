@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,39 +26,39 @@ public interface CacheConstants {
    String CACHE_PROVIDER_ENV = "cache.provider";
 
    /** interface cache manager declare plugin name */
-   String CacheManagerPluginName = "cacheManager";
+   String CacheManagerPluginName = "cacheManagers";
 
    /** interface cache declare plugin name */
-   String CachePluginName = "cache";
+   String CachePluginName = "caches";
 
    /** Default local cache manager implementation declare plugin name */
-   String DefaultLocalCacheManagerPluginName = "cacheManager.local";
+   String DefaultLocalCacheManagerPluginName = "cacheManagers.local";
 
    /** Default local cache implementation declare plugin name */
-   String DefaultLocalCachePluginName = "cache.local";
+   String DefaultLocalCachePluginName = "caches.local";
 
    /** EhCache cache manager implementation declare plugin name */
-   String EhCacheManagerPluginName = "cacheManager.ehCache2x";
+   String EhCacheManagerPluginName = "cacheManagers.ehCache2x";
 
    /** EhCache implementation declare plugin name */
-   String EhCachePluginName = "cache.ehCache2x";
+   String EhCachePluginName = "caches.ehCache2x";
 
    /** JbossCache implementation declare plugin name */
-   String JbossCachePluginName = "cache.jbossCache3x";
+   String JbossCachePluginName = "caches.jbossCache3x";
 
    /** JbossCache manager implementation declare plugin name */
-   String JbossCacheManagerPluginName = "cacheManager.jbossCache3x";
+   String JbossCacheManagerPluginName = "cacheManagers.jbossCache3x";
 
    /** Infinispan cache implementation declare plugin name */
-   String InfinispanCachePluginName = "cache.infinispan4x";
+   String InfinispanCachePluginName = "caches.infinispan4x";
 
    /** Infinispan cache manager implementation declare plugin name */
-   String InfinispanCacheManagerPluginName = "cacheManager.infinispan4x";
+   String InfinispanCacheManagerPluginName = "cacheManagers.infinispan4x";
 
    /** Coherence cache implementation declare plugin name */
-   String CoherenceCachePluginName = "cache.coherence3x";
+   String CoherenceCachePluginName = "caches.coherence3x";
 
    /** Coherence cache manager implementation declare plugin name */
-   String CoherenceCacheManagerPluginName = "cacheManager.coherence3x";
+   String CoherenceCacheManagerPluginName = "cacheManagers.coherence3x";
 
 }

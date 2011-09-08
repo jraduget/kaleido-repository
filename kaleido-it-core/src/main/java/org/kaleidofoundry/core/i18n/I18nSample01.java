@@ -36,9 +36,9 @@ import org.kaleidofoundry.core.context.Context;
  * Resource file : "classpath:/i18n/myContext.properties" contains :
  * 
  * <pre>
- * i18n.myBundle.baseName=i18n/messages
- * i18n.myBundle.locale.lang=en
- * i18n.myBundle.locale.country=GB
+ * i18ns.myBundle.baseName=i18n/messages
+ * i18ns.myBundle.locale.lang=en
+ * i18ns.myBundle.locale.country=GB
  * </pre>
  * 
  * Message file : "classpath:/i18n/messages_en_gb.properties" contains :

@@ -32,16 +32,16 @@ import org.kaleidofoundry.core.context.Context;
  * 
  * <pre>
  * # configuration http context properties
- * fileStore.myStore.uriScheme=http
- * fileStore.myStore.readonly=false
- * fileStore.myStore.connectTimeout=1500
- * fileStore.myStore.readTimeout=10000
+ * fileStores.myStore.uriScheme=http
+ * fileStores.myStore.readonly=false
+ * fileStores.myStore.connectTimeout=1500
+ * fileStores.myStore.readTimeout=10000
  * 
  * # if you need proxy settings, uncomment and configure followings :
- * #fileStore.myStore.proxySet=true
- * #fileStore.myStore.proxyHost=yourProxyHost
- * #fileStore.myStore.proxyUser=yourProxyUser
- * #fileStore.myStore.proxyPassword=proxyUserPassword
+ * #fileStores.myStore.proxySet=true
+ * #fileStores.myStore.proxyHost=yourProxyHost
+ * #fileStores.myStore.proxyUser=yourProxyUser
+ * #fileStores.myStore.proxyPassword=proxyUserPassword
  * 
  * </pre>
  * 
