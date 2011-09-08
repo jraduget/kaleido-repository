@@ -44,11 +44,10 @@ import org.kaleidofoundry.core.store.StoreException;
  * <p>
  * Interface used to access <b>runtime configuration data</b> from your application (this data could be this data could be technical /
  * environmental / application / ...). A {@link Configuration} is like a set of key identifier / value(s) (as {@link Properties}) but with
- * more functionalities ({@link Cache}, ...).<br/>
+ * more functionalities ({@link Cache}, typed accessor, changed events...).<br/>
  * <br/>
- * The goal of these interface, is to <b>the goal is to provide an unique and uniform way to manage for the runtime configuration of your
- * application.</b><br/>
- * Multiple format implementation are provided by default, an configuration "instance" could be :
+ * The goal of these interface, is to <b>provide an unique and uniform way to manage for the runtime configuration of your application.</b><br/>
+ * Multiple formats and implementations are provided by default, like :
  * <ul>
  * <li>Classic java properties file - {@link PropertiesConfiguration},</li>
  * <li>Xml java properties file - {@link XmlPropertiesConfiguration},</li>

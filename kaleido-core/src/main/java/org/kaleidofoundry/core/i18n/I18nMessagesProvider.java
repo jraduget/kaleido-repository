@@ -64,11 +64,9 @@ public class I18nMessagesProvider extends AbstractProviderService<I18nMessages> 
 
 	// default baseName is not defined
 	if (StringHelper.isEmpty(baseName)) {
-	   baseName = context.getName();
+	   if (StringHelper.isEmpty(context.getName())) { throw new EmptyContextParameterException(BaseName, context); }
+	   baseName = "i18n/" + context.getName();
 	}
-
-	// managed baseName
-	if (StringHelper.isEmpty(baseName)) { throw new EmptyContextParameterException(BaseName, context); }
 
 	// managed classloader context
 	try {
