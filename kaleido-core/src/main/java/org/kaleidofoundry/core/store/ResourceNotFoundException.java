@@ -20,7 +20,7 @@ import java.util.Locale;
 /**
  * @author Jerome RADUGET
  */
-public class ResourceNotFoundException extends StoreException {
+public class ResourceNotFoundException extends ResourceException {
 
    private static final long serialVersionUID = -3825066742298741103L;
 

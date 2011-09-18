@@ -54,11 +54,11 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
-import org.kaleidofoundry.core.store.FileHandler;
+import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.FileStoreFactory;
 import org.kaleidofoundry.core.store.SingleFileStore;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.AbstractPropertyAccessor;
 import org.kaleidofoundry.core.util.ConverterHelper;
 import org.kaleidofoundry.core.util.StringHelper;
@@ -101,9 +101,9 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
 
    /**
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   protected AbstractConfiguration(@NotNull final RuntimeContext<Configuration> context) throws StoreException {
+   protected AbstractConfiguration(@NotNull final RuntimeContext<Configuration> context) throws ResourceException {
 	this(null, null, context);
    }
 
@@ -111,10 +111,10 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * @param name
     * @param resourceUri
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     * @throws IllegalArgumentException if resourceUri is illegal ({@link URISyntaxException})
     */
-   protected AbstractConfiguration(String name, String resourceUri, @NotNull final RuntimeContext<Configuration> context) throws StoreException {
+   protected AbstractConfiguration(String name, String resourceUri, @NotNull final RuntimeContext<Configuration> context) throws ResourceException {
 
 	super(context.getString(ConfigurationContextBuilder.MultiValuesSeparator), context.getString(ConfigurationContextBuilder.DateTimeFormat), context
 		.getString(ConfigurationContextBuilder.NumberFormat));
@@ -179,10 +179,10 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * @param resourceHandler
     * @param properties
     * @return internal cache instance
-    * @throws StoreException
+    * @throws ResourceException
     * @throws ConfigurationException
     */
-   protected abstract Cache<String, Serializable> loadProperties(FileHandler resourceHandler, Cache<String, Serializable> properties) throws StoreException,
+   protected abstract Cache<String, Serializable> loadProperties(ResourceHandler resourceHandler, Cache<String, Serializable> properties) throws ResourceException,
    ConfigurationException;
 
    /**
@@ -191,10 +191,10 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * @param fileStore
     * @param properties
     * @return internal cache instance
-    * @throws StoreException
+    * @throws ResourceException
     * @throws ConfigurationException
     */
-   protected abstract Cache<String, Serializable> storeProperties(Cache<String, Serializable> properties, SingleFileStore fileStore) throws StoreException,
+   protected abstract Cache<String, Serializable> storeProperties(Cache<String, Serializable> properties, SingleFileStore fileStore) throws ResourceException,
    ConfigurationException;
 
    /*
@@ -259,14 +259,14 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * @see org.kaleidofoundry.core.config.Configuration#load()
     */
    @Override
-   public final synchronized void load() throws StoreException, ConfigurationException {
+   public final synchronized void load() throws ResourceException, ConfigurationException {
 	if (isLoaded()) { throw new ConfigurationException("config.load.already", name); }
 
-	final FileHandler resourceHandler = singleFileStore.get();
+	final ResourceHandler resourceHandler = singleFileStore.get();
 	try {
 	   loadProperties(resourceHandler, cacheProperties);
 	} finally {
-	   resourceHandler.release();
+	   resourceHandler.close();
 	}
    }
 
@@ -275,7 +275,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * @see org.kaleidofoundry.core.config.Configuration#store()
     */
    @Override
-   public final synchronized void store() throws StoreException {
+   public final synchronized void store() throws ResourceException {
 	if (!isLoaded()) { throw new ConfigurationException("config.load.notloaded", name); }
 	if (!isStorable()) { throw new ConfigurationException("config.readonly.store", name); }
 
@@ -287,7 +287,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * @see org.kaleidofoundry.core.config.Configuration#unload()
     */
    @Override
-   public final synchronized void unload() throws StoreException, ConfigurationException {
+   public final synchronized void unload() throws ResourceException, ConfigurationException {
 	if (!isLoaded()) { throw new ConfigurationException("config.load.notloaded", name); }
 	// cleanup cache entries
 	cacheProperties.removeAll();
@@ -302,7 +302,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * @see org.kaleidofoundry.core.config.Configuration#reload()
     */
    @Override
-   public final synchronized void reload() throws StoreException, ConfigurationException {
+   public final synchronized void reload() throws ResourceException, ConfigurationException {
 	if (!isLoaded()) { throw new ConfigurationException("config.load.notloaded", name); }
 	// backup old entries
 	final Map<String, Serializable> oldItems = new HashMap<String, Serializable>();

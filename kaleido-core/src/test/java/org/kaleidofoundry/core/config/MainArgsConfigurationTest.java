@@ -19,7 +19,7 @@ import java.net.URISyntaxException;
 
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.ConverterHelper;
 
 /**
@@ -27,12 +27,12 @@ import org.kaleidofoundry.core.util.ConverterHelper;
  */
 public class MainArgsConfigurationTest extends AbstractConfigurationTest {
 
-   public MainArgsConfigurationTest() throws StoreException, URISyntaxException {
+   public MainArgsConfigurationTest() throws ResourceException, URISyntaxException {
 	super();
    }
 
    @Override
-   protected Configuration newInstance() throws StoreException, URISyntaxException {
+   protected Configuration newInstance() throws ResourceException, URISyntaxException {
 
 	final String[] mainArgs = new String[] { "application.name=app", "application.description=description&nbsp;of&nbsp;the&nbsp;application...",
 		"application.date=2006-09-01T00:00:00", "application.version=1.0.0", "application.librairies=dom4j.jar|log4j.jar|mail.jar",
@@ -50,7 +50,7 @@ public class MainArgsConfigurationTest extends AbstractConfigurationTest {
 
    @Test
    @Override
-   public void store() throws StoreException {
+   public void store() throws ResourceException {
 	assertNotNull(configuration);
 	try {
 	   configuration.store();

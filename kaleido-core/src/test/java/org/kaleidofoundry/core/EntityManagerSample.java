@@ -28,7 +28,7 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.kaleidofoundry.core.store.entity.FileHandlerEntity;
+import org.kaleidofoundry.core.store.entity.ResourceHandlerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +58,7 @@ public class EntityManagerSample extends Assert {
 	   transaction.begin();
 
 	   // create mocked entity test
-	   FileHandlerEntity entity = new FileHandlerEntity();
+	   ResourceHandlerEntity entity = new ResourceHandlerEntity();
 	   entity.setUri(new URI("http://localhost/foo.txt").toString());
 	   entity.setName("/tmp/foo.txt");
 	   entity.setPath("/tmp/foo.txt");
@@ -76,7 +76,7 @@ public class EntityManagerSample extends Assert {
    @After
    public void close() {
 	try {
-	   em.remove(em.find(FileHandlerEntity.class, "http://localhost/foo.txt"));
+	   em.remove(em.find(ResourceHandlerEntity.class, "http://localhost/foo.txt"));
 	   transaction.commit();
 	} finally {
 	   try {
@@ -100,7 +100,7 @@ public class EntityManagerSample extends Assert {
 	assertNotNull(em);
 	assertNotNull(emf);
 
-	FileHandlerEntity entity = em.find(FileHandlerEntity.class, "http://localhost/foo.txt");
+	ResourceHandlerEntity entity = em.find(ResourceHandlerEntity.class, "http://localhost/foo.txt");
 
 	assertEquals("http://localhost/foo.txt", entity.getUri());
 	assertEquals("/tmp/foo.txt", entity.getName());

@@ -17,8 +17,9 @@ package org.kaleidofoundry.core.lang;
 
 import java.util.Locale;
 
-import org.kaleidofoundry.core.i18n.I18nNullPointerException;
+import org.kaleidofoundry.core.i18n.AbstractI18nNullPointerException;
 import org.kaleidofoundry.core.i18n.InternalBundleEnum;
+import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 
 /**
@@ -30,7 +31,8 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
  * 
  * @author Jerome RADUGET
  */
-public class NotNullException extends I18nNullPointerException {
+@Immutable
+public class NotNullException extends AbstractI18nNullPointerException {
 
    private static final long serialVersionUID = -3933830352293530392L;
 
@@ -79,7 +81,7 @@ public class NotNullException extends I18nNullPointerException {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.i18n.I18nRuntimeException#getI18nBundleName()
+    * @see org.kaleidofoundry.core.i18n.AbstractI18nRuntimeException#getI18nBundleName()
     */
    @Override
    public String getI18nBundleName() {

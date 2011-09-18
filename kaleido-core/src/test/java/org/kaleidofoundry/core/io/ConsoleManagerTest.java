@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.store.ResourceNotFoundException;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,10 +48,10 @@ public class ConsoleManagerTest extends Assert {
 
    /**
     * @throws IOException
-    * @throws StoreException
+    * @throws ResourceException
     */
    @Test
-   public void head() throws IOException, StoreException {
+   public void head() throws IOException, ResourceException {
 	String result;
 	StringBuilder bufferResult;
 
@@ -71,10 +71,10 @@ public class ConsoleManagerTest extends Assert {
 
    /**
     * @throws IOException
-    * @throws StoreException
+    * @throws ResourceException
     */
    @Test
-   public void tail() throws IOException, StoreException {
+   public void tail() throws IOException, ResourceException {
 	String result;
 	StringBuilder bufferResult;
 
@@ -95,10 +95,10 @@ public class ConsoleManagerTest extends Assert {
 
    /**
     * @throws IOException
-    * @throws StoreException
+    * @throws ResourceException
     */
    @Test
-   public void extract() throws IOException, StoreException {
+   public void extract() throws IOException, ResourceException {
 
 	String result;
 	StringBuilder bufferResult;

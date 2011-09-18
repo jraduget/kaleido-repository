@@ -18,8 +18,9 @@ package org.kaleidofoundry.core.context;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
-import org.kaleidofoundry.core.i18n.I18nRuntimeException;
+import org.kaleidofoundry.core.i18n.AbstractI18nRuntimeException;
 import org.kaleidofoundry.core.i18n.InternalBundleEnum;
+import org.kaleidofoundry.core.lang.annotation.Immutable;
 
 /**
  * Base instance provider exception. <br/>
@@ -28,7 +29,8 @@ import org.kaleidofoundry.core.i18n.InternalBundleEnum;
  * 
  * @author Jerome RADUGET
  */
-public class ProviderException extends I18nRuntimeException {
+@Immutable
+public class ProviderException extends AbstractI18nRuntimeException {
 
    private static final long serialVersionUID = 4182831574911814722L;
 
@@ -117,7 +119,7 @@ public class ProviderException extends I18nRuntimeException {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.i18n.I18nRuntimeException#getI18nBundleName()
+    * @see org.kaleidofoundry.core.i18n.AbstractI18nRuntimeException#getI18nBundleName()
     */
    @Override
    public String getI18nBundleName() {

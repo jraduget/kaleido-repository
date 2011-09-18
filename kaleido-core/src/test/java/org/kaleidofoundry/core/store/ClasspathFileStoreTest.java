@@ -45,33 +45,33 @@ public class ClasspathFileStoreTest extends AbstractFileStoreTest {
 
    @Test
    @Override
-   public void store() throws StoreException {
+   public void store() throws ResourceException {
 	try {
-	   fileStore.store("store/toStore.txt", new FileHandlerBean("store/toStore.txt", new ByteArrayInputStream("foo".getBytes())));
+	   fileStore.store("store/toStore.txt", new ResourceHandlerBean("store/toStore.txt", new ByteArrayInputStream("foo".getBytes())));
 	   fail();
-	} catch (final StoreException rse) {
+	} catch (final ResourceException rse) {
 	   assertEquals("store.readonly.illegal", rse.getCode());
 	}
    }
 
    @Test
    @Override
-   public void move() throws StoreException {
+   public void move() throws ResourceException {
 	try {
 	   fileStore.move("store/foo.txt", "newstore/foo.txt");
 	   fail();
-	} catch (final StoreException rse) {
+	} catch (final ResourceException rse) {
 	   assertEquals("store.readonly.illegal", rse.getCode());
 	}
    }
 
    @Test
    @Override
-   public void remove() throws StoreException {
+   public void remove() throws ResourceException {
 	try {
 	   fileStore.remove("store/toRemove.txt");
 	   fail();
-	} catch (final StoreException rse) {
+	} catch (final ResourceException rse) {
 	   assertEquals("store.readonly.illegal", rse.getCode());
 	}
    }

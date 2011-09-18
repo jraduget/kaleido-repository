@@ -32,7 +32,7 @@ import org.kaleidofoundry.core.config.ConfigurationFactory;
 public class FileStoreIntegrationTest {
 
    @BeforeClass
-   public static void setupClass() throws StoreException {
+   public static void setupClass() throws ResourceException {
 	// -Dkaleido.configurations=myContext=classpath:/store/myContext.properties
 	System.getProperties().put(ConfigurationConstants.JavaEnvProperties, "myContext=classpath:/store/myContext.properties");
 	// load given configurations
@@ -40,12 +40,12 @@ public class FileStoreIntegrationTest {
    }
 
    @AfterClass
-   public static void cleanupClass() throws StoreException {
+   public static void cleanupClass() throws ResourceException {
 	ConfigurationFactory.unregisterAll();
    }
 
    @Test
-   public void testFileStoreSample01() throws StoreException, IOException {
+   public void testFileStoreSample01() throws ResourceException, IOException {
 	System.out.println("Test with simple context injection:");
 	FileStoreSample01 fileStore = new FileStoreSample01();
 	assertNotNull(fileStore);
@@ -55,7 +55,7 @@ public class FileStoreIntegrationTest {
    }
 
    @Test
-   public void testFileStoreSample02() throws StoreException, IOException {
+   public void testFileStoreSample02() throws ResourceException, IOException {
 	System.out.println("Test with advanced context injection:");
 	FileStoreSample02 fileStore = new FileStoreSample02();
 	assertNotNull(fileStore);
@@ -65,7 +65,7 @@ public class FileStoreIntegrationTest {
    }
 
    @Test
-   public void testFileStoreSample03() throws StoreException, IOException {
+   public void testFileStoreSample03() throws ResourceException, IOException {
 	System.out.println("Test with manually context build:");
 	FileStoreSample03 fileStore = new FileStoreSample03();
 	assertNotNull(fileStore);

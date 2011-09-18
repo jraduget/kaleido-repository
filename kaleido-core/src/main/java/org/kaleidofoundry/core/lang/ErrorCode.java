@@ -13,26 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core.config;
-
-import java.net.URISyntaxException;
-
-import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.store.ResourceException;
+package org.kaleidofoundry.core.lang;
 
 /**
+ * This interface is used to represent an error with a code (technical, business, ... )<br/>
+ * This code parameter have to be unique, and it represent more precisely the type of the error.
+ * 
  * @author Jerome RADUGET
  */
-public class XmlConfigurationTest extends AbstractConfigurationTest {
+public interface ErrorCode {
 
-   public XmlConfigurationTest() throws ResourceException, URISyntaxException {
-	super();
-   }
-
-   @Override
-   protected Configuration newInstance() throws ResourceException, URISyntaxException {
-	return new org.kaleidofoundry.core.config.XmlConfiguration("xmlCpConfig", "classpath:/config/test.xml", new RuntimeContext<Configuration>(
-		Configuration.class));
-   }
+   /**
+    * @return Error code
+    */
+   String getCode();
 
 }

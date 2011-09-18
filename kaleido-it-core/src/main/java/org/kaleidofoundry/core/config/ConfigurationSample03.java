@@ -18,7 +18,7 @@ package org.kaleidofoundry.core.config;
 import static java.lang.System.out;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * <p>
@@ -35,7 +35,7 @@ public class ConfigurationSample03 {
    // no automatic context injection here
    private final Configuration myConfig;
 
-   public ConfigurationSample03() throws StoreException {
+   public ConfigurationSample03() throws ResourceException {
 
 	RuntimeContext<Configuration> context = new ConfigurationContextBuilder("myManualCtx", Configuration.class)
 	.withName("myConfig")

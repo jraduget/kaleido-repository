@@ -45,11 +45,11 @@ import javax.ws.rs.core.UriInfo;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Task;
-import org.kaleidofoundry.core.store.FileHandler;
+import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.FileStoreFactory;
 import org.kaleidofoundry.core.store.ResourceNotFoundException;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -232,13 +232,13 @@ public class ConsoleManagerBean {
     * 
     * @param resource the resource which we want to extract the contents
     * @return head of the file
-    * @throws StoreException
+    * @throws ResourceException
     * @throws IOException
     */
    @GET
    @Path("head")
    @Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_HTML })
-   public String head(@QueryParam("resource") final String resource) throws StoreException, IOException {
+   public String head(@QueryParam("resource") final String resource) throws ResourceException, IOException {
 	Map<String, Serializable> parameters = new HashMap<String, Serializable>();
 	parameters.put(MAXLINE_COUNT_ARGS, DEFAULT_MAXLINE_COUNT);
 	return head(resource, addUriParameters(parameters));
@@ -250,10 +250,10 @@ public class ConsoleManagerBean {
     * @param resource the resource which we want to extract the contents
     * @param maxLineCount
     * @return head of the file
-    * @throws StoreException
+    * @throws ResourceException
     * @throws IOException
     */
-   public String head(final String resource, final long maxLineCount) throws StoreException, IOException {
+   public String head(final String resource, final long maxLineCount) throws ResourceException, IOException {
 	final Map<String, Serializable> parameters = new HashMap<String, Serializable>();
 	parameters.put(OPERATION_ARGS, Operation.Tail);
 	if (maxLineCount >= 0) {
@@ -268,10 +268,10 @@ public class ConsoleManagerBean {
     * @param resource the resource which we want to extract the contents
     * @param parameters
     * @return head of the file
-    * @throws StoreException
+    * @throws ResourceException
     * @throws IOException
     */
-   public String head(final String resource, final Map<String, Serializable> parameters) throws StoreException, IOException {
+   public String head(final String resource, final Map<String, Serializable> parameters) throws ResourceException, IOException {
 	final Map<String, Serializable> typedParameters = typedParameters(parameters);
 	final Number maxLineCountArg = (Number) typedParameters.get(MAXLINE_COUNT_ARGS);
 	final long maxLine = maxLineCountArg != null ? maxLineCountArg.longValue() : DEFAULT_MAXLINE_COUNT;
@@ -303,13 +303,13 @@ public class ConsoleManagerBean {
     * 
     * @param resource the resource which we want to extract the contents
     * @return tail of the file
-    * @throws StoreException
+    * @throws ResourceException
     * @throws IOException
     */
    @GET
    @Path("tail")
    @Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_HTML })
-   public String tail(@QueryParam("resource") final String resource) throws StoreException, IOException {
+   public String tail(@QueryParam("resource") final String resource) throws ResourceException, IOException {
 	Map<String, Serializable> parameters = new HashMap<String, Serializable>();
 	parameters.put(MAXLINE_COUNT_ARGS, DEFAULT_MAXLINE_COUNT);
 	return tail(resource, addUriParameters(parameters));
@@ -322,9 +322,9 @@ public class ConsoleManagerBean {
     * @param maxLineCount number of line you wish to keep in result buffer
     * @return list of n last line of the buffer
     * @throws IOException
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public String tail(final String resource, final long maxLineCount) throws StoreException, IOException {
+   public String tail(final String resource, final long maxLineCount) throws ResourceException, IOException {
 	final Map<String, Serializable> args = new HashMap<String, Serializable>();
 	args.put(OPERATION_ARGS, Operation.Tail);
 	if (maxLineCount >= 0) {
@@ -340,11 +340,11 @@ public class ConsoleManagerBean {
     * @param parameters
     * @return line of the buffer filter by args arguments
     * @throws IOException
-    * @throws StoreException
+    * @throws ResourceException
     * @see #BEGINLINE_ARGS
     * @see #MAXLINE_COUNT_ARGS
     */
-   public String tail(final String resource, final Map<String, Serializable> parameters) throws StoreException, IOException {
+   public String tail(final String resource, final Map<String, Serializable> parameters) throws ResourceException, IOException {
 	final Map<String, Serializable> typedParameters = typedParameters(parameters);
 	final Number maxLineCountArg = (Number) typedParameters.get(MAXLINE_COUNT_ARGS);
 	final long maxLine = maxLineCountArg != null ? maxLineCountArg.longValue() : DEFAULT_MAXLINE_COUNT;
@@ -378,14 +378,14 @@ public class ConsoleManagerBean {
     * @param beginLine index of beginning line of file you wish
     * @param maxLineCount index of the last line of file you wish
     * @return list of n last line of the buffer
-    * @throws StoreException
+    * @throws ResourceException
     * @throws IOException
     */
    @GET
    @Path("extract")
    @Produces({ MediaType.TEXT_PLAIN, MediaType.TEXT_HTML })
    public String extract(@QueryParam("resource") final String resource, @QueryParam(BEGINLINE_ARGS) final long beginLine,
-	   @QueryParam(MAXLINE_COUNT_ARGS) final long maxLineCount) throws StoreException, IOException {
+	   @QueryParam(MAXLINE_COUNT_ARGS) final long maxLineCount) throws ResourceException, IOException {
 	final Map<String, Serializable> parameters = new HashMap<String, Serializable>();
 
 	parameters.put(OPERATION_ARGS, Operation.Extract);
@@ -404,10 +404,10 @@ public class ConsoleManagerBean {
     * @param resource the resource which we want to extract the contents
     * @param parameters
     * @return extract of the file
-    * @throws StoreException
+    * @throws ResourceException
     * @throws IOException
     */
-   public String extract(final String resource, final Map<String, Serializable> parameters) throws StoreException, IOException {
+   public String extract(final String resource, final Map<String, Serializable> parameters) throws ResourceException, IOException {
 
 	final Map<String, Serializable> typepParameters = typedParameters(parameters);
 	final Number beginLineArg = (Number) typepParameters.get(BEGINLINE_ARGS);
@@ -605,9 +605,9 @@ public class ConsoleManagerBean {
     * @param resource the resource which we want to extract the contents
     * @param typedParameters
     * @return handler on the resource
-    * @throws StoreException
+    * @throws ResourceException
     */
-   protected FileHandler in(final String resource, final Map<String, Serializable> typedParameters) throws StoreException {
+   protected ResourceHandler in(final String resource, final Map<String, Serializable> typedParameters) throws ResourceException {
 
 	// search in console resource registry
 	if (REGISTERED_RESOURCES.contains(resource)) {

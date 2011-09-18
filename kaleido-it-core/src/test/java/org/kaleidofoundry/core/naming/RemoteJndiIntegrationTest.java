@@ -27,7 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * @author Jerome RADUGET
@@ -40,14 +40,14 @@ public abstract class RemoteJndiIntegrationTest extends Assert {
    public abstract NamingServiceJndiSample getNamingServiceJndiSample();
 
    @Before
-   public void setup() throws StoreException {
+   public void setup() throws ResourceException {
 	// load and register given configuration
 	// another way to to this, set following java env variable : -Dkaleido.configurations=myConfig=classpath:/naming/myContext.properties
 	ConfigurationFactory.provides("myConfig", "classpath:/naming/myContext.properties");
    }
 
    @After
-   public void cleanupClass() throws StoreException {
+   public void cleanupClass() throws ResourceException {
 	I18nMessagesFactory.clearCache();
 	ConfigurationFactory.unregister("myConfig");
    }

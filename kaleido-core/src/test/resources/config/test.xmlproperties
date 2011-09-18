@@ -6,14 +6,14 @@
 	<entry key="application.version">1.0.0</entry>
 	<entry key="application.date">2006-09-01T00:00:00</entry>
 	<entry key="application.description">description of the application...</entry>
-	<entry key="application.librairies">dom4j.jar log4j.jar mail.jar</entry>
+	<entry key="application.librairies">dom4j.jar|log4j.jar|mail.jar</entry>
 	<entry key="application.modules.sales.name">Sales</entry>
 	<entry key="application.modules.sales.version">1.1.0</entry>
 	<entry key="application.modules.netbusiness.name"/>
 	<entry key="application.modules.marketing.name">Market.</entry>
 	<entry key="application.single.bigdecimal">1.123456789</entry>
 	<entry key="application.single.boolean">true</entry>
-	<entry key="application.array.bigdecimal">987.5 1.123456789</entry>
-	<entry key="application.array.date">2009-01-02T00:00:00 2009-12-31T00:00:00 2012-05-15T00:00:00</entry>
-	<entry key="application.array.boolean">false true</entry>
+	<entry key="application.array.bigdecimal">987.5|1.123456789</entry>
+	<entry key="application.array.date">2009-01-02T00:00:00|2009-12-31T00:00:00|2012-05-15T00:00:00</entry>
+	<entry key="application.array.boolean">false|true</entry>
 </properties>

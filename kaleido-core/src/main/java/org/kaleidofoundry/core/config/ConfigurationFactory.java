@@ -27,7 +27,7 @@ import org.kaleidofoundry.core.config.ConfigurationConstants.Extension;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -65,10 +65,10 @@ public abstract class ConfigurationFactory {
     * <br/>
     * If load have already be called, it does nothing more.
     * 
-    * @throws StoreException
+    * @throws ResourceException
     * @see ConfigurationConstants#JavaEnvProperties
     */
-   public static synchronized final void init() throws StoreException {
+   public static synchronized final void init() throws ResourceException {
 
 	if (!INIT_LOADED) {
 	   final StringTokenizer strConfigToken = new StringTokenizer(System.getProperty(JavaEnvProperties), JavaEnvPropertiesSeparator);
@@ -92,9 +92,9 @@ public abstract class ConfigurationFactory {
    /**
     * Unload / Unregister / Destroy all registered configurations
     * 
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public static synchronized final void unregisterAll() throws StoreException {
+   public static synchronized final void unregisterAll() throws ResourceException {
 
 	for (final Configuration configuration : getRegistry().values()) {
 	   configuration.unload();
@@ -110,9 +110,9 @@ public abstract class ConfigurationFactory {
     * Unload / Unregister / Destroy the given configuration
     * 
     * @param configName
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public static final void unregister(@NotNull final String configName) throws StoreException {
+   public static final void unregister(@NotNull final String configName) throws ResourceException {
 
 	final Configuration configToDestroy = getRegistry().get(configName);
 

@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * @author Jerome RADUGET
@@ -34,7 +34,7 @@ public class OsEnvConfigurationTest extends Assert {
    private Configuration configuration;
 
    @Before
-   public void setup() throws StoreException {
+   public void setup() throws ResourceException {
 	I18nMessagesFactory.disableJpaControl();
 	configuration = new OsEnvConfiguration("osEnv", new RuntimeContext<Configuration>(Configuration.class));
 	configuration.load();
@@ -52,7 +52,7 @@ public class OsEnvConfigurationTest extends Assert {
    }
 
    @Test
-   public void load() throws StoreException, URISyntaxException, StoreException {
+   public void load() throws ResourceException, URISyntaxException, ResourceException {
 	final Configuration configuration = new OsEnvConfiguration("osEnv", new RuntimeContext<Configuration>(Configuration.class));
 	assertNotNull(configuration);
 	assertFalse(configuration.isLoaded());
@@ -61,7 +61,7 @@ public class OsEnvConfigurationTest extends Assert {
    }
 
    @Test
-   public void unload() throws StoreException, URISyntaxException {
+   public void unload() throws ResourceException, URISyntaxException {
 	assertNotNull(configuration);
 	assertTrue(configuration.isLoaded());
 	configuration.unload();
@@ -69,7 +69,7 @@ public class OsEnvConfigurationTest extends Assert {
    }
 
    @Test
-   public void store() throws StoreException {
+   public void store() throws ResourceException {
 	assertNotNull(configuration);
 	try {
 	   configuration.store();

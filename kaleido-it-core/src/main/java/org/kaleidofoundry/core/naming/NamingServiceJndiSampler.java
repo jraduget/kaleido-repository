@@ -21,7 +21,7 @@ import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.context.ProviderException;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.ThrowableHelper;
 
 /**
@@ -46,7 +46,7 @@ public class NamingServiceJndiSampler extends AbstractJavaSamplerClient {
    public void teardownTest(final JavaSamplerContext context) {
 	try {
 	   ConfigurationFactory.unregister("myConfig");
-	} catch (StoreException rse) {
+	} catch (ResourceException rse) {
 	   throw new IllegalStateException(rse);
 	}
    }

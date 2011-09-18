@@ -16,6 +16,7 @@
 package org.kaleidofoundry.core.store;
 
 import static org.kaleidofoundry.core.store.FileStoreConstants.FileSystemStorePluginName;
+import static org.kaleidofoundry.core.store.FileStoreContextBuilder.BufferSize;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -67,9 +68,9 @@ public class FileSystemStore extends AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.store.AbstractFileStore#doLoad(java.net.URI)
     */
    @Override
-   protected FileHandler doGet(final URI resourceUri) throws ResourceNotFoundException, StoreException {
+   protected ResourceHandler doGet(final URI resourceUri) throws ResourceNotFoundException, ResourceException {
 	try {
-	   return new FileHandlerBean(resourceUri.toString(), new FileInputStream(new File(resourceUri.getPath())));
+	   return new ResourceHandlerBean(resourceUri.toString(), new FileInputStream(new File(resourceUri.getPath())));
 	} catch (final FileNotFoundException fnfe) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
 	}
@@ -80,23 +81,23 @@ public class FileSystemStore extends AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.store.AbstractFileStore#doRemove(java.net.URI)
     */
    @Override
-   protected void doRemove(final URI resourceUri) throws ResourceNotFoundException, StoreException {
+   protected void doRemove(final URI resourceUri) throws ResourceNotFoundException, ResourceException {
 
 	final File file = new File(resourceUri.getPath());
 	if (file.isDirectory()) {
-	   throw new StoreException("store.remove.directory", resourceUri.toString());
+	   throw new ResourceException("store.remove.directory", resourceUri.toString());
 	} else {
-	   if (!file.delete()) { throw new StoreException("store.remove.illegal", resourceUri.toString()); }
+	   if (!file.delete()) { throw new ResourceException("store.remove.illegal", resourceUri.toString()); }
 	}
 
    }
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.store.AbstractFileStore#doStore(java.net.URI, org.kaleidofoundry.core.store.FileHandler)
+    * @see org.kaleidofoundry.core.store.AbstractFileStore#doStore(java.net.URI, org.kaleidofoundry.core.store.ResourceHandler)
     */
    @Override
-   protected void doStore(final URI resourceUri, final FileHandler resource) throws StoreException {
+   protected void doStore(final URI resourceUri, final ResourceHandler resource) throws ResourceException {
 
 	File file;
 	FileOutputStream out = null;
@@ -105,7 +106,7 @@ public class FileSystemStore extends AbstractFileStore implements FileStore {
 	   file = new File(resourceUri.getPath());
 	   out = new FileOutputStream(file, false);
 
-	   final byte[] buff = new byte[128];
+	   final byte[] buff = new byte[context.getInteger(BufferSize, 128)];
 	   while (resource.getInputStream().read(buff) != -1) {
 		out.write(buff);
 	   }
@@ -113,13 +114,13 @@ public class FileSystemStore extends AbstractFileStore implements FileStore {
 	   out.flush();
 
 	} catch (final IOException ioe) {
-	   throw new StoreException(ioe, resourceUri.toString());
+	   throw new ResourceException(ioe, resourceUri.toString());
 	} finally {
 	   if (out != null) {
 		try {
 		   out.close();
 		} catch (final IOException ioe) {
-		   throw new StoreException(ioe, resourceUri.toString());
+		   throw new ResourceException(ioe, resourceUri.toString());
 		}
 	   }
 	}

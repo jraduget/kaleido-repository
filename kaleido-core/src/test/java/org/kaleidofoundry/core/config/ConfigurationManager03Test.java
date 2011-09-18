@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.kaleidofoundry.core.config.entity.ConfigurationModel;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * Test {@link ConfigurationManagerBean} with a configuration that have been registered and whose meta model have not been persisted
@@ -41,7 +41,7 @@ public class ConfigurationManager03Test extends AbstractConfigurationManagerTest
    protected EntityManagerFactory emf;
 
    @Before
-   public void setup() throws StoreException {
+   public void setup() throws ResourceException {
 
 	// register configuration
 	ConfigurationFactory.provides(MyConfigurationName, MyConfigurationUri);
@@ -60,7 +60,7 @@ public class ConfigurationManager03Test extends AbstractConfigurationManagerTest
    public void cleanup() {
 	try {
 	   ConfigurationFactory.unregister(MyConfigurationName);
-	} catch (StoreException ste) {
+	} catch (ResourceException ste) {
 	}
 
 	try {

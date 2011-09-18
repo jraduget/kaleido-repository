@@ -17,15 +17,17 @@ package org.kaleidofoundry.core.cache;
 
 import java.util.Locale;
 
-import org.kaleidofoundry.core.i18n.I18nRuntimeException;
+import org.kaleidofoundry.core.i18n.AbstractI18nRuntimeException;
 import org.kaleidofoundry.core.i18n.InternalBundleEnum;
+import org.kaleidofoundry.core.lang.annotation.Immutable;
 
 /**
  * Root Cache Exception for cache handling
  * 
  * @author Jerome RADUGET
  */
-public class CacheException extends I18nRuntimeException {
+@Immutable
+public class CacheException extends AbstractI18nRuntimeException {
 
    private static final long serialVersionUID = -2959865376439393715L;
 

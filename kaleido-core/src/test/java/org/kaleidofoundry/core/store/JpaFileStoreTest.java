@@ -27,7 +27,7 @@ import org.junit.Before;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
-import org.kaleidofoundry.core.store.entity.FileHandlerEntity;
+import org.kaleidofoundry.core.store.entity.ResourceHandlerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +61,7 @@ public class JpaFileStoreTest extends AbstractFileStoreTest {
 	   transaction.begin();
 
 	   // 1. existing resources (to get) - create mocked entity for the get test
-	   final FileHandlerEntity entityToGet = new FileHandlerEntity();
+	   final ResourceHandlerEntity entityToGet = new ResourceHandlerEntity();
 	   final URI resourceUriToGet = URI.create("jpa:/tmp/foo.txt");
 	   final String filenameToGet = resourceUriToGet.getPath().substring(1);
 	   entityToGet.setUri(resourceUriToGet.toString());
@@ -81,7 +81,7 @@ public class JpaFileStoreTest extends AbstractFileStoreTest {
 	   existingResourcesForStore.put(filenameToStore, DEFAULT_RESOURCE_MOCK_TEST);
 
 	   // 4. resources to remove
-	   final FileHandlerEntity entityToRemove = new FileHandlerEntity();
+	   final ResourceHandlerEntity entityToRemove = new ResourceHandlerEntity();
 	   final URI resourceUriToRemove = URI.create("jpa:/tmp/fooToRemove.txt");
 	   final String filenameToRemove = resourceUriToRemove.getPath().substring(1);
 	   entityToRemove.setUri(resourceUriToRemove.toString());
@@ -94,7 +94,7 @@ public class JpaFileStoreTest extends AbstractFileStoreTest {
 	   existingResourcesForRemove.put(filenameToRemove, DEFAULT_RESOURCE_MOCK_TEST);
 
 	   // 5. resources to move
-	   final FileHandlerEntity entityToMove = new FileHandlerEntity();
+	   final ResourceHandlerEntity entityToMove = new ResourceHandlerEntity();
 	   final URI resourceUriToMove = URI.create("jpa:/tmp/fooToMove.txt");
 	   final String filenameToMove = resourceUriToMove.getPath().substring(1);
 	   entityToMove.setUri(resourceUriToMove.toString());
@@ -119,7 +119,7 @@ public class JpaFileStoreTest extends AbstractFileStoreTest {
    public void cleanup() {
 	try {
 	   final URI resourceUri = URI.create("jpa:/tmp/foo.txt");
-	   final FileHandlerEntity resource = em.find(FileHandlerEntity.class, resourceUri.toString());
+	   final ResourceHandlerEntity resource = em.find(ResourceHandlerEntity.class, resourceUri.toString());
 	   if (resource != null) {
 		em.remove(resource);
 		transaction.commit();

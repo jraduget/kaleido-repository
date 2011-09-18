@@ -19,7 +19,7 @@ import java.io.IOException;
 
 import org.kaleidofoundry.core.config.ConfigurationConstants;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * Configuration launcher test
@@ -29,7 +29,7 @@ import org.kaleidofoundry.core.store.StoreException;
  */
 public class CacheManagerMainLauncher {
 
-   public static void main(final String[] args) throws StoreException, IOException {
+   public static void main(final String[] args) throws ResourceException, IOException {
 
 	try {
 	   // load and register given configuration

@@ -26,7 +26,7 @@ import org.kaleidofoundry.core.config.entity.ConfigurationModel;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
 import org.kaleidofoundry.core.config.entity.FireChangesReport;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * Configuration manager is used to manage the configuration model and properties <br/>
@@ -67,7 +67,7 @@ public interface ConfigurationManager {
     * 
     * @param config configuration name identifier
     */
-   void unregister(String config) throws StoreException;
+   void unregister(String config) throws ResourceException;
 
    /**
     * does following configuration have been registered
@@ -282,40 +282,40 @@ public interface ConfigurationManager {
     * 
     * @param config configuration name identifier
     * @see Configuration#store()
-    * @throws StoreException
+    * @throws ResourceException
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     */
-   void store(@NotNull String config) throws ConfigurationNotFoundException, StoreException;
+   void store(@NotNull String config) throws ConfigurationNotFoundException, ResourceException;
 
    /**
     * load the configuration
     * 
     * @param config configuration name identifier
-    * @throws StoreException
+    * @throws ResourceException
     * @see Configuration#load()
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     */
-   void load(@NotNull String config) throws ConfigurationNotFoundException, StoreException;
+   void load(@NotNull String config) throws ConfigurationNotFoundException, ResourceException;
 
    /**
     * unload the configuration
     * 
     * @param config configuration name identifier
-    * @throws StoreException
+    * @throws ResourceException
     * @see Configuration#unload()
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     */
-   void unload(@NotNull String config) throws ConfigurationNotFoundException, StoreException;
+   void unload(@NotNull String config) throws ConfigurationNotFoundException, ResourceException;
 
    /**
     * reload the configuration
     * 
     * @param config configuration name identifier
-    * @throws StoreException
+    * @throws ResourceException
     * @see Configuration#reload()
     * @throws ConfigurationNotFoundException if configuration can't be found in registry or in database model
     */
-   void reload(@NotNull String config) throws ConfigurationNotFoundException, StoreException;
+   void reload(@NotNull String config) throws ConfigurationNotFoundException, ResourceException;
 
    /**
     * @param config configuration name identifier

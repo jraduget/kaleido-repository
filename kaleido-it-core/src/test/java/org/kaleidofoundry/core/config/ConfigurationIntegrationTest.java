@@ -32,7 +32,7 @@ import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.cache.EhCache2xImpl;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * Integration test for configuration context injection
@@ -42,7 +42,7 @@ import org.kaleidofoundry.core.store.StoreException;
 public class ConfigurationIntegrationTest {
 
    @Before
-   public void setup() throws StoreException {
+   public void setup() throws ResourceException {
 	// load and register given configuration
 	// another way to to this, set following java env variable :
 	// -Dkaleido.configurations=myConfigCtx=classpath:/config/myContext.properties
@@ -50,7 +50,7 @@ public class ConfigurationIntegrationTest {
    }
 
    @After
-   public void cleanup() throws StoreException {
+   public void cleanup() throws ResourceException {
 	// cleanup context configuration
 	ConfigurationFactory.unregister("myConfigCtx");
 	// cleanup configuration
@@ -109,11 +109,11 @@ public class ConfigurationIntegrationTest {
    /**
     * {@link ConfigurationSample03}
     * 
-    * @throws StoreException
+    * @throws ResourceException
     * @throws ParseException
     */
    @Test
-   public void testConfigurationSample03() throws StoreException, ParseException {
+   public void testConfigurationSample03() throws ResourceException, ParseException {
 	ConfigurationSample03 confSample = new ConfigurationSample03();
 	confSample.echo();
 	assertions(confSample.getConfiguration());

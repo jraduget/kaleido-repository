@@ -25,9 +25,9 @@ import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.store.FileHandler;
+import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.store.SingleFileStore;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -46,9 +46,9 @@ public class JavaSystemConfiguration extends AbstractConfiguration implements Co
 
    /**
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public JavaSystemConfiguration(final RuntimeContext<Configuration> context) throws StoreException {
+   public JavaSystemConfiguration(final RuntimeContext<Configuration> context) throws ResourceException {
 	super(context);
    }
 
@@ -56,18 +56,18 @@ public class JavaSystemConfiguration extends AbstractConfiguration implements Co
     * @param name
     * @param resourceUri
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public JavaSystemConfiguration(final String name, final String resourceUri, final RuntimeContext<Configuration> context) throws StoreException {
+   public JavaSystemConfiguration(final String name, final String resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
 	super(name, "memory:/internal/" + name + ".javasystem", context);
    }
 
    /**
     * @param name
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public JavaSystemConfiguration(final String name, final RuntimeContext<Configuration> context) throws StoreException {
+   public JavaSystemConfiguration(final String name, final RuntimeContext<Configuration> context) throws ResourceException {
 	this(name, (String) null, context);
    }
 
@@ -84,8 +84,8 @@ public class JavaSystemConfiguration extends AbstractConfiguration implements Co
     * org.kaleidofoundry.core.cache.Cache)
     */
    @Override
-   protected Cache<String, Serializable> loadProperties(final FileHandler resourceHandler, final Cache<String, Serializable> cacheProperties)
-	   throws StoreException, ConfigurationException {
+   protected Cache<String, Serializable> loadProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> cacheProperties)
+	   throws ResourceException, ConfigurationException {
 
 	final Properties javaEnvVariables = System.getProperties();
 
@@ -112,7 +112,7 @@ public class JavaSystemConfiguration extends AbstractConfiguration implements Co
     * org.kaleidofoundry.core.store.SingleFileStore)
     */
    @Override
-   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> properties, final SingleFileStore fileStore) throws StoreException,
+   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> properties, final SingleFileStore fileStore) throws ResourceException,
 	   ConfigurationException {
 	return properties; // never called
    }

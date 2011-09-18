@@ -24,9 +24,9 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.store.FileHandler;
+import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.store.SingleFileStore;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * Properties {@link Configuration} implementation
@@ -38,9 +38,9 @@ public class PropertiesConfiguration extends AbstractConfiguration {
 
    /**
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public PropertiesConfiguration(final RuntimeContext<Configuration> context) throws StoreException {
+   public PropertiesConfiguration(final RuntimeContext<Configuration> context) throws ResourceException {
 	super(context);
    }
 
@@ -48,10 +48,10 @@ public class PropertiesConfiguration extends AbstractConfiguration {
     * @param name
     * @param resourceUri
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
    public PropertiesConfiguration(@NotNull final String name, @NotNull final String resourceUri, @NotNull final RuntimeContext<Configuration> context)
-	   throws StoreException {
+	   throws ResourceException {
 	super(name, resourceUri, context);
    }
 
@@ -68,7 +68,7 @@ public class PropertiesConfiguration extends AbstractConfiguration {
     * org.kaleidofoundry.core.cache.Cache)
     */
    @Override
-   protected Cache<String, Serializable> loadProperties(final FileHandler resourceHandler, final Cache<String, Serializable> properties) throws StoreException,
+   protected Cache<String, Serializable> loadProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> properties) throws ResourceException,
 	   ConfigurationException {
 	try {
 	   final Properties lprops = new Properties();
@@ -80,7 +80,7 @@ public class PropertiesConfiguration extends AbstractConfiguration {
 
 	   return properties;
 	} catch (final IOException ioe) {
-	   throw new StoreException(ioe, resourceHandler.getResourceUri());
+	   throw new ResourceException(ioe, resourceHandler.getResourceUri());
 	}
    }
 
@@ -92,12 +92,12 @@ public class PropertiesConfiguration extends AbstractConfiguration {
    @Override
    @NotYetImplemented
    protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> cacheProperties, final SingleFileStore fileStore)
-	   throws StoreException, ConfigurationException {
+	   throws ResourceException, ConfigurationException {
 	// try {
 	// properties.save(resourceHandler.getInputStream());
 	// return properties;
 	// } catch (IOException ioe) {
-	// throw new StoreException(ioe);
+	// throw new ResourceException(ioe);
 	// }
 
 	return null; // annotation @NotYetImplemented handle throw new NotYetImplementedException()...

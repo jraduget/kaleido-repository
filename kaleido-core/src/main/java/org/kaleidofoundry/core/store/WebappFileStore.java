@@ -86,14 +86,14 @@ public class WebappFileStore extends AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.store.AbstractFileStore#doGet(java.net.URI)
     */
    @Override
-   protected FileHandler doGet(final URI resourceUri) throws ResourceNotFoundException, StoreException {
+   protected ResourceHandler doGet(final URI resourceUri) throws ResourceNotFoundException, ResourceException {
 	final String localName = FileHelper.buildCustomPath(resourceUri.getPath(), FileHelper.WEBAPP_SEPARATOR);
 	final InputStream input = ServletContextProvider.getServletContext().getResourceAsStream(localName);
 
 	if (input == null) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
 	} else {
-	   return new FileHandlerBean(resourceUri.toString(), input);
+	   return new ResourceHandlerBean(resourceUri.toString(), input);
 	}
    }
 
@@ -102,17 +102,17 @@ public class WebappFileStore extends AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.store.AbstractFileStore#doRemove(java.net.URI)
     */
    @Override
-   protected void doRemove(final URI resourceUri) throws StoreException {
-	throw new StoreException("store.readonly.illegal", context.getName());
+   protected void doRemove(final URI resourceUri) throws ResourceException {
+	throw new ResourceException("store.readonly.illegal", context.getName());
    }
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.store.AbstractFileStore#doStore(java.net.URI, org.kaleidofoundry.core.store.FileHandler)
+    * @see org.kaleidofoundry.core.store.AbstractFileStore#doStore(java.net.URI, org.kaleidofoundry.core.store.ResourceHandler)
     */
    @Override
-   protected void doStore(final URI resourceUri, final FileHandler resource) throws StoreException {
-	throw new StoreException("store.readonly.illegal", context.getName());
+   protected void doStore(final URI resourceUri, final ResourceHandler resource) throws ResourceException {
+	throw new ResourceException("store.readonly.illegal", context.getName());
    }
 
 }

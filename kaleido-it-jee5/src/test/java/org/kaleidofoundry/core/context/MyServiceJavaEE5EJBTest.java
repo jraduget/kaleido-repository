@@ -26,7 +26,7 @@ import org.kaleidofoundry.core.context.jee5.MyServiceRemoteBean;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.naming.NamingService;
 import org.kaleidofoundry.core.naming.NamingServiceFactory;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * @author Jerome RADUGET
@@ -39,7 +39,7 @@ public class MyServiceJavaEE5EJBTest implements MyServiceTest {
    private MyServiceRemoteBean myRemoteJavaEE5Bean;
 
    @Before
-   public void setup() throws StoreException, Throwable {
+   public void setup() throws ResourceException, Throwable {
 
 	I18nMessagesFactory.disableJpaControl();
 
@@ -54,7 +54,7 @@ public class MyServiceJavaEE5EJBTest implements MyServiceTest {
    }
 
    @After
-   public void cleanupClass() throws StoreException {
+   public void cleanupClass() throws ResourceException {
 	ConfigurationFactory.unregister("myNamingHost");
 	I18nMessagesFactory.enableJpaControl();
    }

@@ -46,7 +46,7 @@ import org.kaleidofoundry.core.lang.annotation.Task;
 // @Access(AccessType.PROPERTY)
 @Table(name = "FILESTORE")
 @Task(comment = "Audit information (locale zone for the date, user information...)")
-public class FileHandlerEntity implements Serializable {
+public class ResourceHandlerEntity implements Serializable {
 
    private static final long serialVersionUID = 6158960255569565876L;
 
@@ -203,8 +203,8 @@ public class FileHandlerEntity implements Serializable {
    public boolean equals(final Object obj) {
 	if (this == obj) { return true; }
 	if (obj == null) { return false; }
-	if (!(obj instanceof FileHandlerEntity)) { return false; }
-	final FileHandlerEntity other = (FileHandlerEntity) obj;
+	if (!(obj instanceof ResourceHandlerEntity)) { return false; }
+	final ResourceHandlerEntity other = (ResourceHandlerEntity) obj;
 	if (!Arrays.equals(content, other.content)) { return false; }
 	if (creationDate == null) {
 	   if (other.creationDate != null) { return false; }

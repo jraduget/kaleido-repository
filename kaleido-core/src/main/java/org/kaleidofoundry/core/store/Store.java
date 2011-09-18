@@ -53,9 +53,9 @@ public interface Store<B, R> {
     *           </p>
     * @return bind resource or null if not exists
     * @throws ResourceNotFoundException if resource can't be found
-    * @throws StoreException other kind of error
+    * @throws ResourceException other kind of error
     */
-   R get(B resourceBinding) throws ResourceNotFoundException, StoreException;
+   R get(B resourceBinding) throws ResourceNotFoundException, ResourceException;
 
    /**
     * store updates on current R instance<br/>
@@ -63,24 +63,24 @@ public interface Store<B, R> {
     * @param resourceBinding resource binding which have to be persist
     * @param resource resource to store
     * @return current instance of the store
-    * @throws StoreException other kind of error
+    * @throws ResourceException other kind of error
     */
-   Store<B, R> store(B resourceBinding, R resource) throws StoreException;
+   Store<B, R> store(B resourceBinding, R resource) throws ResourceException;
 
    /**
     * remove resource identify by its resource binding<br/>
     * 
     * @param resourceBinding resource binding which have to be removed
     * @return current instance of the store
-    * @throws StoreException if resource can't be found or for other kind of error
+    * @throws ResourceException if resource can't be found or for other kind of error
     */
-   Store<B, R> remove(B resourceBinding) throws ResourceNotFoundException, StoreException;
+   Store<B, R> remove(B resourceBinding) throws ResourceNotFoundException, ResourceException;
 
    /**
     * @param resourceBinding
     * @return does the resource exists <code>true / false</code>
-    * @throws StoreException other kind of error
+    * @throws ResourceException other kind of error
     */
-   boolean exists(B resourceBinding) throws StoreException;
+   boolean exists(B resourceBinding) throws ResourceException;
 
 }

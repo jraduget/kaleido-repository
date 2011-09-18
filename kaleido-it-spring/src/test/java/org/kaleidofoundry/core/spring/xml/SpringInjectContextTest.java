@@ -25,7 +25,7 @@ import org.kaleidofoundry.core.cache.CacheException;
 import org.kaleidofoundry.core.config.ConfigurationException;
 import org.kaleidofoundry.core.naming.NamingServiceException;
 import org.kaleidofoundry.core.naming.NamingServiceNotFoundException;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -41,7 +41,7 @@ public class SpringInjectContextTest extends Assert {
    private MySpringService mySpringService;
 
    @Test
-   public void testStore() throws StoreException {
+   public void testStore() throws ResourceException {
 	assertNotNull(mySpringService);
 	assertEquals("line1\nline2", mySpringService.getStoreResource("foo.txt"));
    }

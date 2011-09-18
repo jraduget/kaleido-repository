@@ -30,13 +30,13 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
 
 /**
- * Default {@link FileHandler} implementation
+ * Default {@link ResourceHandler} implementation
  * 
  * @author Jerome RADUGET
  */
 @Immutable
 @NotThreadSafe
-public class FileHandlerBean implements FileHandler {
+public class ResourceHandlerBean implements ResourceHandler {
 
    private final String resourceUri;
    private final InputStream input;
@@ -47,7 +47,7 @@ public class FileHandlerBean implements FileHandler {
     * @param resourceUri
     * @param input
     */
-   public FileHandlerBean(@NotNull final String resourceUri, @NotNull final InputStream input) {
+   public ResourceHandlerBean(@NotNull final String resourceUri, @NotNull final InputStream input) {
 	this.input = input;
 	this.resourceUri = resourceUri;
 	this.closed = false;
@@ -59,7 +59,7 @@ public class FileHandlerBean implements FileHandler {
     * @throws UnsupportedEncodingException default text encoding is UTF-8
     * @see Charset
     */
-   public FileHandlerBean(@NotNull final String resourceUri, @NotNull final String input) throws UnsupportedEncodingException {
+   public ResourceHandlerBean(@NotNull final String resourceUri, @NotNull final String input) throws UnsupportedEncodingException {
 	this(resourceUri, input, "UTF-8");
    }
 
@@ -69,7 +69,7 @@ public class FileHandlerBean implements FileHandler {
     * @param charset
     * @throws UnsupportedEncodingException default text encoding is UTF-8
     */
-   public FileHandlerBean(@NotNull final String resourceUri, @NotNull final String input, @NotNull final String charset)
+   public ResourceHandlerBean(@NotNull final String resourceUri, @NotNull final String input, @NotNull final String charset)
 	   throws UnsupportedEncodingException {
 	this(resourceUri, new ByteArrayInputStream(input.getBytes(charset)));
    }
@@ -99,14 +99,14 @@ public class FileHandlerBean implements FileHandler {
     */
    @Override
    @NotNull
-   public byte[] getBytes() throws StoreException {
+   public byte[] getBytes() throws ResourceException {
 	try {
 	   return IOHelper.toByteArray(getInputStream());
 	} catch (final IOException ioe) {
-	   throw new StoreException(ioe, resourceUri);
+	   throw new ResourceException(ioe, resourceUri);
 	} finally {
 	   // free resource handler
-	   release();
+	   close();
 	}
    }
 
@@ -116,7 +116,7 @@ public class FileHandlerBean implements FileHandler {
     */
    @Override
    @NotNull
-   public InputStreamReader getInputStreamReader() throws StoreException {
+   public InputStreamReader getInputStreamReader() throws ResourceException {
 	return getInputStreamReader("UTF-8");
    }
 
@@ -126,11 +126,11 @@ public class FileHandlerBean implements FileHandler {
     */
    @Override
    @NotNull
-   public InputStreamReader getInputStreamReader(final String charset) throws StoreException {
+   public InputStreamReader getInputStreamReader(final String charset) throws ResourceException {
 	try {
 	   return new InputStreamReader(getInputStream(), charset);
 	} catch (final IOException ioe) {
-	   throw new StoreException(ioe, resourceUri);
+	   throw new ResourceException(ioe, resourceUri);
 	}
    }
 
@@ -140,7 +140,7 @@ public class FileHandlerBean implements FileHandler {
     */
    @Override
    @NotNull
-   public String getText() throws StoreException {
+   public String getText() throws ResourceException {
 	return getText("UTF-8");
    }
 
@@ -150,7 +150,7 @@ public class FileHandlerBean implements FileHandler {
     */
    @Override
    @NotNull
-   public String getText(final String charset) throws StoreException {
+   public String getText(final String charset) throws ResourceException {
 	BufferedReader reader = null;
 	String inputLine;
 
@@ -167,7 +167,7 @@ public class FileHandlerBean implements FileHandler {
 	   }
 
 	} catch (final IOException ioe) {
-	   throw new StoreException(ioe, resourceUri);
+	   throw new ResourceException(ioe, resourceUri);
 	} finally {
 	   // free buffered reader
 	   try {
@@ -180,7 +180,7 @@ public class FileHandlerBean implements FileHandler {
 	   }
 
 	   // free resource handler
-	   release();
+	   close();
 	}
    }
 
@@ -189,7 +189,7 @@ public class FileHandlerBean implements FileHandler {
     * @see org.kaleidofoundry.core.store.ResourceHandler#release()
     */
    @Override
-   public void release() {
+   public void close() {
 	if (input != null && !closed) {
 	   try {
 		input.close();

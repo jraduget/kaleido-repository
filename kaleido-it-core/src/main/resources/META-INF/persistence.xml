@@ -9,7 +9,7 @@
 		<jta-data-source>jdbc/kaleido</jta-data-source>
 
 		<!-- entities declarations -->
-		<class>org.kaleidofoundry.core.store.entity.FileHandlerEntity</class>
+		<class>org.kaleidofoundry.core.store.entity.ResourceHandlerEntity</class>
 		<class>org.kaleidofoundry.core.i18n.entity.I18nMessage</class>
 		<class>org.kaleidofoundry.core.i18n.entity.I18nMessageGroup</class>
 		<class>org.kaleidofoundry.core.i18n.entity.I18nMessageLanguage</class>

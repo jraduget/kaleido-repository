@@ -70,9 +70,9 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td>the class name, to get the class loader to use</td>
  * </tr>
  * <tr>
- * <td>customFileHandlerEntity</td>
+ * <td>customResourceHandlerEntity</td>
  * <td>jpa</td>
- * <td>class name of a custom file handler entity (if you want to persist your own bean) - default one is FileHandlerEntity</td>
+ * <td>class name of a custom file handler entity (if you want to persist your own bean) - default one is ResourceHandlerEntity</td>
  * </tr>
  * <tr>
  * <td>bufferSize</td>
@@ -192,7 +192,7 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
 
    // * jpa settings property name ****************
    /** class name of a custom file handler entity used in jpa store */
-   public static final String CustomFileHandlerEntity = "customFileHandlerEntity";
+   public static final String CustomResourceHandlerEntity = "customResourceHandlerEntity";
    /** buffer size for reading input stream data */
    public static final String BufferSize = "bufferSize";
 
@@ -501,12 +501,12 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
    }
 
    /**
-    * @param customFileHandlerEntity
+    * @param customResourceHandlerEntity
     * @return current builder instance
-    * @see FileStoreContextBuilder#CustomFileHandlerEntity
+    * @see FileStoreContextBuilder#CustomResourceHandlerEntity
     */
-   public FileStoreContextBuilder withCustomFileHandlerEntity(final String customFileHandlerEntity) {
-	getContextParameters().put(CustomFileHandlerEntity, customFileHandlerEntity);
+   public FileStoreContextBuilder withCustomResourceHandlerEntity(final String customResourceHandlerEntity) {
+	getContextParameters().put(CustomResourceHandlerEntity, customResourceHandlerEntity);
 	return this;
    }
 

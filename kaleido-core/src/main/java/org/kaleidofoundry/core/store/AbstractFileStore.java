@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  * <li>{@link #getStoreType()}</li>
  * <li>{@link #doGet(URI)}</li>
  * <li>{@link #doRemove(URI)}</li>
- * <li>{@link #doStore(URI, FileHandler)}</li>
+ * <li>{@link #doStore(URI, ResourceHandler)}</li>
  * </ul>
  * Then, annotate {@link Declare} your new class to register your implementation
  * 
@@ -123,29 +123,29 @@ public abstract class AbstractFileStore implements FileStore {
     * 
     * @param resourceUri
     * @return resource handler
-    * @throws StoreException
+    * @throws ResourceException
     * @throws ResourceNotFoundException
     */
-   protected abstract FileHandler doGet(@NotNull URI resourceUri) throws ResourceNotFoundException, StoreException;
+   protected abstract ResourceHandler doGet(@NotNull URI resourceUri) throws ResourceNotFoundException, ResourceException;
 
    /**
     * remove processing, you don't have to check argument validity
     * 
     * @param resourceUri
-    * @throws StoreException
+    * @throws ResourceException
     * @throws ResourceNotFoundException
     */
-   protected abstract void doRemove(@NotNull URI resourceUri) throws ResourceNotFoundException, StoreException;
+   protected abstract void doRemove(@NotNull URI resourceUri) throws ResourceNotFoundException, ResourceException;
 
    /**
     * store processing, you don't have to check argument validity
     * 
     * @param resourceUri
     * @param resource
-    * @throws StoreException
+    * @throws ResourceException
     * @throws ResourceNotFoundException
     */
-   protected abstract void doStore(@NotNull URI resourceUri, @NotNull FileHandler resource) throws StoreException;
+   protected abstract void doStore(@NotNull URI resourceUri, @NotNull ResourceHandler resource) throws ResourceException;
 
    /**
     * build a full resource uri, given a relative path
@@ -230,21 +230,21 @@ public abstract class AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.store.FileStore#get(java.lang.String)
     */
    @Override
-   public final FileHandler get(@NotNull final String resourceRelativePath) throws StoreException {
+   public final ResourceHandler get(@NotNull final String resourceRelativePath) throws ResourceException {
 	final String resourceUri = buildResourceURi(resourceRelativePath);
 	isUriManageable(resourceUri);
 
 	int retryCount = 0;
 	int maxRetryCount = 1;
-	StoreException lastError = null;
+	ResourceException lastError = null;
 
 	while (retryCount < maxRetryCount) {
 	   try {
 		// try to get the resource
-		final FileHandler in = doGet(URI.create(resourceUri));
+		final ResourceHandler in = doGet(URI.create(resourceUri));
 		if (in == null || in.getInputStream() == null) { throw new ResourceNotFoundException(resourceRelativePath); }
 		return in;
-	   } catch (final StoreException rse) {
+	   } catch (final ResourceException rse) {
 		lastError = rse;
 		maxRetryCount = getMaxRetryOnFailure();
 		// no fail-over, we throw the exception
@@ -282,22 +282,22 @@ public abstract class AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.store.FileStore#remove(java.lang.String)
     */
    @Override
-   public final FileStore remove(@NotNull final String resourceRelativePath) throws StoreException {
-	if (isReadOnly()) { throw new StoreException("store.readonly.illegal", context.getName() != null ? context.getName() : ""); }
+   public final FileStore remove(@NotNull final String resourceRelativePath) throws ResourceException {
+	if (isReadOnly()) { throw new ResourceException("store.readonly.illegal", context.getName() != null ? context.getName() : ""); }
 
 	final String resourceUri = buildResourceURi(resourceRelativePath);
 	isUriManageable(resourceUri);
 
 	int retryCount = 0;
 	int maxRetryCount = 1;
-	StoreException lastError = null;
+	ResourceException lastError = null;
 
 	while (retryCount < maxRetryCount) {
 	   try {
 		// try to remove the resource
 		doRemove(URI.create(resourceUri));
 		return this;
-	   } catch (final StoreException rse) {
+	   } catch (final ResourceException rse) {
 		lastError = rse;
 		maxRetryCount = getMaxRetryOnFailure();
 		// no fail-over, we throw the exception
@@ -333,24 +333,24 @@ public abstract class AbstractFileStore implements FileStore {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.store.FileStore#store(java.lang.String, org.kaleidofoundry.core.store.FileHandler)
+    * @see org.kaleidofoundry.core.store.FileStore#store(java.lang.String, org.kaleidofoundry.core.store.ResourceHandler)
     */
    @Override
-   public final FileStore store(@NotNull final String resourceRelativePath, @NotNull final FileHandler resource) throws StoreException {
-	if (isReadOnly()) { throw new StoreException("store.readonly.illegal", context.getName() != null ? context.getName() : ""); }
+   public final FileStore store(@NotNull final String resourceRelativePath, @NotNull final ResourceHandler resource) throws ResourceException {
+	if (isReadOnly()) { throw new ResourceException("store.readonly.illegal", context.getName() != null ? context.getName() : ""); }
 	final String resourceUri = buildResourceURi(resourceRelativePath);
 	isUriManageable(resourceUri);
 
 	int retryCount = 0;
 	int maxRetryCount = 1;
-	StoreException lastError = null;
+	ResourceException lastError = null;
 
 	while (retryCount < maxRetryCount) {
 	   try {
 		// try to store the resource
 		doStore(URI.create(resourceUri), resource);
 		return this;
-	   } catch (final StoreException rse) {
+	   } catch (final ResourceException rse) {
 		lastError = rse;
 		maxRetryCount = getMaxRetryOnFailure();
 		// no fail-over, we throw the exception
@@ -389,8 +389,8 @@ public abstract class AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.store.FileStore#move(java.lang.String, java.lang.String)
     */
    @Override
-   public final FileStore move(@NotNull final String origin, @NotNull final String destination) throws ResourceNotFoundException, StoreException {
-	if (isReadOnly()) { throw new StoreException("store.readonly.illegal", context.getName() != null ? context.getName() : ""); }
+   public final FileStore move(@NotNull final String origin, @NotNull final String destination) throws ResourceNotFoundException, ResourceException {
+	if (isReadOnly()) { throw new ResourceException("store.readonly.illegal", context.getName() != null ? context.getName() : ""); }
 
 	isUriManageable(buildResourceURi(origin));
 	isUriManageable(buildResourceURi(destination));
@@ -399,14 +399,14 @@ public abstract class AbstractFileStore implements FileStore {
 	   remove(destination);
 	}
 
-	final FileHandler resource = get(origin);
+	final ResourceHandler resource = get(origin);
 
 	try {
 	   if (resource != null) {
 		store(destination, resource);
 	   }
 	} finally {
-	   resource.release();
+	   resource.close();
 	}
 	remove(origin);
 
@@ -419,8 +419,8 @@ public abstract class AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.lang.pattern.Store#exists(java.lang.Object)
     */
    @Override
-   public final boolean exists(@NotNull final String resourceRelativePath) throws StoreException {
-	FileHandler resource = null;
+   public final boolean exists(@NotNull final String resourceRelativePath) throws ResourceException {
+	ResourceHandler resource = null;
 	try {
 	   resource = get(resourceRelativePath);
 	   return true;
@@ -428,7 +428,7 @@ public abstract class AbstractFileStore implements FileStore {
 	   return false;
 	} finally {
 	   if (resource != null) {
-		resource.release();
+		resource.close();
 	   }
 	}
    }

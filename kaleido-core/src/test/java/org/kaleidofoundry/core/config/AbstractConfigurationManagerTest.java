@@ -21,7 +21,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.entity.ConfigurationModel;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * @author Jerome RADUGET
@@ -78,7 +78,7 @@ public abstract class AbstractConfigurationManagerTest extends Assert {
    }
 
    @Test
-   public void removeConfigurationModel() throws StoreException {
+   public void removeConfigurationModel() throws ResourceException {
 
 	try {
 	   configurationManager.removeModel("unknown");
@@ -108,7 +108,7 @@ public abstract class AbstractConfigurationManagerTest extends Assert {
    }
 
    @Test
-   public void register() throws StoreException {
+   public void register() throws ResourceException {
 	try {
 	   assertFalse(ConfigurationFactory.getRegistry().containsKey("test"));
 	   configurationManager.register("test", "classpath:/config/test.properties");
@@ -119,7 +119,7 @@ public abstract class AbstractConfigurationManagerTest extends Assert {
    }
 
    @Test
-   public void unregister() throws StoreException {
+   public void unregister() throws ResourceException {
 	try {
 	   assertFalse(ConfigurationFactory.getRegistry().containsKey("test"));
 	   configurationManager.register("test", "classpath:/config/test.properties");
@@ -331,7 +331,7 @@ public abstract class AbstractConfigurationManagerTest extends Assert {
 	   configurationManager.store("unknown");
 	   fail();
 	} catch (ConfigurationNotFoundException cnfe) {
-	} catch (StoreException se) {
+	} catch (ResourceException se) {
 	   fail();
 	}
    }

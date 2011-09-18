@@ -52,7 +52,7 @@ import org.kaleidofoundry.core.plugin.Declare;
 @Stateless
 @Declare(FileStorePluginName)
 @Provider(FileStoreProvider.class)
-public interface FileStore extends Store<String, FileHandler> {
+public interface FileStore extends Store<String, ResourceHandler> {
 
    /**
     * @return root (base) path URI
@@ -66,12 +66,12 @@ public interface FileStore extends Store<String, FileHandler> {
     * @param resourceRelativePath relative resource path (relative from the file store root uri)
     * @return resource input stream to get its content
     * @throws ResourceNotFoundException if resource can't be found, instead of returning null
-    * @throws StoreException other kind of error
+    * @throws ResourceException other kind of error
     * @throws IllegalArgumentException if resourceRelativePath parameter is invalid - see ({@link URI#create(String)})
     */
    @Override
    @NotNull
-   FileHandler get(@NotNull String resourceRelativePath) throws ResourceNotFoundException, StoreException;
+   ResourceHandler get(@NotNull String resourceRelativePath) throws ResourceNotFoundException, ResourceException;
 
    /**
     * Store updates on current R instance<br/>
@@ -80,12 +80,12 @@ public interface FileStore extends Store<String, FileHandler> {
     * @param resource resource input stream to store
     * @return current instance of the store
     * @throws ResourceNotFoundException if resource can't be found, instead of returning null
-    * @throws StoreException other kind of error
+    * @throws ResourceException other kind of error
     * @throws IllegalArgumentException if resourceRelativePath parameter is invalid - see ({@link URI#create(String)})
     */
    @Override
    @NotNull
-   FileStore store(@NotNull String resourceRelativePath, @NotNull FileHandler resource) throws StoreException;
+   FileStore store(@NotNull String resourceRelativePath, @NotNull ResourceHandler resource) throws ResourceException;
 
    /**
     * Remove resource identify by its resource binding
@@ -93,23 +93,23 @@ public interface FileStore extends Store<String, FileHandler> {
     * @param resourceRelativePath relative resource path (relative from the store root uri)
     * @return current instance of the store
     * @throws ResourceNotFoundException if resource can't be found for the uri
-    * @throws StoreException other kind of error
+    * @throws ResourceException other kind of error
     * @throws IllegalArgumentException if resourceRelativePath parameter is invalid - see ({@link URI#create(String)})
     */
    @Override
    @NotNull
-   FileStore remove(@NotNull String resourceRelativePath) throws ResourceNotFoundException, StoreException;
+   FileStore remove(@NotNull String resourceRelativePath) throws ResourceNotFoundException, ResourceException;
 
    /**
     * Does a given resource exists ?
     * 
     * @param resourceRelativePath relative resource path (relative from the store root uri)
     * @return does the resource exists <code>true / false</code>
-    * @throws StoreException other kind of error
+    * @throws ResourceException other kind of error
     * @throws IllegalArgumentException if resourceRelativePath parameter is invalid - see ({@link URI#create(String)})
     */
    @Override
-   boolean exists(@NotNull String resourceRelativePath) throws StoreException;
+   boolean exists(@NotNull String resourceRelativePath) throws ResourceException;
 
    /**
     * Move a resource from a destination to another
@@ -118,11 +118,11 @@ public interface FileStore extends Store<String, FileHandler> {
     * @param destination relative destination resource path (relative from the store root uri)
     * @return current instance of the store
     * @throws ResourceNotFoundException if resource can't be found for the uri
-    * @throws StoreException
+    * @throws ResourceException
     * @throws IllegalArgumentException if resourceRelativePath parameter is invalid - see ({@link URI#create(String)})
     */
    @NotNull
-   FileStore move(@NotNull String origin, @NotNull String destination) throws ResourceNotFoundException, StoreException;
+   FileStore move(@NotNull String origin, @NotNull String destination) throws ResourceNotFoundException, ResourceException;
 
    /**
     * Check the uri validity for the current store

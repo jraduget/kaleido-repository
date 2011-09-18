@@ -28,7 +28,7 @@ import org.kaleidofoundry.core.config.ConfigurationFactory;
  */
 public class FileStoreMainLauncher {
 
-   public static void main(final String[] args) throws StoreException, IOException {
+   public static void main(final String[] args) throws ResourceException, IOException {
 
 	try {
 	   // -Dkaleido.configurations=myContext=classpath:/store/myContext.properties

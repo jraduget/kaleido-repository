@@ -18,7 +18,7 @@ package org.kaleidofoundry.core.config;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * Test {@link ConfigurationManagerBean} with a configuration that have been registered and whose meta model have been persisted
@@ -42,7 +42,7 @@ public class ConfigurationManager02Test extends ConfigurationManager01Test {
 	super.cleanup();
 	try {
 	   ConfigurationFactory.unregister(MyConfigurationName);
-	} catch (StoreException ste) {
+	} catch (ResourceException ste) {
 	} catch (ConfigurationNotFoundException cnfe) {
 	}
    }
@@ -58,7 +58,7 @@ public class ConfigurationManager02Test extends ConfigurationManager01Test {
 	try {
 	   configurationManager.store(MyConfigurationName);
 	   fail();
-	} catch (StoreException se) {
+	} catch (ResourceException se) {
 	   assertEquals("store.readonly.illegal", se.getCode());
 	}
    }

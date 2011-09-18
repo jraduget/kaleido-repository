@@ -17,8 +17,9 @@ package org.kaleidofoundry.core.lang;
 
 import java.util.Locale;
 
-import org.kaleidofoundry.core.i18n.I18nRuntimeException;
+import org.kaleidofoundry.core.i18n.AbstractI18nRuntimeException;
 import org.kaleidofoundry.core.i18n.InternalBundleEnum;
+import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotImplemented;
 
 /**
@@ -28,7 +29,8 @@ import org.kaleidofoundry.core.lang.annotation.NotImplemented;
  * @see NotImplemented
  * @author Jerome RADUGET
  */
-public class NotImplementedException extends I18nRuntimeException {
+@Immutable
+public class NotImplementedException extends AbstractI18nRuntimeException {
 
    private static final long serialVersionUID = 732204899702062693L;
 
@@ -80,7 +82,7 @@ public class NotImplementedException extends I18nRuntimeException {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.i18n.I18nRuntimeException#getI18nBundleName()
+    * @see org.kaleidofoundry.core.i18n.AbstractI18nRuntimeException#getI18nBundleName()
     */
    @Override
    public final String getI18nBundleName() {

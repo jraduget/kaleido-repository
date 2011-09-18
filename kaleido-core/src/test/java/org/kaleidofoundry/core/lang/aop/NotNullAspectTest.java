@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.lang.NotNullException;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +43,7 @@ public class NotNullAspectTest extends Assert {
    }
 
    @After
-   public void cleanup() throws StoreException {
+   public void cleanup() throws ResourceException {
 	// re-enable i18n jpa message bundle control
 	I18nMessagesFactory.enableJpaControl();
    }

@@ -17,15 +17,16 @@ package org.kaleidofoundry.core.config;
 
 import java.util.Locale;
 
-import org.kaleidofoundry.core.i18n.I18nRuntimeException;
+import org.kaleidofoundry.core.i18n.AbstractI18nRuntimeException;
 import org.kaleidofoundry.core.i18n.InternalBundleEnum;
+import org.kaleidofoundry.core.lang.annotation.Immutable;
 
 /**
  * <p>
  * Configuration exception is class ancestor for configuration package
  * </p>
  * <p>
- * Warning: this class extends {@link I18nRuntimeException} and so {@link RuntimeException}. <br/>
+ * Warning: this class extends {@link AbstractI18nRuntimeException} and so {@link RuntimeException}. <br/>
  * Any {@link ConfigurationException} will therefore not be trapped by default (directly propagated).<br/>
  * If you want trap explicit configuration errors :
  * </p>
@@ -42,7 +43,8 @@ import org.kaleidofoundry.core.i18n.InternalBundleEnum;
  * 
  * @author Jerome RADUGET
  */
-public class ConfigurationException extends I18nRuntimeException {
+@Immutable
+public class ConfigurationException extends AbstractI18nRuntimeException {
 
    private static final long serialVersionUID = 1125414504901L;
 
@@ -124,7 +126,7 @@ public class ConfigurationException extends I18nRuntimeException {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.i18n.I18nRuntimeException#getI18nBundleName()
+    * @see org.kaleidofoundry.core.i18n.AbstractI18nRuntimeException#getI18nBundleName()
     */
    @Override
    public String getI18nBundleName() {

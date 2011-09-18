@@ -38,12 +38,12 @@ import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * FTP read only store implementation <br/>
- * <b>This implementation is only for read only use</b> - the methods store, remove, move will throws {@link StoreException}<br/>
+ * <b>This implementation is only for read only use</b> - the methods store, remove, move will throws {@link ResourceException}<br/>
  * <br/>
  * You can create your own store, by extending this class and overriding methods :
  * <ul>
  * <li>{@link #doRemove(URI)}</li>
- * <li>{@link #doStore(URI, FileHandler)}</li>
+ * <li>{@link #doStore(URI, ResourceHandler)}</li>
  * </ul>
  * Then, annotate {@link Declare} your new class to register your implementation
  * 
@@ -99,7 +99,7 @@ public class FtpStore extends AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.store.AbstractFileStore#doLoad(java.net.URI)
     */
    @Override
-   protected FileHandler doGet(final URI resourceUri) throws StoreException {
+   protected ResourceHandler doGet(final URI resourceUri) throws ResourceException {
 	if (resourceUri.getHost() == null) { throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.uri.ftp.illegal",
 		resourceUri.toString())); }
 
@@ -165,7 +165,7 @@ public class FtpStore extends AbstractFileStore implements FileStore {
 	   urlConnection.connect();
 
 	   try {
-		return new FileHandlerBean(resourceUri.toString(), urlConnection.getInputStream());
+		return new ResourceHandlerBean(resourceUri.toString(), urlConnection.getInputStream());
 	   } catch (final FileNotFoundException fnfe) {
 		throw new ResourceNotFoundException(resourceUri.toString());
 	   }
@@ -173,9 +173,13 @@ public class FtpStore extends AbstractFileStore implements FileStore {
 	} catch (final MalformedURLException mure) {
 	   throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.uri.malformed", resourceUri.toString()));
 	} catch (final ConnectException ce) {
-	   throw new StoreException("store.connection.error", ce, resourceUri.toString());
+	   throw new ResourceException("store.connection.error", ce, resourceUri.toString());
 	} catch (final IOException ioe) {
-	   throw new StoreException(ioe, resourceUri.toString());
+	   if (ioe instanceof ResourceException) {
+		throw (ResourceException) ioe;
+	   } else {
+		throw new ResourceException(ioe, resourceUri.toString());
+	   }
 	}
    }
 
@@ -184,17 +188,17 @@ public class FtpStore extends AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.store.AbstractFileStore#doRemove(java.net.URI)
     */
    @Override
-   protected void doRemove(final URI resourceUri) throws ResourceNotFoundException, StoreException {
-	throw new StoreException("store.readonly.illegal", context.getName());
+   protected void doRemove(final URI resourceUri) throws ResourceNotFoundException, ResourceException {
+	throw new ResourceException("store.readonly.illegal", context.getName());
    }
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.store.AbstractFileStore#doStore(java.net.URI, org.kaleidofoundry.core.store.FileHandler)
+    * @see org.kaleidofoundry.core.store.AbstractFileStore#doStore(java.net.URI, org.kaleidofoundry.core.store.ResourceHandler)
     */
    @Override
-   protected void doStore(final URI resourceUri, final FileHandler resource) throws StoreException {
-	throw new StoreException("store.readonly.illegal", context.getName());
+   protected void doStore(final URI resourceUri, final ResourceHandler resource) throws ResourceException {
+	throw new ResourceException("store.readonly.illegal", context.getName());
    }
 
 }

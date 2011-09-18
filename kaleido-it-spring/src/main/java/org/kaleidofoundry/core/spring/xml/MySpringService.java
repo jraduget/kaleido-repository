@@ -23,7 +23,7 @@ import org.kaleidofoundry.core.config.ConfigurationException;
 import org.kaleidofoundry.core.naming.NamingService;
 import org.kaleidofoundry.core.naming.NamingServiceException;
 import org.kaleidofoundry.core.store.FileStore;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -64,9 +64,9 @@ public class MySpringService {
 
    /**
     * @param resource resource name (relative path)
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public String getStoreResource(final String resource) throws StoreException {
+   public String getStoreResource(final String resource) throws ResourceException {
 	return store.get(resource).getText();
    }
 

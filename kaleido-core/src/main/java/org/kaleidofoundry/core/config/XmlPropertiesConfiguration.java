@@ -23,9 +23,9 @@ import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.store.FileHandler;
+import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.store.SingleFileStore;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * Xml properties implementation
@@ -37,9 +37,9 @@ public class XmlPropertiesConfiguration extends AbstractConfiguration implements
 
    /**
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public XmlPropertiesConfiguration(final RuntimeContext<Configuration> context) throws StoreException {
+   public XmlPropertiesConfiguration(final RuntimeContext<Configuration> context) throws ResourceException {
 	super(context);
    }
 
@@ -47,9 +47,9 @@ public class XmlPropertiesConfiguration extends AbstractConfiguration implements
     * @param name
     * @param resourceUri
     * @param context
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public XmlPropertiesConfiguration(final String name, final String resourceUri, final RuntimeContext<Configuration> context) throws StoreException {
+   public XmlPropertiesConfiguration(final String name, final String resourceUri, final RuntimeContext<Configuration> context) throws ResourceException {
 	super(name, resourceUri, context);
    }
 
@@ -66,7 +66,7 @@ public class XmlPropertiesConfiguration extends AbstractConfiguration implements
     * org.kaleidofoundry.core.cache.Cache)
     */
    @Override
-   protected Cache<String, Serializable> loadProperties(final FileHandler resourceHandler, final Cache<String, Serializable> properties) throws StoreException,
+   protected Cache<String, Serializable> loadProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> properties) throws ResourceException,
 	   ConfigurationException {
 	try {
 
@@ -79,7 +79,7 @@ public class XmlPropertiesConfiguration extends AbstractConfiguration implements
 
 	   return properties;
 	} catch (final IOException ioe) {
-	   throw new StoreException(ioe, resourceHandler.getResourceUri());
+	   throw new ResourceException(ioe, resourceHandler.getResourceUri());
 	}
    }
 
@@ -91,12 +91,12 @@ public class XmlPropertiesConfiguration extends AbstractConfiguration implements
    @Override
    @NotYetImplemented
    protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> cacheProperties, final SingleFileStore fileStore)
-	   throws StoreException, ConfigurationException {
+	   throws ResourceException, ConfigurationException {
 	// try {
 	// properties.storeToXML(os, comment, encoding);
 	// return properties;
 	// } catch (IOException ioe) {
-	// throw new StoreException(ioe);
+	// throw new ResourceException(ioe);
 	// }
 	return null; // annotation @NotYetImplemented handle throw new NotYetImplementedException()...
    }

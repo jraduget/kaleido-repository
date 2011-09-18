@@ -36,7 +36,7 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginFactory;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -150,7 +150,7 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 		// re-check uri coherence ?
 		return configuration;
 	   }
-	} catch (final StoreException ste) {
+	} catch (final ResourceException ste) {
 	   throw new ProviderException(ste);
 	}
    }
@@ -195,7 +195,7 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 		throw new ProviderException("context.provider.error.IllegalAccessException", impl.getName(),
 			"String name, String resourceUri, RuntimeContext<Configuration> context");
 	   } catch (final InvocationTargetException e) {
-		if (e.getCause() instanceof StoreException) {
+		if (e.getCause() instanceof ResourceException) {
 		   throw new ProviderException(e.getCause());
 		} else {
 		   throw new ProviderException("context.provider.error.InvocationTargetException", e.getCause(), impl.getName(),
@@ -204,7 +204,7 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 	   }
 	}
 
-	throw new ProviderException(new StoreException("store.uri.custom.notmanaged", resourceURI.getScheme(), resourceURI.toString()));
+	throw new ProviderException(new ResourceException("store.uri.custom.notmanaged", resourceURI.getScheme(), resourceURI.toString()));
    }
 
 }

@@ -120,7 +120,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * 	   // extract current properties to another file
  * 	   Properties tomcatJndiProperties = tomcatContext.toProperties();
  * 	   tomcatJndiProperties.store(new FileOutputStream("jndi-local-tomcat.properties"), "extraction of tomcat jndi properties");
- * 	} catch (final StoreException stoe) {
+ * 	} catch (final ResourceException stoe) {
  * 	   ...
  * 	} catch (final IOException ioe) {
  * 	   ...

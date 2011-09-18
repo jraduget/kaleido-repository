@@ -27,7 +27,7 @@ import org.kaleidofoundry.core.context.service_with_provider.MyServiceWithRuntim
 import org.kaleidofoundry.core.context.service_with_provider.MyServiceWithStaticFinalRuntimeContext;
 import org.kaleidofoundry.core.context.service_with_provider.MyServiceWithStaticRuntimeContext;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * Test {@link RuntimeContext} injection using @{@link Context} <br/>
@@ -66,7 +66,7 @@ public class RuntimeContextProvidedFieldInjectorTest extends Assert {
    protected MyServiceInterface myServiceWithRuntimeContextFromWrongConf;
 
    @Before
-   public void setup() throws StoreException {
+   public void setup() throws ResourceException {
 	// Disable i18n jpa message bundle control
 	I18nMessagesFactory.disableJpaControl();
 	// Register configurations used for testing
@@ -75,7 +75,7 @@ public class RuntimeContextProvidedFieldInjectorTest extends Assert {
    }
 
    @After
-   public void cleanup() throws StoreException {
+   public void cleanup() throws ResourceException {
 	// Remove all configurations
 	ConfigurationFactory.unregister("myConf");
 	ConfigurationFactory.unregister("anotherConf");

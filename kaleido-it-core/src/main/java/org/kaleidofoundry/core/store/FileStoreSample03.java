@@ -30,7 +30,7 @@ public class FileStoreSample03 {
    // no automatic context injection
    private final FileStore myStore;
 
-   public FileStoreSample03() throws StoreException {
+   public FileStoreSample03() throws ResourceException {
 
 	RuntimeContext<FileStore> context = new FileStoreContextBuilder("myManualStore", FileStore.class).withBaseUri("http://localhost:8080/kaleido-it/")
 		.withReadonly(true).withProxySet(false)
@@ -57,9 +57,9 @@ public class FileStoreSample03 {
     * </ul>
     * 
     * @return the content of the resource "http://localhost:8080/kaleido-it/store/foo.txt"
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public String echo() throws StoreException {
+   public String echo() throws ResourceException {
 	String resourceRelativePath = "store/foo.txt";
 	String text = myStore.get(resourceRelativePath).getText("UTF8");
 	System.out.printf("resource content [%s] :\n%s", resourceRelativePath, text);

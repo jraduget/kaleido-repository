@@ -33,7 +33,7 @@ import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.store.entity.FileHandlerEntity;
+import org.kaleidofoundry.core.store.entity.ResourceHandlerEntity;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -104,12 +104,12 @@ public class JpaFileStore extends AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.store.AbstractFileStore#doLoad(java.net.URI)
     */
    @Override
-   protected FileHandler doGet(final URI resourceUri) throws ResourceNotFoundException, StoreException {
-	final FileHandlerEntity entity = getEntityManager().find(FileHandlerEntity.class, resourceUri.toString());
+   protected ResourceHandler doGet(final URI resourceUri) throws ResourceNotFoundException, ResourceException {
+	final ResourceHandlerEntity entity = getEntityManager().find(ResourceHandlerEntity.class, resourceUri.toString());
 	if (entity == null) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
 	} else {
-	   final FileHandler resourceHandler = new FileHandlerBean(resourceUri.toString(), new ByteArrayInputStream(entity.getContent()));
+	   final ResourceHandler resourceHandler = new ResourceHandlerBean(resourceUri.toString(), new ByteArrayInputStream(entity.getContent()));
 	   return resourceHandler;
 	}
    }
@@ -119,8 +119,8 @@ public class JpaFileStore extends AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.store.AbstractFileStore#doRemove(java.net.URI)
     */
    @Override
-   protected void doRemove(final URI resourceUri) throws ResourceNotFoundException, StoreException {
-	final FileHandlerEntity entity = getEntityManager().find(FileHandlerEntity.class, resourceUri.toString());
+   protected void doRemove(final URI resourceUri) throws ResourceNotFoundException, ResourceException {
+	final ResourceHandlerEntity entity = getEntityManager().find(ResourceHandlerEntity.class, resourceUri.toString());
 	if (entity == null) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
 	} else {
@@ -130,16 +130,16 @@ public class JpaFileStore extends AbstractFileStore implements FileStore {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.store.AbstractFileStore#doStore(java.net.URI, org.kaleidofoundry.core.store.FileHandler)
+    * @see org.kaleidofoundry.core.store.AbstractFileStore#doStore(java.net.URI, org.kaleidofoundry.core.store.ResourceHandler)
     */
    @Override
-   protected void doStore(final URI resourceUri, final FileHandler resource) throws StoreException {
+   protected void doStore(final URI resourceUri, final ResourceHandler resource) throws ResourceException {
 
 	boolean isNew = true;
 	final String filename = resourceUri.getPath().substring(1);
-	FileHandlerEntity storeEntity;
+	ResourceHandlerEntity storeEntity;
 
-	storeEntity = getEntityManager().find(FileHandlerEntity.class, resourceUri.toString());
+	storeEntity = getEntityManager().find(ResourceHandlerEntity.class, resourceUri.toString());
 
 	if (storeEntity == null) {
 	   storeEntity = newInstance();
@@ -175,41 +175,41 @@ public class JpaFileStore extends AbstractFileStore implements FileStore {
 		}
 
 	   } catch (final IOException ioe) {
-		throw new StoreException(ioe, resourceUri.toString());
+		throw new ResourceException(ioe, resourceUri.toString());
 	   }
 	}
    }
 
    /**
-    * @return new {@link FileHandlerEntity} instance (default or custom) depending from the current context
+    * @return new {@link ResourceHandlerEntity} instance (default or custom) depending from the current context
     */
-   private FileHandlerEntity newInstance() {
+   private ResourceHandlerEntity newInstance() {
 
-	final String customFileHandlerEntityClass = context.getString(FileStoreContextBuilder.CustomFileHandlerEntity);
+	final String customResourceHandlerEntityClass = context.getString(FileStoreContextBuilder.CustomResourceHandlerEntity);
 
-	if (StringHelper.isEmpty(customFileHandlerEntityClass)) {
-	   return new FileHandlerEntity();
+	if (StringHelper.isEmpty(customResourceHandlerEntityClass)) {
+	   return new ResourceHandlerEntity();
 	} else {
 	   try {
-		final Class<?> customClass = Class.forName(customFileHandlerEntityClass);
+		final Class<?> customClass = Class.forName(customResourceHandlerEntityClass);
 		final Object instance = customClass.newInstance();
 
-		if (instance instanceof FileHandlerEntity) {
-		   return (FileHandlerEntity) instance;
+		if (instance instanceof ResourceHandlerEntity) {
+		   return (ResourceHandlerEntity) instance;
 		} else {
 		   throw new IllegalStateException(StoreMessageBundle.getMessage("store.context.customentity.illegaltype", context.getName(),
-			   context.getProperty(FileStoreContextBuilder.CustomFileHandlerEntity), FileStoreContextBuilder.CustomFileHandlerEntity));
+			   context.getProperty(FileStoreContextBuilder.CustomResourceHandlerEntity), FileStoreContextBuilder.CustomResourceHandlerEntity));
 		}
 
 	   } catch (final ClassNotFoundException cnfe) {
 		throw new IllegalStateException(StoreMessageBundle.getMessage("store.context.customentity.notfound", context.getName(),
-			context.getProperty(FileStoreContextBuilder.CustomFileHandlerEntity), FileStoreContextBuilder.CustomFileHandlerEntity));
+			context.getProperty(FileStoreContextBuilder.CustomResourceHandlerEntity), FileStoreContextBuilder.CustomResourceHandlerEntity));
 	   } catch (final IllegalAccessException iae) {
-		throw new IllegalStateException(StoreMessageBundle.getMessage("store.context.customentity.illegalconstructor", customFileHandlerEntityClass,
+		throw new IllegalStateException(StoreMessageBundle.getMessage("store.context.customentity.illegalconstructor", customResourceHandlerEntityClass,
 			iae.getMessage()));
 
 	   } catch (final InstantiationException ie) {
-		throw new IllegalStateException(StoreMessageBundle.getMessage("store.context.customentity.cantcreate", customFileHandlerEntityClass,
+		throw new IllegalStateException(StoreMessageBundle.getMessage("store.context.customentity.cantcreate", customResourceHandlerEntityClass,
 			ie.getMessage()));
 	   }
 	}

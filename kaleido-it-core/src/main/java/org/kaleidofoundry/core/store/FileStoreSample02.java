@@ -52,9 +52,9 @@ public class FileStoreSample02 {
     * </ul>
     * 
     * @return the content of the file "http://localhost:8080/kaleido-it/store/foo.txt"
-    * @throws StoreException
+    * @throws ResourceException
     */
-   public String echo() throws StoreException {
+   public String echo() throws ResourceException {
 	String storeRelativePath = "store/foo.txt";
 	String text = myStore.get(storeRelativePath).getText("UTF8");
 	System.out.printf("file content [%s] :\n%s", storeRelativePath, text);

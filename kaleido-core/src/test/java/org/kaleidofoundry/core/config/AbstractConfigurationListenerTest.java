@@ -21,7 +21,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * Test all configuration listeners :
@@ -53,7 +53,7 @@ public abstract class AbstractConfigurationListenerTest extends Assert {
    protected abstract int getListenerCount();
 
    @Before
-   public void setup() throws StoreException {
+   public void setup() throws ResourceException {
 
 	// disable jpa i18n control in order to speed up test case run
 	I18nMessagesFactory.disableJpaControl();
@@ -90,7 +90,7 @@ public abstract class AbstractConfigurationListenerTest extends Assert {
    }
 
    @After
-   public void cleanup() throws StoreException {
+   public void cleanup() throws ResourceException {
 	// unregister configuration
 	ConfigurationFactory.unregister("myConf");
 	// re enable jpa i18n control
@@ -160,7 +160,7 @@ public abstract class AbstractConfigurationListenerTest extends Assert {
    }
 
    @Test
-   public void fireConfigurationUnloadTest() throws StoreException {
+   public void fireConfigurationUnloadTest() throws ResourceException {
 	commonInitAssertions();
 
 	configuration.unload();

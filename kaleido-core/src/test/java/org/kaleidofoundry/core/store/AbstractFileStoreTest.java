@@ -77,9 +77,9 @@ public abstract class AbstractFileStoreTest extends Assert {
    }
 
    @Test
-   public void get() throws StoreException, IOException {
+   public void get() throws ResourceException, IOException {
 
-	FileHandler resource = null;
+	ResourceHandler resource = null;
 
 	for (final String uriToTest : existingResources.keySet()) {
 	   try {
@@ -89,14 +89,14 @@ public abstract class AbstractFileStoreTest extends Assert {
 		assertEquals(existingResources.get(uriToTest), IOHelper.toString(resource.getInputStream()));
 	   } finally {
 		if (resource != null) {
-		   resource.release();
+		   resource.close();
 		}
 	   }
 	}
    }
 
    @Test
-   public void loadNotFound() throws StoreException {
+   public void loadNotFound() throws ResourceException {
 
 	assertNotNull(fileStore);
 
@@ -118,14 +118,14 @@ public abstract class AbstractFileStoreTest extends Assert {
    }
 
    @Test
-   public void exists() throws StoreException {
+   public void exists() throws ResourceException {
 	for (final String uriToTest : existingResources.keySet()) {
 	   assertTrue(fileStore.exists(uriToTest));
 	}
    }
 
    @Test
-   public void notExists() throws StoreException {
+   public void notExists() throws ResourceException {
 
 	assertNotNull(fileStore);
 
@@ -142,7 +142,7 @@ public abstract class AbstractFileStoreTest extends Assert {
    }
 
    @Test
-   public void store() throws StoreException, UnsupportedEncodingException {
+   public void store() throws ResourceException, UnsupportedEncodingException {
 
 	assertNotNull(fileStore);
 	assertTrue("there is no resource entry to store in the test", existingResourcesForStore.size() > 0);
@@ -167,17 +167,17 @@ public abstract class AbstractFileStoreTest extends Assert {
 	   // store the resource
 	   final String resourceToStoreAsText = existingResourcesForStore.get(uriToTest);
 	   assertNotNull(resourceToStoreAsText);
-	   fileStore.store(uriToTest, new FileHandlerBean(uriToTest, resourceToStoreAsText));
+	   fileStore.store(uriToTest, new ResourceHandlerBean(uriToTest, resourceToStoreAsText));
 
 	   // get the stored resource
-	   final FileHandler resourceToGet = fileStore.get(uriToTest);
+	   final ResourceHandler resourceToGet = fileStore.get(uriToTest);
 	   assertNotNull(resourceToGet);
 	   assertEquals(resourceToStoreAsText, resourceToGet.getText());
 	}
    }
 
    @Test
-   public void move() throws StoreException {
+   public void move() throws ResourceException {
 
 	assertNotNull(fileStore);
 	assertTrue("there is no resource entry to move in the test", existingResourcesForMove.size() > 0);
@@ -193,14 +193,14 @@ public abstract class AbstractFileStoreTest extends Assert {
 	for (final String uriToTest : existingResourcesForMove.keySet()) {
 
 	   // get resource
-	   FileHandler resource = null;
+	   ResourceHandler resource = null;
 	   try {
 		resource = fileStore.get(uriToTest);
 	   } catch (final ResourceNotFoundException rnfe) {
 		fail("resource '" + rnfe.getMessage() + "' does not exists");
 	   } finally {
 		if (resource != null) {
-		   resource.release();
+		   resource.close();
 		}
 	   }
 
@@ -215,7 +215,7 @@ public abstract class AbstractFileStoreTest extends Assert {
 	   } catch (final ResourceNotFoundException rnfe) {
 	   } finally {
 		if (resource != null) {
-		   resource.release();
+		   resource.close();
 		}
 	   }
 
@@ -226,7 +226,7 @@ public abstract class AbstractFileStoreTest extends Assert {
 		fail("move resource failed '" + newResourcePath + "' does not exists");
 	   } finally {
 		if (resource != null) {
-		   resource.release();
+		   resource.close();
 		}
 	   }
 
@@ -238,7 +238,7 @@ public abstract class AbstractFileStoreTest extends Assert {
    }
 
    @Test
-   public void remove() throws StoreException {
+   public void remove() throws ResourceException {
 	assertNotNull(fileStore);
 	assertTrue("there is no resource entry to remove in the test", existingResourcesForStore.size() > 0);
 

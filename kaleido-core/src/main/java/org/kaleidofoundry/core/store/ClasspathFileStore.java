@@ -30,7 +30,7 @@ import org.kaleidofoundry.core.system.JavaSystemHelper;
 /**
  * Classpath file store implementation<br/>
  * <br/>
- * <b>This implementation is only for read only use</b> - the methods store, remove, move will throws {@link StoreException}<br/>
+ * <b>This implementation is only for read only use</b> - the methods store, remove, move will throws {@link ResourceException}<br/>
  * 
  * @author Jerome RADUGET
  * @see FileStoreContextBuilder enum of context configuration properties available
@@ -104,7 +104,7 @@ public class ClasspathFileStore extends AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.store.AbstractFileStore#doLoad(java.net.URI)
     */
    @Override
-   protected FileHandler doGet(final URI resourceBinding) throws ResourceNotFoundException, StoreException {
+   protected ResourceHandler doGet(final URI resourceBinding) throws ResourceNotFoundException, ResourceException {
 	final StringBuilder localPath = new StringBuilder();
 
 	if (resourceBinding.getHost() != null) {
@@ -115,14 +115,14 @@ public class ClasspathFileStore extends AbstractFileStore implements FileStore {
 	if (localPath.charAt(0) == '/') {
 	   final InputStream in = JavaSystemHelper.getResourceAsStream(getClassLoader(), localPath.substring(1));
 	   if (in != null) {
-		return new FileHandlerBean(resourceBinding.toString(), in);
+		return new ResourceHandlerBean(resourceBinding.toString(), in);
 	   } else {
 		throw new ResourceNotFoundException(resourceBinding.toString());
 	   }
 	} else {
 	   final InputStream in = JavaSystemHelper.getResourceAsStream(getClassLoader(), localPath.toString());
 	   if (in != null) {
-		return new FileHandlerBean(resourceBinding.toString(), in);
+		return new ResourceHandlerBean(resourceBinding.toString(), in);
 	   } else {
 		throw new ResourceNotFoundException(resourceBinding.toString());
 	   }
@@ -134,8 +134,8 @@ public class ClasspathFileStore extends AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.store.AbstractFileStore#doRemove(java.net.URI)
     */
    @Override
-   protected void doRemove(final URI resourceBinding) throws ResourceNotFoundException, StoreException {
-	throw new StoreException("store.readonly.illegal", context.getName());
+   protected void doRemove(final URI resourceUri) throws ResourceNotFoundException, ResourceException {
+	throw new ResourceException("store.readonly.illegal", context.getName());
    }
 
    /*
@@ -143,8 +143,8 @@ public class ClasspathFileStore extends AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.store.AbstractFileStore#doStore(java.net.URI, java.io.InputStream)
     */
    @Override
-   protected void doStore(final URI resourceBinding, final FileHandler resource) throws StoreException {
-	throw new StoreException("store.readonly.illegal", context.getName());
+   protected void doStore(final URI resourceUri, final ResourceHandler resource) throws ResourceException {
+	throw new ResourceException("store.readonly.illegal", context.getName());
    }
 
 }

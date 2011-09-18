@@ -27,7 +27,7 @@ import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.FileStoreConstants;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * @author Jerome RADUGET
@@ -41,14 +41,14 @@ public class RuntimeContextTest extends Assert {
    private Configuration configuration;
 
    @Before
-   public void setup() throws IOException, StoreException {
+   public void setup() throws IOException, ResourceException {
 	// runtimeContext create with Configuration
 	configuration = ConfigurationFactory.provides("contextTest", "classpath:/context/context.properties");
 
    }
 
    @After
-   public void cleanup() throws StoreException {
+   public void cleanup() throws ResourceException {
 	if (configuration != null) {
 	   ConfigurationFactory.unregister("contextTest");
 	}

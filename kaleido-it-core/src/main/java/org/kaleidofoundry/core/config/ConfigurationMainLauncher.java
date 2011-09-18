@@ -17,7 +17,7 @@ package org.kaleidofoundry.core.config;
 
 import java.io.IOException;
 
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * Configuration launcher test
@@ -27,7 +27,7 @@ import org.kaleidofoundry.core.store.StoreException;
  */
 public class ConfigurationMainLauncher {
 
-   public static void main(final String[] args) throws StoreException, IOException {
+   public static void main(final String[] args) throws ResourceException, IOException {
 
 	try {
 	   

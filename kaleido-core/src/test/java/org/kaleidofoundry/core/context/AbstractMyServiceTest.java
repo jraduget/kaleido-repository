@@ -21,7 +21,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * @author Jerome RADUGET
@@ -31,7 +31,7 @@ public abstract class AbstractMyServiceTest extends Assert implements MyServiceT
    public abstract MyService getMyService();
 
    @AfterClass
-   public static void cleanupStatic() throws StoreException {
+   public static void cleanupStatic() throws ResourceException {
 	if (ConfigurationFactory.isRegistered("myConfig")) {
 	   ConfigurationFactory.unregister("myConfig");
 	}

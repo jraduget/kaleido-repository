@@ -24,7 +24,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * @author Jerome RADUGET
@@ -32,14 +32,14 @@ import org.kaleidofoundry.core.store.StoreException;
 public class CacheManagerIntegrationTest {
 
    @BeforeClass
-   public static void setupClass() throws StoreException {
+   public static void setupClass() throws ResourceException {
 	// load and register given configuration
 	// another way to to this, set following java env variable : -Dkaleido.configurations=myConfig=classpath:/cache/myContext.properties
 	ConfigurationFactory.provides("myConfig", "classpath:/cache/myContext.properties");
    }
 
    @AfterClass
-   public static void cleanupClass() throws StoreException {
+   public static void cleanupClass() throws ResourceException {
 	ConfigurationFactory.unregister("myConfig");
    }
 

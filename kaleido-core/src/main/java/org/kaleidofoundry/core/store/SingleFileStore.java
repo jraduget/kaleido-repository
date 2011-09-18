@@ -20,10 +20,10 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 /**
  * @author Jerome RADUGET
  */
-public class SingleFileStore extends AbstractSingleStore<String, FileHandler> {
+public class SingleFileStore extends AbstractSingleStore<String, ResourceHandler> {
 
    private final FileStore fileStore;
-   private FileHandler fileHandler;
+   private ResourceHandler resourceHandler;
 
    /**
     * @param resourceUri
@@ -42,9 +42,9 @@ public class SingleFileStore extends AbstractSingleStore<String, FileHandler> {
     * @see org.kaleidofoundry.core.store.AbstractSingleStore#doLoad()
     */
    @Override
-   protected FileHandler doGet() throws StoreException {
-	fileHandler = fileStore.get(getResourceBinding());
-	return fileHandler;
+   protected ResourceHandler doGet() throws ResourceException {
+	resourceHandler = fileStore.get(getResourceBinding());
+	return resourceHandler;
    }
 
    /*
@@ -52,10 +52,10 @@ public class SingleFileStore extends AbstractSingleStore<String, FileHandler> {
     * @see org.kaleidofoundry.core.store.AbstractSingleStore#doStore()
     */
    @Override
-   protected FileHandler doStore() throws StoreException {
-	if (fileStore.isReadOnly()) { throw new StoreException("store.readonly.illegal", getResourceBinding()); }
-	fileStore.store(getResourceBinding(), fileHandler);
-	return fileHandler;
+   protected ResourceHandler doStore() throws ResourceException {
+	if (fileStore.isReadOnly()) { throw new ResourceException("store.readonly.illegal", getResourceBinding()); }
+	fileStore.store(getResourceBinding(), resourceHandler);
+	return resourceHandler;
    }
 
    /*
@@ -63,10 +63,10 @@ public class SingleFileStore extends AbstractSingleStore<String, FileHandler> {
     * @see org.kaleidofoundry.core.store.AbstractSingleStore#doUnload()
     */
    @Override
-   protected void doUnload() throws StoreException {
-	if (fileHandler != null) {
-	   fileHandler.release();
-	   fileHandler = null;
+   protected void doUnload() throws ResourceException {
+	if (resourceHandler != null) {
+	   resourceHandler.close();
+	   resourceHandler = null;
 	}
    }
 

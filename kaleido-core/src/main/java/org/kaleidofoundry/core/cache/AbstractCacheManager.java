@@ -45,7 +45,7 @@ import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.FileStoreFactory;
 import org.kaleidofoundry.core.store.ResourceNotFoundException;
 import org.kaleidofoundry.core.store.SingleFileStore;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.Registry;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
@@ -113,7 +113,7 @@ public abstract class AbstractCacheManager implements CacheManager {
 	   } catch (final ProviderException pe) {
 		if (pe.getCause() instanceof ResourceNotFoundException) { throw new CacheConfigurationNotFoundException("cache.configuration.notfound",
 			getMetaInformations(), getCurrentConfiguration()); }
-		if (pe.getCause() instanceof StoreException) { throw new CacheConfigurationException("cache.configuration.error", pe.getCause(),
+		if (pe.getCause() instanceof ResourceException) { throw new CacheConfigurationException("cache.configuration.error", pe.getCause(),
 			getMetaInformations(), getCurrentConfiguration()); }
 		throw pe;
 	   }
@@ -190,7 +190,7 @@ public abstract class AbstractCacheManager implements CacheManager {
 	   if (singleFileStore != null) {
 		singleFileStore.unload();
 	   }
-	} catch (final StoreException rse) {
+	} catch (final ResourceException rse) {
 	   LOGGER.error(InternalBundleHelper.CacheMessageBundle.getMessage("cache.destroyall.store.error"), rse);
 	} finally {
 	   // unregister cacheManager from registry
@@ -338,7 +338,7 @@ public abstract class AbstractCacheManager implements CacheManager {
 		return singleFileStore.get().getInputStream();
 	   } catch (final ResourceNotFoundException rse) {
 		throw new CacheConfigurationNotFoundException("cache.configuration.notfound", getMetaInformations(), getCurrentConfiguration());
-	   } catch (final StoreException rse) {
+	   } catch (final ResourceException rse) {
 		throw new CacheConfigurationException("cache.configuration.error", rse, getMetaInformations(), getCurrentConfiguration());
 	   }
 	} else {

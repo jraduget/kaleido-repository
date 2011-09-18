@@ -52,7 +52,7 @@ import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
 import org.kaleidofoundry.core.config.entity.FireChangesReport;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.lang.annotation.TaskLabel;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -550,7 +550,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     */
    @PUT
    @Path("{config}/unregister")
-   public void unregister(final @PathParam("config") String config) throws StoreException {
+   public void unregister(final @PathParam("config") String config) throws ResourceException {
 	ConfigurationFactory.unregister(config);
    }
 
@@ -586,7 +586,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     */
    @PUT
    @Path("{config}/store")
-   public void store(@PathParam("config") final String config) throws StoreException {
+   public void store(@PathParam("config") final String config) throws ResourceException {
 	// store configuration resource file
 	Configuration configuration = getRegisteredConfiguration(config);
 	configuration.store();
@@ -614,7 +614,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     */
    @PUT
    @Path("{config}/load")
-   public void load(@PathParam("config") final String config) throws StoreException {
+   public void load(@PathParam("config") final String config) throws ResourceException {
 	getRegisteredConfiguration(config).load();
    }
 
@@ -624,7 +624,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     */
    @PUT
    @Path("{config}/unload")
-   public void unload(@PathParam("config") final String config) throws StoreException {
+   public void unload(@PathParam("config") final String config) throws ResourceException {
 	getRegisteredConfiguration(config).unload();
    }
 
@@ -634,7 +634,7 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
     */
    @PUT
    @Path("{config}/reload")
-   public void reload(@PathParam("config") final String config) throws StoreException {
+   public void reload(@PathParam("config") final String config) throws ResourceException {
 	getRegisteredConfiguration(config).reload();
    }
 

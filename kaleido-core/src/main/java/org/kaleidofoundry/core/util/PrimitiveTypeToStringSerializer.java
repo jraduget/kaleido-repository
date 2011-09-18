@@ -40,18 +40,18 @@ import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 @ThreadSafe
 public class PrimitiveTypeToStringSerializer implements ToStringSerializer {
 
-   /** Multiple value separator */
-   public static final String DefaultMultiValuesSeparator = " ";
-   /** String Date Formatter */
+   /** The multi-value separator by default is | */
+   public static final String DefaultMultiValuesSeparator = "|";
+   /** The date format pattern by default */
    public static final String DefaultDateFormat = "yyyy-MM-dd'T'hh:mm:ss"; // yyyy-MM-ddThh:mm:ss
-   /** String Number Formatter */
+   /** The number format pattern by default */
    public static final String DefaultNumberFormat = "##0.0####";
 
-   /** Multiple value separator */
+   /** The multi-value separator to use */
    protected final String MultiValuesSeparator;
-   /** Date Formatter */
+   /** The date format pattern to use */
    protected final String DateFormat;
-   /** Number Formatter */
+   /** The number format pattern to use */
    protected final String NumberFormat;
 
    /**

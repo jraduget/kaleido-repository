@@ -27,7 +27,7 @@ import org.kaleidofoundry.core.plugin.Declare;
 
 /**
  * Memory internal file store. <b>Avoid using it</b>, or only for small binary data, without multi-threading<br/>
- * Be careful {@link FileHandler} is not thread safe. Internally, you can create {@link FileHandlerBean} giving an
+ * Be careful {@link ResourceHandler} is not thread safe. Internally, you can create {@link ResourceHandlerBean} giving an
  * {@link ByteArrayInputStream} in argument to use it. By this way, your binary data will be kept in memory
  * 
  * @author Jerome RADUGET
@@ -36,7 +36,7 @@ import org.kaleidofoundry.core.plugin.Declare;
 @Declare(MemoryStorePluginName)
 public class MemoryFileStore extends AbstractFileStore {
 
-   private final ConcurrentMap<URI, FileHandler> memoryResources = new ConcurrentHashMap<URI, FileHandler>();
+   private final ConcurrentMap<URI, ResourceHandler> memoryResources = new ConcurrentHashMap<URI, ResourceHandler>();
 
    /**
     * @param context
@@ -61,10 +61,10 @@ public class MemoryFileStore extends AbstractFileStore {
    }
 
    @Override
-   protected FileHandler doGet(final URI resourceUri) throws ResourceNotFoundException, StoreException {
-	FileHandler rh = memoryResources.get(resourceUri);
+   protected ResourceHandler doGet(final URI resourceUri) throws ResourceNotFoundException, ResourceException {
+	ResourceHandler rh = memoryResources.get(resourceUri);
 	if (rh == null) {
-	   rh = new FileHandlerBean(resourceUri.toString(), new ByteArrayInputStream(new byte[0]));
+	   rh = new ResourceHandlerBean(resourceUri.toString(), new ByteArrayInputStream(new byte[0]));
 	   memoryResources.put(resourceUri, rh);
 	}
 	return rh;
@@ -72,12 +72,12 @@ public class MemoryFileStore extends AbstractFileStore {
    }
 
    @Override
-   protected void doRemove(final URI resourceUri) throws ResourceNotFoundException, StoreException {
+   protected void doRemove(final URI resourceUri) throws ResourceNotFoundException, ResourceException {
 	memoryResources.remove(resourceUri);
    }
 
    @Override
-   protected void doStore(final URI resourceUri, final FileHandler resource) throws StoreException {
+   protected void doStore(final URI resourceUri, final ResourceHandler resource) throws ResourceException {
 	memoryResources.put(resourceUri, resource);
 
    }

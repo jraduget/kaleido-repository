@@ -17,60 +17,65 @@ package org.kaleidofoundry.core.i18n;
 
 import java.util.Locale;
 
-import org.kaleidofoundry.core.lang.CodedNullPointerException;
-
 /**
  * I18n NullPointer Exception<br/>
- * I18nNullPointerException is normally not handle, and propagate through the layers.<br/>
+ * AbstractI18nNullPointerException is normally not handle, and propagate through the layers.<br/>
  * 
  * @author Jerome RADUGET
  */
-public abstract class I18nNullPointerException extends CodedNullPointerException {
+public abstract class AbstractI18nNullPointerException extends NullPointerException implements I18nException {
 
    private static final long serialVersionUID = 6623119392420767038L;
 
-   private final Locale locale; // user locale if specified
-   private final String args[]; // arguments to pass to the message : "user {0} is disconnect"
+   private final String code;
+   private final Locale locale; // user locale if specified in constructor
+   private final String parameters[]; // arguments to pass to the message : "user {0} is disconnect"
 
    /**
     * @param code domain code of the exception
     */
-   public I18nNullPointerException(final String code) {
+   public AbstractI18nNullPointerException(final String code) {
 	this(code, null, (String[]) null);
    }
 
    /**
     * @param code
-    * @param args
+    * @param parameters
     */
-   public I18nNullPointerException(final String code, final String... args) {
-	this(code, null, args);
+   public AbstractI18nNullPointerException(final String code, final String... parameters) {
+	this(code, null, parameters);
    }
 
    /**
     * @param code domain code of the exception
     * @param locale user locale
     */
-   public I18nNullPointerException(final String code, final Locale locale) {
+   public AbstractI18nNullPointerException(final String code, final Locale locale) {
 	this(code, locale, (String[]) null);
    }
 
    /**
     * @param code code of the exception
     * @param locale user locale
-    * @param args token value to replace
+    * @param parameters token value to replace
     */
-   public I18nNullPointerException(final String code, final Locale locale, final String... args) {
-	super(code, null);
-	this.args = args;
+   public AbstractI18nNullPointerException(final String code, final Locale locale, final String... parameters) {
+	super(code);
+	this.code = code;
+	this.parameters = parameters;
 	this.locale = locale;
    }
 
+   @Override
+   public String getCode() {
+	return code;
+   }
+
    /**
-    * @return Token arguments passed for the template message
+    * @return Token parameters passed for the template message
     */
-   public String[] getArgs() {
-	return args;
+   public String[] getParameters() {
+	return parameters;
    }
 
    /**
@@ -106,8 +111,8 @@ public abstract class I18nNullPointerException extends CodedNullPointerException
    public String getMessage() {
 	final I18nMessages msgB = getMessages();
 	if (msgB != null) {
-	   if (getArgs() != null) {
-		return msgB.getMessage(getCode(), (Object[]) getArgs());
+	   if (getParameters() != null) {
+		return msgB.getMessage(getCode(), (Object[]) getParameters());
 	   } else {
 		return msgB.getMessage(getCode());
 	   }

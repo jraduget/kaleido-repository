@@ -19,7 +19,7 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Test;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * @author Jerome RADUGET
@@ -27,12 +27,12 @@ import org.kaleidofoundry.core.store.StoreException;
 public class ConfigurationFactoryTest extends Assert {
 
    @After
-   public void cleanup() throws StoreException {
+   public void cleanup() throws ResourceException {
 	ConfigurationFactory.unregisterAll();
    }
 
    @Test
-   public void providePropertiesConfiguration() throws StoreException {
+   public void providePropertiesConfiguration() throws ResourceException {
 
 	final String configId = "propCpConfig";
 	final String configResourceUri = "classpath:/config/test.properties";
@@ -45,10 +45,10 @@ public class ConfigurationFactoryTest extends Assert {
    }
 
    @Test
-   public void provideXmlPropertiesConfiguration() throws StoreException {
+   public void provideXmlPropertiesConfiguration() throws ResourceException {
 
 	final String configId = "propXmlCpConfig";
-	final String configResourceUri = "classpath:/config/test.properties.xml";
+	final String configResourceUri = "classpath:/config/test.xmlproperties";
 	final Configuration config = ConfigurationFactory.provides(configId, configResourceUri);
 
 	assertNotNull(config);
@@ -58,7 +58,7 @@ public class ConfigurationFactoryTest extends Assert {
    }
 
    @Test
-   public void provideXmlConfiguration() throws StoreException {
+   public void provideXmlConfiguration() throws ResourceException {
 
 	final String configId = "xmlCpConfig";
 	final String configResourceUri = "classpath:/config/test.xml";
@@ -71,7 +71,7 @@ public class ConfigurationFactoryTest extends Assert {
    }
 
    @Test
-   public void provideJavaSystemConfiguration() throws StoreException {
+   public void provideJavaSystemConfiguration() throws ResourceException {
 
 	System.getProperties().setProperty("application.name", "app");
 	System.getProperties().setProperty("application.description", "description of the application...");

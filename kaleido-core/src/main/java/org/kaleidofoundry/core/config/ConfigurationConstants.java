@@ -70,7 +70,7 @@ public interface ConfigurationConstants {
    /** classic properties implementation configuration plugin name - configuration resource uri have to end with '.properties' */
    String PropertiesConfigurationPluginName = "configurations.properties";
    /** xml properties implementation configuration plugin name - configuration resource uri have to end with '.xmlproperties' */
-   String XmlPropertiesConfigurationPluginName = "configurations.properties.xml";
+   String XmlPropertiesConfigurationPluginName = "configurations.xmlproperties";
    /** xml implementation configuration plugin name - configuration resource uri have to end with '.xml' */
    String XmlConfigurationPluginName = "configurations.xml";
    /** jpa model implementation for configuration, plugin name */

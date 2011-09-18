@@ -28,7 +28,7 @@ import org.kaleidofoundry.core.config.entity.ConfigurationModel;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,11 +49,11 @@ public class JpaModelConfigurationTest extends AbstractConfigurationTest {
     * create a database with mocked data
     * 
     * @throws URISyntaxException
-    * @throws StoreException
+    * @throws ResourceException
     */
    @Override
    @Before
-   public void setup() throws StoreException, URISyntaxException {
+   public void setup() throws ResourceException, URISyntaxException {
 
 	try {
 
@@ -78,14 +78,14 @@ public class JpaModelConfigurationTest extends AbstractConfigurationTest {
 	   properties.add(new ConfigurationProperty("application.version", "1.0.0", String.class, ""));
 	   properties.add(new ConfigurationProperty("application.description", "description of the application...", String.class, ""));
 	   properties.add(new ConfigurationProperty("application.date", "2006-09-01T00:00:00", String.class, ""));
-	   properties.add(new ConfigurationProperty("application.librairies", "dom4j.jar log4j.jar mail.jar", String.class, ""));
+	   properties.add(new ConfigurationProperty("application.librairies", "dom4j.jar|log4j.jar|mail.jar", String.class, ""));
 	   properties.add(new ConfigurationProperty("application.modules.sales.name", "Sales", String.class, ""));
 	   properties.add(new ConfigurationProperty("application.modules.sales.version", "1.1.0", String.class, ""));
 	   properties.add(new ConfigurationProperty("application.modules.marketing.name", "Market.", String.class, ""));
 	   properties.add(new ConfigurationProperty("application.modules.netbusiness.name", "", String.class, ""));
-	   properties.add(new ConfigurationProperty("application.array.boolean", "false true", String.class, ""));
-	   properties.add(new ConfigurationProperty("application.array.date", "2009-01-02T00:00:00 2009-12-31T00:00:00 2012-05-15T00:00:00", String.class, ""));
-	   properties.add(new ConfigurationProperty("application.array.bigdecimal", "987.5 1.123456789", String.class, ""));
+	   properties.add(new ConfigurationProperty("application.array.boolean", "false|true", String.class, ""));
+	   properties.add(new ConfigurationProperty("application.array.date", "2009-01-02T00:00:00|2009-12-31T00:00:00|2012-05-15T00:00:00", String.class, ""));
+	   properties.add(new ConfigurationProperty("application.array.bigdecimal", "987.5|1.123456789", String.class, ""));
 	   properties.add(new ConfigurationProperty("application.single.boolean", "true", String.class, ""));
 	   properties.add(new ConfigurationProperty("application.single.bigdecimal", "1.123456789", String.class, ""));
 
@@ -108,7 +108,7 @@ public class JpaModelConfigurationTest extends AbstractConfigurationTest {
 
    @Override
    @After
-   public void cleanup() throws StoreException {
+   public void cleanup() throws ResourceException {
 
 	try {
 	   if (em != null) {
@@ -129,7 +129,7 @@ public class JpaModelConfigurationTest extends AbstractConfigurationTest {
     * @see org.kaleidofoundry.core.config.AbstractConfigurationTest#newInstance()
     */
    @Override
-   protected Configuration newInstance() throws StoreException, URISyntaxException {
+   protected Configuration newInstance() throws ResourceException, URISyntaxException {
 	return new org.kaleidofoundry.core.config.JpaModelConfiguration(MyConfigurationName, MyConfigurationUri,
 		new RuntimeContext<org.kaleidofoundry.core.config.Configuration>(Configuration.class));
    }

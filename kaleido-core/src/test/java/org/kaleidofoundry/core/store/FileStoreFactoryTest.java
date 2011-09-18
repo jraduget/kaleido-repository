@@ -25,7 +25,7 @@ import org.junit.Test;
 public class FileStoreFactoryTest extends Assert {
 
    @Test
-   public void newClasspathFileStore() throws StoreException {
+   public void newClasspathFileStore() throws ResourceException {
 	final FileStore fileStore = FileStoreFactory.provides("classpath:/");
 	assertNotNull(fileStore);
 	assertEquals(ClasspathFileStore.class, fileStore.getClass());
@@ -33,7 +33,7 @@ public class FileStoreFactoryTest extends Assert {
    }
 
    @Test
-   public void newFileSystemFileStore() throws StoreException {
+   public void newFileSystemFileStore() throws ResourceException {
 	final FileStore fileStore = FileStoreFactory.provides("file:/dev/workspace/kaleidofoundry");
 	assertNotNull(fileStore);
 	assertEquals(FileSystemStore.class, fileStore.getClass());
@@ -41,7 +41,7 @@ public class FileStoreFactoryTest extends Assert {
    }
 
    @Test
-   public void newFtpFileStore() throws StoreException {
+   public void newFtpFileStore() throws ResourceException {
 	final FileStore fileStore = FileStoreFactory.provides("ftp://localhost/");
 	assertNotNull(fileStore);
 	assertEquals(FtpStore.class, fileStore.getClass());
@@ -49,7 +49,7 @@ public class FileStoreFactoryTest extends Assert {
    }
 
    @Test
-   public void newHttpFileStore() throws StoreException {
+   public void newHttpFileStore() throws ResourceException {
 	final FileStore fileStore = FileStoreFactory.provides("http://localhost/");
 	assertNotNull(fileStore);
 	assertEquals(HttpFileStore.class, fileStore.getClass());
@@ -57,7 +57,7 @@ public class FileStoreFactoryTest extends Assert {
    }
 
    @Test
-   public void newJpaFileStore() throws StoreException {
+   public void newJpaFileStore() throws ResourceException {
 	final FileStore fileStore = FileStoreFactory.provides("jpa:/");
 	assertNotNull(fileStore);
 	assertTrue(fileStore.isUriManageable("jpa:/tmp/foo.txt"));

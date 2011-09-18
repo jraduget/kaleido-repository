@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.lang.NotNullException;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * @author Jerome RADUGET
@@ -44,11 +44,11 @@ public abstract class AbstractConfigurationTest extends Assert {
     * create configuration instance calling abstract method {@link #newInstance()}<br/>
     * and load it after creation
     * 
-    * @throws StoreException
+    * @throws ResourceException
     * @throws URISyntaxException
     */
    @Before
-   public void setup() throws StoreException, URISyntaxException {
+   public void setup() throws ResourceException, URISyntaxException {
 	// disable i18n message bundle control to speed up test (no need of a local derby instance startup)
 	I18nMessagesFactory.disableJpaControl();
 	// create and load instance
@@ -61,10 +61,10 @@ public abstract class AbstractConfigurationTest extends Assert {
    /**
     * unload and cleanup internal configuration cache
     * 
-    * @throws StoreException
+    * @throws ResourceException
     */
    @After
-   public void cleanup() throws StoreException {
+   public void cleanup() throws ResourceException {
 	if (configuration != null) {
 	   configuration.unload();
 	}
@@ -74,10 +74,10 @@ public abstract class AbstractConfigurationTest extends Assert {
 
    /**
     * @return the configuration manager to load and test
-    * @throws StoreException
+    * @throws ResourceException
     * @throws URISyntaxException
     */
-   protected abstract Configuration newInstance() throws StoreException, URISyntaxException;
+   protected abstract Configuration newInstance() throws ResourceException, URISyntaxException;
 
    @Test
    public void isLoaded() {
@@ -86,7 +86,7 @@ public abstract class AbstractConfigurationTest extends Assert {
    }
 
    @Test
-   public void load() throws StoreException, URISyntaxException {
+   public void load() throws ResourceException, URISyntaxException {
 	final Configuration configuration = newInstance();
 	assertNotNull(configuration);
 	assertFalse(configuration.isLoaded());
@@ -95,7 +95,7 @@ public abstract class AbstractConfigurationTest extends Assert {
    }
 
    @Test
-   public void unload() throws StoreException, URISyntaxException {
+   public void unload() throws ResourceException, URISyntaxException {
 	final Configuration configuration = newInstance();
 	assertNotNull(configuration);
 	assertFalse(configuration.isLoaded());
@@ -106,7 +106,7 @@ public abstract class AbstractConfigurationTest extends Assert {
    }
 
    @Test
-   public void store() throws StoreException, URISyntaxException {
+   public void store() throws ResourceException, URISyntaxException {
 
 	assertNotNull(configuration);
 
@@ -127,7 +127,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 	   if (!configuration.isStorable()) {
 		fail();
 	   }
-	} catch (final StoreException se) {
+	} catch (final ResourceException se) {
 	   assertEquals("store.readonly.illegal", se.getCode());
 	}
 
@@ -233,7 +233,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 	final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	assertNotNull(configuration);
 	// test raw property
-	assertEquals("2009-01-02T00:00:00 2009-12-31T00:00:00 2012-05-15T00:00:00", configuration.getProperty("//application/array/date"));
+	assertEquals("2009-01-02T00:00:00|2009-12-31T00:00:00|2012-05-15T00:00:00", configuration.getProperty("//application/array/date"));
 	assertNotNull(configuration.getDateList("//application/array/date"));
 	assertEquals(3, configuration.getDateList("//application/array/date").size());
 	assertEquals(df.parse("2009-01-02"), configuration.getDateList("//application/array/date").get(0));
@@ -258,7 +258,7 @@ public abstract class AbstractConfigurationTest extends Assert {
    public void getBigDecimalList() {
 	assertNotNull(configuration);
 	// test raw property
-	assertEquals("987.5 1.123456789", configuration.getProperty("//application/array/bigdecimal"));
+	assertEquals("987.5|1.123456789", configuration.getProperty("//application/array/bigdecimal"));
 	assertEquals(2, configuration.getBigDecimalList("//application/array/bigdecimal").size());
 	assertEquals(new BigDecimal("987.5"), configuration.getBigDecimalList("//application/array/bigdecimal").get(0));
 	assertEquals(new BigDecimal("1.123456789"), configuration.getBigDecimalList("//application/array/bigdecimal").get(1));
@@ -281,7 +281,7 @@ public abstract class AbstractConfigurationTest extends Assert {
    public void getBooleanList() {
 	assertNotNull(configuration);
 	// test raw property
-	assertEquals("false true", configuration.getProperty("//application/array/boolean"));
+	assertEquals("false|true", configuration.getProperty("//application/array/boolean"));
 	assertEquals(2, configuration.getBooleanList("//application/array/boolean").size());
 	assertTrue(!configuration.getBooleanList("//application/array/boolean").get(0));
 	assertTrue(configuration.getBooleanList("//application/array/boolean").get(1));
@@ -358,7 +358,7 @@ public abstract class AbstractConfigurationTest extends Assert {
    }
 
    @Test
-   public void addConfiguration() throws StoreException, URISyntaxException {
+   public void addConfiguration() throws ResourceException, URISyntaxException {
 	assertNotNull(configuration);
 	assertTrue(configuration.isLoaded());
 
@@ -395,7 +395,7 @@ public abstract class AbstractConfigurationTest extends Assert {
    }
 
    @Test
-   public void extractConfiguration() throws StoreException, URISyntaxException {
+   public void extractConfiguration() throws ResourceException, URISyntaxException {
 	assertNotNull(configuration);
 	assertTrue(configuration.isLoaded());
 
@@ -430,16 +430,16 @@ public abstract class AbstractConfigurationTest extends Assert {
 	assertEquals("description of the application...", configuration.toProperties().getProperty("application.description"));
 	assertEquals("2006-09-01T00:00:00", configuration.toProperties().getProperty("application.date"));
 	assertEquals("1.0.0", configuration.toProperties().getProperty("application.version"));
-	assertEquals("dom4j.jar log4j.jar mail.jar", configuration.toProperties().getProperty("application.librairies"));
+	assertEquals("dom4j.jar|log4j.jar|mail.jar", configuration.toProperties().getProperty("application.librairies"));
 	assertEquals("Sales", configuration.toProperties().getProperty("application.modules.sales.name"));
 	assertEquals("1.1.0", configuration.toProperties().getProperty("application.modules.sales.version"));
 	assertEquals("Market.", configuration.toProperties().getProperty("application.modules.marketing.name"));
 	assertEquals("", configuration.toProperties().getProperty("application.modules.netbusiness.name"));
-	assertEquals("987.5 1.123456789", configuration.toProperties().getProperty("application.array.bigdecimal"));
-	assertEquals("false true", configuration.toProperties().getProperty("application.array.boolean"));
+	assertEquals("987.5|1.123456789", configuration.toProperties().getProperty("application.array.bigdecimal"));
+	assertEquals("false|true", configuration.toProperties().getProperty("application.array.boolean"));
 	assertEquals("true", configuration.toProperties().getProperty("application.single.boolean"));
 	assertEquals("1.123456789", configuration.toProperties().getProperty("application.single.bigdecimal"));
-	assertEquals("2009-01-02T00:00:00 2009-12-31T00:00:00 2012-05-15T00:00:00", configuration.toProperties().getProperty("application.array.date"));
+	assertEquals("2009-01-02T00:00:00|2009-12-31T00:00:00|2012-05-15T00:00:00", configuration.toProperties().getProperty("application.array.date"));
 
    }
 

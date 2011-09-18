@@ -17,15 +17,17 @@ package org.kaleidofoundry.core.plugin;
 
 import java.util.Locale;
 
-import org.kaleidofoundry.core.i18n.I18nRuntimeException;
+import org.kaleidofoundry.core.i18n.AbstractI18nRuntimeException;
 import org.kaleidofoundry.core.i18n.InternalBundleEnum;
+import org.kaleidofoundry.core.lang.annotation.Immutable;
 
 /**
  * Plugin Registry I18n Exception
  * 
  * @author Jerome RADUGET
  */
-public class PluginRegistryException extends I18nRuntimeException {
+@Immutable
+public class PluginRegistryException extends AbstractI18nRuntimeException {
 
    private static final long serialVersionUID = 8617595959218104906L;
 
@@ -99,7 +101,7 @@ public class PluginRegistryException extends I18nRuntimeException {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.i18n.I18nRuntimeException#getI18nBundleName()
+    * @see org.kaleidofoundry.core.i18n.AbstractI18nRuntimeException#getI18nBundleName()
     */
    @Override
    public String getI18nBundleName() {

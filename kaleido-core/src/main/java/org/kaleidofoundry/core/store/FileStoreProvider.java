@@ -131,7 +131,7 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 		} catch (final IllegalAccessException e) {
 		   throw new ProviderException("context.provider.error.IllegalAccessException", impl.getName(), "RuntimeContext<FileStore> context");
 		} catch (final InvocationTargetException e) {
-		   if (e.getCause() instanceof StoreException) {
+		   if (e.getCause() instanceof ResourceException) {
 			throw new ProviderException(e.getCause());
 		   } else {
 			throw new ProviderException("context.provider.error.InvocationTargetException", e.getCause(), impl.getName(),
@@ -140,10 +140,10 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 		}
 	   }
 
-	   throw new ProviderException(new StoreException("store.uri.custom.notmanaged", baseURI.getScheme(), baseUri.toString()));
+	   throw new ProviderException(new ResourceException("store.uri.custom.notmanaged", baseURI.getScheme(), baseUri.toString()));
 	}
 
-	throw new ProviderException(new StoreException("store.uri.notmanaged", baseURI.getScheme(), baseUri.toString()));
+	throw new ProviderException(new ResourceException("store.uri.notmanaged", baseURI.getScheme(), baseUri.toString()));
 
    }
 

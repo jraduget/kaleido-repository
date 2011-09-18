@@ -24,7 +24,7 @@ import org.kaleidofoundry.core.config.ConfigurationConstants;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.plugin.PluginFactory;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.kaleidofoundry.core.util.locale.LocaleFactory;
 import org.slf4j.Logger;
@@ -74,7 +74,7 @@ public class StartupListener implements ServletContextListener {
 	   // load and register given configurations ids / url
 	   try {
 		ConfigurationFactory.init();
-	   } catch (final StoreException rse) {
+	   } catch (final ResourceException rse) {
 		throw new IllegalStateException(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.start.configurations.error", kaleidoConfigurations),
 			rse);
 	   }
@@ -92,7 +92,7 @@ public class StartupListener implements ServletContextListener {
 	try {
 	   LOGGER.info(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.stop.configurations"));
 	   ConfigurationFactory.unregisterAll();
-	} catch (final StoreException rse) {
+	} catch (final ResourceException rse) {
 	   throw new IllegalStateException(rse);
 	}
    }

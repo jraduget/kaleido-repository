@@ -38,7 +38,7 @@ import org.kaleidofoundry.core.store.FileSystemStore;
 import org.kaleidofoundry.core.store.FtpStore;
 import org.kaleidofoundry.core.store.HttpFileStore;
 import org.kaleidofoundry.core.store.JpaFileStore;
-import org.kaleidofoundry.core.store.StoreException;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * <p>
@@ -475,19 +475,19 @@ public interface Configuration {
    /**
     * load configuration content
     * 
-    * @throws StoreException
+    * @throws ResourceException
     * @throws ConfigurationException if configuration is already loaded
     */
-   void load() throws StoreException, ConfigurationException;
+   void load() throws ResourceException, ConfigurationException;
 
    /**
     * unload configuration content
     * 
-    * @throws StoreException
+    * @throws ResourceException
     * @throws ConfigurationException if configuration is not loaded
     * @see #addConfigurationListener(ConfigurationListener) to register a listener on unload
     */
-   void unload() throws StoreException, ConfigurationException;
+   void unload() throws ResourceException, ConfigurationException;
 
    /**
     * reload all configuration content
@@ -495,7 +495,7 @@ public interface Configuration {
     * @throws ConfigurationException if configuration is not loaded
     * @see #addConfigurationListener(ConfigurationListener) to register a listener for changed values
     */
-   void reload() throws StoreException, ConfigurationException;
+   void reload() throws ResourceException, ConfigurationException;
 
    /**
     * @return Configuration have been loaded ? <code>true/false</code>
@@ -505,10 +505,10 @@ public interface Configuration {
    /**
     * Persist all configuration datas (with updade)
     * 
-    * @throws StoreException
+    * @throws ResourceException
     * @throws ConfigurationException if configuration is not loaded, or is for readonly use
     */
-   void store() throws StoreException, ConfigurationException;
+   void store() throws ResourceException, ConfigurationException;
 
    /**
     * @return does configuration allowed storage

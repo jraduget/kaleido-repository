@@ -17,68 +17,73 @@ package org.kaleidofoundry.core.i18n;
 
 import java.util.Locale;
 
-import org.kaleidofoundry.core.lang.CodedRuntimeException;
-
 /**
- * I18n Runtime Exception<br/>
- * RuntimeException is normally not handle, and propagate through the layers.<br/>
+ * <b>I18n exception base implementation</b><br/>
+ * <p>
+ * An i18n exception is used to identified precisely an exception by a code and a i18n message.<br/>
+ * The exception code is bind to an i18n message using {@link I18nMessagesFactory}, and user specific {@link Locale}<br/>
+ * <br/>
+ * This exception can be extended and used in your service layer error, web service layer error (fault code...)
+ * </p>
  * 
  * @author Jerome RADUGET
+ * @see I18nMessagesFactory
  */
-public abstract class I18nRuntimeException extends CodedRuntimeException {
+public abstract class AbstractI18nException extends Exception implements I18nException {
 
    private static final long serialVersionUID = 6623119392420767038L;
 
-   private Locale locale; // user locale if specified
-   private String args[]; // arguments to pass to the message : "user {0} is disconnect"
+   private final String code;
+   private final Locale locale; // user locale if specified
+   private final String parameters[]; // parameters to pass to the message : "user {0} is disconnect"
 
    /**
     * @param code i18n code of the exception
     */
-   public I18nRuntimeException(final String code) {
-	super(code);
+   public AbstractI18nException(final String code) {
+	this(code, (String[]) null);
    }
 
    /**
-    * @param code
-    * @param args
+    * @param code i18n code of the exception
+    * @param parameters
     */
-   public I18nRuntimeException(final String code, final String... args) {
-	this(code, (Locale) null, args);
+   public AbstractI18nException(final String code, final String... parameters) {
+	this(code, (Locale) null, parameters);
    }
 
    /**
     * @param code i18n code of the exception
     * @param cause
     */
-   public I18nRuntimeException(final String code, final Throwable cause) {
+   public AbstractI18nException(final String code, final Throwable cause) {
 	this(code, cause, null, (String[]) null);
    }
 
    /**
     * @param code i18n code of the exception
     * @param cause
-    * @param args message tokens arguments
+    * @param parameters message tokens arguments
     */
-   public I18nRuntimeException(final String code, final Throwable cause, final String... args) {
-	this(code, cause, null, args);
+   public AbstractI18nException(final String code, final Throwable cause, final String... parameters) {
+	this(code, cause, null, parameters);
    }
 
    /**
     * @param code i18n code of the exception
     * @param locale user locale
     */
-   public I18nRuntimeException(final String code, final Locale locale) {
+   public AbstractI18nException(final String code, final Locale locale) {
 	this(code, locale, (String[]) null);
    }
 
    /**
     * @param code i18n code of the exception
     * @param locale user locale
-    * @param args token value to replace
+    * @param parameters token value to replace
     */
-   public I18nRuntimeException(final String code, final Locale locale, final String... args) {
-	this(code, null, locale, args);
+   public AbstractI18nException(final String code, final Locale locale, final String... parameters) {
+	this(code, null, locale, parameters);
    }
 
    /**
@@ -86,7 +91,7 @@ public abstract class I18nRuntimeException extends CodedRuntimeException {
     * @param cause exception cause
     * @param locale user locale
     */
-   public I18nRuntimeException(final String code, final Throwable cause, final Locale locale) {
+   public AbstractI18nException(final String code, final Throwable cause, final Locale locale) {
 	this(code, cause, locale, (String[]) null);
    }
 
@@ -94,23 +99,29 @@ public abstract class I18nRuntimeException extends CodedRuntimeException {
     * @param code i18n code of the exception
     * @param cause exception cause
     * @param locale user locale
-    * @param args message tokens arguments
+    * @param parameters message tokens arguments
     */
-   public I18nRuntimeException(final String code, final Throwable cause, final Locale locale, final String... args) {
-	super(code, null, cause);
-	this.args = args;
+   public AbstractI18nException(final String code, final Throwable cause, final Locale locale, final String... parameters) {
+	super(code, cause);
+	this.code = code;
+	this.parameters = parameters;
 	this.locale = locale;
    }
 
-   /**
-    * @return Token arguments passed for the template message
-    */
-   public String[] getArgs() {
-	return args;
+   @Override
+   public String getCode() {
+	return code;
    }
 
    /**
-    * @return exception specified locale (for i18n message)
+    * @return Token parameters passed for the template message
+    */
+   public String[] getParameters() {
+	return parameters;
+   }
+
+   /**
+    * @return specified locale to use to get i18n exception message
     */
    public Locale getLocale() {
 	return locale;
@@ -143,8 +154,8 @@ public abstract class I18nRuntimeException extends CodedRuntimeException {
 
 	final I18nMessages msgB = getMessages();
 	if (msgB != null) {
-	   if (getArgs() != null) {
-		return msgB.getMessage(getCode(), (Object[]) getArgs());
+	   if (getParameters() != null) {
+		return msgB.getMessage(getCode(), (Object[]) getParameters());
 	   } else {
 		return msgB.getMessage(getCode());
 	   }

@@ -17,13 +17,15 @@ package org.kaleidofoundry.core.naming;
 
 import java.util.Locale;
 
-import org.kaleidofoundry.core.i18n.I18nRuntimeException;
+import org.kaleidofoundry.core.i18n.AbstractI18nRuntimeException;
 import org.kaleidofoundry.core.i18n.InternalBundleEnum;
+import org.kaleidofoundry.core.lang.annotation.Immutable;
 
 /**
  * @author Jerome RADUGET
  */
-public class NamingServiceException extends I18nRuntimeException {
+@Immutable
+public class NamingServiceException extends AbstractI18nRuntimeException {
 
    private static final long serialVersionUID = -7872864470141062829L;
 
@@ -97,7 +99,7 @@ public class NamingServiceException extends I18nRuntimeException {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.i18n.I18nRuntimeException#getI18nBundleName()
+    * @see org.kaleidofoundry.core.i18n.AbstractI18nRuntimeException#getI18nBundleName()
     */
    @Override
    public String getI18nBundleName() {

@@ -15,7 +15,7 @@
  */
 package org.kaleidofoundry.core.util;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,7 +23,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import org.kaleidofoundry.core.lang.annotation.Nullable;
 
@@ -139,15 +138,7 @@ public abstract class ConverterHelper {
    @Nullable
    public static String[] stringToArray(final String values, final String delimiter) {
 	if (values == null || delimiter == null) { return null; }
-
-	final StringTokenizer st = new StringTokenizer(values, delimiter);
-	final String[] result = new String[st.countTokens()];
-
-	for (int i = 0; st.hasMoreTokens(); i++) {
-	   result[i] = st.nextToken();
-	}
-
-	return result;
+	return StringHelper.split(values, delimiter);
    }
 
    /**
@@ -159,15 +150,7 @@ public abstract class ConverterHelper {
    @Nullable
    public static List<String> stringToCollection(final String values, final String delimiter) {
 	if (values == null || delimiter == null) { return null; }
-
-	final StringTokenizer st = new StringTokenizer(values, delimiter);
-	final List<String> result = new ArrayList<String>(st.countTokens());
-
-	while (st.hasMoreTokens()) {
-	   result.add(st.nextToken());
-	}
-
-	return result;
+	return Arrays.asList(stringToArray(values, delimiter));
    }
 
    /**

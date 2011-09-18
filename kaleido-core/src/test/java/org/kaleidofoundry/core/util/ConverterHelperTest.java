@@ -82,9 +82,22 @@ public class ConverterHelperTest extends Assert {
 	assertNull(arrayToString(null, null));
 	assertNull(arrayToString(null, ";"));
 
-	String result = arrayToString(new String[] { "a", "bb", "ccc" }, ";");
+	String result;
+	result = arrayToString(new String[] { "a", "bb", "ccc" }, ";");
 	assertNotNull(result);
 	assertEquals("a;bb;ccc", result);
+
+	result = arrayToString(new String[] { "a", "", "ccc" }, ";");
+	assertNotNull(result);
+	assertEquals("a;;ccc", result);
+
+	result = arrayToString(new String[] { "a", "bb", "" }, ";");
+	assertNotNull(result);
+	assertEquals("a;bb;", result);
+
+	result = arrayToString(new String[] { "", "bb", "ccc" }, ";");
+	assertNotNull(result);
+	assertEquals(";bb;ccc", result);
    }
 
    @Test
@@ -93,9 +106,23 @@ public class ConverterHelperTest extends Assert {
 	assertNull(collectionToString(null, null));
 	assertNull(collectionToString(null, ";"));
 
-	String result = collectionToString(Arrays.asList(new String[] { "a", "bb", "ccc" }), ";");
+	String result;
+	result = collectionToString(Arrays.asList(new String[] { "a", "bb", "ccc" }), ";");
 	assertNotNull(result);
 	assertEquals("a;bb;ccc", result);
+
+	result = collectionToString(Arrays.asList(new String[] { "a", "", "ccc" }), ";");
+	assertNotNull(result);
+	assertEquals("a;;ccc", result);
+
+	result = collectionToString(Arrays.asList(new String[] { "a", "bb", "" }), ";");
+	assertNotNull(result);
+	assertEquals("a;bb;", result);
+
+	result = collectionToString(Arrays.asList(new String[] { "", "bb", "ccc" }), ";");
+	assertNotNull(result);
+	assertEquals(";bb;ccc", result);
+
    }
 
    @Test
@@ -103,13 +130,32 @@ public class ConverterHelperTest extends Assert {
 	assertNull(stringToArray(null, null));
 	assertNull(stringToArray(null, ";"));
 
-	String[] results = stringToArray("a;bb;ccc", ";");
+	String[] results;
 
+	results = stringToArray("a;bb;ccc", ";");
 	assertNotNull(results);
-	assertTrue(results.length == 3);
+	assertEquals(3, results.length);
 	assertEquals("a", results[0]);
 	assertEquals("bb", results[1]);
 	assertEquals("ccc", results[2]);
+
+	results = stringToArray("a;;ccc", ";");
+	assertNotNull(results);
+	assertEquals(2, results.length);
+	assertEquals("a", results[0]);
+	assertEquals("ccc", results[1]);
+
+	results = stringToArray("a;bb;", ";");
+	assertNotNull(results);
+	assertEquals(2, results.length);
+	assertEquals("a", results[0]);
+	assertEquals("bb", results[1]);
+
+	results = stringToArray(";bb;ccc", ";");
+	assertNotNull(results);
+	assertEquals(2, results.length);
+	assertEquals("bb", results[0]);
+	assertEquals("ccc", results[1]);
    }
 
    @Test
@@ -117,13 +163,33 @@ public class ConverterHelperTest extends Assert {
 	assertNull(stringToCollection(null, null));
 	assertNull(stringToCollection(null, ";"));
 
-	List<String> results = stringToCollection("a;bb;ccc", ";");
+	List<String> results;
 
+	results = stringToCollection("a;bb;ccc", ";");
 	assertNotNull(results);
-	assertTrue(results.size() == 3);
+	assertEquals(3, results.size());
 	assertEquals("a", results.get(0));
 	assertEquals("bb", results.get(1));
 	assertEquals("ccc", results.get(2));
+
+	results = stringToCollection("a;;ccc", ";");
+	assertNotNull(results);
+	assertEquals(2, results.size());
+	assertEquals("a", results.get(0));
+
+	assertEquals("ccc", results.get(1));
+
+	results = stringToCollection("a;bb;", ";");
+	assertNotNull(results);
+	assertEquals(2, results.size());
+	assertEquals("a", results.get(0));
+	assertEquals("bb", results.get(1));
+
+	results = stringToCollection(";bb;ccc", ";");
+	assertNotNull(results);
+	assertEquals(2, results.size());
+	assertEquals("bb", results.get(0));
+	assertEquals("ccc", results.get(1));
    }
 
    @Test
@@ -131,10 +197,11 @@ public class ConverterHelperTest extends Assert {
 	assertNull(stringToSet(null, null));
 	assertNull(stringToSet(null, ";"));
 
-	Set<String> results = stringToSet("a;a;ccc", ";");
+	Set<String> results;
 
+	results = stringToSet("a;a;ccc", ";");
 	assertNotNull(results);
-	assertTrue(results.size() == 2);
+	assertEquals(2, results.size());
 
 	Iterator<String> itValues = results.iterator();
 	assertEquals("a", itValues.next());
