@@ -107,8 +107,10 @@ public class FileSystemStore extends AbstractFileStore implements FileStore {
 	   out = new FileOutputStream(file, false);
 
 	   final byte[] buff = new byte[context.getInteger(BufferSize, 128)];
-	   while (resource.getInputStream().read(buff) != -1) {
-		out.write(buff);
+	   int lengthToWrite = resource.getInputStream().read(buff);
+	   while (lengthToWrite != -1) {
+		out.write(buff, 0, lengthToWrite);
+		lengthToWrite = resource.getInputStream().read(buff);
 	   }
 
 	   out.flush();
