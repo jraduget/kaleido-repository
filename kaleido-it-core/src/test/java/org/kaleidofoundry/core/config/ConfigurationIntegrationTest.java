@@ -21,6 +21,7 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,7 +30,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.cache.Cache;
-import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.cache.EhCache2xImpl;
 import org.kaleidofoundry.core.store.ResourceException;
@@ -46,19 +46,15 @@ public class ConfigurationIntegrationTest {
 	// load and register given configuration
 	// another way to to this, set following java env variable :
 	// -Dkaleido.configurations=myConfigCtx=classpath:/config/myContext.properties
-	ConfigurationFactory.provides("myConfigCtx", "classpath:/config/myContext.properties");
+	ConfigurationFactory.provides("myConfigContext", "classpath:/config/myContext.properties");
    }
 
    @After
    public void cleanup() throws ResourceException {
-	// cleanup context configuration
-	ConfigurationFactory.unregister("myConfigCtx");
 	// cleanup configuration
-	ConfigurationFactory.unregister("myConfig");
+	ConfigurationFactory.unregisterAll();
 	// cleanup cache manager
-	if (CacheManagerFactory.getRegistry().containsKey("myCacheManager")) {
-	   CacheManagerFactory.getRegistry().get("myCacheManager").destroyAll();
-	}
+	CacheManagerFactory.getRegistry().clear();
    }
 
    /**
@@ -89,11 +85,9 @@ public class ConfigurationIntegrationTest {
 	assertEquals(Boolean.TRUE, confSample.getConfiguration().getBoolean("myapp.sample.http"));
 
 	// assert that ehcache instance are right been created and feededs
-	CacheManager cacheManager = CacheManagerFactory.getRegistry().get("myCacheManager");
-	assertNotNull(cacheManager);
-	Cache<String, String> currentConfigurationCache = cacheManager.getCache("kaleidofoundry/configuration/myConfig");
-
-	assertTrue(currentConfigurationCache instanceof EhCache2xImpl<?, ?>);
+	Cache<String, Serializable> currentConfigurationCache = ((AbstractConfiguration) confSample.getConfiguration()).cacheProperties;
+	assertNotNull(currentConfigurationCache);
+	assertEquals(EhCache2xImpl.class, currentConfigurationCache.getClass());
 	assertTrue(currentConfigurationCache.getDelegate() instanceof net.sf.ehcache.Cache);
 	net.sf.ehcache.Cache ehCacheConfInstance = (net.sf.ehcache.Cache) currentConfigurationCache.getDelegate();
 

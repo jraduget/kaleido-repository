@@ -165,6 +165,19 @@
             <updatePolicy>never</updatePolicy>
           </snapshots>
         </repository>      
+        <repository>
+          <id>jboss-old-repository-group</id>
+          <url>http://repository.jboss.org/maven2/</url>
+          <layout>default</layout>
+          <releases>
+            <enabled>false</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+            <updatePolicy>never</updatePolicy>
+          </snapshots>
+        </repository>         
 	</repositories>
 
 	<pluginRepositories>

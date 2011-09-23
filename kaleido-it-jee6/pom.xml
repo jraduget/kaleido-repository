@@ -51,16 +51,6 @@
 			<scope>provided</scope>			
 		</dependency>
 		
-		<!-- Glassfish client - need system path in order to work (glassfish install) -->
-		<dependency>
-			<groupId>org.glassfish.appclient</groupId>
-			<artifactId>gf-client</artifactId>
-			<version>3.0.1</version>
-			<systemPath>${glassfishv3.home}/glassfish/modules/gf-client.jar</systemPath>
-			<optional>true</optional>
-			<scope>system</scope>
-		</dependency>
-		
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
 			<artifactId>kaleido-core</artifactId>

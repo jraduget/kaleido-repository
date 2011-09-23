@@ -78,24 +78,7 @@
 			<artifactId>log4j</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
-
-		<!-- Glassfish client - need system path in order to work (glassfish install)-->
-		<dependency>
-			<groupId>org.glassfish.appclient</groupId>
-			<artifactId>gf-client</artifactId>
-			<version>3.0.1</version>
-			<systemPath>${glassfishv3.home}/glassfish/modules/gf-client.jar</systemPath>			
-			<optional>true</optional>			
-			<scope>system</scope>
-		</dependency>
 		
-		<!-- Mysql Database -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.13</version>
-			<scope>test</scope>
-		</dependency>
 		<!-- REST / JAXB - JSON -->
 		<dependency>
     		<groupId>com.sun.jersey</groupId>

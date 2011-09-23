@@ -18,16 +18,10 @@ $GLASSFISH_HOME/bin/asadmin undeploy --droptables=true kaleido-it-ear
 
 # resources creation 
 echo 'start jms queue factory creation...'
-if  $GLASSFISH_HOME/bin/asadmin ping-connection-pool jms/kaleidoQueueFactory
-then echo 'jms/kaleidoQueueFactory resource already exists'
-else $GLASSFISH_HOME/bin/asadmin create-jms-resource --restype=javax.jms.QueueConnectionFactory --description="kaleido integration test queue factory" jms/kaleidoQueueFactory
-fi
+$GLASSFISH_HOME/bin/asadmin create-jms-resource --restype=javax.jms.QueueConnectionFactory --description="kaleido integration test queue factory" jms/kaleidoQueueFactory
 
 echo 'start jms queue creation...'
-if $GLASSFISH_HOME/bin/asadmin --user admin list-jms-resources | grep 'jms/kaleidoQueue'
-then echo 'jms/kaleidoQueue resource already exists'
-else $GLASSFISH_HOME/bin/asadmin create-jms-resource --restype=javax.jms.Queue --description="kaleido integration test queue" jms/kaleidoQueue
-fi
+$GLASSFISH_HOME/bin/asadmin create-jms-resource --restype=javax.jms.Queue --description="kaleido integration test queue" jms/kaleidoQueue
 
 # create jdbc datasource at each redeploy (derby in memory reset)
 echo 'start datasource creation...'

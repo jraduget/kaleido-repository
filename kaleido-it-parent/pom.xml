@@ -21,30 +21,73 @@
 		<module>../kaleido-it-war</module>
 		<module>../kaleido-it-ear</module>
 	</modules>
-	
+
 	<properties>
 		<terracotta-ehcache.version>2.3.2</terracotta-ehcache.version>
 		<jboss-infinispan.version>4.0.0.FINAL</jboss-infinispan.version>
 	</properties>
-	
+
 	<dependencies>
-		<!-- jmeter have no maven artifact in repository - define ${jmeter.home} in your ~/.m2/settings.xml -->
+		<!-- jmeter have no maven artifact in repository - define ${jmeter.home} 
+			in your ~/.m2/settings.xml -->
 		<dependency>
-      		<groupId>org.apache.jmeter</groupId>
-      		<artifactId>jmeter-core</artifactId>
-      		<version>2.4</version>
-      		<systemPath>${jmeter.home}/lib/ext/ApacheJMeter_core.jar</systemPath>
-      		<scope>system</scope>
-    	</dependency>
+			<groupId>org.apache.jmeter</groupId>
+			<artifactId>jmeter-core</artifactId>
+			<version>2.4</version>
+			<systemPath>${jmeter.home}/lib/ext/ApacheJMeter_core.jar</systemPath>
+			<scope>system</scope>
+		</dependency>
 		<dependency>
-      		<groupId>org.apache.jmeter</groupId>
-      		<artifactId>jmeter-java</artifactId>
-      		<version>2.4</version>
-      		<systemPath>${jmeter.home}/lib/ext/ApacheJMeter_java.jar</systemPath>
-      		<scope>system</scope>
-    	</dependency>    	
+			<groupId>org.apache.jmeter</groupId>
+			<artifactId>jmeter-java</artifactId>
+			<version>2.4</version>
+			<systemPath>${jmeter.home}/lib/ext/ApacheJMeter_java.jar</systemPath>
+			<scope>system</scope>
+		</dependency>
 	</dependencies>
 
+	<profiles>
+		<profile>
+			<id>glassfishv30x</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>glassfish</name>
+					<value>3.0</value>
+				</property>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>org.glassfish.appclient</groupId>
+					<artifactId>gf-client-module</artifactId>
+					<version>3.1.x</version>
+					<systemPath>${glassfishv3.home}/glassfish/modules/gf-client.jar</systemPath>
+					<optional>true</optional>
+					<scope>system</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>glassfishv31x</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>glassfish</name>
+					<value>3.1</value>
+				</property>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>org.glassfish.appclient</groupId>
+					<artifactId>gf-client-module</artifactId>
+					<version>3.1.x</version>
+					<systemPath>${glassfishv3.home}/glassfish/lib/gf-client.jar</systemPath>
+					<optional>true</optional>
+					<scope>system</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 
 	<build>
 		<plugins>
@@ -62,17 +105,18 @@
 				<groupId>com.googlecode.maven-gcu-plugin</groupId>
 				<artifactId>maven-gcu-plugin</artifactId>
 				<inherited>false</inherited>
-				<executions>				
+				<executions>
 					<execution>
 						<id>gcode-upload</id>
 						<phase>none</phase>
 					</execution>
 				</executions>
-			</plugin>	
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!-- Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!-- Eclipse m2e settings only. It has no influence on the Maven build 
+					itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -116,7 +160,7 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	
+
 	<reporting>
 		<!-- skip mvn site javadoc for this module -->
 		<plugins>
@@ -131,13 +175,13 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-		        <artifactId>maven-surefire-report-plugin</artifactId>
-		        <version>2.9</version>
-		        <configuration>
-		        	<aggregate>true</aggregate>		          
-		        </configuration>
-			</plugin>			
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<aggregate>true</aggregate>
+				</configuration>
+			</plugin>
 		</plugins>
 	</reporting>
-	
+
 </project>
