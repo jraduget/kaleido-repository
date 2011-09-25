@@ -17,6 +17,8 @@ package org.kaleidofoundry.core.store;
 
 import static org.kaleidofoundry.core.store.FileStoreConstants.FileStorePluginName;
 
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
 
@@ -74,9 +76,40 @@ public interface FileStore extends Store<String, ResourceHandler> {
    ResourceHandler get(@NotNull String resourceRelativePath) throws ResourceNotFoundException, ResourceException;
 
    /**
+    * Stores the given resource and its contents
+    * 
+    * @param resourceRelativePath relative resource path (relative from the file store root uri)
+    * @param resourceContent
+    * @return current instance of the store
+    * @throws ResourceException
+    */
+   @NotNull
+   FileStore store(@NotNull String resourceRelativePath, @NotNull InputStream resourceContent) throws ResourceException;
+
+   /**
+    * Stores the given resource and its contents
+    * 
+    * @param resourceRelativePath relative resource path (relative from the file store root uri)
+    * @param resourceContent
+    * @return current instance of the store
+    * @throws ResourceException
+    */
+   @NotNull
+   FileStore store(@NotNull String resourceRelativePath, @NotNull byte[] resourceContent) throws ResourceException;
+
+   /**
+    * @param resourceRelativePath relative resource path (relative from the file store root uri)
+    * @param resourceContent
+    * @return current instance of the store
+    * @throws ResourceException
+    * @throws UnsupportedEncodingException
+    */
+   @NotNull
+   FileStore store(@NotNull String resourceRelativePath, @NotNull String resourceContent) throws ResourceException, UnsupportedEncodingException;
+
+   /**
     * Store updates on current R instance<br/>
     * 
-    * @param resourceRelativePath relative resource path (relative from the store root uri)
     * @param resource resource input stream to store
     * @return current instance of the store
     * @throws ResourceNotFoundException if resource can't be found, instead of returning null
@@ -85,7 +118,7 @@ public interface FileStore extends Store<String, ResourceHandler> {
     */
    @Override
    @NotNull
-   FileStore store(@NotNull String resourceRelativePath, @NotNull ResourceHandler resource) throws ResourceException;
+   FileStore store(@NotNull ResourceHandler resource) throws ResourceException;
 
    /**
     * Remove resource identify by its resource binding
@@ -137,4 +170,20 @@ public interface FileStore extends Store<String, ResourceHandler> {
     * @return does this store is for read-only use
     */
    boolean isReadOnly();
+
+   /**
+    * @param resourceUri
+    * @param input
+    * @return new resource handler
+    */
+   ResourceHandler createResourceHandler(final String resourceUri, final InputStream input);
+
+   /**
+    * @param resourceUri
+    * @param content
+    * @return new resource handler
+    * @throws UnsupportedEncodingException
+    */
+   ResourceHandler createResourceHandler(final String resourceUri, final String content) throws UnsupportedEncodingException;
+
 }

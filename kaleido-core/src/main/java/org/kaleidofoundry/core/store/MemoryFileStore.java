@@ -64,7 +64,7 @@ public class MemoryFileStore extends AbstractFileStore {
    protected ResourceHandler doGet(final URI resourceUri) throws ResourceNotFoundException, ResourceException {
 	ResourceHandler rh = memoryResources.get(resourceUri);
 	if (rh == null) {
-	   rh = new ResourceHandlerBean(resourceUri.toString(), new ByteArrayInputStream(new byte[0]));
+	   rh = createResourceHandler(resourceUri.toString(), new ByteArrayInputStream(new byte[0]));
 	   memoryResources.put(resourceUri, rh);
 	}
 	return rh;

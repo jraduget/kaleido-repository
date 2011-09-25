@@ -79,8 +79,7 @@ public class HttpFileStoreTest extends AbstractFileStoreTest {
    @Override
    public void store() throws ResourceException {
 	try {
-	   fileStore.store("kaleidofoundry/it/store/toStore.txt",
-		   new ResourceHandlerBean("kaleidofoundry/it/store/toStore.txt", new ByteArrayInputStream("foo".getBytes())));
+	   fileStore.store("kaleidofoundry/it/store/toStore.txt", new ByteArrayInputStream("foo".getBytes()));
 	   fail();
 	} catch (final ResourceException rse) {
 	   assertEquals("store.readonly.illegal", rse.getCode());

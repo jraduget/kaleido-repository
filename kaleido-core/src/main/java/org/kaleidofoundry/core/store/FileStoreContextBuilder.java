@@ -65,6 +65,16 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * disabled if not defined)</td>
  * </tr>
  * <tr>
+ * <td>bufferSize</td>
+ * <td>all</td>
+ * <td>buffer size for writing (store) in output stream data</td>
+ * </tr>
+ * <tr>
+ * <td>charset</td>
+ * <td>all</td>
+ * <td>charset to use with a text that we want to read or store</td>
+ * </tr>
+ * <tr>
  * <td>classloader</td>
  * <td>classpath</td>
  * <td>the class name, to get the class loader to use</td>
@@ -73,11 +83,6 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td>customResourceHandlerEntity</td>
  * <td>jpa</td>
  * <td>class name of a custom file handler entity (if you want to persist your own bean) - default one is ResourceHandlerEntity</td>
- * </tr>
- * <tr>
- * <td>bufferSize</td>
- * <td>jpa</td>
- * <td>buffer size for reading input stream data</td>
  * </tr>
  * <tr>
  * <th>Property name</th>
@@ -187,17 +192,18 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
     * disabled if not defined)
     */
    public static final String SleepTimeBeforeRetryOnFailure = "sleepTimeBeforeRetryOnFailure";
+   /** buffer size for reading input stream data */
+   public static final String BufferSize = "bufferSize";
+   /** charset to use with a text that we want to read or store */
+   public static final String Charset = "charset";
    /** property name for setting the class name, to get the class loader to use */
    public static final String Classloader = "classloader";
 
    // * jpa settings property name ****************
    /** class name of a custom file handler entity used in jpa store */
    public static final String CustomResourceHandlerEntity = "customResourceHandlerEntity";
-   /** buffer size for reading input stream data */
-   public static final String BufferSize = "bufferSize";
 
    // * connection settings for ftp, http ... if needed ******************
-
    /** the connection user when file store needs authentication */
    public static final String User = "user";
    /** the connection password when file store needs authentication */
@@ -517,6 +523,16 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
     */
    public FileStoreContextBuilder withBufferSize(final String bufferSize) {
 	getContextParameters().put(BufferSize, bufferSize);
+	return this;
+   }
+
+   /**
+    * @param charset
+    * @return current builder instance
+    * @see FileStoreContextBuilder#Charset
+    */
+   public FileStoreContextBuilder withCharset(final String charset) {
+	getContextParameters().put(Charset, charset);
 	return this;
    }
 

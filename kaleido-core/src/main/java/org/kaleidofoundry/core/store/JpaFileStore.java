@@ -110,7 +110,7 @@ public class JpaFileStore extends AbstractFileStore implements FileStore {
 	if (entity == null) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
 	} else {
-	   final ResourceHandler resourceHandler = new ResourceHandlerBean(resourceUri.toString(), new ByteArrayInputStream(entity.getContent()));
+	   final ResourceHandler resourceHandler = createResourceHandler(resourceUri.toString(), new ByteArrayInputStream(entity.getContent()));
 	   return resourceHandler;
 	}
    }

@@ -149,7 +149,7 @@ public abstract class AbstractFileStoreTest extends Assert {
 
 	// null argument not allowed
 	try {
-	   fileStore.store(null, null);
+	   fileStore.store(null);
 	   fail("NotNullException expected");
 	} catch (final NotNullException nae) {
 	}
@@ -167,7 +167,7 @@ public abstract class AbstractFileStoreTest extends Assert {
 	   // store the resource
 	   final String resourceToStoreAsText = existingResourcesForStore.get(uriToTest);
 	   assertNotNull(resourceToStoreAsText);
-	   fileStore.store(uriToTest, new ResourceHandlerBean(uriToTest, resourceToStoreAsText));
+	   fileStore.store(uriToTest, resourceToStoreAsText);
 
 	   // get the stored resource
 	   final ResourceHandler resourceToGet = fileStore.get(uriToTest);

@@ -30,7 +30,7 @@ import org.kaleidofoundry.core.lang.annotation.Stateless;
  * <ul>
  * <li>{@link #get(Object)}
  * <li>{@link #exists(Object)}
- * <li>{@link #store(Object, Object)}
+ * <li>{@link #store(Object)}
  * <li>{@link #remove(Object)}
  * </ul>
  * a given resource R, is identify by its resource binding (like a path)
@@ -60,12 +60,11 @@ public interface Store<B, R> {
    /**
     * store updates on current R instance<br/>
     * 
-    * @param resourceBinding resource binding which have to be persist
     * @param resource resource to store
     * @return current instance of the store
     * @throws ResourceException other kind of error
     */
-   Store<B, R> store(B resourceBinding, R resource) throws ResourceException;
+   Store<B, R> store(R resource) throws ResourceException;
 
    /**
     * remove resource identify by its resource binding<br/>

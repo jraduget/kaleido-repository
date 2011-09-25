@@ -15,18 +15,20 @@
  */
 package org.kaleidofoundry.core.store;
 
+import static org.kaleidofoundry.core.store.FileStoreContextBuilder.Charset;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.io.IOHelper;
+import org.kaleidofoundry.core.lang.Charsets;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
-import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
 
 /**
@@ -36,42 +38,36 @@ import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
  */
 @Immutable
 @NotThreadSafe
-public class ResourceHandlerBean implements ResourceHandler {
+class ResourceHandlerBean implements ResourceHandler {
 
+   private final static Charsets DEFAULT_CHARSET = Charsets.UTF_8;
+
+   private final AbstractFileStore store;
    private final String resourceUri;
    private final InputStream input;
 
    private boolean closed;
 
    /**
+    * @param store
+    * @param resourceUri
+    * @param input
+    * @throws UnsupportedEncodingException default text encoding is UTF-8
+    */
+   ResourceHandlerBean(final AbstractFileStore store, final String resourceUri, final String input) throws UnsupportedEncodingException {
+	this(store, resourceUri, new ByteArrayInputStream(input.getBytes(store.context.getString(Charset, DEFAULT_CHARSET.getCode()))));
+   }
+
+   /**
+    * @param store
     * @param resourceUri
     * @param input
     */
-   public ResourceHandlerBean(@NotNull final String resourceUri, @NotNull final InputStream input) {
-	this.input = input;
+   ResourceHandlerBean(final AbstractFileStore store, final String resourceUri, final InputStream input) {
+	this.store = store;
 	this.resourceUri = resourceUri;
+	this.input = input;
 	this.closed = false;
-   }
-
-   /**
-    * @param resourceUri
-    * @param input default encoding is UTF-8
-    * @throws UnsupportedEncodingException default text encoding is UTF-8
-    * @see Charset
-    */
-   public ResourceHandlerBean(@NotNull final String resourceUri, @NotNull final String input) throws UnsupportedEncodingException {
-	this(resourceUri, input, "UTF-8");
-   }
-
-   /**
-    * @param resourceUri
-    * @param input
-    * @param charset
-    * @throws UnsupportedEncodingException default text encoding is UTF-8
-    */
-   public ResourceHandlerBean(@NotNull final String resourceUri, @NotNull final String input, @NotNull final String charset)
-	   throws UnsupportedEncodingException {
-	this(resourceUri, new ByteArrayInputStream(input.getBytes(charset)));
    }
 
    /*
@@ -88,7 +84,6 @@ public class ResourceHandlerBean implements ResourceHandler {
     * @see org.kaleidofoundry.core.store.ResourceHandler#getInputStream()
     */
    @Override
-   @NotNull
    public InputStream getInputStream() {
 	return input;
    }
@@ -98,7 +93,6 @@ public class ResourceHandlerBean implements ResourceHandler {
     * @see org.kaleidofoundry.core.store.ResourceHandler#getBytes()
     */
    @Override
-   @NotNull
    public byte[] getBytes() throws ResourceException {
 	try {
 	   return IOHelper.toByteArray(getInputStream());
@@ -115,9 +109,8 @@ public class ResourceHandlerBean implements ResourceHandler {
     * @see org.kaleidofoundry.core.store.ResourceHandler#getInputStreamReader()
     */
    @Override
-   @NotNull
-   public InputStreamReader getInputStreamReader() throws ResourceException {
-	return getInputStreamReader("UTF-8");
+   public Reader getReader() throws ResourceException {
+	return getReader(store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
    }
 
    /*
@@ -125,8 +118,7 @@ public class ResourceHandlerBean implements ResourceHandler {
     * @see org.kaleidofoundry.core.store.ResourceHandler#getInputStreamReader(java.lang.String)
     */
    @Override
-   @NotNull
-   public InputStreamReader getInputStreamReader(final String charset) throws ResourceException {
+   public Reader getReader(final String charset) throws ResourceException {
 	try {
 	   return new InputStreamReader(getInputStream(), charset);
 	} catch (final IOException ioe) {
@@ -139,9 +131,8 @@ public class ResourceHandlerBean implements ResourceHandler {
     * @see org.kaleidofoundry.core.store.ResourceHandler#getText()
     */
    @Override
-   @NotNull
    public String getText() throws ResourceException {
-	return getText("UTF-8");
+	return getText(store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
    }
 
    /*
@@ -149,14 +140,13 @@ public class ResourceHandlerBean implements ResourceHandler {
     * @see org.kaleidofoundry.core.store.ResourceHandler#getText(java.lang.String)
     */
    @Override
-   @NotNull
    public String getText(final String charset) throws ResourceException {
 	BufferedReader reader = null;
 	String inputLine;
 
 	try {
 	   final StringBuilder stb = new StringBuilder();
-	   reader = new BufferedReader(getInputStreamReader(charset));
+	   reader = new BufferedReader(getReader(charset));
 	   while ((inputLine = reader.readLine()) != null) {
 		stb.append(inputLine.trim()).append("\n");
 	   }
@@ -175,8 +165,7 @@ public class ResourceHandlerBean implements ResourceHandler {
 		   reader.close();
 		}
 	   } catch (final IOException ioe) {
-		throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.inputstream.close.error", ioe.getMessage(),
-			ioe), ioe);
+		throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.inputstream.close.error", ioe.getMessage(), ioe), ioe);
 	   }
 
 	   // free resource handler
@@ -195,8 +184,7 @@ public class ResourceHandlerBean implements ResourceHandler {
 		input.close();
 		closed = true;
 	   } catch (final IOException ioe) {
-		throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.inputstream.close.error", ioe.getMessage(),
-			ioe), ioe);
+		throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.inputstream.close.error", ioe.getMessage(), ioe), ioe);
 	   }
 	}
    }

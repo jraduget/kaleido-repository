@@ -115,14 +115,14 @@ public class ClasspathFileStore extends AbstractFileStore implements FileStore {
 	if (localPath.charAt(0) == '/') {
 	   final InputStream in = JavaSystemHelper.getResourceAsStream(getClassLoader(), localPath.substring(1));
 	   if (in != null) {
-		return new ResourceHandlerBean(resourceBinding.toString(), in);
+		return createResourceHandler(resourceBinding.toString(), in);
 	   } else {
 		throw new ResourceNotFoundException(resourceBinding.toString());
 	   }
 	} else {
 	   final InputStream in = JavaSystemHelper.getResourceAsStream(getClassLoader(), localPath.toString());
 	   if (in != null) {
-		return new ResourceHandlerBean(resourceBinding.toString(), in);
+		return createResourceHandler(resourceBinding.toString(), in);
 	   } else {
 		throw new ResourceNotFoundException(resourceBinding.toString());
 	   }

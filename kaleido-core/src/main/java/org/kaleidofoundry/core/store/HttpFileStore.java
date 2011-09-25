@@ -166,7 +166,7 @@ public class HttpFileStore extends AbstractFileStore implements FileStore {
 	   urlConnection.connect();
 
 	   try {
-		return new ResourceHandlerBean(resourceUri.toString(), urlConnection.getInputStream());
+		return createResourceHandler(resourceUri.toString(), urlConnection.getInputStream());
 	   } catch (final FileNotFoundException fnfe) {
 		throw new ResourceNotFoundException(resourceUri.toString());
 	   }

@@ -18,10 +18,13 @@ package org.kaleidofoundry.core.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import org.kaleidofoundry.core.lang.annotation.NotNull;
 
 /**
  * String Helper static method
@@ -649,6 +652,25 @@ public abstract class StringHelper {
 	} else {
 	   return String.valueOf(obj);
 	}
+   }
+
+   /**
+    * Returns a list without the null argument
+    * 
+    * @param values
+    * @return list without the null argument
+    */
+   @NotNull
+   public static List<String> withNoNull(final String... values) {
+	List<String> list = new ArrayList<String>();
+	if (values != null) {
+	   for (String value : values) {
+		if (!isEmpty(value)) {
+		   list.add(value);
+		}
+	   }
+	}
+	return list;
    }
 
 }

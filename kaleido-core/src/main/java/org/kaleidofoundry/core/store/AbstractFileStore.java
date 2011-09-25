@@ -25,6 +25,9 @@ import static org.kaleidofoundry.core.store.FileStoreContextBuilder.SleepTimeBef
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.UseCaches;
 import static org.kaleidofoundry.core.store.FileStoreProvider.FILE_STORE_REGISTRY;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLConnection;
 
@@ -184,6 +187,16 @@ public abstract class AbstractFileStore implements FileStore {
 	return StringHelper.replaceAll(resourceUri.toString(), " ", "%20");
    }
 
+   @Override
+   public ResourceHandler createResourceHandler(final String resourceUri, final InputStream input) {
+	return new ResourceHandlerBean(this, resourceUri, input);
+   }
+
+   @Override
+   public ResourceHandler createResourceHandler(final String resourceUri, final String content) throws UnsupportedEncodingException {
+	return new ResourceHandlerBean(this, resourceUri, content);
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.store.FileStore#getBaseUri()
@@ -333,12 +346,12 @@ public abstract class AbstractFileStore implements FileStore {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.store.FileStore#store(java.lang.String, org.kaleidofoundry.core.store.ResourceHandler)
+    * @see org.kaleidofoundry.core.store.FileStore#store(org.kaleidofoundry.core.store.ResourceHandler)
     */
    @Override
-   public final FileStore store(@NotNull final String resourceRelativePath, @NotNull final ResourceHandler resource) throws ResourceException {
+   public final FileStore store(@NotNull final ResourceHandler resource) throws ResourceException {
 	if (isReadOnly()) { throw new ResourceException("store.readonly.illegal", context.getName() != null ? context.getName() : ""); }
-	final String resourceUri = buildResourceURi(resourceRelativePath);
+	final String resourceUri = buildResourceURi(resource.getResourceUri());
 	isUriManageable(resourceUri);
 
 	int retryCount = 0;
@@ -362,7 +375,7 @@ public abstract class AbstractFileStore implements FileStore {
 		   retryCount++;
 		   final int sleepTime = getSleepTimeBeforeRetryOnFailure();
 		   if (retryCount < maxRetryCount) {
-			logger.warn(StoreMessageBundle.getMessage("store.failover.retry.store.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount));
+			logger.warn(StoreMessageBundle.getMessage("store.failover.retry.store.info", resource.getResourceUri(), sleepTime, retryCount, maxRetryCount));
 			try {
 			   Thread.sleep((sleepTime));
 			} catch (final InterruptedException e) {
@@ -370,8 +383,8 @@ public abstract class AbstractFileStore implements FileStore {
 			   throw rse;
 			}
 		   } else {
-			logger.error(StoreMessageBundle.getMessage("store.failover.retry.store.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount),
-				rse);
+			logger.error(
+				StoreMessageBundle.getMessage("store.failover.retry.store.info", resource.getResourceUri(), sleepTime, retryCount, maxRetryCount), rse);
 		   }
 		}
 	   }
@@ -382,6 +395,33 @@ public abstract class AbstractFileStore implements FileStore {
 	} else {
 	   throw new IllegalStateException();
 	}
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.store.FileStore#store(java.lang.String, java.io.InputStream)
+    */
+   @Override
+   public FileStore store(final String resourceRelativePath, final InputStream resourceContent) throws ResourceException {
+	return store(createResourceHandler(resourceRelativePath, resourceContent));
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.store.FileStore#store(java.lang.String, byte[])
+    */
+   @Override
+   public FileStore store(final String resourceRelativePath, final byte[] resourceContent) throws ResourceException {
+	return store(resourceRelativePath, new ByteArrayInputStream(resourceContent));
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.store.FileStore#store(java.lang.String, java.lang.String)
+    */
+   @Override
+   public FileStore store(final String resourceRelativePath, final String resourceContent) throws ResourceException, UnsupportedEncodingException {
+	return store(createResourceHandler(resourceRelativePath, resourceContent));
    }
 
    /*
@@ -403,7 +443,7 @@ public abstract class AbstractFileStore implements FileStore {
 
 	try {
 	   if (resource != null) {
-		store(destination, resource);
+		store(createResourceHandler(destination, resource.getInputStream()));
 	   }
 	} finally {
 	   resource.close();

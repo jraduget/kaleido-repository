@@ -93,7 +93,7 @@ public class WebappFileStore extends AbstractFileStore implements FileStore {
 	if (input == null) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
 	} else {
-	   return new ResourceHandlerBean(resourceUri.toString(), input);
+	   return createResourceHandler(resourceUri.toString(), input);
 	}
    }
 

@@ -70,7 +70,7 @@ public class FileSystemStore extends AbstractFileStore implements FileStore {
    @Override
    protected ResourceHandler doGet(final URI resourceUri) throws ResourceNotFoundException, ResourceException {
 	try {
-	   return new ResourceHandlerBean(resourceUri.toString(), new FileInputStream(new File(resourceUri.getPath())));
+	   return createResourceHandler(resourceUri.toString(), new FileInputStream(new File(resourceUri.getPath())));
 	} catch (final FileNotFoundException fnfe) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
 	}
