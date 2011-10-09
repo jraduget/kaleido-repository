@@ -118,16 +118,16 @@
 			<dependencies>
 				<dependency>
 					<groupId>org.kaleidofoundry</groupId>
-					<artifactId>kaleido-it-jee6</artifactId>
-					<version>${project.version}</version>
-					<type>ejb</type>
-				</dependency>
-				<dependency>
-					<groupId>org.kaleidofoundry</groupId>
 					<artifactId>kaleido-jee6</artifactId>
 					<version>${project.version}</version>
 					<type>jar</type>
 				</dependency>				
+				<dependency>
+					<groupId>org.kaleidofoundry</groupId>
+					<artifactId>kaleido-it-jee6</artifactId>
+					<version>${project.version}</version>
+					<type>ejb</type>
+				</dependency>
 			</dependencies>
 			<build>
 				<plugins>

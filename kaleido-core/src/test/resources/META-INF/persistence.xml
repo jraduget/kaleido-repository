@@ -23,8 +23,8 @@
 			<property name="javax.persistence.jdbc.password" value="APP" />
 			<property name="eclipselink.target-database" value="Derby" />
 			
-			<property name="eclipselink.logging.level" value="FINEST" />
-			<property name="eclipselink.logging.level.sql" value="FINEST" />
+			<property name="eclipselink.logging.level" value="INFO" />
+			<property name="eclipselink.logging.level.sql" value="INFO" />
 			<property name="eclipselink.logging.timestamp" value="false" />
 			<property name="eclipselink.logging.session" value="false" />
 			<property name="eclipselink.logging.thread" value="false" />
@@ -50,7 +50,7 @@
 			<property name="javax.persistence.jdbc.url" value="jdbc:derby:target/kaleidoCustomUnitTest;create=true" />
 			<property name="javax.persistence.jdbc.user" value="APP" />
 			<property name="javax.persistence.jdbc.password" value="APP" />
-			<property name="eclipselink.logging.level" value="FINE" />
+			<property name="eclipselink.logging.level" value="INFO" />
 			<property name="eclipselink.target-database" value="Derby" />
 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
 		</properties>

@@ -91,7 +91,21 @@ public abstract class FileHelper {
     * @return Normalizes the path given <br/>
     *         Sample : buildCustomPath("/foo/toto/titi", "$") => "$foo$kaleidofoundry$core$io$" on a UNIX system
     */
-   public static String buildCustomPath(final String path, String pathSepToUse) {
+   public static String buildCustomPath(final String path, final String pathSepToUse) {
+	return buildCustomPath(path, pathSepToUse, true);
+   }
+
+   /**
+    * Build a valid & normalized (pathSepToUse will be used as directory separator)
+    * It replaces the "\" or "/" by 'pathSepToUse', and it will add at the end 'pathSepToUse'
+    * 
+    * @param path
+    * @param pathSepToUse directory separator to use, if null {@link File}.separator will be used
+    * @param appendPathSepToEnd add path separator at the end of the path ?
+    * @return Normalizes the path given <br/>
+    *         Sample : buildCustomPath("/foo/toto/titi", "$") => "$foo$kaleidofoundry$core$io$" on a UNIX system
+    */
+   public static String buildCustomPath(final String path, String pathSepToUse, final boolean appendPathSepToEnd) {
 
 	if (path != null) {
 
@@ -112,7 +126,7 @@ public abstract class FileHelper {
 		}
 	   }
 
-	   if (c != '/' && c != '\\' && c != ' ') {
+	   if (appendPathSepToEnd && c != '/' && c != '\\' && c != ' ') {
 		str.append(pathSepToUse);
 	   }
 

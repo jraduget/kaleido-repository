@@ -186,4 +186,12 @@ public interface FileStore extends Store<String, ResourceHandler> {
     */
    ResourceHandler createResourceHandler(final String resourceUri, final String content) throws UnsupportedEncodingException;
 
+   /**
+    * close all opened resources, that have not been closed using {@link ResourceHandler#close()} <br/>
+    * <b>the store is still functional after calling this method</b>
+    * 
+    * @return current instance of the store
+    */
+   FileStore closeAll();
+
 }

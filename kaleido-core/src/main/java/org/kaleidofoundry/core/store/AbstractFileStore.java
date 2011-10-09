@@ -30,9 +30,11 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLConnection;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
@@ -63,6 +65,8 @@ public abstract class AbstractFileStore implements FileStore {
 
    protected final String baseUri;
 
+   protected final ConcurrentHashMap<String, ResourceHandler> openResources;
+
    /**
     * runtime context injection by constructor<br/>
     * the file store will be registered in {@link FileStoreFactory#getRegistry()}
@@ -91,8 +95,10 @@ public abstract class AbstractFileStore implements FileStore {
 	if (StringHelper.isEmpty(baseUri)) { throw new EmptyContextParameterException(BaseUri, context); }
 
 	this.context = context;
-	logger = LoggerFactory.getLogger(this.getClass());
+	this.logger = LoggerFactory.getLogger(this.getClass());
 	this.baseUri = baseUri;
+	this.openResources = new ConcurrentHashMap<String, ResourceHandler>();
+
 	// register the file store instance
 	FILE_STORE_REGISTRY.put(getBaseUri(), this);
    }
@@ -102,9 +108,10 @@ public abstract class AbstractFileStore implements FileStore {
     * this constructor is only needed and used by some IOC framework like spring.
     */
    AbstractFileStore() {
-	context = null;
-	baseUri = null;
-	logger = LoggerFactory.getLogger(this.getClass());
+	this.context = null;
+	this.baseUri = null;
+	this.logger = LoggerFactory.getLogger(this.getClass());
+	this.openResources = new ConcurrentHashMap<String, ResourceHandler>();
    }
 
    /**
@@ -160,41 +167,74 @@ public abstract class AbstractFileStore implements FileStore {
 
 	boolean appendBaseUri = false;
 	final String baseUri = getBaseUri();
+	final String relativePath = resourceRelativePath;
 	final StringBuilder resourceUri = new StringBuilder();
 
-	if (resourceRelativePath != null && !resourceRelativePath.startsWith(baseUri)) {
+	if (relativePath != null && !relativePath.startsWith(baseUri)) {
 	   appendBaseUri = true;
 	   resourceUri.append(baseUri);
 	} else {
-	   resourceUri.append(resourceRelativePath);
+	   resourceUri.append(relativePath);
 	}
 
-	// remove '/' is baseUri ends with '/' and resourceRelativePath starts with a '/'
-	if (appendBaseUri && baseUri != null && baseUri.endsWith("/") && resourceRelativePath != null && resourceRelativePath.startsWith("/")) {
+	// remove '/' is baseUri ends with '/' and relativePath starts with a '/'
+	if (appendBaseUri && baseUri != null && baseUri.endsWith("/") && relativePath != null && relativePath.startsWith("/")) {
 	   resourceUri.deleteCharAt(resourceUri.length() - 1);
 	} else {
 	   // add '/' if needed
-	   if (appendBaseUri && baseUri != null && !baseUri.endsWith("/") && resourceRelativePath != null && !resourceRelativePath.startsWith("/")) {
+	   if (appendBaseUri && baseUri != null && !baseUri.endsWith("/") && relativePath != null && !relativePath.startsWith("/")) {
 		resourceUri.append("/");
 	   }
 	}
 
 	if (appendBaseUri) {
-	   resourceUri.append(resourceRelativePath);
+	   resourceUri.append(relativePath);
 	}
 
-	// handle spaces in the uri -> replace them by %20
-	return StringHelper.replaceAll(resourceUri.toString(), " ", "%20");
+	// normalize uri by using '/' as path separator, and by replacing spaces by %20
+	return StringHelper.replaceAll(FileHelper.buildCustomPath(resourceUri.toString(), FileHelper.UNIX_SEPARATOR, false), " ", "%20");
    }
 
    @Override
    public ResourceHandler createResourceHandler(final String resourceUri, final InputStream input) {
-	return new ResourceHandlerBean(this, resourceUri, input);
+	ResourceHandler resource = new ResourceHandlerBean(this, resourceUri, input);
+	openResources.put(resourceUri, resource);
+	return resource;
    }
 
    @Override
    public ResourceHandler createResourceHandler(final String resourceUri, final String content) throws UnsupportedEncodingException {
-	return new ResourceHandlerBean(this, resourceUri, content);
+	ResourceHandler resource = new ResourceHandlerBean(this, resourceUri, content);
+	openResources.put(resourceUri, resource);
+	return resource;
+   }
+
+   @Override
+   public FileStore closeAll() {
+	for (ResourceHandler resourceHandler : openResources.values()) {
+	   resourceHandler.close();
+	}
+	return this;
+   }
+
+   /**
+    * opened resource cleanup
+    * 
+    * @param resource
+    * @see ResourceHandler#close()
+    */
+   void unregisterResource(final ResourceHandler resource) {
+	unregisterResource(resource.getResourceUri());
+   }
+
+   /**
+    * opened resource cleanup
+    * 
+    * @param resourceUri
+    * @see ResourceHandler#close()
+    */
+   void unregisterResource(final String resourceUri) {
+	openResources.remove(resourceUri);
    }
 
    /*

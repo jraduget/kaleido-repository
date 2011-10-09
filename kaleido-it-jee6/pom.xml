@@ -59,10 +59,10 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Logging -->
+		<!-- Logging (log4j conflict during mvn test - log4j-over-slf4j solve the problem)-->
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
+			<artifactId>log4j-over-slf4j</artifactId>
 			<version>${slf4j.version}</version>
 			<scope>test</scope>
 		</dependency>	

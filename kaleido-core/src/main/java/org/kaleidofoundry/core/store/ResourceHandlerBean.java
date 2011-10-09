@@ -183,6 +183,7 @@ class ResourceHandlerBean implements ResourceHandler {
 	   try {
 		input.close();
 		closed = true;
+		store.unregisterResource(resourceUri);
 	   } catch (final IOException ioe) {
 		throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.inputstream.close.error", ioe.getMessage(), ioe), ioe);
 	   }

@@ -122,7 +122,7 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 		   }
 
 		   // unregister wrong file store
-		   FileStoreFactory.getRegistry().get(baseUri).remove(fileStore);
+		   FileStoreFactory.getRegistry().get(fileStore.getBaseUri()).remove(fileStore);
 
 		} catch (final NoSuchMethodException e) {
 		   throw new ProviderException("context.provider.error.NoSuchConstructorException", impl.getName(), "RuntimeContext<FileStore> context");

@@ -15,7 +15,7 @@
  */
 package org.kaleidofoundry.core.io;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 
@@ -56,24 +56,25 @@ public class FileHelperTest {
    @Test
    public void testBuildCustomPath() {
 	assertEquals("--foo--toto--tutu--gaga--", FileHelper.buildCustomPath("/foo\\toto/tutu\\gaga", "--"));
+	assertEquals("--foo--toto--tutu--gaga", FileHelper.buildCustomPath("/foo\\toto/tutu\\gaga", "--", false));
    }
 
    @Test
    public void testGetRelativeClassPathByObj() {
-	assertEquals("org" + File.separator + "kaleidofoundry" + File.separator + "core" + File.separator + "io" + File.separator, FileHelper
-		.getRelativeClassPath(this));
+	assertEquals("org" + File.separator + "kaleidofoundry" + File.separator + "core" + File.separator + "io" + File.separator,
+		FileHelper.getRelativeClassPath(this));
    }
 
    @Test
    public void testGetRelativeClassPathByClass() {
-	assertEquals("org" + File.separator + "kaleidofoundry" + File.separator + "core" + File.separator + "io" + File.separator, FileHelper
-		.getRelativeClassPath(FileHelper.class));
+	assertEquals("org" + File.separator + "kaleidofoundry" + File.separator + "core" + File.separator + "io" + File.separator,
+		FileHelper.getRelativeClassPath(FileHelper.class));
    }
 
    @Test
    public void testBuildParentPath() {
-	assertEquals(File.separator + "foo" + File.separator + "toto" + File.separator + "tutu", FileHelper.buildParentPath(File.separator
-		+ "foo" + File.separator + "toto" + File.separator + "tutu" + File.separator + "gaga" + File.separator));
+	assertEquals(File.separator + "foo" + File.separator + "toto" + File.separator + "tutu",
+		FileHelper.buildParentPath(File.separator + "foo" + File.separator + "toto" + File.separator + "tutu" + File.separator + "gaga" + File.separator));
    }
 
    @Test
