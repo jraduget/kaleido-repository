@@ -61,7 +61,7 @@ import org.kaleidofoundry.core.context.Context;
  * 
  * # http configuration context properties
  * configurations.myHttpConfig.readonly=true
- * configurations.myHttpConfig.fileStoreUri=http://localhost:8080/kaleido-it/config/myHttpConfig.properties
+ * configurations.myHttpConfig.fileStoreUri=http://localhost:8380/kaleido-it/config/myHttpConfig.properties
  * 
  * # http configuration context (optional) - used for file store (proxy or other parameters...)
  * #configurations.myHttpConfig.fileStoreRef=myConfigStore

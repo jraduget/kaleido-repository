@@ -16,7 +16,6 @@
 package org.kaleidofoundry.core.config;
 
 import static java.lang.System.out;
-
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.CacheManagerRef;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.FileStoreRef;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.FileStoreUri;
@@ -37,7 +36,7 @@ import org.kaleidofoundry.core.context.Parameter;
 public class ConfigurationSample02 {
 
    @Context(value = "myConfig", parameters = { @Parameter(name = StorageAllowed, value = "false"),
-	   @Parameter(name = FileStoreUri, value = "http://localhost:8080/kaleido-it/config/myHttpConfig.properties"),
+	   @Parameter(name = FileStoreUri, value = "http://localhost:8380/kaleido-it/config/myHttpConfig.properties"),
 	   @Parameter(name = CacheManagerRef, value = "myCacheManager"), @Parameter(name = FileStoreRef, value = "myConfigStore") })
    private Configuration myConfig;
 

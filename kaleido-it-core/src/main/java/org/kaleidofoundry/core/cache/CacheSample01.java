@@ -41,7 +41,7 @@ import org.kaleidofoundry.core.context.Context;
  * cacheManagers.myCacheManager.fileStoreUri=classpath:/cache/ehcache.xml
  * 
  * # sample if your cache configuration is accessible from an external file store
- * #cacheManagers.myCacheManager.fileStoreUri=http://localhost:8080/kaleido-it/cache/ehcache.xml
+ * #cacheManagers.myCacheManager.fileStoreUri=http://localhost:8380/kaleido-it/cache/ehcache.xml
  * #cacheManagers.myCacheManager.fileStoreRef=myHttpCtx
  * 
  * # sample if you need proxy settings, uncomment and configure followings :

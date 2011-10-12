@@ -8,7 +8,7 @@ echo "**************************************************************************
 if asadmin list-domains | grep 'kaleido'
 then echo 'kaleido domain already exists'
 else
-$GLASSFISH_HOME/bin/asadmin create-domain --adminport 4848 --instanceport 8080 --nopassword=true kaleido 
+$GLASSFISH_HOME/bin/asadmin create-domain --adminport 4848 --instanceport 8380 --nopassword=true kaleido 
 fi
 
 # clean log, start domain if needed, and undeploy current version

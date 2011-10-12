@@ -8,7 +8,7 @@
            	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
         ">
 
-	<bean id="mySpringBean" class="org.kaleidofoundry.core.spring.aop.MySpringBean" />
+	<bean id="mySpringBean" class="org.kaleidofoundry.core.spring.aop.MySpringBean"  />
 	
 	<!-- enable aspectj load time weaving (only for spring compatible aspect !!) 
 	     to use with :
@@ -19,7 +19,7 @@
 	-->
  	
  	<!-- enable spring aop proxy (not native aspectj support) -->
- 	<!-- 
+ 	 
 	<aop:aspectj-autoproxy>
 		<aop:include name="kaleidoNotNullAspect"/>
 		<aop:include name="kaleidoAnnotationContexInjectorAspect"/>
@@ -27,14 +27,14 @@
 		<aop:include name="kaleidoNotYetImplementedAspect"/>
 		<aop:include name="kaleidoNotImplementedAspect"/>
 	</aop:aspectj-autoproxy>
-	-->
 	
-	<!-- kaleido aspect  
+	
+	<!-- kaleido aspect  -->
 	<bean id="kaleidoNotNullAspect" class="org.kaleidofoundry.core.lang.aop.NotNullAspect" factory-method="aspectOf" />
 	<bean id="kaleidoAnnotationContexInjectorAspect" class="org.kaleidofoundry.core.context.AnnotationContexInjectorAspect" factory-method="aspectOf"/>
 	<bean id="kaleidoPersistenceContextAspect" class="org.kaleidofoundry.core.persistence.PersistenceContextAspect" factory-method="aspectOf"/>
 	<bean id="kaleidoNotYetImplementedAspect" class="org.kaleidofoundry.core.lang.aop.NotYetImplementedAspect" factory-method="aspectOf"/>
 	<bean id="kaleidoNotImplementedAspect" class="org.kaleidofoundry.core.lang.aop.NotImplementedAspect" factory-method="aspectOf"/>
- 	-->
+ 	
 	  
 </beans>

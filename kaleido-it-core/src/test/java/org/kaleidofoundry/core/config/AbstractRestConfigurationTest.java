@@ -330,7 +330,7 @@ public abstract class AbstractRestConfigurationTest extends Assert {
    }
 
    private URI getBaseURI() {
-	return UriBuilder.fromUri("http://localhost:8080/kaleido-it").build();
+	return UriBuilder.fromUri("http://localhost:8380/kaleido-it").build();
    }
 
    private WebResource getBaseResource() {

@@ -60,12 +60,12 @@ public class FileStoreSample01 {
     * <br/>
     * <b>Path are relative from the file store root uri, like :</b>
     * <ul>
-    * <li>http://localhost:8080/kaleido-it/</li>
+    * <li>http://localhost:8380/kaleido-it/</li>
     * <li>ftp://localhost/kaleido-it/</li>
     * <li>classpath:/org/kaleidofoundry/core/</li>
     * </ul>
     * 
-    * @return the content of the resource "http://localhost:8080/kaleido-it/store/foo.txt"
+    * @return the content of the resource "http://localhost:8380/kaleido-it/store/foo.txt"
     * @throws ResourceException
     */
    public String echo() throws ResourceException {

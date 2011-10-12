@@ -22,12 +22,10 @@ import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * <p>
- * <h3>Simple configuration usage</h3>
- * Build {@link Configuration} context and instance manually by coding, using context builder
+ * <h3>Simple configuration usage</h3> Build {@link Configuration} context and instance manually by coding, using context builder
  * </p>
  * 
  * @see ConfigurationSample01
- * 
  * @author Jerome RADUGET
  */
 public class ConfigurationSample03 {
@@ -37,13 +35,9 @@ public class ConfigurationSample03 {
 
    public ConfigurationSample03() throws ResourceException {
 
-	RuntimeContext<Configuration> context = new ConfigurationContextBuilder("myManualCtx", Configuration.class)
-	.withName("myConfig")
-	.withStorageAllowed(false)
-	.withFileStoreUri("http://localhost:8080/kaleido-it/config/myHttpConfig.properties")
-	.withCacheManagerRef("myCacheManager")
-	.withFileStoreRef("myConfigStore")
-	.build();
+	RuntimeContext<Configuration> context = new ConfigurationContextBuilder("myManualCtx", Configuration.class).withName("myConfig")
+		.withStorageAllowed(false).withFileStoreUri("http://localhost:8380/kaleido-it/config/myHttpConfig.properties")
+		.withCacheManagerRef("myCacheManager").withFileStoreRef("myConfigStore").build();
 
 	myConfig = ConfigurationFactory.provides(context);
    }
@@ -66,7 +60,6 @@ public class ConfigurationSample03 {
 	   out.printf("\tkey=%s\n", key);
 	}
    }
-
 
    /**
     * used only for junit assertions
