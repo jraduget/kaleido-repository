@@ -21,6 +21,11 @@ import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ProviderC
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.FileStoreUri;
 import static org.kaleidofoundry.core.i18n.I18nContextBuilder.BaseName;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
+
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.config.Configuration;
@@ -31,6 +36,12 @@ import org.kaleidofoundry.core.naming.NamingService;
  * @author Jerome RADUGET
  */
 public class MyServiceImpl implements MyService {
+
+   @PersistenceUnit(unitName = "kaleido")
+   private EntityManagerFactory entityManagerFactory;
+
+   @PersistenceContext(unitName = "kaleido")
+   private EntityManager entityManager;
 
    @Context
    private RuntimeContext<?> myContext;
@@ -150,6 +161,24 @@ public class MyServiceImpl implements MyService {
    @Override
    public NamingService getMyNamingService() {
 	return myNamingService;
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.context.MyService#getEntityManagerFactory()
+    */
+   @Override
+   public EntityManagerFactory getEntityManagerFactory() {
+	return entityManagerFactory;
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.context.MyService#getEntityManager()
+    */
+   @Override
+   public EntityManager getEntityManager() {
+	return entityManager;
    }
 
 }

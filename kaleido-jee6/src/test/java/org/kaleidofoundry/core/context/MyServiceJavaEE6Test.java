@@ -17,41 +17,31 @@ package org.kaleidofoundry.core.context;
 
 import java.lang.annotation.Annotation;
 
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.cache.CacheProvidersEnum;
+import org.kaleidofoundry.core.inject.UnmanagedCdiInjector;
 
 /**
  * @author Jerome RADUGET
  */
 public class MyServiceJavaEE6Test extends AbstractMyServiceTest {
 
-   private static Weld weldSE;
-   private static WeldContainer weldContainer;
-   private static boolean weldSEInitialize = false;
-
    @BeforeClass
    public static void setupStatic() {
-	weldSE = new Weld();
-	weldContainer = weldSE.initialize();
-	weldSEInitialize = true;
-
+	UnmanagedCdiInjector.init();
 	CacheManagerFactory.provides(CacheProvidersEnum.infinispan4x.name(), new RuntimeContext<CacheManager>("myCustomCacheManager"));
    }
 
    @AfterClass
    public static void shutdownWeld() {
-	if (weldSE != null && weldSEInitialize) {
-	   weldSE.shutdown();
-	}
+	UnmanagedCdiInjector.shutdown();
    }
 
    public static <T> T getBean(final Class<T> type, final Annotation... annotations) {
-	return weldContainer.instance().select(type, annotations).get();
+	return UnmanagedCdiInjector.getContainer().instance().select(type, annotations).get();
    }
 
    /*

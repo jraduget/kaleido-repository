@@ -66,8 +66,15 @@
 		<!-- AOP / Aspectj -->
 		<aspectj.version>1.6.11</aspectj.version>
 		<!-- framework global version dependencies -->
-		<slf4j.version>1.6.2</slf4j.version>
+		<slf4j.version>1.6.3</slf4j.version>
 		<log4j.version>1.2.16</log4j.version>
+		<logback.version>0.9.3</logback.version>
+		<!-- Cache implementation version -->
+		<jboss-cache.version>3.2.3.CR1</jboss-cache.version>
+		<terracotta-ehcache.version>2.4.6</terracotta-ehcache.version>
+		<jboss-infinispan.version>4.2.1.FINAL</jboss-infinispan.version>
+		<oracle-coherence.version>3.7.0</oracle-coherence.version>
+		<!-- Testing -->		
 		<junit.version>4.8.1</junit.version>
 		<mockito.version>1.8.5</mockito.version>
 		<!--  Spring integration version -->
@@ -91,6 +98,7 @@
 		<module>../kaleido-jee6</module>
 		<module>../kaleido-spring</module>
 		<module>../kaleido-guice</module>
+		<module>../kaleido-test</module>
 	</modules>
 
 	<dependencies>
@@ -100,7 +108,7 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
 			<scope>compile</scope>
-		</dependency>
+		</dependency>		
 		<!-- Framework for testing -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -108,7 +116,6 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- Framework for testing -->
 		<dependency>
 			<groupId>org.mockito</groupId>
 		  	<artifactId>mockito-core</artifactId>  

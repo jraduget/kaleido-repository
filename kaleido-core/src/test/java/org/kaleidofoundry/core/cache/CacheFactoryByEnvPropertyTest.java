@@ -24,7 +24,7 @@ import org.junit.Test;
  * Testing getting cacheFactory and cache with java env variable : <br/>
  * <ul>
  * <li>-Dcache.provider=local</li>
- * <li>-Dcache.provider=ehCache2x</li>
+ * <li>-Dcache.provider=ehCache</li>
  * <li>-Dcache.provider=jbossCache3x</li>
  * <li>-Dcache.provider=coherence3x</li>
  * <li>-Dcache.provider=infinispan4x</li>

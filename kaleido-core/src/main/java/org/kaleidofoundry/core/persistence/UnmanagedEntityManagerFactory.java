@@ -24,6 +24,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.lang.annotation.Nullable;
 import org.kaleidofoundry.core.util.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +57,7 @@ public abstract class UnmanagedEntityManagerFactory {
    public static final String KaleidoPersistentContextUnitName = "kaleido";
 
    // default kaleidofoundry EntityManagerFactory
-   private static volatile EntityManagerFactory DefaultEmf;
+   private static EntityManagerFactory DefaultEmf;
 
    // default kaleidofoundry threadlocal EntityManager
    private static final ThreadLocal<EntityManager> DefaultEm = new ThreadLocal<EntityManager>();
@@ -68,8 +69,9 @@ public abstract class UnmanagedEntityManagerFactory {
    private static final ThreadLocal<Registry<String, EntityManager>> CustomEmRegistry = new ThreadLocal<Registry<String, EntityManager>>();
 
    /**
-    * @return default kaleido entity manager of the current user (thread local)<br/>
+    * @return kaleido default entity manager (thread local)<br/>
     *         it will create the EntityManager if needed. If previous entity manager thread was closed, a new one is created.
+    *         it will use as persistent unit name : {@link #KaleidoPersistentContextUnitName} <br/>
     */
    @NotNull
    public static final EntityManager currentEntityManager() {
@@ -115,7 +117,7 @@ public abstract class UnmanagedEntityManagerFactory {
    }
 
    /**
-    * @return default kaleido entity manager factory<br/>
+    * @return kaleido default entity manager factory<br/>
     *         it will use as persistent unit name : {@link #KaleidoPersistentContextUnitName} <br/>
     *         it will create the EntityManagerFactory if needed
     */
@@ -150,11 +152,13 @@ public abstract class UnmanagedEntityManagerFactory {
    }
 
    /**
-    * @param em close the given entity manager
+    * @param em close the given entity manager (if null, it does nothing)
     * @throws IllegalArgumentException if the given entity manager have not been create by {@link UnmanagedEntityManagerFactory}
     * @throws IllegalStateException if the entity manager is container-managed
     */
-   public static final void close(@NotNull final EntityManager em) throws IllegalArgumentException {
+   public static final void close(@Nullable final EntityManager em) throws IllegalArgumentException {
+
+	if (em == null) { return; }
 
 	// if em is the default kaleido one
 	if (em == DefaultEm.get()) {
@@ -177,11 +181,13 @@ public abstract class UnmanagedEntityManagerFactory {
    }
 
    /**
-    * @param emf close the given entity manager factory
+    * @param emf close the given entity manager factory if null, it does nothing
     * @throws IllegalArgumentException if the given entity manager factory have not been create by {@link UnmanagedEntityManagerFactory}
     * @throws IllegalStateException if the entity manager factory has been closed
     */
-   public static final void close(@NotNull final EntityManagerFactory emf) throws IllegalArgumentException {
+   public static final void close(@Nullable final EntityManagerFactory emf) throws IllegalArgumentException {
+
+	if (emf == null) { return; }
 
 	// if emf is the default kaleido one
 	if (emf == DefaultEmf) {

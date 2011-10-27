@@ -42,7 +42,7 @@
 		</constructor-arg>
 	</bean>
 	
-	<bean id="myCacheManager" class="org.kaleidofoundry.core.cache.EhCache2xManagerImpl">		
+	<bean id="myCacheManager" class="org.kaleidofoundry.core.cache.EhCacheManagerImpl">		
 		<constructor-arg>		
 			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
 				<constructor-arg type="java.lang.String" value="myCacheManagerCtx"/>
@@ -57,7 +57,7 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="myCache" class="org.kaleidofoundry.core.cache.EhCache2xImpl">
+	<bean id="myCache" class="org.kaleidofoundry.core.cache.EhCacheImpl">
 		<constructor-arg value="CacheSample01"/>
 		<constructor-arg ref="myCacheManager"/>		
 	</bean>

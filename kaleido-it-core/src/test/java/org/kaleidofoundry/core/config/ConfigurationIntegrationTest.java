@@ -31,7 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
-import org.kaleidofoundry.core.cache.EhCache2xImpl;
+import org.kaleidofoundry.core.cache.EhCacheImpl;
 import org.kaleidofoundry.core.store.ResourceException;
 
 /**
@@ -87,7 +87,7 @@ public class ConfigurationIntegrationTest {
 	// assert that ehcache instance are right been created and feededs
 	Cache<String, Serializable> currentConfigurationCache = ((AbstractConfiguration) confSample.getConfiguration()).cacheProperties;
 	assertNotNull(currentConfigurationCache);
-	assertEquals(EhCache2xImpl.class, currentConfigurationCache.getClass());
+	assertEquals(EhCacheImpl.class, currentConfigurationCache.getClass());
 	assertTrue(currentConfigurationCache.getDelegate() instanceof net.sf.ehcache.Cache);
 	net.sf.ehcache.Cache ehCacheConfInstance = (net.sf.ehcache.Cache) currentConfigurationCache.getDelegate();
 

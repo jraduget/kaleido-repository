@@ -116,9 +116,7 @@ public class JpaModelConfigurationTest extends AbstractConfigurationTest {
 		UnmanagedEntityManagerFactory.close(em);
 	   }
 	} finally {
-	   if (emf != null) {
-		UnmanagedEntityManagerFactory.close(emf);
-	   }
+	   UnmanagedEntityManagerFactory.close(emf);
 	}
 
 	super.cleanup();

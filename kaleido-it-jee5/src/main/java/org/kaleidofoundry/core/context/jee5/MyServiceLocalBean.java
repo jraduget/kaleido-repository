@@ -37,4 +37,8 @@ public interface MyServiceLocalBean {
 
    void namingServiceInjectionAssertions();
 
+   void entityManagerFactoryInjectionAssertions();
+
+   void entityManagerInjectionAssertions();
+
 }

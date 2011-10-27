@@ -45,10 +45,10 @@ import org.slf4j.LoggerFactory;
  * @author Jerome RADUGET
  */
 @Declare(value = EhCacheManagerPluginName)
-public class EhCache2xManagerImpl extends AbstractCacheManager {
+public class EhCacheManagerImpl extends AbstractCacheManager {
 
    /** internal logger */
-   private static final Logger LOGGER = LoggerFactory.getLogger(EhCache2xManagerImpl.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(EhCacheManagerImpl.class);
 
    /** Default cache configuration */
    private static final String DefaultCacheConfiguration = "ehcache.xml";
@@ -59,7 +59,7 @@ public class EhCache2xManagerImpl extends AbstractCacheManager {
    /**
     * @param context
     */
-   public EhCache2xManagerImpl(final RuntimeContext<org.kaleidofoundry.core.cache.CacheManager> context) {
+   public EhCacheManagerImpl(final RuntimeContext<org.kaleidofoundry.core.cache.CacheManager> context) {
 	this(context.getString(FileStoreUri), context);
    }
 
@@ -70,7 +70,7 @@ public class EhCache2xManagerImpl extends AbstractCacheManager {
     *           override the context configuration file (if defined)
     * @param context
     */
-   public EhCache2xManagerImpl(final String configuration, final RuntimeContext<org.kaleidofoundry.core.cache.CacheManager> context) {
+   public EhCacheManagerImpl(final String configuration, final RuntimeContext<org.kaleidofoundry.core.cache.CacheManager> context) {
 	super(configuration, context);
 
 	try {
@@ -100,7 +100,7 @@ public class EhCache2xManagerImpl extends AbstractCacheManager {
    /**
     * @see AbstractCacheManager#AbstractCacheManager()
     */
-   EhCache2xManagerImpl() {
+   EhCacheManagerImpl() {
 	super();
 	ehCacheManager = null;
    }
@@ -120,7 +120,7 @@ public class EhCache2xManagerImpl extends AbstractCacheManager {
     */
    @Override
    public String getMetaInformations() {
-	return "ehcache-2.x - [1.2.x -> 2.x]";
+	return "ehcache-2.x - [1.2.x -> 2.4.x]";
    }
 
    /*
@@ -132,7 +132,7 @@ public class EhCache2xManagerImpl extends AbstractCacheManager {
    public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
 	Cache<K, V> cache = cachesByName.get(name);
 	if (cache == null) {
-	   cache = new EhCache2xImpl<K, V>(name, this, context);
+	   cache = new EhCacheImpl<K, V>(name, this, context);
 	   // registered it to cache manager
 	   cachesByName.put(name, cache);
 	}
@@ -148,7 +148,7 @@ public class EhCache2xManagerImpl extends AbstractCacheManager {
 	final Cache<?, ?> cache = cachesByName.get(cacheName);
 	if (cache != null) {
 	   // custom ehcache destroy
-	   ((EhCache2xImpl<?, ?>) cache).destroy();
+	   ((EhCacheImpl<?, ?>) cache).destroy();
 	   cachesByName.remove(cacheName);
 	}
    }
@@ -211,7 +211,7 @@ public class EhCache2xManagerImpl extends AbstractCacheManager {
    public void clearStatistics(final String cacheName) {
 	final Cache<?, ?> cache = getCache(cacheName);
 	if (cache != null) {
-	   final net.sf.ehcache.Cache ehcache = ((EhCache2xImpl<?, ?>) cache).getCache();
+	   final net.sf.ehcache.Cache ehcache = ((EhCacheImpl<?, ?>) cache).getCache();
 	   ehcache.clearStatistics();
 	}
    }
@@ -226,7 +226,7 @@ public class EhCache2xManagerImpl extends AbstractCacheManager {
 	final Cache<?, ?> cache = getCache(cacheName);
 
 	if (cache != null) {
-	   final net.sf.ehcache.Cache ehcache = ((EhCache2xImpl<?, ?>) cache).getCache();
+	   final net.sf.ehcache.Cache ehcache = ((EhCacheImpl<?, ?>) cache).getCache();
 	   final Map<String, Object> lcacheStats = new LinkedHashMap<String, Object>();
 	   lcacheStats.put("CacheSize", ehcache.getSize());
 	   lcacheStats.put("MemoryStoreSize", ehcache.getStatistics().getMemoryStoreObjectCount());

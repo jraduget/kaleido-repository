@@ -27,7 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
-import org.kaleidofoundry.core.cache.EhCache2xImpl;
+import org.kaleidofoundry.core.cache.EhCacheImpl;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.store.ResourceException;
 
@@ -96,7 +96,7 @@ public class I18nIntegrationTest extends Assert {
 	// we have to use ehcache here (see configuration)
 	Cache<?, ?> internalCache = ((DefaultMessageBundle) sample.getMessages()).resourceBundleCache;
 	assertNotNull(internalCache);
-	assertEquals(EhCache2xImpl.class.getName(), internalCache.getClass().getName());
+	assertEquals(EhCacheImpl.class.getName(), internalCache.getClass().getName());
 	assertTrue(internalCache.getDelegate() instanceof Ehcache);
 	assertEquals(4, internalCache.size());
 	assertTrue(internalCache.keys().contains("label.hello"));

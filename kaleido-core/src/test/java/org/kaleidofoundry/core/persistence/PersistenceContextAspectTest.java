@@ -53,9 +53,7 @@ public class PersistenceContextAspectTest extends Assert {
     */
    @AfterClass
    public static void cleanupStatic() {
-	if (emf != null) {
-	   UnmanagedEntityManagerFactory.close(emf);
-	}
+	UnmanagedEntityManagerFactory.close(emf);
    }
 
    // ******* pre init part (begin transaction for current processed test) ******************************************************

@@ -24,6 +24,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.Infinispan4xCacheImpl;
@@ -103,5 +106,15 @@ public class MyServiceAssertions {
    public static void namingServiceInjectionAssertions(final NamingService myNamingService) {
 	assertNotNull(myNamingService);
 	assertEquals(JndiNamingService.class, myNamingService.getClass());
+   }
+
+   public static void entityManagerFactoryInjectionAssertions(final EntityManagerFactory entityManagerFactory) {
+	assertNotNull(entityManagerFactory);
+	assertTrue(entityManagerFactory.isOpen());
+   }
+
+   public static void entityManagerInjectionAssertions(final EntityManager entityManager) {
+	assertNotNull(entityManager);
+	assertTrue(entityManager.isOpen());
    }
 }

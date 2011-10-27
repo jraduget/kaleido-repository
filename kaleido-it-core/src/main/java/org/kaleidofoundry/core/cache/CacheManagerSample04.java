@@ -18,10 +18,10 @@ package org.kaleidofoundry.core.cache;
 import static org.kaleidofoundry.core.cache.CacheManagerSample01.feedCache;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
+
 /**
  * <p>
- * <h3>Simple cache manager usage</h3>
- * Build {@link CacheManager} context and instance manually by coding, using context builder
+ * <h3>Simple cache manager usage</h3> Build {@link CacheManager} context and instance manually by coding, using context builder
  * </p>
  * <br/>
  * 
@@ -36,10 +36,8 @@ public class CacheManagerSample04 {
 
    public CacheManagerSample04() {
 
-	RuntimeContext<CacheManager> context = new CacheManagerContextBuilder("myCacheManager", CacheManager.class)
-	.withProviderCode("ehCache2x")
-	.withFileStoreUri("classpath:/cache/ehcache.xml")
-	.build();
+	RuntimeContext<CacheManager> context = new CacheManagerContextBuilder("myCacheManager", CacheManager.class).withProviderCode("ehCache")
+		.withFileStoreUri("classpath:/cache/ehcache.xml").build();
 
 	myCacheManager = CacheManagerFactory.provides(context);
 

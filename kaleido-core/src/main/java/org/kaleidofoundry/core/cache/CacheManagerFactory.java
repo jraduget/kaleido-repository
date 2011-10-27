@@ -37,7 +37,7 @@ import org.kaleidofoundry.core.util.Registry;
  * </ul>
  * where cacheImplCode can be :
  * <ul>
- * <li>'ehCache2x' -> terracotta ehcache (c)</li>
+ * <li>'ehCache' -> terracotta ehcache (c)</li>
  * <li>'jbossCache3x' -> jboss cache (c)</li>
  * <li>'infinispan4x' -> jboss infinispan (c)</li>
  * <li>'coherence3x' -> oracle coherence (c)</li>

@@ -112,7 +112,7 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
     */
    @Override
    public String getMetaInformations() {
-	return "infinispan-4.x - [4.0.x -> 4.x]";
+	return "infinispan-4.x - [4.0.x -> 4.2.x]";
    }
 
    /*

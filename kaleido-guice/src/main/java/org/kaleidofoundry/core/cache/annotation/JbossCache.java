@@ -22,12 +22,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import org.kaleidofoundry.core.cache.Jboss32xCacheImpl;
+import org.kaleidofoundry.core.cache.Jboss3xCacheImpl;
 
 import com.google.inject.BindingAnnotation;
 
 /**
- * Guice binding annotation for binding a {@link org.kaleidofoundry.core.cache.Cache} to {@link Jboss32xCacheImpl}
+ * Guice binding annotation for binding a {@link org.kaleidofoundry.core.cache.Cache} to {@link Jboss3xCacheImpl}
  * 
  * @author Jerome RADUGET
  */

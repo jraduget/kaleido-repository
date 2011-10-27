@@ -33,7 +33,7 @@ public class EhCacheManagerTest extends AbstractCacheManagerTest {
 
    @Override
    protected String getCacheImplementationCode() {
-	return CacheProvidersEnum.ehCache2x.name();
+	return CacheProvidersEnum.ehCache.name();
    }
 
    @Override

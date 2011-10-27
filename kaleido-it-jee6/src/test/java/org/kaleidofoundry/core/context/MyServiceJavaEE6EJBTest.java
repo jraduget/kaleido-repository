@@ -27,11 +27,15 @@ import org.kaleidofoundry.core.naming.NamingService;
 import org.kaleidofoundry.core.naming.NamingServiceFactory;
 import org.kaleidofoundry.core.naming.NamingServiceNotFoundException;
 import org.kaleidofoundry.core.store.ResourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jerome RADUGET
  */
 public class MyServiceJavaEE6EJBTest implements MyServiceTest {
+
+   private static final Logger LOGGER = LoggerFactory.getLogger(MyServiceJavaEE6EJBTest.class);
 
    // the remote naming service use to lookup the remote ejb
    private NamingService myNamingService;
@@ -72,40 +76,66 @@ public class MyServiceJavaEE6EJBTest implements MyServiceTest {
 
    @Test
    public void runtimeContextInjectionTest() {
-	if (!jee6Profil) { return; }
-	myRemoteJavaEE6Bean.runtimeContextInjectionAssertions();
+	if (isJavaEE6Profil()) {
+	   myRemoteJavaEE6Bean.runtimeContextInjectionAssertions();
+	}
 
    }
 
    @Test
    public void configurationInjectionTest() throws ParseException {
-	if (!jee6Profil) { return; }
-	myRemoteJavaEE6Bean.configurationInjectionAssertions();
+	if (isJavaEE6Profil()) {
+	   myRemoteJavaEE6Bean.configurationInjectionAssertions();
+	}
    }
 
    @Test
    public void cacheManagerInjectionTest() {
-	if (!jee6Profil) { return; }
-	myRemoteJavaEE6Bean.cacheManagerInjectionAssertions();
+	if (isJavaEE6Profil()) {
+	   myRemoteJavaEE6Bean.cacheManagerInjectionAssertions();
+	}
    }
 
    @Test
    public void cacheInjectionTest() {
-	if (!jee6Profil) { return; }
-	myRemoteJavaEE6Bean.cacheInjectionAssertions();
+	if (isJavaEE6Profil()) {
+	   myRemoteJavaEE6Bean.cacheInjectionAssertions();
+	}
 
    }
 
    @Test
    public void i18nMessagesInjectionTest() {
-	if (!jee6Profil) { return; }
-	myRemoteJavaEE6Bean.i18nMessagesInjectionAssertions();
+	if (isJavaEE6Profil()) {
+	   myRemoteJavaEE6Bean.i18nMessagesInjectionAssertions();
+	}
    }
 
    @Test
    public void namingServiceInjectionTest() {
-	if (!jee6Profil) { return; }
-	myRemoteJavaEE6Bean.namingServiceInjectionAssertions();
+	if (isJavaEE6Profil()) {
+	   myRemoteJavaEE6Bean.namingServiceInjectionAssertions();
+	}
    }
 
+   @Test
+   public void entityManagerFactoryInjectionTest() {
+	if (isJavaEE6Profil()) {
+	   myRemoteJavaEE6Bean.entityManagerFactoryInjectionAssertions();
+	}
+   }
+
+   @Test
+   public void entityManagerInjectionTest() {
+	if (isJavaEE6Profil()) {
+	   myRemoteJavaEE6Bean.entityManagerInjectionAssertions();
+	}
+   }
+
+   private boolean isJavaEE6Profil() {
+	if (!jee6Profil) {
+	   LOGGER.info("JavaEE 6 profile is not enable, skip test");
+	}
+	return jee6Profil;
+   }
 }

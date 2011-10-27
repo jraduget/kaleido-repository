@@ -35,7 +35,7 @@ public class CacheModule extends AbstractModule<Cache> {
     */
    @Override
    public Class<? extends Cache> getUnnamedImplementation() {
-	return EhCache2xImpl.class;
+	return EhCacheImpl.class;
    }
 
    /*
@@ -47,11 +47,11 @@ public class CacheModule extends AbstractModule<Cache> {
 	super.configure();
 
 	// default implementation
-	bind(CacheManager.class).to(EhCache2xManagerImpl.class);
+	bind(CacheManager.class).to(EhCacheManagerImpl.class);
 
 	// bind custom annotation
-	bind(Cache.class).annotatedWith(EhCache.class).to(EhCache2xImpl.class).in(scope(EhCache2xImpl.class));
-	bind(Cache.class).annotatedWith(JbossCache.class).to(Jboss32xCacheImpl.class).in(scope(Jboss32xCacheImpl.class));
+	bind(Cache.class).annotatedWith(EhCache.class).to(EhCacheImpl.class).in(scope(EhCacheImpl.class));
+	bind(Cache.class).annotatedWith(JbossCache.class).to(Jboss3xCacheImpl.class).in(scope(Jboss3xCacheImpl.class));
 	bind(Cache.class).annotatedWith(InfinispanCache.class).to(Infinispan4xCacheImpl.class).in(scope(Infinispan4xCacheImpl.class));
 	bind(Cache.class).annotatedWith(CoherenceCache.class).to(Coherence3xCacheImpl.class).in(scope(Coherence3xCacheImpl.class));
    }

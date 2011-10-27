@@ -121,4 +121,30 @@ public abstract class AbstractMyServiceTest extends Assert implements MyServiceT
 	MyServiceAssertions.namingServiceInjectionAssertions(myService.getMyNamingService());
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.context.MyServiceTest#entityManagerFactoryInjectionTest()
+    */
+   @Override
+   @Test
+   public void entityManagerFactoryInjectionTest() {
+	MyService myService = getMyService();
+	assertNotNull(myService);
+	assertSame(myService, getMyService());
+	MyServiceAssertions.entityManagerFactoryInjectionAssertions(myService.getEntityManagerFactory());
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.context.MyServiceTest#entityManagerInjectionTest()
+    */
+   @Override
+   @Test
+   public void entityManagerInjectionTest() {
+	MyService myService = getMyService();
+	assertNotNull(myService);
+	assertSame(myService, getMyService());
+	MyServiceAssertions.entityManagerInjectionAssertions(myService.getEntityManager());
+   }
+
 }

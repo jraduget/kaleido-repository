@@ -17,7 +17,7 @@ package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.EhCachePluginName;
 import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
-import static org.kaleidofoundry.core.cache.CacheProvidersEnum.ehCache2x;
+import static org.kaleidofoundry.core.cache.CacheProvidersEnum.ehCache;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -42,17 +42,17 @@ import org.kaleidofoundry.core.plugin.Declare;
  * @param <V>
  */
 @Declare(EhCachePluginName)
-public class EhCache2xImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> implements org.kaleidofoundry.core.cache.Cache<K, V> {
+public class EhCacheImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> implements org.kaleidofoundry.core.cache.Cache<K, V> {
 
    // internal ehcache instance
-   private final Cache ehCache;
+   private final Cache cache;
    // instance of the cacheManager to use
-   private final EhCache2xManagerImpl cacheManager;
+   private final EhCacheManagerImpl cacheManager;
 
    /**
     * @param context
     */
-   EhCache2xImpl(@NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+   EhCacheImpl(@NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
 	this(context.getString(CacheName), context);
    }
 
@@ -60,7 +60,7 @@ public class EhCache2xImpl<K extends Serializable, V extends Serializable> exten
     * @param c
     * @param context
     */
-   EhCache2xImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+   EhCacheImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
 	this(c.getName(), context);
    }
 
@@ -68,7 +68,7 @@ public class EhCache2xImpl<K extends Serializable, V extends Serializable> exten
     * @param name
     * @param context
     */
-   EhCache2xImpl(final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+   EhCacheImpl(final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
 	this(name, null, context);
    }
 
@@ -78,7 +78,7 @@ public class EhCache2xImpl<K extends Serializable, V extends Serializable> exten
     * @param name
     * @param cacheManager
     */
-   EhCache2xImpl(final String name, final EhCache2xManagerImpl cacheManager) {
+   EhCacheImpl(final String name, final EhCacheManagerImpl cacheManager) {
 	this(name, cacheManager, new RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>>());
    }
 
@@ -89,7 +89,7 @@ public class EhCache2xImpl<K extends Serializable, V extends Serializable> exten
     * @param cacheManager
     * @param context
     */
-   EhCache2xImpl(final String name, final EhCache2xManagerImpl cacheManager, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+   EhCacheImpl(final String name, final EhCacheManagerImpl cacheManager, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
 	// check name argument in ancestor
 	super(name, context);
 
@@ -97,12 +97,12 @@ public class EhCache2xImpl<K extends Serializable, V extends Serializable> exten
 	if (cacheManager != null) {
 	   this.cacheManager = cacheManager;
 	} else {
-	   this.cacheManager = (EhCache2xManagerImpl) CacheManagerFactory.provides(ehCache2x.name(),
-		   new RuntimeContext<org.kaleidofoundry.core.cache.CacheManager>(ehCache2x.name(), org.kaleidofoundry.core.cache.CacheManager.class, context));
+	   this.cacheManager = (EhCacheManagerImpl) CacheManagerFactory.provides(ehCache.name(),
+		   new RuntimeContext<org.kaleidofoundry.core.cache.CacheManager>(ehCache.name(), org.kaleidofoundry.core.cache.CacheManager.class, context));
 	}
 
 	// create internal cache provider
-	ehCache = this.cacheManager.createCache(name);
+	cache = this.cacheManager.createCache(name);
 
 	// registered it to cache manager (needed by spring or guice direct injection)
 	this.cacheManager.cachesByName.put(name, this);
@@ -111,8 +111,8 @@ public class EhCache2xImpl<K extends Serializable, V extends Serializable> exten
    /**
     * @see AbstractCache#AbstractCache()
     */
-   EhCache2xImpl() {
-	this.ehCache = null;
+   EhCacheImpl() {
+	this.cache = null;
 	this.cacheManager = null;
    }
 
@@ -123,7 +123,7 @@ public class EhCache2xImpl<K extends Serializable, V extends Serializable> exten
    @SuppressWarnings("unchecked")
    @Override
    public V doGet(final K id) {
-	final Element elt = ehCache.getQuiet(id); // no stat, perf. decrease :(
+	final Element elt = cache.getQuiet(id); // no stat, perf. decrease :(
 	return elt != null ? (V) elt.getObjectValue() : null;
    }
 
@@ -133,7 +133,7 @@ public class EhCache2xImpl<K extends Serializable, V extends Serializable> exten
     */
    @Override
    public void doPut(final K key, final V entity) {
-	ehCache.putQuiet(new Element(key, entity)); // no stat, perf. decrease :(
+	cache.putQuiet(new Element(key, entity)); // no stat, perf. decrease :(
    }
 
    /*
@@ -142,7 +142,7 @@ public class EhCache2xImpl<K extends Serializable, V extends Serializable> exten
     */
    @Override
    public boolean doRemove(final Serializable id) {
-	return ehCache.removeQuiet(id);
+	return cache.removeQuiet(id);
    }
 
    /*
@@ -152,7 +152,7 @@ public class EhCache2xImpl<K extends Serializable, V extends Serializable> exten
    @SuppressWarnings("unchecked")
    @Override
    public Set<K> keys() {
-	return new HashSet<K>(ehCache.getKeys());
+	return new HashSet<K>(cache.getKeys());
    }
 
    /**
@@ -165,7 +165,7 @@ public class EhCache2xImpl<K extends Serializable, V extends Serializable> exten
 
 	final Collection<V> result = new ArrayList<V>();
 	V value;
-	for (final Object key : ehCache.getKeys()) {
+	for (final Object key : cache.getKeys()) {
 	   value = get((K) key);
 	   if (value != null) {
 		result.add(value);
@@ -180,7 +180,7 @@ public class EhCache2xImpl<K extends Serializable, V extends Serializable> exten
     */
    @Override
    public void removeAll() {
-	ehCache.removeAll();
+	cache.removeAll();
    }
 
    /*
@@ -189,7 +189,7 @@ public class EhCache2xImpl<K extends Serializable, V extends Serializable> exten
     */
    @Override
    public int size() {
-	return ehCache.getSize();
+	return cache.getSize();
    }
 
    /*
@@ -198,7 +198,7 @@ public class EhCache2xImpl<K extends Serializable, V extends Serializable> exten
     */
    @Override
    public Object getDelegate() {
-	return ehCache;
+	return cache;
    }
 
    @Override
@@ -212,7 +212,7 @@ public class EhCache2xImpl<K extends Serializable, V extends Serializable> exten
     * @return the cache
     */
    protected Cache getCache() {
-	return ehCache;
+	return cache;
    }
 
 }

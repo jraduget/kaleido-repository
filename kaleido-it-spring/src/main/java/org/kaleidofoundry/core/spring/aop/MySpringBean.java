@@ -39,7 +39,7 @@ public class MySpringBean {
    @Context(value = "myStoreCtx", parameters = { @Parameter(name = BaseUri, value = "classpath:/store") })
    private FileStore store;
 
-   @Context(value = "myCacheManagerCtx", parameters = { @Parameter(name = ProviderCode, value = "ehCache2x"),
+   @Context(value = "myCacheManagerCtx", parameters = { @Parameter(name = ProviderCode, value = "ehCache"),
 	   @Parameter(name = FileStoreUri, value = "classpath:/cache/ehcache.xml") })
    private CacheManager cacheManager;
 

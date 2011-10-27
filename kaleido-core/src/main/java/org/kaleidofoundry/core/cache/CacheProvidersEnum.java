@@ -23,7 +23,7 @@ package org.kaleidofoundry.core.cache;
 public enum CacheProvidersEnum {
 
    /* If you change an enum name, please apply changes to CacheConstants too... */
-   ehCache2x,
+   ehCache,
 
    jbossCache3x,
 

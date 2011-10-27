@@ -27,6 +27,10 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
@@ -54,6 +58,14 @@ public class MyServiceBean implements MyServiceRemoteBean {
 	// the fields injection order is not guaranteed with CDI... something myCustomCacheManager is processed after myCustomCache
 	CacheManagerFactory.provides(CacheProvidersEnum.infinispan4x.name(), new RuntimeContext<CacheManager>("myCustomCacheManager"));
    }
+
+   @Inject
+   @PersistenceContext(unitName = "kaleido")
+   private EntityManager entityManager;
+
+   @Inject
+   @PersistenceUnit(unitName = "kaleido")
+   private EntityManagerFactory entityManagerFactory;
 
    @Inject
    @Context
@@ -107,7 +119,7 @@ public class MyServiceBean implements MyServiceRemoteBean {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee5.MyServiceLocalBean#runtimeContextInjectionAssertions()
+    * @see org.kaleidofoundry.core.context.jee6.MyServiceLocalBean#runtimeContextInjectionAssertions()
     */
    @Override
    public void runtimeContextInjectionAssertions() {
@@ -116,7 +128,7 @@ public class MyServiceBean implements MyServiceRemoteBean {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee5.MyServiceLocalBean#configurationInjectionAssertions()
+    * @see org.kaleidofoundry.core.context.jee6.MyServiceLocalBean#configurationInjectionAssertions()
     */
    @Override
    public void configurationInjectionAssertions() throws ParseException {
@@ -125,7 +137,7 @@ public class MyServiceBean implements MyServiceRemoteBean {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee5.MyServiceLocalBean#cacheManagerInjectionAssertions()
+    * @see org.kaleidofoundry.core.context.jee6.MyServiceLocalBean#cacheManagerInjectionAssertions()
     */
    @Override
    public void cacheManagerInjectionAssertions() {
@@ -134,7 +146,7 @@ public class MyServiceBean implements MyServiceRemoteBean {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee5.MyServiceLocalBean#cacheInjectionAssertions()
+    * @see org.kaleidofoundry.core.context.jee6.MyServiceLocalBean#cacheInjectionAssertions()
     */
    @Override
    public void cacheInjectionAssertions() {
@@ -143,7 +155,7 @@ public class MyServiceBean implements MyServiceRemoteBean {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee5.MyServiceLocalBean#i18nMessagesInjectionAssertions()
+    * @see org.kaleidofoundry.core.context.jee6.MyServiceLocalBean#i18nMessagesInjectionAssertions()
     */
    @Override
    public void i18nMessagesInjectionAssertions() {
@@ -152,11 +164,29 @@ public class MyServiceBean implements MyServiceRemoteBean {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.context.jee5.MyServiceLocalBean#namingServiceInjectionAssertions()
+    * @see org.kaleidofoundry.core.context.jee6.MyServiceLocalBean#namingServiceInjectionAssertions()
     */
    @Override
    public void namingServiceInjectionAssertions() {
 	MyServiceAssertions.namingServiceInjectionAssertions(myNamingService);
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.context.jee6.MyServiceLocalBean#entityManagerFactoryInjectionAssertions()
+    */
+   @Override
+   public void entityManagerFactoryInjectionAssertions() {
+	MyServiceAssertions.entityManagerFactoryInjectionAssertions(entityManagerFactory);
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.context.jee6.MyServiceLocalBean#entityManagerInjectionAssertions()
+    */
+   @Override
+   public void entityManagerInjectionAssertions() {
+	MyServiceAssertions.entityManagerInjectionAssertions(entityManager);
    }
 
    /*
@@ -177,6 +207,8 @@ public class MyServiceBean implements MyServiceRemoteBean {
 	str.append("\n\tmyConfig=").append(myConfig != null ? myConfig.toString() : "null");
 	str.append("\n\tmyContext=").append(myContext != null ? myContext.toString() : "null");
 	str.append("\n\tmyNamedContext=").append(myNamedContext != null ? myNamedContext.toString() : "null");
+	str.append("\n\tentityManagerFactory=").append(entityManagerFactory != null ? entityManager.toString() : "null");
+	str.append("\n\tentityManager=").append(entityManager != null ? entityManager.toString() : "null");
 	return str.toString();
    }
 

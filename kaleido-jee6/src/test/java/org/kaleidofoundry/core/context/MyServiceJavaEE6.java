@@ -23,6 +23,10 @@ import static org.kaleidofoundry.core.i18n.I18nContextBuilder.BaseName;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
@@ -35,6 +39,14 @@ import org.kaleidofoundry.core.naming.NamingService;
  */
 @Singleton
 public class MyServiceJavaEE6 implements MyService {
+
+   @Inject
+   @PersistenceContext(unitName = "kaleido")
+   private EntityManager entityManager;
+
+   @Inject
+   @PersistenceUnit(unitName = "kaleido")
+   private EntityManagerFactory entityManagerFactory;
 
    @Inject
    @Context
@@ -76,7 +88,8 @@ public class MyServiceJavaEE6 implements MyService {
    @Context
    private NamingService myNamingService;
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.context.MyService#getMyContext()
     */
    @Override
@@ -84,7 +97,8 @@ public class MyServiceJavaEE6 implements MyService {
 	return myContext;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.context.MyService#getMyNamedContext()
     */
    @Override
@@ -92,7 +106,8 @@ public class MyServiceJavaEE6 implements MyService {
 	return myNamedContext;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.context.MyService#getMyConfig()
     */
    @Override
@@ -100,7 +115,8 @@ public class MyServiceJavaEE6 implements MyService {
 	return myConfig;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.context.MyService#getMyDefaultCacheManager()
     */
    @Override
@@ -108,7 +124,8 @@ public class MyServiceJavaEE6 implements MyService {
 	return myDefaultCacheManager;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.context.MyService#getMyCustomCacheManager()
     */
    @Override
@@ -116,7 +133,8 @@ public class MyServiceJavaEE6 implements MyService {
 	return myCustomCacheManager;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.context.MyService#getMyDefaultCache()
     */
    @Override
@@ -124,7 +142,8 @@ public class MyServiceJavaEE6 implements MyService {
 	return myDefaultCache;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.context.MyService#getMyCustomCache()
     */
    @Override
@@ -132,7 +151,8 @@ public class MyServiceJavaEE6 implements MyService {
 	return myCustomCache;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.context.MyService#getMyDefaultMessages()
     */
    @Override
@@ -140,7 +160,8 @@ public class MyServiceJavaEE6 implements MyService {
 	return myDefaultMessages;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.context.MyService#getMyBaseMessages()
     */
    @Override
@@ -148,12 +169,31 @@ public class MyServiceJavaEE6 implements MyService {
 	return myBaseMessages;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.context.MyService#getMyNamingService()
     */
    @Override
    public NamingService getMyNamingService() {
 	return myNamingService;
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.context.MyService#getEntityManagerFactory()
+    */
+   @Override
+   public EntityManagerFactory getEntityManagerFactory() {
+	return entityManagerFactory;
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.context.MyService#getEntityManager()
+    */
+   @Override
+   public EntityManager getEntityManager() {
+	return entityManager;
    }
 
 }

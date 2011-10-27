@@ -15,6 +15,9 @@
  */
 package org.kaleidofoundry.core.context;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.config.Configuration;
@@ -27,6 +30,16 @@ import org.kaleidofoundry.core.naming.NamingService;
  * @author Jerome RADUGET
  */
 public interface MyService {
+
+   /**
+    * @return kaleido default entity manager
+    */
+   EntityManager getEntityManager();
+
+   /**
+    * @return kaleido default entity manager factory
+    */
+   EntityManagerFactory getEntityManagerFactory();
 
    /**
     * @return the myContext

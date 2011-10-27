@@ -62,7 +62,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
    static Set<String> RESERVED_CACHE_NAME;
 
    static {
-	// try to get java env variable : -Dcache.provider=local|ehCache2x|jbossCache3x|coherence3x|infinispan4x
+	// try to get java env variable : -Dcache.provider=local|ehCache|jbossCache3x|coherence3x|infinispan4x
 	init(System.getProperties().getProperty(CACHE_PROVIDER_ENV));
    }
 

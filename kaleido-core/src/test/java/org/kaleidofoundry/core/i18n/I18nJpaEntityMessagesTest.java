@@ -140,17 +140,13 @@ public class I18nJpaEntityMessagesTest extends AbstractI18nMessagesTest {
 	   LOGGER.error("static setup", re);
 	   throw re;
 	} finally {
-	   if (em != null) {
-		UnmanagedEntityManagerFactory.close(em);
-	   }
+	   UnmanagedEntityManagerFactory.close(em);
 	}
    }
 
    @AfterClass
    public static void cleanupStatic() {
-	if (emf != null) {
-	   UnmanagedEntityManagerFactory.close(emf);
-	}
+	UnmanagedEntityManagerFactory.close(emf);
    }
 
    @After

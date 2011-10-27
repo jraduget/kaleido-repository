@@ -26,6 +26,10 @@ import java.text.ParseException;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 import javax.persistence.PostLoad;
 
 import org.kaleidofoundry.core.cache.Cache;
@@ -54,6 +58,12 @@ public class MyServiceBean implements MyServiceRemoteBean {
 	// the fields injection order is not guaranteed with CDI... something myCustomCacheManager is processed after myCustomCache
 	CacheManagerFactory.provides(CacheProvidersEnum.infinispan4x.name(), new RuntimeContext<CacheManager>("myCustomCacheManager"));
    }
+
+   @PersistenceContext(unitName = "kaleido")
+   private EntityManager entityManager;
+
+   @PersistenceUnit(unitName = "kaleido")
+   private EntityManagerFactory entityManagerFactory;
 
    @Context
    private RuntimeContext<?> myContext;
@@ -167,6 +177,24 @@ public class MyServiceBean implements MyServiceRemoteBean {
 
    /*
     * (non-Javadoc)
+    * @see org.kaleidofoundry.core.context.jee5.MyServiceLocalBean#entityManagerFactoryInjectionAssertions()
+    */
+   @Override
+   public void entityManagerFactoryInjectionAssertions() {
+	MyServiceAssertions.entityManagerFactoryInjectionAssertions(entityManagerFactory);
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.context.jee5.MyServiceLocalBean#entityManagerInjectionAssertions()
+    */
+   @Override
+   public void entityManagerInjectionAssertions() {
+	MyServiceAssertions.entityManagerInjectionAssertions(entityManager);
+   }
+
+   /*
+    * (non-Javadoc)
     * @see java.lang.Object#toString()
     */
    @Override
@@ -183,6 +211,9 @@ public class MyServiceBean implements MyServiceRemoteBean {
 	str.append("\n\tmyConfig=").append(myConfig != null ? myConfig.toString() : "null");
 	str.append("\n\tmyContext=").append(myContext != null ? myContext.toString() : "null");
 	str.append("\n\tmyNamedContext=").append(myNamedContext != null ? myNamedContext.toString() : "null");
+	str.append("\n\tentityManagerFactory=").append(entityManagerFactory != null ? entityManager.toString() : "null");
+	str.append("\n\tentityManager=").append(entityManager != null ? entityManager.toString() : "null");
+
 	return str.toString();
    }
 

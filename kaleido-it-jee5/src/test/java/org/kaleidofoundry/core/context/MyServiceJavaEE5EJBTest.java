@@ -91,4 +91,14 @@ public class MyServiceJavaEE5EJBTest implements MyServiceTest {
 	myRemoteJavaEE5Bean.namingServiceInjectionAssertions();
    }
 
+   @Test
+   public void entityManagerFactoryInjectionTest() {
+	myRemoteJavaEE5Bean.entityManagerFactoryInjectionAssertions();
+   }
+
+   @Test
+   public void entityManagerInjectionTest() {
+	myRemoteJavaEE5Bean.entityManagerInjectionAssertions();
+   }
+
 }

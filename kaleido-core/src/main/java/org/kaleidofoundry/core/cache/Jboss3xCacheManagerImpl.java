@@ -43,10 +43,10 @@ import org.slf4j.LoggerFactory;
  * @author Jerome RADUGET
  */
 @Declare(value = JbossCacheManagerPluginName)
-public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheManager {
+public class Jboss3xCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheManager {
 
    /** internal logger */
-   private static final Logger LOGGER = LoggerFactory.getLogger(Jboss32xCacheManagerImpl.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(Jboss3xCacheManagerImpl.class);
 
    /** Default cache configuration */
    private static final String DefaultCacheConfiguration = "jboss.xml";
@@ -58,7 +58,7 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
    /**
     * @param context
     */
-   public Jboss32xCacheManagerImpl(final RuntimeContext<org.kaleidofoundry.core.cache.CacheManager> context) {
+   public Jboss3xCacheManagerImpl(final RuntimeContext<org.kaleidofoundry.core.cache.CacheManager> context) {
 	this(context.getString(FileStoreUri), context);
    }
 
@@ -67,7 +67,7 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
     * @param context
     */
    @SuppressWarnings("rawtypes")
-   public Jboss32xCacheManagerImpl(final String configuration, final RuntimeContext<CacheManager> context) {
+   public Jboss3xCacheManagerImpl(final String configuration, final RuntimeContext<CacheManager> context) {
 	super(configuration, context);
 
 	// internal jboss cache factory
@@ -83,7 +83,7 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
    /**
     * @see AbstractCacheManager#AbstractCacheManager()
     */
-   Jboss32xCacheManagerImpl() {
+   Jboss3xCacheManagerImpl() {
 	super();
 	cacheManager = null;
    }
@@ -115,7 +115,7 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
    public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
 	Cache<K, V> cache = cachesByName.get(name);
 	if (cache == null) {
-	   cache = new Jboss32xCacheImpl<K, V>(name, this, context);
+	   cache = new Jboss3xCacheImpl<K, V>(name, this, context);
 	   cachesByName.put(name, cache);
 	}
 	return cache;
@@ -129,7 +129,7 @@ public class Jboss32xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abst
    public synchronized void destroy(final String cacheName) {
 	final Cache<?, ?> cache = cachesByName.get(cacheName);
 	if (cache != null) {
-	   ((Jboss32xCacheImpl<?, ?>) cache).destroy();
+	   ((Jboss3xCacheImpl<?, ?>) cache).destroy();
 	   cachesByName.remove(cacheName);
 	}
    }

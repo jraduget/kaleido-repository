@@ -23,8 +23,8 @@
 	</modules>
 
 	<properties>
-		<terracotta-ehcache.version>2.3.2</terracotta-ehcache.version>
-		<jboss-infinispan.version>4.0.0.FINAL</jboss-infinispan.version>
+		<terracotta-ehcache.version>2.4.6</terracotta-ehcache.version>
+		<jboss-infinispan.version>4.2.1.FINAL</jboss-infinispan.version>
 	</properties>
 
 	<dependencies>

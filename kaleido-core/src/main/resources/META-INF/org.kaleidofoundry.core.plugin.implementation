@@ -1,11 +1,11 @@
 org.kaleidofoundry.core.cache.Coherence3xCacheImpl
 org.kaleidofoundry.core.cache.Coherence3xCacheManagerImpl
-org.kaleidofoundry.core.cache.EhCache2xImpl
-org.kaleidofoundry.core.cache.EhCache2xManagerImpl
+org.kaleidofoundry.core.cache.EhCacheImpl
+org.kaleidofoundry.core.cache.EhCacheManagerImpl
 org.kaleidofoundry.core.cache.Infinispan4xCacheImpl
 org.kaleidofoundry.core.cache.Infinispan4xCacheManagerImpl
-org.kaleidofoundry.core.cache.Jboss32xCacheImpl
-org.kaleidofoundry.core.cache.Jboss32xCacheManagerImpl
+org.kaleidofoundry.core.cache.Jboss3xCacheImpl
+org.kaleidofoundry.core.cache.Jboss3xCacheManagerImpl
 org.kaleidofoundry.core.cache.LocalCacheImpl
 org.kaleidofoundry.core.cache.LocalCacheManagerImpl
 org.kaleidofoundry.core.config.JavaSystemConfiguration

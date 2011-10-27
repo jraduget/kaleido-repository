@@ -59,7 +59,7 @@
 	</logger>
 
 	<logger name="org.kaleidofoundry.core" additivity="true">
-		<level value="DEBUG" />
+		<level value="INFO" />
 	</logger>
 
 	<logger name="org.kaleidofoundry.core.i18n.MessageBundleControl" additivity="true">

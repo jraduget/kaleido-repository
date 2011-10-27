@@ -38,10 +38,10 @@ public interface CacheConstants {
    String DefaultLocalCachePluginName = "caches.local";
 
    /** EhCache cache manager implementation declare plugin name */
-   String EhCacheManagerPluginName = "cacheManagers.ehCache2x";
+   String EhCacheManagerPluginName = "cacheManagers.ehCache";
 
    /** EhCache implementation declare plugin name */
-   String EhCachePluginName = "caches.ehCache2x";
+   String EhCachePluginName = "caches.ehCache";
 
    /** JbossCache implementation declare plugin name */
    String JbossCachePluginName = "caches.jbossCache3x";

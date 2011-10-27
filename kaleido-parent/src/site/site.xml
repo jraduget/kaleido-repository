@@ -4,12 +4,12 @@
 
 	<bannerLeft>
 		<name>KaleidoFoundry</name>
-		<src>http://maven.apache.org/images/apache-maven-project-2.png</src>
+		<!--  <src>http://maven.apache.org/images/apache-maven-project-2.png</src> -->
 		<href>http://www.kaleidofoundry.org/</href>
 	</bannerLeft>
 	<bannerRight>
 		<name></name>
-		<src>http://maven.apache.org/images/maven-logo-2.gif</src>
+		<!-- <src>http://maven.apache.org/images/maven-logo-2.gif</src> -->
 	</bannerRight>
 
 	<version position="right" />

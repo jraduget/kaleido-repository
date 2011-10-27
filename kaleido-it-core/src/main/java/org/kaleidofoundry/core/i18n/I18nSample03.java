@@ -45,7 +45,7 @@ import org.kaleidofoundry.core.context.Parameter;
  * i18ns.myBundle.locale.country=GB
  * #i18ns.myBundle.cacheManagerRef=myCacheManager
  * 
- * cacheManagers.myCacheManager.providerCode=ehCache2x
+ * cacheManagers.myCacheManager.providerCode=ehCache
  * cacheManagers.myCacheManager.fileStoreUri=classpath:/i18n/ehcache.xml
  * </pre>
  * 

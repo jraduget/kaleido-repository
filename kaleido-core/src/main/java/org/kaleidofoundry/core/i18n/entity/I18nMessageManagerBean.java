@@ -32,13 +32,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import mazz.i18n.annotation.I18NMessage;
-
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Task;
 
 /**
- * Service which handle {@link I18NMessage} persistent model
+ * Service which handle {@link I18nMessage} persistent model
  * 
  * @author Jerome RADUGET
  */

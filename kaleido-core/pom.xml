@@ -13,14 +13,6 @@
 	<name>KaleidoFoundry core</name>
 	<packaging>jar</packaging>
 
-	<properties>
-		<!-- Cache implementation version -->
-		<jboss-cache.version>3.2.3.CR1</jboss-cache.version>
-		<terracotta-ehcache.version>2.3.2</terracotta-ehcache.version>
-		<jboss-infinispan.version>4.0.0.FINAL</jboss-infinispan.version>
-		<oracle-coherence.version>3.7.0</oracle-coherence.version>
-	</properties>
-
 	<dependencies>
 
 		<!-- AOP -->
@@ -37,6 +29,12 @@
 			<version>${terracotta-ehcache.version}</version>
 			<scope>provided</scope>
 			<optional>true</optional>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.cache</groupId>
@@ -44,6 +42,12 @@
 			<version>${jboss-cache.version}</version>
 			<scope>provided</scope>
 			<optional>true</optional>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.infinispan</groupId>
@@ -80,13 +84,70 @@
 		
 		<!-- ** Testing part **************************************************************** -->
 
-		<!-- Logging -->
+		<!-- Logging with log4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${slf4j.version}</version>
 			<scope>test</scope>
-		</dependency>
+		</dependency>		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>test</scope>
+		</dependency> 
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>test</scope>
+		</dependency>		
+		<!-- Logging with logback 
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${logback.version}</version>
+			<scope>test</scope>
+		</dependency>	
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency> 
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency> 
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>				 
+		 -->
+		 
 		<!-- Derby database -->
 		<dependency>
 			<groupId>org.apache.derby</groupId>
@@ -113,6 +174,12 @@
 			<artifactId>MockFtpServer</artifactId>
 			<version>2.2</version>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 	</dependencies>

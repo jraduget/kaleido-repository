@@ -15,36 +15,27 @@
  */
 package org.kaleidofoundry.core.context;
 
-import java.text.ParseException;
+import javax.inject.Inject;
 
-import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.kaleidofoundry.core.cache.WeldCdiJunit4Runner;
 
 /**
  * @author Jerome RADUGET
  */
-public interface MyServiceTest {
+@RunWith(WeldCdiJunit4Runner.class)
+public class MyServiceJavaEE6WithRunnerTest extends AbstractMyServiceTest {
 
-   @Test
-   void runtimeContextInjectionTest();
+   @Inject
+   private MyService myService;
 
-   @Test
-   void configurationInjectionTest() throws ParseException;
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.context.AbstractMyServiceTest#getMyService()
+    */
+   @Override
+   public MyService getMyService() {
+	return myService;
+   }
 
-   @Test
-   void cacheManagerInjectionTest();
-
-   @Test
-   void cacheInjectionTest();
-
-   @Test
-   void i18nMessagesInjectionTest();
-
-   @Test
-   void namingServiceInjectionTest();
-
-   @Test
-   void entityManagerFactoryInjectionTest();
-
-   @Test
-   void entityManagerInjectionTest();
 }

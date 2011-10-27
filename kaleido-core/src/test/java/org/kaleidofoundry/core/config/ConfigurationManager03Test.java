@@ -69,9 +69,7 @@ public class ConfigurationManager03Test extends AbstractConfigurationManagerTest
 		UnmanagedEntityManagerFactory.close(em);
 	   }
 	} finally {
-	   if (emf != null) {
-		UnmanagedEntityManagerFactory.close(emf);
-	   }
+	   UnmanagedEntityManagerFactory.close(emf);
 	}
    }
 

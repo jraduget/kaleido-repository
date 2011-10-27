@@ -40,18 +40,18 @@ import org.slf4j.LoggerFactory;
  * @param <V>
  */
 @Declare(JbossCachePluginName)
-public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> implements org.kaleidofoundry.core.cache.Cache<K, V> {
+public class Jboss3xCacheImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> implements org.kaleidofoundry.core.cache.Cache<K, V> {
 
-   private static final Logger LOGGER = LoggerFactory.getLogger(Jboss32xCacheImpl.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(Jboss3xCacheImpl.class);
 
    private final Cache<K, V> cache;
    private final Node<K, V> root;
-   private final Jboss32xCacheManagerImpl cacheManager;
+   private final Jboss3xCacheManagerImpl cacheManager;
 
    /**
     * @param context
     */
-   Jboss32xCacheImpl(@NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+   Jboss3xCacheImpl(@NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
 	this(context.getString(CacheName), context);
    }
 
@@ -59,7 +59,7 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
     * @param c
     * @param context
     */
-   Jboss32xCacheImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+   Jboss3xCacheImpl(@NotNull final Class<V> c, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
 	this(c.getName(), context);
    }
 
@@ -67,7 +67,7 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
     * @param name
     * @param context
     */
-   Jboss32xCacheImpl(final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
+   Jboss3xCacheImpl(final String name, @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
 	this(name, null, context);
    }
 
@@ -77,7 +77,7 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
     * @param name
     * @param cacheManager
     */
-   Jboss32xCacheImpl(final String name, final Jboss32xCacheManagerImpl cacheManager) {
+   Jboss3xCacheImpl(final String name, final Jboss3xCacheManagerImpl cacheManager) {
 	this(name, cacheManager, new RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>>());
    }
 
@@ -88,7 +88,7 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
     * @param cacheManager
     * @param context
     */
-   Jboss32xCacheImpl(final String name, final Jboss32xCacheManagerImpl cacheManager,
+   Jboss3xCacheImpl(final String name, final Jboss3xCacheManagerImpl cacheManager,
 	   @NotNull final RuntimeContext<org.kaleidofoundry.core.cache.Cache<K, V>> context) {
 	// check name argument in ancestor
 	super(name, context);
@@ -97,7 +97,7 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
 	if (cacheManager != null) {
 	   this.cacheManager = cacheManager;
 	} else {
-	   this.cacheManager = (Jboss32xCacheManagerImpl) CacheManagerFactory.provides(jbossCache3x.name(),
+	   this.cacheManager = (Jboss3xCacheManagerImpl) CacheManagerFactory.provides(jbossCache3x.name(),
 		   new RuntimeContext<org.kaleidofoundry.core.cache.CacheManager>(jbossCache3x.name(), org.kaleidofoundry.core.cache.CacheManager.class, context));
 	}
 	// create internal cache provider
@@ -111,7 +111,7 @@ public class Jboss32xCacheImpl<K extends Serializable, V extends Serializable> e
    /**
     * @see AbstractCache#AbstractCache()
     */
-   Jboss32xCacheImpl() {
+   Jboss3xCacheImpl() {
 	this.cache = null;
 	this.root = null;
 	this.cacheManager = null;

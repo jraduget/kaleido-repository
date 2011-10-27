@@ -26,7 +26,7 @@ import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
  * Testing getting cacheFactory and cache with java env. variable : <br/>
  * <ul>
  * <li>-Dcache.provider=local</li>
- * <li>-Dcache.provider=ehCache2x</li>
+ * <li>-Dcache.provider=ehCache</li>
  * <li>-Dcache.provider=jbossCache3x</li>
  * <li>-Dcache.provider=coherence3x</li>
  * <li>-Dcache.provider=infinispan4x</li>
@@ -65,12 +65,12 @@ public class CacheFactoryDefaultTest extends Assert {
 
    @Test(expected = CacheDefinitionNotFoundException.class)
    public void ehCacheFactoryImplementation() {
-	testCacheFactory(CacheProvidersEnum.ehCache2x, EhCache2xManagerImpl.class, EhCache2xImpl.class);
+	testCacheFactory(CacheProvidersEnum.ehCache, EhCacheManagerImpl.class, EhCacheImpl.class);
    }
 
    @Test
    public void jbossFactoryImplementation() {
-	testCacheFactory(CacheProvidersEnum.jbossCache3x, Jboss32xCacheManagerImpl.class, Jboss32xCacheImpl.class);
+	testCacheFactory(CacheProvidersEnum.jbossCache3x, Jboss3xCacheManagerImpl.class, Jboss3xCacheImpl.class);
    }
 
    @SuppressWarnings("rawtypes")
