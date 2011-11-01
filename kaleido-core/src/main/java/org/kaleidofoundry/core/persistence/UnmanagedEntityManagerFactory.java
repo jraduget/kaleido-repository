@@ -241,4 +241,25 @@ public abstract class UnmanagedEntityManagerFactory {
 	   LOGGER.error("closeItSilently", th);
 	}
    }
+
+   /**
+    * Close all open entity manager
+    * 
+    * @throws IllegalArgumentException
+    */
+   public static final void closeAll() {
+
+	close(DefaultEm.get());
+
+	if (CustomEmRegistry.get() != null) {
+	   for (EntityManager em : CustomEmRegistry.get().values()) {
+		close(em);
+	   }
+	}
+
+	close(DefaultEmf);
+	for (EntityManagerFactory emf : CustomEmfRegistry.values()) {
+	   close(emf);
+	}
+   }
 }

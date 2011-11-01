@@ -16,7 +16,6 @@
 package org.kaleidofoundry.core.config;
 
 import static org.kaleidofoundry.core.config.ConfigurationConstants.ConfigurationPluginName;
-import static org.kaleidofoundry.core.config.ConfigurationConstants.LOGGER;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.FileStoreUri;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.Name;
 
@@ -31,7 +30,6 @@ import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.ProviderService;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.plugin.Plugin;
@@ -139,9 +137,7 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 		newInstance.load();
 		// register it
 		REGISTRY.put(name, newInstance);
-		// info
-		LOGGER.info(InternalBundleHelper.ConfigurationMessageBundle.getMessage("config.load.info", name, resourceURI.toString()));
-		// result
+
 		return newInstance;
 	   } else {
 		if (!configuration.isLoaded()) {

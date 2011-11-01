@@ -21,18 +21,6 @@
 			<artifactId>kaleido-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
-		<!-- Framework for logging -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
 		
 		<!-- IOC Spring -->
 		<dependency>
@@ -93,6 +81,14 @@
 			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- Logging with logback during tests -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+			<scope>test</scope>
+		</dependency>		
 	</dependencies>
 
 </project>

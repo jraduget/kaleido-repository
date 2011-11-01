@@ -54,11 +54,11 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
-import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.FileStoreFactory;
-import org.kaleidofoundry.core.store.SingleFileStore;
 import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.ResourceHandler;
+import org.kaleidofoundry.core.store.SingleFileStore;
 import org.kaleidofoundry.core.util.AbstractPropertyAccessor;
 import org.kaleidofoundry.core.util.ConverterHelper;
 import org.kaleidofoundry.core.util.StringHelper;
@@ -182,8 +182,8 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * @throws ResourceException
     * @throws ConfigurationException
     */
-   protected abstract Cache<String, Serializable> loadProperties(ResourceHandler resourceHandler, Cache<String, Serializable> properties) throws ResourceException,
-   ConfigurationException;
+   protected abstract Cache<String, Serializable> loadProperties(ResourceHandler resourceHandler, Cache<String, Serializable> properties)
+	   throws ResourceException, ConfigurationException;
 
    /**
     * you don't need to release resourceHandler argument, it is done by agregator
@@ -195,7 +195,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
     * @throws ConfigurationException
     */
    protected abstract Cache<String, Serializable> storeProperties(Cache<String, Serializable> properties, SingleFileStore fileStore) throws ResourceException,
-   ConfigurationException;
+	   ConfigurationException;
 
    /*
     * (non-Javadoc)
@@ -261,7 +261,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
    @Override
    public final synchronized void load() throws ResourceException, ConfigurationException {
 	if (isLoaded()) { throw new ConfigurationException("config.load.already", name); }
-
+	LOGGER.info(ConfigurationMessageBundle.getMessage("config.load.info", name, getResourceUri()));
 	final ResourceHandler resourceHandler = singleFileStore.get();
 	try {
 	   loadProperties(resourceHandler, cacheProperties);
@@ -278,7 +278,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
    public final synchronized void store() throws ResourceException {
 	if (!isLoaded()) { throw new ConfigurationException("config.load.notloaded", name); }
 	if (!isStorable()) { throw new ConfigurationException("config.readonly.store", name); }
-
+	LOGGER.info(ConfigurationMessageBundle.getMessage("config.save.info", name, getResourceUri()));
 	singleFileStore.store();
    }
 
@@ -289,6 +289,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
    @Override
    public final synchronized void unload() throws ResourceException, ConfigurationException {
 	if (!isLoaded()) { throw new ConfigurationException("config.load.notloaded", name); }
+	LOGGER.info(ConfigurationMessageBundle.getMessage("config.unload.info", name, getResourceUri()));
 	// cleanup cache entries
 	cacheProperties.removeAll();
 	// unload store
@@ -309,6 +310,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
 	for (final String oldPropName : cacheProperties.keys()) {
 	   oldItems.put(oldPropName, cacheProperties.get(oldPropName));
 	}
+	LOGGER.info(ConfigurationMessageBundle.getMessage("config.unload.info", name, getResourceUri()));
 	// cleanup cache entries
 	cacheProperties.removeAll();
 	// unload store

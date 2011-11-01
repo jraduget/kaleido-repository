@@ -57,6 +57,7 @@ import org.kaleidofoundry.core.config.ConfigurationRegistry;
  * Several aop implementations will be provided :
  * <ul>
  * <li>aspectj (default) - {@link AnnotationContexInjectorAspect}</li>
+ * <li>java EE CDI using @Inject</li>
  * <li>spring - incoming</li>
  * <li>guice - incoming</li>
  * </ul>

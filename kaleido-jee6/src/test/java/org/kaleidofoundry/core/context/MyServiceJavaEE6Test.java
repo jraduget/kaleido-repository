@@ -22,7 +22,7 @@ import org.junit.BeforeClass;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.cache.CacheProvidersEnum;
-import org.kaleidofoundry.core.inject.UnmanagedCdiInjector;
+import org.kaleidofoundry.launcher.UnmanagedCdiInjector;
 
 /**
  * @author Jerome RADUGET

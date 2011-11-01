@@ -111,8 +111,9 @@ public abstract class ConfigurationFactory {
     * 
     * @param configName
     * @throws ResourceException
+    * @throws ConfigurationNotFoundException
     */
-   public static final void unregister(@NotNull final String configName) throws ResourceException {
+   public static final void unregister(@NotNull final String configName) throws ConfigurationNotFoundException, ResourceException {
 
 	final Configuration configToDestroy = getRegistry().get(configName);
 

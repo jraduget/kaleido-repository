@@ -138,6 +138,8 @@ import org.kaleidofoundry.core.store.ResourceException;
  * </p>
  * 
  * @see FileStore
+ * @see NamedConfiguration
+ * @see NamedConfigurations
  * @author Jerome RADUGET
  */
 @ThreadSafe

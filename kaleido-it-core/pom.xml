@@ -42,6 +42,13 @@
 
 	<dependencies>
 
+		<!-- Logging (first in classpath to avoid version conflict)-->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		
 		<!-- Core -->
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
@@ -61,22 +68,13 @@
 			<artifactId>ehcache-core</artifactId>
 			<version>${terracotta-ehcache.version}</version>
 		</dependency>
-
-		<!-- Framework for logging -->
+		
+		<!-- Logging with logback during tests -->
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>		
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+			<scope>test</scope>
 		</dependency>
 		
 		<!-- REST / JAXB - JSON -->

@@ -20,28 +20,17 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 
 import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.kaleidofoundry.core.config.ConfigurationFactory;
-import org.kaleidofoundry.core.store.ResourceException;
+import org.junit.runner.RunWith;
+import org.kaleidofoundry.core.config.NamedConfiguration;
+import org.kaleidofoundry.core.launcher.KaleidoJunit4ClassRunner;
 
 /**
  * @author Jerome RADUGET
  */
+@RunWith(KaleidoJunit4ClassRunner.class)
+@NamedConfiguration(name = "myConfig", uri = "classpath:/cache/myContext.properties")
 public class CacheManagerIntegrationTest {
-
-   @BeforeClass
-   public static void setupClass() throws ResourceException {
-	// load and register given configuration
-	// another way to to this, set following java env variable : -Dkaleido.configurations=myConfig=classpath:/cache/myContext.properties
-	ConfigurationFactory.provides("myConfig", "classpath:/cache/myContext.properties");
-   }
-
-   @AfterClass
-   public static void cleanupClass() throws ResourceException {
-	ConfigurationFactory.unregister("myConfig");
-   }
 
    @After
    public void cleanup() {

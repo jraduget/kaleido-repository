@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration scan="true" scanPeriod="30 seconds">
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<layout class="ch.qos.logback.classic.PatternLayout">
-			<Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+			<pattern>%-15(%d{HH:mm:ss.SSS} [%thread]) %-5level %msg%n%rEx</pattern>
 		</layout>
 	</appender>
 
-	<logger name="org.kaleidofoundry.core" level="TRACE" />
+	<logger name="org.kaleidofoundry" level="INFO" />
 
-	<root level="debug">
+	<root level="INFO">
 		<appender-ref ref="STDOUT" />
 	</root>
 	

@@ -14,7 +14,7 @@
 	<packaging>jar</packaging>
 
 	<dependencies>
-
+		
 		<!-- AOP -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
@@ -75,6 +75,8 @@
 			<version>0.1.42</version>
 		</dependency>
 		-->		
+		
+		<!-- ** Testing part **************************************************************** -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -82,9 +84,7 @@
 			<scope>provided</scope>
 		</dependency>
 		
-		<!-- ** Testing part **************************************************************** -->
-
-		<!-- Logging with log4j -->
+		<!-- Logging with log4j  
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
@@ -103,10 +103,12 @@
 			<version>${slf4j.version}</version>
 			<scope>test</scope>
 		</dependency>		
-		<!-- Logging with logback 
+		-->
+		
+		<!-- Logging with logback -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
+			<artifactId>logback-classic</artifactId>
 			<version>${logback.version}</version>
 			<scope>test</scope>
 		</dependency>	
@@ -115,39 +117,20 @@
 			<artifactId>log4j-over-slf4j</artifactId>
 			<version>${slf4j.version}</version>
 			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency> 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>${slf4j.version}</version>
 			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency> 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jul-to-slf4j</artifactId>
 			<version>${slf4j.version}</version>
 			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>				 
-		 -->
-		 
+		</dependency>				 		 
+				 
 		<!-- Derby database -->
 		<dependency>
 			<groupId>org.apache.derby</groupId>

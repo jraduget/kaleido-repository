@@ -18,12 +18,12 @@ package org.kaleidofoundry.core.context;
 import javax.inject.Inject;
 
 import org.junit.runner.RunWith;
-import org.kaleidofoundry.core.cache.WeldCdiJunit4Runner;
+import org.kaleidofoundry.launcher.junit.KaleidoCdiJunit4ClassRunner;
 
 /**
  * @author Jerome RADUGET
  */
-@RunWith(WeldCdiJunit4Runner.class)
+@RunWith(KaleidoCdiJunit4ClassRunner.class)
 public class MyServiceJavaEE6WithRunnerTest extends AbstractMyServiceTest {
 
    @Inject

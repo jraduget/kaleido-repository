@@ -19,36 +19,25 @@ import static org.kaleidofoundry.core.cache.CacheManagerIntegrationTest.assertio
 
 import java.util.Map;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.kaleidofoundry.core.config.ConfigurationFactory;
-import org.kaleidofoundry.core.store.ResourceException;
+import org.junit.runner.RunWith;
+import org.kaleidofoundry.core.config.NamedConfiguration;
+import org.kaleidofoundry.core.launcher.KaleidoJunit4ClassRunner;
 
 /**
  * @author Jerome RADUGET
  */
+@RunWith(KaleidoJunit4ClassRunner.class)
+@NamedConfiguration(name = "myConfig", uri = "classpath:/cache/myContext.properties")
 public class CacheIntegrationTest extends Assert {
-
-   @BeforeClass
-   public static void setupClass() throws ResourceException {
-	// load and register given configuration
-	// another way to to this, set following java env variable : -Dkaleido.configurations=myConfig=classpath:/cache/myContext.properties
-	ConfigurationFactory.provides("myConfig", "classpath:/cache/myContext.properties");
-   }
-
-   @AfterClass
-   public static void cleanupClass() throws ResourceException {
-	ConfigurationFactory.unregister("myConfig");
-   }
 
    @Test
    public void testSample01() {
 	CacheSample01 cache = new CacheSample01();
 	assertNotNull(cache);
 	cache.echo();
-	assertSame(cache.getMyCache(),cache.getMyCache());
+	assertSame(cache.getMyCache(), cache.getMyCache());
 	assertions(cache.getMyCache());
 	assertEquals("CacheSample01", cache.getMyCache().getName());
 	assertTrue(cache.getMyCache().getDelegate() instanceof net.sf.ehcache.Cache);
@@ -59,7 +48,7 @@ public class CacheIntegrationTest extends Assert {
 	CacheSample02 cache = new CacheSample02();
 	assertNotNull(cache);
 	cache.echo();
-	assertSame(cache.getMyCache(),cache.getMyCache());
+	assertSame(cache.getMyCache(), cache.getMyCache());
 	assertions(cache.getMyCache());
 	assertEquals("CacheSample02", cache.getMyCache().getName());
 	System.out.println(cache.getMyCache().getDelegate().getClass().getName());
@@ -71,7 +60,7 @@ public class CacheIntegrationTest extends Assert {
 	CacheSample03 cache = new CacheSample03();
 	assertNotNull(cache);
 	cache.echo();
-	assertSame(cache.getMyCache(),cache.getMyCache());
+	assertSame(cache.getMyCache(), cache.getMyCache());
 	assertions(cache.getMyCache());
 	assertEquals("CacheSample03", cache.getMyCache().getName());
 	System.out.println(cache.getMyCache().getDelegate().getClass().getName());
@@ -83,7 +72,7 @@ public class CacheIntegrationTest extends Assert {
 	CacheSample04 cache = new CacheSample04();
 	assertNotNull(cache);
 	cache.echo();
-	assertSame(cache.getMyCache(),cache.getMyCache());
+	assertSame(cache.getMyCache(), cache.getMyCache());
 	assertions(cache.getMyCache());
 	assertEquals("CacheSample04", cache.getMyCache().getName());
 	System.out.println(cache.getMyCache().getDelegate().getClass().getName());

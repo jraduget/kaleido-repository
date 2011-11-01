@@ -31,6 +31,13 @@
 
 	<dependencies>
 	
+		<!-- Logging (first in classpath to avoid version conflict)-->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
 			<artifactId>kaleido-jee6</artifactId>
@@ -51,6 +58,14 @@
 			<scope>provided</scope>			
 		</dependency>
 		
+		<!-- Logging with logback during tests -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+			<scope>test</scope>
+		</dependency>
+				
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
 			<artifactId>kaleido-core</artifactId>
@@ -58,14 +73,6 @@
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
-
-		<!-- Logging (log4j conflict during mvn test - log4j-over-slf4j solve the problem)-->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>log4j-over-slf4j</artifactId>
-			<version>${slf4j.version}</version>
-			<scope>test</scope>
-		</dependency>	
 		
 	</dependencies>
 

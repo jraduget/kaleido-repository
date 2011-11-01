@@ -51,6 +51,13 @@
 
 	<dependencies>
 
+		<!-- Logging (first in classpath to avoid version conflict)-->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
 			<artifactId>kaleido-core</artifactId>
@@ -67,6 +74,13 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+			<scope>test</scope>
 		</dependency>
 		
 		<dependency>

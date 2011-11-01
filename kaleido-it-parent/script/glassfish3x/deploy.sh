@@ -5,14 +5,16 @@ echo "glassfish base dir: $GLASSFISH_HOME"
 echo "***************************************************************************"
 
 # domain creation if needed
-if asadmin list-domains | grep 'kaleido'
+if $GLASSFISH_HOME/bin/asadmin list-domains | grep 'kaleido'
 then echo 'kaleido domain already exists'
 else
 $GLASSFISH_HOME/bin/asadmin create-domain --adminport 4848 --instanceport 8380 --nopassword=true kaleido 
 fi
 
 # clean log, start domain if needed, and undeploy current version
-cat /dev/null > $GLASSFISH_HOME/glassfish/domains/kaleido/logs/server.log
+> $GLASSFISH_HOME/glassfish/domains/kaleido/logs/server.log
+
+$GLASSFISH_HOME/bin/asadmin start-database
 $GLASSFISH_HOME/bin/asadmin start-domain kaleido 
 $GLASSFISH_HOME/bin/asadmin undeploy --droptables=true kaleido-it-ear 
 

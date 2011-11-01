@@ -15,10 +15,12 @@
  */
 package org.kaleidofoundry.core.context;
 
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.io.Serializable;
 import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 /**
  * Static parameter that can be join to a {@link Context}, in order to inject it to {@link RuntimeContext} <br/>
@@ -29,6 +31,7 @@ import java.lang.annotation.Retention;
  * 
  * @author Jerome RADUGET
  */
+@Target({ ANNOTATION_TYPE })
 @Retention(RUNTIME)
 public @interface Parameter {
 
