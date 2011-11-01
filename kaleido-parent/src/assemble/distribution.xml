@@ -1,0 +1,63 @@
+<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+	<id>bin</id>
+	<formats>
+		<format>dir</format>
+		<format>zip</format>
+	</formats>
+	
+	<includeBaseDirectory>false</includeBaseDirectory>
+<!-- 	<includeSiteDirectory>true</includeSiteDirectory> -->
+	
+	<moduleSets>
+		<moduleSet>
+
+			<!-- Enable access to all projects in the current multimodule build! -->
+			<useAllReactorProjects>true</useAllReactorProjects>
+
+			<!-- Now, select which projects to include in this module-set. -->
+			<includes>
+				<include>org.kaleidofoundry:kaleido-core</include>
+				<include>org.kaleidofoundry:kaleido-jee6</include>				
+			</includes>
+			
+			<binaries>
+				<outputDirectory>distrib</outputDirectory>
+				<unpack>false</unpack>
+			</binaries>
+
+			<sources>
+				<includeModuleDirectory>true</includeModuleDirectory>				
+<!-- 				<outputDirectory>src/${module.artifactId}</outputDirectory> -->
+				<outputDirectoryMapping>src/${module.artifactId}</outputDirectoryMapping>				
+			</sources>	
+					
+		</moduleSet>
+	</moduleSets>
+	
+	<dependencySets>
+		<dependencySet>
+			<scope>runtime</scope>		
+			<outputDirectory>lib</outputDirectory>
+			<useProjectArtifact>false</useProjectArtifact>
+			<useTransitiveDependencies>false</useTransitiveDependencies>				
+			<unpack>false</unpack>
+		</dependencySet>
+	</dependencySets>
+
+	<fileSets>
+		<fileSet>
+			<directory>${project.basedir}/..</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>README*</include>
+				<include>LICENSE*</include>
+				<include>NOTICE*</include>
+			</includes>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+	</fileSets>
+
+</assembly>
