@@ -24,6 +24,8 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 
 /**
+ * Some helper methods for aspectj
+ * 
  * @author Jerome RADUGET
  */
 public abstract class AspectjHelper {

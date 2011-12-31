@@ -360,4 +360,12 @@ public class RegExpSample extends Assert {
 	}
    }
 
+   /**
+    * 
+    */
+   @Test
+   public void singleTest() {
+	assertEquals("file:/_/lulu", "file:/${gg}/lulu".replaceFirst("\\$\\{.+\\}", "_"));
+	assertEquals("file:/_/lulu/_/", "file:/${gg}/lulu/${hhhh}/".replaceAll("\\$\\{.+\\}", "_"));
+   }
 }

@@ -28,7 +28,7 @@ import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.store.SingleFileStore;
 import org.kaleidofoundry.core.store.ResourceException;
-import org.kaleidofoundry.core.util.ConverterHelper;
+import org.kaleidofoundry.core.util.CollectionsHelper;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -86,8 +86,8 @@ public class MainArgsConfiguration extends AbstractConfiguration implements Conf
 	final String mainArgs = context.getString(ArgsMainString);
 	final String argsSeparator = context.getString(ArgsSeparator);
 
-	final String[] args = ConverterHelper.stringToArray(mainArgs, argsSeparator != null ? argsSeparator : " ");
-	final Map<String, String> argsMap = ConverterHelper.argsToMap(args);
+	final String[] args = CollectionsHelper.stringToArray(mainArgs, argsSeparator != null ? argsSeparator : " ");
+	final Map<String, String> argsMap = CollectionsHelper.argsToMap(args);
 
 	if (argsMap != null) {
 	   for (final Entry<String, String> entry : argsMap.entrySet()) {

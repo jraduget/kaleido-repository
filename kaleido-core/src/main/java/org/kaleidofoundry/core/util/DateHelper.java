@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
- * Helper for date handle
+ * Some helper methods for date
  * 
  * @author Jerome RADUGET
  */

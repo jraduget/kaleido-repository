@@ -15,12 +15,12 @@
  */
 package org.kaleidofoundry.core.util;
 
-import static org.kaleidofoundry.core.util.ConverterHelper.argsToMap;
-import static org.kaleidofoundry.core.util.ConverterHelper.arrayToString;
-import static org.kaleidofoundry.core.util.ConverterHelper.collectionToString;
-import static org.kaleidofoundry.core.util.ConverterHelper.stringToArray;
-import static org.kaleidofoundry.core.util.ConverterHelper.stringToCollection;
-import static org.kaleidofoundry.core.util.ConverterHelper.stringToSet;
+import static org.kaleidofoundry.core.util.CollectionsHelper.argsToMap;
+import static org.kaleidofoundry.core.util.CollectionsHelper.arrayToString;
+import static org.kaleidofoundry.core.util.CollectionsHelper.collectionToString;
+import static org.kaleidofoundry.core.util.CollectionsHelper.stringToArray;
+import static org.kaleidofoundry.core.util.CollectionsHelper.stringToCollection;
+import static org.kaleidofoundry.core.util.CollectionsHelper.stringToSet;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -35,7 +35,7 @@ import org.junit.Test;
 /**
  * @author Jerome RADUGET
  */
-public class ConverterHelperTest extends Assert {
+public class CollectionsHelperTest extends Assert {
 
    @Test
    public void testArgsToMap() {

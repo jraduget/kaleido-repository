@@ -21,7 +21,7 @@ import java.net.URLDecoder;
 import org.kaleidofoundry.core.lang.Charsets;
 
 /**
- * Helper for encoding url get parameter
+ * Some helper methods for encoding / decoding urls
  * 
  * @author Jerome RADUGET
  * @see Charsets

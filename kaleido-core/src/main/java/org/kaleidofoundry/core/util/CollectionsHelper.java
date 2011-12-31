@@ -27,11 +27,11 @@ import java.util.Set;
 import org.kaleidofoundry.core.lang.annotation.Nullable;
 
 /**
- * Utility class converter
+ * Some helper methods for collections / arrays / maps
  * 
  * @author Jerome RADUGET
  */
-public abstract class ConverterHelper {
+public abstract class CollectionsHelper {
 
    /**
     * Example : <br/>

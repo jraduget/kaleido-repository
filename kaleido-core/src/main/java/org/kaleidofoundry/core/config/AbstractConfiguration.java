@@ -60,7 +60,7 @@ import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.store.SingleFileStore;
 import org.kaleidofoundry.core.util.AbstractPropertyAccessor;
-import org.kaleidofoundry.core.util.ConverterHelper;
+import org.kaleidofoundry.core.util.CollectionsHelper;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -666,7 +666,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
 	   propPath = StringHelper.replaceAll(propPath, KeySeparator, KeyPropertiesSeparator);
 
 	   if (propValues != null) {
-		prop.put(propPath, ConverterHelper.collectionToString(propValues, MultiValuesSeparator));
+		prop.put(propPath, CollectionsHelper.collectionToString(propValues, MultiValuesSeparator));
 	   } else if (propValue != null) {
 		prop.put(propPath, propValue);
 	   }
@@ -742,7 +742,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
 	   if (values != null && values.size() <= 1) {
 		str.append(key).append("=").append(value).append(" , ");
 	   } else {
-		str.append(key).append("=").append(ConverterHelper.collectionToString(values, MultiValuesSeparator)).append(" , ");
+		str.append(key).append("=").append(CollectionsHelper.collectionToString(values, MultiValuesSeparator)).append(" , ");
 	   }
 	}
 	str.append("}");

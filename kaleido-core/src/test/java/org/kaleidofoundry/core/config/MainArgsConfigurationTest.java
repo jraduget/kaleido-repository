@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.store.ResourceException;
-import org.kaleidofoundry.core.util.ConverterHelper;
+import org.kaleidofoundry.core.util.CollectionsHelper;
 
 /**
  * @author Jerome RADUGET
@@ -41,7 +41,7 @@ public class MainArgsConfigurationTest extends AbstractConfigurationTest {
 		"application.single.boolean=true", "application.single.bigdecimal=1.123456789",
 		"application.array.date=2009-01-02T00:00:00|2009-12-31T00:00:00|2012-05-15T00:00:00" };
 
-	RuntimeContext<Configuration> context = new ConfigurationContextBuilder().withMainArgsString(ConverterHelper.arrayToString(mainArgs, "#"))
+	RuntimeContext<Configuration> context = new ConfigurationContextBuilder().withMainArgsString(CollectionsHelper.arrayToString(mainArgs, "#"))
 		.withMainArgsSeparator("#").build();
 
 	return new MainArgsConfiguration("mainArgsConfig", context);

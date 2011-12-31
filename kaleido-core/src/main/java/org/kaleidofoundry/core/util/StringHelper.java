@@ -25,9 +25,10 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.lang.annotation.Nullable;
 
 /**
- * String Helper static method
+ * Some helper methods for string
  * 
  * @author Jerome RADUGET
  */
@@ -673,4 +674,17 @@ public abstract class StringHelper {
 	return list;
    }
 
+   /**
+    * Returns the first not empty value in argument
+    * 
+    * @param values
+    * @return first not null value in argument
+    */
+   @Nullable
+   public static String firstNonEmpty(final String... values) {
+	for (String value : values) {
+	   if (!StringHelper.isEmpty(value)) { return value; }
+	}
+	return null;
+   }
 }

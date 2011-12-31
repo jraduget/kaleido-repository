@@ -191,8 +191,13 @@ public abstract class AbstractFileStore implements FileStore {
 	   resourceUri.append(relativePath);
 	}
 
-	// normalize uri by using '/' as path separator, and by replacing spaces by %20
-	return StringHelper.replaceAll(FileHelper.buildCustomPath(resourceUri.toString(), FileHelper.UNIX_SEPARATOR, false), " ", "%20");
+	String result = resourceUri.toString();
+	// normalize uri by using '/' as path separator
+	result = FileHelper.buildCustomPath(result, FileHelper.UNIX_SEPARATOR, false);
+	// normalize uri by replacing spaces by %20
+	result = StringHelper.replaceAll(result, " ", "%20");
+
+	return result;
    }
 
    @Override
@@ -252,8 +257,9 @@ public abstract class AbstractFileStore implements FileStore {
     * @see org.kaleidofoundry.core.store.FileStore#isUriManageable(java.net.String)
     */
    @Override
-   public boolean isUriManageable(@NotNull final String resourceUri) {
+   public boolean isUriManageable(@NotNull final String pResourceUri) {
 
+	final String resourceUri = buildResourceURi(pResourceUri);
 	final FileStoreType rst = FileStoreTypeEnum.match(resourceUri);
 
 	if (rst != null) {
@@ -262,7 +268,7 @@ public abstract class AbstractFileStore implements FileStore {
 	   }
 	}
 
-	throw new IllegalArgumentException(StoreMessageBundle.getMessage("store.uri.illegal", resourceUri.toString(), getClass().getName()));
+	throw new IllegalArgumentException(StoreMessageBundle.getMessage("store.uri.illegal", pResourceUri, getClass().getName()));
    }
 
    /*

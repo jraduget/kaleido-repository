@@ -16,6 +16,7 @@
 package org.kaleidofoundry.core.io;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.kaleidofoundry.core.util.StringHelper;
 
@@ -302,4 +303,29 @@ public abstract class FileHelper {
 	return null;
    }
 
+   /**
+    * get the current directory
+    * 
+    * @return current directory
+    */
+   public static String getCurrentPath() {
+	try {
+	   return new File(".").getCanonicalPath();
+	} catch (IOException ioe) {
+	   throw new IllegalStateException(ioe);
+	}
+   }
+
+   /**
+    * get the parent directory of the current directory
+    * 
+    * @return parent directory of the current directory
+    */
+   public static String getParentPath() {
+	try {
+	   return new File("..").getCanonicalPath();
+	} catch (IOException ioe) {
+	   throw new IllegalStateException(ioe);
+	}
+   }
 }

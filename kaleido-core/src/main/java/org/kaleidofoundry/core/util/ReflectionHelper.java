@@ -41,7 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Utilities for managing class introspection
+ * Some helper methods for managing class introspection
  * 
  * @author Jerome RADUGET
  */

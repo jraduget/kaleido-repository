@@ -54,10 +54,15 @@ public class StringHelperTest extends Assert {
 
    @Test
    public void replaceAll() {
+	System.out.println((int) " ".charAt(0));
+	System.out.println((int) " ".charAt(0));
 	assertNull(StringHelper.replaceAll(null, null, null));
 	assertNull(StringHelper.replaceAll(null, "a", "b"));
 	assertEquals("anullc", StringHelper.replaceAll("abc", "b", null));
 	assertEquals("", StringHelper.replaceAll("", "", ""));
+	assertEquals("", StringHelper.replaceAll("    ", " ", ""));
+	assertEquals("1316,10", StringHelper.replaceAll("1 316,10  ", " ", "")); // nbsp
+	assertEquals("12345,67", StringHelper.replaceAll("1 2345,67  ", " ", "")); // space
 	assertEquals("foo", StringHelper.replaceAll("a", "a", "foo"));
 	assertEquals(".foo", StringHelper.replaceAll(".a", "a", "foo"));
 	assertEquals("foo.", StringHelper.replaceAll("a.", "a", "foo"));

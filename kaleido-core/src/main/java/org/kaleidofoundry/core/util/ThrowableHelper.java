@@ -20,7 +20,7 @@ import java.io.StringWriter;
 import java.lang.reflect.Method;
 
 /**
- * Exception Helper
+ * Some helper methods for exception
  * 
  * @author Jerome RADUGET
  */

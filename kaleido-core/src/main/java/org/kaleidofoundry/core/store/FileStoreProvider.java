@@ -85,7 +85,7 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
     * create a instance of {@link FileStore} analyzing a given {@link URI}<br/>
     * scheme of the uri is used to get the registered file store implementation.
     * 
-    * @param baseUri <br/>
+    * @param pBaseUri <br/>
     *           file store root path uri, which looks like (path is optional) :
     *           <ul>
     *           <li><code>http://host/</code> <b>or</b> <code>http://host/path</code></li>
@@ -96,14 +96,14 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
     *           <li><code>...</li>
     *           </ul>
     *           <b>uri schemes handled</b>: <code>http|https|ftp|file|classpath|webapp|...</code>
-    * @param context store runtime context
+    * @param pContext store runtime context
     * @return new file store instance, specific to the resource uri scheme
     * @throws ProviderException encapsulate class implementation constructor call error (like {@link NoSuchMethodException},
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
-   public FileStore provides(@NotNull final String baseUri, @NotNull final RuntimeContext<FileStore> context) throws ProviderException {
+   public FileStore provides(@NotNull final String pBaseUri, @NotNull final RuntimeContext<FileStore> pContext) throws ProviderException {
 
-	final URI baseURI = createURI(baseUri);
+	final URI baseURI = createURI(pBaseUri);
 	final FileStoreType fileStoreType = FileStoreTypeEnum.match(baseURI);
 
 	if (fileStoreType != null) {
@@ -113,11 +113,11 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 	   for (final Plugin<FileStore> pi : pluginImpls) {
 		final Class<? extends FileStore> impl = pi.getAnnotatedClass();
 		try {
-		   final Constructor<? extends FileStore> constructor = impl.getConstructor(String.class, context.getClass());
-		   final FileStore fileStore = constructor.newInstance(baseUri, context);
+		   final Constructor<? extends FileStore> constructor = impl.getConstructor(String.class, pContext.getClass());
+		   final FileStore fileStore = constructor.newInstance(pBaseUri, pContext);
 
 		   try {
-			if (fileStore.isUriManageable(baseUri.toString())) { return fileStore; }
+			if (fileStore.isUriManageable(pBaseUri.toString())) { return fileStore; }
 		   } catch (final Throwable th) {
 		   }
 
@@ -140,20 +140,23 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 		}
 	   }
 
-	   throw new ProviderException(new ResourceException("store.uri.custom.notmanaged", baseURI.getScheme(), baseUri.toString()));
+	   throw new ProviderException(new ResourceException("store.uri.custom.notmanaged", baseURI.getScheme(), pBaseUri.toString()));
 	}
 
-	throw new ProviderException(new ResourceException("store.uri.notmanaged", baseURI.getScheme(), baseUri.toString()));
+	throw new ProviderException(new ResourceException("store.uri.notmanaged", baseURI.getScheme(), pBaseUri.toString()));
 
    }
 
    // use to resolve uri although pUri contains only the uri scheme like ftp|http|classpath...
    private static URI createURI(@NotNull final String pUri) {
 
-	if (!pUri.contains(":") && !pUri.contains("/")) {
-	   return URI.create(pUri + ":/");
+	// replace all ${param} by "", to avoid URISyntaxException
+	String uri = pUri.replaceAll("\\$\\{.+\\}", "");
+
+	if (!uri.contains(":") && !uri.contains("/")) {
+	   return URI.create(uri + ":/");
 	} else {
-	   return URI.create(pUri);
+	   return URI.create(uri);
 	}
 
    }

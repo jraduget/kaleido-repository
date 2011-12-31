@@ -1,7 +1,30 @@
 #!/bin/bash
 
+# current build version (TODO extract it from pom.xml)
+KALEIDO_VERSION=0.8.1
+
+# script base dir
+BASE="$(cd -P -- $(dirname -- "$0"); pwd -P)"
+
+if [ -z "$GLASSFISH_HOME" ]; then
+	if [ -z "$1" ]; then
+		echo "***************************************************************************"
+		echo "To deploy the kaleidoFoundry integration tests, please:"
+		echo "***************************************************************************"	
+		echo "-> define GLASSFISH_HOME variable like : export GLASSFISH_HOME=/opt/glassfishv3.1.1"	
+		echo "-> or use: ./deploy.sh /opt/glassfishv3.1.1"
+		exit 1
+	fi	
+	
+	if [ "$1" ]; then
+		GLASSFISH_HOME=$1
+	fi
+fi
+
 echo "***************************************************************************"
-echo "glassfish base dir: $GLASSFISH_HOME"
+echo "Deploying kaleido integration tests $KALEIDO_VERSION :"
+echo "-> from '$BASE'"
+echo "-> to glassfish '$GLASSFISH_HOME' using domain kaleido"
 echo "***************************************************************************"
 
 # domain creation if needed
@@ -41,7 +64,5 @@ $GLASSFISH_HOME/bin/asadmin start-database
 # ear deployment redeploy 
 echo 'start deployment...'
 $GLASSFISH_HOME/bin/asadmin stop-domain kaleido
-$GLASSFISH_HOME/bin/asadmin start-domain kaleido
-$GLASSFISH_HOME/bin/asadmin deploy --name=kaleido-it-ear --dbvendorname=javadb --createtables=true  ../kaleido-it-ear/target/kaleido-it-ear-0.8.1-SNAPSHOT.ear 
-
-
+$GLASSFISH_HOME/bin/asadmin start-domain kaleido 
+$GLASSFISH_HOME/bin/asadmin deploy --name=kaleido-it-ear --dbvendorname=javadb --createtables=true  $BASE/../../../kaleido-it-ear/target/kaleido-it-ear-$KALEIDO_VERSION.ear

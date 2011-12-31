@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.util.ConverterHelper;
+import org.kaleidofoundry.core.util.CollectionsHelper;
 
 /**
  * Common labels class, used to categorize some persistent entities with multiple text labels <br/>
@@ -121,7 +121,7 @@ public class Labels implements Serializable, Iterable<String> {
    }
 
    private void update() {
-	items = ConverterHelper.collectionToString(itemSet, "|");
+	items = CollectionsHelper.collectionToString(itemSet, "|");
    }
 
    /*
