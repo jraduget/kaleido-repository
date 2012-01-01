@@ -94,7 +94,7 @@
 		<module>../kaleido-spring</module>
 		<module>../kaleido-guice</module>
 		<module>../kaleido-launcher</module>	
-		<!-- distrib module -->
+		<!-- distrib bundle module -->
 		<module>../kaleido-distrib</module>	
 		<!--incoming - to refactor 
 		<module>../kaleido-mailing</module> 
@@ -450,14 +450,13 @@
 					<maxmemory>512m</maxmemory>
 					<docfilessubdirs>true</docfilessubdirs>
 					<linksource>true</linksource>					
-					<aggregate>true</aggregate>
 				</configuration>	
 				<executions>
 					<execution>
 						<inherited>true</inherited>
 						<phase>deploy</phase>
 						<goals>
-							<goal>jar</goal>
+							<goal>aggregate</goal>
 						</goals>
 					</execution>
 				</executions>							       	
@@ -492,7 +491,8 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>		
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>

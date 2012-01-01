@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>kaleido-distrib</artifactId>
-	<name>KaleidoFoundry distribution</name>
+	<name>KaleidoFoundry distribution bundle</name>
 	<packaging>jar</packaging>
 
 	<build>
@@ -29,6 +29,7 @@
 							<descriptors>
 								<descriptor>src/assemble/distribution.xml</descriptor>
 							</descriptors>
+							<siteDirectory>../kaleido-parent/target/site</siteDirectory>
 						</configuration>
 					</execution>
 				</executions>
@@ -51,7 +52,7 @@
 							<projectName>kaleido-foundry</projectName>
 							<uploads>
 								<upload>
-									<file>${project.build.directory}/${project.artifactId}-${project.version}-bin.zip</file>
+									<file>${project.build.directory}/${project.artifactId}-${project.version}-bundle.zip</file>
 									<summary>${project.name} bundle ${project.version}</summary>
 									<labels>
 										<label>Featured</label>
