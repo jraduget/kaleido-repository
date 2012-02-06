@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  * <li><code>http://</code></li>
  * <li><code>https://</code></li>
  * <li><code>ftp://</code></li>
- * <li><code>file://</code></li>
+ * <li><code>file:/</code></li>
  * <li><code>classpath:/</code></li>
  * <li><code>webapp:/</code></li>
  * <li><code>jpa:/</code></li>

@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.io.FileHelper;
 
@@ -97,6 +98,33 @@ public class FileSystemStoreTest extends AbstractFileStoreTest {
 		System.out.printf("cleanup resources - deleted \"%s\" is %s", file.getCanonicalFile(), file.delete() ? "OK\n" : "KO\n");
 	   }
 	}
+   }
+
+   @Test
+   public void baseDirTest() throws ResourceException {
+	FileStore fileStore = FileStoreFactory.provides("file:/${basedir}");
+	ResourceHandler resourceHandler = fileStore.get("src/test/resources/store/foo.txt");
+	assertNotNull(resourceHandler);
+	assertNotNull(resourceHandler.getResourceUri());
+	assertEquals("line1\nline2", resourceHandler.getText());
+   }
+
+   @Test
+   public void currentDirTest() throws ResourceException {
+	FileStore fileStore = FileStoreFactory.provides("file:/.");
+	ResourceHandler resourceHandler = fileStore.get("src/test/resources/store/foo.txt");
+	assertNotNull(resourceHandler);
+	assertNotNull(resourceHandler.getResourceUri());
+	assertEquals("line1\nline2", resourceHandler.getText());
+   }
+
+   @Test
+   public void parentDirTest() throws ResourceException {
+	FileStore fileStore = FileStoreFactory.provides("file:/..");
+	ResourceHandler resourceHandler = fileStore.get("kaleido-core/src/test/resources/store/foo.txt");
+	assertNotNull(resourceHandler);
+	assertNotNull(resourceHandler.getResourceUri());
+	assertEquals("line1\nline2", resourceHandler.getText());
    }
 
 }
