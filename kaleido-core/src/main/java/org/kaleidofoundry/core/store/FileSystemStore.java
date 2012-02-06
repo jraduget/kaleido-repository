@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,14 @@ import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * File system store implementation (Windows, Linux, MacOS, ...) <br/>
+ * <p>
+ * You can use following variable in the file system uri:
+ * <ul>
+ * <li><code>file:/${basedir}</code> - your application basedir (it can be override using the java system properties -Dbasedir=...)</li>
+ * <li><code>file:/.</code> - the current system path</li>
+ * <li><code>file:/..</code> - the parent of the current system path</li>
+ * </ul>
+ * </p>
  * 
  * @author Jerome RADUGET
  * @see FileStoreContextBuilder enum of context configuration properties available
@@ -74,16 +82,15 @@ public class FileSystemStore extends AbstractFileStore implements FileStore {
 	String result = super.buildResourceURi(resourceRelativePath);
 
 	if (result.contains("${basedir}")) {
-	   String currentPath = FileHelper.getCurrentPath();
+	   String currentPath = FileHelper.buildUnixAppPath(FileHelper.getCurrentPath());
 	   result = StringHelper.replaceAll(result, "${basedir}", (currentPath.startsWith("/") ? currentPath.substring(1) : currentPath));
 	}
-	if (result.startsWith("file:/.")) {
-	   String currentPath = FileHelper.getCurrentPath();
-	   result = StringHelper.replaceAll(result, "file:/.", "file:/" + (currentPath.startsWith("/") ? currentPath.substring(1) : currentPath));
-	}
 	if (result.contains("file:/..")) {
-	   String parentPath = FileHelper.getParentPath();
+	   String parentPath = FileHelper.buildUnixAppPath(FileHelper.getParentPath());
 	   result = StringHelper.replaceAll(result, "file:/..", "file:/" + (parentPath.startsWith("/") ? parentPath.substring(1) : parentPath));
+	} else if (result.startsWith("file:/.")) {
+	   String currentPath = FileHelper.buildUnixAppPath(FileHelper.getCurrentPath());
+	   result = StringHelper.replaceAll(result, "file:/.", "file:/" + (currentPath.startsWith("/") ? currentPath.substring(1) : currentPath));
 	}
 	return result;
    }
