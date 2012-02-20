@@ -51,8 +51,8 @@
 							<projectName>kaleido-foundry</projectName>
 							<uploads>
 								<upload>
-									<file>${project.build.directory}/${project.artifactId}-${project.version}-bundle.zip</file>
-									<summary>${project.name} bundle ${project.version}</summary>
+									<file>${project.build.directory}/kaleido-${project.version}.zip</file>
+									<summary>${project.name} ${project.version}</summary>
 									<labels>
 										<label>Featured</label>
 										<label>Type-Archive</label>
