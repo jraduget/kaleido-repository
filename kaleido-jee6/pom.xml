@@ -6,7 +6,6 @@
 		<groupId>org.kaleidofoundry</groupId>
 		<artifactId>kaleido-parent</artifactId>
 		<version>0.8.1-SNAPSHOT</version>
-		<relativePath>../kaleido-parent/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>kaleido-jee6</artifactId>

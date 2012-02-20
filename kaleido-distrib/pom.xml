@@ -6,7 +6,6 @@
 		<groupId>org.kaleidofoundry</groupId>
 		<artifactId>kaleido-parent</artifactId>
 		<version>0.8.1-SNAPSHOT</version>
-		<relativePath>../kaleido-parent/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>kaleido-distrib</artifactId>
@@ -29,7 +28,7 @@
 							<descriptors>
 								<descriptor>src/assemble/distribution.xml</descriptor>
 							</descriptors>
-							<siteDirectory>../kaleido-parent/target/site</siteDirectory>
+							<siteDirectory>../target/site</siteDirectory>
 						</configuration>
 					</execution>
 				</executions>

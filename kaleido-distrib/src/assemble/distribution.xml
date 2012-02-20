@@ -39,7 +39,8 @@
 			<useAllReactorProjects>true</useAllReactorProjects>
 			<includes>
 				<include>org.kaleidofoundry:kaleido-core</include>
-				<include>org.kaleidofoundry:kaleido-jee6</include>				
+				<include>org.kaleidofoundry:kaleido-jee6</include>	
+				<include>org.kaleidofoundry:kaleido-launcher</include>			
 			</includes>
 			<binaries>
 				<attachmentClassifier>javadoc</attachmentClassifier>
