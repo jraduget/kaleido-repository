@@ -7,11 +7,11 @@ mvn -N versions:update-child-modules
 # releasing
 # https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide
 
-mvn clean deploy -Dgpg.passphrase=thephrase
+mvn clean deploy -Dgpg.keyname=thekeyname -Dgpg.passphrase=thephrase
 mvn release:clean
 mvn release:prepare
 mvn release:rollback
-mvn release:perform -Darguments=-Dgpg.passphrase=thephrase
+mvn release:perform -Dgpg.keyname=thekeyname -Darguments=-Dgpg.passphrase=thephrase
 
 
 # site and google code upload
