@@ -15,5 +15,6 @@ mvn release:perform -Dgpg.keyname=thekeyname -Darguments=-Dgpg.passphrase=thephr
 
 
 # site and google code upload
-mvn site:site 
+mvn clean site:site && mvn site:stage
+mvn site:deploy 
 
