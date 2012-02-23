@@ -9,7 +9,7 @@
   	
 	<groupId>org.kaleidofoundry</groupId>
 	<artifactId>kaleido-parent</artifactId>
-	<version>0.8.2-SNAPSHOT</version>
+	<version>0.8.1-SNAPSHOT</version>
 
 	<name>KaleidoFoundry parent POM</name>
 	<url>http://code.google.com/p/kaleido-foundry/</url>
