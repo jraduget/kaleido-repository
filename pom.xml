@@ -6,15 +6,804 @@
     	<artifactId>oss-parent</artifactId>
     	<version>7</version>
   	</parent>
-	
+  	
 	<groupId>org.kaleidofoundry</groupId>
-	<artifactId>kaleido-release</artifactId>
-	<version>0.8.1-SNAPSHOT</version>
-	
+	<artifactId>kaleido-parent</artifactId>
+	<version>0.8.2-SNAPSHOT</version>
+
+	<name>KaleidoFoundry parent POM</name>
+	<url>http://code.google.com/p/kaleido-foundry/</url>
+	<description>Parent POM for all kaleido-foundry modules. It provides default build configurations.</description>
 	<packaging>pom</packaging>
 
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<organization>
+		<name>KaleidoFoundry</name>
+		<url>http://www.kaleidofoundry.org</url>
+	</organization>
+
+	<prerequisites>
+		<maven>3.0.2</maven>
+	</prerequisites>
+
+	<developers>
+		<developer>
+			<id>jraduget</id>
+			<name>Jerome RADUGET</name>
+			<email>jerome.raduget@gmail.com</email>
+			<timezone>+1</timezone>
+			<organization>Consultant</organization>
+			<roles>
+				<role>Project Lead</role>
+				<role>Architect</role>
+				<role>Developer</role>
+			</roles>
+		</developer>
+	</developers>
+
+	<mailingLists>
+		<mailingList>
+			<name>kaleido-user</name>
+			<post>kaleido-user@googlegroups.com</post>
+		</mailingList>
+		<mailingList>
+			<name>kaleido-dev</name>
+			<post>kaleido-dev@googlegroups.com</post>
+		</mailingList>
+	</mailingLists>
+
+	<properties>
+		<!-- jdk / jee global version dependencies -->
+		<jdk.version>1.6</jdk.version>
+		<!-- AOP / Aspectj -->
+		<aspectj.version>1.6.11</aspectj.version>
+		<!-- framework global version dependencies -->
+		<slf4j.version>1.6.3</slf4j.version>
+		<log4j.version>1.2.16</log4j.version>
+		<logback.version>0.9.30</logback.version>
+		<!-- Cache implementation version -->
+		<jboss-cache.version>3.2.3.CR1</jboss-cache.version>
+		<terracotta-ehcache.version>2.4.6</terracotta-ehcache.version>
+		<jboss-infinispan.version>4.2.1.FINAL</jboss-infinispan.version>
+		<oracle-coherence.version>3.7.0</oracle-coherence.version>
+		<!-- Testing -->		
+		<junit.version>4.8.1</junit.version>
+		<mockito.version>1.8.5</mockito.version>
+		<!--  Spring integration version -->
+		<spring.version>3.0.4.RELEASE</spring.version>
+		<!-- integration url properties -->
+		<sonar.host.url>http://localhost:8080/sonar</sonar.host.url>
+		<hudson.host.url>http://localhost:8080/hudson</hudson.host.url>
+		<!-- source encoding options -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 	<modules>
-		<module>kaleido-parent</module>
+		<!-- core modules -->
+		<module>kaleido-core</module>
+		<!-- core extensions -->
+		<module>kaleido-jee6</module>
+		<module>kaleido-spring</module>
+		<module>kaleido-guice</module>
+		<module>kaleido-launcher</module>	
+		<!-- distrib bundle module -->
+		<module>kaleido-distrib</module>	
+		<!--incoming - to refactor 
+		<module>kaleido-mailing</module> 
+		<module>kaleido-messaging</module> 
+		<module>kaleido-reporting</module> 
+		-->
 	</modules>
+
+	<dependencies>
+		<!-- Framework for Logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>compile</scope>
+		</dependency>		
+		<!-- Framework for testing -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+		  	<artifactId>mockito-core</artifactId>  
+		  	<version>${mockito.version}</version> 
+		  	<scope>test</scope>	  
+		</dependency>		
+	</dependencies>
+
+	<repositories>
+		<!-- Maven central -->
+		<repository>
+			<id>central</id>
+			<name>Maven Plugin Repository</name>
+			<url>http://repo1.maven.org/maven2</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<!-- JavaMail, activation, ... sun API official repo -->
+		<repository>
+			<id>maven2-repository.dev.java.net</id>
+			<name>Java.net Repository for Maven</name>
+			<url>http://download.java.net/maven/2/</url>
+			<layout>default</layout>
+		</repository>
+		<!-- Glassfish -->
+		<repository>
+			<id>maven-glassfish-repository.dev.java.net</id>
+			<name>Java.net Repository for Maven</name>
+			<url>http://download.java.net/maven/glassfish/</url>
+			<layout>default</layout>
+		</repository>
+		<!-- Eclipse link for JPA provider -->
+		<repository>
+			<id>eclipse-link-repo</id>
+			<url>http://download.eclipse.org/rt/eclipselink/maven.repo/</url>
+			<layout>default</layout>
+		</repository>
+		<!-- Jboss public repository -->
+        <repository>
+          <id>jboss-public-repository-group</id>
+          <name>JBoss Public Maven Repository Group</name>
+          <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+          <layout>default</layout>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </snapshots>
+        </repository>      
+        <repository>
+          <id>jboss-old-repository-group</id>
+          <url>http://repository.jboss.org/maven2/</url>
+          <layout>default</layout>
+          <releases>
+            <enabled>false</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+            <updatePolicy>never</updatePolicy>
+          </snapshots>
+        </repository>         
+	</repositories>
+
+	<pluginRepositories>
+		<!-- Maven central -->
+		<pluginRepository>
+			<id>central</id>
+			<name>Maven Plugin Repository</name>
+			<url>http://repo1.maven.org/maven2</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+		<!-- Java.net -->
+		<pluginRepository>
+			<id>maven2-repository.dev.java.net</id>
+			<name>Maven Plugin Repository</name>
+			<url>http://download.java.net/maven/2/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<scm>
+    	<connection>scm:svn:http://kaleido-foundry.googlecode.com/svn/trunk/</connection>
+    	<developerConnection>scm:svn:https://kaleido-foundry.googlecode.com/svn/trunk/</developerConnection>
+    	<url>http://kaleido-foundry.googlecode.com/svn/trunk/</url>		
+	</scm>
+
+	<issueManagement>
+		<system>googlecode</system>
+		<url>http://code.google.com/p/kaleido-foundry/issues/list</url>
+	</issueManagement>
+
+	<ciManagement>
+		<system>hudson</system>
+		<url>${hudson.host.url}</url>
+		<notifiers>
+			<notifier>
+				<type>mail</type>
+				<sendOnError>true</sendOnError>
+				<sendOnFailure>true</sendOnFailure>
+				<sendOnSuccess>false</sendOnSuccess>
+				<sendOnWarning>false</sendOnWarning>
+			</notifier>
+		</notifiers>
+	</ciManagement>
+
+<!-- 	<distributionManagement> -->
+<!-- 		<site> -->
+<!-- 			<id>googlecode.kaleido</id> -->
+<!-- 			<name>googlecode maven site</name> -->
+<!-- 			<url>scm:svn:https://kaleido-foundry.googlecode.com/svn/www/site</url> -->
+<!-- 		</site>				 -->
+<!-- 	</distributionManagement> -->
+
+	<build>		
+	    <pluginManagement>
+            <plugins>
+				<!-- assembly facilities -->
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.2.1</version>
+				</plugin>
+
+				<!-- release -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.2.2</version>
+				</plugin>        
+        		<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.1</version>
+					<configuration>
+						<useAgent>true</useAgent>
+					</configuration>
+				</plugin>
+				
+				<!-- google code upload facilities -->
+                <plugin>
+                    <groupId>com.googlecode.maven-gcu-plugin</groupId>
+                    <artifactId>maven-gcu-plugin</artifactId>
+                    <version>1.1</version>
+                </plugin>
+                
+                <!-- Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <plugin>
+                	<groupId>org.eclipse.m2e</groupId>
+                	<artifactId>lifecycle-mapping</artifactId>
+                	<version>1.0.0</version>
+                	<configuration>
+                		<lifecycleMappingMetadata>
+                			<pluginExecutions>
+                				<pluginExecution>
+                					<pluginExecutionFilter>
+                						<groupId>org.bsc.maven</groupId>
+                						<artifactId>maven-processor-plugin</artifactId>
+                						<versionRange>[2.0.0,)</versionRange>
+                						<goals>
+                							<goal>process-test</goal>
+                							<goal>process</goal>
+                						</goals>
+                					</pluginExecutionFilter>
+                					<action>
+                						<ignore />
+                					</action>
+                				</pluginExecution>
+                				<pluginExecution>
+                					<pluginExecutionFilter>
+                						<groupId>org.codehaus.mojo</groupId>
+                						<artifactId>aspectj-maven-plugin</artifactId>
+                						<versionRange>[1.4,)</versionRange>
+                						<goals>
+                							<goal>compile</goal>
+                							<goal>test-compile</goal>
+                						</goals>
+                					</pluginExecutionFilter>
+                					<action>
+                						<ignore />
+                					</action>
+                				</pluginExecution>
+                			</pluginExecutions>
+                		</lifecycleMappingMetadata>
+                	</configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        
+		<plugins>
+			<!-- compilation -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+					<!-- <optimize>true</optimize> -->
+					<!-- disable annotation processors during normal compilation, use maven-processor-plugin, 
+						waiting maven compiler plugin handle it -->
+					<compilerArgument>-proc:none</compilerArgument>
+				</configuration>
+			</plugin>
+			<!-- compilation resouces -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.5</version>
+			</plugin>
+			<!-- annotation processor jdk 6 - http://maven-annotation-plugin.googlecode.com/svn/docs/usage.html -->
+			<plugin>
+				<groupId>org.bsc.maven</groupId>
+				<artifactId>maven-processor-plugin</artifactId>
+				<version>2.0.5</version>
+				<executions>
+					<execution>
+						<id>process</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>process-classes</phase>
+						<configuration>
+							<outputDirectory>${project.basedir}/src/main/resources</outputDirectory>
+							<processors>
+								<processor>org.kaleidofoundry.core.plugin.processor.PluginAnnotationProcessor</processor>
+							</processors>
+						</configuration>
+					</execution>
+					<execution>
+						<id>process-test</id>
+						<goals>
+							<goal>process-test</goal>
+						</goals>
+						<phase>process-test-classes</phase>
+						<configuration>
+							<outputDirectory>${project.basedir}/src/test/resources</outputDirectory>
+							<processors>
+								<processor>org.kaleidofoundry.core.plugin.processor.PluginAnnotationProcessor</processor>
+							</processors>
+						</configuration>
+					</execution>					
+				</executions>
+				<dependencies />
+			</plugin>			
+			<!-- aop compile weaving -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>aspectj-maven-plugin</artifactId>
+				<version>1.4</version>
+				<configuration>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+					<complianceLevel>${jdk.version}</complianceLevel>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>       <!-- use this goal to weave all your main classes -->
+							<goal>test-compile</goal>  <!-- use this goal to weave all your test classes -->
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjrt</artifactId>
+						<version>${aspectj.version}</version>
+						<scope>compile</scope>
+					</dependency>				
+					<dependency>
+              			<groupId>org.aspectj</groupId>
+              			<artifactId>aspectjtools</artifactId>
+              			<version>${aspectj.version}</version>
+              			<scope>compile</scope>
+        			</dependency>						 					
+				</dependencies>
+			</plugin>
+			<!-- packaging -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.1</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+						<manifestEntries>
+              				<Implementation-Build>${buildNumber}</Implementation-Build>
+            			</manifestEntries>
+					</archive>
+				</configuration>			
+			</plugin>
+			<!-- packaging using revision number -->	
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>false</doCheck>
+          			<doUpdate>false</doUpdate>
+<!-- 					<format>{0,date,yyyy-MM-dd HH:mm:ss}</format> -->
+<!-- 					<items> -->
+<!-- 						<item>timestamp</item> -->
+<!-- 					</items>           -->
+				</configuration>
+			</plugin>			
+			<!-- deploying -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.6</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-plugin</artifactId>
+				<version>1.4</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.2.2</version>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<tagBase>https://kaleido-foundry.googlecode.com/svn/tags</tagBase>
+					<tagNameFormat>kaleido-@{project.version}</tagNameFormat>
+				</configuration>
+			</plugin>
+			<!-- attach sources -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
+				<executions>
+					<execution>
+						<inherited>true</inherited>
+						<phase>deploy</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>			
+			<!-- report -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+				<!-- doclava configuration 
+				<configuration>
+			          <docletArtifact>
+			            <groupId>com.google.doclava</groupId>
+			            <artifactId>doclava</artifactId>
+			            <version>1.0.3</version>
+			          </docletArtifact>
+			          <doclet>com.google.doclava.Doclava</doclet>
+			          <bootclasspath>${sun.boot.class.path}</bootclasspath>
+			          <additionalparam>
+			             -quiet
+			             -federate JDK http://download.oracle.com/javase/6/docs/api/index.html?
+			             -federationxml JDK http://doclava.googlecode.com/svn/static/api/openjdk-6.xml
+			             -hdf project.name "${project.name}"
+			             -d ${project.build.directory}/apidocs
+			           </additionalparam>
+			          <useStandardDocletOptions>false</useStandardDocletOptions>
+			          <additionalJOption>-J-Xmx1024m</additionalJOption>
+			    </configuration>	
+			    -->		
+				<configuration>
+					<links>
+						<link>http://download.oracle.com/javase/6/docs/api/</link>
+						<link>http://download.oracle.com/javaee/6/api/</link>
+						<link>http://junit.sourceforge.net/javadoc/</link>
+						<link>http://www.slf4j.org/api/</link>
+					</links>
+					<source>${jdk.version}</source>
+					<minmemory>128m</minmemory>
+					<maxmemory>512m</maxmemory>
+					<docfilessubdirs>true</docfilessubdirs>
+					<linksource>true</linksource>					
+				</configuration>	
+				<executions>
+					<execution>
+						<inherited>true</inherited>
+						<phase>deploy</phase>
+						<goals>
+							<goal>aggregate</goal>
+						</goals>
+					</execution>
+				</executions>							       	
+			</plugin>				
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<locales>en</locales>	
+					<siteDirectory>kaleido-parent/src/site</siteDirectory>				
+					<reportPlugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-project-info-reports-plugin</artifactId>
+							<version>2.4</version>
+							<reportSets>
+								<reportSet>
+									<reports>
+										<report>summary</report>
+										<report>index</report>
+										<report>project-team</report>
+										<report>license</report>
+										<report>modules</report>
+										<report>dependencies</report>
+										<report>dependency-convergence</report>
+										<report>dependency-management</report>
+										<report>mailing-list</report>
+										<report>issue-tracking</report>
+										<report>plugins</report>
+										<report>plugin-management</report>
+										<report>scm</report>
+										<report>cim</report>
+									</reports>
+								</reportSet>
+							</reportSets>										
+						</plugin>		
+    					<plugin>
+	            			<groupId>org.apache.maven.plugins</groupId>
+	            			<artifactId>maven-javadoc-plugin</artifactId>
+	            			<version>2.7</version>
+	          			</plugin>							
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-jxr-plugin</artifactId>
+							<version>2.2</version>
+							<configuration>
+								<aggregate>true</aggregate>
+							</configuration>				
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+					        <artifactId>maven-surefire-report-plugin</artifactId>
+					        <version>2.9</version>
+					        <configuration>
+					        	<aggregate>true</aggregate>		          
+					        </configuration>
+						</plugin>
+ 						<plugin>
+	            			<groupId>org.apache.maven.plugins</groupId>
+	            			<artifactId>maven-checkstyle-plugin</artifactId>
+	            			<version>2.6</version>
+	            			<configuration>
+								<aggregate>true</aggregate>	
+							</configuration>
+	          			</plugin>									
+						<!-- maven annotation processor incompatibles 
+							<plugin> 
+								<groupId>org.codehaus.mojo</groupId> 
+								<artifactId>cobertura-maven-plugin</artifactId> 
+								<version>2.4</version> 
+					            <configuration>
+					              <formats>
+					                <format>xml</format>
+					                <format>html</format>
+					              </formats>
+					            </configuration>								
+							</plugin>
+						-->
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-pmd-plugin</artifactId>
+							<version>2.5</version>
+							<configuration>
+								<aggregate>true</aggregate>				
+								<targetJdk>${jdk.version}</targetJdk>
+								<rulesets>
+									<ruleset>/rulesets/braces.xml</ruleset>
+									<ruleset>/rulesets/naming.xml</ruleset>
+								</rulesets>
+								<format>xml</format>
+								<linkXref>true</linkXref>										
+								<sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+								<minimumTokens>100</minimumTokens>
+							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-changes-plugin</artifactId>
+							<version>2.4</version>
+							<reportSets>
+								<reportSet>
+									<reports>
+										<report>changes-report</report>
+									</reports>
+								</reportSet>
+							</reportSets>
+						</plugin>					
+					</reportPlugins>
+				</configuration>
+			</plugin>
+
+		
+			<plugin>
+				<groupId>org.codehaus.sonar</groupId>
+				<artifactId>sonar-dev-mojo</artifactId>
+				<version>2.1</version>
+			</plugin>
+			<!-- ide -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<useProjectReferences>true</useProjectReferences>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+					<configuration>
+						<ajdtVersion>${jdk.version}</ajdtVersion>
+					</configuration>
+				</configuration>
+			</plugin>
+		</plugins>
+
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-scm</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.scm</groupId>
+				<artifactId>maven-scm-manager-plexus</artifactId>
+				<version>1.4</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.scm</groupId>
+				<artifactId>maven-scm-provider-svnexe</artifactId>
+				<version>1.4</version>
+			</extension>
+		</extensions>
+	</build>
+
+	<profiles>
+		<!-- JavaEE 5 profile - Ejb 3.0, JPA 1.x, JMS 1.1 ... -->
+		<profile>
+			<id>javaee5</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>javaee</name>
+					<value>5</value>
+				</property>
+			</activation>
+			<properties>
+				<webapp.version>2.5</webapp.version>
+				<webapp.xsd.version>2_5</webapp.xsd.version>
+			</properties>			
+			<dependencies>
+				<!-- jpa api - it is only used for testing (it have to be before javax.persistence in classpath) -->
+				<dependency>
+					<groupId>org.eclipse.persistence</groupId>
+					<artifactId>eclipselink</artifactId>
+					<version>1.2.0</version>
+					<scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.eclipse.persistence</groupId>
+					<artifactId>javax.persistence</artifactId>
+					<version>1.2.0</version>
+					<scope>test</scope>
+				</dependency>
+				<!-- jpa api -->
+				<dependency>
+					<groupId>org.apache.geronimo.specs</groupId>
+					<artifactId>geronimo-jpa_1.0_spec</artifactId>
+					<version>1.1.2</version>
+					<scope>provided</scope>
+				</dependency>
+				<!-- web api -->
+				<dependency>
+					<groupId>org.apache.geronimo.specs</groupId>
+					<artifactId>geronimo-servlet_2.5_spec</artifactId>
+					<version>1.2</version>
+					<scope>provided</scope>
+				</dependency>
+				<!--  ejb api -->
+				<dependency>
+    				<groupId>org.apache.geronimo.specs</groupId>
+    				<artifactId>geronimo-ejb_3.0_spec</artifactId>
+    				<version>1.0</version>
+    				<scope>provided</scope>
+				</dependency>
+				<!-- jms api -->
+				<dependency>
+					<groupId>org.apache.geronimo.specs</groupId>
+					<artifactId>geronimo-jms_1.1_spec</artifactId>
+					<version>1.1</version>
+					<scope>provided</scope>
+				</dependency>
+				<!-- jax-ws api -->
+				<dependency>
+					<groupId>javax.xml.ws</groupId>
+					<artifactId>jaxws-api</artifactId>
+					<version>2.0</version>
+					<scope>provided</scope>
+				</dependency>				
+				<!-- jax-rs api -->
+				<dependency>
+					<groupId>javax.ws.rs</groupId>
+					<artifactId>jsr311-api</artifactId>
+					<version>1.0</version>
+					<scope>provided</scope>
+				</dependency>				
+			</dependencies>
+		</profile>
+		
+		<!-- JavaEE 6 profile - Ejb 3.1, JPA 2.x, ... -->
+		<profile>
+			<id>javaee6</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>javaee</name>
+					<value>6</value>
+				</property>				
+			</activation>		
+			<properties>
+				<webapp.version>3.0</webapp.version>
+				<webapp.xsd.version>3_0</webapp.xsd.version>
+			</properties>			
+			<dependencies>
+				<!-- persistence api - used only for testing (have to be before javaee-api in classpath) -->
+				<dependency>
+					<groupId>org.eclipse.persistence</groupId>
+					<artifactId>eclipselink</artifactId>
+					<version>2.0.2</version>
+					<scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.eclipse.persistence</groupId>
+					<artifactId>javax.persistence</artifactId>
+					<version>2.0.0</version>
+					<scope>test</scope>
+				</dependency>
+				<!-- full javaee 6 profile -->
+				<dependency>
+					<groupId>javax</groupId>
+					<artifactId>javaee-api</artifactId>
+					<version>6.0</version>
+					<scope>provided</scope>
+				</dependency>
+				<!-- javaee6 web profile 
+				<dependency> 
+					<groupId>javax</groupId>
+					<artifactId>javaee-web-api</artifactId> 
+					<version>6.0</version> 
+					<scope>provided</scope> 
+				</dependency> 
+				-->
+			</dependencies>
+		</profile>		
+	</profiles>
 
 </project>
