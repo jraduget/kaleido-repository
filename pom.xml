@@ -90,20 +90,14 @@
 		<module>kaleido-core</module>
 		<!-- core extensions -->
 		<module>kaleido-jee6</module>
-<<<<<<< HEAD
-=======
 		<module>kaleido-spring</module>
 		<module>kaleido-guice</module>
->>>>>>> origin/master
 		<module>kaleido-launcher</module>	
 		<!-- distrib bundle module -->
 		<module>kaleido-distrib</module>	
 		<!--incoming - to refactor 
-<<<<<<< HEAD
 		<module>kaleido-spring</module>
 		<module>kaleido-guice</module>
-=======
->>>>>>> origin/master
 		<module>kaleido-mailing</module> 
 		<module>kaleido-messaging</module> 
 		<module>kaleido-reporting</module> 
