@@ -658,7 +658,7 @@
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
-					<finalName>kaleidofoundry-${project.version}.zip</finalName>
+					<finalName>kaleidofoundry-${project.version}-R{${buildNumber}.zip</finalName>
 					<descriptors>
 						<descriptor>${project.artifactId}/src/assemble/distribution.xml</descriptor>
 					</descriptors>
@@ -682,7 +682,7 @@
 				<executions>
 					<execution>
 						<id>gcode-upload</id>
-						<phase>site-deploy</phase>
+						<phase>deploy</phase>
 						<goals>
 							<goal>upload</goal>
 						</goals>
@@ -692,8 +692,8 @@
 							<projectName>kaleido-foundry</projectName>
 							<uploads>
 								<upload>
-									<file>${project.build.directory}/kaleidofoundry-${project.version}.zip</file>
-									<summary>${project.name} ${project.version}</summary>
+									<file>${project.build.directory}/kaleidofoundry-${project.version}-R{${buildNumber}.zip</file>
+									<summary>${project.name} ${project.version} - Revision ${buildNumber}</summary>
 									<labels>
 										<label>Featured</label>
 										<label>Type-Archive</label>
