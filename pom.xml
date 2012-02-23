@@ -9,7 +9,7 @@
   	
 	<groupId>org.kaleidofoundry</groupId>
 	<artifactId>kaleido-parent</artifactId>
-	<version>0.8.1-SNAPSHOT</version>
+	<version>0.8.2-SNAPSHOT</version>
 
 	<name>KaleidoFoundry parent POM</name>
 	<url>http://code.google.com/p/kaleido-foundry/</url>
@@ -90,12 +90,20 @@
 		<module>kaleido-core</module>
 		<!-- core extensions -->
 		<module>kaleido-jee6</module>
+<<<<<<< HEAD
+=======
+		<module>kaleido-spring</module>
+		<module>kaleido-guice</module>
+>>>>>>> origin/master
 		<module>kaleido-launcher</module>	
 		<!-- distrib bundle module -->
 		<module>kaleido-distrib</module>	
 		<!--incoming - to refactor 
+<<<<<<< HEAD
 		<module>kaleido-spring</module>
 		<module>kaleido-guice</module>
+=======
+>>>>>>> origin/master
 		<module>kaleido-mailing</module> 
 		<module>kaleido-messaging</module> 
 		<module>kaleido-reporting</module> 
