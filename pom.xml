@@ -239,13 +239,13 @@
 		</notifiers>
 	</ciManagement>
 
-	<distributionManagement>
-		<site>
-			<id>googlecode.kaleido</id>
-			<name>googlecode maven site</name>
-			<url>scm:svn:https://kaleido-foundry.googlecode.com/svn/www/site</url>
-		</site>				
-	</distributionManagement>
+<!-- 	<distributionManagement> -->
+<!-- 		<site> -->
+<!-- 			<id>googlecode.kaleido</id> -->
+<!-- 			<name>googlecode maven site</name> -->
+<!-- 			<url>scm:svn:https://kaleido-foundry.googlecode.com/svn/www/site</url> -->
+<!-- 		</site>				 -->
+<!-- 	</distributionManagement> -->
 
 	<build>			
     	
