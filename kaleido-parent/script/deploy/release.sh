@@ -12,3 +12,8 @@ mvn release:clean
 mvn release:prepare
 mvn release:rollback
 mvn release:perform -Darguments=-Dgpg.passphrase=thephrase
+
+
+# site and google code upload
+mvn site:site 
+

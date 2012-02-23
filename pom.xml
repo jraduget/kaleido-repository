@@ -93,8 +93,6 @@
 		<module>kaleido-spring</module>
 		<module>kaleido-guice</module>
 		<module>kaleido-launcher</module>	
-		<!-- distrib bundle module -->
-		<module>kaleido-distrib</module>	
 		<!--incoming - to refactor 
 		<module>kaleido-spring</module>
 		<module>kaleido-guice</module>
@@ -673,7 +671,7 @@
 				<executions>
 					<execution>
 						<id>bundle</id>
-						<phase>deploy</phase>
+						<phase>post-site</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>
