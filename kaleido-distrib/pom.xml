@@ -16,20 +16,21 @@
 		<plugins>
 			<!-- assemble artifact -->
 			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>				
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<finalName>kaleidofoundry-${project.version}.zip</finalName>
+					<descriptors>
+						<descriptor>src/assemble/distribution.xml</descriptor>
+					</descriptors>
+					<siteDirectory>../target/site</siteDirectory>
+				</configuration>
 				<executions>
 					<execution>
-						<id>distrib-assembly</id>
+						<id>bundle</id>
 						<phase>deploy</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>
-						<configuration>
-							<descriptors>
-								<descriptor>src/assemble/distribution.xml</descriptor>
-							</descriptors>
-							<siteDirectory>../target/site</siteDirectory>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -51,7 +52,7 @@
 							<projectName>kaleido-foundry</projectName>
 							<uploads>
 								<upload>
-									<file>${project.build.directory}/kaleido-${project.version}.zip</file>
+									<file>${project.build.directory}/kaleidofoundry-${project.version}.zip</file>
 									<summary>${project.name} ${project.version}</summary>
 									<labels>
 										<label>Featured</label>
