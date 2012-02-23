@@ -15,7 +15,7 @@ mvn clean site:site && mvn site:stage
 
 mvn clean deploy -Dgpg.keyname=${GPG_KEYNAME} -Dgpg.passphrase=${GPG_PASSPHRASE}
 mvn release:clean
-mvn release:prepare
+mvn release:prepare -Dgpg.keyname=${GPG_KEYNAME} -Darguments=-Dgpg.passphrase=${GPG_PASSPHRASE}
 #mvn release:rollback
 mvn release:perform -Dgpg.keyname=${GPG_KEYNAME} -Darguments=-Dgpg.passphrase=${GPG_PASSPHRASE}
 
