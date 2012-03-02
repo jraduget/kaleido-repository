@@ -9,7 +9,7 @@
   	
 	<groupId>org.kaleidofoundry</groupId>
 	<artifactId>kaleido-parent</artifactId>
-	<version>0.8.1-SNAPSHOT</version>
+	<version>0.8.2-SNAPSHOT</version>
 
 	<name>KaleidoFoundry parent POM</name>
 	<url>http://code.google.com/p/kaleido-foundry/</url>
@@ -91,9 +91,9 @@
 		<!-- core extensions -->
 		<module>kaleido-jee6</module>
 		<module>kaleido-launcher</module>	
-		<!--incoming 
 		<module>kaleido-spring</module>
 		<module>kaleido-guice</module>
+		<!--incoming 
 		<module>kaleido-mailing</module> 
 		<module>kaleido-messaging</module> 
 		<module>kaleido-reporting</module> 
@@ -239,13 +239,13 @@
 		</notifiers>
 	</ciManagement>
 
-<!-- 	<distributionManagement> -->
-<!-- 		<site> -->
-<!-- 			<id>googlecode.kaleido</id> -->
-<!-- 			<name>googlecode maven site</name> -->
-<!-- 			<url>scm:svn:https://kaleido-foundry.googlecode.com/svn/www/site</url> -->
-<!-- 		</site>				 -->
-<!-- 	</distributionManagement> -->
+	<distributionManagement>
+		<site>
+			<id>googlecode.kaleido</id>
+			<name>googlecode maven site</name>
+			<url>scm:svn:https://kaleido-foundry.googlecode.com/svn/www/site</url>
+		</site>				
+	</distributionManagement>
 
 	<build>			
     	
@@ -256,7 +256,6 @@
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>2.3</version>
 				</plugin>
-
 				<!-- release -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>

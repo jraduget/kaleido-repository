@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.kaleidofoundry</groupId>
 		<artifactId>kaleido-parent</artifactId>
-		<version>0.8.1-SNAPSHOT</version>
+		<version>0.8.2-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>kaleido-distrib</artifactId>
@@ -26,7 +26,7 @@
 				<executions>
 					<execution>
 						<id>bundle</id>
-						<phase>install</phase>
+						<phase>deploy</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>
@@ -41,7 +41,7 @@
 				<executions>
 					<execution>
 						<id>gcode-upload</id>
-						<phase>install</phase>
+						<phase>deploy</phase>
 						<goals>
 							<goal>upload</goal>
 						</goals>
