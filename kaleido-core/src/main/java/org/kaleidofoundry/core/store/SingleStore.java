@@ -93,9 +93,10 @@ public interface SingleStore<B, R> {
     * store updates on current R instance<br/>
     * multi-thread access,it have to be synchronized
     * 
+    * @param r
     * @return current instance
     * @throws ResourceException
     */
    @NotNull
-   R store() throws ResourceException;
+   R store(R r) throws ResourceException;
 }

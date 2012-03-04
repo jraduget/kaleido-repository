@@ -15,6 +15,9 @@
  */
 package org.kaleidofoundry.core.store;
 
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 
 /**
@@ -52,10 +55,11 @@ public class SingleFileStore extends AbstractSingleStore<String, ResourceHandler
     * @see org.kaleidofoundry.core.store.AbstractSingleStore#doStore()
     */
    @Override
-   protected ResourceHandler doStore() throws ResourceException {
+   protected ResourceHandler doStore(final ResourceHandler r) throws ResourceException {
 	if (fileStore.isReadOnly()) { throw new ResourceException("store.readonly.illegal", getResourceBinding()); }
-	fileStore.store(resourceHandler);
-	return resourceHandler;
+	fileStore.store(r);
+	this.resourceHandler = r;
+	return get();
    }
 
    /*
@@ -76,6 +80,20 @@ public class SingleFileStore extends AbstractSingleStore<String, ResourceHandler
     */
    @Override
    protected void init(final String resourceBinding) {
+   }
+
+   /*
+    * @see org.kaleidofoundry.core.store.FileStore#createResourceHandler(java.lang.String, java.io.InputStream)
+    */
+   public ResourceHandler createResourceHandler(final String resourceUri, final InputStream input) {
+	return fileStore.createResourceHandler(resourceUri, input);
+   }
+
+   /*
+    * @see org.kaleidofoundry.core.store.FileStore#createResourceHandler(java.lang.String, java.lang.String)
+    */
+   public ResourceHandler createResourceHandler(final String resourceUri, final String content) throws UnsupportedEncodingException {
+	return fileStore.createResourceHandler(resourceUri, content);
    }
 
 }

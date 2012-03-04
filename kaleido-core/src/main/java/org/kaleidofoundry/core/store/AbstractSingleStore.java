@@ -86,9 +86,10 @@ public abstract class AbstractSingleStore<B, R> implements SingleStore<B, R> {
    /**
     * persists current resource instance
     * 
+    * @param r
     * @return current resource instance
     */
-   protected abstract R doStore() throws ResourceException;
+   protected abstract R doStore(R r) throws ResourceException;
 
    /*
     * (non-Javadoc)
@@ -127,8 +128,8 @@ public abstract class AbstractSingleStore<B, R> implements SingleStore<B, R> {
     * @see org.kaleidofoundry.core.lang.pattern.SingleStore#store()
     */
    @Override
-   public synchronized R store() throws ResourceException {
-	return doStore();
+   public synchronized R store(final R r) throws ResourceException {
+	return doStore(r);
    }
 
 }

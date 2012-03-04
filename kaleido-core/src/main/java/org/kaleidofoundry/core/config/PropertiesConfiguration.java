@@ -15,18 +15,20 @@
  */
 package org.kaleidofoundry.core.config;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Properties;
 
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.store.ResourceHandler;
-import org.kaleidofoundry.core.store.SingleFileStore;
 import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.ResourceHandler;
+import org.kaleidofoundry.core.util.locale.LocaleFactory;
 
 /**
  * Properties {@link Configuration} implementation
@@ -68,17 +70,17 @@ public class PropertiesConfiguration extends AbstractConfiguration {
     * org.kaleidofoundry.core.cache.Cache)
     */
    @Override
-   protected Cache<String, Serializable> loadProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> properties) throws ResourceException,
-	   ConfigurationException {
+   protected Cache<String, Serializable> loadProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> cacheProperties)
+	   throws ResourceException, ConfigurationException {
 	try {
 	   final Properties lprops = new Properties();
 	   lprops.load(resourceHandler.getInputStream());
 
 	   for (final String propName : lprops.stringPropertyNames()) {
-		properties.put(normalizeKey(propName), lprops.getProperty(propName));
+		cacheProperties.put(normalizeKey(propName), lprops.getProperty(propName));
 	   }
 
-	   return properties;
+	   return cacheProperties;
 	} catch (final IOException ioe) {
 	   throw new ResourceException(ioe, resourceHandler.getResourceUri());
 	}
@@ -86,20 +88,19 @@ public class PropertiesConfiguration extends AbstractConfiguration {
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.AbstractConfiguration#storeProperties(org.kaleidofoundry.core.cache.Cache,
-    * org.kaleidofoundry.core.store.SingleFileStore)
+    * @see org.kaleidofoundry.core.config.AbstractConfiguration#storeProperties(org.kaleidofoundry.core.store.ResourceHandler,
+    * org.kaleidofoundry.core.cache.Cache)
     */
    @Override
-   @NotYetImplemented
-   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> cacheProperties, final SingleFileStore fileStore)
+   protected Cache<String, Serializable> storeProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> cacheProperties)
 	   throws ResourceException, ConfigurationException {
-	// try {
-	// properties.save(resourceHandler.getInputStream());
-	// return properties;
-	// } catch (IOException ioe) {
-	// throw new ResourceException(ioe);
-	// }
-
-	return null; // annotation @NotYetImplemented handle throw new NotYetImplementedException()...
+	try {
+	   ByteArrayOutputStream out = new ByteArrayOutputStream();
+	   toProperties().store(out, Calendar.getInstance(LocaleFactory.getDefaultFactory().getCurrentLocale()).getTime().toString());
+	   singleFileStore.store(singleFileStore.createResourceHandler(resourceHandler.getResourceUri(), new ByteArrayInputStream(out.toByteArray())));
+	   return cacheProperties;
+	} catch (IOException ioe) {
+	   throw new ResourceException(ioe, resourceHandler.getResourceUri());
+	}
    }
 }
