@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,15 +73,15 @@ public abstract class ConfigurationFactory {
 	if (!INIT_LOADED) {
 	   final StringTokenizer strConfigToken = new StringTokenizer(System.getProperty(JavaEnvProperties), JavaEnvPropertiesSeparator);
 	   while (strConfigToken.hasMoreTokens()) {
-		final String configItemStr = strConfigToken.nextToken();
+		final String configItemStr = strConfigToken.nextToken().trim();
 		final String[] configItem = StringHelper.split(configItemStr, JavaEnvPropertiesValueSeparator);
 		// named declaration
 		if (configItem.length == 2) {
-		   provides(configItem[0], configItem[1]);
+		   provides(configItem[0].trim(), configItem[1].trim());
 		}
 		// anonymous declaration
 		else if (configItem.length == 1) {
-		   provides(configItem[0], configItem[0]);
+		   provides(configItem[0].trim(), configItem[0].trim());
 		}
 	   }
 	   INIT_LOADED = true;

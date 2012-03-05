@@ -30,7 +30,6 @@ import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * File system store implementation (Windows, Linux, MacOS, ...) <br/>
@@ -78,21 +77,7 @@ public class FileSystemStore extends AbstractFileStore implements FileStore {
     */
    @Override
    protected String buildResourceURi(final String resourceRelativePath) {
-
-	String result = super.buildResourceURi(resourceRelativePath);
-
-	if (result.contains("${basedir}")) {
-	   String currentPath = FileHelper.buildUnixAppPath(FileHelper.getCurrentPath());
-	   result = StringHelper.replaceAll(result, "${basedir}", (currentPath.startsWith("/") ? currentPath.substring(1) : currentPath));
-	}
-	if (result.contains("file:/..")) {
-	   String parentPath = FileHelper.buildUnixAppPath(FileHelper.getParentPath());
-	   result = StringHelper.replaceAll(result, "file:/..", "file:/" + (parentPath.startsWith("/") ? parentPath.substring(1) : parentPath));
-	} else if (result.startsWith("file:/.")) {
-	   String currentPath = FileHelper.buildUnixAppPath(FileHelper.getCurrentPath());
-	   result = StringHelper.replaceAll(result, "file:/.", "file:/" + (currentPath.startsWith("/") ? currentPath.substring(1) : currentPath));
-	}
-	return result;
+	return FileStoreFactory.buildFullResourceURi(super.buildResourceURi(resourceRelativePath));
    }
 
    /*

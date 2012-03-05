@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,8 +69,10 @@ public class StartupListener implements ServletContextListener {
 	// Parse default configurations and load it if needed
 	final String kaleidoConfigurations = sce.getServletContext().getInitParameter(ConfigurationConstants.JavaEnvProperties);
 	if (!StringHelper.isEmpty(kaleidoConfigurations)) {
-	   LOGGER.info(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.start.configurations", kaleidoConfigurations));
-	   System.getProperties().put(ConfigurationConstants.JavaEnvProperties, kaleidoConfigurations);
+	   LOGGER.info(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.start.configurations",
+		   StringHelper.replaceAll(kaleidoConfigurations, "\n", ",")));
+	   System.getProperties().put(ConfigurationConstants.JavaEnvProperties,
+		   StringHelper.replaceAll(kaleidoConfigurations, "\n", ConfigurationConstants.JavaEnvPropertiesSeparator));
 	   // load and register given configurations ids / url
 	   try {
 		ConfigurationFactory.init();

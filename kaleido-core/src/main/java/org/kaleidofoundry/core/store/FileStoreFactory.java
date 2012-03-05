@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,13 @@
 package org.kaleidofoundry.core.store;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
 
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * {@link FileStore} factory
@@ -87,5 +90,29 @@ public abstract class FileStoreFactory {
     */
    public static FileStore provides(@NotNull final RuntimeContext<FileStore> context) throws ProviderException {
 	return FILE_STORE_PROVIDER.provides(context);
+   }
+
+   /**
+    * A {@link FileStore} resource uri, can contains some variables like ${basedir} ...<br.>
+    * This class merge this variable if needed, in order to build a full valid {@link URI} for the filestore
+    * 
+    * @param resourcePath the resource uri to merge with the system variables
+    * @return the merged resource uri
+    */
+   public static String buildFullResourceURi(String resourcePath) {
+
+	if (resourcePath.contains("${basedir}")) {
+	   String currentPath = FileHelper.buildUnixAppPath(FileHelper.getCurrentPath());
+	   currentPath = currentPath.endsWith("/") ? currentPath.substring(0, currentPath.length() - 1) : currentPath;
+	   resourcePath = StringHelper.replaceAll(resourcePath, "${basedir}", (currentPath.startsWith("/") ? currentPath.substring(1) : currentPath));
+	}
+	if (resourcePath.contains("file:/..")) {
+	   String parentPath = FileHelper.buildUnixAppPath(FileHelper.getParentPath());
+	   resourcePath = StringHelper.replaceAll(resourcePath, "file:/..", "file:/" + (parentPath.startsWith("/") ? parentPath.substring(1) : parentPath));
+	} else if (resourcePath.startsWith("file:/.")) {
+	   String currentPath = FileHelper.buildUnixAppPath(FileHelper.getCurrentPath());
+	   resourcePath = StringHelper.replaceAll(resourcePath, "file:/.", "file:/" + (currentPath.startsWith("/") ? currentPath.substring(1) : currentPath));
+	}
+	return resourcePath;
    }
 }
