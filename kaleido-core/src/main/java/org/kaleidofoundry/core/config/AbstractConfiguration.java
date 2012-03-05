@@ -188,14 +188,14 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
    /**
     * you don't need to release resourceHandler argument, it is done by agregator
     * 
-    * @param fileStore
+    * @param resourceHandler
     * @param properties
     * @return internal cache instance
     * @throws ResourceException
     * @throws ConfigurationException
     */
-   protected abstract Cache<String, Serializable> storeProperties(Cache<String, Serializable> properties, SingleFileStore fileStore) throws ResourceException,
-	   ConfigurationException;
+   protected abstract Cache<String, Serializable> storeProperties(final ResourceHandler resourceHandler, Cache<String, Serializable> properties)
+	   throws ResourceException, ConfigurationException;
 
    /*
     * (non-Javadoc)
@@ -279,7 +279,12 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
 	if (!isLoaded()) { throw new ConfigurationException("config.load.notloaded", name); }
 	if (!isStorable()) { throw new ConfigurationException("config.readonly.store", name); }
 	LOGGER.info(ConfigurationMessageBundle.getMessage("config.save.info", name, getResourceUri()));
-	singleFileStore.store();
+	final ResourceHandler resourceHandler = singleFileStore.get();
+	try {
+	   storeProperties(resourceHandler, cacheProperties);
+	} finally {
+	   resourceHandler.close();
+	}
    }
 
    /*

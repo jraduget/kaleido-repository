@@ -25,9 +25,8 @@ import java.util.Map.Entry;
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.store.ResourceHandler;
-import org.kaleidofoundry.core.store.SingleFileStore;
 import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.util.CollectionsHelper;
 import org.kaleidofoundry.core.util.StringHelper;
 
@@ -101,12 +100,12 @@ public class MainArgsConfiguration extends AbstractConfiguration implements Conf
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.AbstractConfiguration#storeProperties(org.kaleidofoundry.core.cache.Cache,
-    * org.kaleidofoundry.core.store.SingleFileStore)
+    * @see org.kaleidofoundry.core.config.AbstractConfiguration#storeProperties(org.kaleidofoundry.core.store.ResourceHandler,
+    * org.kaleidofoundry.core.cache.Cache)
     */
    @Override
-   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> properties, final SingleFileStore fileStore) throws ResourceException,
-	   ConfigurationException {
+   protected Cache<String, Serializable> storeProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> properties)
+	   throws ResourceException, ConfigurationException {
 	return properties; // never called
    }
 

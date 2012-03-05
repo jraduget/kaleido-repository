@@ -93,5 +93,7 @@ public interface ConfigurationConstants {
    String KeyPropertiesRoot = "";
    /** Default separator for properties name */
    String KeyPropertiesSeparator = ".";
+   /** Root of an xml configuration */
+   String XmlRootElement = "configuration";
 
 }

@@ -21,9 +21,8 @@ import java.io.Serializable;
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.store.ResourceHandler;
-import org.kaleidofoundry.core.store.SingleFileStore;
 import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.system.OsEnvironment;
 
 /**
@@ -75,8 +74,8 @@ public class OsEnvConfiguration extends AbstractConfiguration implements Configu
     * org.kaleidofoundry.core.cache.Cache)
     */
    @Override
-   protected Cache<String, Serializable> loadProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> properties) throws ResourceException,
-	   ConfigurationException {
+   protected Cache<String, Serializable> loadProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> properties)
+	   throws ResourceException, ConfigurationException {
 	try {
 	   final OsEnvironment environment = new OsEnvironment();
 	   for (final String key : environment.stringPropertyNames()) {
@@ -91,11 +90,11 @@ public class OsEnvConfiguration extends AbstractConfiguration implements Configu
 
    /*
     * (non-Javadoc)
-    * @see org.kaleidofoundry.core.config.AbstractConfiguration#storeProperties(org.kaleidofoundry.core.cache.Cache,
-    * org.kaleidofoundry.core.store.SingleFileStore)
+    * @see org.kaleidofoundry.core.config.AbstractConfiguration#storeProperties(org.kaleidofoundry.core.store.ResourceHandler,
+    * org.kaleidofoundry.core.cache.Cache)
     */
    @Override
-   protected Cache<String, Serializable> storeProperties(final Cache<String, Serializable> cacheProperties, final SingleFileStore fileStore)
+   protected Cache<String, Serializable> storeProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> cacheProperties)
 	   throws ResourceException, ConfigurationException {
 	return cacheProperties; // never called
    }
