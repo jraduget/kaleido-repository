@@ -22,6 +22,8 @@ import javax.servlet.ServletContextListener;
 
 import org.kaleidofoundry.core.config.ConfigurationConstants;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
+import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
+import org.kaleidofoundry.core.i18n.I18nMessagesProvider;
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.plugin.PluginFactory;
 import org.kaleidofoundry.core.store.ResourceException;
@@ -37,6 +39,7 @@ import org.slf4j.LoggerFactory;
  * <li>the default user locale</li>
  * <li>the configuration resources to load</li>
  * <li>the current servlet context</li>
+ * <li>the jpa support for i18n messages bundles</li>
  * </ul>
  * 
  * @author Jerome RADUGET
@@ -53,7 +56,20 @@ public class StartupListener implements ServletContextListener {
    public void contextInitialized(final ServletContextEvent sce) {
 	ServletContextProvider.init(sce.getServletContext());
 
-	// Static load plugin registry
+	// I18n JPA enable or not
+	I18nMessagesFactory.disableJpaControl();
+	String enableI18nJpa = sce.getServletContext().getInitParameter(I18nMessagesProvider.ENABLE_JPA_PROPERTY);
+	enableI18nJpa = StringHelper.isEmpty(enableI18nJpa) ? Boolean.FALSE.toString() : enableI18nJpa;
+
+	if (Boolean.valueOf(enableI18nJpa)) {
+	   LOGGER.info(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.start.i18n.jpa.enabled"));
+	   I18nMessagesFactory.enableJpaControl();
+	} else {
+	   LOGGER.info(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.start.i18n.jpa.disabled"));
+	   I18nMessagesFactory.disableJpaControl();
+	}
+
+	// Static load of the plugin registry
 	PluginFactory.getInterfaceRegistry();
 	LOGGER.info(StringHelper.replicate("*", 120));
 
@@ -66,7 +82,7 @@ public class StartupListener implements ServletContextListener {
 	   LOGGER.info(StringHelper.replicate("*", 120));
 	}
 
-	// Parse default configurations and load it if needed
+	// Parse tje default configurations and load it if needed
 	final String kaleidoConfigurations = sce.getServletContext().getInitParameter(ConfigurationConstants.JavaEnvProperties);
 	if (!StringHelper.isEmpty(kaleidoConfigurations)) {
 	   LOGGER.info(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.start.configurations",

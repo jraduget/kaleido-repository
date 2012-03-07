@@ -20,6 +20,7 @@ import java.lang.annotation.Annotation;
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
 import org.kaleidofoundry.core.config.NamedConfigurationInitializer;
+import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,9 @@ public class UnmanagedCdiInjector {
     */
    public static synchronized void init(final Class<?> mainClass) {
 	if (!weldSEInitialize) {
-
+	   
+	   I18nMessagesFactory.disableJpaControl();
+	   
 	   // create and init the configurations initializer
 	   if (mainClass != null) {
 		configurationInitializer = new NamedConfigurationInitializer(mainClass);
