@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,6 +99,8 @@ public class PropertiesConfiguration extends AbstractConfiguration {
 	   toProperties().store(out, Calendar.getInstance(LocaleFactory.getDefaultFactory().getCurrentLocale()).getTime().toString());
 	   singleFileStore.store(singleFileStore.createResourceHandler(resourceHandler.getResourceUri(), new ByteArrayInputStream(out.toByteArray())));
 	   return cacheProperties;
+	} catch (ResourceException re) {
+	   throw re;
 	} catch (IOException ioe) {
 	   throw new ResourceException(ioe, resourceHandler.getResourceUri());
 	}

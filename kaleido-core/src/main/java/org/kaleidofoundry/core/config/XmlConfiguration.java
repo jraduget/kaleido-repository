@@ -45,7 +45,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceHandler;
@@ -146,7 +145,6 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
     * org.kaleidofoundry.core.cache.Cache)
     */
    @Override
-   @NotYetImplemented
    protected Cache<String, Serializable> storeProperties(final ResourceHandler resourceHandler, final Cache<String, Serializable> cacheProperties)
 	   throws ResourceException, ConfigurationException {
 
