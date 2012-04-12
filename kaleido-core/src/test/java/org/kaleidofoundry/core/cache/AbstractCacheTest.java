@@ -139,6 +139,7 @@ public abstract class AbstractCacheTest extends Assert {
 	cache.put(mockPerson1.getId(), mockPerson1);
 	assertNotNull(mockPerson1.getId());
 	assertTrue(cache.keys().contains(mockPerson1.getId()));
+	assertTrue(cache.containsKey(mockPerson1.getId()));
 	// assert that first entry put have same reference when get it
 	assertSame(mockPerson1, cache.get(mockPerson1.getId()));
 	// assert that first entry put have right properties
@@ -154,6 +155,7 @@ public abstract class AbstractCacheTest extends Assert {
 	cache.put(mockPerson2.getId(), mockPerson2);
 	assertNotNull(mockPerson1.getId());
 	assertTrue(cache.keys().contains(mockPerson1.getId()));
+	assertTrue(cache.containsKey(mockPerson1.getId()));
 	// assert that second entry put have right replace old instance
 	mockPerson1 = cache.get(mockPerson2.getId());
 	assertNotNull(mockPerson2);
@@ -185,12 +187,14 @@ public abstract class AbstractCacheTest extends Assert {
 
 	   cache.put(p.getId(), p);
 	   assertEquals(id, cache.size());
+	   assertTrue(cache.containsKey(id));
 	}
 
 	assertEquals(maxSize - 1, cache.size());
 
 	cache.remove(1);
 	assertEquals(maxSize - 2, cache.size());
+	assertFalse(cache.containsKey(1));
 
 	cache.removeAll();
 	assertEquals(0, cache.size());

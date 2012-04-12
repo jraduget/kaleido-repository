@@ -171,6 +171,15 @@ public class Jboss3xCacheImpl<K extends Serializable, V extends Serializable> ex
 
    /*
     * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.AbstractCache#containsKey(java.io.Serializable)
+    */
+   @Override
+   public boolean containsKey(final K key) {
+	return root.getKeys().contains(key);
+   }
+
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.Cache#values()
     */
    @Override

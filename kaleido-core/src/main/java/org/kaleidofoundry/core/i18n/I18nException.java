@@ -26,7 +26,9 @@ import org.kaleidofoundry.core.lang.ErrorCode;
  * An i18n exception is used to identified precisely an exception by a code and a i18n message.<br/>
  * <p>
  * 
- * @see I18nMessagesFactory
+ * @see AbstractI18nException
+ * @see AbstractI18nRuntimeException
+ * @see AbstractI18nNullPointerException
  * @author Jerome RADUGET
  */
 public interface I18nException extends ErrorCode, Serializable {

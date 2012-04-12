@@ -155,6 +155,15 @@ public class EhCacheImpl<K extends Serializable, V extends Serializable> extends
 	return new HashSet<K>(cache.getKeys());
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.AbstractCache#containsKey(java.io.Serializable)
+    */
+   @Override
+   public boolean containsKey(final K key) {
+	return cache.getKeys().contains(key);
+   }
+
    /**
     * ehcache don't provide direct values access in the api. Values are encapsulated into {@link Element}<br/>
     * so for performance reason, this code is no very efficient if cache contains a lot of items. <br/>
@@ -214,5 +223,6 @@ public class EhCacheImpl<K extends Serializable, V extends Serializable> extends
    protected Cache getCache() {
 	return cache;
    }
+
 
 }

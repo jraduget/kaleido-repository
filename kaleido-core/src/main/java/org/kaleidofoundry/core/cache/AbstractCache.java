@@ -145,6 +145,15 @@ public abstract class AbstractCache<K extends Serializable, V extends Serializab
 
    /*
     * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.Cache#containsKey(java.io.Serializable)
+    */
+   @Override
+   public boolean containsKey(final K key) {
+	return keys().contains(key);
+   }
+
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.Cache#hasBeenDestroy()
     */
    @Override
@@ -165,4 +174,5 @@ public abstract class AbstractCache<K extends Serializable, V extends Serializab
    void checkCacheState() throws IllegalStateException {
 	if (hasBeenDestroy) { throw new IllegalStateException(InternalBundleHelper.CacheMessageBundle.getMessage("cache.destroy.access", getName())); }
    }
+
 }

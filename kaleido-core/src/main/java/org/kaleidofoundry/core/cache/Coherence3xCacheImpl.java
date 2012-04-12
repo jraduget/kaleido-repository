@@ -153,6 +153,15 @@ public class Coherence3xCacheImpl<K extends Serializable, V extends Serializable
 
    /*
     * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.AbstractCache#containsKey(java.io.Serializable)
+    */
+   @Override
+   public boolean containsKey(final K key) {
+	return namedCache.containsKey(key);
+   }
+
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.Cache#values()
     */
    @SuppressWarnings("unchecked")

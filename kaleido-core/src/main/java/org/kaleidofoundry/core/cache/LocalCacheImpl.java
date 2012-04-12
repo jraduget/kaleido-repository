@@ -147,6 +147,15 @@ public class LocalCacheImpl<K extends Serializable, V extends Serializable> exte
 
    /*
     * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.AbstractCache#containsKey(java.io.Serializable)
+    */
+   @Override
+   public boolean containsKey(final K key) {
+	return CacheableMap.containsKey(key);
+   }
+
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.Cache#values()
     */
    @Override

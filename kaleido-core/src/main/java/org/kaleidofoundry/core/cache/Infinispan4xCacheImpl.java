@@ -35,7 +35,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  */
 @Declare(InfinispanCachePluginName)
 public class Infinispan4xCacheImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> implements
-	org.kaleidofoundry.core.cache.Cache<K, V> {
+org.kaleidofoundry.core.cache.Cache<K, V> {
 
    // internal infinspan cache instance
    private final Cache<K, V> cache;
@@ -147,6 +147,15 @@ public class Infinispan4xCacheImpl<K extends Serializable, V extends Serializabl
 
    /*
     * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.AbstractCache#containsKey(java.io.Serializable)
+    */
+   @Override
+   public boolean containsKey(final K key) {
+	return cache.containsKey(key);
+   }
+
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.cache.Cache#values()
     */
    @Override
@@ -200,5 +209,6 @@ public class Infinispan4xCacheImpl<K extends Serializable, V extends Serializabl
 	cacheManager.cachesByName.remove(getName());
 	super.destroy();
    }
+
 
 }
