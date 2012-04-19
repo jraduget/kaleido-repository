@@ -158,6 +158,6 @@ public class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
    protected <K extends Serializable, V extends Serializable> LocalCacheImpl<K, V> createCache(final String name, final String configurationUri,
 	   final RuntimeContext<Cache<K, V>> context) {
 	LOGGER.info(CacheMessageBundle.getMessage("cachemanager.create.default", name, getName()));
-	return new LocalCacheImpl<K, V>(name, context);
+	return new LocalCacheImpl<K, V>(name, this, context);
    }
 }

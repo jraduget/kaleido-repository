@@ -87,12 +87,19 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 		+ CacheProvidersEnum.local.name();
 	RESERVED_CACHE_NAME = Collections.synchronizedSet(new HashSet<String>());
 
-	if (userCacheImplNotFound) {
+	if (userCacheImplNotFound && StringHelper.isEmpty(cacheProviderCode)) {
 	   LOGGER.warn(CacheMessageBundle.getMessage("cacheprovider.notfound", cacheProviderCode));
 	}
 
 	LOGGER.info(CacheMessageBundle.getMessage("cacheprovider.default", DEFAULT_CACHE_PROVIDER));
 	LOGGER.info(CacheMessageBundle.getMessage("cacheprovider.customize"));
+   }
+
+   /**
+    * @return code of the default cache provider setted
+    */
+   public static String getDefaultCacheProvider() {
+	return DEFAULT_CACHE_PROVIDER;
    }
 
    /**

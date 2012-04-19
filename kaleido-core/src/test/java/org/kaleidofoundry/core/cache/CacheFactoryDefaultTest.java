@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.kaleidofoundry.core.cache;
 
 import junit.framework.Assert;
 
+import org.junit.After;
 import org.junit.Test;
 
 /**
@@ -33,6 +34,12 @@ import org.junit.Test;
  * @author Jerome RADUGET
  */
 public class CacheFactoryDefaultTest extends Assert {
+
+   @After
+   public void cleanup() {
+	// reset default to the cache provider
+	CacheManagerProvider.init(null);
+   }
 
    @Test
    public void defaultCacheFactoryImplementation() {
@@ -62,19 +69,19 @@ public class CacheFactoryDefaultTest extends Assert {
    @SuppressWarnings("rawtypes")
    void testCacheFactory(final CacheProvidersEnum provider, final Class<? extends CacheManager> cacheManagerClass, final Class<? extends Cache> cacheClass) {
 
-	CacheManager cacheFactory = null;
+	CacheManager cacheManager = null;
 	CacheManagerProvider.init(provider != null ? provider.name() : null);
 
 	try {
-	   cacheFactory = CacheManagerFactory.provides();
-	   assertNotNull(cacheFactory);
-	   assertEquals(cacheManagerClass.getName(), cacheFactory.getClass().getName());
+	   cacheManager = CacheManagerFactory.provides();
+	   assertNotNull(cacheManager);
+	   assertEquals(cacheManagerClass.getName(), cacheManager.getClass().getName());
 
-	   final Cache<Integer, Person> cache = cacheFactory.getCache(Person.class);
+	   final Cache<Integer, Person> cache = cacheManager.getCache(Person.class);
 	   assertEquals(cacheClass.getName(), cache.getClass().getName());
 	} finally {
-	   if (cacheFactory != null) {
-		cacheFactory.destroyAll();
+	   if (cacheManager != null) {
+		cacheManager.destroyAll();
 	   }
 	}
    }

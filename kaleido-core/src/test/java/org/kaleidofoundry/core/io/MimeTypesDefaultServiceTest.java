@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,13 +38,21 @@ public class MimeTypesDefaultServiceTest extends Assert {
 	mimeType = "application/postscript";
 	resultsValues = Arrays.asList(new String[] { "ps", "ai", "eps" });
 	ext = mimes.getExtentions(mimeType);
-	assertEquals(Arrays.asList(ext), resultsValues);
+	assertNotNull(ext);
+	assertEquals(resultsValues.size(), ext.length);
+	for (String v : resultsValues) {
+	   assertTrue(Arrays.asList(ext).contains(v));
+	}
 	assertTrue(mimes.isMimeTypeBinary(mimeType));
 
 	mimeType = "text/plain";
 	resultsValues = Arrays.asList(new String[] { "txt", "text", "diff" });
 	ext = mimes.getExtentions(mimeType);
-	assertEquals(Arrays.asList(ext), resultsValues);
+	assertNotNull(ext);
+	assertEquals(resultsValues.size(), ext.length);
+	for (String v : resultsValues) {
+	   assertTrue(Arrays.asList(ext).contains(v));
+	}
 	assertTrue(mimes.isMimeTypeAscii(mimeType));
 
    }

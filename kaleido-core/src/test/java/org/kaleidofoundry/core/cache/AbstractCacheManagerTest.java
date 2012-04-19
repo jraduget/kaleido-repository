@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,11 +42,14 @@ public abstract class AbstractCacheManagerTest extends Assert {
 
    private CacheManager cacheManager;
 
+   private int cacheManagerCountBeforeCreation = -1;
+
    // ** init & clean
    // **************************************************************************************************
 
    @Before
    public void setup() {
+	cacheManagerCountBeforeCreation = CacheManagerFactory.getRegistry().size();
 	cacheManager = CacheManagerFactory.provides(getCacheImplementationCode(), getAvailableConfiguration(), getCacheManagerContext());
    }
 
@@ -55,14 +58,13 @@ public abstract class AbstractCacheManagerTest extends Assert {
     */
    @After
    public void destroyAll() {
-	try {
-	   if (cacheManager != null) {
-		cacheManager.destroyAll();
-	   }
-	} finally {
-	   System.out.println(CacheManagerFactory.getRegistry() + "\n\n");
-	}
 
+	if (cacheManager != null) {
+	   cacheManager.destroyAll();
+	}
+	if (cacheManagerCountBeforeCreation >= 0) {
+	   assertEquals("Leak detected on cache manager destroyAll", cacheManagerCountBeforeCreation, CacheManagerFactory.getRegistry().size());
+	}
    }
 
    // ** tests *********************************************************************************************************

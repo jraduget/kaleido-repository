@@ -101,7 +101,7 @@ public class Jboss3xCacheImpl<K extends Serializable, V extends Serializable> ex
 		   new RuntimeContext<org.kaleidofoundry.core.cache.CacheManager>(jbossCache3x.name(), org.kaleidofoundry.core.cache.CacheManager.class, context));
 	}
 	// create internal cache provider
-	this.cache = this.cacheManager.createCache(context.getString(CacheName));
+	this.cache = this.cacheManager.createCache(name);
 	// create jboss cache root and start it
 	this.root = createAndStartIt();
 	// registered it to cache manager (needed by spring or guice direct injection)

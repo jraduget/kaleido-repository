@@ -88,7 +88,6 @@ public abstract class AbstractCacheManager implements CacheManager {
     */
    @SuppressWarnings("rawtypes")
    public AbstractCacheManager(final String configuration, @NotNull final RuntimeContext<CacheManager> context) {
-	super();
 
 	forcedConfiguration = StringHelper.isEmpty(configuration) ? null : configuration;
 
@@ -204,6 +203,7 @@ public abstract class AbstractCacheManager implements CacheManager {
 	} finally {
 	   // unregister cacheManager from registry
 	   CacheManagerProvider.removeFromRegistry(context.getName());
+	   LOGGER.debug("Cache manager registry after destroyAll: {}", CacheManagerFactory.getRegistry());
 	}
    }
 
