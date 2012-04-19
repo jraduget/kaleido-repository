@@ -19,13 +19,9 @@ import static org.kaleidofoundry.core.lang.NotYetImplementedException.ERROR_NotY
 import static org.kaleidofoundry.core.lang.NotYetImplementedException.ERROR_NotYetImplementedCustom;
 import junit.framework.Assert;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.lang.NotYetImplementedException;
 import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
-import org.kaleidofoundry.core.store.ResourceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,18 +31,6 @@ import org.slf4j.LoggerFactory;
 public class NotYetImplementedlAspectTest extends Assert {
 
    static Logger LOGGER = LoggerFactory.getLogger(NotImplementedlAspectTest.class);
-
-   @Before
-   public void setup() {
-	// disable i18n message bundle control to speed up test (no need of a local derby instance startup)
-	I18nMessagesFactory.disableJpaControl();
-   }
-
-   @After
-   public void cleanup() throws ResourceException {
-	// re-enable i18n jpa message bundle control
-	I18nMessagesFactory.enableJpaControl();
-   }
 
    @Test
    public void constructors() {

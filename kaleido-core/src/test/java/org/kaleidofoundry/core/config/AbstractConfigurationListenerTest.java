@@ -20,7 +20,6 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.store.ResourceException;
 
 /**
@@ -54,9 +53,6 @@ public abstract class AbstractConfigurationListenerTest extends Assert {
 
    @Before
    public void setup() throws ResourceException {
-
-	// disable jpa i18n control in order to speed up test case run
-	I18nMessagesFactory.disableJpaControl();
 
 	// create & load configuration
 	configuration = ConfigurationFactory.provides("myConf", "classpath:/config/test.properties");
@@ -93,8 +89,6 @@ public abstract class AbstractConfigurationListenerTest extends Assert {
    public void cleanup() throws ResourceException {
 	// unregister configuration
 	ConfigurationFactory.unregister("myConf");
-	// re enable jpa i18n control
-	I18nMessagesFactory.enableJpaControl();
    }
 
    @Test

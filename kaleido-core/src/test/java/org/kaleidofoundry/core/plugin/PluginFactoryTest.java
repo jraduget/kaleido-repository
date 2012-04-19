@@ -19,26 +19,12 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 
 /**
  * @author Jerome RADUGET
  */
 public class PluginFactoryTest extends Assert {
-
-   @Before
-   public void setup() {
-	// speed up test case - i18n jpa is not used for this test
-	I18nMessagesFactory.disableJpaControl();
-   }
-
-   @After
-   public void cleanup() {
-	I18nMessagesFactory.enableJpaControl();
-   }
 
    /**
     * assert that plugin interface is well registered, with correct annotation meta-data

@@ -23,7 +23,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.context.jee5.MyServiceRemoteBean;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.naming.NamingService;
 import org.kaleidofoundry.core.naming.NamingServiceFactory;
 import org.kaleidofoundry.core.store.ResourceException;
@@ -41,8 +40,6 @@ public class MyServiceJavaEE5EJBTest implements MyServiceTest {
    @Before
    public void setup() throws ResourceException, Throwable {
 
-	I18nMessagesFactory.disableJpaControl();
-
 	// load and register given configuration
 	// another way to to this, set following java env variable : -Dkaleido.configurations=myNaming=classpath:/naming/myContext.properties
 	ConfigurationFactory.provides("myNamingHost", "classpath:/naming/myContext.properties");
@@ -56,7 +53,6 @@ public class MyServiceJavaEE5EJBTest implements MyServiceTest {
    @After
    public void cleanupClass() throws ResourceException {
 	ConfigurationFactory.unregister("myNamingHost");
-	I18nMessagesFactory.enableJpaControl();
    }
 
    @Test

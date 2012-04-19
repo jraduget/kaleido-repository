@@ -29,7 +29,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.lang.NotNullException;
 import org.kaleidofoundry.core.store.ResourceException;
 
@@ -49,8 +48,6 @@ public abstract class AbstractConfigurationTest extends Assert {
     */
    @Before
    public void setup() throws ResourceException, URISyntaxException {
-	// disable i18n message bundle control to speed up test (no need of a local derby instance startup)
-	I18nMessagesFactory.disableJpaControl();
 	// create and load instance
 	configuration = newInstance();
 	if (configuration != null) {
@@ -68,8 +65,6 @@ public abstract class AbstractConfigurationTest extends Assert {
 	if (configuration != null) {
 	   configuration.unload();
 	}
-	// re-enable i18n jpa message bundle control
-	I18nMessagesFactory.enableJpaControl();
    }
 
    /**

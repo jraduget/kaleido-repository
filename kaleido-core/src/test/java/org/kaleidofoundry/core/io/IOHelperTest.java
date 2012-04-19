@@ -28,7 +28,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 
 /**
  * IOHelper test cases
@@ -44,7 +43,6 @@ public class IOHelperTest extends Assert {
 
    @Before
    public void setup() throws IOException {
-	I18nMessagesFactory.disableJpaControl();
 	File tempFile = tempFolder.newFile("iohelper.test");
 	tempFilename = tempFile.getCanonicalPath();
 
@@ -55,7 +53,6 @@ public class IOHelperTest extends Assert {
 
    @After
    public void cleanup() {
-	I18nMessagesFactory.enableJpaControl();
    }
 
    // ** Test methods ************************************************************************************************

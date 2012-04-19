@@ -20,9 +20,8 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
-import org.kaleidofoundry.core.store.ResourceNotFoundException;
 import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +40,6 @@ public class ConsoleManagerTest extends Assert {
 
    @Before
    public void setUp() throws ResourceNotFoundException {
-	I18nMessagesFactory.disableJpaControl();
 	console = new ConsoleManagerBean();
 	console.register("classpath:/io/java_install.txt");
    }
