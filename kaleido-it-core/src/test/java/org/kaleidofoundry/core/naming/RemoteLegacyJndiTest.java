@@ -23,12 +23,9 @@ import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
 import javax.sql.DataSource;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 
 /**
  * Legacy jndi look up and new jndi naming service lookup
@@ -38,18 +35,6 @@ import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 public class RemoteLegacyJndiTest extends Assert {
 
    private static final String datasourceJndiName = "jdbc/kaleido";
-
-   @Before
-   public void setup() {
-	// disable i18n message bundle control to speed up test (no need of a local derby instance startup)
-	I18nMessagesFactory.disableJpaControl();
-   }
-
-   @After
-   public void cleanup() {
-	// re-enable i18n jpa message bundle control
-	I18nMessagesFactory.enableJpaControl();
-   }
 
    @Test
    public void remoteLegacyDatasourceTest() throws NamingException, SQLException {
@@ -63,14 +48,14 @@ public class RemoteLegacyJndiTest extends Assert {
 	   ic.addToEnvironment(Context.STATE_FACTORIES, "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
 	   ic.addToEnvironment("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
 	   ic.addToEnvironment("org.omg.CORBA.ORBInitialPort", "3700");
-	   //ic.addToEnvironment(Context.SECURITY_PRINCIPAL, "admin");
-	   //ic.addToEnvironment(Context.SECURITY_CREDENTIALS, "admin");
+	   // ic.addToEnvironment(Context.SECURITY_PRINCIPAL, "admin");
+	   // ic.addToEnvironment(Context.SECURITY_CREDENTIALS, "admin");
 
 	   // timeout test settings ko
-	   //	   ic.addToEnvironment("com.sun.corba.ee.transport.ORBTCPConnectTimeouts" , "100:50000:20");
-	   //	   ic.addToEnvironment("com.sun.corba.ee.transport.ORBTCPTimeouts" , "100:50000:20");
-	   //	   ic.addToEnvironment("com.sun.CORBA.transport.ORBTCPReadTimeouts" , "100:50000:20");
-	   //	   ic.addToEnvironment("com.sun.corba.ee.transport.ORBWaitForResponseTimeout" , "1");
+	   // ic.addToEnvironment("com.sun.corba.ee.transport.ORBTCPConnectTimeouts" , "100:50000:20");
+	   // ic.addToEnvironment("com.sun.corba.ee.transport.ORBTCPTimeouts" , "100:50000:20");
+	   // ic.addToEnvironment("com.sun.CORBA.transport.ORBTCPReadTimeouts" , "100:50000:20");
+	   // ic.addToEnvironment("com.sun.corba.ee.transport.ORBWaitForResponseTimeout" , "1");
 
 	   Object remoteObj = ic.lookup(datasourceJndiName);
 	   datasource = DataSource.class.cast(PortableRemoteObject.narrow(remoteObj, DataSource.class));
@@ -89,18 +74,14 @@ public class RemoteLegacyJndiTest extends Assert {
    @Test
    public void remoteDatasourceTest() throws NamingException, SQLException {
 	// test naming service connection
-	RuntimeContext<NamingService> context = new NamingContextBuilder()
-	.withInitialContextFactory("com.sun.enterprise.naming.SerialInitContextFactory")
-	.withUrlpkgPrefixes("com.sun.enterprise.naming")
-	.withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl")
-	.withCorbaORBInitialHost("127.0.0.1")
-	.withCorbaORBInitialPort("3700")
-	.build();
-	
+	RuntimeContext<NamingService> context = new NamingContextBuilder().withInitialContextFactory("com.sun.enterprise.naming.SerialInitContextFactory")
+		.withUrlpkgPrefixes("com.sun.enterprise.naming").withStateFactories("com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl")
+		.withCorbaORBInitialHost("127.0.0.1").withCorbaORBInitialPort("3700").build();
+
 	NamingService namingService = new JndiNamingService(context);
 	DataSource datasource = namingService.locate(datasourceJndiName, DataSource.class);
 	assertNotNull(datasource);
 	assertNotNull(datasource.getConnection());
    }
-   
+
 }

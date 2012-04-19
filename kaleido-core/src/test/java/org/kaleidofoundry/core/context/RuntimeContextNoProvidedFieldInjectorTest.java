@@ -28,7 +28,6 @@ import org.kaleidofoundry.core.context.service_with_no_provider.MyServiceWithIll
 import org.kaleidofoundry.core.context.service_with_no_provider.MyServiceWithRuntimeContext;
 import org.kaleidofoundry.core.context.service_with_no_provider.MyServiceWithStaticFinalRuntimeContext;
 import org.kaleidofoundry.core.context.service_with_no_provider.MyServiceWithStaticRuntimeContext;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.store.ResourceException;
 
 /**
@@ -68,8 +67,6 @@ public class RuntimeContextNoProvidedFieldInjectorTest extends Assert {
 
    @Before
    public void setup() throws ResourceException {
-	// Disable i18n jpa message bundle control
-	I18nMessagesFactory.disableJpaControl();
 	// Register configurations used for testing
 	ConfigurationFactory.provides("myConf", "classpath:/context/application.properties");
 	ConfigurationFactory.provides("anotherConf", "classpath:/context/module.properties");
@@ -91,8 +88,6 @@ public class RuntimeContextNoProvidedFieldInjectorTest extends Assert {
 	// Remove all configurations
 	ConfigurationFactory.unregister("myConf");
 	ConfigurationFactory.unregister("anotherConf");
-	// re-enable i18n jpa message bundle control
-	I18nMessagesFactory.enableJpaControl();
    }
 
    @Test

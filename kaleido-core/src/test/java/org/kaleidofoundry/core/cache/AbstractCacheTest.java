@@ -19,11 +19,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.lang.NotNullException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,22 +36,6 @@ public abstract class AbstractCacheTest extends Assert {
 
    /** legal cache to use, must be initialize by the concrete class test */
    protected Cache<Integer, Person> cache;
-
-   /**
-    * disable i18n message bundle control to speed up test (no need of a local derby instance startup)
-    */
-   @BeforeClass
-   public static void setupClass() {
-	I18nMessagesFactory.disableJpaControl();
-   }
-
-   /**
-    * re-enable i18n message bundle control
-    */
-   @AfterClass
-   public static void cleanupClass() {
-	I18nMessagesFactory.enableJpaControl();
-   }
 
    // testing part *****************************************************************************************************
 

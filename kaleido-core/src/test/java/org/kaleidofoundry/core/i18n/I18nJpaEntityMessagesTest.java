@@ -133,7 +133,7 @@ public class I18nJpaEntityMessagesTest extends AbstractI18nMessagesTest {
 
 	   et.commit();
 
-	   // enable jpa control in case it have been disabled (true by default)
+	   // enable jpa control
 	   I18nMessagesFactory.enableJpaControl();
 
 	} catch (final RuntimeException re) {

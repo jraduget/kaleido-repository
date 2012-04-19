@@ -23,7 +23,6 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 
 /**
  * @author Jerome RADUGET
@@ -35,13 +34,10 @@ public class PluginInspectorTest extends Assert {
    @Before
    public void setup() {
 	pluginInspector = new PluginInspector();
-	// speed up test case - i18n jpa is not used for this test
-	I18nMessagesFactory.disableJpaControl();
    }
 
    @After
    public void cleanup() {
-	I18nMessagesFactory.enableJpaControl();
    }
 
    /**

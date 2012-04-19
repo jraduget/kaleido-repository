@@ -26,7 +26,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 
 /**
  * @author Jerome RADUGET
@@ -37,9 +36,6 @@ public class HttpFileStoreTest extends AbstractFileStoreTest {
 
    @BeforeClass
    public static void setupStatic() throws Exception {
-	// disable i18n jpa for test performance
-	I18nMessagesFactory.disableJpaControl();
-
 	// jetty http server start
 	final SocketConnector connector = new SocketConnector();
 	connector.setPort(9090);
@@ -55,8 +51,6 @@ public class HttpFileStoreTest extends AbstractFileStoreTest {
 
    @AfterClass
    public static void cleanupStatic() throws Exception {
-	// re-enable i18n jpa
-	I18nMessagesFactory.enableJpaControl();
 	// jetty http server stop
 	server.stop();
 	server.destroy();

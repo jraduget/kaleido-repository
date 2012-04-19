@@ -17,10 +17,7 @@ package org.kaleidofoundry.core.cache;
 
 import junit.framework.Assert;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 
 /**
  * Testing getting cacheFactory and cache with java env. variable : <br/>
@@ -36,17 +33,6 @@ import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
  * @author Jerome RADUGET
  */
 public class CacheFactoryDefaultTest extends Assert {
-
-   @Before
-   public void setup() {
-	I18nMessagesFactory.disableJpaControl();
-   }
-
-   @After
-   public void cleanup() {
-	CacheManagerProvider.init(null);
-	I18nMessagesFactory.enableJpaControl();
-   }
 
    @Test
    public void defaultCacheFactoryImplementation() {

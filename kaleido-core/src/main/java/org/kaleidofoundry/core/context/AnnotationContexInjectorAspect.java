@@ -239,7 +239,7 @@ public class AnnotationContexInjectorAspect {
 			final ProviderService<?> fieldProviderInstance = providerConstructor.newInstance(annotatedField.getType());
 
 			// invoke provides method with Context annotation meta-informations
-			final Method providesMethod = provideInfo.value().getMethod("provides", Context.class, String.class, Class.class);
+			final Method providesMethod = provideInfo.value().getMethod(ProviderService.PROVIDES_METHOD, Context.class, String.class, Class.class);
 
 			try {
 			   fieldToInjectInstance = providesMethod.invoke(fieldProviderInstance, annotation, annotatedField.getName(), annotatedField.getType());

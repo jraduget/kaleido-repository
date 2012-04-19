@@ -30,14 +30,12 @@ public class I18nXmlPropertiesMessagesTest extends AbstractI18nMessagesTest {
 
    @Before
    public void setup() {
-	I18nMessagesFactory.disableJpaControl();
    }
 
    @After
    @Override
    public void cleanup() {
 	super.cleanup();
-	I18nMessagesFactory.enableJpaControl();
    }
 
 }

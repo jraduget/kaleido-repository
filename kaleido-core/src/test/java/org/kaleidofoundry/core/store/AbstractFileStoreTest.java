@@ -27,7 +27,6 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.io.IOHelper;
 import org.kaleidofoundry.core.lang.NotNullException;
 
@@ -53,20 +52,12 @@ public abstract class AbstractFileStoreTest extends Assert {
    // valid uri resource to move
    protected Map<String, String> existingResourcesForMove = new LinkedHashMap<String, String>();
 
-   /**
-    * disable i18n message bundle control to speed up test (no need of a local derby instance startup)
-    */
    @Before
    public void setup() throws Throwable {
-	I18nMessagesFactory.disableJpaControl();
    }
 
-   /**
-    * re-enable i18n message bundle control
-    */
    @After
    public void cleanup() throws Throwable {
-	I18nMessagesFactory.enableJpaControl();
    }
 
    @Test

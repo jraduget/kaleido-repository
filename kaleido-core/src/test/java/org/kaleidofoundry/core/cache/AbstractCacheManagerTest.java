@@ -23,7 +23,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 
 /**
  * Test Cache Factory
@@ -48,7 +47,6 @@ public abstract class AbstractCacheManagerTest extends Assert {
 
    @Before
    public void setup() {
-	I18nMessagesFactory.disableJpaControl();
 	cacheManager = CacheManagerFactory.provides(getCacheImplementationCode(), getAvailableConfiguration(), getCacheManagerContext());
    }
 
@@ -62,9 +60,8 @@ public abstract class AbstractCacheManagerTest extends Assert {
 		cacheManager.destroyAll();
 	   }
 	} finally {
-	   I18nMessagesFactory.enableJpaControl();
+	   System.out.println(CacheManagerFactory.getRegistry() + "\n\n");
 	}
-	System.out.println(CacheManagerFactory.getRegistry() + "\n\n");
 
    }
 

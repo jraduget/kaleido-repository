@@ -27,6 +27,11 @@ import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 public interface ProviderService<T> {
 
    /**
+    * provider service method name
+    */
+   String PROVIDES_METHOD = "provides";
+
+   /**
     * @param context runtime context
     * @return the new instance that will be created using {@link RuntimeContext} information
     * @throws ProviderException

@@ -244,6 +244,6 @@ public class I18nMessagesProvider extends AbstractProviderService<I18nMessages> 
    static boolean JpaIsEnabled;
 
    static {
-	JpaIsEnabled = Boolean.valueOf(JavaSystemHelper.getSystemProperty(ENABLE_JPA_PROPERTY, "true"));
+	JpaIsEnabled = Boolean.valueOf(JavaSystemHelper.getSystemProperty(ENABLE_JPA_PROPERTY, "false"));
    }
 }
