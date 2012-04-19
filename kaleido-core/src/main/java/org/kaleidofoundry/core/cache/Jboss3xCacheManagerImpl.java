@@ -142,7 +142,7 @@ public class Jboss3xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstr
    public synchronized void destroyAll() {
 	super.destroyAll();
 	for (final String name : cachesByName.keySet()) {
-	   LOGGER.info(CacheMessageBundle.getMessage("cache.destroy.info", getMetaInformations(), name));
+	   LOGGER.info(CacheMessageBundle.getMessage("cachemanager.destroy.info", name));
 	   destroy(name);
 	}
    }
@@ -187,13 +187,13 @@ public class Jboss3xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstr
 	try {
 	   final org.jboss.cache.Cache<K, V> cache;
 
+	   LOGGER.info(CacheMessageBundle.getMessage("cachemanager.create.default", name, getName()));
+
 	   if (StringHelper.isEmpty(getCurrentConfiguration())) {
-		LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), DefaultCacheConfiguration, name));
 		cache = cacheManager.createCache(true);
 	   } else {
 		final InputStream inConf = getConfiguration(getCurrentConfiguration());
 		if (inConf != null) {
-		   LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration(), name));
 		   cache = cacheManager.createCache(inConf, true);
 		} else {
 		   throw new CacheConfigurationNotFoundException("cache.configuration.notfound", JbossCacheManagerPluginName, getCurrentConfiguration());

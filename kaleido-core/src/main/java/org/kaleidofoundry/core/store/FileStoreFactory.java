@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.core.store;
 
+import static org.kaleidofoundry.core.i18n.InternalBundleHelper.StoreMessageBundle;
+
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 
@@ -23,6 +25,8 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.util.StringHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link FileStore} factory
@@ -30,6 +34,22 @@ import org.kaleidofoundry.core.util.StringHelper;
  * @author Jerome RADUGET
  */
 public abstract class FileStoreFactory {
+
+   // application base directory (use to merge with ${basedir} variable)
+   public static final String BASE_DIR;
+
+   private static final Logger LOGGER = LoggerFactory.getLogger(FileStoreFactory.class);
+
+   static {
+	if (StringHelper.isEmpty(System.getProperty("kaleidofoundry.basedir"))) {
+	   String currentPath = FileHelper.buildUnixAppPath(FileHelper.getCurrentPath());
+	   currentPath = currentPath.endsWith("/") ? currentPath.substring(0, currentPath.length() - 1) : currentPath;
+	   BASE_DIR = (currentPath.startsWith("/") ? currentPath.substring(1) : currentPath);
+	} else {
+	   BASE_DIR = System.getProperty("kaleidofoundry.basedir");
+	}
+	LOGGER.info(StoreMessageBundle.getMessage("store.basedir.info", BASE_DIR));
+   }
 
    // file store provider used by the factory
    private static final FileStoreProvider FILE_STORE_PROVIDER = new FileStoreProvider(FileStore.class);
@@ -102,9 +122,7 @@ public abstract class FileStoreFactory {
    public static String buildFullResourceURi(String resourcePath) {
 
 	if (resourcePath.contains("${basedir}")) {
-	   String currentPath = FileHelper.buildUnixAppPath(FileHelper.getCurrentPath());
-	   currentPath = currentPath.endsWith("/") ? currentPath.substring(0, currentPath.length() - 1) : currentPath;
-	   resourcePath = StringHelper.replaceAll(resourcePath, "${basedir}", (currentPath.startsWith("/") ? currentPath.substring(1) : currentPath));
+	   resourcePath = StringHelper.replaceAll(resourcePath, "${basedir}", BASE_DIR);
 	}
 	if (resourcePath.contains("file:/..")) {
 	   String parentPath = FileHelper.buildUnixAppPath(FileHelper.getParentPath());

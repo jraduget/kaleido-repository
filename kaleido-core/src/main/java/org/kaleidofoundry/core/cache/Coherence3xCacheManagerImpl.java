@@ -77,11 +77,11 @@ public class Coherence3xCacheManagerImpl extends AbstractCacheManager {
 	super(configuration, context);
 
 	if (StringHelper.isEmpty(configuration)) {
-	   LOGGER.info(CacheMessageBundle.getMessage("cache.loading.default", getMetaInformations(), DefaultCacheConfiguration));
+	   LOGGER.info(CacheMessageBundle.getMessage("cachemanager.loading.default", getMetaInformations(), DefaultCacheConfiguration));
 	   configurableCacheFactory = null;
 	} else {
 	   try {
-		LOGGER.info(CacheMessageBundle.getMessage("cache.loading.custom", getMetaInformations(), configuration));
+		LOGGER.info(CacheMessageBundle.getMessage("cachemanager.loading.custom", getMetaInformations(), configuration));
 		final URI resourceUri = URI.create(singleFileStore.getResourceBinding());
 		configurableCacheFactory = new DefaultConfigurableCacheFactory(resourceUri.getPath());
 		com.tangosol.net.CacheFactory.setConfigurableCacheFactory(configurableCacheFactory);
@@ -170,7 +170,7 @@ public class Coherence3xCacheManagerImpl extends AbstractCacheManager {
 	super.destroyAll();
 
 	for (final String name : cachesByName.keySet()) {
-	   LOGGER.info(CacheMessageBundle.getMessage("cache.destroy.info", getMetaInformations(), name));
+	   LOGGER.info(CacheMessageBundle.getMessage("cachemanager.destroy.info", name));
 	   destroy(name);
 	}
 	com.tangosol.net.CacheFactory.shutdown();
@@ -212,7 +212,7 @@ public class Coherence3xCacheManagerImpl extends AbstractCacheManager {
     */
    protected NamedCache createCache(final String name) {
 
-	LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration(), name));
+	LOGGER.info(CacheMessageBundle.getMessage("cachemanager.create.default", name, getName()));
 
 	try {
 
@@ -220,7 +220,7 @@ public class Coherence3xCacheManagerImpl extends AbstractCacheManager {
 		try {
 		   return CacheFactory.getCache(name, Class.forName(Classloader).getClassLoader());
 		} catch (final ClassNotFoundException cnfe) {
-		   throw new CacheConfigurationException("cache.classloader.notfound", cnfe, context.getString(Classloader));
+		   throw new CacheConfigurationException("cachemanager.classloader.notfound", cnfe, context.getString(Classloader));
 		}
 	   } else {
 		return com.tangosol.net.CacheFactory.getCache(name);

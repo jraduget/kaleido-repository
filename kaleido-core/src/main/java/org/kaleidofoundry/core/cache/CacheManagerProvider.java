@@ -88,11 +88,11 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 	RESERVED_CACHE_NAME = Collections.synchronizedSet(new HashSet<String>());
 
 	if (userCacheImplNotFound) {
-	   LOGGER.warn(CacheMessageBundle.getMessage("cache.provider.notfound", cacheProviderCode));
+	   LOGGER.warn(CacheMessageBundle.getMessage("cacheprovider.notfound", cacheProviderCode));
 	}
 
-	LOGGER.info(CacheMessageBundle.getMessage("cache.provider.default", DEFAULT_CACHE_PROVIDER));
-	LOGGER.info(CacheMessageBundle.getMessage("cache.provider.customize"));
+	LOGGER.info(CacheMessageBundle.getMessage("cacheprovider.default", DEFAULT_CACHE_PROVIDER));
+	LOGGER.info(CacheMessageBundle.getMessage("cacheprovider.customize"));
    }
 
    /**
@@ -162,12 +162,19 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
    @NotNull
    public CacheManager provides(@NotNull final String providerCode, final String configuration, @NotNull final RuntimeContext<CacheManager> context)
 	   throws ProviderException {
-	final String contextName = !StringHelper.isEmpty(context.getName()) ? context.getName() : DEFAULT_CACHE_PROVIDER;
-	CacheManager cacheManager = REGISTRY.get(contextName);
+
+	RuntimeContext<CacheManager> newNamedContext = context;
+
+	if (StringHelper.isEmpty(context.getName())) {
+	   newNamedContext = new RuntimeContext<CacheManager>(providerCode, CacheManager.class);
+	   RuntimeContext.copyFrom(context, newNamedContext);
+	}
+
+	CacheManager cacheManager = REGISTRY.get(newNamedContext.getName());
 
 	if (cacheManager == null) {
-	   cacheManager = create(providerCode, configuration, context);
-	   REGISTRY.put(contextName, cacheManager);
+	   cacheManager = create(providerCode, configuration, newNamedContext);
+	   REGISTRY.put(newNamedContext.getName(), cacheManager);
 	}
 
 	return cacheManager;
@@ -192,7 +199,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
     * @param contextName
     */
    static void removeFromRegistry(final String contextName) {
-	getRegistry().remove(!StringHelper.isEmpty(contextName) ? contextName : DEFAULT_CACHE_PROVIDER);
+	getRegistry().remove(contextName);
    }
 
    /**
@@ -241,7 +248,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 		}
 	   }
 	}
-	throw new ProviderException(new CacheException("cache.provider.illegal", providerCode));
+	throw new ProviderException(new CacheException("cacheprovider.illegal", providerCode));
 
    }
 
@@ -254,7 +261,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 	try {
 	   return (Plugin<CacheManager>) plugin;
 	} catch (final ClassCastException cce) {
-	   throw new CacheException("cache.provider.classcasterror", code, plugin.getClass().getTypeParameters()[0].getClass().getName(),
+	   throw new CacheException("cacheprovider.classcasterror", code, plugin.getClass().getTypeParameters()[0].getClass().getName(),
 		   CacheManager.class.getName());
 	}
    }

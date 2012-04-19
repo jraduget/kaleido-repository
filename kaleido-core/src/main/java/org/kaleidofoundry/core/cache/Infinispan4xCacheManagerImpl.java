@@ -71,12 +71,12 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
 
 	try {
 	   if (StringHelper.isEmpty(configuration)) {
-		LOGGER.info(CacheMessageBundle.getMessage("cache.loading.default", getMetaInformations(), DefaultCacheConfiguration));
+		LOGGER.info(CacheMessageBundle.getMessage("cachemanager.loading.default", getMetaInformations(), DefaultCacheConfiguration));
 		infiniSpanCacheManager = new DefaultCacheManager(true);
 	   } else {
 		final InputStream inConf = getConfiguration(configuration);
 		if (inConf != null) {
-		   LOGGER.info(CacheMessageBundle.getMessage("cache.loading.custom", getMetaInformations(), configuration));
+		   LOGGER.info(CacheMessageBundle.getMessage("cachemanager.loading.custom", getMetaInformations(), configuration));
 		   infiniSpanCacheManager = new DefaultCacheManager(inConf, true);
 		} else {
 		   throw new CacheConfigurationNotFoundException("cache.configuration.notfound", InfinispanCacheManagerPluginName, configuration);
@@ -152,7 +152,7 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
    public synchronized void destroyAll() {
 	super.destroyAll();
 	for (final String name : cachesByName.keySet()) {
-	   LOGGER.info(CacheMessageBundle.getMessage("cache.destroy.info", getMetaInformations(), name));
+	   LOGGER.info(CacheMessageBundle.getMessage("cachemanager.destroy.info", name));
 	   destroy(name);
 	}
 	infiniSpanCacheManager.stop();
@@ -192,7 +192,7 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
     */
    protected <K, V> org.infinispan.Cache<K, V> createCache(final String name) {
 
-	LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration(), name));
+	LOGGER.info(CacheMessageBundle.getMessage("cachemanager.create.default", name, getName()));
 	try {
 	   return infiniSpanCacheManager.getCache(name);
 	} catch (final ConfigurationException cfe) {

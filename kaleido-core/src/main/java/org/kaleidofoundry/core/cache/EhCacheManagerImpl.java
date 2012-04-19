@@ -75,12 +75,12 @@ public class EhCacheManagerImpl extends AbstractCacheManager {
 
 	try {
 	   if (StringHelper.isEmpty(configuration)) {
-		LOGGER.info(CacheMessageBundle.getMessage("cache.loading.default", getMetaInformations(), DefaultCacheConfiguration));
+		LOGGER.info(CacheMessageBundle.getMessage("cachemanager.loading.default", getMetaInformations(), DefaultCacheConfiguration));
 		ehCacheManager = new CacheManager();
 		if (ehCacheManager == null) { throw newCacheException("cache.configuration.notfound", new String[] { EhCacheManagerPluginName,
 			DefaultCacheConfiguration }); }
 	   } else {
-		LOGGER.info(CacheMessageBundle.getMessage("cache.loading.custom", getMetaInformations(), configuration));
+		LOGGER.info(CacheMessageBundle.getMessage("cachemanager.loading.custom", getMetaInformations(), configuration));
 		final InputStream inConf = getConfiguration(configuration);
 		if (inConf != null) {
 		   ehCacheManager = new CacheManager(inConf);
@@ -164,7 +164,7 @@ public class EhCacheManagerImpl extends AbstractCacheManager {
 
 	// destroy all cache instances
 	for (final String name : cachesByName.keySet()) {
-	   LOGGER.info(CacheMessageBundle.getMessage("cache.destroy.info", getMetaInformations(), name));
+	   LOGGER.info(CacheMessageBundle.getMessage("cachemanager.destroy.info", name));
 	   destroy(name);
 	}
 
@@ -254,7 +254,7 @@ public class EhCacheManagerImpl extends AbstractCacheManager {
     */
    protected net.sf.ehcache.Cache createCache(final String name) {
 
-	LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration(), name));
+	LOGGER.info(CacheMessageBundle.getMessage("cachemanager.create.default", name, getName()));
 
 	try {
 	   // the internal ehcache instance that will be created

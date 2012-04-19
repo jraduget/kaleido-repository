@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,6 +86,14 @@ public interface CacheManager {
     * @return cache instance, whose the name is the name of the class in argument
     */
    <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final Class<V> cl, @NotNull final RuntimeContext<Cache<K, V>> context);
+
+
+   /**
+    * The name of the cache manager
+    * 
+    * @return cache manager name
+    */
+   String getName();
 
    /**
     * The current configuration file cache provider

@@ -36,7 +36,8 @@ import org.kaleidofoundry.core.plugin.Declare;
  * <p>
  * You can use following variable in the file system uri:
  * <ul>
- * <li><code>file:/${basedir}</code> - your application basedir (it can be override using the java system properties -Dbasedir=...)</li>
+ * <li><code>file:/${basedir}</code> - your application basedir (it can be override using the java system properties
+ * -Dkaleidofoundry.basedir=...)</li>
  * <li><code>file:/.</code> - the current system path</li>
  * <li><code>file:/..</code> - the parent of the current system path</li>
  * </ul>

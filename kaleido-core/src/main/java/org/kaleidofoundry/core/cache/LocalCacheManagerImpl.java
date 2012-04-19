@@ -76,7 +76,7 @@ public class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
     */
    @Override
    public String getMetaInformations() {
-	return "kaleido-local - [1.0.x]";
+	return "kaleido local java.util.concurrent.ConcurrentMap";
    }
 
    /*
@@ -119,7 +119,7 @@ public class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
    public synchronized void destroyAll() {
 	super.destroyAll();
 	for (final String name : cachesByName.keySet()) {
-	   LOGGER.info(CacheMessageBundle.getMessage("cache.destroy.info", getMetaInformations(), name));
+	   LOGGER.info(CacheMessageBundle.getMessage("cachemanager.destroy.info", name));
 	   destroy(name);
 	}
    }
@@ -157,8 +157,7 @@ public class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
     */
    protected <K extends Serializable, V extends Serializable> LocalCacheImpl<K, V> createCache(final String name, final String configurationUri,
 	   final RuntimeContext<Cache<K, V>> context) {
-	LOGGER.info(CacheMessageBundle.getMessage("cache.create.default", getMetaInformations(), getCurrentConfiguration() != null ? getCurrentConfiguration()
-		: "", name));
+	LOGGER.info(CacheMessageBundle.getMessage("cachemanager.create.default", name, getName()));
 	return new LocalCacheImpl<K, V>(name, context);
    }
 }

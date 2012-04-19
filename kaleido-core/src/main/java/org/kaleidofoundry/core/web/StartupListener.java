@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.core.web;
 
+import static org.kaleidofoundry.core.i18n.InternalBundleHelper.WebMessageBundle;
+
 import java.util.Locale;
 
 import javax.servlet.ServletContextEvent;
@@ -24,14 +26,12 @@ import org.kaleidofoundry.core.config.ConfigurationConstants;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.i18n.I18nMessagesProvider;
-import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.plugin.PluginFactory;
 import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.kaleidofoundry.core.util.locale.LocaleFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 /**
  * Startup listener used to initialize some webapp resource like :
  * <ul>
@@ -62,10 +62,10 @@ public class StartupListener implements ServletContextListener {
 	enableI18nJpa = StringHelper.isEmpty(enableI18nJpa) ? Boolean.FALSE.toString() : enableI18nJpa;
 
 	if (Boolean.valueOf(enableI18nJpa)) {
-	   LOGGER.info(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.start.i18n.jpa.enabled"));
+	   LOGGER.info(WebMessageBundle.getMessage("web.filter.start.i18n.jpa.enabled"));
 	   I18nMessagesFactory.enableJpaControl();
 	} else {
-	   LOGGER.info(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.start.i18n.jpa.disabled"));
+	   LOGGER.info(WebMessageBundle.getMessage("web.filter.start.i18n.jpa.disabled"));
 	   I18nMessagesFactory.disableJpaControl();
 	}
 
@@ -76,24 +76,24 @@ public class StartupListener implements ServletContextListener {
 	// Parse and set default locale if needed
 	final String webappDefaultLocale = sce.getServletContext().getInitParameter(LocaleFactory.JavaEnvProperties);
 	if (!StringHelper.isEmpty(webappDefaultLocale)) {
-	   LOGGER.info(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.start.locale", webappDefaultLocale));
+	   LOGGER.info(WebMessageBundle.getMessage("web.filter.start.locale", webappDefaultLocale));
 	   final Locale setDefaultLocale = LocaleFactory.parseLocale(webappDefaultLocale);
 	   Locale.setDefault(setDefaultLocale);
 	   LOGGER.info(StringHelper.replicate("*", 120));
 	}
 
-	// Parse tje default configurations and load it if needed
+	// Parse the default configurations and load it if needed
 	final String kaleidoConfigurations = sce.getServletContext().getInitParameter(ConfigurationConstants.JavaEnvProperties);
 	if (!StringHelper.isEmpty(kaleidoConfigurations)) {
-	   LOGGER.info(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.start.configurations",
-		   StringHelper.replaceAll(kaleidoConfigurations, "\n", ",")));
+	   LOGGER.info(WebMessageBundle.getMessage("web.filter.start.configurations",
+		   StringHelper.replaceAll(kaleidoConfigurations, "\n", ",").replaceAll("\\s+", "")));
 	   System.getProperties().put(ConfigurationConstants.JavaEnvProperties,
 		   StringHelper.replaceAll(kaleidoConfigurations, "\n", ConfigurationConstants.JavaEnvPropertiesSeparator));
 	   // load and register given configurations ids / url
 	   try {
 		ConfigurationFactory.init();
 	   } catch (final ResourceException rse) {
-		throw new IllegalStateException(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.start.configurations.error", kaleidoConfigurations),
+		throw new IllegalStateException(WebMessageBundle.getMessage("web.filter.start.configurations.error", kaleidoConfigurations),
 			rse);
 	   }
 	   LOGGER.info(StringHelper.replicate("*", 120));
@@ -108,7 +108,7 @@ public class StartupListener implements ServletContextListener {
    public void contextDestroyed(final ServletContextEvent sce) {
 	// unload and unregister given configurations ids / url
 	try {
-	   LOGGER.info(InternalBundleHelper.WebMessageBundle.getMessage("web.filter.stop.configurations"));
+	   LOGGER.info(WebMessageBundle.getMessage("web.filter.stop.configurations"));
 	   ConfigurationFactory.unregisterAll();
 	} catch (final ResourceException rse) {
 	   throw new IllegalStateException(rse);

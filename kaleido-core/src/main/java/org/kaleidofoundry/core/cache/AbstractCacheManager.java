@@ -43,9 +43,9 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Nullable;
 import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.FileStoreFactory;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceNotFoundException;
 import org.kaleidofoundry.core.store.SingleFileStore;
-import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.Registry;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
@@ -128,10 +128,10 @@ public abstract class AbstractCacheManager implements CacheManager {
     * this constructor is only needed and used by some IOC framework like spring.
     */
    AbstractCacheManager() {
-	this.context = null;
-	this.singleFileStore = null;
-	this.cachesByName = null;
-	this.forcedConfiguration = null;
+	context = null;
+	singleFileStore = null;
+	cachesByName = null;
+	forcedConfiguration = null;
    }
 
    /*
@@ -159,6 +159,15 @@ public abstract class AbstractCacheManager implements CacheManager {
    @Override
    public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(final String name) {
 	return getCache(name, new RuntimeContext<Cache<K, V>>());
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.cache.CacheManager#getName()
+    */
+   @Override
+   public String getName() {
+	return context.getName();
    }
 
    /*
@@ -191,7 +200,7 @@ public abstract class AbstractCacheManager implements CacheManager {
 		singleFileStore.unload();
 	   }
 	} catch (final ResourceException rse) {
-	   LOGGER.error(InternalBundleHelper.CacheMessageBundle.getMessage("cache.destroyall.store.error"), rse);
+	   LOGGER.error(InternalBundleHelper.CacheMessageBundle.getMessage("cachemanager.destroyall.store.error"), rse);
 	} finally {
 	   // unregister cacheManager from registry
 	   CacheManagerProvider.removeFromRegistry(context.getName());
@@ -402,4 +411,5 @@ public abstract class AbstractCacheManager implements CacheManager {
 
 	return currentClassLoader;
    }
+
 }
