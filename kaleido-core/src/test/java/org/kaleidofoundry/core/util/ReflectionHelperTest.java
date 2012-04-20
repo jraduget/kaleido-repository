@@ -167,8 +167,6 @@ interface LocalInterface2 {
 
 class LocalAncestor implements LocalInterface1, LocalInterface2 {
 
-   private static final long serialVersionUID = 6056399394375997621L;
-
    @SuppressWarnings("unused")
    @Column
    private String privateLocalAncestorField;

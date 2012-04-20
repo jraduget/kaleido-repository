@@ -57,8 +57,8 @@ public class BeanContextPostProcessor implements MergedBeanDefinitionPostProcess
    public Object postProcessBeforeInitialization(final Object beanInstance, final String beanName) throws BeansException {
 
 	// Field[] fields = beanInstance.getClass().getDeclaredFields();
-	Set<Field> fields = ReflectionHelper.getAllDeclaredFields(beanInstance.getClass());
-
+	Set<Field> fields = ReflectionHelper.getAllDeclaredFields(beanInstance.getClass());	
+	
 	for (Field field : fields) {
 	   final Context context = field.getAnnotation(Context.class);
 	   if (context != null) {

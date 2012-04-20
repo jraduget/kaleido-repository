@@ -33,7 +33,7 @@ import org.kaleidofoundry.core.util.Registry;
  * <br/>
  * <b>You can customize default cache provider, by defining the java env. variable :</b>
  * <ul>
- * <li>-Dcache.provider=cacheImplCode</li>
+ * <li>-Dkaleido.cacheprovider=cacheImplCode</li>
  * </ul>
  * where cacheImplCode can be :
  * <ul>

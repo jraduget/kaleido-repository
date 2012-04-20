@@ -23,12 +23,12 @@ import org.junit.Test;
 /**
  * Testing getting cacheFactory and cache with java env. variable : <br/>
  * <ul>
- * <li>-Dcache.provider=local</li>
- * <li>-Dcache.provider=ehCache</li>
- * <li>-Dcache.provider=jbossCache3x</li>
- * <li>-Dcache.provider=coherence3x</li>
- * <li>-Dcache.provider=infinispan4x</li>
- * <li>-Dcache.provider=gigaspace7x</li>
+ * <li>-Dkaleido.cacheprovider=local</li>
+ * <li>-Dkaleido.cacheprovider=ehCache</li>
+ * <li>-Dkaleido.cacheprovider=jbossCache3x</li>
+ * <li>-Dkaleido.cacheprovider=coherence3x</li>
+ * <li>-Dkaleido.cacheprovider=infinispan4x</li>
+ * <li>-Dkaleido.cacheprovider=gigaspace7x</li>
  * </ul>
  * 
  * @author Jerome RADUGET

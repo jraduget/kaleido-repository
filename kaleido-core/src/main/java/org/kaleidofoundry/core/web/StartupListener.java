@@ -15,6 +15,7 @@
  */
 package org.kaleidofoundry.core.web;
 
+import static org.kaleidofoundry.core.cache.CacheConstants.CACHE_PROVIDER_ENV;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.WebMessageBundle;
 
 import java.util.Locale;
@@ -22,6 +23,8 @@ import java.util.Locale;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.kaleidofoundry.core.cache.CacheConstants;
+import org.kaleidofoundry.core.cache.CacheManagerProvider;
 import org.kaleidofoundry.core.config.ConfigurationConstants;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
@@ -32,6 +35,7 @@ import org.kaleidofoundry.core.util.StringHelper;
 import org.kaleidofoundry.core.util.locale.LocaleFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 /**
  * Startup listener used to initialize some webapp resource like :
  * <ul>
@@ -39,6 +43,7 @@ import org.slf4j.LoggerFactory;
  * <li>the default user locale</li>
  * <li>the configuration resources to load</li>
  * <li>the current servlet context</li>
+ * <li>the current cache provider</li>
  * <li>the jpa support for i18n messages bundles</li>
  * </ul>
  * 
@@ -73,6 +78,15 @@ public class StartupListener implements ServletContextListener {
 	PluginFactory.getInterfaceRegistry();
 	LOGGER.info(StringHelper.replicate("*", 120));
 
+	// Cache provider init
+	final String cacheProvider = sce.getServletContext().getInitParameter(CacheConstants.CACHE_PROVIDER_ENV);
+	if (!StringHelper.isEmpty(cacheProvider)) {
+	   LOGGER.info(WebMessageBundle.getMessage("web.filter.start.cachemanager", cacheProvider));
+	   System.getProperties().setProperty(CACHE_PROVIDER_ENV, cacheProvider);
+	   // static init of the class
+	   CacheManagerProvider.getRegistry();
+	}
+
 	// Parse and set default locale if needed
 	final String webappDefaultLocale = sce.getServletContext().getInitParameter(LocaleFactory.JavaEnvProperties);
 	if (!StringHelper.isEmpty(webappDefaultLocale)) {
@@ -87,7 +101,7 @@ public class StartupListener implements ServletContextListener {
 	if (!StringHelper.isEmpty(kaleidoConfigurations)) {
 	   LOGGER.info(WebMessageBundle.getMessage("web.filter.start.configurations",
 		   StringHelper.replaceAll(kaleidoConfigurations, "\n", ",").replaceAll("\\s+", "")));
-	   System.getProperties().put(ConfigurationConstants.JavaEnvProperties,
+	   System.getProperties().setProperty(ConfigurationConstants.JavaEnvProperties,
 		   StringHelper.replaceAll(kaleidoConfigurations, "\n", ConfigurationConstants.JavaEnvPropertiesSeparator));
 	   // load and register given configurations ids / url
 	   try {

@@ -61,11 +61,6 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
    // set of reserved cache name
    static Set<String> RESERVED_CACHE_NAME;
 
-   static {
-	// try to get java env variable : -Dcache.provider=local|ehCache|jbossCache3x|coherence3x|infinispan4x
-	init(System.getProperties().getProperty(CACHE_PROVIDER_ENV));
-   }
-
    /**
     * load the default cache provider to use
     * 
@@ -93,6 +88,8 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 
 	LOGGER.info(CacheMessageBundle.getMessage("cacheprovider.default", DEFAULT_CACHE_PROVIDER));
 	LOGGER.info(CacheMessageBundle.getMessage("cacheprovider.customize"));
+
+	System.getProperties().setProperty(CACHE_PROVIDER_ENV, DEFAULT_CACHE_PROVIDER);
    }
 
    /**
@@ -273,4 +270,8 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 	}
    }
 
+   static {
+	// try to get java env variable : -Dkaleido.cacheprovider=local|ehCache|jbossCache3x|coherence3x|infinispan4x
+	init(System.getProperties().getProperty(CACHE_PROVIDER_ENV));
+   }
 }

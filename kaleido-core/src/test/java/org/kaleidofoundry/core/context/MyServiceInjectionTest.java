@@ -15,7 +15,6 @@
  */
 package org.kaleidofoundry.core.context;
 
-import org.kaleidofoundry.core.cache.CacheManagerProvider;
 
 
 
@@ -32,7 +31,6 @@ public class MyServiceInjectionTest extends AbstractMyServiceTest {
     */
    @Override
    public MyService getMyService() {
-	System.out.println(CacheManagerProvider.getDefaultCacheProvider());
 	return myService;
    }
 

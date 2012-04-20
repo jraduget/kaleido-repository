@@ -15,14 +15,18 @@
  */
 package org.kaleidofoundry.core.web;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Set;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 import org.kaleidofoundry.core.context.Context;
+import org.kaleidofoundry.core.context.Provider;
+import org.kaleidofoundry.core.context.ProviderService;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.util.ReflectionHelper;
@@ -46,7 +50,6 @@ public class BaseServlet extends HttpServlet {
 	super.init();
 
 	Set<Field> fields = ReflectionHelper.getAllDeclaredFields(getClass());
-	Object fieldValue = null;
 
 	for (Field field : fields) {
 	   final Context context = field.getAnnotation(Context.class);
@@ -55,34 +58,35 @@ public class BaseServlet extends HttpServlet {
 		try {
 		   // runtime context injection
 		   if (field.getDeclaringClass() == RuntimeContext.class) {
-			fieldValue = RuntimeContext.createFrom(context, field.getName(), field.getDeclaringClass());
+			Object fieldValue = RuntimeContext.createFrom(context, field.getName(), field.getDeclaringClass());
 			field.setAccessible(true);
 			field.set(this, fieldValue);
 		   }
 		   // plugin injection
 		   else {
+			if (field.getType().isAnnotationPresent(Provider.class)) {
 
+			   // create provider using annotation meta-information
+			   final Provider provideInfo = field.getType().getAnnotation(Provider.class);
+			   final Constructor<? extends ProviderService<?>> providerConstructor = provideInfo.value().getConstructor(Class.class);
+			   final ProviderService<?> fieldProviderInstance = providerConstructor.newInstance(field.getType());
+
+			   // invoke provides method with Context annotation meta-informations
+			   final Method providesMethod = provideInfo.value().getMethod(ProviderService.PROVIDES_METHOD, Context.class, String.class, Class.class);
+
+			   Object fieldValue = providesMethod.invoke(fieldProviderInstance, context, field.getName(), field.getType());
+			   // set the field that was not yet injected
+			   field.set(this, fieldValue);
+			}
 		   }
-		} catch (IllegalArgumentException e) {
-		   // TODO Auto-generated catch block
-		   e.printStackTrace();
-		} catch (IllegalAccessException e) {
-		   // TODO Auto-generated catch block
-		   e.printStackTrace();
+		} catch (InvocationTargetException ite) {
+		   throw new ServletException("Servlet initialize failed, due to context injection error", ite.getCause() != null ? ite.getCause()
+			   : (ite.getTargetException() != null ? ite.getTargetException() : ite));
+		} catch (Throwable th) {
+		   throw new ServletException("Servlet initialize failed, due to context injection error", th);
 		}
 	   }
 	}
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
-    */
-   @Task
-   @Override
-   public void init(final ServletConfig config) throws ServletException {
-	// TODO Auto-generated method stub
-	super.init(config);
    }
 
 }

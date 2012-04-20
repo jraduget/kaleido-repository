@@ -198,8 +198,6 @@ public class RegExpSample extends Assert {
     */
    public static class ResourceBean {
 
-	private static final long serialVersionUID = -1967385305976732617L;
-
 	private ResourceUriEnum type;
 	private String name;
 	private String path;
