@@ -41,12 +41,12 @@ public abstract class FileStoreFactory {
    private static final Logger LOGGER = LoggerFactory.getLogger(FileStoreFactory.class);
 
    static {
-	if (StringHelper.isEmpty(System.getProperty("kaleidofoundry.basedir"))) {
+	if (StringHelper.isEmpty(System.getProperty("kaleido.basedir"))) {
 	   String currentPath = FileHelper.buildUnixAppPath(FileHelper.getCurrentPath());
 	   currentPath = currentPath.endsWith("/") ? currentPath.substring(0, currentPath.length() - 1) : currentPath;
 	   BASE_DIR = (currentPath.startsWith("/") ? currentPath.substring(1) : currentPath);
 	} else {
-	   BASE_DIR = System.getProperty("kaleidofoundry.basedir");
+	   BASE_DIR = System.getProperty("kaleido.basedir");
 	}
 	LOGGER.info(StoreMessageBundle.getMessage("store.basedir.info", BASE_DIR));
    }
