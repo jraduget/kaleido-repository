@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+    ">
+	
+	<!-- only used for injecting i18n messages with @Context (because java message bundle can't be directly instantiate like a POJO) -->
+	<bean class="org.kaleidofoundry.core.context.spring.BeanContextPostProcessor" name="kaleidoPostProcessor"/>
+	
+	<bean id="myCdiService" class="org.kaleidofoundry.core.spring.xml.MyXmlCdiSpringService"/>
+	
+	<bean id="myContext" class="org.kaleidofoundry.core.context.RuntimeContext">
+		<constructor-arg type="java.lang.String" value="myContext"/>
+		<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.store.FileStore"/>
+		<constructor-arg type="java.util.concurrent.ConcurrentMap" >
+			<util:map map-class="java.util.concurrent.ConcurrentHashMap">						
+			</util:map>
+		</constructor-arg>
+		<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
+	</bean>
+				
+	<bean id="myNamedContext" class="org.kaleidofoundry.core.context.RuntimeContext">
+		<constructor-arg type="java.lang.String" value="namedCtx"/>
+		<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.store.FileStore"/>
+		<constructor-arg type="java.util.concurrent.ConcurrentMap" >
+			<util:map map-class="java.util.concurrent.ConcurrentHashMap">						
+			</util:map>
+		</constructor-arg>
+		<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
+	</bean>						
+	
+	<bean id="myStore" class="org.kaleidofoundry.core.store.ClasspathFileStore">		
+		<constructor-arg>		
+			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
+				<constructor-arg type="java.lang.String" value="myStoreContext"/>
+				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.store.FileStore"/>
+				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
+					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
+						<entry key="baseUri" value="classpath:/store" />
+					</util:map>
+				</constructor-arg>				
+				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
+			</bean>
+		</constructor-arg>
+	</bean>
+		
+	<bean id="myConfig" class="org.kaleidofoundry.core.config.PropertiesConfiguration" init-method="load" destroy-method="unload">		
+		<constructor-arg>		
+			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
+				<constructor-arg type="java.lang.String" value="myConfigContext"/>
+				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.config.Configuration"/>
+				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
+					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
+						<entry key="name" value="myConfig" />
+						<entry key="fileStoreUri" value="classpath:/config/myConfig.properties" />
+					</util:map>
+				</constructor-arg>				
+				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
+			</bean>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="myDefaultCacheManager" class="org.kaleidofoundry.core.cache.LocalCacheManagerImpl">		
+		<constructor-arg>		
+			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
+				<constructor-arg type="java.lang.String" value="myDefaultCacheManagerContext"/>
+				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.cache.CacheManager"/>				
+				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
+					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
+					</util:map>
+				</constructor-arg>
+				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="myDefaultCache" class="org.kaleidofoundry.core.cache.LocalCacheImpl">
+		<constructor-arg value="myDefaultCache"/>
+		<constructor-arg ref="myDefaultCacheManager"/>		
+	</bean>
+
+	<bean id="myCustomCacheManager" class="org.kaleidofoundry.core.cache.Infinispan4xCacheManagerImpl">		
+		<constructor-arg>		
+			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
+				<constructor-arg type="java.lang.String" value="myCustomCacheManagerContext"/>
+				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.cache.CacheManager"/>				
+				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
+					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
+						<entry key="fileStoreUri" value="classpath:/cache/infinispan-local.xml" />
+					</util:map>
+				</constructor-arg>
+				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
+			</bean>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="myCustomCache" class="org.kaleidofoundry.core.cache.Infinispan4xCacheImpl">
+		<constructor-arg type="java.lang.String" value="myNamedCache"/>
+		<constructor-arg type="org.kaleidofoundry.core.cache.Infinispan4xCacheManagerImpl" ref="myCustomCacheManager"/>		
+		<constructor-arg type="org.kaleidofoundry.core.context.RuntimeContext">					
+			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
+				<constructor-arg type="java.lang.String" value="myCustomCacheContext"/>
+				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.cache.Cache"/>				
+				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
+					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
+					</util:map>
+				</constructor-arg>
+				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
+			</bean>
+		</constructor-arg>
+	</bean>		
+	 		 	 		 
+	<bean id="myNamingService" class="org.kaleidofoundry.core.naming.JndiNamingService">		
+		<constructor-arg>		
+			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
+				<constructor-arg type="java.lang.String" value="myNamingServiceContext"/>
+				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.naming.NamingService"/>				
+				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
+					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
+						<entry key="java.naming.factory.initial" value="com.sun.enterprise.naming.SerialInitContextFactory" />
+						<entry key="java.naming.factory.url.pkgs" value="com.sun.enterprise.naming" />
+						<entry key="java.naming.factory.state" value="com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl" />
+						<entry key="org.omg.CORBA.ORBInitialHost" value="127.0.0.1" />
+						<entry key="org.omg.CORBA.ORBInitialPort" value="3700" />
+					</util:map>
+				</constructor-arg>
+				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
+			</bean>
+		</constructor-arg>
+	</bean>	 
+</beans>
