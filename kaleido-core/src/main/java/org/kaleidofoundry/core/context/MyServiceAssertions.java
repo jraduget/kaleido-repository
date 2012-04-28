@@ -38,6 +38,9 @@ import org.kaleidofoundry.core.config.PropertiesConfiguration;
 import org.kaleidofoundry.core.i18n.I18nMessages;
 import org.kaleidofoundry.core.naming.JndiNamingService;
 import org.kaleidofoundry.core.naming.NamingService;
+import org.kaleidofoundry.core.store.FileStore;
+import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.ResourceHandler;
 
 /**
  * @author Jerome RADUGET
@@ -50,6 +53,14 @@ public class MyServiceAssertions {
 
 	assertNotNull(myNamedContext);
 	assertEquals("namedCtx", myNamedContext.getName());
+   }
+
+   public static void storeInjectionAssertions(final FileStore myStore) throws ResourceException {
+	assertNotNull(myStore);
+	assertSame(myStore, myStore);
+	ResourceHandler fooRes = myStore.get("foo.txt");
+	assertNotNull(fooRes);
+	assertEquals("line1\nline2", fooRes.getText());
    }
 
    public static void configurationInjectionAssertions(final Configuration myConfig) throws ParseException {
@@ -117,4 +128,5 @@ public class MyServiceAssertions {
 	assertNotNull(entityManager);
 	assertTrue(entityManager.isOpen());
    }
+
 }

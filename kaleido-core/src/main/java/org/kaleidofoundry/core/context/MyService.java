@@ -23,6 +23,7 @@ import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.i18n.I18nMessages;
 import org.kaleidofoundry.core.naming.NamingService;
+import org.kaleidofoundry.core.store.FileStore;
 
 /**
  * A service sample interface only use for integration tests (ejb, cdi, spring, guice...)
@@ -50,6 +51,11 @@ public interface MyService {
     * @return the myNamedContext
     */
    RuntimeContext<?> getMyNamedContext();
+
+   /**
+    * @return the myStore
+    */
+   FileStore getMyStore();
 
    /**
     * @return the myConfig
