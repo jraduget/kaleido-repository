@@ -126,7 +126,7 @@ public class Coherence3xCacheManagerImpl extends AbstractCacheManager {
     */
    @Override
    public String getMetaInformations() {
-	return "coherence-3.x - [3.0.x -> 3.6.x]";
+	return "coherence-3.x (3.0.x -> 3.6.x)";
    }
 
    /*

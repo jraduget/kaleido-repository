@@ -76,7 +76,7 @@ public class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
     */
    @Override
    public String getMetaInformations() {
-	return "kaleido local java.util.concurrent.ConcurrentMap";
+	return "kaleido java.util.concurrent.ConcurrentMap";
    }
 
    /*

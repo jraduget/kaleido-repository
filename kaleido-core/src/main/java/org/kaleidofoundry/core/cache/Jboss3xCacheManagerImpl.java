@@ -103,7 +103,7 @@ public class Jboss3xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstr
     */
    @Override
    public String getMetaInformations() {
-	return "jboss-cache-3.x - [3.0.x -> 3.2.x]";
+	return "jboss-cache-3.x (3.0.x -> 3.2.x)";
    }
 
    /*
