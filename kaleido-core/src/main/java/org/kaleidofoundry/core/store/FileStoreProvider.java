@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.core.store;
 
+import static org.kaleidofoundry.core.i18n.InternalBundleHelper.StoreMessageBundle;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
@@ -24,10 +26,13 @@ import org.kaleidofoundry.core.context.AbstractProviderService;
 import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginFactory;
 import org.kaleidofoundry.core.util.StringHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * FileStore Provider
@@ -36,10 +41,26 @@ import org.kaleidofoundry.core.util.StringHelper;
  */
 public class FileStoreProvider extends AbstractProviderService<FileStore> {
 
+   // application base directory (use to merge with ${basedir} variable)
+   public static final String BASE_DIR;
+
    /**
     * files store internal registry
     */
    static final FileStoreRegistry FILE_STORE_REGISTRY = new FileStoreRegistry();
+
+   private static final Logger LOGGER = LoggerFactory.getLogger(FileStoreFactory.class);
+
+   static {
+	String currentPath = System.getProperty("kaleido.basedir");
+	if (StringHelper.isEmpty(currentPath)) {
+	   currentPath = FileHelper.buildUnixAppPath(FileHelper.getCurrentPath());
+	}
+	currentPath = currentPath.endsWith("/") ? currentPath.substring(0, currentPath.length() - 1) : currentPath;
+	BASE_DIR = (currentPath.startsWith("/") ? currentPath.substring(1) : currentPath);
+
+	LOGGER.info(StoreMessageBundle.getMessage("store.basedir.info", BASE_DIR));
+   }
 
    /**
     * @param genericClass
@@ -161,4 +182,25 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 
    }
 
+   /**
+    * A {@link FileStore} resource uri, can contains some variables like ${basedir} ...<br.>
+    * This class merge this variable if needed, in order to build a full valid {@link URI} for the filestore
+    * 
+    * @param resourcePath the resource uri to merge with the system variables
+    * @return the merged resource uri
+    */
+   public static String buildFullResourceURi(String resourcePath) {
+
+	if (resourcePath.contains("${basedir}")) {
+	   resourcePath = StringHelper.replaceAll(resourcePath, "${basedir}", FileStoreProvider.BASE_DIR);
+	}
+	if (resourcePath.contains("file:/..")) {
+	   String parentPath = FileHelper.buildUnixAppPath(FileHelper.getParentPath());
+	   resourcePath = StringHelper.replaceAll(resourcePath, "file:/..", "file:/" + (parentPath.startsWith("/") ? parentPath.substring(1) : parentPath));
+	} else if (resourcePath.startsWith("file:/.")) {
+	   String currentPath = FileHelper.buildUnixAppPath(FileHelper.getCurrentPath());
+	   resourcePath = StringHelper.replaceAll(resourcePath, "file:/.", "file:/" + (currentPath.startsWith("/") ? currentPath.substring(1) : currentPath));
+	}
+	return resourcePath;
+   }
 }

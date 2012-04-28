@@ -81,7 +81,6 @@ public class StartupListener implements ServletContextListener {
 	// Cache provider init
 	final String cacheProvider = sce.getServletContext().getInitParameter(CacheConstants.CACHE_PROVIDER_ENV);
 	if (!StringHelper.isEmpty(cacheProvider)) {
-	   LOGGER.info(WebMessageBundle.getMessage("web.filter.start.cachemanager", cacheProvider));
 	   System.getProperties().setProperty(CACHE_PROVIDER_ENV, cacheProvider);
 	   // static init of the class
 	   CacheManagerProvider.getRegistry();
@@ -107,8 +106,7 @@ public class StartupListener implements ServletContextListener {
 	   try {
 		ConfigurationFactory.init();
 	   } catch (final ResourceException rse) {
-		throw new IllegalStateException(WebMessageBundle.getMessage("web.filter.start.configurations.error", kaleidoConfigurations),
-			rse);
+		throw new IllegalStateException(WebMessageBundle.getMessage("web.filter.start.configurations.error", kaleidoConfigurations), rse);
 	   }
 	   LOGGER.info(StringHelper.replicate("*", 120));
 	}

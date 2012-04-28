@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.core.web;
 
+import static org.kaleidofoundry.core.i18n.InternalBundleHelper.WebMessageBundle;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -48,8 +50,15 @@ public class BaseServlet extends HttpServlet {
    @Override
    public void init() throws ServletException {
 	super.init();
+	initContextInjection(this);
+   }
 
-	Set<Field> fields = ReflectionHelper.getAllDeclaredFields(getClass());
+   /**
+    * @param servletInstance
+    * @throws ServletException
+    */
+   public static <CL> void initContextInjection(final CL servletInstance) throws ServletException {
+	Set<Field> fields = ReflectionHelper.getAllDeclaredFields(servletInstance.getClass());
 
 	for (Field field : fields) {
 	   final Context context = field.getAnnotation(Context.class);
@@ -60,7 +69,7 @@ public class BaseServlet extends HttpServlet {
 		   if (field.getDeclaringClass() == RuntimeContext.class) {
 			Object fieldValue = RuntimeContext.createFrom(context, field.getName(), field.getDeclaringClass());
 			field.setAccessible(true);
-			field.set(this, fieldValue);
+			field.set(servletInstance, fieldValue);
 		   }
 		   // plugin injection
 		   else {
@@ -76,17 +85,17 @@ public class BaseServlet extends HttpServlet {
 
 			   Object fieldValue = providesMethod.invoke(fieldProviderInstance, context, field.getName(), field.getType());
 			   // set the field that was not yet injected
-			   field.set(this, fieldValue);
+			   field.setAccessible(true);
+			   field.set(servletInstance, fieldValue);
 			}
 		   }
 		} catch (InvocationTargetException ite) {
-		   throw new ServletException("Servlet initialize failed, due to context injection error", ite.getCause() != null ? ite.getCause()
+		   throw new ServletException(WebMessageBundle.getMessage("web.baseservlet.init.error"), ite.getCause() != null ? ite.getCause()
 			   : (ite.getTargetException() != null ? ite.getTargetException() : ite));
 		} catch (Throwable th) {
-		   throw new ServletException("Servlet initialize failed, due to context injection error", th);
+		   throw new ServletException(WebMessageBundle.getMessage("web.baseservlet.init.error"), th);
 		}
 	   }
 	}
    }
-
 }

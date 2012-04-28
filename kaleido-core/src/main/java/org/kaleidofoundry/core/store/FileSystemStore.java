@@ -77,7 +77,7 @@ public class FileSystemStore extends AbstractFileStore implements FileStore {
     */
    @Override
    protected String buildResourceURi(final String resourceRelativePath) {
-	return FileStoreFactory.buildFullResourceURi(super.buildResourceURi(resourceRelativePath));
+	return FileStoreProvider.buildFullResourceURi(super.buildResourceURi(resourceRelativePath));
    }
 
    /*

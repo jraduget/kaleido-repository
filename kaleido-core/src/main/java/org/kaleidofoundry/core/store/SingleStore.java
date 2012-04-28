@@ -31,7 +31,7 @@ import org.kaleidofoundry.core.lang.annotation.Stateful;
  * <li>{@link #get()}
  * <li>{@link #unload()}
  * <li>{@link #reload()}
- * <li>{@link #store()}
+ * <li>{@link #store(Object)}
  * </ul>
  * a given resource, identify by its resource binding (like a path)
  * 

@@ -34,7 +34,7 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginFactory;
-import org.kaleidofoundry.core.store.FileStoreFactory;
+import org.kaleidofoundry.core.store.FileStoreProvider;
 import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.StringHelper;
 
@@ -86,7 +86,7 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 	if (StringHelper.isEmpty(name)) { throw new EmptyContextParameterException(Name, runtimeContext); }
 	if (StringHelper.isEmpty(resourceUri)) { throw new EmptyContextParameterException(FileStoreUri, runtimeContext); }
 
-	return provides(name, resourceUri != null ? URI.create(FileStoreFactory.buildFullResourceURi(resourceUri)) : null, runtimeContext);
+	return provides(name, resourceUri != null ? URI.create(FileStoreProvider.buildFullResourceURi(resourceUri)) : null, runtimeContext);
    }
 
    /**
@@ -112,7 +112,7 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
     */
    public Configuration provides(@NotNull final String name, @NotNull final String resourceURI, @NotNull final RuntimeContext<Configuration> runtimeContext)
 	   throws ProviderException {
-	String fullResourceUri = FileStoreFactory.buildFullResourceURi(resourceURI);
+	String fullResourceUri = FileStoreProvider.buildFullResourceURi(resourceURI);
 	return provides(name, resourceURI != null ? URI.create(fullResourceUri) : null, runtimeContext);
    }
 
