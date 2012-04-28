@@ -20,6 +20,7 @@ import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ProviderCode;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.FileStoreUri;
 import static org.kaleidofoundry.core.i18n.I18nContextBuilder.BaseName;
+import static org.kaleidofoundry.core.store.FileStoreContextBuilder.BaseUri;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,6 +34,7 @@ import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.i18n.I18nMessages;
 import org.kaleidofoundry.core.naming.NamingService;
+import org.kaleidofoundry.core.store.FileStore;
 
 /**
  * @author Jerome RADUGET
@@ -55,6 +57,10 @@ public class MyServiceJavaEE6 implements MyService {
    @Inject
    @Context("namedCtx")
    private RuntimeContext<?> myNamedContext;
+
+   @Inject
+   @Context(value = "myStoreCtx", parameters = { @Parameter(name = BaseUri, value = "classpath:/store") })
+   private FileStore myStore;
 
    @Inject
    @Context(parameters = { @Parameter(name = FileStoreUri, value = "classpath:/config/myConfig.properties") })
@@ -104,6 +110,15 @@ public class MyServiceJavaEE6 implements MyService {
    @Override
    public RuntimeContext<?> getMyNamedContext() {
 	return myNamedContext;
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.context.MyService#getMyStore()
+    */
+   @Override
+   public FileStore getMyStore() {
+	return myStore;
    }
 
    /*

@@ -13,13 +13,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.kaleidofoundry.core.context;
+package org.kaleidofoundry.core.spring.processor;
 
 import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheManagerRef;
 import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ProviderCode;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.FileStoreUri;
 import static org.kaleidofoundry.core.i18n.I18nContextBuilder.BaseName;
+import static org.kaleidofoundry.core.store.FileStoreContextBuilder.BaseUri;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -27,15 +28,21 @@ import javax.persistence.EntityManagerFactory;
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.config.Configuration;
+import org.kaleidofoundry.core.context.Context;
+import org.kaleidofoundry.core.context.MyService;
+import org.kaleidofoundry.core.context.Parameter;
+import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.I18nMessages;
 import org.kaleidofoundry.core.naming.NamingService;
+import org.kaleidofoundry.core.store.FileStore;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  * @author Jerome RADUGET
  */
 @Service
-public class MyServiceSpring implements MyService {
+public class MySpringService implements MyService {
 
    //
    // @PersistenceContext(unitName = "kaleido")
@@ -49,6 +56,14 @@ public class MyServiceSpring implements MyService {
 
    @Context("namedCtx")
    private RuntimeContext<?> myNamedContext;
+
+   @Context("namedCtx")
+   // @Context must be ignored by spring post processor, because classic @Autowired is used
+   @Autowired
+   private RuntimeContext<?> mySpringContext;
+
+   @Context(value = "myStoreCtx", parameters = { @Parameter(name = BaseUri, value = "classpath:/store") })
+   private FileStore myStore;
 
    @Context(parameters = { @Parameter(name = FileStoreUri, value = "classpath:/config/myConfig.properties") })
    private Configuration myConfig;
@@ -90,6 +105,15 @@ public class MyServiceSpring implements MyService {
    @Override
    public RuntimeContext<?> getMyNamedContext() {
 	return myNamedContext;
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.context.MyService#getMyStore()
+    */
+   @Override
+   public FileStore getMyStore() {
+	return myStore;
    }
 
    /*
@@ -180,6 +204,13 @@ public class MyServiceSpring implements MyService {
    @Override
    public EntityManager getEntityManager() {
 	return null;
+   }
+
+   /**
+    * @return the mySpringContext
+    */
+   public RuntimeContext<?> getMySpringContext() {
+	return mySpringContext;
    }
 
 }

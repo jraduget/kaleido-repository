@@ -18,6 +18,7 @@ package org.kaleidofoundry.core.context;
 import java.text.ParseException;
 
 import org.junit.Test;
+import org.kaleidofoundry.core.store.ResourceException;
 
 /**
  * @author Jerome RADUGET
@@ -26,6 +27,9 @@ public interface MyServiceTest {
 
    @Test
    void runtimeContextInjectionTest();
+
+   @Test
+   void storeInjectionTest() throws ResourceException;
 
    @Test
    void configurationInjectionTest() throws ParseException;

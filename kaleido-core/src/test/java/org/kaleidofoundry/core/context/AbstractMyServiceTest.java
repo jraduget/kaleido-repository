@@ -53,6 +53,20 @@ public abstract class AbstractMyServiceTest extends Assert implements MyServiceT
 
    /*
     * (non-Javadoc)
+    * @see org.kaleidofoundry.core.context.MyServiceTest#storeInjectionTest()
+    */
+   @Override
+   @Test
+   public void storeInjectionTest() throws ResourceException {
+	MyService myService = getMyService();
+	assertNotNull(myService);
+	assertSame(myService, getMyService());
+	MyServiceAssertions.storeInjectionAssertions(myService.getMyStore());
+
+   }
+
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.context.MyServiceTest#configurationInjectionTest()
     */
    @Override
