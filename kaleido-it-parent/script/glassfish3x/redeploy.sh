@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # current build version (TODO extract it from pom.xml)
-KALEIDO_VERSION=0.8.1
+KALEIDO_VERSION=0.8.2-SNAPSHOT
 
 # script base dir
 BASE="$(cd -P -- $(dirname -- "$0"); pwd -P)"

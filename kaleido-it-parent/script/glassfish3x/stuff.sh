@@ -28,9 +28,9 @@ asadmin create-jvm-options -Declipselink.logging.level=FINE
 asadmin create-jvm-options -Declipselink.logging.level=INFO
 
 # deploy / undeploy commands
-asadmin deploy --name=kaleido-it-ear ../kaleido-it-ear/target/kaleido-it-ear-0.8.1-SNAPSHOT.ear
-asadmin deploy --name=kaleido-it-ear --dbvendorname=javadb --createtables=true  ../kaleido-it-ear/target/kaleido-it-ear-0.8.1-SNAPSHOT.ear
-asadmin deploy --name=kaleido-it-ear --dbvendorname=javadb --dropandcreatetables=true  ../kaleido-it-ear/target/kaleido-it-ear-0.8.1-SNAPSHOT.ear 
+asadmin deploy --name=kaleido-it-ear ../kaleido-it-ear/target/kaleido-it-ear-0.8.2-SNAPSHOT.ear
+asadmin deploy --name=kaleido-it-ear --dbvendorname=javadb --createtables=true  ../kaleido-it-ear/target/kaleido-it-ear-0.8.2-SNAPSHOT.ear
+asadmin deploy --name=kaleido-it-ear --dbvendorname=javadb --dropandcreatetables=true  ../kaleido-it-ear/target/kaleido-it-ear-0.8.2-SNAPSHOT.ear 
 asadmin undeploy --droptables=true kaleido-it-ear 
 asadmin undeploy kaleido-it-ear 
 

@@ -19,10 +19,14 @@ import java.text.ParseException;
 
 import javax.ejb.Local;
 
+import org.kaleidofoundry.core.store.ResourceException;
+
 @Local
 public interface MyServiceLocalBean {
 
    void runtimeContextInjectionAssertions();
+
+   void storeInjectionAssertions() throws ResourceException;
 
    void configurationInjectionAssertions() throws ParseException;
 

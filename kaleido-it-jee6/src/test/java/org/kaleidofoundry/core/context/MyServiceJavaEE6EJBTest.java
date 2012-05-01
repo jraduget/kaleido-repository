@@ -75,7 +75,11 @@ public class MyServiceJavaEE6EJBTest implements MyServiceTest {
 	if (isJavaEE6Profil()) {
 	   myRemoteJavaEE6Bean.runtimeContextInjectionAssertions();
 	}
+   }
 
+   @Test
+   public void storeInjectionTest() throws ResourceException {
+	myRemoteJavaEE6Bean.storeInjectionAssertions();
    }
 
    @Test

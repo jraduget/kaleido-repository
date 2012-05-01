@@ -58,7 +58,11 @@ public class MyServiceJavaEE5EJBTest implements MyServiceTest {
    @Test
    public void runtimeContextInjectionTest() {
 	myRemoteJavaEE5Bean.runtimeContextInjectionAssertions();
+   }
 
+   @Test
+   public void storeInjectionTest() throws ResourceException {
+	myRemoteJavaEE5Bean.storeInjectionAssertions();
    }
 
    @Test

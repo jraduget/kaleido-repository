@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>kaleido-it-spring</artifactId>
-	<name>KaleidoFoundry spring tests</name>
+	<name>KaleidoFoundry integration tests spring</name>
 	<packaging>jar</packaging>
 
 	<dependencies>

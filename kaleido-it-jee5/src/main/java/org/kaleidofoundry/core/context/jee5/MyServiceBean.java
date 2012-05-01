@@ -20,6 +20,7 @@ import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ProviderCode;
 import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.FileStoreUri;
 import static org.kaleidofoundry.core.i18n.I18nContextBuilder.BaseName;
+import static org.kaleidofoundry.core.store.FileStoreContextBuilder.BaseUri;
 
 import java.text.ParseException;
 
@@ -43,6 +44,8 @@ import org.kaleidofoundry.core.context.Parameter;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.I18nMessages;
 import org.kaleidofoundry.core.naming.NamingService;
+import org.kaleidofoundry.core.store.FileStore;
+import org.kaleidofoundry.core.store.ResourceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +73,9 @@ public class MyServiceBean implements MyServiceRemoteBean {
 
    @Context("namedCtx")
    private RuntimeContext<?> myNamedContext;
+
+   @Context(value = "myStoreCtx", parameters = { @Parameter(name = BaseUri, value = "classpath:/store") })
+   private FileStore myStore;
 
    @Context(parameters = { @Parameter(name = FileStoreUri, value = "classpath:/config/myConfig.properties") })
    private Configuration myConfig;
@@ -128,6 +134,15 @@ public class MyServiceBean implements MyServiceRemoteBean {
    @Override
    public void runtimeContextInjectionAssertions() {
 	MyServiceAssertions.runtimeContextInjectionAssertions(myContext, myNamedContext);
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.context.jee5.MyServiceLocalBean#storeInjectionAssertions()
+    */
+   @Override
+   public void storeInjectionAssertions() throws ResourceException {
+	MyServiceAssertions.storeInjectionAssertions(myStore);
    }
 
    /*
