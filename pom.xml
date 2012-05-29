@@ -63,21 +63,21 @@
 		<!-- jdk / jee global version dependencies -->
 		<jdk.version>1.6</jdk.version>
 		<!-- AOP / Aspectj -->
-		<aspectj.version>1.6.11</aspectj.version>
+		<aspectj.version>1.6.12</aspectj.version>
 		<!-- framework global version dependencies -->
-		<slf4j.version>1.6.3</slf4j.version>
+		<slf4j.version>1.6.4</slf4j.version>
 		<log4j.version>1.2.16</log4j.version>
-		<logback.version>0.9.30</logback.version>
+		<logback.version>1.0.3</logback.version>
 		<!-- Cache implementation version -->
 		<jboss-cache.version>3.2.3.CR1</jboss-cache.version>
 		<terracotta-ehcache.version>2.4.6</terracotta-ehcache.version>
 		<jboss-infinispan.version>4.2.1.FINAL</jboss-infinispan.version>
 		<oracle-coherence.version>3.7.0</oracle-coherence.version>
 		<!-- Testing -->		
-		<junit.version>4.8.1</junit.version>
+		<junit.version>4.10</junit.version>
 		<mockito.version>1.8.5</mockito.version>
 		<!--  Spring integration version -->
-		<spring.version>3.1.0.RELEASE</spring.version>
+		<spring.version>3.1.1.RELEASE</spring.version>
 		<!-- integration url properties -->
 		<sonar.host.url>http://localhost:8080/sonar</sonar.host.url>
 		<hudson.host.url>http://localhost:8080/hudson</hudson.host.url>

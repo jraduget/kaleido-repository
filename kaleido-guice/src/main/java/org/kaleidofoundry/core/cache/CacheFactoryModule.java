@@ -15,7 +15,6 @@
  */
 package org.kaleidofoundry.core.cache;
 
-import org.kaleidofoundry.core.cache.annotation.CoherenceCache;
 import org.kaleidofoundry.core.cache.annotation.EhCache;
 import org.kaleidofoundry.core.cache.annotation.InfinispanCache;
 import org.kaleidofoundry.core.cache.annotation.JbossCache;
@@ -46,12 +45,12 @@ public class CacheFactoryModule extends AbstractModule<CacheManager> {
 	super.configure();
 
 	// default implementation
-	bind(CacheManager.class).to(EhCacheManagerImpl.class);
+	bind(CacheManager.class).to(LocalCacheManagerImpl.class);
 
 	// bind custom annotation
 	bind(CacheManager.class).annotatedWith(EhCache.class).to(EhCacheManagerImpl.class).in(scope(EhCacheManagerImpl.class));
 	bind(CacheManager.class).annotatedWith(JbossCache.class).to(Jboss3xCacheManagerImpl.class).in(scope(Jboss3xCacheManagerImpl.class));
 	bind(CacheManager.class).annotatedWith(InfinispanCache.class).to(Infinispan4xCacheManagerImpl.class).in(scope(Infinispan4xCacheManagerImpl.class));
-	bind(CacheManager.class).annotatedWith(CoherenceCache.class).to(Coherence3xCacheManagerImpl.class).in(scope(Coherence3xCacheManagerImpl.class));
+	
    }
 }
