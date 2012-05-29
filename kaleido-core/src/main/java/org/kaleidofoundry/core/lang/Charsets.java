@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@ import java.nio.charset.Charset;
  * <ul>
  * <li>UTF-8</li>
  * <li>UTF-16</li>
+ * <li>UTF-16BE</li>
+ * <li>UTF-16LE</li>
  * <li>ISO-8859-1</li>
  * <li>US-ASCII</li>
  * </ul>
@@ -52,8 +54,16 @@ public enum Charsets {
     * bits for most characters but includes 32-bit characters for ideogram-based languages such as Chinese. A Western European-language
     * document that uses UTF-16 will be twice as large as the same document encoded using UTF-8. But documents written in far Eastern
     * languages will be far smaller using UTF-16.
+    * UTF-16 Sixteen-bit UCS Transformation Format, byte order identified by an optional byte-order mark
     */
    UTF_16("UTF-16"),
+
+   /** UTF-16BE Sixteen-bit UCS Transformation Format, big-endian byte order */
+   UTF_16BE("UTF-16BE"),
+
+   /** UTF-16LE Sixteen-bit UCS Transformation Format, little-endian byte order */
+   UTF_16BLE("UTF-16LE"),
+
    /**
     * ISO-8859-1 is the character set for Western European languages. It's an 8-bit encoding scheme in which every encoded character
     * takes
@@ -64,13 +74,17 @@ public enum Charsets {
    /**
     * US-ASCII is a 7-bit character set and encoding that covers the English-language alphabet. It is not large enough to cover the
     * characters used in other languages, however, so it is not very useful for internationalization.
+    * US-ASCII Seven-bit ASCII, a.k.a. ISO646-US, a.k.a. the Basic Latin block of the Unicode character set
     */
    US_ASCII("US-ASCII");
 
+
    private final String code;
+   private final Charset charset;
 
    Charsets(final String code) {
 	this.code = code;
+	charset = Charset.forName(code);
    }
 
    /**
@@ -83,8 +97,8 @@ public enum Charsets {
    /**
     * @return new instance of the current charset code
     */
-   public Charset newCharset() {
-	return Charset.forName(code);
+   public Charset getCharset() {
+	return charset;
    }
 
    /**
@@ -92,7 +106,7 @@ public enum Charsets {
     * @return encoded buffer
     */
    public ByteBuffer encode(final String message) {
-	return newCharset().encode(message);
+	return charset.encode(message);
    }
 
    /**
@@ -100,6 +114,6 @@ public enum Charsets {
     * @return decoded buffer
     */
    public CharBuffer decode(final ByteBuffer buffer) {
-	return newCharset().decode(buffer);
+	return charset.decode(buffer);
    }
 }
