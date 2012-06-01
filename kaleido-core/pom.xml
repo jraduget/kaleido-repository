@@ -54,13 +54,6 @@
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
-		<dependency>
-			<groupId>com.oracle.coherence</groupId>
-			<artifactId>coherence</artifactId>
-			<version>${oracle-coherence.version}</version>
-			<scope>provided</scope>
-			<optional>true</optional>
-		</dependency>
 		<!-- Store FTP and SSH (SFTP / SCP ...) API
 		<dependency>
 			<groupId>commons-net</groupId>
