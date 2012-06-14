@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class FtpStoreTest extends AbstractFileStoreTest {
 	fakeFtpServer.setFileSystem(fileSystem);
 	fakeFtpServer.addUserAccount(new UserAccount("anonymous", "anonymous", "/"));
 	fakeFtpServer.start();
-	// end ftp mock setip
+	// end ftp mock setup
 
 	final RuntimeContext<FileStore> context = new FileStoreContextBuilder().withBaseUri("ftp://anonymous:anonymous@localhost:43120/").build();
 	fileStore = new FtpStore(context);
