@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -152,12 +152,10 @@ public abstract class IOHelper {
 		   str = new StringBuilder();
 		}
 		str.append(inputLine);
-		if (reader.ready()) {
-		   str.append("\n");
-		}
+		str.append("\n");
 	   }
 
-	   return str != null ? str.toString() : null;
+	   return str != null ? str.substring(0, str.length() - 1) : null;
 
 	} finally {
 	   if (reader != null) {
@@ -211,16 +209,19 @@ public abstract class IOHelper {
 
 		   private String currentLine = getNextLine();
 
+		   @Override
 		   public boolean hasNext() {
 			return currentLine != null;
 		   }
 
+		   @Override
 		   public String next() {
 			String retval = currentLine;
 			currentLine = getNextLine();
 			return retval;
 		   }
 
+		   @Override
 		   public void remove() {
 			throw new UnsupportedOperationException();
 		   }
