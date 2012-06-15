@@ -27,7 +27,7 @@ import org.junit.Test;
  * <li>-Dkaleido.cacheprovider=ehCache</li>
  * <li>-Dkaleido.cacheprovider=jbossCache3x</li>
  * <li>-Dkaleido.cacheprovider=coherence3x</li>
- * <li>-Dkaleido.cacheprovider=infinispan4x</li>
+ * <li>-Dkaleido.cacheprovider=infinispan</li>
  * <li>-Dkaleido.cacheprovider=gigaspace7x</li>
  * </ul>
  * 
@@ -53,7 +53,7 @@ public class CacheFactoryDefaultTest extends Assert {
 
    @Test
    public void infinispanFactoryImplementation() {
-	testCacheFactory(CacheProvidersEnum.infinispan4x, Infinispan4xCacheManagerImpl.class, Infinispan4xCacheImpl.class);
+	testCacheFactory(CacheProvidersEnum.infinispan, InfinispanCacheManagerImpl.class, InfinispanCacheImpl.class);
    }
 
    @Test(expected = CacheDefinitionNotFoundException.class)

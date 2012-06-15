@@ -51,6 +51,6 @@ public class CacheModule extends AbstractModule<Cache> {
 	// bind custom annotation
 	bind(Cache.class).annotatedWith(EhCache.class).to(EhCacheImpl.class).in(scope(EhCacheImpl.class));
 	bind(Cache.class).annotatedWith(JbossCache.class).to(Jboss3xCacheImpl.class).in(scope(Jboss3xCacheImpl.class));
-	bind(Cache.class).annotatedWith(InfinispanCache.class).to(Infinispan4xCacheImpl.class).in(scope(Infinispan4xCacheImpl.class));	
+	bind(Cache.class).annotatedWith(InfinispanCache.class).to(InfinispanCacheImpl.class).in(scope(InfinispanCacheImpl.class));	
    }
 }

@@ -59,7 +59,7 @@ public class MyServiceBean implements MyServiceRemoteBean {
 
    public MyServiceBean() {
 	// the fields injection order is not guaranteed with CDI... something myCustomCacheManager is processed after myCustomCache
-	CacheManagerFactory.provides(CacheProvidersEnum.infinispan4x.name(), new RuntimeContext<CacheManager>("myCustomCacheManager"));
+	CacheManagerFactory.provides(CacheProvidersEnum.infinispan.name(), new RuntimeContext<CacheManager>("myCustomCacheManager"));
    }
 
    @Inject
@@ -91,7 +91,7 @@ public class MyServiceBean implements MyServiceRemoteBean {
    private CacheManager myDefaultCacheManager;
 
    @Inject
-   @Context(parameters = { @Parameter(name = ProviderCode, value = "infinispan4x") })
+   @Context(parameters = { @Parameter(name = ProviderCode, value = "infinispan") })
    private CacheManager myCustomCacheManager;
 
    @Inject

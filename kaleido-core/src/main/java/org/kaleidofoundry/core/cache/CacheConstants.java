@@ -50,10 +50,10 @@ public interface CacheConstants {
    String JbossCacheManagerPluginName = "cacheManagers.jbossCache3x";
 
    /** Infinispan cache implementation declare plugin name */
-   String InfinispanCachePluginName = "caches.infinispan4x";
+   String InfinispanCachePluginName = "caches.infinispan";
 
    /** Infinispan cache manager implementation declare plugin name */
-   String InfinispanCacheManagerPluginName = "cacheManagers.infinispan4x";
+   String InfinispanCacheManagerPluginName = "cacheManagers.infinispan";
 
    /** Coherence cache implementation declare plugin name */
    String CoherenceCachePluginName = "caches.coherence3x";

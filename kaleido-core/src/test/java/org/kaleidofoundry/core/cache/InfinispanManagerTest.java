@@ -32,7 +32,7 @@ public class InfinispanManagerTest extends AbstractCacheManagerTest {
 
    @Override
    protected String getCacheImplementationCode() {
-	return CacheProvidersEnum.infinispan4x.name();
+	return CacheProvidersEnum.infinispan.name();
    }
 
    @Override

@@ -1,7 +1,7 @@
 org.kaleidofoundry.core.cache.EhCacheImpl
 org.kaleidofoundry.core.cache.EhCacheManagerImpl
-org.kaleidofoundry.core.cache.Infinispan4xCacheImpl
-org.kaleidofoundry.core.cache.Infinispan4xCacheManagerImpl
+org.kaleidofoundry.core.cache.InfinispanCacheImpl
+org.kaleidofoundry.core.cache.InfinispanCacheManagerImpl
 org.kaleidofoundry.core.cache.Jboss3xCacheImpl
 org.kaleidofoundry.core.cache.Jboss3xCacheManagerImpl
 org.kaleidofoundry.core.cache.LocalCacheImpl

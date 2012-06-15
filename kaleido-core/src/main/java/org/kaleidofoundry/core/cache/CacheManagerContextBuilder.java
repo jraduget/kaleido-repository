@@ -36,7 +36,7 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <tr>
  * <td>providerCode</td>
  * <td>cache provider code to use (see {@link CacheProvidersEnum}):
- * <code>ehCache|jbossCache3x|infinispan4x|coherence3x|gigaspace7x|local</code></td>
+ * <code>ehCache|jbossCache3x|infinispan|coherence3x|gigaspace7x|local</code></td>
  * </tr>
  * <tr>
  * <td>classloader</td>
@@ -59,7 +59,7 @@ public class CacheManagerContextBuilder extends AbstractRuntimeContextBuilder<Ca
 
    /**
     * cache provider code to use (see {@link CacheProvidersEnum}):
-    * <code>ehCache|jbossCache3x|infinispan4x|coherence3x|gigaspace7x|local</code>
+    * <code>ehCache|jbossCache3x|infinispan|coherence3x|gigaspace7x|local</code>
     */
    public static final String ProviderCode = "providerCode";
    /** full class name, which will give the class loader to use */

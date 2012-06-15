@@ -22,12 +22,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import org.kaleidofoundry.core.cache.Infinispan4xCacheImpl;
+import org.kaleidofoundry.core.cache.InfinispanCacheImpl;
 
 import com.google.inject.BindingAnnotation;
 
 /**
- * Guice binding annotation for binding a {@link org.kaleidofoundry.core.cache.Cache} to {@link Infinispan4xCacheImpl}
+ * Guice binding annotation for binding a {@link org.kaleidofoundry.core.cache.Cache} to {@link InfinispanCacheImpl}
  * 
  * @author Jerome RADUGET
  */

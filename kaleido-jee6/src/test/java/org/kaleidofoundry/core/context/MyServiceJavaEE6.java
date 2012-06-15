@@ -71,7 +71,7 @@ public class MyServiceJavaEE6 implements MyService {
    private CacheManager myDefaultCacheManager;
 
    @Inject
-   @Context(parameters = { @Parameter(name = ProviderCode, value = "infinispan4x") })
+   @Context(parameters = { @Parameter(name = ProviderCode, value = "infinispan") })
    private CacheManager myCustomCacheManager;
 
    @Inject

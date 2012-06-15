@@ -71,7 +71,7 @@ public class MySpringService implements MyService {
    @Context
    private CacheManager myDefaultCacheManager;
 
-   @Context(parameters = { @Parameter(name = ProviderCode, value = "infinispan4x") })
+   @Context(parameters = { @Parameter(name = ProviderCode, value = "infinispan") })
    private CacheManager myCustomCacheManager;
 
    @Context

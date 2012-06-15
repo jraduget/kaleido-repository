@@ -247,7 +247,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 		if (e.getCause() instanceof CacheConfigurationException) {
 		   throw (CacheConfigurationException) e.getCause();
 		} else {
-		   throw new ProviderException("context.provider.error.InvocationTargetException", impl.getName(),
+		   throw new ProviderException("context.provider.error.InvocationTargetException", e.getCause(), impl.getName(),
 			   "String configuration, RuntimeContext<CacheManager> context", e.getCause().getClass().getName(), e.getMessage());
 		}
 	   }
@@ -271,7 +271,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
    }
 
    static {
-	// try to get java env variable : -Dkaleido.cacheprovider=local|ehCache|jbossCache3x|coherence3x|infinispan4x
+	// try to get java env variable : -Dkaleido.cacheprovider=local|ehCache|jbossCache3x|coherence3x|infinispan
 	init(System.getProperties().getProperty(CACHE_PROVIDER_ENV));
    }
 }
