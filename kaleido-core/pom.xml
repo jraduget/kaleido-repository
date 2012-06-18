@@ -45,6 +45,11 @@
 					<artifactId>commons-logging</artifactId>
 					<groupId>commons-logging</groupId>
 				</exclusion>
+				<exclusion>
+					<!-- conflict with infinispan -->
+					<artifactId>jboss-logging-spi</artifactId>
+					<groupId>org.jboss.logging</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -52,8 +57,9 @@
 			<artifactId>infinispan-core</artifactId>
 			<version>${jboss-infinispan.version}</version>
 			<scope>provided</scope>
-			<optional>true</optional>
+			<optional>true</optional>			
 		</dependency>
+		
 		<!-- Store FTP and SSH (SFTP / SCP ...) API
 		<dependency>
 			<groupId>commons-net</groupId>

@@ -25,7 +25,7 @@
 
 	<properties>
 		<terracotta-ehcache.version>2.4.6</terracotta-ehcache.version>
-		<jboss-infinispan.version>4.2.1.FINAL</jboss-infinispan.version>
+		<jboss-infinispan.version>5.1.5.FINAL</jboss-infinispan.version>
 	</properties>
 
 	<dependencies>

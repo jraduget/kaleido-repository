@@ -44,10 +44,10 @@ import org.slf4j.LoggerFactory;
  * @author Jerome RADUGET
  */
 @Declare(value = InfinispanCacheManagerPluginName)
-public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheManager {
+public class InfinispanCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheManager {
 
    /** internal logger */
-   private static final Logger LOGGER = LoggerFactory.getLogger(Infinispan4xCacheManagerImpl.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(InfinispanCacheManagerImpl.class);
 
    /** Default cache configuration */
    private static final String DefaultCacheConfiguration = null;
@@ -58,7 +58,7 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
    /**
     * @param context
     */
-   public Infinispan4xCacheManagerImpl(final RuntimeContext<org.kaleidofoundry.core.cache.CacheManager> context) {
+   public InfinispanCacheManagerImpl(final RuntimeContext<org.kaleidofoundry.core.cache.CacheManager> context) {
 	this(context.getString(FileStoreUri), context);
    }
 
@@ -66,7 +66,7 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
     * @param configuration override the context configuration file (if defined)
     * @param context
     */
-   public Infinispan4xCacheManagerImpl(final String configuration, final RuntimeContext<org.kaleidofoundry.core.cache.CacheManager> context) {
+   public InfinispanCacheManagerImpl(final String configuration, final RuntimeContext<org.kaleidofoundry.core.cache.CacheManager> context) {
 	super(configuration, context);
 
 	try {
@@ -92,7 +92,7 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
    /**
     * @see AbstractCacheManager#AbstractCacheManager()
     */
-   Infinispan4xCacheManagerImpl() {
+   InfinispanCacheManagerImpl() {
 	super();
 	infiniSpanCacheManager = null;
    }
@@ -112,7 +112,7 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
     */
    @Override
    public String getMetaInformations() {
-	return "infinispan-4.x (4.0.x -> 4.2.x)";
+	return "infinispan (4.0.x -> 5.1.x)";
    }
 
    /*
@@ -124,7 +124,7 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
    public <K extends Serializable, V extends Serializable> Cache<K, V> getCache(@NotNull final String name, @NotNull final RuntimeContext<Cache<K, V>> context) {
 	Cache<K, V> cache = cachesByName.get(name);
 	if (cache == null) {
-	   cache = new Infinispan4xCacheImpl(name, this, context);
+	   cache = new InfinispanCacheImpl(name, this, context);
 	   cachesByName.put(name, cache);
 	}
 	return cache;
@@ -139,7 +139,7 @@ public class Infinispan4xCacheManagerImpl extends org.kaleidofoundry.core.cache.
 	final Cache<?, ?> cache = cachesByName.get(cacheName);
 	if (cache != null) {
 	   cache.removeAll();
-	   ((Infinispan4xCacheImpl<?, ?>) cache).destroy();
+	   ((InfinispanCacheImpl<?, ?>) cache).destroy();
 	   cachesByName.remove(cacheName);
 	}
    }

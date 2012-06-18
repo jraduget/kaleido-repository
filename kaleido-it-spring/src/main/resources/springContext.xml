@@ -62,7 +62,7 @@
 		<constructor-arg ref="myCacheManager"/>		
 	</bean>
 
-	<bean id="myOtherCacheManager" class="org.kaleidofoundry.core.cache.Infinispan4xCacheManagerImpl">		
+	<bean id="myOtherCacheManager" class="org.kaleidofoundry.core.cache.InfinispanCacheManagerImpl">		
 		<constructor-arg>		
 			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
 				<constructor-arg type="java.lang.String" value="myOtherCacheManagerCtx"/>
@@ -77,7 +77,7 @@
 		</constructor-arg>
 	</bean>
 	
-	<bean id="myOtherCache" class="org.kaleidofoundry.core.cache.Infinispan4xCacheImpl">
+	<bean id="myOtherCache" class="org.kaleidofoundry.core.cache.InfinispanCacheImpl">
 		<constructor-arg value="OtherCacheSample01"/>
 		<constructor-arg ref="myOtherCacheManager"/>		
 		<constructor-arg>					

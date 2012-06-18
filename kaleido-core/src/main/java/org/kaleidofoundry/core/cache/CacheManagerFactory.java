@@ -39,7 +39,7 @@ import org.kaleidofoundry.core.util.Registry;
  * <ul>
  * <li>'ehCache' -> terracotta ehcache (c)</li>
  * <li>'jbossCache3x' -> jboss cache (c)</li>
- * <li>'infinispan4x' -> jboss infinispan (c)</li>
+ * <li>'infinispan' -> jboss infinispan (c)</li>
  * <li>'coherence3x' -> oracle coherence (c)</li>
  * <li>'gigaspace7x' -> gigaspace (c)</li>
  * <li>'kaleidoLocalCache' -> kaleidofoundry (c) local (ConcurrentHashMap)</li>

@@ -71,7 +71,7 @@
 		<!-- Cache implementation version -->
 		<jboss-cache.version>3.2.3.CR1</jboss-cache.version>
 		<terracotta-ehcache.version>2.4.6</terracotta-ehcache.version>
-		<jboss-infinispan.version>4.2.1.FINAL</jboss-infinispan.version>
+		<jboss-infinispan.version>5.1.5.FINAL</jboss-infinispan.version><!-- 5.1.5.FINAL -->
 		<oracle-coherence.version>3.7.0</oracle-coherence.version>
 		<!-- Testing -->		
 		<junit.version>4.10</junit.version>
@@ -80,7 +80,7 @@
 		<spring.version>3.1.1.RELEASE</spring.version>
 		<!-- integration url properties -->
 		<sonar.host.url>http://localhost:8080/sonar</sonar.host.url>
-		<hudson.host.url>http://localhost:8080/hudson</hudson.host.url>
+		<hudson.host.url>https://buildhive.cloudbees.com/job/kaleidofoundry/job/kaleido-repository/</hudson.host.url>
 		<!-- source encoding options -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

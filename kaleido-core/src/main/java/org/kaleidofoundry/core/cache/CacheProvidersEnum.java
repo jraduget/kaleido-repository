@@ -27,7 +27,7 @@ public enum CacheProvidersEnum {
 
    jbossCache3x,
 
-   infinispan4x,
+   infinispan,
 
    coherence3x,
 

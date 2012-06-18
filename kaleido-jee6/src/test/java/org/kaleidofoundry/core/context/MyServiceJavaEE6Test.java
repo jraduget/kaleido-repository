@@ -32,7 +32,7 @@ public class MyServiceJavaEE6Test extends AbstractMyServiceTest {
    @BeforeClass
    public static void setupStatic() {
 	UnmanagedCdiInjector.init();
-	CacheManagerFactory.provides(CacheProvidersEnum.infinispan4x.name(), new RuntimeContext<CacheManager>("myCustomCacheManager"));
+	CacheManagerFactory.provides(CacheProvidersEnum.infinispan.name(), new RuntimeContext<CacheManager>("myCustomCacheManager"));
    }
 
    @AfterClass

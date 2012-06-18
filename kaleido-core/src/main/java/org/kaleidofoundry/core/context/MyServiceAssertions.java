@@ -29,8 +29,8 @@ import javax.persistence.EntityManagerFactory;
 
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
-import org.kaleidofoundry.core.cache.Infinispan4xCacheImpl;
-import org.kaleidofoundry.core.cache.Infinispan4xCacheManagerImpl;
+import org.kaleidofoundry.core.cache.InfinispanCacheImpl;
+import org.kaleidofoundry.core.cache.InfinispanCacheManagerImpl;
 import org.kaleidofoundry.core.cache.LocalCacheImpl;
 import org.kaleidofoundry.core.cache.LocalCacheManagerImpl;
 import org.kaleidofoundry.core.config.Configuration;
@@ -92,7 +92,7 @@ public class MyServiceAssertions {
 	assertEquals(LocalCacheManagerImpl.class, myDefaultCacheManager.getClass());
 
 	assertNotNull(myCustomCacheManager);
-	assertEquals(Infinispan4xCacheManagerImpl.class, myCustomCacheManager.getClass());
+	assertEquals(InfinispanCacheManagerImpl.class, myCustomCacheManager.getClass());
    }
 
    @SuppressWarnings("rawtypes")
@@ -102,7 +102,7 @@ public class MyServiceAssertions {
 	assertEquals("myDefaultCache", myDefaultCache.getName());
 
 	assertNotNull(myCustomCache);
-	assertEquals(Infinispan4xCacheImpl.class, myCustomCache.getClass());
+	assertEquals(InfinispanCacheImpl.class, myCustomCache.getClass());
 	assertEquals("myNamedCache", myCustomCache.getName());
    }
 

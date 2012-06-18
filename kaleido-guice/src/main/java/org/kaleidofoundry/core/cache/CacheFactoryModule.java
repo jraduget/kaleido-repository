@@ -50,7 +50,7 @@ public class CacheFactoryModule extends AbstractModule<CacheManager> {
 	// bind custom annotation
 	bind(CacheManager.class).annotatedWith(EhCache.class).to(EhCacheManagerImpl.class).in(scope(EhCacheManagerImpl.class));
 	bind(CacheManager.class).annotatedWith(JbossCache.class).to(Jboss3xCacheManagerImpl.class).in(scope(Jboss3xCacheManagerImpl.class));
-	bind(CacheManager.class).annotatedWith(InfinispanCache.class).to(Infinispan4xCacheManagerImpl.class).in(scope(Infinispan4xCacheManagerImpl.class));
+	bind(CacheManager.class).annotatedWith(InfinispanCache.class).to(InfinispanCacheManagerImpl.class).in(scope(InfinispanCacheManagerImpl.class));
 	
    }
 }
