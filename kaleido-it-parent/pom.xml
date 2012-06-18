@@ -18,7 +18,6 @@
 		<module>../kaleido-it-core</module>
 		<module>../kaleido-it-jee5</module>
 		<module>../kaleido-it-jee6</module>
-		<module>../kaleido-it-spring</module>
 		<module>../kaleido-it-war</module>
 		<module>../kaleido-it-ear</module>
 	</modules>

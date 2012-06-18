@@ -16,6 +16,7 @@
 package org.kaleidofoundry.core.spring.aop;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kaleidofoundry.core.lang.NotNullException;
@@ -33,6 +34,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * 
  * @author Jerome RADUGET
  */
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/springAopContext.xml" })
 public class SpringAopContextTest extends Assert {

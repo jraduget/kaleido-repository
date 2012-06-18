@@ -98,7 +98,7 @@ public class I18nIntegrationTest extends Assert {
 	assertNotNull(internalCache);
 	assertEquals(EhCacheImpl.class.getName(), internalCache.getClass().getName());
 	assertTrue(internalCache.getDelegate() instanceof Ehcache);
-	assertEquals(4, internalCache.size());
+	assertEquals(5, internalCache.size());
 	assertTrue(internalCache.keys().contains("label.hello"));
 	assertTrue(internalCache.keys().contains("label.hello.who"));
 	assertTrue(internalCache.keys().contains("label.hello.when"));
