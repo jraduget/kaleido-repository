@@ -8,6 +8,7 @@ org.kaleidofoundry.core.cache.LocalCacheImpl
 org.kaleidofoundry.core.cache.LocalCacheManagerImpl
 org.kaleidofoundry.core.config.JavaSystemConfiguration
 org.kaleidofoundry.core.config.JpaModelConfiguration
+org.kaleidofoundry.core.config.JsonConfiguration
 org.kaleidofoundry.core.config.MainArgsConfiguration
 org.kaleidofoundry.core.config.OsEnvConfiguration
 org.kaleidofoundry.core.config.PropertiesConfiguration

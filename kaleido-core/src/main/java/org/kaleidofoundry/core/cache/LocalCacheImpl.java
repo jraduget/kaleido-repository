@@ -196,4 +196,14 @@ public class LocalCacheImpl<K extends Serializable, V extends Serializable> exte
 	cacheManager.cachesByName.remove(getName());
 	super.destroy();
    }
+
+   /* (non-Javadoc)
+    * @see java.lang.Object#toString()
+    */
+   @Override
+   public String toString() {
+	return super.toString() + " : " + CacheableMap.toString();
+   }
+
+
 }

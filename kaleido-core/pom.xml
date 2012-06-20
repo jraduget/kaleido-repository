@@ -20,6 +20,12 @@
 			<version>${aspectj.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.6</version>
+		</dependency>	
+		
 		<!-- Cache implementations -->
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>

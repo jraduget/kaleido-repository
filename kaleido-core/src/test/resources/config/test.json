@@ -1,0 +1,35 @@
+{
+	"application" : {
+	
+		"name" : "app", 
+		"version" : "1.0.0",
+		"description" : "description of the application...",
+		"date" : "2006-09-01T00:00:00",
+		"librairies" : ["dom4j.jar", "log4j.jar", "mail.jar"],
+
+		"modules" : {
+			"sales" : {
+				"name" : "Sales",
+				"version" : "1.1.0"
+			},			
+			"marketing" : {
+				"name" : "Market."
+			},
+			"netbusiness" : {
+				"name" : ""
+			}
+		},
+		
+		"array" : {
+			"boolean" : ["false", "true"],
+			"date" : ["2009-01-02T00:00:00","2009-12-31T00:00:00","2012-05-15T00:00:00"],
+			"bigdecimal" : ["987.5","1.123456789"]
+		},
+		
+		"single" : {
+			"boolean" : "true",
+			"bigdecimal" : "1.123456789"
+		}
+		
+	}
+}
