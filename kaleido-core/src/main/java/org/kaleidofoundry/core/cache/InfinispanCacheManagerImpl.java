@@ -34,8 +34,6 @@ import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Jboss3x factory implementation
@@ -45,9 +43,6 @@ import org.slf4j.LoggerFactory;
  */
 @Declare(value = InfinispanCacheManagerPluginName)
 public class InfinispanCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheManager {
-
-   /** internal logger */
-   private static final Logger LOGGER = LoggerFactory.getLogger(InfinispanCacheManagerImpl.class);
 
    /** Default cache configuration */
    private static final String DefaultCacheConfiguration = null;

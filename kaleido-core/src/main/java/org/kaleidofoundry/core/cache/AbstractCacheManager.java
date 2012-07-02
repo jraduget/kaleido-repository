@@ -56,7 +56,8 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractCacheManager implements CacheManager {
 
-   private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCacheManager.class);
+   /** CacheManager default logger */
+   static final Logger LOGGER = LoggerFactory.getLogger(CacheManager.class);
 
    /** force the use of this cache configuration instead of the context one (if defined) */
    protected final String forcedConfiguration;

@@ -81,7 +81,7 @@ public class JsonConfiguration extends AbstractConfiguration {
 
 	ObjectMapper mapper = new ObjectMapper();
 	try {
-	   JsonNode rootNode = mapper.readValue(resourceHandler.getInputStream(), JsonNode.class);
+	   JsonNode rootNode = mapper.readValue(resourceHandler.getReader(), JsonNode.class);
 	   if (rootNode != null) {
 		feedProperties(rootNode.getFields(), new StringBuilder(), properties);
 	   }
@@ -206,7 +206,7 @@ public class JsonConfiguration extends AbstractConfiguration {
 			result.add(arrayValues.next().asText());
 		   }
 
-		   properties.put(newKeyName.toString(), StringHelper.unsplit(MultiValuesSeparator, result.toArray(new String[result.size()])));
+		   properties.put(newKeyName.toString(), StringHelper.unsplit(MultiValuesSeparator, result.toArray(new Object[result.size()])));
 
 		} else {
 		   feedProperties(node.getValue().getFields(), newKeyName, properties);

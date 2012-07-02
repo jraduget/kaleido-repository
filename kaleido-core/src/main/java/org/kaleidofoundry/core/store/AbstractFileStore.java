@@ -59,9 +59,10 @@ import org.slf4j.LoggerFactory;
 @Immutable
 public abstract class AbstractFileStore implements FileStore {
 
-   protected final RuntimeContext<FileStore> context;
+   /** default fileStore logger */
+   static final Logger LOGGER = LoggerFactory.getLogger(FileStore.class);
 
-   protected final Logger logger;
+   protected final RuntimeContext<FileStore> context;
 
    protected final String baseUri;
 
@@ -95,9 +96,8 @@ public abstract class AbstractFileStore implements FileStore {
 	if (StringHelper.isEmpty(baseUri)) { throw new EmptyContextParameterException(BaseUri, context); }
 
 	this.context = context;
-	this.logger = LoggerFactory.getLogger(this.getClass());
 	this.baseUri = baseUri;
-	this.openResources = new ConcurrentHashMap<String, ResourceHandler>();
+	openResources = new ConcurrentHashMap<String, ResourceHandler>();
 
 	// register the file store instance
 	FILE_STORE_REGISTRY.put(getBaseUri(), this);
@@ -108,10 +108,9 @@ public abstract class AbstractFileStore implements FileStore {
     * this constructor is only needed and used by some IOC framework like spring.
     */
    AbstractFileStore() {
-	this.context = null;
-	this.baseUri = null;
-	this.logger = LoggerFactory.getLogger(this.getClass());
-	this.openResources = new ConcurrentHashMap<String, ResourceHandler>();
+	context = null;
+	baseUri = null;
+	openResources = new ConcurrentHashMap<String, ResourceHandler>();
    }
 
    /**
@@ -315,15 +314,15 @@ public abstract class AbstractFileStore implements FileStore {
 		   retryCount++;
 		   final int sleepTime = getSleepTimeBeforeRetryOnFailure();
 		   if (retryCount < maxRetryCount) {
-			logger.warn(StoreMessageBundle.getMessage("store.failover.retry.get.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount));
+			LOGGER.warn(StoreMessageBundle.getMessage("store.failover.retry.get.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount));
 			try {
 			   Thread.sleep((sleepTime));
 			} catch (final InterruptedException e) {
-			   logger.error(StoreMessageBundle.getMessage("store.failover.retry.error", sleepTime), rse);
+			   LOGGER.error(StoreMessageBundle.getMessage("store.failover.retry.error", sleepTime), rse);
 			   throw rse;
 			}
 		   } else {
-			logger.error(StoreMessageBundle.getMessage("store.failover.retry.get.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount), rse);
+			LOGGER.error(StoreMessageBundle.getMessage("store.failover.retry.get.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount), rse);
 		   }
 		}
 	   }
@@ -368,15 +367,15 @@ public abstract class AbstractFileStore implements FileStore {
 		   retryCount++;
 		   final int sleepTime = getSleepTimeBeforeRetryOnFailure();
 		   if (retryCount < maxRetryCount) {
-			logger.warn(StoreMessageBundle.getMessage("store.failover.retry.remove.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount));
+			LOGGER.warn(StoreMessageBundle.getMessage("store.failover.retry.remove.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount));
 			try {
 			   Thread.sleep((sleepTime));
 			} catch (final InterruptedException e) {
-			   logger.error(StoreMessageBundle.getMessage("store.failover.retry.error", sleepTime), rse);
+			   LOGGER.error(StoreMessageBundle.getMessage("store.failover.retry.error", sleepTime), rse);
 			   throw rse;
 			}
 		   } else {
-			logger.error(StoreMessageBundle.getMessage("store.failover.retry.remove.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount),
+			LOGGER.error(StoreMessageBundle.getMessage("store.failover.retry.remove.info", resourceRelativePath, sleepTime, retryCount, maxRetryCount),
 				rse);
 		   }
 		}
@@ -421,15 +420,15 @@ public abstract class AbstractFileStore implements FileStore {
 		   retryCount++;
 		   final int sleepTime = getSleepTimeBeforeRetryOnFailure();
 		   if (retryCount < maxRetryCount) {
-			logger.warn(StoreMessageBundle.getMessage("store.failover.retry.store.info", resource.getResourceUri(), sleepTime, retryCount, maxRetryCount));
+			LOGGER.warn(StoreMessageBundle.getMessage("store.failover.retry.store.info", resource.getResourceUri(), sleepTime, retryCount, maxRetryCount));
 			try {
 			   Thread.sleep((sleepTime));
 			} catch (final InterruptedException e) {
-			   logger.error(StoreMessageBundle.getMessage("store.failover.retry.error", sleepTime), rse);
+			   LOGGER.error(StoreMessageBundle.getMessage("store.failover.retry.error", sleepTime), rse);
 			   throw rse;
 			}
 		   } else {
-			logger.error(
+			LOGGER.error(
 				StoreMessageBundle.getMessage("store.failover.retry.store.info", resource.getResourceUri(), sleepTime, retryCount, maxRetryCount), rse);
 		   }
 		}

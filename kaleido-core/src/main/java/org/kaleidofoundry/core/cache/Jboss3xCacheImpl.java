@@ -29,8 +29,6 @@ import org.jboss.cache.Node;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * JbossCache {@link org.kaleidofoundry.core.cache.Cache} implementation
@@ -41,8 +39,6 @@ import org.slf4j.LoggerFactory;
  */
 @Declare(JbossCachePluginName)
 public class Jboss3xCacheImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> implements org.kaleidofoundry.core.cache.Cache<K, V> {
-
-   private static final Logger LOGGER = LoggerFactory.getLogger(Jboss3xCacheImpl.class);
 
    private final Cache<K, V> cache;
    private final Node<K, V> root;
@@ -125,7 +121,7 @@ public class Jboss3xCacheImpl<K extends Serializable, V extends Serializable> ex
 	final Node<K, V> root = cache.getRoot().addChild(Fqn.fromString(cacheName));
 
 	// create and start cache
-	LOGGER.info("Starts JBoss Cache root name: {}", cacheName);
+	AbstractCacheManager.LOGGER.info("Starts JBoss Cache root name: {}", cacheName);
 
 	cache.create();
 	cache.start();

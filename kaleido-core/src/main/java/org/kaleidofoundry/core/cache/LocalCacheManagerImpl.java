@@ -25,8 +25,6 @@ import java.util.Map;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Internal kaleidofoundry cache manager, if no cache provider is specify
@@ -35,9 +33,6 @@ import org.slf4j.LoggerFactory;
  */
 @Declare(value = DefaultLocalCacheManagerPluginName)
 public class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.AbstractCacheManager {
-
-   /** internal logger */
-   private static final Logger LOGGER = LoggerFactory.getLogger(LocalCacheManagerImpl.class);
 
    /**
     * @param context

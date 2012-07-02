@@ -74,7 +74,7 @@ public class PropertiesConfiguration extends AbstractConfiguration {
 	   throws ResourceException, ConfigurationException {
 	try {
 	   final Properties lprops = new Properties();
-	   lprops.load(resourceHandler.getInputStream());
+	   lprops.load(resourceHandler.getReader());
 
 	   for (final String propName : lprops.stringPropertyNames()) {
 		cacheProperties.put(normalizeKey(propName), lprops.getProperty(propName));

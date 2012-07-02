@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -183,6 +183,8 @@ public abstract class AbstractConfigurationTest extends Assert {
 	assertEquals(Character.valueOf('m'), values.get(2));
 	// test unknown key
 	assertNull(configuration.getCharacterList("foo"));
+	// test raw property
+	// assertEquals("d|l|m", configuration.getString("//application/librairies"));
    }
 
    @Test
@@ -216,7 +218,7 @@ public abstract class AbstractConfigurationTest extends Assert {
 	final Date mockDate = df.parse("2006-09-01");
 	assertNotNull(configuration);
 	// test raw property
-	assertEquals("2006-09-01T00:00:00", configuration.getProperty("//application/date"));
+	assertEquals("2006-09-01T00:00:00", configuration.getString("//application/date"));
 	assertEquals(mockDate, configuration.getDate("//application/date"));
 	// test unknown key
 	assertNull(configuration.getDate("foo"));
@@ -227,8 +229,6 @@ public abstract class AbstractConfigurationTest extends Assert {
    public void getDateList() throws ParseException {
 	final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	assertNotNull(configuration);
-	// test raw property
-	assertEquals("2009-01-02T00:00:00|2009-12-31T00:00:00|2012-05-15T00:00:00", configuration.getProperty("//application/array/date"));
 	assertNotNull(configuration.getDateList("//application/array/date"));
 	assertEquals(3, configuration.getDateList("//application/array/date").size());
 	assertEquals(df.parse("2009-01-02"), configuration.getDateList("//application/array/date").get(0));
@@ -236,13 +236,15 @@ public abstract class AbstractConfigurationTest extends Assert {
 	assertEquals(df.parse("2012-05-15"), configuration.getDateList("//application/array/date").get(2));
 	// test unknown key
 	assertNull(configuration.getDateList("foo"));
+	// test raw property
+	assertEquals("2009-01-02T00:00:00|2009-12-31T00:00:00|2012-05-15T00:00:00", configuration.getString("//application/array/date"));
    }
 
    @Test
    public void getBigDecimal() {
 	assertNotNull(configuration);
 	// test raw property
-	assertEquals("1.123456789", configuration.getProperty("//application/single/bigdecimal"));
+	assertEquals("1.123456789", configuration.getString("//application/single/bigdecimal"));
 	assertEquals(new BigDecimal("1.123456789"), configuration.getBigDecimal("//application/single/bigdecimal"));
 	// test unknown key
 	assertNull(configuration.getBigDecimal("foo"));
@@ -252,20 +254,20 @@ public abstract class AbstractConfigurationTest extends Assert {
    @Test
    public void getBigDecimalList() {
 	assertNotNull(configuration);
-	// test raw property
-	assertEquals("987.5|1.123456789", configuration.getProperty("//application/array/bigdecimal"));
 	assertEquals(2, configuration.getBigDecimalList("//application/array/bigdecimal").size());
 	assertEquals(new BigDecimal("987.5"), configuration.getBigDecimalList("//application/array/bigdecimal").get(0));
 	assertEquals(new BigDecimal("1.123456789"), configuration.getBigDecimalList("//application/array/bigdecimal").get(1));
 	// test unknown key
 	assertNull(configuration.getBigDecimalList("foo"));
+	// test raw property
+	assertEquals("987.5|1.123456789", configuration.getString("//application/array/bigdecimal"));
    }
 
    @Test
    public void getBoolean() {
 	assertNotNull(configuration);
 	// test raw property
-	assertEquals("true", configuration.getProperty("//application/single/boolean"));
+	assertEquals("true", configuration.getString("//application/single/boolean"));
 	assertTrue(configuration.getBoolean("//application/single/boolean"));
 	// test unknown key
 	assertNull(configuration.getBoolean("foo"));
@@ -275,13 +277,13 @@ public abstract class AbstractConfigurationTest extends Assert {
    @Test
    public void getBooleanList() {
 	assertNotNull(configuration);
-	// test raw property
-	assertEquals("false|true", configuration.getProperty("//application/array/boolean"));
 	assertEquals(2, configuration.getBooleanList("//application/array/boolean").size());
 	assertTrue(!configuration.getBooleanList("//application/array/boolean").get(0));
 	assertTrue(configuration.getBooleanList("//application/array/boolean").get(1));
 	// test unknown key
 	assertNull(configuration.getBooleanList("foo"));
+	// test raw property
+	assertEquals("false|true", configuration.getString("//application/array/boolean"));
    }
 
    @Test

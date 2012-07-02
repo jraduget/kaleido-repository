@@ -60,6 +60,7 @@ public interface ConfigurationConstants {
 	xmlproperties,
 	xml,
 	json,
+	yaml,
 	model,
 	javasystem,
 	osenv,
@@ -78,6 +79,8 @@ public interface ConfigurationConstants {
    String JpaModelConfigurationPluginName = "configurations.model";
    /** json implementation for configuration, plugin name */
    String JsonConfigurationPluginName = "configurations.json";
+   /** yaml implementation for configuration, plugin name */
+   String YamlConfigurationPluginName = "configurations.yaml";
    /** java env variable implementation configuration plugin name - configuration resource uri have to end with '.javasystem' */
    String JavaSystemConfigurationPluginName = "configurations.javasystem";
    /** operating system env variable implementation configuration plugin name - configuration resource uri have to end with '.osenv' */

@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -369,13 +369,13 @@ public abstract class StringHelper {
     * @param values
     * @return string representation of a String[] using valueSeparator as string separator
     */
-   public static String unsplit(final String delim, final String... values) {
+   public static String unsplit(final String delim, final Object... values) {
 	final StringBuilder buffer = new StringBuilder();
 	if (values != null) {
 	   for (int i = 0; i < values.length - 1; i++) {
-		buffer.append(values[i] + delim);
+		buffer.append(String.valueOf(values[i]) + delim);
 	   }
-	   buffer.append(values[values.length - 1]);
+	   buffer.append(String.valueOf(values[values.length - 1]));
 
 	   return buffer.toString();
 	} else {

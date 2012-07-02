@@ -84,7 +84,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
    // configuration name identifier
    protected final String name;
 
-   // internal properties cache
+   // internal parameters cache
    protected final Cache<String, Serializable> cacheProperties;
 
    // external persistent singleFileStore
@@ -174,27 +174,27 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
    /**
     * you don't need to release resourceHandler argument, it is done by agregator <br/>
     * <b>be careful, if you use {@link #setProperty(String, Serializable)}, event will be fired...</b> a preferred way is to use
-    * properties.put(normalizeKey(key), value)
+    * cacheProperties.put(normalizeKey(key), value)
     * 
     * @param resourceHandler
-    * @param properties
+    * @param cacheProperties
     * @return internal cache instance
     * @throws ResourceException
     * @throws ConfigurationException
     */
-   protected abstract Cache<String, Serializable> loadProperties(ResourceHandler resourceHandler, Cache<String, Serializable> properties)
+   protected abstract Cache<String, Serializable> loadProperties(ResourceHandler resourceHandler, Cache<String, Serializable> cacheProperties)
 	   throws ResourceException, ConfigurationException;
 
    /**
     * you don't need to release resourceHandler argument, it is done by agregator
     * 
     * @param resourceHandler
-    * @param properties
+    * @param cacheProperties
     * @return internal cache instance
     * @throws ResourceException
     * @throws ConfigurationException
     */
-   protected abstract Cache<String, Serializable> storeProperties(final ResourceHandler resourceHandler, Cache<String, Serializable> properties)
+   protected abstract Cache<String, Serializable> storeProperties(final ResourceHandler resourceHandler, Cache<String, Serializable> cacheProperties)
 	   throws ResourceException, ConfigurationException;
 
    /*

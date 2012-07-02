@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,15 @@ package org.kaleidofoundry.core.util;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 
 /**
- * Typed property accessor
+ * Typed property accessors
  * 
  * @author Jerome RADUGET
  */
@@ -59,8 +61,22 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @return value of the property
     * @param <T>
     */
+   @SuppressWarnings({ "unchecked", "rawtypes" })
    public <T extends Serializable> T getProperty(final String key, final Class<T> type) {
-	return _deserialize(getProperty(key), type);
+
+	Serializable value = getProperty(key);
+
+	if (value == null) {
+	   return null;
+	} else if (type.isAssignableFrom(value.getClass())) {
+	   return (T) value;
+	} else if (value instanceof Collection) {
+	   return (T) serialize((Collection) value, type);
+	} else if (String.class == type) {
+	   return (T) serialize((T) value, type);
+	} else {
+	   return convert(value, type);
+	}
    }
 
    /**
@@ -69,8 +85,43 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
     * @return values of the property
     * @param <T>
     */
+   @SuppressWarnings("unchecked")
    public <T extends Serializable> List<T> getPropertyList(final String key, final Class<T> type) {
-	return _deserializeToList(getProperty(key), type);
+
+	Serializable value = getProperty(key);
+
+	if (value == null) {
+	   return null;
+	} else if (value instanceof Collection) {
+
+	   List<T> values = new ArrayList<T>();
+	   for (Object v : (Collection<?>) value) {
+		if (v == null) {
+		   values.add(null);
+		} else if (type.isAssignableFrom(v.getClass())) {
+		   values.add((T) v);
+		} else if (String.class == type) {
+		   values.add((T) serialize((T) v, type));
+		} else if (Character.class == type) {
+		   T sv = (T) serialize((T) v, type);
+		   String csv;
+		   if (sv instanceof String) {
+			csv = (String) sv;
+			values.add(StringHelper.isEmpty(csv) ? null : (T) Character.valueOf(csv.charAt(0)));
+		   } else {
+			csv = String.valueOf(sv);
+			values.add((T) Character.valueOf(csv.charAt(0)));
+		   }
+		} else {
+		   values.add(convert((Serializable) v, type));
+		}
+	   }
+	   return values;
+
+	} else {
+	   return convertToList(value, type);
+	}
+
    }
 
    // ***************************************************************************
