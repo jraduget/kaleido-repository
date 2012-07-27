@@ -158,11 +158,10 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 		}
 	   }
 
-	   throw new ProviderException(new ResourceException("store.uri.custom.notmanaged", baseURI.getScheme(), pBaseUri.toString()));
+	   throw new IllegalArgumentException(StoreMessageBundle.getMessage("store.uri.notmanaged", pBaseUri.toString(), baseURI.getScheme()));
 	}
 
-	throw new ProviderException(new ResourceException("store.uri.notmanaged", baseURI.getScheme(), pBaseUri.toString()));
-
+	throw new IllegalArgumentException(StoreMessageBundle.getMessage("store.uri.notmanaged", pBaseUri.toString(), baseURI.getScheme()));
    }
 
    // use to resolve uri although pUri contains only the uri scheme like ftp|http|classpath...

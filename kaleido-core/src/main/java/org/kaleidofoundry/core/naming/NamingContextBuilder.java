@@ -16,6 +16,7 @@
 package org.kaleidofoundry.core.naming;
 
 import java.io.Serializable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.ejb.EJBHome;
@@ -346,55 +347,55 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
    /**
     * @see Context#PROVIDER_URL
     */
-   public static final String ProviderUrl = Context.PROVIDER_URL;
+   public static final String ProviderUrl = "provider-url";
    /**
     * @see Context#INITIAL_CONTEXT_FACTORY
     */
-   public static final String InitialContextFactory = Context.INITIAL_CONTEXT_FACTORY;
+   public static final String InitialContextFactory = "factory-initial-class";
    /**
     * @see Context#URL_PKG_PREFIXES
     */
-   public static final String UrlPkgPrefixes = Context.URL_PKG_PREFIXES;
+   public static final String UrlPkgPrefixes = "factory-url-pkgs";
    /**
     * @see Context#DNS_URL
     */
-   public static final String DnsUrl = Context.DNS_URL;
+   public static final String DnsUrl = "dns-url";
    /**
     * @see Context#AUTHORITATIVE
     */
-   public static final String Authoritative = Context.AUTHORITATIVE;
+   public static final String Authoritative = "authoritative";
    /**
     * @see Context#BATCHSIZE
     */
-   public static final String BatchSize = Context.BATCHSIZE;
+   public static final String BatchSize = "batchsize";
    /**
     * @see Context#LANGUAGE
     */
-   public static final String Language = Context.LANGUAGE;
+   public static final String Language = "language";
    /**
     * @see Context#REFERRAL
     */
-   public static final String Referral = Context.REFERRAL;
+   public static final String Referral = "referral";
    /**
     * @see Context#SECURITY_AUTHENTICATION
     */
-   public static final String SecurityAuthentication = Context.SECURITY_AUTHENTICATION;
+   public static final String SecurityAuthentication = "security-authentication";
    /**
     * @see Context#SECURITY_PRINCIPAL
     */
-   public static final String SecurityPrincipal = Context.SECURITY_PRINCIPAL;
+   public static final String SecurityPrincipal = "security-principal";
    /**
     * @see Context#SECURITY_CREDENTIALS
     */
-   public static final String SecurityCredentials = Context.SECURITY_CREDENTIALS;
+   public static final String SecurityCredentials = "security-credentials";
    /**
     * @see Context#SECURITY_PROTOCOL
     */
-   public static final String SecurityProtocol = Context.SECURITY_PROTOCOL;
+   public static final String SecurityProtocol = "security-protocol";
    /**
     * @see Context#STATE_FACTORIES
     */
-   public static final String StateFactories = Context.STATE_FACTORIES;
+   public static final String StateFactories = "factory-state";
    /**
     * 
     */
@@ -404,12 +405,34 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
     */
    public static final String CorbaORBInitialPort = "org.omg.CORBA.ORBInitialPort";
 
+   /** Mapping between context properties and java naming properties */
+   static final ConcurrentMap<String, String> CONTEXT_PARAMETER_MAPPER = new ConcurrentHashMap<String, String>();
+
+   static {
+	CONTEXT_PARAMETER_MAPPER.put(ProviderUrl, Context.PROVIDER_URL);
+	CONTEXT_PARAMETER_MAPPER.put(InitialContextFactory, Context.INITIAL_CONTEXT_FACTORY);
+	CONTEXT_PARAMETER_MAPPER.put(UrlPkgPrefixes, Context.URL_PKG_PREFIXES);
+	CONTEXT_PARAMETER_MAPPER.put(DnsUrl, Context.DNS_URL);
+	CONTEXT_PARAMETER_MAPPER.put(Authoritative, Context.AUTHORITATIVE);
+	CONTEXT_PARAMETER_MAPPER.put(BatchSize, Context.BATCHSIZE);
+	CONTEXT_PARAMETER_MAPPER.put(Language, Context.LANGUAGE);
+	CONTEXT_PARAMETER_MAPPER.put(Referral, Context.REFERRAL);
+	CONTEXT_PARAMETER_MAPPER.put(SecurityAuthentication, Context.SECURITY_AUTHENTICATION);
+	CONTEXT_PARAMETER_MAPPER.put(SecurityPrincipal, Context.SECURITY_PRINCIPAL);
+	CONTEXT_PARAMETER_MAPPER.put(SecurityCredentials, Context.SECURITY_CREDENTIALS);
+	CONTEXT_PARAMETER_MAPPER.put(SecurityProtocol, Context.SECURITY_PROTOCOL);
+	CONTEXT_PARAMETER_MAPPER.put(StateFactories, Context.STATE_FACTORIES);
+	CONTEXT_PARAMETER_MAPPER.put(CorbaORBInitialHost, "org.omg.CORBA.ORBInitialHost");
+	CONTEXT_PARAMETER_MAPPER.put(CorbaORBInitialPort, "org.omg.CORBA.ORBInitialPort");
+
+   }
+
    // kaleido custom properties ************************************************************************************************************
 
    /**
     * see {@link NamingContextBuilder}
     */
-   public static final String EnvPrefixName = "java.naming.env.prefix";
+   public static final String EnvPrefixName = "env-prefix";
 
    /**
     * see {@link NamingContextBuilder}

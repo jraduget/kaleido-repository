@@ -210,6 +210,16 @@ public class PrimitiveTypeToStringSerializer implements ToStringSerializer {
 	   return (T) new BigDecimal(value.toString());
 	} else if (BigInteger.class.isAssignableFrom(type)) {
 	   return (T) new BigInteger(value.toString());
+	} else if (Long.class.isAssignableFrom(type)) {
+	   return (T) new Long(value.toString());
+	} else if (Integer.class.isAssignableFrom(type)) {
+	   return (T) new Integer(value.toString());
+	} else if (Double.class.isAssignableFrom(type)) {
+	   return (T) new Double(value.toString());
+	} else if (Float.class.isAssignableFrom(type)) {
+	   return (T) new Float(value.toString());
+	} else if (Short.class.isAssignableFrom(type)) {
+	   return (T) new Short(value.toString());
 	} else if (type.isAssignableFrom(String.class)) {
 	   return (T) serialize((T) value, type);
 	} else {
