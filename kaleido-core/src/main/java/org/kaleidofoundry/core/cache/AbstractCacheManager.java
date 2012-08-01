@@ -336,11 +336,13 @@ public abstract class AbstractCacheManager implements CacheManager {
     * <li>second on file system</li>
     * <li>second on classpath (and jars resources)</li>
     * </ul>
+    * <b>Don't forget to close the inputStream</b>
     * 
     * @param configurationUri
     * @return InputStream of the input configuration url, or null if none found
     * @throws CacheException
     */
+   @SuppressWarnings("resource")
    protected InputStream getConfiguration(final String configurationUri) throws CacheException {
 	if (singleFileStore != null) {
 	   try {

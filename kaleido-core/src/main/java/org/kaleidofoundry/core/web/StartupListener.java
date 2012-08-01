@@ -30,6 +30,7 @@ import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.i18n.I18nMessagesProvider;
 import org.kaleidofoundry.core.plugin.PluginFactory;
+import org.kaleidofoundry.core.store.FileStoreProvider;
 import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.kaleidofoundry.core.util.locale.LocaleFactory;
@@ -82,9 +83,12 @@ public class StartupListener implements ServletContextListener {
 	final String cacheProvider = sce.getServletContext().getInitParameter(CacheConstants.CACHE_PROVIDER_ENV);
 	if (!StringHelper.isEmpty(cacheProvider)) {
 	   System.getProperties().setProperty(CACHE_PROVIDER_ENV, cacheProvider);
-	   // static init of the class
-	   CacheManagerProvider.getRegistry();
 	}
+
+	// Cache manager static init
+	CacheManagerProvider.getRegistry();
+	// only needed to static initialize of FileStoreProvider, and log info message first
+	@SuppressWarnings("unused") String initBaseDir = FileStoreProvider.BASE_DIR;
 
 	// Parse and set default locale if needed
 	final String webappDefaultLocale = sce.getServletContext().getInitParameter(LocaleFactory.JavaEnvProperties);

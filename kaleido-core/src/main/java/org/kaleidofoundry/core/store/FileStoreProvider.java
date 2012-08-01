@@ -52,12 +52,12 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
    private static final Logger LOGGER = LoggerFactory.getLogger(FileStoreFactory.class);
 
    static {
-	String currentPath = System.getProperty("kaleido.basedir");
-	if (StringHelper.isEmpty(currentPath)) {
-	   currentPath = FileHelper.buildUnixAppPath(FileHelper.getCurrentPath());
+	String currentBaseDir = System.getProperty("kaleido.basedir");
+	if (StringHelper.isEmpty(currentBaseDir)) {
+	   currentBaseDir = FileHelper.buildUnixAppPath(FileHelper.getCurrentPath());
 	}
-	currentPath = currentPath.endsWith("/") ? currentPath.substring(0, currentPath.length() - 1) : currentPath;
-	BASE_DIR = (currentPath.startsWith("/") ? currentPath.substring(1) : currentPath);
+	currentBaseDir = currentBaseDir.endsWith("/") ? currentBaseDir.substring(0, currentBaseDir.length() - 1) : currentBaseDir;
+	BASE_DIR = (currentBaseDir.startsWith("/") ? currentBaseDir.substring(1) : currentBaseDir);
 
 	LOGGER.info(StoreMessageBundle.getMessage("store.basedir.info", BASE_DIR));
    }

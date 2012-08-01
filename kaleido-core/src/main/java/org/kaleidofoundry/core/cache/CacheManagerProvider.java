@@ -86,8 +86,8 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 	   LOGGER.warn(CacheMessageBundle.getMessage("cacheprovider.notfound", cacheProviderCode));
 	}
 
-	LOGGER.info(CacheMessageBundle.getMessage("cacheprovider.default", DEFAULT_CACHE_PROVIDER));
 	LOGGER.info(CacheMessageBundle.getMessage("cacheprovider.customize"));
+	LOGGER.info(CacheMessageBundle.getMessage("cacheprovider.default", DEFAULT_CACHE_PROVIDER));
 
 	System.getProperties().setProperty(CACHE_PROVIDER_ENV, DEFAULT_CACHE_PROVIDER);
    }

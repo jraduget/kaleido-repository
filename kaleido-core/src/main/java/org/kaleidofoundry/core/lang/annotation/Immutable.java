@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * @author Jerome RADUGET
  */
 @Documented
-@Target( { ElementType.TYPE })
+@Target({ ElementType.TYPE, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Immutable {
 

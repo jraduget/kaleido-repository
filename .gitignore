@@ -10,14 +10,3 @@ derby.log
 .svn/
 .DS_Store
 .tomcatplugin
-kaleido-wiki/
-kaleido-site/
-kaleido-mail/
-kaleido-messaging/
-kaleido-miscellaneous/
-kaleido-model/
-kaleido-persistence/
-kaleido-report/
-kaleido-rules/
-kaleido-web/
-kaleido-wiki/
