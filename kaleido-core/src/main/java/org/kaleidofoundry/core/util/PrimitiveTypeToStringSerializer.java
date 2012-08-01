@@ -23,6 +23,8 @@ import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,7 +45,7 @@ public class PrimitiveTypeToStringSerializer implements ToStringSerializer {
    /** The multi-value separator by default is | */
    public static final String DefaultMultiValuesSeparator = "|";
    /** The date format pattern by default */
-   public static final String DefaultDateFormat = "yyyy-MM-dd'T'hh:mm:ss"; // yyyy-MM-ddThh:mm:ss
+   public static final String DefaultDateFormat = "yyyy-MM-dd'T'HH:mm:ss"; // yyyy-MM-ddTHH:mm:ss
    /** The number format pattern by default */
    public static final String DefaultNumberFormat = "##0.0####";
 
@@ -70,6 +72,34 @@ public class PrimitiveTypeToStringSerializer implements ToStringSerializer {
 	MultiValuesSeparator = (multiValuesSeparator != null ? multiValuesSeparator : DefaultMultiValuesSeparator);
 	DateFormat = dateFormat != null ? dateFormat : DefaultDateFormat;
 	NumberFormat = numberFormat != null ? numberFormat : DefaultNumberFormat;
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.util.ToStringSerializer#serialize(T, java.lang.Class)
+    */
+   @Override
+   @Task(comment = "use SimpleDateFormat has a thread local", labels = TaskLabel.Enhancement)
+   public <T extends Serializable> String serialize(final T value, final Class<T> type) {
+
+	if (value == null) { return null; }
+
+	if (Boolean.class.isAssignableFrom(type)) { return value.toString(); }
+
+	if (Number.class.isAssignableFrom(type)) { return value.toString(); }
+
+	if (Date.class.isAssignableFrom(type) || (value instanceof Date && String.class.isAssignableFrom(type))) { return new SimpleDateFormat(DateFormat)
+	.format((Date) value); }
+
+	if (String.class.isAssignableFrom(type)) { return String.valueOf(value); }
+
+	if (Character.class.isAssignableFrom(type)) {
+	   String valueStr = String.valueOf(value);
+	   return StringHelper.isEmpty(valueStr) ? null : String.valueOf(valueStr.charAt(0));
+	}
+
+	throw new IllegalStateException(UtilMessageBundle.getMessage("serializer.illegal.class", type.getName()));
+
    }
 
    /*
@@ -118,6 +148,24 @@ public class PrimitiveTypeToStringSerializer implements ToStringSerializer {
 
    /*
     * (non-Javadoc)
+    * @see org.kaleidofoundry.core.util.ToStringSerializer#serialize(java.util.Collection, java.lang.Class)
+    */
+   @Override
+   public <T extends Serializable> String serialize(final Collection<T> values, final Class<T> type) {
+
+	if (values == null) {
+	   return null;
+	} else {
+	   List<String> valuesList = new LinkedList<String>();
+	   for (T v : values) {
+		valuesList.add(serialize(v, type));
+	   }
+	   return StringHelper.unsplit(MultiValuesSeparator, valuesList.toArray());
+	}
+   }
+
+   /*
+    * (non-Javadoc)
     * @see org.kaleidofoundry.core.util.ToStringSerializer#deserializeToList(java.lang.String, java.lang.Class)
     */
    @Override
@@ -138,47 +186,42 @@ public class PrimitiveTypeToStringSerializer implements ToStringSerializer {
 	return result;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.util.ToStringSerializer#serialize(T, java.lang.Class)
-    */
-   @Override
-   @Task(comment = "use SimpleDateFormat has a thread local", labels = TaskLabel.Enhancement)
-   public <T extends Serializable> String serialize(final T value, final Class<T> type) {
 
-	if (value == null) { return null; }
-
-	if (Boolean.class.isAssignableFrom(type)) { return value.toString(); }
-
-	if (Number.class.isAssignableFrom(type)) { return value.toString(); }
-
-	if (Date.class.isAssignableFrom(type)) { return new SimpleDateFormat(DateFormat).format((Date) value); }
-
-	if (String.class.isAssignableFrom(type)) { return (String) value; }
-
-	if (Character.class.isAssignableFrom(type)) { return value.toString(); }
-
-	throw new IllegalStateException(UtilMessageBundle.getMessage("serializer.illegal.class", type.getName()));
-
-   }
 
    /**
+    * convert a value to another type
+    * 
     * @param <T>
     * @param value
     * @param type
-    * @return if the value parameter is a String, this method will return {@link #deserialize(String, Class)}, otherwise if class of the
-    *         value parameter is already of type T it will return it, otherwise if will throw a {@link IllegalArgumentException}
+    * @return
     * @throws IllegalArgumentException
     */
    @SuppressWarnings("unchecked")
-   protected <T extends Serializable> T _deserialize(final Serializable value, final Class<T> type) {
+   protected <T extends Serializable> T convert(final Serializable value, final Class<T> type) {
 
 	if (value == null) { return null; }
 
-	if (value.getClass().isAssignableFrom(type)) {
+	if (type.isAssignableFrom(value.getClass())) {
 	   return (T) value;
 	} else if (value instanceof String) {
 	   return deserialize((String) value, type);
+	} else if (BigDecimal.class.isAssignableFrom(type)) {
+	   return (T) new BigDecimal(value.toString());
+	} else if (BigInteger.class.isAssignableFrom(type)) {
+	   return (T) new BigInteger(value.toString());
+	} else if (Long.class.isAssignableFrom(type)) {
+	   return (T) new Long(value.toString());
+	} else if (Integer.class.isAssignableFrom(type)) {
+	   return (T) new Integer(value.toString());
+	} else if (Double.class.isAssignableFrom(type)) {
+	   return (T) new Double(value.toString());
+	} else if (Float.class.isAssignableFrom(type)) {
+	   return (T) new Float(value.toString());
+	} else if (Short.class.isAssignableFrom(type)) {
+	   return (T) new Short(value.toString());
+	} else if (type.isAssignableFrom(String.class)) {
+	   return (T) serialize((T) value, type);
 	} else {
 	   throw new IllegalArgumentException(UtilMessageBundle.getMessage("serializer.illegal.argument", value.getClass().getName(), type.getName()));
 	}
@@ -186,29 +229,31 @@ public class PrimitiveTypeToStringSerializer implements ToStringSerializer {
    }
 
    /**
+    * convert a list value to another list type
+    * 
     * @param <T>
     * @param values
     * @param type
-    * @return if the values parameter is a String, this method will return {@link #deserializeToList(String, Class)}, otherwise if class of
-    *         the values parameter is already of type List<T> it will return it, otherwise if will throw a {@link IllegalArgumentException}
+    * @return
     * @throws IllegalArgumentException
     */
    @SuppressWarnings("unchecked")
-   protected <T extends Serializable> List<T> _deserializeToList(final Serializable values, final Class<T> type) {
+   protected <T extends Serializable> List<T> convertToList(final Serializable values, final Class<T> type) {
 
 	if (values == null) { return null; }
 
 	if (values instanceof String) {
 	   return deserializeToList((String) values, type);
-	} else if (values.getClass().isAssignableFrom(List.class)) {
-	   List<? extends Serializable> current = (List<? extends Serializable>) values;
+	} else if (values instanceof Collection) {
+	   Collection<? extends Serializable> current = (Collection<? extends Serializable>) values;
 	   List<T> result = new ArrayList<T>();
 	   for (Serializable item : current) {
-		result.add(_deserialize(item, type));
+		result.add(convert(item, type));
 	   }
 	   return result;
 	} else {
-	   throw new IllegalArgumentException(UtilMessageBundle.getMessage("serializer.illegal.argument", values.getClass().getName(), type.getName()));
+	   return Arrays.asList(convert(values, type));
 	}
    }
+
 }

@@ -31,8 +31,6 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * EhCache factory implementation <br/>
@@ -46,9 +44,6 @@ import org.slf4j.LoggerFactory;
  */
 @Declare(value = EhCacheManagerPluginName)
 public class EhCacheManagerImpl extends AbstractCacheManager {
-
-   /** internal logger */
-   private static final Logger LOGGER = LoggerFactory.getLogger(EhCacheManagerImpl.class);
 
    /** Default cache configuration */
    private static final String DefaultCacheConfiguration = "ehcache.xml";

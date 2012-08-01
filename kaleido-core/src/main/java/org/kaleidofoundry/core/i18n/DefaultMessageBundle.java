@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ public class DefaultMessageBundle extends ResourceBundle implements I18nMessages
     */
    public DefaultMessageBundle(final String resourceName, final Properties properties, final RuntimeContext<I18nMessages> runtimeContext) {
 
-	this.context = runtimeContext;
+	context = runtimeContext;
 
 	// internal kaleidofoundry resource bundle, does not use internal cache
 	if (InternalBundleEnum.isInternalBundle(resourceName)) {
@@ -90,7 +90,8 @@ public class DefaultMessageBundle extends ResourceBundle implements I18nMessages
 	   } else {
 		cacheManager = CacheManagerFactory.provides();
 	   }
-	   resourceBundleCache = cacheManager.getCache("kaleidofoundry/i18n/" + resourceName);
+	   resourceBundleCache = cacheManager.getCache(resourceName.startsWith("i18n/") ? "kaleidofoundry/" + resourceName : "kaleidofoundry/i18n/"
+		   + resourceName);
 	   resourceBundleNoCache = null;
 	   // copy common properties to internal Cache<String,String> storage
 	   for (final String propName : properties.stringPropertyNames()) {
@@ -106,10 +107,10 @@ public class DefaultMessageBundle extends ResourceBundle implements I18nMessages
     * this constructor is only needed and used by some IOC framework like spring.
     */
    DefaultMessageBundle() {
-	this.resourceName = null;
-	this.context = null;
-	this.resourceBundleCache = null;
-	this.resourceBundleNoCache = null;
+	resourceName = null;
+	context = null;
+	resourceBundleCache = null;
+	resourceBundleNoCache = null;
    }
 
    /*

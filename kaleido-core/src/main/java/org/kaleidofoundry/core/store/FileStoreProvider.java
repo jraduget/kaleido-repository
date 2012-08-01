@@ -16,6 +16,7 @@
 package org.kaleidofoundry.core.store;
 
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.StoreMessageBundle;
+import static org.kaleidofoundry.core.store.AbstractFileStore.LOGGER;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -31,8 +32,6 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginFactory;
 import org.kaleidofoundry.core.util.StringHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * FileStore Provider
@@ -48,8 +47,6 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
     * files store internal registry
     */
    static final FileStoreRegistry FILE_STORE_REGISTRY = new FileStoreRegistry();
-
-   private static final Logger LOGGER = LoggerFactory.getLogger(FileStoreFactory.class);
 
    static {
 	String currentBaseDir = System.getProperty("kaleido.basedir");
@@ -161,11 +158,10 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 		}
 	   }
 
-	   throw new ProviderException(new ResourceException("store.uri.custom.notmanaged", baseURI.getScheme(), pBaseUri.toString()));
+	   throw new IllegalArgumentException(StoreMessageBundle.getMessage("store.uri.notmanaged", pBaseUri.toString(), baseURI.getScheme()));
 	}
 
-	throw new ProviderException(new ResourceException("store.uri.notmanaged", baseURI.getScheme(), pBaseUri.toString()));
-
+	throw new IllegalArgumentException(StoreMessageBundle.getMessage("store.uri.notmanaged", pBaseUri.toString(), baseURI.getScheme()));
    }
 
    // use to resolve uri although pUri contains only the uri scheme like ftp|http|classpath...

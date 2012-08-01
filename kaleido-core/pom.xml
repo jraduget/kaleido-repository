@@ -20,11 +20,19 @@
 			<version>${aspectj.version}</version>
 		</dependency>
 
+		<!-- Json configuration -->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.6</version>
 		</dependency>	
+		<!-- Yamlconfiguration -->
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.10</version>
+		</dependency>
+		
 		
 		<!-- Cache implementations -->
 		<dependency>

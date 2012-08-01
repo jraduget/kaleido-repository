@@ -14,6 +14,7 @@ org.kaleidofoundry.core.config.OsEnvConfiguration
 org.kaleidofoundry.core.config.PropertiesConfiguration
 org.kaleidofoundry.core.config.XmlConfiguration
 org.kaleidofoundry.core.config.XmlPropertiesConfiguration
+org.kaleidofoundry.core.config.YamlConfiguration
 org.kaleidofoundry.core.i18n.DefaultMessageBundle
 org.kaleidofoundry.core.naming.JndiNamingService
 org.kaleidofoundry.core.store.ClasspathFileStore

@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -64,7 +65,7 @@ import org.xml.sax.SAXException;
  * 			&lt;name&gt;app&lt;/name&gt;
  * 			&lt;version&gt;1.0.0&lt;/version&gt;
  * 			&lt;description&gt;description of the application...&lt;/description&gt;
- * 			&lt;date&gt;2006-09-01&lt;/date&gt;	
+ * 			&lt;date&gt;2006-09-01&lt;/date&gt;
  * 			&lt;librairies&gt;
  * 				&lt;value&gt;dom4j.jar&lt;/value&gt;
  * 				&lt;value&gt;log4j.jar&lt;/value&gt;
@@ -74,7 +75,7 @@ import org.xml.sax.SAXException;
  * 				&lt;sales&gt;Sales&lt;version&gt;1.1.0&lt;/version&gt;&lt;/sales&gt;
  * 				&lt;marketing&gt;Market.&lt;/marketing&gt;
  * 				&lt;netbusiness&gt;&lt;/netbusiness&gt;
- * 			&lt;/modules&gt;		
+ * 			&lt;/modules&gt;
  * 	&lt;/application&gt;
  * &lt;/root&gt;
  * </pre>
@@ -121,7 +122,7 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
 	try {
 	   final DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
 	   final DocumentBuilder documentBuilder = domFactory.newDocumentBuilder();
-	   final Document document = documentBuilder.parse(resourceHandler.getInputStream());
+	   final Document document = documentBuilder.parse(new InputSource(resourceHandler.getReader()));
 	   final Element root = document.getDocumentElement();
 
 	   if (root != null) {
@@ -239,7 +240,7 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
 		   // multiple value have been detected
 		   else {
 			properties.put(normalizeKey(newKeyName.toString()),
-				StringHelper.unsplit(MultiValuesSeparator, multipleValues.toArray(new String[multipleValues.size()])));
+				StringHelper.unsplit(MultiValuesSeparator, multipleValues.toArray(new Object[multipleValues.size()])));
 			// properties.setMultiValueProperty(newKeyName.toString(), multipleValues.toArray(new String[multipleValues.size()]));
 		   }
 		}

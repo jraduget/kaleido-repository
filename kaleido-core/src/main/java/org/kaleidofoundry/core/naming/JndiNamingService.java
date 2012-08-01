@@ -22,6 +22,8 @@ import static org.kaleidofoundry.core.naming.NamingContextBuilder.FailoverEnable
 import static org.kaleidofoundry.core.naming.NamingContextBuilder.FailoverMaxRetry;
 import static org.kaleidofoundry.core.naming.NamingContextBuilder.FailoverWaitBeforeRetry;
 
+import java.util.Properties;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
@@ -143,10 +145,17 @@ public class JndiNamingService implements NamingService {
    @Task(comment = "handle caching policies context|all")
    protected static Context createInitialContext(final RuntimeContext<NamingService> context) throws NamingException {
 	final Context initialContext = new InitialContext();
-	for (final String propertyName : context.keySet()) {
-	   final Object propertyValue = context.getProperty(propertyName);
+	final Properties ctxProperties = context.toProperties();
+
+	for (final String propertyName : ctxProperties.stringPropertyNames()) {
+	   final Object propertyValue = ctxProperties.getProperty(propertyName);
 	   if (propertyValue != null) {
 		initialContext.addToEnvironment(propertyName, propertyValue);
+		// map context properties to java naming context properties
+		String mappedPropName = NamingContextBuilder.CONTEXT_PARAMETER_MAPPER.get(propertyName);
+		if (mappedPropName != null) {
+		   initialContext.addToEnvironment(mappedPropName, propertyValue);
+		}
 	   }
 	}
 	return initialContext;

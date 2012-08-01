@@ -15,6 +15,7 @@
  */
 package org.kaleidofoundry.core.cache;
 
+import static org.kaleidofoundry.core.cache.AbstractCacheManager.LOGGER;
 import static org.kaleidofoundry.core.cache.CacheConstants.CACHE_PROVIDER_ENV;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreUri;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ProviderCode;
@@ -36,8 +37,6 @@ import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginFactory;
 import org.kaleidofoundry.core.util.Registry;
 import org.kaleidofoundry.core.util.StringHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Registry & provider of {@link CacheManager} instances.
@@ -48,8 +47,6 @@ import org.slf4j.LoggerFactory;
  */
 @ThreadSafe
 public class CacheManagerProvider extends AbstractProviderService<CacheManager> {
-
-   static final Logger LOGGER = LoggerFactory.getLogger(CacheManagerProvider.class);
 
    /**
     * main configuration registry instance (shared between providers instances)

@@ -30,6 +30,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
 
+import org.kaleidofoundry.core.lang.Charsets;
 import org.kaleidofoundry.core.system.JavaSystemHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,10 +82,10 @@ public abstract class IOHelper {
    /**
     * @param in
     * @param bufferSize
-    * @return byte[] of data input stream, buffered reading
+    * @return data input stream
     * @throws IOException
     */
-   public static byte[] toByteArray(final InputStream in, final int bufferSize) throws IOException {
+   public static ByteArrayOutputStream toByteArrayOutputStream(final InputStream in, final int bufferSize) throws IOException {
 	final ByteArrayOutputStream bout = new ByteArrayOutputStream();
 
 	final byte[] data = new byte[bufferSize];
@@ -93,7 +94,17 @@ public abstract class IOHelper {
 	   bout.write(data, 0, dataBuffLenght);
 	}
 
-	return bout.toByteArray();
+	return bout;
+   }
+
+   /**
+    * @param in
+    * @param bufferSize
+    * @return byte[] of data input stream
+    * @throws IOException
+    */
+   public static byte[] toByteArray(final InputStream in, final int bufferSize) throws IOException {
+	return toByteArrayOutputStream(in, bufferSize).toByteArray();
    }
 
    /**
@@ -128,7 +139,7 @@ public abstract class IOHelper {
     * @throws IOException
     */
    public static String toString(final InputStream in) throws IOException {
-	return toString(in, "UTF8");
+	return toString(in, Charsets.UTF_8.getCode());
    }
 
    /**

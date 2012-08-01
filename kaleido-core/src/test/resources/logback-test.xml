@@ -8,7 +8,10 @@
 	</appender>
 	
 	<logger name="org.kaleidofoundry" level="INFO" />	
-	<logger name="org.kaleidofoundry.core.cache.AbstractCacheManager" level="DEBUG" />
+	
+	<logger name="org.kaleidofoundry.core.config.Configuration" level="INFO" />
+	<logger name="org.kaleidofoundry.core.cache.CacheManager" level="INFO" />
+	<logger name="org.kaleidofoundry.core.store.FileStore" level="INFO" />
 
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />

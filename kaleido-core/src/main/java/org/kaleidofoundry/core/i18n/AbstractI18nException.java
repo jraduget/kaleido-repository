@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,6 +116,7 @@ public abstract class AbstractI18nException extends Exception implements I18nExc
    /**
     * @return Token parameters passed for the template message
     */
+   @Override
    public String[] getParameters() {
 	return parameters;
    }
@@ -123,6 +124,7 @@ public abstract class AbstractI18nException extends Exception implements I18nExc
    /**
     * @return specified locale to use to get i18n exception message
     */
+   @Override
    public Locale getLocale() {
 	return locale;
    }
@@ -154,7 +156,7 @@ public abstract class AbstractI18nException extends Exception implements I18nExc
 
 	final I18nMessages msgB = getMessages();
 	if (msgB != null) {
-	   if (getParameters() != null) {
+	   if (getParameters() != null && getParameters().length > 0) {
 		return msgB.getMessage(getCode(), (Object[]) getParameters());
 	   } else {
 		return msgB.getMessage(getCode());
