@@ -81,16 +81,16 @@
 		<dependency>
     		<groupId>com.sun.jersey</groupId>
    			<artifactId>jersey-client</artifactId>
-    		<version>1.5</version>
+    		<version>1.13</version>
     		<scope>test</scope>
 		</dependency>
 		<dependency>
 		    <groupId>com.sun.jersey</groupId>
 		    <artifactId>jersey-json</artifactId>
-		    <version>1.5</version>
+		    <version>1.13</version>
 		    <scope>test</scope>
-		</dependency>		
-				
+		</dependency>
+
 	</dependencies>
 
 </project>

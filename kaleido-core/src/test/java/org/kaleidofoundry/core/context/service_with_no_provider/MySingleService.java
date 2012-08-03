@@ -29,10 +29,10 @@ public class MySingleService {
    @Context
    private RuntimeContext<MySingleService> defaultTypedNamingService;
 
-   @Context("jndi.context.jboss")
+   @Context("namingServices.jboss")
    private RuntimeContext<?> unTypedRuntimeContext;
 
-   @Context("jndi.context.jboss")
+   @Context("namingServices.jboss")
    private RuntimeContext<MySingleService> typedRuntimeContext;
 
    public RuntimeContext<?> getDefaultNamingService() {
