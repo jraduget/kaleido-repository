@@ -80,7 +80,7 @@
 		<spring.version>3.1.1.RELEASE</spring.version>
 		<!-- integration url properties -->
 		<sonar.host.url>http://localhost:8080/sonar</sonar.host.url>
-		<hudson.host.url>https://buildhive.cloudbees.com/job/kaleidofoundry/job/kaleido-repository/</hudson.host.url>
+		<jenkins.host.url>https://buildhive.cloudbees.com/job/kaleidofoundry/job/kaleido-repository/</jenkins.host.url>
 		<!-- source encoding options -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -226,8 +226,8 @@
 	</issueManagement>
 
 	<ciManagement>
-		<system>hudson</system>
-		<url>${hudson.host.url}</url>
+		<system>jenkins</system>
+		<url>${jenkins.host.url}</url>
 		<notifiers>
 			<notifier>
 				<type>mail</type>
@@ -239,13 +239,13 @@
 		</notifiers>
 	</ciManagement>
 
-	<distributionManagement>
-		<site>
-			<id>googlecode.kaleido</id>
-			<name>googlecode maven site</name>
-			<url>scm:svn:https://kaleido-foundry.googlecode.com/svn/www/site</url>
-		</site>				
-	</distributionManagement>
+<!-- 	<distributionManagement> -->
+<!-- 		<site> -->
+<!-- 			<id>googlecode.kaleido</id> -->
+<!-- 			<name>googlecode maven site</name> -->
+<!-- 			<url>scm:svn:https://kaleido-foundry.googlecode.com/svn/www/site</url> -->
+<!-- 		</site>				 -->
+<!-- 	</distributionManagement> -->
 
 	<build>			
     	
