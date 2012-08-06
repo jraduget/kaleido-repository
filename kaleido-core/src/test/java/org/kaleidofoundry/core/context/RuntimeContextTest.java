@@ -36,7 +36,7 @@ import org.kaleidofoundry.core.store.ResourceException;
 public class RuntimeContextTest extends Assert {
 
    private static final String TomcatContextName = "tomcat";
-   private static final String ContextPrefix = "jndi.context";
+   private static final String ContextPrefix = "namingServices";
 
    private Configuration configuration;
 
@@ -161,18 +161,18 @@ public class RuntimeContextTest extends Assert {
 	    */
 
 	   // assertions on keys
-	   assertTrue(runtimeContext.keySet().contains("java.naming.env.prefix"));
-	   assertTrue(runtimeContext.keySet().contains("java.naming.provider.url"));
-	   assertTrue(runtimeContext.keySet().contains("java.naming.factory.initial"));
-	   assertTrue(runtimeContext.keySet().contains("java.naming.factory.url.pkgs"));
-	   assertTrue(runtimeContext.keySet().contains("java.naming.dns.url"));
+	   assertTrue(runtimeContext.keySet().contains("envPrefix"));
+	   assertTrue(runtimeContext.keySet().contains("providerUrl"));
+	   assertTrue(runtimeContext.keySet().contains("factoryInitialClass"));
+	   assertTrue(runtimeContext.keySet().contains("factoryUrlPkgs"));
+	   assertTrue(runtimeContext.keySet().contains("dnsUrl"));
 
 	   // assertions on keys values
-	   assertEquals("java:comp/env", runtimeContext.getProperty("java.naming.env.prefix"));
-	   assertEquals("", runtimeContext.getProperty("java.naming.provider.url"));
-	   assertEquals("org.apache.naming.java.javaURLContextFactory", runtimeContext.getProperty("java.naming.factory.initial"));
-	   assertEquals("", runtimeContext.getProperty("java.naming.factory.url.pkgs"));
-	   assertEquals("", runtimeContext.getProperty("java.naming.dns.url"));
+	   assertEquals("java:comp/env", runtimeContext.getProperty("envPrefix"));
+	   assertEquals("", runtimeContext.getProperty("providerUrl"));
+	   assertEquals("org.apache.naming.java.javaURLContextFactory", runtimeContext.getProperty("factoryInitialClass"));
+	   assertEquals("", runtimeContext.getProperty("factoryUrlPkgs"));
+	   assertEquals("", runtimeContext.getProperty("dnsUrl"));
 
 	}
 

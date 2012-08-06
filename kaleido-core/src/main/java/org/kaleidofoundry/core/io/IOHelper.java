@@ -68,8 +68,12 @@ public abstract class IOHelper {
 	final StringBuilder str = new StringBuilder();
 	String line = null;
 
-	while ((line = buff.readLine()) != null) {
-	   str.append(line);
+	try {
+	   while ((line = buff.readLine()) != null) {
+		str.append(line);
+	   }
+	} finally {
+	   buff.close();
 	}
 
 	return str;

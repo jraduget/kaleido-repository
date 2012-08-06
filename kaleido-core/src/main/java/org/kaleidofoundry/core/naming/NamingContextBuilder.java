@@ -347,19 +347,19 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
    /**
     * @see Context#PROVIDER_URL
     */
-   public static final String ProviderUrl = "provider-url";
+   public static final String ProviderUrl = "providerUrl";
    /**
     * @see Context#INITIAL_CONTEXT_FACTORY
     */
-   public static final String InitialContextFactory = "factory-initial-class";
+   public static final String InitialContextFactory = "factoryInitialClass";
    /**
     * @see Context#URL_PKG_PREFIXES
     */
-   public static final String UrlPkgPrefixes = "factory-url-pkgs";
+   public static final String UrlPkgPrefixes = "factoryUrlPkgs";
    /**
     * @see Context#DNS_URL
     */
-   public static final String DnsUrl = "dns-url";
+   public static final String DnsUrl = "dnsUrl";
    /**
     * @see Context#AUTHORITATIVE
     */
@@ -379,31 +379,31 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
    /**
     * @see Context#SECURITY_AUTHENTICATION
     */
-   public static final String SecurityAuthentication = "security-authentication";
+   public static final String SecurityAuthentication = "securityAuthentication";
    /**
     * @see Context#SECURITY_PRINCIPAL
     */
-   public static final String SecurityPrincipal = "security-principal";
+   public static final String SecurityPrincipal = "securityPrincipal";
    /**
     * @see Context#SECURITY_CREDENTIALS
     */
-   public static final String SecurityCredentials = "security-credentials";
+   public static final String SecurityCredentials = "securityCredentials";
    /**
     * @see Context#SECURITY_PROTOCOL
     */
-   public static final String SecurityProtocol = "security-protocol";
+   public static final String SecurityProtocol = "securityProtocol";
    /**
     * @see Context#STATE_FACTORIES
     */
-   public static final String StateFactories = "factory-state";
+   public static final String StateFactories = "factoryState";
    /**
-    * 
+    * org.omg.CORBA.ORBInitialHost
     */
-   public static final String CorbaORBInitialHost = "org.omg.CORBA.ORBInitialHost";
+   public static final String CorbaORBInitialHost = "orbInitialHost";
    /**
-    * 
+    * org.omg.CORBA.ORBInitialPort
     */
-   public static final String CorbaORBInitialPort = "org.omg.CORBA.ORBInitialPort";
+   public static final String CorbaORBInitialPort = "orbInitialPort";
 
    /** Mapping between context properties and java naming properties */
    static final ConcurrentMap<String, String> CONTEXT_PARAMETER_MAPPER = new ConcurrentHashMap<String, String>();
@@ -432,7 +432,7 @@ public class NamingContextBuilder extends AbstractRuntimeContextBuilder<NamingSe
    /**
     * see {@link NamingContextBuilder}
     */
-   public static final String EnvPrefixName = "env-prefix";
+   public static final String EnvPrefixName = "envPrefix";
 
    /**
     * see {@link NamingContextBuilder}

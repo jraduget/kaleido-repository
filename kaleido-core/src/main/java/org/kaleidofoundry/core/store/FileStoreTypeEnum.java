@@ -57,7 +57,10 @@ public enum FileStoreTypeEnum implements FileStoreType {
    jpa,
 
    /** mock memory scheme */
-   memory
+   memory,
+
+   /** google storage scheme */
+   gs
 
    ;
 
