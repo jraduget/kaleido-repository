@@ -35,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.io.FileHelper;
+import org.kaleidofoundry.core.io.MimeTypeResolverFactory;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
@@ -407,6 +408,11 @@ public abstract class AbstractFileStore implements FileStore {
 	   try {
 		// try to store the resource
 		doStore(URI.create(resourceUri), resource);
+		// Set some meta datas
+		if (resource instanceof ResourceHandlerBean) {
+		   ((ResourceHandlerBean) resource).setLastModified(System.currentTimeMillis());
+		   ((ResourceHandlerBean) resource).setMimeType(MimeTypeResolverFactory.getService().getMimeType(FileHelper.getFileNameExtension(resourceUri)));
+		}
 		return this;
 	   } catch (final ResourceException rse) {
 		lastError = rse;

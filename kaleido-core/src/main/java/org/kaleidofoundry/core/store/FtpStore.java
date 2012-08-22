@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,8 @@ import java.net.URLConnection;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
+import org.kaleidofoundry.core.io.FileHelper;
+import org.kaleidofoundry.core.io.MimeTypeResolverFactory;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
@@ -165,7 +167,17 @@ public class FtpStore extends AbstractFileStore implements FileStore {
 	   urlConnection.connect();
 
 	   try {
-		return createResourceHandler(resourceUri.toString(), urlConnection.getInputStream());
+		ResourceHandler resource = createResourceHandler(resourceUri.toString(), urlConnection.getInputStream());
+
+		// Set some meta datas
+		if (resource instanceof ResourceHandlerBean) {
+		   ((ResourceHandlerBean) resource).setLastModified(urlConnection.getLastModified());
+		   ((ResourceHandlerBean) resource).setMimeType(MimeTypeResolverFactory.getService().getMimeType(
+			   FileHelper.getFileNameExtension(resourceUri.getPath())));
+		}
+
+		return resource;
+
 	   } catch (final FileNotFoundException fnfe) {
 		throw new ResourceNotFoundException(resourceUri.toString());
 	   }

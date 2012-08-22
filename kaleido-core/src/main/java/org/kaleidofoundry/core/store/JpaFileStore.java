@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,17 +25,20 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Calendar;
+import java.util.Locale;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.io.FileHelper;
+import org.kaleidofoundry.core.io.MimeTypeResolverFactory;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.store.entity.ResourceHandlerEntity;
 import org.kaleidofoundry.core.util.StringHelper;
+import org.kaleidofoundry.core.util.locale.LocaleFactory;
 
 /**
  * JPA file store. Resource will be stored in clob or / blob database<br/>
@@ -110,8 +113,17 @@ public class JpaFileStore extends AbstractFileStore implements FileStore {
 	if (entity == null) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
 	} else {
-	   final ResourceHandler resourceHandler = createResourceHandler(resourceUri.toString(), new ByteArrayInputStream(entity.getContent()));
-	   return resourceHandler;
+	   final ResourceHandler resource = createResourceHandler(resourceUri.toString(), new ByteArrayInputStream(entity.getContent()));
+	   // Set some meta datas
+	   if (resource instanceof ResourceHandlerBean) {
+		if (entity.getUpdatedDate() != null) {
+		   ((ResourceHandlerBean) resource).setLastModified(entity.getUpdatedDate().getTime());
+		} else {
+		   ((ResourceHandlerBean) resource).setLastModified(entity.getCreationDate().getTime());
+		}
+		((ResourceHandlerBean) resource).setMimeType(entity.getContentMimeType());
+	   }
+	   return resource;
 	}
    }
 
@@ -139,6 +151,7 @@ public class JpaFileStore extends AbstractFileStore implements FileStore {
 	boolean isNew = true;
 	final String filename = resourceUri.getPath().substring(1);
 	ResourceHandlerEntity storeEntity;
+	Locale locale = LocaleFactory.getDefaultFactory().getCurrentLocale();
 
 	storeEntity = getEntityManager().find(ResourceHandlerEntity.class, resourceUri.toString());
 
@@ -147,10 +160,11 @@ public class JpaFileStore extends AbstractFileStore implements FileStore {
 	   storeEntity.setUri(resourceUri.toString());
 	   storeEntity.setName(FileHelper.getFileName(filename));
 	   storeEntity.setPath(filename);
-	   storeEntity.setCreationDate(Calendar.getInstance().getTime());
+	   storeEntity.setCreationDate(Calendar.getInstance(locale).getTime());
+	   storeEntity.setContentMimeType(MimeTypeResolverFactory.getService().getMimeType(FileHelper.getFileNameExtension(resourceUri.getPath())));
 	   isNew = true;
 	} else {
-	   storeEntity.setUpdatedDate(Calendar.getInstance().getTime());
+	   storeEntity.setUpdatedDate(Calendar.getInstance(locale).getTime());
 	   isNew = false;
 	}
 

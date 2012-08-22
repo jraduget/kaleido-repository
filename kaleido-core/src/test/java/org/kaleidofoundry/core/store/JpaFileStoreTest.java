@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.io.FileHelper;
+import org.kaleidofoundry.core.io.MimeTypeResolverFactory;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 import org.kaleidofoundry.core.store.entity.ResourceHandlerEntity;
 import org.slf4j.Logger;
@@ -69,6 +70,7 @@ public class JpaFileStoreTest extends AbstractFileStoreTest {
 	   entityToGet.setCreationDate(Calendar.getInstance().getTime());
 	   entityToGet.setPath(filenameToGet);
 	   entityToGet.setContent(DEFAULT_RESOURCE_MOCK_TEST.getBytes());
+	   entityToGet.setContentMimeType(MimeTypeResolverFactory.getService().getMimeType(FileHelper.getFileNameExtension(resourceUriToGet.getPath())));
 	   em.persist(entityToGet);
 	   em.flush(); // flush to be sure, that entity is right persist
 	   existingResources.put(resourceUriToGet.getPath(), DEFAULT_RESOURCE_MOCK_TEST);
@@ -89,6 +91,7 @@ public class JpaFileStoreTest extends AbstractFileStoreTest {
 	   entityToRemove.setCreationDate(Calendar.getInstance().getTime());
 	   entityToRemove.setPath(filenameToRemove);
 	   entityToRemove.setContent(DEFAULT_RESOURCE_MOCK_TEST.getBytes());
+	   entityToGet.setContentMimeType(MimeTypeResolverFactory.getService().getMimeType(FileHelper.getFileNameExtension(resourceUriToGet.getPath())));
 	   em.persist(entityToRemove);
 	   em.flush(); // flush to be sure, that entity is right persist
 	   existingResourcesForRemove.put(filenameToRemove, DEFAULT_RESOURCE_MOCK_TEST);

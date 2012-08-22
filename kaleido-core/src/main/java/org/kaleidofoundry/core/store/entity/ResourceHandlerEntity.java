@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,9 @@ package org.kaleidofoundry.core.store.entity;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -34,6 +35,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
 import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.util.locale.LocaleFactory;
 
 /**
  * Default entity to store a file content in a blob / clob ...<br/>
@@ -55,6 +57,7 @@ public class ResourceHandlerEntity implements Serializable {
    private String name;
    private String path;
    private Integer contentSize;
+   private String contentMimeType;
    @Lob
    @Basic(fetch = FetchType.LAZY)
    private byte[] content;
@@ -70,7 +73,8 @@ public class ResourceHandlerEntity implements Serializable {
    @PreUpdate
    protected void preUpdate() {
 	if (updatedDate == null) {
-	   updatedDate = GregorianCalendar.getInstance().getTime();
+	   Locale locale = LocaleFactory.getDefaultFactory().getCurrentLocale();
+	   updatedDate = Calendar.getInstance(locale).getTime();
 	   contentSize = content != null ? content.length : 0;
 	}
    }
@@ -78,7 +82,8 @@ public class ResourceHandlerEntity implements Serializable {
    @PrePersist
    protected void preCreation() {
 	if (creationDate == null) {
-	   creationDate = GregorianCalendar.getInstance().getTime();
+	   Locale locale = LocaleFactory.getDefaultFactory().getCurrentLocale();
+	   creationDate = Calendar.getInstance(locale).getTime();
 	   contentSize = content != null ? content.length : 0;
 	}
    }
@@ -172,6 +177,20 @@ public class ResourceHandlerEntity implements Serializable {
    }
 
    /**
+    * @return mime type of the resource
+    */
+   public String getContentMimeType() {
+	return contentMimeType;
+   }
+
+   /**
+    * @param contentMimeType
+    */
+   public void setContentMimeType(final String contentMimeType) {
+	this.contentMimeType = contentMimeType;
+   }
+
+   /**
     * @param creationDate
     */
    public void setCreationDate(final Date creationDate) {
@@ -194,6 +213,7 @@ public class ResourceHandlerEntity implements Serializable {
 	result = prime * result + (uri == null ? 0 : uri.hashCode());
 	result = prime * result + (name == null ? 0 : name.hashCode());
 	result = prime * result + (path == null ? 0 : path.hashCode());
+	result = prime * result + (contentMimeType == null ? 0 : contentMimeType.hashCode());
 	result = prime * result + (contentSize == null ? 0 : contentSize.hashCode());
 	result = prime * result + (updatedDate == null ? 0 : updatedDate.hashCode());
 	return result;
@@ -221,6 +241,9 @@ public class ResourceHandlerEntity implements Serializable {
 	if (contentSize == null) {
 	   if (other.contentSize != null) { return false; }
 	} else if (!contentSize.equals(other.contentSize)) { return false; }
+	if (contentMimeType == null) {
+	   if (other.contentMimeType != null) { return false; }
+	} else if (!contentMimeType.equals(other.contentMimeType)) { return false; }
 	if (updatedDate == null) {
 	   if (other.updatedDate != null) { return false; }
 	} else if (!updatedDate.equals(other.updatedDate)) { return false; }

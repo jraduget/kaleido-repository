@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,9 @@ package org.kaleidofoundry.core.util;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
+
+import org.kaleidofoundry.core.util.locale.LocaleFactory;
 
 /**
  * Some helper methods for date
@@ -31,7 +34,8 @@ public abstract class DateHelper {
     * @return Age from the current date
     */
    public static float getAge(final Date birthdate) {
-	return getAge(Calendar.getInstance().getTime(), birthdate);
+	final Locale locale = LocaleFactory.getDefaultFactory().getCurrentLocale();
+	return getAge(Calendar.getInstance(locale).getTime(), birthdate);
    }
 
    /**
@@ -47,7 +51,8 @@ public abstract class DateHelper {
 	if (current == null) {
 	   return getAge(birthdate);
 	} else {
-	   final Calendar calend = new GregorianCalendar();
+	   final Locale locale = LocaleFactory.getDefaultFactory().getCurrentLocale();
+	   final Calendar calend = new GregorianCalendar(locale);
 	   calend.set(Calendar.HOUR_OF_DAY, 0);
 	   calend.set(Calendar.MINUTE, 0);
 	   calend.set(Calendar.SECOND, 0);
@@ -69,7 +74,8 @@ public abstract class DateHelper {
     */
    public static int dayMonthOfDate(final Date date) {
 	if (date == null) { return -1; }
-	final Calendar calend = new GregorianCalendar();
+	final Locale locale = LocaleFactory.getDefaultFactory().getCurrentLocale();
+	final Calendar calend = new GregorianCalendar(locale);
 	calend.setTime(date);
 	return calend.get(Calendar.DAY_OF_MONTH);
    }
@@ -80,7 +86,8 @@ public abstract class DateHelper {
     */
    public static int yearOfDate(final Date date) {
 	if (date == null) { return -1; }
-	final Calendar calend = new GregorianCalendar();
+	final Locale locale = LocaleFactory.getDefaultFactory().getCurrentLocale();
+	final Calendar calend = new GregorianCalendar(locale);
 	calend.setTime(date);
 	return calend.get(Calendar.YEAR);
    }
@@ -91,7 +98,8 @@ public abstract class DateHelper {
     */
    public static int monthOfDate(final Date date) {
 	if (date == null) { return -1; }
-	final Calendar calend = new GregorianCalendar();
+	final Locale locale = LocaleFactory.getDefaultFactory().getCurrentLocale();
+	final Calendar calend = new GregorianCalendar(locale);
 	calend.setTime(date);
 	return calend.get(Calendar.MONTH) + 1;
    }
@@ -103,7 +111,8 @@ public abstract class DateHelper {
     * @return Date corresponding to data input (hour, minute, second, ms will be set to zero)
     */
    public static Date newDate(final int day, final int month, final int year) {
-	final Calendar calend = new GregorianCalendar();
+	final Locale locale = LocaleFactory.getDefaultFactory().getCurrentLocale();
+	final Calendar calend = new GregorianCalendar(locale);
 	calend.set(Calendar.DATE, day);
 	calend.set(Calendar.MONTH, month - 1);
 	calend.set(Calendar.YEAR, year);
@@ -121,7 +130,8 @@ public abstract class DateHelper {
     * @return new instance of date, computed by adding original date, a month, a year, a minute... (the field arg )
     */
    public static Date add(final Date original, final int field, final int amount) {
-	final Calendar calendMin = new GregorianCalendar();
+	final Locale locale = LocaleFactory.getDefaultFactory().getCurrentLocale();
+	final Calendar calendMin = new GregorianCalendar(locale);
 	calendMin.setTime(original);
 	calendMin.add(field, amount);
 	return calendMin.getTime();

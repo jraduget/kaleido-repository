@@ -27,6 +27,7 @@ import java.net.URI;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.io.FileHelper;
+import org.kaleidofoundry.core.io.MimeTypeResolverFactory;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
@@ -87,7 +88,17 @@ public class FileSystemStore extends AbstractFileStore implements FileStore {
    @Override
    protected ResourceHandler doGet(final URI resourceUri) throws ResourceNotFoundException, ResourceException {
 	try {
-	   return createResourceHandler(resourceUri.toString(), new FileInputStream(new File(resourceUri.getPath())));
+	   File file = new File(resourceUri.getPath());
+	   ResourceHandler resource = createResourceHandler(resourceUri.toString(), new FileInputStream(file));
+
+	   // Set some meta datas
+	   if (resource instanceof ResourceHandlerBean) {
+		((ResourceHandlerBean) resource).setLastModified(file.lastModified());
+		((ResourceHandlerBean) resource).setMimeType(MimeTypeResolverFactory.getService().getMimeType(
+			FileHelper.getFileNameExtension(resourceUri.getPath())));
+	   }
+
+	   return resource;
 	} catch (final FileNotFoundException fnfe) {
 	   throw new ResourceNotFoundException(resourceUri.toString());
 	}

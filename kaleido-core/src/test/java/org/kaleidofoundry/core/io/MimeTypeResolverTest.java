@@ -22,17 +22,17 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-public class MimeTypesDefaultServiceTest extends Assert {
+public class MimeTypeResolverTest extends Assert {
 
    @Test
    public void testMimeExtentions() {
 
-	MimeTypesDefaultService mimes = null;
+	MimeTypeResolver mimes = null;
 	String mimeType = null;
 	String[] ext = null;
 	List<String> resultsValues = null;
 
-	mimes = MimeTypesFactory.getService();
+	mimes = MimeTypeResolverFactory.getService();
 	assertNotNull(mimes);
 
 	mimeType = "application/postscript";
@@ -46,7 +46,7 @@ public class MimeTypesDefaultServiceTest extends Assert {
 	assertTrue(mimes.isMimeTypeBinary(mimeType));
 
 	mimeType = "text/plain";
-	resultsValues = Arrays.asList(new String[] { "txt", "text", "diff" });
+	resultsValues = Arrays.asList(new String[] { "txt", "text", "conf", "def", "list", "log", "in" });
 	ext = mimes.getExtentions(mimeType);
 	assertNotNull(ext);
 	assertEquals(resultsValues.size(), ext.length);
@@ -60,11 +60,11 @@ public class MimeTypesDefaultServiceTest extends Assert {
    @Test
    public void testMimeType() {
 
-	MimeTypesDefaultService mimes = null;
+	MimeTypeResolver mimes = null;
 	String extention = null;
 	String mimeType = null;
 
-	mimes = MimeTypesFactory.getService();
+	mimes = MimeTypeResolverFactory.getService();
 	assertNotNull(mimes);
 
 	extention = "ps";
