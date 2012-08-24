@@ -38,14 +38,12 @@
 	<bean id="myStore" class="org.kaleidofoundry.core.store.ClasspathFileStore">		
 		<constructor-arg>		
 			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
-				<constructor-arg type="java.lang.String" value="myStoreContext"/>
 				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.store.FileStore"/>
 				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
 					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
 						<entry key="baseUri" value="classpath:/store" />
 					</util:map>
 				</constructor-arg>				
-				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
 			</bean>
 		</constructor-arg>
 	</bean>
@@ -53,7 +51,6 @@
 	<bean id="myConfig" class="org.kaleidofoundry.core.config.PropertiesConfiguration" init-method="load" destroy-method="unload">		
 		<constructor-arg>		
 			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
-				<constructor-arg type="java.lang.String" value="myConfigContext"/>
 				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.config.Configuration"/>
 				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
 					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
@@ -61,7 +58,6 @@
 						<entry key="fileStoreUri" value="classpath:/config/myConfig.properties" />
 					</util:map>
 				</constructor-arg>				
-				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
 			</bean>
 		</constructor-arg>
 	</bean>
@@ -69,13 +65,10 @@
 	<bean id="myDefaultCacheManager" class="org.kaleidofoundry.core.cache.LocalCacheManagerImpl">		
 		<constructor-arg>		
 			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
-				<constructor-arg type="java.lang.String" value="myDefaultCacheManagerContext"/>
 				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.cache.CacheManager"/>				
 				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
-					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
-					</util:map>
+					<util:map map-class="java.util.concurrent.ConcurrentHashMap"/>
 				</constructor-arg>
-				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
 			</bean>
 		</constructor-arg>
 	</bean>
@@ -88,14 +81,12 @@
 	<bean id="myCustomCacheManager" class="org.kaleidofoundry.core.cache.InfinispanCacheManagerImpl">		
 		<constructor-arg>		
 			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
-				<constructor-arg type="java.lang.String" value="myCustomCacheManagerContext"/>
 				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.cache.CacheManager"/>				
 				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
 					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
 						<entry key="fileStoreUri" value="classpath:/cache/infinispan-local.xml" />
 					</util:map>
 				</constructor-arg>
-				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
 			</bean>
 		</constructor-arg>
 	</bean>
@@ -105,13 +96,11 @@
 		<constructor-arg type="org.kaleidofoundry.core.cache.InfinispanCacheManagerImpl" ref="myCustomCacheManager"/>		
 		<constructor-arg type="org.kaleidofoundry.core.context.RuntimeContext">					
 			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
-				<constructor-arg type="java.lang.String" value="myCustomCacheContext"/>
 				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.cache.Cache"/>				
 				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
 					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
 					</util:map>
 				</constructor-arg>
-				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
 			</bean>
 		</constructor-arg>
 	</bean>		
@@ -119,7 +108,6 @@
 	<bean id="myNamingService" class="org.kaleidofoundry.core.naming.JndiNamingService">		
 		<constructor-arg>		
 			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
-				<constructor-arg type="java.lang.String" value="myNamingServiceContext"/>
 				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.naming.NamingService"/>				
 				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
 					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
@@ -130,7 +118,6 @@
 						<entry key="org.omg.CORBA.ORBInitialPort" value="3700" />
 					</util:map>
 				</constructor-arg>
-				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>
 			</bean>
 		</constructor-arg>
 	</bean>	 
