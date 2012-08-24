@@ -40,7 +40,7 @@
 			<groupId>com.tibco.tibrv</groupId>
 			<artifactId>tibrvj</artifactId>
 			<version>7.4</version>
-			<systemPath>${project.build.directory}/../lib/tibrvj-7.4.jar</systemPath>	
+			<systemPath>${basedir}/lib/tibrvj-7.4.jar</systemPath>	
 			<scope>system</scope>				
 		</dependency>
 
@@ -57,7 +57,7 @@
 			<groupId>com.ibm.mq</groupId>
 			<artifactId>mq</artifactId>
 			<version>6.0.1.1</version>
-			<systemPath>${project.build.directory}/../lib/com.ibm.mq-6.0.1.1.jar</systemPath>	
+			<systemPath>${basedir}/lib/com.ibm.mq-6.0.1.1.jar</systemPath>	
 			<scope>system</scope>		
 			<optional>true</optional>
 		</dependency>
@@ -65,7 +65,7 @@
 			<groupId>com.ibm.mq</groupId>
 			<artifactId>mqjms</artifactId>
 			<version>6.0.1.1</version>
-			<systemPath>${project.build.directory}/../lib/com.ibm.mqjms-6.0.1.1.jar</systemPath>	
+			<systemPath>${basedir}/lib/com.ibm.mqjms-6.0.1.1.jar</systemPath>	
 			<scope>system</scope>	
 			<optional>true</optional>	
 		</dependency>
@@ -73,7 +73,7 @@
 			<groupId>com.ibm</groupId>
 			<artifactId>dhbcore</artifactId>
 			<version>1.0</version>
-			<systemPath>${project.build.directory}/../lib/com.ibm.dhbcore.jar</systemPath>	
+			<systemPath>${basedir}/lib/com.ibm.dhbcore.jar</systemPath>	
 			<scope>system</scope>	
 			<optional>true</optional>	
 		</dependency>
