@@ -26,6 +26,7 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginFactory;
+import org.kaleidofoundry.core.util.Registry;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -40,6 +41,11 @@ public class MyServiceProvider extends AbstractProviderService<MyServiceInterfac
     */
    public MyServiceProvider(final Class<MyServiceInterface> genericClass) {
 	super(genericClass);
+   }
+
+   @Override
+   protected Registry<String, MyServiceInterface> getRegistry() {
+	return null;
    }
 
    /*

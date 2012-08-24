@@ -30,10 +30,12 @@ import org.kaleidofoundry.core.config.ConfigurationListener;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginHelper;
+import org.kaleidofoundry.core.util.ObjectHelper;
+import org.kaleidofoundry.core.util.Registry;
 
 /**
  * Base implementation for {@link ProviderService} <br/>
- * The dynamic runtime contexts are registered here, in order to trigger configuration changes
+ * The dynamic runtime contexts are registered here, in order to trigger configuration changes<br/>
  * 
  * @author Jerome RADUGET
  * @param <T>
@@ -41,6 +43,7 @@ import org.kaleidofoundry.core.plugin.PluginHelper;
 @ThreadSafe
 public abstract class AbstractProviderService<T> implements ProviderService<T> {
 
+   /** Keep generic type (type erasure once compiled) */
    protected final Class<T> genericClassInterface;
 
    /** runtime context instances */
@@ -51,6 +54,8 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
 
    protected final Plugin<?> currentPlugin;
 
+   protected final boolean keepInstanceInRegistry;
+
    /**
     * @param genericClassInterface
     */
@@ -60,8 +65,25 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
 	this.configurationsListeners = new ConcurrentHashMap<String, ConfigurationListener>();
 	this.currentPlugin = PluginHelper.getInterfacePlugin(genericClassInterface);
 
+	// do we keep instances in registry
+	Provider providerAnnot = this.genericClassInterface.getAnnotation(Provider.class);
+	this.keepInstanceInRegistry = providerAnnot != null ? providerAnnot.singletons() : false;
+
 	registerConfigurationsListeners();
    }
+
+   /**
+    * @return if {@link Provider} is configured has {@link Provider#singletons()} , this method handle the access to the registry
+    */
+
+   protected abstract Registry<String, T> getRegistry();
+
+   /**
+    * @param context
+    * @return new T instance, build from context informations
+    * @throws ProviderException
+    */
+   protected abstract T _provides(RuntimeContext<T> context) throws ProviderException;
 
    /*
     * (non-Javadoc)
@@ -69,7 +91,17 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
     */
    @Override
    public final T provides(final Context context, final String defaultName, final Class<T> genericClassInterface) throws ProviderException {
-	return provides(RuntimeContext.createFrom(context, defaultName, genericClassInterface));
+
+	String name = ObjectHelper.firstNonNull(defaultName, context.value());
+	T instance = keepInstanceInRegistry ? getRegistry().get(name) : null;
+
+	if (instance == null) {
+	   instance = provides(RuntimeContext.createFrom(context, defaultName, genericClassInterface));
+	   if (keepInstanceInRegistry) {
+		getRegistry().put(name, instance);
+	   }
+	}
+	return instance;
    }
 
    /*
@@ -78,16 +110,19 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
     */
    @Override
    public final T provides(final RuntimeContext<T> context) throws ProviderException {
-	registerDynamicContext(context);
-	return _provides(context);
-   }
 
-   /**
-    * @param context
-    * @return new T instance, build from context informations
-    * @throws ProviderException
-    */
-   protected abstract T _provides(RuntimeContext<T> context) throws ProviderException;
+	T instance = keepInstanceInRegistry ? getRegistry().get(context.getName()) : null;
+
+	if (instance == null) {
+	   registerDynamicContext(context);
+	   instance = _provides(context);
+
+	   if (keepInstanceInRegistry) {
+		getRegistry().put(context.getName(), instance);
+	   }
+	}
+	return instance;
+   }
 
    /**
     * register for listening configuration changes (multiples), for all registered configuration

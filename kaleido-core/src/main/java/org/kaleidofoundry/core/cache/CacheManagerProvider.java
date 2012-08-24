@@ -90,7 +90,7 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
    }
 
    /**
-    * @return code of the default cache provider setted
+    * @return code of the default cache provider (that have been set)
     */
    public static String getDefaultCacheProvider() {
 	return DEFAULT_CACHE_PROVIDER;
@@ -171,11 +171,11 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 	   RuntimeContext.copyFrom(context, newNamedContext);
 	}
 
-	CacheManager cacheManager = REGISTRY.get(newNamedContext.getName());
+	CacheManager cacheManager = getRegistry().get(newNamedContext.getName());
 
 	if (cacheManager == null) {
 	   cacheManager = create(providerCode, configuration, newNamedContext);
-	   REGISTRY.put(newNamedContext.getName(), cacheManager);
+	   getRegistry().put(newNamedContext.getName(), cacheManager);
 	}
 
 	return cacheManager;
@@ -184,7 +184,8 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
    /**
     * @return cache manager registry. each instance provided will be registered here
     */
-   public static Registry<String, CacheManager> getRegistry() {
+   @Override
+   public Registry<String, CacheManager> getRegistry() {
 	return REGISTRY;
    }
 
@@ -194,13 +195,6 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
     */
    public static Set<String> getReservedCacheName() {
 	return RESERVED_CACHE_NAME;
-   }
-
-   /**
-    * @param contextName
-    */
-   static void removeFromRegistry(final String contextName) {
-	getRegistry().remove(contextName);
    }
 
    /**

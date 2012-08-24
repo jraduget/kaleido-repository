@@ -203,7 +203,7 @@ public abstract class AbstractCacheManager implements CacheManager {
 	   LOGGER.error(InternalBundleHelper.CacheMessageBundle.getMessage("cachemanager.destroyall.store.error"), rse);
 	} finally {
 	   // unregister cacheManager from registry
-	   CacheManagerProvider.removeFromRegistry(context.getName());
+	   CacheManagerFactory.getRegistry().remove(context.getName());
 	   LOGGER.debug("Cache manager registry after destroyAll: {}", CacheManagerFactory.getRegistry());
 	}
    }

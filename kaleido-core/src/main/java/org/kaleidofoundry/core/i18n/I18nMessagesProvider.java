@@ -29,6 +29,7 @@ import org.kaleidofoundry.core.context.IllegalContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.system.JavaSystemHelper;
+import org.kaleidofoundry.core.util.Registry;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.kaleidofoundry.core.util.locale.LocaleFactory;
 
@@ -45,6 +46,15 @@ public class I18nMessagesProvider extends AbstractProviderService<I18nMessages> 
     */
    public I18nMessagesProvider(final Class<I18nMessages> genericClassInterface) {
 	super(genericClassInterface);
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.context.AbstractProviderService#getRegistry()
+    */
+   @Override
+   protected Registry<String, I18nMessages> getRegistry() {
+	return null;
    }
 
    /*

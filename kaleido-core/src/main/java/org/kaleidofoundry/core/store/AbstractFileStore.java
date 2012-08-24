@@ -23,7 +23,6 @@ import static org.kaleidofoundry.core.store.FileStoreContextBuilder.ReadTimeout;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.Readonly;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.SleepTimeBeforeRetryOnFailure;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.UseCaches;
-import static org.kaleidofoundry.core.store.FileStoreProvider.FILE_STORE_REGISTRY;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -101,7 +100,7 @@ public abstract class AbstractFileStore implements FileStore {
 	openResources = new ConcurrentHashMap<String, ResourceHandler>();
 
 	// register the file store instance
-	FILE_STORE_REGISTRY.put(getBaseUri(), this);
+	FileStoreFactory.getRegistry().put(getBaseUri(), this);
    }
 
    /*

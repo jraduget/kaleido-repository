@@ -51,23 +51,20 @@ import org.kaleidofoundry.core.util.StringHelper;
  */
 public class ConfigurationProvider extends AbstractProviderService<Configuration> implements ProviderService<Configuration> {
 
-   /**
-    * main configuration registry instance (shared between providers instances)
-    */
-   private static final ConfigurationRegistry REGISTRY = new ConfigurationRegistry();
-
-   /**
-    * @return main configuration registry instance (shared between providers instances)
-    */
-   public static final ConfigurationRegistry getRegistry() {
-	return REGISTRY;
-   }
 
    /**
     * @param genericClass
     */
    public ConfigurationProvider(final Class<Configuration> genericClass) {
 	super(genericClass);
+   }
+
+   /**
+    * @return main configuration registry instance (shared between providers instances)
+    */
+   @Override
+   public final ConfigurationRegistry getRegistry() {
+	return ConfigurationFactory.REGISTRY;
    }
 
    /*
@@ -128,7 +125,7 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
    public Configuration provides(@NotNull final String name, @NotNull final URI resourceURI, @NotNull final RuntimeContext<Configuration> runtimeContext)
 	   throws ProviderException {
 
-	final Configuration configuration = REGISTRY.get(name);
+	final Configuration configuration = getRegistry().get(name);
 
 	try {
 	   if (configuration == null) {
@@ -138,7 +135,7 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 		// load it
 		newInstance.load();
 		// register it
-		REGISTRY.put(name, newInstance);
+		getRegistry().put(name, newInstance);
 
 		return newInstance;
 	   } else {

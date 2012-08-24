@@ -57,8 +57,15 @@ public abstract class ConfigurationFactory {
    // does default init Configurations have occurred
    private static boolean INIT_LOADED = false;
 
-   // configuration provider used by the factory
-   private static final ConfigurationProvider CONFIGURATION_PROVIDER = new ConfigurationProvider(Configuration.class);
+   /**
+    * main configuration registry instance (shared between providers instances)
+    */
+   static final ConfigurationRegistry REGISTRY = new ConfigurationRegistry();
+
+   /**
+    * configuration provider used by the factory
+    */
+   static final ConfigurationProvider CONFIGURATION_PROVIDER = new ConfigurationProvider(Configuration.class);
 
    /**
     * Create / Load / Register all configurations, that have been declared via java system environment <br/>
@@ -141,7 +148,7 @@ public abstract class ConfigurationFactory {
     * @return shortcut to main configuration registry stored in {@link ConfigurationProvider}
     */
    public static final ConfigurationRegistry getRegistry() {
-	return ConfigurationProvider.getRegistry();
+	return REGISTRY;
    }
 
    /**
