@@ -26,7 +26,7 @@ import org.kaleidofoundry.core.util.StringHelper;
 public abstract class LocaleFactory {
 
    static enum LocaleEnum {
-	Defaulf;
+	Default;
    }
 
    /**
@@ -43,7 +43,7 @@ public abstract class LocaleFactory {
     * @return default locale factory
     */
    public static LocaleFactory getDefaultFactory() {
-	return getFactory(LocaleEnum.Defaulf);
+	return getFactory(LocaleEnum.Default);
    }
 
    /**
@@ -55,7 +55,7 @@ public abstract class LocaleFactory {
 
 	switch (factoryID) {
 
-	case Defaulf: {
+	case Default: {
 	   return new DefaultLocalFactory();
 	}
 

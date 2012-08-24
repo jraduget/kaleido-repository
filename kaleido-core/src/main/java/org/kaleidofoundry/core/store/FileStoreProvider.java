@@ -31,6 +31,7 @@ import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginFactory;
+import org.kaleidofoundry.core.util.Registry;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -46,7 +47,7 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
    /**
     * files store internal registry
     */
-   static final FileStoreRegistry FILE_STORE_REGISTRY = new FileStoreRegistry();
+   static final Registry<String, FileStore> REGISTRY = new Registry<String, FileStore>();
 
    static {
 	String currentBaseDir = System.getProperty("kaleido.basedir");
@@ -64,6 +65,15 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
     */
    public FileStoreProvider(final Class<FileStore> genericClass) {
 	super(genericClass);
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see org.kaleidofoundry.core.context.AbstractProviderService#getRegistry()
+    */
+   @Override
+   protected Registry<String, FileStore> getRegistry() {
+	return REGISTRY;
    }
 
    /*
@@ -96,7 +106,12 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
     *            {@link InstantiationException}, {@link IllegalAccessException}, {@link InvocationTargetException})
     */
    public FileStore provides(final String baseUri) throws ProviderException {
-	return provides(baseUri, new FileStoreContextBuilder().withBaseUri(baseUri).build());
+
+	FileStore fileStore = getRegistry().get(baseUri);
+	if (fileStore == null) {
+	   fileStore = provides(baseUri, new FileStoreContextBuilder().withBaseUri(baseUri).build());
+	}
+	return fileStore;
    }
 
    /**
@@ -135,12 +150,15 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 		   final FileStore fileStore = constructor.newInstance(pBaseUri, pContext);
 
 		   try {
-			if (fileStore.isUriManageable(pBaseUri.toString())) { return fileStore; }
+			if (fileStore.isUriManageable(pBaseUri)) {
+			   getRegistry().put(pBaseUri, fileStore);
+			   return fileStore;
+			}
 		   } catch (final Throwable th) {
 		   }
 
 		   // unregister wrong file store
-		   FileStoreFactory.getRegistry().get(fileStore.getBaseUri()).remove(fileStore);
+		   getRegistry().remove(fileStore.getBaseUri());
 
 		} catch (final NoSuchMethodException e) {
 		   throw new ProviderException("context.provider.error.NoSuchConstructorException", impl.getName(), "RuntimeContext<FileStore> context");

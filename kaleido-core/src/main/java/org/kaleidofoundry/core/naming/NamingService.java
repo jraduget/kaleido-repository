@@ -35,7 +35,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  * @author Jerome RADUGET
  */
 @Declare(value = NamingPluginName, description = "naming service plugin interface")
-@Provider(value = NamingServiceProvider.class, singletons = false)
+@Provider(value = NamingServiceProvider.class, singletons = true)
 public interface NamingService {
 
    /**

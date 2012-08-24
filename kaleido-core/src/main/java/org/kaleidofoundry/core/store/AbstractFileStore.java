@@ -23,7 +23,6 @@ import static org.kaleidofoundry.core.store.FileStoreContextBuilder.ReadTimeout;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.Readonly;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.SleepTimeBeforeRetryOnFailure;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.UseCaches;
-import static org.kaleidofoundry.core.store.FileStoreProvider.FILE_STORE_REGISTRY;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -35,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.io.FileHelper;
+import org.kaleidofoundry.core.io.MimeTypeResolverFactory;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
@@ -100,7 +100,7 @@ public abstract class AbstractFileStore implements FileStore {
 	openResources = new ConcurrentHashMap<String, ResourceHandler>();
 
 	// register the file store instance
-	FILE_STORE_REGISTRY.put(getBaseUri(), this);
+	FileStoreFactory.getRegistry().put(getBaseUri(), this);
    }
 
    /*
@@ -407,6 +407,11 @@ public abstract class AbstractFileStore implements FileStore {
 	   try {
 		// try to store the resource
 		doStore(URI.create(resourceUri), resource);
+		// Set some meta datas
+		if (resource instanceof ResourceHandlerBean) {
+		   ((ResourceHandlerBean) resource).setLastModified(System.currentTimeMillis());
+		   ((ResourceHandlerBean) resource).setMimeType(MimeTypeResolverFactory.getService().getMimeType(FileHelper.getFileNameExtension(resourceUri)));
+		}
 		return this;
 	   } catch (final ResourceException rse) {
 		lastError = rse;

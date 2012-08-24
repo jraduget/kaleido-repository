@@ -53,7 +53,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  */
 @Stateless
 @Declare(FileStorePluginName)
-@Provider(FileStoreProvider.class)
+@Provider(value = FileStoreProvider.class, singletons = true)
 public interface FileStore extends Store<String, ResourceHandler> {
 
    /**

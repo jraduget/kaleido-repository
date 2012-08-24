@@ -24,7 +24,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.kaleidofoundry.core.cache.CacheConstants;
-import org.kaleidofoundry.core.cache.CacheManagerProvider;
+import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.config.ConfigurationConstants;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
@@ -86,7 +86,7 @@ public class StartupListener implements ServletContextListener {
 	}
 
 	// Cache manager static init
-	CacheManagerProvider.getRegistry();
+	CacheManagerFactory.getRegistry();
 	// only needed to static initialize of FileStoreProvider, and log info message first
 	@SuppressWarnings("unused") String initBaseDir = FileStoreProvider.BASE_DIR;
 

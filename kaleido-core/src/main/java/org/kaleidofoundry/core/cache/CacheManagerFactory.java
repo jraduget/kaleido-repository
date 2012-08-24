@@ -152,7 +152,7 @@ public abstract class CacheManagerFactory {
     * @return cache manager registry. each instance provided will be registered here
     */
    public static Registry<String, CacheManager> getRegistry() {
-	return CacheManagerProvider.getRegistry();
+	return CACHEMANAGER_PROVIDER.getRegistry();
    }
 
 }

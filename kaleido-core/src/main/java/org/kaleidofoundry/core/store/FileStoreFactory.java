@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.util.Registry;
 
 /**
  * {@link FileStore} factory
@@ -34,8 +35,8 @@ public abstract class FileStoreFactory {
    /**
     * @return File store instances
     */
-   public static FileStoreRegistry getRegistry() {
-	return FileStoreProvider.FILE_STORE_REGISTRY;
+   public static Registry<String, FileStore> getRegistry() {
+	return FILE_STORE_PROVIDER.getRegistry();
    }
 
    /**

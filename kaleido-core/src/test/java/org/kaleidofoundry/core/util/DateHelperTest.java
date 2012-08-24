@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +24,12 @@ import static org.kaleidofoundry.core.util.DateHelper.yearOfDate;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.kaleidofoundry.core.util.locale.LocaleFactory;
 
 /**
  * Date Helper test case
@@ -40,7 +42,8 @@ public class DateHelperTest extends Assert {
    public void testNewDate() {
 	Date date = newDate(1, 1, 2000);
 	assertNotNull(date);
-	Calendar calend = Calendar.getInstance();
+	final Locale locale = LocaleFactory.getDefaultFactory().getCurrentLocale();
+	Calendar calend = Calendar.getInstance(locale);
 	calend.setTime(date);
 	assertEquals(1, calend.get(Calendar.DATE));
 	assertEquals(1, calend.get(Calendar.MONTH) + 1);

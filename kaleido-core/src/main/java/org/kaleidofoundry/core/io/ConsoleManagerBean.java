@@ -25,7 +25,6 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -45,11 +44,11 @@ import javax.ws.rs.core.UriInfo;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Task;
-import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.FileStoreFactory;
-import org.kaleidofoundry.core.store.ResourceNotFoundException;
 import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.ResourceHandler;
+import org.kaleidofoundry.core.store.ResourceNotFoundException;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -175,13 +174,11 @@ public class ConsoleManagerBean {
 	if (!REGISTERED_RESOURCES.contains(resource)) {
 	   boolean found = false;
 	   // looking at registered file store
-	   for (Entry<String, List<FileStore>> storeEntry : FileStoreFactory.getRegistry().entrySet()) {
+	   for (Entry<String, FileStore> storeEntry : FileStoreFactory.getRegistry().entrySet()) {
 		if (resource.toLowerCase().contains(storeEntry.getKey().toLowerCase())) {
-		   for (FileStore store : storeEntry.getValue()) {
-			if (store.isUriManageable(resource)) {
-			   found = true;
-			   break;
-			}
+		   if (storeEntry.getValue().isUriManageable(resource)) {
+			found = true;
+			break;
 		   }
 		}
 	   }
@@ -612,18 +609,9 @@ public class ConsoleManagerBean {
 	// search in console resource registry
 	if (REGISTERED_RESOURCES.contains(resource)) {
 	   // looking at registered file store
-	   for (Entry<String, List<FileStore>> storeEntry : FileStoreFactory.getRegistry().entrySet()) {
-		if (resource.toLowerCase().contains(storeEntry.getKey().toLowerCase())) {
-		   Iterator<FileStore> stores = storeEntry.getValue().iterator();
-
-		   while (stores.hasNext()) {
-			try {
-			   return stores.next().get(resource.substring(storeEntry.getKey().length()));
-			} catch (ResourceNotFoundException rnfe) {
-			   if (!stores.hasNext()) { throw rnfe; }
-			}
-		   }
-		}
+	   for (Entry<String, FileStore> storeEntry : FileStoreFactory.getRegistry().entrySet()) {
+		if (resource.toLowerCase().contains(storeEntry.getKey().toLowerCase())) { return storeEntry.getValue().get(
+			resource.substring(storeEntry.getKey().length())); }
 	   }
 	}
 

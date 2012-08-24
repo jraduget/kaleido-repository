@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,8 @@ class ResourceHandlerBean implements ResourceHandler {
    private final AbstractFileStore store;
    private final String resourceUri;
    private final InputStream input;
+   private long lastModified;
+   private String mimeType;
 
    private boolean closed;
 
@@ -67,31 +69,20 @@ class ResourceHandlerBean implements ResourceHandler {
 	this.store = store;
 	this.resourceUri = resourceUri;
 	this.input = input;
-	this.closed = false;
+	closed = false;
+	lastModified = 0;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.store.ResourceHandler#getResourceUri()
-    */
    @Override
    public String getResourceUri() {
 	return resourceUri;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.store.ResourceHandler#getInputStream()
-    */
    @Override
    public InputStream getInputStream() {
 	return input;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.store.ResourceHandler#getBytes()
-    */
    @Override
    public byte[] getBytes() throws ResourceException {
 	try {
@@ -104,19 +95,11 @@ class ResourceHandlerBean implements ResourceHandler {
 	}
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.store.ResourceHandler#getInputStreamReader()
-    */
    @Override
    public Reader getReader() throws ResourceException {
 	return getReader(store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.store.ResourceHandler#getInputStreamReader(java.lang.String)
-    */
    @Override
    public Reader getReader(final String charset) throws ResourceException {
 	try {
@@ -126,19 +109,11 @@ class ResourceHandlerBean implements ResourceHandler {
 	}
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.store.ResourceHandler#getText()
-    */
    @Override
    public String getText() throws ResourceException {
 	return getText(store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.store.ResourceHandler#getText(java.lang.String)
-    */
    @Override
    public String getText(final String charset) throws ResourceException {
 	BufferedReader reader = null;
@@ -173,10 +148,6 @@ class ResourceHandlerBean implements ResourceHandler {
 	}
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.store.ResourceHandler#release()
-    */
    @Override
    public void close() {
 	if (input != null && !closed) {
@@ -188,6 +159,24 @@ class ResourceHandlerBean implements ResourceHandler {
 		throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.inputstream.close.error", ioe.getMessage(), ioe), ioe);
 	   }
 	}
+   }
+
+   @Override
+   public long getLastModified() {
+	return lastModified;
+   }
+
+   void setLastModified(final long lastModified) {
+	this.lastModified = lastModified;
+   }
+
+   @Override
+   public String getMimeType() {
+	return mimeType;
+   }
+
+   void setMimeType(final String mimeType) {
+	this.mimeType = mimeType;
    }
 
 }

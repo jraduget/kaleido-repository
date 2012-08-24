@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,18 +20,18 @@ package org.kaleidofoundry.core.plugin;
  */
 public interface PluginConstants {
 
-   /** Plugin are considered standard, if interfaces / classes annotated are package into */
-   public static final String PACKAGE_STANDARD = "org.kaleidofoundry";
+   /** Plugin are considered as standard, if the interfaces / classes annotated are package into */
+   String PACKAGE_STANDARD = "org.kaleidofoundry";
 
    // Annotation processing info ***************************************************************************************
 
    /** Plugin annotation processor package name, used for meta file plugin generation */
-   public static final String META_PLUGIN_PATH = "";
+   String META_PLUGIN_PATH = "";
 
    /** Plugin annotation processor output plugin file, used for plugin meta-file generation */
-   public static final String META_PLUGIN_FILE = "META-INF/org.kaleidofoundry.core.plugin";
+   String META_PLUGIN_FILE = "META-INF/org.kaleidofoundry.core.plugin";
 
    /** Plugin annotation processor output plugin implementation file, used for plugin meta-file generation */
-   public static final String META_PLUGIN_IMPLEMENTATION_FILE = "META-INF/org.kaleidofoundry.core.plugin.implementation";
+   String META_PLUGIN_IMPLEMENTATION_FILE = "META-INF/org.kaleidofoundry.core.plugin.implementation";
 
 }

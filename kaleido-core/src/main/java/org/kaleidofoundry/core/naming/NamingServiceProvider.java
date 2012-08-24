@@ -19,6 +19,7 @@ import org.kaleidofoundry.core.context.AbstractProviderService;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
+import org.kaleidofoundry.core.util.Registry;
 
 /**
  * @author Jerome RADUGET
@@ -26,11 +27,18 @@ import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 @ThreadSafe
 public class NamingServiceProvider extends AbstractProviderService<NamingService> {
 
+   private static final Registry<String, NamingService> REGISTRY = new Registry<String, NamingService>();
+
    /**
     * @param genericClassInterface
     */
    public NamingServiceProvider(final Class<NamingService> genericClassInterface) {
 	super(genericClassInterface);
+   }
+
+   @Override
+   protected Registry<String, NamingService> getRegistry() {
+	return REGISTRY;
    }
 
    /*

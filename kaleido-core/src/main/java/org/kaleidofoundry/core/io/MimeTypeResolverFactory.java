@@ -27,10 +27,10 @@ import org.kaleidofoundry.core.lang.annotation.Task;
  * @author Jerome RADUGET
  */
 @Task(comment = "use {@link MimetypesFileTypeMap} instead {@link MimeTypesDefaultService} ?", labels = { Enhancement })
-public abstract class MimeTypesFactory {
+public abstract class MimeTypeResolverFactory {
 
    /* default unique instance */
-   private static MimeTypesDefaultService DEFAULT_MIMETYPERESSOURCE_INSTANCE;
+   private static MimeTypeResolver DEFAULT_MIMETYPERESSOURCE_INSTANCE;
 
    static {
 	init();
@@ -38,7 +38,7 @@ public abstract class MimeTypesFactory {
 
    private synchronized static void init() {
 	try {
-	   DEFAULT_MIMETYPERESSOURCE_INSTANCE = new MimeTypesDefaultService();
+	   DEFAULT_MIMETYPERESSOURCE_INSTANCE = new MimeTypeResolver();
 	} catch (final IOException ioe) {
 	   throw new java.lang.IllegalStateException("error loading resource: " + ioe.getMessage(), ioe);
 	}
@@ -48,7 +48,7 @@ public abstract class MimeTypesFactory {
    /**
     * @return default MimeTypesDefaultService instance
     */
-   public static MimeTypesDefaultService getService() {
+   public static MimeTypeResolver getService() {
 
 	if (DEFAULT_MIMETYPERESSOURCE_INSTANCE == null) {
 	   init();

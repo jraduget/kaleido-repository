@@ -35,7 +35,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  * @author Jerome RADUGET
  */
 @Declare(CachePluginName)
-@Provider(value = CacheProvider.class, singletons = true)
+@Provider(value = CacheProvider.class)
 public interface Cache<K extends Serializable, V extends Serializable> {
 
    /**

@@ -25,16 +25,29 @@ public class IllegalContextParameterException extends ContextException {
    private static final long serialVersionUID = -7106275164578192921L;
 
    /**
-    * following context parameter have causes error
+    * context parameter are invalid
+    * 
+    * @param parameter
+    * @param parameterValue
+    * @param context
+    * @param reason
+    */
+   public IllegalContextParameterException(final String parameter, final String parameterValue, final RuntimeContext<?> context, final String reason) {
+	super("context.parameter.illegal.use", parameter, parameterValue, context.getName(), reason);
+   }
+
+   /**
+    * context parameter have causes some error
+    * 
     * @param parameter
     * @param parameterValue
     * @param context
     * @param error
     */
-   public IllegalContextParameterException(String parameter, String parameterValue, RuntimeContext<?> context, Throwable error ) {
+   public IllegalContextParameterException(final String parameter, final String parameterValue, final RuntimeContext<?> context, final Throwable error ) {
 	super("context.parameter.causes.error", parameter, parameterValue, context.getName(), error.getMessage());
    }
-   
+
    /**
     * @param code
     * @param locale
@@ -48,7 +61,7 @@ public class IllegalContextParameterException extends ContextException {
     * @param code
     * @param locale
     */
-    IllegalContextParameterException(final String code, final Locale locale) {
+   IllegalContextParameterException(final String code, final Locale locale) {
 	super(code, locale);
    }
 
@@ -56,7 +69,7 @@ public class IllegalContextParameterException extends ContextException {
     * @param code
     * @param args
     */
-    IllegalContextParameterException(final String code, final String... args) {
+   IllegalContextParameterException(final String code, final String... args) {
 	super(code, args);
    }
 
@@ -66,7 +79,7 @@ public class IllegalContextParameterException extends ContextException {
     * @param locale
     * @param args
     */
-    IllegalContextParameterException(final String code, final Throwable cause, final Locale locale, final String... args) {
+   IllegalContextParameterException(final String code, final Throwable cause, final Locale locale, final String... args) {
 	super(code, cause, locale, args);
    }
 
@@ -75,7 +88,7 @@ public class IllegalContextParameterException extends ContextException {
     * @param cause
     * @param locale
     */
-    IllegalContextParameterException(final String code, final Throwable cause, final Locale locale) {
+   IllegalContextParameterException(final String code, final Throwable cause, final Locale locale) {
 	super(code, cause, locale);
    }
 
@@ -84,7 +97,7 @@ public class IllegalContextParameterException extends ContextException {
     * @param cause
     * @param args
     */
-    IllegalContextParameterException(final String code, final Throwable cause, final String... args) {
+   IllegalContextParameterException(final String code, final Throwable cause, final String... args) {
 	super(code, cause, args);
    }
 
@@ -92,16 +105,16 @@ public class IllegalContextParameterException extends ContextException {
     * @param code
     * @param cause
     */
-    IllegalContextParameterException(final String code, final Throwable cause) {
+   IllegalContextParameterException(final String code, final Throwable cause) {
 	super(code, cause);
    }
 
    /**
     * @param code
     */
-    IllegalContextParameterException(final String code) {
+   IllegalContextParameterException(final String code) {
 	super(code);
    }
 
-    
+
 }

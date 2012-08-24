@@ -23,6 +23,7 @@ import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.util.Registry;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -50,6 +51,14 @@ public class CacheProvider extends AbstractProviderService<Cache> {
 	}
 	if (StringHelper.isEmpty(cacheName)) { throw new EmptyContextParameterException(CacheName, context); }
 	return provides(cacheName, context);
+   }
+
+   /**
+    * registry is handle by cache manager
+    */
+   @Override
+   protected Registry<String, Cache> getRegistry() {
+	return null;
    }
 
    /**

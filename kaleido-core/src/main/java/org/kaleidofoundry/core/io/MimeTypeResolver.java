@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,37 +15,39 @@
  */
 package org.kaleidofoundry.core.io;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.kaleidofoundry.core.system.JavaSystemHelper;
+import org.kaleidofoundry.core.util.CollectionsHelper;
 import org.kaleidofoundry.core.util.StringHelper;
-import org.kaleidofoundry.core.util.properties.ExtendedProperties;
 
 /**
- * MimeTypesDefaultService handle association between mime type / file association <br/>
- * Thread safe
+ * This class handle association between mime type / file association <br/>
  * 
  * @author Jerome RADUGET
  */
-public class MimeTypesDefaultService {
+@ThreadSafe
+public class MimeTypeResolver {
 
    /* Filename containing the mime types to load */
-   private static final String FILE_PROPERTIES = "META-INF/mimes.properties";
+   private static final String FILE_PROPERTIES = "META-INF/mime.types";
 
    /* Map of mimes properties */
-   private final ConcurrentMap<String, String[]> mimesProperties;
+   private final ConcurrentMap<String, String[]> mimeTypesByName;
 
    /*
     * @throws IOException
     */
-   MimeTypesDefaultService() throws IOException {
+   MimeTypeResolver() throws IOException {
 	this(FILE_PROPERTIES);
    }
 
@@ -54,26 +56,25 @@ public class MimeTypesDefaultService {
     * 
     * @throws IOException
     */
-   MimeTypesDefaultService(final String filename) throws IOException {
+   MimeTypeResolver(final String filename) throws IOException {
 
-	InputStream fin = null;
-	final ExtendedProperties fileProperties = new ExtendedProperties();
-
-	fin = JavaSystemHelper.getResourceAsStream(filename);
+	InputStream fin = JavaSystemHelper.getResourceAsStream(filename);
 
 	if (fin == null) { throw new FileNotFoundException(filename); }
 
-	mimesProperties = new ConcurrentHashMap<String, String[]>();
+	BufferedReader reader = new BufferedReader(new InputStreamReader(fin));
 
-	fileProperties.load(fin);
+	mimeTypesByName = new ConcurrentHashMap<String, String[]>();
 
-	for (final Enumeration<?> mimesKey = fileProperties.keys(); mimesKey.hasMoreElements();) {
+	String line = reader.readLine();
 
-	   final String mime = (String) mimesKey.nextElement();
-	   final String[] arrayVal = fileProperties.getMultiValueProperty(mime, " ");
-
-	   mimesProperties.put(mime, arrayVal);
+	while ((line = reader.readLine()) != null) {
+	   String[] values = CollectionsHelper.stringToArray(line, "	");
+	   if (values != null && values.length > 0 && !values[0].startsWith("#")) {
+		mimeTypesByName.put(values[0], CollectionsHelper.stringToArray(values[1], " "));
+	   }
 	}
+
    }
 
    /**
@@ -86,12 +87,12 @@ public class MimeTypesDefaultService {
 
 	fileExtention = fileExtention.toLowerCase();
 
-	final Set<String> mimesKey = mimesProperties.keySet();
+	final Set<String> mimesKey = mimeTypesByName.keySet();
 
 	for (final String string : mimesKey) {
 
 	   final String mime = string;
-	   final String[] arrayVal = mimesProperties.get(mime);
+	   final String[] arrayVal = mimeTypesByName.get(mime);
 
 	   Arrays.sort(arrayVal);
 
@@ -109,7 +110,7 @@ public class MimeTypesDefaultService {
 
 	if (StringHelper.isEmpty(mimeType)) { return null; }
 
-	return mimesProperties.get(mimeType.toLowerCase());
+	return mimeTypesByName.get(mimeType.toLowerCase());
 
    }
 

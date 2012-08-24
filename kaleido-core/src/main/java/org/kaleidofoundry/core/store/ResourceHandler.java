@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,5 +120,15 @@ public interface ResourceHandler {
     * Release the resource and the eventual connections
     */
    void close();
+
+   /**
+    * @return Time in milliseconds, when the resource has been modified. It will be set to 0 if the information can't be provided.
+    */
+   long getLastModified();
+
+   /**
+    * @return the mime type of the resource. It will be set to null if the information can't be provided
+    */
+   String getMimeType();
 
 }
