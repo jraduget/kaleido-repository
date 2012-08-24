@@ -23,6 +23,7 @@
 				<include>org.kaleidofoundry:kaleido-jee6</include>
 				<include>org.kaleidofoundry:kaleido-spring</include>
 				<include>org.kaleidofoundry:kaleido-launcher</include>
+				<include>org.kaleidofoundry:kaleido-messaging</include>
 			</includes>
 			<binaries>
 				<outputDirectory>distrib</outputDirectory>
@@ -42,7 +43,8 @@
 				<include>org.kaleidofoundry:kaleido-core</include>
 				<include>org.kaleidofoundry:kaleido-jee6</include>	
 				<include>org.kaleidofoundry:kaleido-spring</include>
-				<include>org.kaleidofoundry:kaleido-launcher</include>			
+				<include>org.kaleidofoundry:kaleido-launcher</include>	
+				<include>org.kaleidofoundry:kaleido-messaging</include>		
 			</includes>
 			<binaries>
 				<attachmentClassifier>javadoc</attachmentClassifier>
