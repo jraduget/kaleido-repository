@@ -25,8 +25,8 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
 
 /**
- * A file resource binding<br/>
- * Once {@link FileStore} client have get its resource ({@link ResourceHandler}), he have to free it, by calling {@link #close()}<br/>
+ * A file resource handler<br/>
+ * Once {@link FileStore} client have get a ({@link ResourceHandler}), you have to free it, by calling {@link #close()}<br/>
  * You'd better use {@link ResourceHandler} locally or with {@link ThreadLocal}, because instance will not be thread
  * safe (it handles an {@link InputStream})<br/>
  * 

@@ -194,7 +194,7 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
    public static final String SleepTimeBeforeRetryOnFailure = "sleepTimeBeforeRetryOnFailure";
    /** buffer size for reading input stream data */
    public static final String BufferSize = "bufferSize";
-   /** charset to use with a text that we want to read or store */
+   /** the default charset to use for reading a resource as text */
    public static final String Charset = "charset";
    /** property name for setting the class name, to get the class loader to use */
    public static final String Classloader = "classloader";
