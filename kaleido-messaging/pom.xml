@@ -1,0 +1,128 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.kaleidofoundry</groupId>
+		<artifactId>kaleido-parent</artifactId>
+		<version>0.9.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>kaleido-messaging</artifactId>
+	<name>KaleidoFoundry messaging</name>
+	<packaging>jar</packaging>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.kaleidofoundry</groupId>
+			<artifactId>kaleido-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- JavaEE 6 CDI API -->
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- JMS API -->
+		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-jms_1.1_spec</artifactId>
+			<version>1.1</version>
+		</dependency>
+				
+		<!-- Tibco RDV transport librairies -->
+		<dependency>
+			<groupId>com.tibco.tibrv</groupId>
+			<artifactId>tibrvj</artifactId>
+			<version>7.4</version>
+			<systemPath>${project.build.directory}/../lib/tibrvj-7.4.jar</systemPath>	
+			<scope>system</scope>				
+		</dependency>
+
+		<!-- Active MQ transport librairies -->
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-core</artifactId>
+			<version>5.5.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- IBM MQ transport librairies -->
+		<dependency>
+			<groupId>com.ibm.mq</groupId>
+			<artifactId>mq</artifactId>
+			<version>6.0.1.1</version>
+			<systemPath>${project.build.directory}/../lib/com.ibm.mq-6.0.1.1.jar</systemPath>	
+			<scope>system</scope>		
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.ibm.mq</groupId>
+			<artifactId>mqjms</artifactId>
+			<version>6.0.1.1</version>
+			<systemPath>${project.build.directory}/../lib/com.ibm.mqjms-6.0.1.1.jar</systemPath>	
+			<scope>system</scope>	
+			<optional>true</optional>	
+		</dependency>
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>dhbcore</artifactId>
+			<version>1.0</version>
+			<systemPath>${project.build.directory}/../lib/com.ibm.dhbcore.jar</systemPath>	
+			<scope>system</scope>	
+			<optional>true</optional>	
+		</dependency>
+		
+		<!-- Logging with logback -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.1</version>
+				<inherited>true</inherited>
+				<!-- build jar test in order to be reused between module -->
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

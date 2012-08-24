@@ -1,0 +1,62 @@
+messaging:
+  transports:
+    jmstransacted:
+      provider: jms
+      namingService:
+        name: ConnectionFactory
+        service-ref: activemq
+      connectionFactory:  
+        password: guest
+        user: guest
+      session:  
+        acknowledgeMode: 1
+        transacted: false
+        
+  producers:
+    jmsproducer:      
+      transport-ref: jmstransacted
+      destination:
+        names: myQueue;myTopic 
+      message:
+        priority: 4
+        expiration: 0
+      
+  consumers:
+    jmsconsumer:
+      transport-ref: jmstransacted
+      destination:
+        name: myQueue
+      message:
+        selector: ''
+        noLocal: false
+      threadPrefix: consumer
+      threadCount: 4
+      timeout: 15000
+      debug: true
+      printProcessedMsgModulo: 2
+      
+namingServices:
+  tomcat:
+    env-prefix: java:comp/env
+    factory-initial-class: org.apache.naming.java.javaURLContextFactory
+
+  jboss:    
+    factory-initial-class: org.jnp.interfaces.NamingContextFactory
+    factory-url-pkgs: org.jboss.naming:org.jnp.interfaces
+    provider-url: localhost:1099
+
+  was5:
+    env-prefix: java:comp/env
+    factory-initial-class: com.ibm.ejs.ns.jndi.CNInitialContextFactory
+    provider-url: iiop://localhost:2809
+
+  was6:
+    env-prefix: java:comp/env
+    factory-initial-class: com.ibm.websphere.naming.WsnInitialContextFactory
+    factory-url-pkgs: com.ibm.ws.naming
+    provider-url: iiop://localhost:900
+
+  activemq:
+    factory-initial-class: org.apache.activemq.jndi.ActiveMQInitialContextFactory
+    provider-url: vm://localhost?broker.persistent=false
+      

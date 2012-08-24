@@ -1,0 +1,12 @@
+org.kaleidofoundry.messaging.jms.JmsConsumer
+org.kaleidofoundry.messaging.jms.JmsProducer
+org.kaleidofoundry.messaging.jms.JmsTransport
+org.kaleidofoundry.messaging.jms.amq.AmqConsumer
+org.kaleidofoundry.messaging.jms.amq.AmqProducer
+org.kaleidofoundry.messaging.jms.amq.AmqTransport
+org.kaleidofoundry.messaging.jms.ibm.WebsphereMQConsumer
+org.kaleidofoundry.messaging.jms.ibm.WebsphereMQProducer
+org.kaleidofoundry.messaging.jms.ibm.WebsphereMQTransport
+org.kaleidofoundry.messaging.rdv.RdvConsumer
+org.kaleidofoundry.messaging.rdv.RdvProducer
+org.kaleidofoundry.messaging.rdv.RdvTransport
