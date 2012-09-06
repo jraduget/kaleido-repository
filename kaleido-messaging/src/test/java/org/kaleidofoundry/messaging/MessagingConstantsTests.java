@@ -15,7 +15,9 @@
  */
 package org.kaleidofoundry.messaging;
 
-import java.util.GregorianCalendar;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 
 /**
@@ -77,11 +79,13 @@ public abstract class MessagingConstantsTests {
    public static final SerializableBeanSample MESSAGE_JAVABEAN_TEST = new SerializableBeanSample();
 
    
-   public static Map<String, Object> buildParameters(Map<String, Object> parameters) {	
+   public static Map<String, Object> buildParameters(Map<String, Object> parameters) throws ParseException {	
+	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");	
 	parameters.put("paramStr", "strValue");
-	parameters.put("paramDate", new GregorianCalendar(2010, 02, 06, 0, 0, 0).getTime());
-	parameters.put("paramCalendar", new GregorianCalendar(2012, 02, 06, 0, 0, 0));
+	parameters.put("paramDate", dateFormat.parse("2010-03-06T00:00:00.000+0100"));
+	parameters.put("paramCalendar", dateFormat.parse("2012-03-06T00:00:00.000+0100"));
 	parameters.put("paramInt", new Integer(5));
 	return parameters;
    }
+
 }

@@ -15,6 +15,7 @@
  */
 package org.kaleidofoundry.core.store;
 
+import static org.kaleidofoundry.core.store.FileStoreConstants.DEFAULT_CHARSET;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.Charset;
 
 import java.io.BufferedReader;
@@ -27,7 +28,6 @@ import java.io.UnsupportedEncodingException;
 
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.io.IOHelper;
-import org.kaleidofoundry.core.lang.Charsets;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
 
@@ -39,8 +39,6 @@ import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
 @Immutable
 @NotThreadSafe
 class ResourceHandlerBean implements ResourceHandler {
-
-   private final static Charsets DEFAULT_CHARSET = Charsets.UTF_8;
 
    private final AbstractFileStore store;
    private final String resourceUri;

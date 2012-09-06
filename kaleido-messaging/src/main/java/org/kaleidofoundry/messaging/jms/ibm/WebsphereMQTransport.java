@@ -15,10 +15,13 @@
  */
 package org.kaleidofoundry.messaging.jms.ibm;
 
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.*;
+import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONNECTION_FACTORY_CHANNEL;
 import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONNECTION_FACTORY_HOST;
 import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONNECTION_FACTORY_PORT;
 import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONNECTION_FACTORY_TRANSPORT_TYPE;
+import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.DESTINATION_PERSISTENT_TYPE;
+import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.DESTINATION_TARGET_CLIENT;
+import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.DESTINATION_TYPE;
 
 import javax.jms.Connection;
 import javax.jms.Destination;

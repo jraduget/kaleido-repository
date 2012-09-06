@@ -155,6 +155,16 @@ public class CacheContextBuilder extends AbstractRuntimeContextBuilder<Cache> {
    }
 
    /**
+    * @param parameter parameter name
+    * @param value parameter value
+    * @return current builder instance
+    */
+   public CacheContextBuilder withParameter(final String parameter, final Serializable value) {
+	getContextParameters().put(parameter, value);
+	return this;
+   }
+
+   /**
     * @param cacheName
     * @return current builder instance
     */

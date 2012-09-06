@@ -15,10 +15,15 @@
  */
 package org.kaleidofoundry.core.store;
 
+import org.kaleidofoundry.core.lang.Charsets;
+
 /**
  * @author Jerome RADUGET
  */
 public interface FileStoreConstants {
+
+   /** Default charset to use for text in a fileStore */
+   Charsets DEFAULT_CHARSET = Charsets.UTF_8;
 
    /** interface store declare plugin name */
    String FileStorePluginName = "fileStores";
