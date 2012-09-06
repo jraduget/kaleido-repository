@@ -60,7 +60,7 @@ public abstract class MessagingConstantsTests {
 
    /** Active MQ default url */
    public final static String JMS_EMBEDDED_BORKER_URL = "vm://localhost?broker.persistent=false";
-   
+
    /*
     * Commons tests constants
     * *******************************************
@@ -70,7 +70,7 @@ public abstract class MessagingConstantsTests {
    /** Max time while we are waiting after message publishing */
    public final static int TIME_TO_SLEEP_WAITING_MESSAGE = 5;
    /** Text body of TextMessage Test */
-   public static final String MESSAGE_TEXT_BODY_TEST = "hello world héèh!";   
+   public static final String MESSAGE_TEXT_BODY_TEST = "hello world héèh!";
    /** Xml body of XmlMessage Test */
    public static final String MESSAGE_XML_BODY_TEST = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><root><country>FR</country></root>";
    /** Binary body of BinaryMessage Test */
@@ -78,14 +78,17 @@ public abstract class MessagingConstantsTests {
    /** Bean body of JavaBeanMessage Test */
    public static final SerializableBeanSample MESSAGE_JAVABEAN_TEST = new SerializableBeanSample();
 
-   
-   public static Map<String, Object> buildParameters(Map<String, Object> parameters) throws ParseException {	
-	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");	
-	parameters.put("paramStr", "strValue");
-	parameters.put("paramDate", dateFormat.parse("2010-03-06T00:00:00.000+0100"));
-	parameters.put("paramCalendar", dateFormat.parse("2012-03-06T00:00:00.000+0100"));
-	parameters.put("paramInt", new Integer(5));
-	return parameters;
+   public static Map<String, Object> buildParameters(Map<String, Object> parameters) {
+	try {
+	   DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	   parameters.put("paramStr", "strValue");
+	   parameters.put("paramDate", dateFormat.parse("2010-03-06T00:00:00.000+0100"));
+	   parameters.put("paramCalendar", dateFormat.parse("2012-03-06T00:00:00.000+0100"));
+	   parameters.put("paramInt", new Integer(5));
+	   return parameters;
+	} catch (ParseException pe) {
+	   throw new IllegalStateException("check date format", pe);
+	}
    }
 
 }
