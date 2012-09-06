@@ -43,7 +43,7 @@ public class MimeTypeResolverTest extends Assert {
 	for (String v : resultsValues) {
 	   assertTrue(Arrays.asList(ext).contains(v));
 	}
-	assertTrue(mimes.isMimeTypeBinary(mimeType));
+	assertTrue(mimes.isBytes(mimeType));
 
 	mimeType = "text/plain";
 	resultsValues = Arrays.asList(new String[] { "txt", "text", "conf", "def", "list", "log", "in" });
@@ -53,7 +53,7 @@ public class MimeTypeResolverTest extends Assert {
 	for (String v : resultsValues) {
 	   assertTrue(Arrays.asList(ext).contains(v));
 	}
-	assertTrue(mimes.isMimeTypeAscii(mimeType));
+	assertTrue(mimes.isText(mimeType));
 
    }
 

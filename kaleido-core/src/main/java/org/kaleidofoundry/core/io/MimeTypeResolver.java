@@ -118,16 +118,16 @@ public class MimeTypeResolver {
     * @param mimeType
     * @return does the mimeType parameter is a binary type ?
     */
-   public boolean isMimeTypeBinary(final String mimeType) {
-	return !mimeType.startsWith("text/");
+   public boolean isBytes(final String mimeType) {
+	return !isText(mimeType);
    }
 
    /**
     * @param mimeType
     * @return does the mimeType parameter is a text type ?
     */
-   public boolean isMimeTypeAscii(final String mimeType) {
-	return !isMimeTypeBinary(mimeType);
+   public boolean isText(final String mimeType) {
+	return mimeType.startsWith("text/") || mimeType.contains("xml") || mimeType.contains("js") || mimeType.contains("json");
    }
 
 }
