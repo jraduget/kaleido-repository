@@ -35,6 +35,14 @@
 			<version>1.1</version>
 		</dependency>
 				
+		<!-- Active MQ transport librairies -->
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-core</artifactId>
+			<version>5.5.1</version>
+			<scope>provided</scope>
+		</dependency>
+						
 		<!-- Tibco RDV transport librairies -->
 		<dependency>
 			<groupId>com.tibco.tibrv</groupId>
@@ -42,14 +50,6 @@
 			<version>7.4</version>
 			<systemPath>${basedir}/lib/tibrvj-7.4.jar</systemPath>	
 			<scope>system</scope>				
-		</dependency>
-
-		<!-- Active MQ transport librairies -->
-		<dependency>
-			<groupId>org.apache.activemq</groupId>
-			<artifactId>activemq-core</artifactId>
-			<version>5.5.1</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- IBM MQ transport librairies -->
@@ -78,7 +78,7 @@
 			<optional>true</optional>	
 		</dependency>
 		
-		<!-- Logging with logback -->
+		<!-- Logging with logback for test -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>

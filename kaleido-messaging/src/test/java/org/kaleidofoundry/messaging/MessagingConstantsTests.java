@@ -18,6 +18,7 @@ package org.kaleidofoundry.messaging;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -80,7 +81,7 @@ public abstract class MessagingConstantsTests {
 
    public static Map<String, Object> buildParameters(Map<String, Object> parameters) {
 	try {
-	   DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	   DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.FRANCE);
 	   parameters.put("paramStr", "strValue");
 	   parameters.put("paramDate", dateFormat.parse("2010-03-06T00:00:00.000+0100"));
 	   parameters.put("paramCalendar", dateFormat.parse("2012-03-06T00:00:00.000+0100"));
