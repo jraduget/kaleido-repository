@@ -153,7 +153,7 @@ public class GSFileStore extends AbstractFileStore {
 	// optionsBuilder.setAcl("public_read");
 	// optionsBuilder.addUserMetadata("myfield1", "my field value");
 
-	if (MimeTypeResolverFactory.getService().isMimeTypeAscii(resource.getMimeType())) {
+	if (MimeTypeResolverFactory.getService().isText(resource.getMimeType())) {
 	   optionsBuilder.setContentEncoding(charset);
 	}
 
