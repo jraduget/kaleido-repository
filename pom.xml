@@ -71,8 +71,7 @@
 		<!-- Cache implementation version -->
 		<jboss-cache.version>3.2.3.CR1</jboss-cache.version>
 		<terracotta-ehcache.version>2.4.6</terracotta-ehcache.version>
-		<jboss-infinispan.version>5.1.5.FINAL</jboss-infinispan.version>
-		<oracle-coherence.version>3.7.0</oracle-coherence.version>
+		<jboss-infinispan.version>5.1.5.FINAL</jboss-infinispan.version>		
 		<!-- Testing -->		
 		<junit.version>4.10</junit.version>
 		<mockito.version>1.8.5</mockito.version>

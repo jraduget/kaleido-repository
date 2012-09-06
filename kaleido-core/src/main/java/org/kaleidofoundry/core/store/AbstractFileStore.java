@@ -405,13 +405,13 @@ public abstract class AbstractFileStore implements FileStore {
 
 	while (retryCount < maxRetryCount) {
 	   try {
-		// try to store the resource
-		doStore(URI.create(resourceUri), resource);
 		// Set some meta datas
 		if (resource instanceof ResourceHandlerBean) {
 		   ((ResourceHandlerBean) resource).setLastModified(System.currentTimeMillis());
 		   ((ResourceHandlerBean) resource).setMimeType(MimeTypeResolverFactory.getService().getMimeType(FileHelper.getFileNameExtension(resourceUri)));
 		}
+		// try to store the resource
+		doStore(URI.create(resourceUri), resource);
 		return this;
 	   } catch (final ResourceException rse) {
 		lastError = rse;

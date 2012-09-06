@@ -35,8 +35,8 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * </tr>
  * <tr>
  * <td>providerCode</td>
- * <td>cache provider code to use (see {@link CacheProvidersEnum}):
- * <code>ehCache|jbossCache3x|infinispan|coherence3x|gigaspace7x|local</code></td>
+ * <td>cache provider code to use (see {@link CacheProvidersEnum}): <code>local|ehCache|infinispan|coherence3x|websphere|jbossCache3x</code>
+ * </td>
  * </tr>
  * <tr>
  * <td>classloader</td>
@@ -58,8 +58,7 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 public class CacheManagerContextBuilder extends AbstractRuntimeContextBuilder<CacheManager> {
 
    /**
-    * cache provider code to use (see {@link CacheProvidersEnum}):
-    * <code>ehCache|jbossCache3x|infinispan|coherence3x|gigaspace7x|local</code>
+    * cache provider code to use (see {@link CacheProvidersEnum}): <code>local|ehCache|infinispan|coherence3x|websphere|jbossCache3x</code>
     */
    public static final String ProviderCode = "providerCode";
    /** full class name, which will give the class loader to use */
@@ -68,6 +67,8 @@ public class CacheManagerContextBuilder extends AbstractRuntimeContextBuilder<Ca
    public static final String FileStoreUri = "fileStoreUri";
    /** name of the store context to use, in order to load configuration */
    public static final String FileStoreRef = "fileStoreRef";
+   /** naming service reference, if jndi lookup is needed to access cache or cacheManager */
+   public static final String NamingServiceRef = "namingServiceRef";
 
    /**
     * 
@@ -171,6 +172,16 @@ public class CacheManagerContextBuilder extends AbstractRuntimeContextBuilder<Ca
    }
 
    /**
+    * @param parameter parameter name
+    * @param value parameter value
+    * @return current builder instance
+    */
+   public CacheManagerContextBuilder withParameter(final String parameter, final Serializable value) {
+	getContextParameters().put(parameter, value);
+	return this;
+   }
+
+   /**
     * @param providerCode
     * @return current builder instance
     */
@@ -205,4 +216,14 @@ public class CacheManagerContextBuilder extends AbstractRuntimeContextBuilder<Ca
 	getContextParameters().put(FileStoreRef, fileStoreRef);
 	return this;
    }
+
+   /**
+    * @param fileStoreRef
+    * @return current builder instance
+    */
+   public CacheManagerContextBuilder withNamingServiceRef(final String namingServiceRef) {
+	getContextParameters().put(NamingServiceRef, namingServiceRef);
+	return this;
+   }
+
 }

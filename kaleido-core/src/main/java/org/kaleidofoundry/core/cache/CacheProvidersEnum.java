@@ -33,5 +33,7 @@ public enum CacheProvidersEnum {
 
    gigaspace7x,
 
+   websphere,
+
    local;
 }

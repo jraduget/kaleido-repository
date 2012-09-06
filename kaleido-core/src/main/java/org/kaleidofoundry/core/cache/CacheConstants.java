@@ -49,16 +49,22 @@ public interface CacheConstants {
    /** JbossCache manager implementation declare plugin name */
    String JbossCacheManagerPluginName = "cacheManagers.jbossCache3x";
 
-   /** Infinispan cache implementation declare plugin name */
+   /** Jboss Infinispan cache implementation declare plugin name */
    String InfinispanCachePluginName = "caches.infinispan";
 
-   /** Infinispan cache manager implementation declare plugin name */
+   /** Jboss Infinispan cache manager implementation declare plugin name */
    String InfinispanCacheManagerPluginName = "cacheManagers.infinispan";
 
-   /** Coherence cache implementation declare plugin name */
+   /** Oracle Coherence cache implementation declare plugin name */
    String CoherenceCachePluginName = "caches.coherence3x";
 
-   /** Coherence cache manager implementation declare plugin name */
+   /** Oracle Coherence cache manager implementation declare plugin name */
    String CoherenceCacheManagerPluginName = "cacheManagers.coherence3x";
+
+   /** IBM Websphere cache implementation declare plugin name */
+   String WebsphereCachePluginName = "caches.websphere";
+
+   /** IBM Websphere cache manager implementation declare plugin name */
+   String WebsphereCacheManagerPluginName = "cacheManagers.websphere";
 
 }

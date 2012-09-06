@@ -338,6 +338,16 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
    // ** builder methods **************************
 
    /**
+    * @param parameter parameter name
+    * @param value parameter value
+    * @return current builder instance
+    */
+   public FileStoreContextBuilder withParameter(final String parameter, final Serializable value) {
+	getContextParameters().put(parameter, value);
+	return this;
+   }
+
+   /**
     * @param baseUri
     * @return current builder instance
     * @see FileStoreContextBuilder#BaseUri
