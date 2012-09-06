@@ -28,6 +28,8 @@ import java.util.Map;
  */
 public interface Message {
 
+   // TODO : add uuid, timestamp (long), error destination, priority (int), expiration date (long)   
+   
    /**
     * @return internal provider id 
     */

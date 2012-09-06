@@ -39,9 +39,28 @@ public interface Producer extends Client {
    void send(Message message) throws MessagingException;
 
    /**
+    * Send a message with a maximum time
+    * 
+    * @param message
+    * @param timeout maximum time (-1 : infinite time). if the timeout is reached, a {@link MessagingTimeoutException} is thrown
+    * @throws MessagingException
+    */
+   // TODO : void send(Message message, long timeout) throws MessagingException;
+   
+   /**
     * @param messages
     * @throws TransportException
     */
    void send(Collection<Message> messages) throws MessagingException;
+   
+   /**
+    * 
+    * @param messages
+    * @param timeout maximum time (-1 : infinite time). if the timeout is reached, a {@link MessagingTimeoutException} is thrown
+    * @throws MessagingException
+    */
+   // TODO : void send(Collection<Message> messages, long timeout) throws MessagingException;
+   
+   
    
 }

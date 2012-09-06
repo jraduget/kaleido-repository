@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.messaging;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +32,8 @@ public abstract class AbstractMessage implements Message {
    private final Map<String, Object> parameters;
 
    public AbstractMessage(final Map<String, Object> parameters) {	
-	this.parameters = parameters;
+	this.parameters = new HashMap<String, Object>();
+	this.parameters.putAll(parameters);
    }
    
    public AbstractMessage(String correlationId, Map<String, Object> parameters) {
@@ -56,7 +59,7 @@ public abstract class AbstractMessage implements Message {
    }
 
    public Map<String, Object> getParameters() {
-	return parameters;
+	return  Collections.unmodifiableMap(parameters);
    }
 
    @Override
@@ -72,11 +75,11 @@ public abstract class AbstractMessage implements Message {
 
 	final StringBuffer str = new StringBuffer();
 
-	if (getParameters() != null) {
+	if (parameters != null) {
 	   str.append("{");
-	   for (final String param : getParameters().keySet()) {
+	   for (final String param : parameters.keySet()) {
 		if (exeptions == null || !exeptions.contains(param)) {
-		   str.append(param).append("=").append(getParameters().get(param)).append(" ; ");
+		   str.append(param).append("=").append(parameters.get(param)).append(" ; ");
 		}
 	   }
 	   str.append("}");
