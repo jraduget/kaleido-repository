@@ -131,9 +131,9 @@ public abstract class AbstractMessagingTest {
 	assertTrue(parameters.containsKey("paramStr"));
 	assertEquals("strValue", parameters.get("paramStr"));
 	assertTrue(parameters.containsKey("paramDate"));
-	assertEquals("2010-03-06T00:00:00.000+0100", parameters.get("paramDate"));
+	assertEquals("2010-03-06T00:00:00.000", parameters.get("paramDate"));
 	assertTrue(parameters.containsKey("paramCalendar"));
-	assertEquals("2012-03-06T00:00:00.000+0100", parameters.get("paramCalendar"));
+	assertEquals("2012-03-06T00:00:00.000", parameters.get("paramCalendar"));
 	assertTrue(parameters.containsKey("paramInt"));
 	assertEquals(new Integer(5), parameters.get("paramInt"));
    }

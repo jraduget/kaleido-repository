@@ -105,5 +105,5 @@ public interface JmsMessagingConstants {
    String MESSAGE_CONSUMPTION = "message.consumption";
 
    /** Full date format for date handling in message */
-   String MESSAGE_FULL_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+   String MESSAGE_FULL_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 }
