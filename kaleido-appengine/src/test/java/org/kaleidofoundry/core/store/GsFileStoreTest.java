@@ -15,14 +15,28 @@
  */
 package org.kaleidofoundry.core.store;
 
-import java.io.UnsupportedEncodingException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.channels.Channels;
 import java.util.Map.Entry;
 
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.kaleidofoundry.core.context.RuntimeContext;
 
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.files.AppEngineFile;
+import com.google.appengine.api.files.FileService;
+import com.google.appengine.api.files.FileServiceFactory;
+import com.google.appengine.api.files.FinalizationException;
+import com.google.appengine.api.files.GSFileOptions.GSFileOptionsBuilder;
+import com.google.appengine.api.files.LockException;
+import com.google.appengine.api.files.RecordWriteChannel;
+import com.google.appengine.tools.development.testing.LocalBlobstoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalFileServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
@@ -34,29 +48,54 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 @Ignore
 public class GsFileStoreTest extends AbstractFileStoreTest {
 
-   private final LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalFileServiceTestConfig());
+   protected static LocalServiceTestHelper helper;
+   protected static FileService fileService;
+   protected static BlobstoreService blobstoreService;
+
+   @BeforeClass
+   public static void init() throws IOException {
+	helper = new LocalServiceTestHelper(new LocalFileServiceTestConfig(), new LocalBlobstoreServiceTestConfig());
+	helper.setUp();
+
+	fileService = FileServiceFactory.getFileService();
+	blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+   }
+
+   @AfterClass
+   public static void tearDown() {
+	helper.tearDown();
+   }
 
    @Before
-   public void setUp() throws ResourceException, UnsupportedEncodingException {
-	helper.setUp();
-	
-	final RuntimeContext<FileStore> context = new FileStoreContextBuilder().withBaseUri("gs:/kaleido/store/test").build();
+   public void setUp() throws FileNotFoundException, FinalizationException, LockException, IOException {
+
+	final String bucketName = "gs:/kaleido/store/test";
+	final RuntimeContext<FileStore> context = new FileStoreContextBuilder().withBaseUri(bucketName).build();
 	fileStore = new GSFileStore(context);
 
 	existingResources.put("path/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
-	existingResources.put("/path/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
+	// existingResources.put("/path/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
 
 	nonExistingResources.add("gs:/path/foo");
 	nonExistingResources.add("path/foo");
-	
-	for (Entry<String, String> entryToTest : existingResources.entrySet()) {
-	   fileStore.store(entryToTest.getKey(), entryToTest.getValue());	   
-	}
-   }
 
-   @After
-   public void tearDown() {
-	helper.tearDown();
+	existingResourcesForStore.put("newpath/newfoo.txt", "line1\nline2\nline3");
+	existingResourcesForRemove.put("path/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
+
+	for (Entry<String, String> entryToTest : existingResources.entrySet()) {
+	   // fileStore.store(entryToTest.getKey(), entryToTest.getValue());
+
+	   // write datas used by the test	   
+	   GSFileOptionsBuilder optionsBuilder = new GSFileOptionsBuilder().setBucket(bucketName).setKey(entryToTest.getKey());
+	   optionsBuilder.setMimeType("text/plain");
+	   optionsBuilder.setContentEncoding("UTF8");
+	   final AppEngineFile writableFile = fileService.createNewGSFile(optionsBuilder.build());
+	   RecordWriteChannel writeChannel = fileService.openRecordWriteChannel(writableFile, true);
+	   PrintWriter out = new PrintWriter(Channels.newWriter(writeChannel, "UTF8"));
+	   out.write(entryToTest.getValue());
+	   out.close();
+	   writeChannel.closeFinally();
+	}
    }
 
 }

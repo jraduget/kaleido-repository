@@ -37,8 +37,8 @@ import com.google.appengine.api.files.AppEngineFile;
 import com.google.appengine.api.files.FileReadChannel;
 import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
-import com.google.appengine.api.files.FileWriteChannel;
 import com.google.appengine.api.files.GSFileOptions.GSFileOptionsBuilder;
+import com.google.appengine.api.files.RecordWriteChannel;
 
 /**
  * https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/files/FileService
@@ -53,10 +53,6 @@ public class GSFileStore extends AbstractFileStore {
    protected final FileService fileService = FileServiceFactory.getFileService();
 
    protected final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-
-   // protected final BlobstoreService service = BlobstoreServiceFactory.getBlobstoreService();
-   // protected final ThreadLocal<HttpServletRequest> httpRequest = new ThreadLocal<HttpServletRequest>();
-   // protected final ThreadLocal<HttpServletResponse> httpResponse = new ThreadLocal<HttpServletResponse>();
 
    /**
     * @param context
@@ -93,10 +89,12 @@ public class GSFileStore extends AbstractFileStore {
 	ResourceHandler resource;
 
 	try {
-	   final String filepath = getBucketName() + resourceUri.getPath();
+	   final String filepath = "/gs" + resourceUri.getPath();
 	   final AppEngineFile readableFile = new AppEngineFile(filepath);
 
 	   readChannel = fileService.openReadChannel(readableFile, false);
+	   
+	   //LOGGER.info( new BufferedReader(Channels.newReader(readChannel, "UTF8")).readLine());	   
 	   resource = createResourceHandler(resourceUri.toString(), Channels.newInputStream(readChannel));
 
 	   // Set some meta datas
@@ -129,7 +127,7 @@ public class GSFileStore extends AbstractFileStore {
    @Override
    @NotYetImplemented
    protected void doRemove(final URI resourceUri) throws ResourceNotFoundException, ResourceException {
-	final String filepath = getBucketName() + resourceUri.getPath();
+	final String filepath = "/gs" + resourceUri.getPath();
 	final AppEngineFile readableFile = new AppEngineFile(filepath);
 	blobstoreService.delete(fileService.getBlobKey(readableFile));
    }
@@ -143,30 +141,32 @@ public class GSFileStore extends AbstractFileStore {
 
 	String bucketName = getBucketName();
 	String charset = context.getString(Charset, DEFAULT_CHARSET.getCode());
+	boolean isTextContent = false;
 
 	GSFileOptionsBuilder optionsBuilder = new GSFileOptionsBuilder().setBucket(bucketName).setKey(resource.getResourceUri());
 
 	if (!StringHelper.isEmpty(resource.getMimeType())) {
 	   optionsBuilder.setMimeType(resource.getMimeType());
+	   isTextContent = MimeTypeResolverFactory.getService().isText(resource.getMimeType());
 	}
 
-	// optionsBuilder.setAcl("public_read");
-	// optionsBuilder.addUserMetadata("myfield1", "my field value");
-
-	if (MimeTypeResolverFactory.getService().isText(resource.getMimeType())) {
+	//optionsBuilder.setAcl("public_read");
+	
+	if (isTextContent) {
 	   optionsBuilder.setContentEncoding(charset);
 	}
-
+	
 	final AppEngineFile writableFile;
-	FileWriteChannel writeChannel = null;
+	RecordWriteChannel writeChannel = null;
 
 	try {
 	   writableFile = fileService.createNewGSFile(optionsBuilder.build());
-	   writeChannel = fileService.openWriteChannel(writableFile, true);
-
+	   writeChannel = fileService.openRecordWriteChannel(writableFile, true);
+			   
+	   // TODO isTextContent and PrintWriter
 	   final byte[] buff = new byte[context.getInteger(BufferSize, 128)];
 	   int lengthToWrite = resource.getInputStream().read(buff);
-	   while (lengthToWrite != -1) {
+	   while (lengthToWrite != -1) {		
 		writeChannel.write(ByteBuffer.wrap(buff, 0, lengthToWrite));
 		lengthToWrite = resource.getInputStream().read(buff);
 	   }
