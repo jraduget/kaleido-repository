@@ -99,6 +99,7 @@ public class RdvProducer extends AbstractProducer {
 	}	
    }
    
+   
    @Override
    public void send(final Message message) throws MessagingException {
 

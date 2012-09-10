@@ -61,10 +61,10 @@ public interface MessagingConstants {
    
 
    /** Transport type : see {@link TransportProviderEnum} */
-   String TRANSPORT_PROVIDER = "provider";
+   String TRANSPORT_PROVIDER = "provider";   
+   /** Consumer / Producer thread pool count */
+   String THREAD_POOL_COUNT_PROPERTY = "threadCount";
    
-   /** Consumer thread pool count */
-   String CONSUMER_THREAD_POOL_COUNT_PROPERTY = "threadCount";
    
    /** Consumer thread prefix */
    String CONSUMER_THREAD_PREFIX_PROPERTY = "threadPrefix";

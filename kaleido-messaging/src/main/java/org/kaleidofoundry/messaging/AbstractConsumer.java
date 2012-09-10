@@ -18,7 +18,7 @@ package org.kaleidofoundry.messaging;
 import static org.kaleidofoundry.messaging.MessagingConstants.CONSUMER_DEBUG_PROPERTY;
 import static org.kaleidofoundry.messaging.MessagingConstants.CONSUMER_PRINT_PROCESSED_MESSAGES_MODULO;
 import static org.kaleidofoundry.messaging.MessagingConstants.CONSUMER_RESPONSE_DURATION;
-import static org.kaleidofoundry.messaging.MessagingConstants.CONSUMER_THREAD_POOL_COUNT_PROPERTY;
+import static org.kaleidofoundry.messaging.MessagingConstants.THREAD_POOL_COUNT_PROPERTY;
 import static org.kaleidofoundry.messaging.MessagingConstants.CONSUMER_THREAD_PREFIX_PROPERTY;
 import static org.kaleidofoundry.messaging.MessagingConstants.CONSUMER_TRANSPORT_REF;
 import static org.kaleidofoundry.messaging.MessagingConstants.I18N_RESOURCE;
@@ -304,6 +304,7 @@ public abstract class AbstractConsumer implements Consumer {
 
    protected final RuntimeContext<Consumer> context;
    protected final Transport transport;
+   @Task(comment="Lazy creation of the executor service for google application engine, use com.google.appengine.api.taskqueue.Queue ?")
    protected ExecutorService pool;
 
    private final List<MessageHandler> messageHandlers;
@@ -355,14 +356,14 @@ public abstract class AbstractConsumer implements Consumer {
 	stop();
 
 	// thread executor service
-	int threadCound = this.context.getInteger(CONSUMER_THREAD_POOL_COUNT_PROPERTY, 1);
+	int threadCount = this.context.getInteger(THREAD_POOL_COUNT_PROPERTY, 1);
 
-	LOGGER.info("Creating consumer [{}] with a thread pool size of {}", context.getName(), threadCound);
-	this.pool = Executors.newFixedThreadPool(threadCound);
+	LOGGER.info("Creating consumer [{}] with a thread pool size of {}", context.getName(), threadCount);
+	this.pool = Executors.newFixedThreadPool(threadCount);
 
 	// submit thread to the pool
 	String threadPrefix = this.context.getString(CONSUMER_THREAD_PREFIX_PROPERTY, context.getName());
-	for (int cpt = 0; cpt < threadCound; cpt++) {
+	for (int cpt = 0; cpt < threadCount; cpt++) {
 	   this.pool.submit(newWorker(threadPrefix + "[" + StringHelper.leftPad(String.valueOf(cpt + 1), 3, '0') + "]", cpt + 1));
 	}
 

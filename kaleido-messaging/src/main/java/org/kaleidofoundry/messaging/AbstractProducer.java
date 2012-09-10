@@ -15,10 +15,19 @@
  */
 package org.kaleidofoundry.messaging;
 
+import static org.kaleidofoundry.messaging.MessagingConstants.THREAD_POOL_COUNT_PROPERTY;
 import static org.kaleidofoundry.messaging.MessagingConstants.I18N_RESOURCE;
 import static org.kaleidofoundry.messaging.MessagingConstants.PRODUCER_DEBUG_PROPERTY;
 import static org.kaleidofoundry.messaging.MessagingConstants.PRODUCER_TRANSPORT_REF;
 
+import java.util.Collection;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.kaleidofoundry.core.context.EmptyContextParameterException;
@@ -26,6 +35,7 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.I18nMessages;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
+import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +58,10 @@ public abstract class AbstractProducer implements Producer {
    protected final RuntimeContext<Producer> context;
    protected final Transport transport;
 
+   /** Executor service used to implements timeout feature when sending message */
+   @Task(comment="Lazy creation of the executor service for google application engine, use com.google.appengine.api.taskqueue.Queue ?")
+   protected final ExecutorService pool;
+
    public AbstractProducer(RuntimeContext<Producer> context) {
 	this.context = context;
 
@@ -57,6 +71,94 @@ public abstract class AbstractProducer implements Producer {
 	   this.transport = TransportFactory.provides(transportRef, context);
 	} else {
 	   throw new EmptyContextParameterException(PRODUCER_TRANSPORT_REF, context);
+	}
+
+	// thread executor service
+	int threadCount = this.context.getInteger(THREAD_POOL_COUNT_PROPERTY, 1);
+
+	LOGGER.info("Creating producer [{}] with a thread pool size of {}", context.getName(), threadCount);
+	this.pool = Executors.newFixedThreadPool(threadCount);
+
+   }
+
+   @Override
+   public void send(final Message message, final long timeout) throws MessagingException {
+
+	if (timeout <= 0) {
+	   send(message);
+	}
+	
+	FutureTask<Throwable> future = new FutureTask<Throwable>(new Callable<Throwable>() {
+	   public Throwable call() {
+		try {
+		   send(message);
+		   return null;
+		} catch (Throwable th) {
+		   return th;
+		}
+	   }
+	});
+
+	pool.execute(future);
+
+	try {
+	   Throwable error = future.get(timeout, TimeUnit.MILLISECONDS);
+
+	   if (error != null) {
+		if (error instanceof MessagingException) {
+		   throw (MessagingException) error;
+		} else {
+		   throw new IllegalStateException("Internal producer error", error);
+		}
+	   }
+
+	} catch (TimeoutException ex) {
+	   throw MessageTimeoutException.buildProducerTimeoutException(getName());
+	} catch (ExecutionException eex) {
+	   throw new IllegalStateException("Executor service error", eex);
+	} catch (InterruptedException iex) {
+	   throw new IllegalStateException("Thread have been interrupted", iex);
+	}
+
+   }
+
+   @Override
+   public void send(final Collection<Message> messages, final  long timeout) throws MessagingException {
+
+	if (timeout <= 0) {
+	   send(messages);
+	}
+
+	FutureTask<Throwable> future = new FutureTask<Throwable>(new Callable<Throwable>() {
+	   public Throwable call() {
+		try {
+		   send(messages);
+		   return null;
+		} catch (Throwable th) {
+		   return th;
+		}
+	   }
+	});
+
+	pool.execute(future);
+
+	try {
+	   Throwable error = future.get(timeout, TimeUnit.MILLISECONDS);
+
+	   if (error != null) {
+		if (error instanceof MessagingException) {
+		   throw (MessagingException) error;
+		} else {
+		   throw new IllegalStateException("Internal producer error", error);
+		}
+	   }
+
+	} catch (TimeoutException ex) {
+	   throw MessageTimeoutException.buildProducerTimeoutException(getName());
+	} catch (ExecutionException eex) {
+	   throw new IllegalStateException("Executor service error", eex);
+	} catch (InterruptedException iex) {
+	   throw new IllegalStateException("Thread have been interrupted", iex);
 	}
 
    }
@@ -94,7 +196,8 @@ public abstract class AbstractProducer implements Producer {
 
    protected void debugMessage(Message message) {
 	if (isDebug()) {
-	   LOGGER.info(">>> sending message with providerId={} , correlationId={} , parameters={}",  new String[] {message.getProviderId(), message.getCorrelationId(), String.valueOf(message.getParameters()) });
+	   LOGGER.info(">>> sending message with providerId={} , correlationId={} , parameters={}",
+		   new String[] { message.getProviderId(), message.getCorrelationId(), String.valueOf(message.getParameters()) });
 	   LOGGER.info("{}", message.toString());
 	}
    }

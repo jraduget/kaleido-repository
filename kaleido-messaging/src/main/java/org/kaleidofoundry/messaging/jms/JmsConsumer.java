@@ -134,7 +134,7 @@ public class JmsConsumer extends AbstractConsumer {
 		   if (messageTimeout > 0) {
 			jmsMessage = jmsConsumer.receive(messageTimeout);
 			if (jmsMessage == null) {
-			   messageWrapper.setError(new MessageTimeoutException(getName()));
+			   messageWrapper.setError(MessageTimeoutException.buildConsumerTimeoutException(getName()));
 			   return;
 			}
 		   } else {

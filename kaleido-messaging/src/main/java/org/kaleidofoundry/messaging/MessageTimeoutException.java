@@ -15,23 +15,22 @@
  */
 package org.kaleidofoundry.messaging;
 
-
 /**
- * 
  * @author Jerome RADUGET
- *
  */
 public class MessageTimeoutException extends MessageException {
 
-
    private static final long serialVersionUID = 9005545543717544311L;
 
-   /**
-    * @param code
-    */
-   public MessageTimeoutException(String workerName) {
-	super("messaging.consumer.jms.receive.timeout", workerName);
+   private MessageTimeoutException(String code, String... parameters) {
+	super(code, parameters);
    }
 
+   public static MessageTimeoutException buildConsumerTimeoutException(String workername) {
+	return new MessageTimeoutException("messaging.consumer.receive.timeout", workername);
+   }
 
+   public static MessageTimeoutException buildProducerTimeoutException(String workername) {
+	return new MessageTimeoutException("messaging.producer.sent.timeout", workername);
+   }
 }

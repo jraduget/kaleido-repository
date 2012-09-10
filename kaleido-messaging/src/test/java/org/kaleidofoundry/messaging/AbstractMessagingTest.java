@@ -45,11 +45,20 @@ public abstract class AbstractMessagingTest {
 
    @Test
    public void javaBeanMessage() throws InterruptedException, MessagingException {
+	_javaBeanMessage(-1);
+   }
+   
+   @Test
+   public void javaBeanMessageWithTimeout() throws InterruptedException, MessagingException {
+	_javaBeanMessage(3000);
+   }
+   
+   protected void _javaBeanMessage(long timeout) throws InterruptedException, MessagingException {
 	Map<String, Object> parameters = buildParameters(new HashMap<String, Object>());
 	parameters.put("kind", "bean");
 
 	Message message = new JavaBeanMessage(new SerializableBeanSample(), buildParameters(parameters));
-	sendMessageWithAssertions(message);
+	sendMessageWithAssertions(message, timeout);
 
 	message = RECEIVED_MESSAGES.get(uniqueMessageId(message.getProviderId()));
 	assertNotNull(message);
@@ -69,10 +78,19 @@ public abstract class AbstractMessagingTest {
 
    @Test
    public void xmlMessage() throws InterruptedException, MessagingException {
+	_xmlMessage(-1);
+   }
+   
+   @Test
+   public void xmlMessageWithTimeout() throws InterruptedException, MessagingException {
+	_xmlMessage(3000);
+   }   
+   
+   protected void _xmlMessage(long timeout) throws InterruptedException, MessagingException {
 	Map<String, Object> parameters = buildParameters(new HashMap<String, Object>());
 	parameters.put("kind", "xml");
 	Message message = new XmlMessage(MESSAGE_XML_BODY_TEST, buildParameters(parameters));
-	sendMessageWithAssertions(message);
+	sendMessageWithAssertions(message, timeout);
 
 	message = RECEIVED_MESSAGES.get(uniqueMessageId(message.getProviderId()));
 	assertNotNull(message);
@@ -86,10 +104,19 @@ public abstract class AbstractMessagingTest {
 
    @Test
    public void bytesMessage() throws InterruptedException, MessagingException {
+	_bytesMessage(-1);
+   }
+   
+   @Test
+   public void bytesMessageWithTimeout() throws InterruptedException, MessagingException {
+	_bytesMessage(3000);
+   }
+   
+   protected void _bytesMessage(long timeout) throws InterruptedException, MessagingException {
 	Map<String, Object> parameters = buildParameters(new HashMap<String, Object>());
 	parameters.put("kind", "bytes");
 	Message message = new BytesMessage(MESSAGE_BINARY_TEST, buildParameters(parameters));
-	sendMessageWithAssertions(message);
+	sendMessageWithAssertions(message, timeout);
 
 	message = RECEIVED_MESSAGES.get(uniqueMessageId(message.getProviderId()));
 	assertNotNull(message);
@@ -103,10 +130,19 @@ public abstract class AbstractMessagingTest {
 
    @Test
    public void textMessage() throws InterruptedException, MessagingException {
+	_textMessage(-1);
+   }
+   
+   @Test
+   public void textMessageWithTimeout() throws InterruptedException, MessagingException {
+	_textMessage(3000);
+   }   
+   
+   protected void _textMessage(long timeout) throws InterruptedException, MessagingException {
 	Map<String, Object> parameters = buildParameters(new HashMap<String, Object>());
 	parameters.put("kind", "text");
 	Message message = new TextMessage(MESSAGE_TEXT_BODY_TEST, buildParameters(parameters));
-	sendMessageWithAssertions(message);
+	sendMessageWithAssertions(message, timeout);
 
 	message = RECEIVED_MESSAGES.get(uniqueMessageId(message.getProviderId()));
 	assertNotNull(message);
@@ -118,9 +154,13 @@ public abstract class AbstractMessagingTest {
 	assertEquals("text", message.getParameters().get("kind"));
    }
 
-   private void sendMessageWithAssertions(final Message msg) throws InterruptedException, MessagingException {
+   private void sendMessageWithAssertions(final Message msg, long timeout) throws InterruptedException, MessagingException {
 	assertNotNull(producer);
-	producer.send(msg);
+	if (timeout <=0) {
+	   producer.send(msg);
+	} else {
+	   producer.send(msg, timeout);
+	}
 	assertNotNull(msg.getProviderId());
 
 	// wait the message consummation
