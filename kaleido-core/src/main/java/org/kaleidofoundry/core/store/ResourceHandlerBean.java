@@ -24,11 +24,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.Serializable;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+
+import javax.persistence.Transient;
 
 import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.io.IOHelper;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
+import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
 
 /**
@@ -38,15 +43,43 @@ import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
  */
 @Immutable
 @NotThreadSafe
-class ResourceHandlerBean implements ResourceHandler {
+class ResourceHandlerBean implements ResourceHandler, Serializable {
 
-   private final AbstractFileStore store;
+   private static final long serialVersionUID = 1L;
+
+   @Transient
+   private final transient AbstractFileStore store;
+
    private final String resourceUri;
-   private final InputStream input;
    private long lastModified;
    private String mimeType;
 
    private boolean closed;
+
+   private final byte[] bytes;
+   private final String text;
+
+   @Transient
+   private transient InputStream input;
+   @Transient
+   private transient Reader reader;
+
+   /**
+    * @param store
+    * @param resourceUri
+    * @param datas
+    */
+   ResourceHandlerBean(final AbstractFileStore store, final String resourceUri, @NotNull final byte[] content) {
+	this.store = store;
+	this.resourceUri = resourceUri;
+	input = null;
+	text = null;
+	reader = null;
+	bytes = content;
+	closed = false;
+	lastModified = 0;
+
+   }
 
    /**
     * @param store
@@ -54,8 +87,15 @@ class ResourceHandlerBean implements ResourceHandler {
     * @param input
     * @throws UnsupportedEncodingException default text encoding is UTF-8
     */
-   ResourceHandlerBean(final AbstractFileStore store, final String resourceUri, final String input) throws UnsupportedEncodingException {
-	this(store, resourceUri, new ByteArrayInputStream(input.getBytes(store.context.getString(Charset, DEFAULT_CHARSET.getCode()))));
+   ResourceHandlerBean(final AbstractFileStore store, final String resourceUri, @NotNull final String content) {
+	this.store = store;
+	this.resourceUri = resourceUri;
+	input = null;
+	text = content;
+	reader = null;
+	bytes = null;
+	closed = false;
+	lastModified = 0;
    }
 
    /**
@@ -67,6 +107,9 @@ class ResourceHandlerBean implements ResourceHandler {
 	this.store = store;
 	this.resourceUri = resourceUri;
 	this.input = input;
+	text = null;
+	reader = null;
+	bytes = null;
 	closed = false;
 	lastModified = 0;
    }
@@ -78,18 +121,45 @@ class ResourceHandlerBean implements ResourceHandler {
 
    @Override
    public InputStream getInputStream() {
-	return input;
+
+	if (input != null) {
+	   return input;
+	} else if (bytes != null) {
+	   input = new ByteArrayInputStream(bytes);
+	   return input;
+	} else {
+	   String charset = store.context.getString(Charset, DEFAULT_CHARSET.getCode());
+	   try {
+		input = new ByteArrayInputStream(text.getBytes(charset));
+		return input;
+	   } catch (UnsupportedEncodingException uee) {
+		throw new IllegalStateException("Invalid charset encoding " + charset, uee);
+	   }
+	}
+
    }
 
    @Override
    public byte[] getBytes() throws ResourceException {
-	try {
-	   return IOHelper.toByteArray(getInputStream());
-	} catch (final IOException ioe) {
-	   throw new ResourceException(ioe, resourceUri);
-	} finally {
-	   // free resource handler
-	   close();
+
+	if (bytes != null) {
+	   return bytes;
+	} else if (text != null) {
+	   String charset = store.context.getString(Charset, DEFAULT_CHARSET.getCode());
+	   try {
+		return text.getBytes(charset);
+	   } catch (UnsupportedEncodingException uee) {
+		throw new IllegalStateException("Invalid charset encoding " + charset, uee);
+	   }
+	} else {
+	   try {
+		return IOHelper.toByteArray(input);
+	   } catch (final IOException ioe) {
+		throw new ResourceException(ioe, resourceUri);
+	   } finally {
+		// free resource handler
+		close();
+	   }
 	}
    }
 
@@ -100,49 +170,68 @@ class ResourceHandlerBean implements ResourceHandler {
 
    @Override
    public Reader getReader(final String charset) throws ResourceException {
-	try {
-	   return new InputStreamReader(getInputStream(), charset);
-	} catch (final IOException ioe) {
-	   throw new ResourceException(ioe, resourceUri);
+
+	if (reader != null) {
+	   return reader;
+	} else if (text != null) {
+	   reader = new StringReader(text);
+	   return reader;
+	} else {
+	   try {
+		reader = new InputStreamReader(getInputStream(), charset);
+		return reader;
+	   } catch (final IOException ioe) {
+		throw new ResourceException(ioe, resourceUri);
+	   }
 	}
    }
 
    @Override
    public String getText() throws ResourceException {
-	return getText(store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
+
+	if (text != null) {
+	   return text;
+	} else {
+	   return getText(store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
+	}
    }
 
    @Override
    public String getText(final String charset) throws ResourceException {
-	BufferedReader reader = null;
-	String inputLine;
 
-	try {
-	   final StringBuilder stb = new StringBuilder();
-	   reader = new BufferedReader(getReader(charset));
-	   while ((inputLine = reader.readLine()) != null) {
-		stb.append(inputLine.trim()).append("\n");
-	   }
-	   if (stb.length() <= 0) {
-		return "";
-	   } else {
-		return stb.toString().substring(0, stb.length() - 1);
-	   }
+	if (text != null) {
+	   return text;
+	} else {
+	   BufferedReader reader = null;
+	   String inputLine;
 
-	} catch (final IOException ioe) {
-	   throw new ResourceException(ioe, resourceUri);
-	} finally {
-	   // free buffered reader
 	   try {
-		if (reader != null) {
-		   reader.close();
+		final StringBuilder stb = new StringBuilder();
+		reader = new BufferedReader(getReader(charset));
+		while ((inputLine = reader.readLine()) != null) {
+		   stb.append(inputLine.trim()).append("\n");
 		}
-	   } catch (final IOException ioe) {
-		throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.inputstream.close.error", ioe.getMessage(), ioe), ioe);
-	   }
+		if (stb.length() <= 0) {
+		   return "";
+		} else {
+		   return stb.toString().substring(0, stb.length() - 1);
+		}
 
-	   // free resource handler
-	   close();
+	   } catch (final IOException ioe) {
+		throw new ResourceException(ioe, resourceUri);
+	   } finally {
+		// free buffered reader
+		try {
+		   if (reader != null) {
+			reader.close();
+		   }
+		} catch (final IOException ioe) {
+		   throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.inputstream.close.error", ioe.getMessage(), ioe), ioe);
+		}
+
+		// free resource handler
+		close();
+	   }
 	}
    }
 
@@ -152,7 +241,21 @@ class ResourceHandlerBean implements ResourceHandler {
 	   try {
 		input.close();
 		closed = true;
-		store.unregisterResource(resourceUri);
+		if (store != null) {
+		   store.unregisterOpenedResource(resourceUri);
+		}
+	   } catch (final IOException ioe) {
+		throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.inputstream.close.error", ioe.getMessage(), ioe), ioe);
+	   }
+	}
+
+	if (reader != null && !closed) {
+	   try {
+		reader.close();
+		closed = true;
+		if (store != null) {
+		   store.unregisterOpenedResource(resourceUri);
+		}
 	   } catch (final IOException ioe) {
 		throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.inputstream.close.error", ioe.getMessage(), ioe), ioe);
 	   }

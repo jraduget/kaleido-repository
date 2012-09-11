@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -157,7 +157,7 @@ public class StringHelperTest extends Assert {
 
    @Test
    public void unsplit() {
-	assertNull(StringHelper.unsplit("", (String[]) null));
+	assertNull(StringHelper.unsplit("", (Object[]) null));
 	assertEquals("a", StringHelper.unsplit("-", "a"));
 	assertEquals("a-b", StringHelper.unsplit("-", "a", "b"));
 	assertEquals("a-b-c", StringHelper.unsplit("-", "a", "b", "c"));

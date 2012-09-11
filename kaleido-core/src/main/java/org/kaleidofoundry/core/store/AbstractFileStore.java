@@ -24,19 +24,20 @@ import static org.kaleidofoundry.core.store.FileStoreContextBuilder.Readonly;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.SleepTimeBeforeRetryOnFailure;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.UseCaches;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLConnection;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.io.MimeTypeResolverFactory;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
@@ -57,6 +58,7 @@ import org.slf4j.LoggerFactory;
  * @author Jerome RADUGET
  */
 @Immutable
+@Task(comment = "Caching resources, configureable ")
 public abstract class AbstractFileStore implements FileStore {
 
    /** default fileStore logger */
@@ -66,7 +68,9 @@ public abstract class AbstractFileStore implements FileStore {
 
    protected final String baseUri;
 
-   protected final ConcurrentHashMap<String, ResourceHandler> openResources;
+   protected final ConcurrentHashMap<String, ResourceHandler> openedResources;
+
+   protected final Cache<String, ResourceHandler> resourcesByUri;
 
    /**
     * runtime context injection by constructor<br/>
@@ -97,7 +101,9 @@ public abstract class AbstractFileStore implements FileStore {
 
 	this.context = context;
 	this.baseUri = baseUri;
-	openResources = new ConcurrentHashMap<String, ResourceHandler>();
+	openedResources = new ConcurrentHashMap<String, ResourceHandler>();
+
+	resourcesByUri = null;
 
 	// register the file store instance
 	FileStoreFactory.getRegistry().put(getBaseUri(), this);
@@ -110,7 +116,8 @@ public abstract class AbstractFileStore implements FileStore {
    AbstractFileStore() {
 	context = null;
 	baseUri = null;
-	openResources = new ConcurrentHashMap<String, ResourceHandler>();
+	resourcesByUri = null;
+	openedResources = new ConcurrentHashMap<String, ResourceHandler>();
    }
 
    /**
@@ -202,20 +209,25 @@ public abstract class AbstractFileStore implements FileStore {
    @Override
    public ResourceHandler createResourceHandler(final String resourceUri, final InputStream input) {
 	ResourceHandler resource = new ResourceHandlerBean(this, resourceUri, input);
-	openResources.put(resourceUri, resource);
+	openedResources.put(resourceUri, resource);
 	return resource;
    }
 
    @Override
-   public ResourceHandler createResourceHandler(final String resourceUri, final String content) throws UnsupportedEncodingException {
+   public ResourceHandler createResourceHandler(final String resourceUri, final String content) {
 	ResourceHandler resource = new ResourceHandlerBean(this, resourceUri, content);
-	openResources.put(resourceUri, resource);
+	return resource;
+   }
+
+   @Override
+   public ResourceHandler createResourceHandler(final String resourceUri, final byte[] content) {
+	ResourceHandler resource = new ResourceHandlerBean(this, resourceUri, content);
 	return resource;
    }
 
    @Override
    public FileStore closeAll() {
-	for (ResourceHandler resourceHandler : openResources.values()) {
+	for (ResourceHandler resourceHandler : openedResources.values()) {
 	   resourceHandler.close();
 	}
 	return this;
@@ -227,8 +239,8 @@ public abstract class AbstractFileStore implements FileStore {
     * @param resource
     * @see ResourceHandler#close()
     */
-   void unregisterResource(final ResourceHandler resource) {
-	unregisterResource(resource.getResourceUri());
+   void unregisterOpenedResource(final ResourceHandler resource) {
+	unregisterOpenedResource(resource.getResourceUri());
    }
 
    /**
@@ -237,8 +249,8 @@ public abstract class AbstractFileStore implements FileStore {
     * @param resourceUri
     * @see ResourceHandler#close()
     */
-   void unregisterResource(final String resourceUri) {
-	openResources.remove(resourceUri);
+   void unregisterOpenedResource(final String resourceUri) {
+	openedResources.remove(resourceUri);
    }
 
    /*
@@ -462,7 +474,7 @@ public abstract class AbstractFileStore implements FileStore {
     */
    @Override
    public FileStore store(final String resourceRelativePath, final byte[] resourceContent) throws ResourceException {
-	return store(resourceRelativePath, new ByteArrayInputStream(resourceContent));
+	return store(createResourceHandler(resourceRelativePath, resourceContent));
    }
 
    /*

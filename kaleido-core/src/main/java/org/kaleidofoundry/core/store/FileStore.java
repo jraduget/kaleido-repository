@@ -173,6 +173,13 @@ public interface FileStore extends Store<String, ResourceHandler> {
 
    /**
     * @param resourceUri
+    * @param content resource content
+    * @return new resource handler
+    */
+   ResourceHandler createResourceHandler(final String resourceUri, final byte[] content);
+
+   /**
+    * @param resourceUri
     * @param input
     * @return new resource handler
     */
@@ -180,7 +187,7 @@ public interface FileStore extends Store<String, ResourceHandler> {
 
    /**
     * @param resourceUri
-    * @param content
+    * @param content resource content
     * @return new resource handler
     * @throws UnsupportedEncodingException
     */

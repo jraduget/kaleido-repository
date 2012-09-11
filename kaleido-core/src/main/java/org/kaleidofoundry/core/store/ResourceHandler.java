@@ -19,6 +19,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.Serializable;
 import java.net.URI;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
@@ -26,14 +27,13 @@ import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
 
 /**
  * A file resource handler<br/>
- * Once {@link FileStore} client have get a ({@link ResourceHandler}), you have to free it, by calling {@link #close()}<br/>
- * You'd better use {@link ResourceHandler} locally or with {@link ThreadLocal}, because instance will not be thread
- * safe (it handles an {@link InputStream})<br/>
+ * Once {@link FileStore} client had get a ({@link ResourceHandler}), you have to free it, by calling {@link #close()} <br/>
+ * Be careful, if you use {@link ResourceHandler#getInputStream()} : this class is not thread safe. Use a {@link ThreadLocal} to do this. <br/>
  * 
  * @author Jerome RADUGET
  */
 @NotThreadSafe
-public interface ResourceHandler {
+public interface ResourceHandler extends Serializable {
 
    /**
     * Get the identifier of the file content resource {@link URI}
