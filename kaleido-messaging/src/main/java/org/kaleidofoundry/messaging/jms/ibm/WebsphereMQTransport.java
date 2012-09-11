@@ -45,6 +45,8 @@ import com.ibm.mq.jms.MQConnectionFactory;
 import com.ibm.mq.jms.MQDestination;
 
 /**
+ * Websphere MQ transport layer
+ * 
  * @author Jerome RADUGET
  */
 @Declare(MessagingConstants.WMQ_TRANSPORT_PLUGIN)

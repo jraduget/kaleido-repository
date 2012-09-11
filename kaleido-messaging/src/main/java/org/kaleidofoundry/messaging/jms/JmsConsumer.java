@@ -188,7 +188,7 @@ public class JmsConsumer extends AbstractConsumer {
 			@SuppressWarnings("unchecked")
 			Enumeration<String> mapNames = mapMessage.getMapNames();
 			while (mapNames.hasMoreElements()) {
-			   String pname = (String) mapNames.nextElement();
+			   String pname = mapNames.nextElement();
 			   mapParameters.put(pname, mapMessage.getObject(pname));
 			}
 

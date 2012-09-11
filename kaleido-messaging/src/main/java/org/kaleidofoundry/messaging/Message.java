@@ -17,6 +17,9 @@ package org.kaleidofoundry.messaging;
 
 import java.util.Map;
 
+import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.lang.annotation.TaskLabel;
+
 /**
  * Interface used to produce / consume messages
  * 
@@ -26,9 +29,8 @@ import java.util.Map;
  * @see Producer
  * @see Consumer
  */
+@Task(comment="add uuid, timestamp (long), error destination, priority (int), expiration date (long)", labels=TaskLabel.Enhancement)
 public interface Message {
-
-   // TODO : add uuid, timestamp (long), error destination, priority (int), expiration date (long)   
    
    /**
     * @return internal provider id 

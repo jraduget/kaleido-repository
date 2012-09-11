@@ -33,6 +33,8 @@ import org.apache.activemq.command.ActiveMQDestination;
 import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.IllegalContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.lang.annotation.Task;
+import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.kaleidofoundry.messaging.DestinationEnum;
@@ -42,6 +44,8 @@ import org.kaleidofoundry.messaging.TransportException;
 import org.kaleidofoundry.messaging.jms.AbstractJmsTransport;
 
 /**
+ * Apache ActiveMQ transport layer 
+ * 
  * @author Jerome RADUGET
  */
 @Declare(MessagingConstants.AMQ_TRANSPORT_PLUGIN)
@@ -49,6 +53,7 @@ public class AmqTransport extends AbstractJmsTransport<ActiveMQConnectionFactory
 
    private final ActiveMQConnectionFactory activeMQConnectionFactory;
 
+   @Task(comment="use context to configure additional connection factory parameters", labels=TaskLabel.Enhancement)
    public AmqTransport(RuntimeContext<Transport> context) throws TransportException {
 	super(context);
 
@@ -59,7 +64,6 @@ public class AmqTransport extends AbstractJmsTransport<ActiveMQConnectionFactory
 		   context.getString(CONNECTION_FACTORY_PASSWORD));
 	}
 
-	// TODO use context to configure additional connection factory parameters
    }
 
    @Override
