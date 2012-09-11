@@ -75,6 +75,16 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td>charset to use with a text that we want to read or store</td>
  * </tr>
  * <tr>
+ * <td>caching</td>
+ * <td>all</td>
+ * <td>true|false it controls the caching of the store resources</td>
+ * </tr>
+ * <tr>
+ * <td>cacheManagerRef</td>
+ * <td>all</td>
+ * <td>the name of the custom cacheManager to use if you want to cache resources</td>
+ * </tr>
+ * <tr>
  * <td>classloader</td>
  * <td>classpath</td>
  * <td>the class name, to get the class loader to use</td>
@@ -198,6 +208,11 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
    public static final String Charset = "charset";
    /** property name for setting the class name, to get the class loader to use */
    public static final String Classloader = "classloader";
+   /** enable the caching of resources */
+   public static final String Caching = "caching";
+   /** if caching is enable - this property can be used to set the cache manager to use */
+   public static final String CacheManagerRef = "cacheManagerRef";
+
 
    // * jpa settings property name ****************
    /** class name of a custom file handler entity used in jpa store */
@@ -495,6 +510,25 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
 	getContextParameters().put(Classloader, classloader);
 	return this;
    }
+
+   /**
+    * @param caching
+    * @return set caching context parameter
+    */
+   public FileStoreContextBuilder withCaching(final String caching) {
+	getContextParameters().put(Caching, caching);
+	return this;
+   }
+
+   /**
+    * @param cacheManagerRef
+    * @return set cacheManagerRef context parameter
+    */
+   public FileStoreContextBuilder withCacheManagerRef(final String cacheManagerRef) {
+	getContextParameters().put(CacheManagerRef, cacheManagerRef);
+	return this;
+   }
+
 
    /**
     * @param method

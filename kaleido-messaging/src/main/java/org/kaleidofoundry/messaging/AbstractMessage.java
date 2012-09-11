@@ -33,7 +33,9 @@ public abstract class AbstractMessage implements Message {
 
    public AbstractMessage(final Map<String, Object> parameters) {	
 	this.parameters = new HashMap<String, Object>();
-	this.parameters.putAll(parameters);
+	if (parameters != null) {
+	   this.parameters.putAll(parameters);
+	}
    }
    
    public AbstractMessage(String correlationId, Map<String, Object> parameters) {

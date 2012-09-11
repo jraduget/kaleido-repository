@@ -172,6 +172,8 @@ public interface FileStore extends Store<String, ResourceHandler> {
    boolean isReadOnly();
 
    /**
+    * Create a resource handler from a raw bytes datas
+    * 
     * @param resourceUri
     * @param content resource content
     * @return new resource handler
@@ -179,6 +181,8 @@ public interface FileStore extends Store<String, ResourceHandler> {
    ResourceHandler createResourceHandler(final String resourceUri, final byte[] content);
 
    /**
+    * Create a resource handler from an inputstream
+    * 
     * @param resourceUri
     * @param input
     * @return new resource handler
@@ -186,12 +190,23 @@ public interface FileStore extends Store<String, ResourceHandler> {
    ResourceHandler createResourceHandler(final String resourceUri, final InputStream input);
 
    /**
+    * Create a resource handler that will use the file store charset encoding {@link FileStoreContextBuilder#Charset}
+    * 
     * @param resourceUri
     * @param content resource content
     * @return new resource handler
-    * @throws UnsupportedEncodingException
     */
-   ResourceHandler createResourceHandler(final String resourceUri, final String content) throws UnsupportedEncodingException;
+   ResourceHandler createResourceHandler(final String resourceUri, final String content);
+
+   /**
+    * Create a resource handler that will use a specific charset encoding
+    * 
+    * @param resourceUri
+    * @param content
+    * @param charset
+    * @return
+    */
+   ResourceHandler createResourceHandler(String resourceUri, String content, String charset);
 
    /**
     * close all opened resources, that have not been closed using {@link ResourceHandler#close()} <br/>
@@ -200,5 +215,6 @@ public interface FileStore extends Store<String, ResourceHandler> {
     * @return current instance of the store
     */
    FileStore closeAll();
+
 
 }

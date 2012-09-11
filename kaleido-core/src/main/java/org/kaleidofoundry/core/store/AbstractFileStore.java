@@ -17,6 +17,8 @@ package org.kaleidofoundry.core.store;
 
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.StoreMessageBundle;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.BaseUri;
+import static org.kaleidofoundry.core.store.FileStoreContextBuilder.CacheManagerRef;
+import static org.kaleidofoundry.core.store.FileStoreContextBuilder.Caching;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.ConnectTimeout;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.MaxRetryOnFailure;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.ReadTimeout;
@@ -31,6 +33,8 @@ import java.net.URLConnection;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.kaleidofoundry.core.cache.Cache;
+import org.kaleidofoundry.core.cache.CacheManager;
+import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.io.FileHelper;
@@ -58,7 +62,7 @@ import org.slf4j.LoggerFactory;
  * @author Jerome RADUGET
  */
 @Immutable
-@Task(comment = "Caching resources, configureable ")
+@Task(comment = "Caching resources")
 public abstract class AbstractFileStore implements FileStore {
 
    /** default fileStore logger */
@@ -103,7 +107,20 @@ public abstract class AbstractFileStore implements FileStore {
 	this.baseUri = baseUri;
 	openedResources = new ConcurrentHashMap<String, ResourceHandler>();
 
-	resourcesByUri = null;
+	// internal resource cache
+	if (context.getBoolean(Caching, false)) {
+	   final CacheManager cacheManager;
+	   final String cacheManagerContextRef = context.getString(CacheManagerRef);
+
+	   if (!StringHelper.isEmpty(cacheManagerContextRef)) {
+		cacheManager = CacheManagerFactory.provides(new RuntimeContext<CacheManager>(cacheManagerContextRef, CacheManager.class, context));
+	   } else {
+		cacheManager = CacheManagerFactory.provides();
+	   }
+	   resourcesByUri = cacheManager.getCache("kaleidofoundry/store/" + getBaseUri().replaceAll(":", ""));
+	} else {
+	   resourcesByUri = null;
+	}
 
 	// register the file store instance
 	FileStoreFactory.getRegistry().put(getBaseUri(), this);
@@ -220,6 +237,12 @@ public abstract class AbstractFileStore implements FileStore {
    }
 
    @Override
+   public ResourceHandler createResourceHandler(final String resourceUri, final String content, final String charset) {
+	ResourceHandler resource = new ResourceHandlerBean(this, resourceUri, content, charset);
+	return resource;
+   }
+
+   @Override
    public ResourceHandler createResourceHandler(final String resourceUri, final byte[] content) {
 	ResourceHandler resource = new ResourceHandlerBean(this, resourceUri, content);
 	return resource;
@@ -308,11 +331,24 @@ public abstract class AbstractFileStore implements FileStore {
 	int maxRetryCount = 1;
 	ResourceException lastError = null;
 
+	// get from cache if enabled
+	if (resourcesByUri != null && resourcesByUri.containsKey(resourceUri)) { return resourcesByUri.get(resourceUri); }
+
 	while (retryCount < maxRetryCount) {
 	   try {
 		// try to get the resource
 		final ResourceHandler in = doGet(URI.create(resourceUri));
 		if (in == null || in.getInputStream() == null) { throw new ResourceNotFoundException(resourceRelativePath); }
+		// put to cache if enabled
+		if (resourcesByUri != null) {
+		   final ResourceHandler cacheableResource = createResourceHandler(resourceUri, in.getBytes());
+		   if (cacheableResource instanceof ResourceHandlerBean) {
+			((ResourceHandlerBean) cacheableResource).setLastModified(in.getLastModified());
+			((ResourceHandlerBean) cacheableResource).setMimeType(in.getMimeType());
+			((ResourceHandlerBean) cacheableResource).setCharset(in.getCharset());
+		   }
+		   resourcesByUri.put(resourceUri, cacheableResource);
+		}
 		return in;
 	   } catch (final ResourceException rse) {
 		lastError = rse;
@@ -361,6 +397,11 @@ public abstract class AbstractFileStore implements FileStore {
 	int retryCount = 0;
 	int maxRetryCount = 1;
 	ResourceException lastError = null;
+
+	// invalidate cache entry
+	if (resourcesByUri != null && resourcesByUri.containsKey(resourceUri)) {
+	   resourcesByUri.remove(resourceUri);
+	}
 
 	while (retryCount < maxRetryCount) {
 	   try {
@@ -414,6 +455,11 @@ public abstract class AbstractFileStore implements FileStore {
 	int retryCount = 0;
 	int maxRetryCount = 1;
 	ResourceException lastError = null;
+
+	// invalidate cache entry
+	if (resourcesByUri != null && resourcesByUri.containsKey(resourceUri)) {
+	   resourcesByUri.remove(resourceUri);
+	}
 
 	while (retryCount < maxRetryCount) {
 	   try {

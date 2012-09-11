@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.kaleidofoundry.core.io.IOHelper;
 import org.kaleidofoundry.core.lang.NotNullException;
 
 /**
@@ -77,7 +76,7 @@ public abstract class AbstractFileStoreTest extends Assert {
 		resource = fileStore.get(uriToTest);
 		assertNotNull(resource);
 		assertNotNull(resource.getInputStream());
-		assertEquals(existingResources.get(uriToTest), IOHelper.toString(resource.getInputStream()));
+		assertEquals(existingResources.get(uriToTest), resource.getText());
 	   } finally {
 		if (resource != null) {
 		   resource.close();

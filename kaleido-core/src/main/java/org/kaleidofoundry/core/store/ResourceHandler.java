@@ -131,4 +131,9 @@ public interface ResourceHandler extends Serializable {
     */
    String getMimeType();
 
+   /**
+    * @return the charset of the resource. By default it will be the {@link FileStore} default charset
+    */
+   String getCharset();
+
 }

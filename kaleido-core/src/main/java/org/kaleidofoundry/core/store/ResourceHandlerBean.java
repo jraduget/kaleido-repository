@@ -35,6 +35,7 @@ import org.kaleidofoundry.core.io.IOHelper;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
+import org.kaleidofoundry.core.util.ObjectHelper;
 
 /**
  * Default {@link ResourceHandler} implementation
@@ -53,6 +54,7 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
    private final String resourceUri;
    private long lastModified;
    private String mimeType;
+   private String charset;
 
    private boolean closed;
 
@@ -102,6 +104,24 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
     * @param store
     * @param resourceUri
     * @param input
+    * @throws UnsupportedEncodingException default text encoding is UTF-8
+    */
+   ResourceHandlerBean(final AbstractFileStore store, final String resourceUri, @NotNull final String content, final String charset) {
+	this.store = store;
+	this.resourceUri = resourceUri;
+	input = null;
+	text = content;
+	this.charset = charset;
+	reader = null;
+	bytes = null;
+	closed = false;
+	lastModified = 0;
+   }
+
+   /**
+    * @param store
+    * @param resourceUri
+    * @param input
     */
    ResourceHandlerBean(final AbstractFileStore store, final String resourceUri, final InputStream input) {
 	this.store = store;
@@ -113,6 +133,7 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	closed = false;
 	lastModified = 0;
    }
+
 
    @Override
    public String getResourceUri() {
@@ -128,7 +149,7 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	   input = new ByteArrayInputStream(bytes);
 	   return input;
 	} else {
-	   String charset = store.context.getString(Charset, DEFAULT_CHARSET.getCode());
+	   String charset = ObjectHelper.firstNonNull(this.charset, store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
 	   try {
 		input = new ByteArrayInputStream(text.getBytes(charset));
 		return input;
@@ -145,7 +166,7 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	if (bytes != null) {
 	   return bytes;
 	} else if (text != null) {
-	   String charset = store.context.getString(Charset, DEFAULT_CHARSET.getCode());
+	   String charset = ObjectHelper.firstNonNull(this.charset, store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
 	   try {
 		return text.getBytes(charset);
 	   } catch (UnsupportedEncodingException uee) {
@@ -165,7 +186,8 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 
    @Override
    public Reader getReader() throws ResourceException {
-	return getReader(store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
+	String charset = ObjectHelper.firstNonNull(this.charset, store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
+	return getReader(charset);
    }
 
    @Override
@@ -192,7 +214,8 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	if (text != null) {
 	   return text;
 	} else {
-	   return getText(store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
+	   String charset = ObjectHelper.firstNonNull(this.charset, store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
+	   return getText(charset);
 	}
    }
 
@@ -278,6 +301,15 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 
    void setMimeType(final String mimeType) {
 	this.mimeType = mimeType;
+   }
+
+   @Override
+   public String getCharset() {
+	return charset;
+   }
+
+   void setCharset(final String charset) {
+	this.charset = charset;
    }
 
 }
