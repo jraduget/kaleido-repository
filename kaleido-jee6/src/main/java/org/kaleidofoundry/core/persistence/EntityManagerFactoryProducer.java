@@ -69,8 +69,8 @@ public class EntityManagerFactoryProducer {
 	String defaultPersistenceUnit;
 	PersistenceUnit persistenceUnit;
 
-	// try CDI bean name
-	defaultPersistenceUnit = injectionPoint.getBean().getName();
+	// try CDI bean name	
+	defaultPersistenceUnit = injectionPoint.getBean() != null ? injectionPoint.getBean().getName() : null;	
 
 	// try field / method name
 	if (StringHelper.isEmpty(defaultPersistenceUnit)) {

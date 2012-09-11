@@ -43,7 +43,7 @@ public class I18nMessagesProducer extends I18nMessagesProvider {
 	String defaultName;
 
 	// try CDI bean name
-	defaultName = injectionPoint.getBean().getName();
+	defaultName = injectionPoint.getBean() != null ? injectionPoint.getBean().getName() : null;
 
 	// try field / method name
 	if (StringHelper.isEmpty(defaultName)) {

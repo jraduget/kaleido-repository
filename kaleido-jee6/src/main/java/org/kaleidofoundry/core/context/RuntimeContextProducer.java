@@ -62,7 +62,7 @@ public class RuntimeContextProducer {
 	final Class runtimeContextType = injectionPoint.getBean().getBeanClass();
 
 	// try CDI bean name
-	defaultName = injectionPoint.getBean().getName();
+	defaultName = injectionPoint.getBean() != null ? injectionPoint.getBean().getName() : null;
 
 	// try field / method name
 	if (StringHelper.isEmpty(defaultName)) {

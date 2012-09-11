@@ -42,9 +42,9 @@ public class NamingServiceProducer extends NamingServiceProvider {
 	Context context;
 	String defaultName;
 
-	// try CDI bean name
-	defaultName = injectionPoint.getBean().getName();
-
+	// try CDI bean name	
+	defaultName = injectionPoint.getBean() != null ? injectionPoint.getBean().getName() : null;
+	
 	// try field / method name
 	if (StringHelper.isEmpty(defaultName)) {
 	   defaultName = injectionPoint.getMember().getName();
