@@ -16,6 +16,7 @@
 package org.kaleidofoundry.core.store;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -75,7 +76,9 @@ public abstract class AbstractFileStoreTest extends Assert {
 	   try {
 		resource = fileStore.get(uriToTest);
 		assertNotNull(resource);
-		assertNotNull(resource.getInputStream());
+		InputStream in = resource.getInputStream();
+		assertNotNull(in);
+		assertSame(in, resource.getInputStream());
 		assertEquals(existingResources.get(uriToTest), resource.getText());
 	   } finally {
 		if (resource != null) {

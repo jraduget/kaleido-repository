@@ -64,9 +64,9 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
    private final String text;
 
    @Transient
-   private final transient InputStream input;
+   private transient InputStream input;
    @Transient
-   private final transient Reader reader;
+   private transient Reader reader;
 
    /**
     * @param store
@@ -148,11 +148,13 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	if (input != null) {
 	   return input;
 	} else if (bytes != null) {
-	   return new ByteArrayInputStream(bytes);
+	   input = new ByteArrayInputStream(bytes);
+	   return input;
 	} else {
 	   String charset = ObjectHelper.firstNonNull(this.charset, store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
 	   try {
-		return new ByteArrayInputStream(text.getBytes(charset));
+		input = new ByteArrayInputStream(text.getBytes(charset));
+		return input;
 	   } catch (UnsupportedEncodingException uee) {
 		throw new IllegalStateException("Invalid charset encoding " + charset, uee);
 	   }
@@ -196,10 +198,12 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	if (reader != null) {
 	   return reader;
 	} else if (text != null) {
-	   return new StringReader(text);
+	   reader = new StringReader(text);
+	   return reader;
 	} else {
 	   try {
-		return new InputStreamReader(getInputStream(), charset);
+		reader = new InputStreamReader(getInputStream(), charset);
+		return reader;
 	   } catch (final IOException ioe) {
 		throw new ResourceException(ioe, resourceUri);
 	   }
@@ -310,4 +314,8 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	this.charset = charset;
    }
 
+   // only used by for cacheable resource handler
+   void setInputStream(final InputStream inputStream) {
+	input = inputStream;
+   }
 }

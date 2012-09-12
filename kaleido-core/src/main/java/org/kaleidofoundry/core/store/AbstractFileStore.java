@@ -26,6 +26,7 @@ import static org.kaleidofoundry.core.store.FileStoreContextBuilder.Readonly;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.SleepTimeBeforeRetryOnFailure;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.UseCaches;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -250,6 +251,24 @@ public abstract class AbstractFileStore implements FileStore {
 	return resource;
    }
 
+   /**
+    * creates a new resource handler for caching purposes.<br/>
+    * the input and output resource handler, will sharing the same bytes data,<br/>
+    * but the new one will have a dedicated inputStream / reader to avoid thread share problem between users
+    * 
+    * @param resourceHandler
+    * @return
+    * @throws ResourceException
+    */
+   protected ResourceHandler createCacheableResourceHandler(final ResourceHandler resourceHandler) throws ResourceException {
+	ResourceHandlerBean cacheableResource = new ResourceHandlerBean(this, resourceHandler.getResourceUri(), resourceHandler.getBytes());
+	cacheableResource.setLastModified(resourceHandler.getLastModified());
+	cacheableResource.setMimeType(resourceHandler.getMimeType());
+	cacheableResource.setCharset(resourceHandler.getCharset());
+	cacheableResource.setInputStream(new ByteArrayInputStream(resourceHandler.getBytes()));
+	return cacheableResource;
+   }
+
    @Override
    public FileStore closeAll() {
 	for (ResourceHandler resourceHandler : openedResources.values()) {
@@ -335,8 +354,8 @@ public abstract class AbstractFileStore implements FileStore {
 
 	// get from cache if enabled
 	if (resourcesByUri != null && resourcesByUri.containsKey(resourceUri)) {
-	   //
-	   return resourcesByUri.get(resourceUri);
+	   // create a new resourceHandler sharing same bytes data, but with a specific user inputStream / reader
+	   return createCacheableResourceHandler(resourcesByUri.get(resourceUri));
 	}
 
 	while (retryCount < maxRetryCount) {

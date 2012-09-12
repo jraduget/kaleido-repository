@@ -30,10 +30,14 @@
 			<property name="eclipselink.logging.thread" value="false" />
 			
 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+			<property name="eclipselink.ddl-generation.output-mode" value="database" />
+			<!-- 
+			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
 			<property name="eclipselink.ddl-generation.output-mode" value="both" />
 			<property name="eclipselink.application-location" value="src/main/scripts/" />
 			<property name="eclipselink.drop-ddl-jdbc-file-name" value="dropSchema-derby.sql" />
 			<property name="eclipselink.create-ddl-jdbc-file-name" value="createSchema-derby.sql" />
+			 -->
 		</properties>
 
 	</persistence-unit>
