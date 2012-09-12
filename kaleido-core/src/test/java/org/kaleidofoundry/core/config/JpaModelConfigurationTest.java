@@ -23,9 +23,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.kaleidofoundry.core.config.entity.ConfigurationModel;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
 import org.kaleidofoundry.core.context.RuntimeContext;
@@ -44,20 +42,8 @@ public class JpaModelConfigurationTest extends AbstractConfigurationTest {
    protected static final String MyConfigurationName = "jpaModelConfig";
    protected static final String MyConfigurationUri = "memory:/config/test.model";
 
-   protected static EntityManagerFactory emf;
    protected EntityManager em;
-
-   @BeforeClass
-   public static void init() {
-	// memorize entity manager factory in order to clean it up at end of tests
-	emf = UnmanagedEntityManagerFactory.getEntityManagerFactory();
-
-   }
-
-   @AfterClass
-   public static void destroy() {
-	UnmanagedEntityManagerFactory.close(emf);
-   }
+   protected EntityManagerFactory emf;
 
    /**
     * create a database with mocked data
@@ -71,12 +57,14 @@ public class JpaModelConfigurationTest extends AbstractConfigurationTest {
 
 	try {
 
+	   // memorize entity manager factory in order to clean it up at end of tests
+	   emf = UnmanagedEntityManagerFactory.getEntityManagerFactory();
+
 	   // current entity manager
 	   em = UnmanagedEntityManagerFactory.currentEntityManager();
 
 	   // begin transaction
 	   em.getTransaction().begin();
-
 
 	   // create configuration meta model
 	   ConfigurationModel configurationModel = new ConfigurationModel();
@@ -128,7 +116,7 @@ public class JpaModelConfigurationTest extends AbstractConfigurationTest {
 		UnmanagedEntityManagerFactory.close(em);
 	   }
 	} finally {
-	   // UnmanagedEntityManagerFactory.close(emf);
+	   UnmanagedEntityManagerFactory.close(emf);
 	}
 
 	super.cleanup();
