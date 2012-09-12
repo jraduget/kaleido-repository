@@ -21,11 +21,15 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.entity.ConfigurationModel;
+import org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Query_FindAllConfiguration;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
 import org.kaleidofoundry.core.lang.label.Labels;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
@@ -46,7 +50,20 @@ public class ConfigurationManager01Test extends AbstractConfigurationManagerTest
    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationManager01Test.class);
 
    protected EntityManager em;
-   protected EntityManagerFactory emf;
+   protected static EntityManagerFactory emf;
+
+   @BeforeClass
+   public static void init() {
+	// memorize entity manager factory in order to clean it up at end of tests
+	emf = UnmanagedEntityManagerFactory.getEntityManagerFactory();
+
+   }
+
+   @AfterClass
+   public static void destroy() {
+	UnmanagedEntityManagerFactory.close(emf);
+   }
+
 
    /**
     * create a database with mocked data
@@ -56,14 +73,18 @@ public class ConfigurationManager01Test extends AbstractConfigurationManagerTest
 
 	try {
 
-	   // memorize entity manager factory in order to clean it up at end of tests
-	   emf = UnmanagedEntityManagerFactory.getEntityManagerFactory();
-
 	   // current entity manager
 	   em = UnmanagedEntityManagerFactory.currentEntityManager();
 
 	   // begin transaction
 	   em.getTransaction().begin();
+
+	   // remove all configuration entries
+	   Query query = em.createQuery(Query_FindAllConfiguration.Jql);
+	   for (Object model : query.getResultList()) {
+		em.remove(model);
+	   }
+	   em.flush();
 
 	   // create configuration meta model
 	   ConfigurationModel configurationModel = new ConfigurationModel();
@@ -101,7 +122,7 @@ public class ConfigurationManager01Test extends AbstractConfigurationManagerTest
 		UnmanagedEntityManagerFactory.close(em);
 	   }
 	} finally {
-	   UnmanagedEntityManagerFactory.close(emf);
+	   // UnmanagedEntityManagerFactory.close(emf);
 	}
    }
 

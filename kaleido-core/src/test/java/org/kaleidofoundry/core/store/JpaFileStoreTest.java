@@ -21,9 +21,12 @@ import java.util.Calendar;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.io.MimeTypeResolverFactory;
@@ -39,17 +42,28 @@ public class JpaFileStoreTest extends AbstractFileStoreTest {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(JpaFileStoreTest.class);
 
-   private EntityManagerFactory emf;
+   private static EntityManagerFactory emf;
    private EntityManager em;
    private EntityTransaction transaction;
+
+   @BeforeClass
+   public static void init() {
+	// memorize entity manager factory in order to clean it up at end of tests
+	emf = UnmanagedEntityManagerFactory.getEntityManagerFactory();
+
+   }
+
+   @AfterClass
+   public static void destroy() {
+	UnmanagedEntityManagerFactory.close(emf);
+   }
 
    @Before
    @Override
    public void setup() throws Throwable {
 
 	try {
-	   // jpa entity manager configuration (default kaleido)
-	   emf = UnmanagedEntityManagerFactory.getEntityManagerFactory();
+
 	   // emf = UnmanagedEntityManagerFactory.getEntityManagerFactory("kaleido-core-derby-oracle");
 	   em = UnmanagedEntityManagerFactory.currentEntityManager();
 
@@ -60,6 +74,13 @@ public class JpaFileStoreTest extends AbstractFileStoreTest {
 	   // begin transaction
 	   transaction = em.getTransaction();
 	   transaction.begin();
+
+	   // 0. remove all resource entries
+	   Query query = em.createQuery("SELECT r FROM  FileStore r");
+	   for (Object model : query.getResultList()) {
+		em.remove(model);
+	   }
+	   em.flush();
 
 	   // 1. existing resources (to get) - create mocked entity for the get test
 	   final ResourceHandlerEntity entityToGet = new ResourceHandlerEntity();
@@ -129,7 +150,6 @@ public class JpaFileStoreTest extends AbstractFileStoreTest {
 	   }
 	} finally {
 	   UnmanagedEntityManagerFactory.closeItSilently(em);
-	   UnmanagedEntityManagerFactory.closeItSilently(emf);
 	}
    }
 }

@@ -19,7 +19,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.entity.ConfigurationModel;
 import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
@@ -38,16 +40,25 @@ public class ConfigurationManager03Test extends AbstractConfigurationManagerTest
    }
 
    protected EntityManager em;
-   protected EntityManagerFactory emf;
+   protected static EntityManagerFactory emf;
+
+   @BeforeClass
+   public static void init() {
+	// memorize entity manager factory in order to clean it up at end of tests
+	emf = UnmanagedEntityManagerFactory.getEntityManagerFactory();
+
+   }
+
+   @AfterClass
+   public static void destroy() {
+	UnmanagedEntityManagerFactory.close(emf);
+   }
 
    @Before
    public void setup() throws ResourceException {
 
 	// register configuration
 	ConfigurationFactory.provides(MyConfigurationName, MyConfigurationUri);
-
-	// memorize entity manager factory in order to clean it up at end of tests
-	emf = UnmanagedEntityManagerFactory.getEntityManagerFactory();
 
 	// current entity manager
 	em = UnmanagedEntityManagerFactory.currentEntityManager();
@@ -69,7 +80,7 @@ public class ConfigurationManager03Test extends AbstractConfigurationManagerTest
 		UnmanagedEntityManagerFactory.close(em);
 	   }
 	} finally {
-	   UnmanagedEntityManagerFactory.close(emf);
+	   // UnmanagedEntityManagerFactory.close(emf);
 	}
    }
 
