@@ -70,12 +70,10 @@ public class EhCacheManagerImpl extends AbstractCacheManager {
 
 	try {
 	   if (StringHelper.isEmpty(configuration)) {
-		LOGGER.info(CacheMessageBundle.getMessage("cachemanager.loading.default", getMetaInformations(), DefaultCacheConfiguration));
 		ehCacheManager = new CacheManager();
 		if (ehCacheManager == null) { throw newCacheException("cache.configuration.notfound", new String[] { EhCacheManagerPluginName,
 			DefaultCacheConfiguration }); }
 	   } else {
-		LOGGER.info(CacheMessageBundle.getMessage("cachemanager.loading.custom", getMetaInformations(), configuration));
 		final InputStream inConf = getConfiguration(configuration);
 		if (inConf != null) {
 		   ehCacheManager = new CacheManager(inConf);

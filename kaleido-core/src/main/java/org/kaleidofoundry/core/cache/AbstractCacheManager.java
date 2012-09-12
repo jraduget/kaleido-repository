@@ -18,6 +18,7 @@ package org.kaleidofoundry.core.cache;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.Classloader;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreRef;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreUri;
+import static org.kaleidofoundry.core.i18n.InternalBundleHelper.CacheMessageBundle;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,6 +43,7 @@ import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Nullable;
 import org.kaleidofoundry.core.store.FileStore;
+import org.kaleidofoundry.core.store.FileStoreContextBuilder;
 import org.kaleidofoundry.core.store.FileStoreFactory;
 import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceNotFoundException;
@@ -94,6 +96,7 @@ public abstract class AbstractCacheManager implements CacheManager {
 
 	// no need of configuration
 	if (forcedConfiguration == null && StringHelper.isEmpty(context.getString(FileStoreUri))) {
+	   LOGGER.info(CacheMessageBundle.getMessage("cachemanager.loading.default", getMetaInformations(), getDefaultConfiguration()));
 	   singleFileStore = null;
 	}
 	// configuration is given
@@ -101,14 +104,22 @@ public abstract class AbstractCacheManager implements CacheManager {
 
 	   final String fileStoreRef = context.getString(FileStoreRef);
 	   final FileStore fileStore;
-	   final String fileStoreUri = StringHelper.isEmpty(forcedConfiguration) ? context.getString(FileStoreUri) : forcedConfiguration;
+	   String fileStoreUri = StringHelper.isEmpty(forcedConfiguration) ? context.getString(FileStoreUri) : forcedConfiguration;
 
 	   try {
 		if (!StringHelper.isEmpty(fileStoreRef)) {
-		   fileStore = FileStoreFactory.provides(fileStoreUri, new RuntimeContext<FileStore>(fileStoreRef, FileStore.class, context));
+		   RuntimeContext<FileStore> fileStoreContext = new RuntimeContext<FileStore>(fileStoreRef, FileStore.class, context);
+		   String baseUri = fileStoreContext.getString(FileStoreContextBuilder.BaseUri);
+		   if (!fileStoreUri.contains(baseUri)) {
+			fileStoreUri = baseUri + fileStoreUri;
+		   }
+		   fileStore = FileStoreFactory.provides(baseUri, fileStoreContext);
 		} else {
 		   fileStore = FileStoreFactory.provides(fileStoreUri);
 		}
+
+		LOGGER.info(CacheMessageBundle.getMessage("cachemanager.loading.custom", getMetaInformations(), fileStoreUri));
+
 		singleFileStore = new SingleFileStore(fileStoreUri, fileStore);
 	   } catch (final ProviderException pe) {
 		if (pe.getCause() instanceof ResourceNotFoundException) { throw new CacheConfigurationNotFoundException("cache.configuration.notfound",

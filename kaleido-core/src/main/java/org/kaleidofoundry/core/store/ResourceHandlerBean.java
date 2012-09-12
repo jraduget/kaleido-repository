@@ -38,12 +38,14 @@ import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
 import org.kaleidofoundry.core.util.ObjectHelper;
 
 /**
- * Default {@link ResourceHandler} implementation
+ * Default {@link ResourceHandler} implementation <br/>
+ * If the class is built using constructor with a {@link Reader} or an {@link InputStream}, the instance will not be thread safe ! <br/>
+ * If the class is built with the raw data of the resource, there is no problem.
  * 
  * @author Jerome RADUGET
  */
 @Immutable
-@NotThreadSafe
+@NotThreadSafe(comment = "for the instances built by calling constructor with an inputstream or a reader")
 class ResourceHandlerBean implements ResourceHandler, Serializable {
 
    private static final long serialVersionUID = 1L;
@@ -62,9 +64,9 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
    private final String text;
 
    @Transient
-   private transient InputStream input;
+   private final transient InputStream input;
    @Transient
-   private transient Reader reader;
+   private final transient Reader reader;
 
    /**
     * @param store
@@ -146,13 +148,11 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	if (input != null) {
 	   return input;
 	} else if (bytes != null) {
-	   input = new ByteArrayInputStream(bytes);
-	   return input;
+	   return new ByteArrayInputStream(bytes);
 	} else {
 	   String charset = ObjectHelper.firstNonNull(this.charset, store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
 	   try {
-		input = new ByteArrayInputStream(text.getBytes(charset));
-		return input;
+		return new ByteArrayInputStream(text.getBytes(charset));
 	   } catch (UnsupportedEncodingException uee) {
 		throw new IllegalStateException("Invalid charset encoding " + charset, uee);
 	   }
@@ -196,12 +196,10 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	if (reader != null) {
 	   return reader;
 	} else if (text != null) {
-	   reader = new StringReader(text);
-	   return reader;
+	   return new StringReader(text);
 	} else {
 	   try {
-		reader = new InputStreamReader(getInputStream(), charset);
-		return reader;
+		return new InputStreamReader(getInputStream(), charset);
 	   } catch (final IOException ioe) {
 		throw new ResourceException(ioe, resourceUri);
 	   }

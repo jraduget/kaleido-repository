@@ -66,12 +66,10 @@ public class InfinispanCacheManagerImpl extends org.kaleidofoundry.core.cache.Ab
 
 	try {
 	   if (StringHelper.isEmpty(configuration)) {
-		LOGGER.info(CacheMessageBundle.getMessage("cachemanager.loading.default", getMetaInformations(), DefaultCacheConfiguration));
 		infiniSpanCacheManager = new DefaultCacheManager(true);
 	   } else {
 		final InputStream inConf = getConfiguration(configuration);
 		if (inConf != null) {
-		   LOGGER.info(CacheMessageBundle.getMessage("cachemanager.loading.custom", getMetaInformations(), configuration));
 		   infiniSpanCacheManager = new DefaultCacheManager(inConf, true);
 		} else {
 		   throw new CacheConfigurationNotFoundException("cache.configuration.notfound", InfinispanCacheManagerPluginName, configuration);

@@ -109,6 +109,7 @@ public abstract class AbstractFileStore implements FileStore {
 
 	// internal resource cache
 	if (context.getBoolean(Caching, false)) {
+	   final String cacheName;
 	   final CacheManager cacheManager;
 	   final String cacheManagerContextRef = context.getString(CacheManagerRef);
 
@@ -117,7 +118,8 @@ public abstract class AbstractFileStore implements FileStore {
 	   } else {
 		cacheManager = CacheManagerFactory.provides();
 	   }
-	   resourcesByUri = cacheManager.getCache("kaleidofoundry/store/" + getBaseUri().replaceAll(":", ""));
+	   cacheName = "kaleidofoundry/store/" + (!StringHelper.isEmpty(context.getName()) ? context.getName() : getBaseUri().replaceAll(":", ""));
+	   resourcesByUri = cacheManager.getCache(cacheName);
 	} else {
 	   resourcesByUri = null;
 	}
@@ -332,14 +334,17 @@ public abstract class AbstractFileStore implements FileStore {
 	ResourceException lastError = null;
 
 	// get from cache if enabled
-	if (resourcesByUri != null && resourcesByUri.containsKey(resourceUri)) { return resourcesByUri.get(resourceUri); }
+	if (resourcesByUri != null && resourcesByUri.containsKey(resourceUri)) {
+	   //
+	   return resourcesByUri.get(resourceUri);
+	}
 
 	while (retryCount < maxRetryCount) {
 	   try {
 		// try to get the resource
 		final ResourceHandler in = doGet(URI.create(resourceUri));
 		if (in == null || in.getInputStream() == null) { throw new ResourceNotFoundException(resourceRelativePath); }
-		// put to cache if enabled
+		// if caching is enabled : put to cache
 		if (resourcesByUri != null) {
 		   final ResourceHandler cacheableResource = createResourceHandler(resourceUri, in.getBytes());
 		   if (cacheableResource instanceof ResourceHandlerBean) {
@@ -348,8 +353,12 @@ public abstract class AbstractFileStore implements FileStore {
 			((ResourceHandlerBean) cacheableResource).setCharset(in.getCharset());
 		   }
 		   resourcesByUri.put(resourceUri, cacheableResource);
+		   return cacheableResource;
 		}
-		return in;
+		// no cache, direct resource access
+		else {
+		   return in;
+		}
 	   } catch (final ResourceException rse) {
 		lastError = rse;
 		maxRetryCount = getMaxRetryOnFailure();
