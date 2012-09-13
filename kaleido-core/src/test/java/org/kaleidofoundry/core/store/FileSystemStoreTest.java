@@ -80,7 +80,8 @@ public class FileSystemStoreTest extends AbstractFileStoreTest {
 	filesToDelete.add(tmpFileToRemmove);
 	fout.close();
 	existingResources.put(FileHelper.getFileName(tmpFileToRemmove.getCanonicalPath()), DEFAULT_RESOURCE_MOCK_TEST);
-
+	existingResourcesForRemove.put(FileHelper.getFileName(tmpFileToRemmove.getCanonicalPath()), DEFAULT_RESOURCE_MOCK_TEST);
+	
 	// 5. resources to move
 	final File tmpFileToMove = folder.newFile("kaleido-resource-move.test");
 	fout = new FileWriter(tmpFileToMove);

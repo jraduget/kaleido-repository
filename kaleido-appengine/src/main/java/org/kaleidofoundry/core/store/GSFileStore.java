@@ -37,8 +37,8 @@ import com.google.appengine.api.files.AppEngineFile;
 import com.google.appengine.api.files.FileReadChannel;
 import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
+import com.google.appengine.api.files.FileWriteChannel;
 import com.google.appengine.api.files.GSFileOptions.GSFileOptionsBuilder;
-import com.google.appengine.api.files.RecordWriteChannel;
 
 /**
  * https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/files/FileService
@@ -94,7 +94,7 @@ public class GSFileStore extends AbstractFileStore {
 
 	   readChannel = fileService.openReadChannel(readableFile, false);
 	   
-	   //LOGGER.info( new BufferedReader(Channels.newReader(readChannel, "UTF8")).readLine());	   
+	   //resource = createResourceHandler(resourceUri.toString(), new BufferedInputStream(Channels.newInputStream(readChannel)));
 	   resource = createResourceHandler(resourceUri.toString(), Channels.newInputStream(readChannel));
 
 	   // Set some meta datas
@@ -157,11 +157,11 @@ public class GSFileStore extends AbstractFileStore {
 	}
 	
 	final AppEngineFile writableFile;
-	RecordWriteChannel writeChannel = null;
+	FileWriteChannel writeChannel = null;
 
 	try {
 	   writableFile = fileService.createNewGSFile(optionsBuilder.build());
-	   writeChannel = fileService.openRecordWriteChannel(writableFile, true);
+	   writeChannel = fileService.openWriteChannel(writableFile, true);
 			   
 	   // TODO isTextContent and PrintWriter
 	   final byte[] buff = new byte[context.getInteger(BufferSize, 128)];

@@ -1,7 +1,12 @@
 #!/bin/bash
 
+asadmin start-database
+asadmin create-jdbc-connection-pool --datasourceclassname org.apache.derby.jdbc.ClientDataSource --restype javax.sql.XADataSource --property portNumber=1527:password=APP:user=APP:serverName=localhost:databaseName=modulor:connectionAttributes=\;create\\=true  modulorPool
+asadmin create-jdbc-resource --connectionpoolid modulorPool jdbc/modulor
+asadmin deploy --dbvendorname=javadb --createtables=true yourApplication.war
+
 # current build version (TODO extract it from pom.xml)
-KALEIDO_VERSION=0.8.2-SNAPSHOT
+KALEIDO_VERSION=0.9.0-SNAPSHOT
 
 # script base dir
 BASE="$(cd -P -- $(dirname -- "$0"); pwd -P)"
