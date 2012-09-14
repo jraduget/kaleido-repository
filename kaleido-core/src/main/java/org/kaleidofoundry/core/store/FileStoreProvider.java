@@ -15,8 +15,10 @@
  */
 package org.kaleidofoundry.core.store;
 
+import static org.kaleidofoundry.core.config.ConfigurationConstants.STATIC_ENV_PARAMETERS;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.StoreMessageBundle;
 import static org.kaleidofoundry.core.store.AbstractFileStore.LOGGER;
+import static org.kaleidofoundry.core.store.FileStoreConstants.DEFAULT_BASE_DIR_PROP;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -41,23 +43,40 @@ import org.kaleidofoundry.core.util.StringHelper;
  */
 public class FileStoreProvider extends AbstractProviderService<FileStore> {
 
-   // application base directory (use to merge with ${basedir} variable)
-   public static final String BASE_DIR;
-
    /**
     * files store internal registry
     */
    static final Registry<String, FileStore> REGISTRY = new Registry<String, FileStore>();
 
-   static {
-	String currentBaseDir = System.getProperty("kaleido.basedir");
-	if (StringHelper.isEmpty(currentBaseDir)) {
-	   currentBaseDir = FileHelper.buildUnixAppPath(FileHelper.getCurrentPath());
-	}
-	currentBaseDir = currentBaseDir.endsWith("/") ? currentBaseDir.substring(0, currentBaseDir.length() - 1) : currentBaseDir;
-	BASE_DIR = (currentBaseDir.startsWith("/") ? currentBaseDir.substring(1) : currentBaseDir);
+   // does default init Configurations have occurred
+   private static boolean INIT_LOADED = false;
 
-	LOGGER.info(StoreMessageBundle.getMessage("store.basedir.info", BASE_DIR));
+   // The default base directory (use to merge resource uri with ${basedir.default} variable)
+   private static String DEFAULT_BASE_DIR;
+
+   /**
+    * @param basedir
+    */
+   public static synchronized final void init(final String basedir) {
+
+	if (!INIT_LOADED) {
+
+	   // base dir if defined
+	   String currentBaseDir = StringHelper.isEmpty(basedir) ? System.getProperty(DEFAULT_BASE_DIR_PROP) : basedir;
+	   if (StringHelper.isEmpty(currentBaseDir)) {
+		currentBaseDir = FileHelper.buildUnixAppPath(FileHelper.getCurrentPath());
+	   }
+	   currentBaseDir = currentBaseDir.endsWith("/") ? currentBaseDir.substring(0, currentBaseDir.length() - 1) : currentBaseDir;
+	   DEFAULT_BASE_DIR = (currentBaseDir.startsWith("/") ? currentBaseDir.substring(1) : currentBaseDir);
+
+	   STATIC_ENV_PARAMETERS.put("basedir", DEFAULT_BASE_DIR);
+	   STATIC_ENV_PARAMETERS.put("default.basedir", DEFAULT_BASE_DIR);
+	   STATIC_ENV_PARAMETERS.put(DEFAULT_BASE_DIR_PROP, DEFAULT_BASE_DIR);
+
+	   LOGGER.info(StoreMessageBundle.getMessage("store.basedir.info", "basedir", DEFAULT_BASE_DIR));
+
+	   INIT_LOADED = true;
+	}
    }
 
    /**
@@ -176,7 +195,7 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 		}
 	   }
 
-	   throw new IllegalArgumentException(StoreMessageBundle.getMessage("store.uri.notmanaged", pBaseUri.toString(), baseURI.getScheme()));
+	   throw new IllegalArgumentException(StoreMessageBundle.getMessage("store.uri.notmanaged.illegal", pBaseUri.toString()));
 	}
 
 	throw new IllegalArgumentException(StoreMessageBundle.getMessage("store.uri.notmanaged", pBaseUri.toString(), baseURI.getScheme()));
@@ -197,7 +216,7 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
    }
 
    /**
-    * A {@link FileStore} resource uri, can contains some variables like ${basedir} ...<br.>
+    * A {@link FileStore} resource uri, can contains some variables like ${application.basedir} ...<br.>
     * This class merge this variable if needed, in order to build a full valid {@link URI} for the filestore
     * 
     * @param resourcePath the resource uri to merge with the system variables
@@ -205,9 +224,12 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
     */
    public static String buildFullResourceURi(String resourcePath) {
 
-	if (resourcePath.contains("${basedir}")) {
-	   resourcePath = StringHelper.replaceAll(resourcePath, "${basedir}", FileStoreProvider.BASE_DIR);
+	// merge variables in the resource path if needed
+	if (resourcePath.contains("${")) {
+	   resourcePath = StringHelper.resolveExpression(resourcePath, STATIC_ENV_PARAMETERS);
 	}
+
+	// only needed by SystemFileStore
 	if (resourcePath.contains("file:/..")) {
 	   String parentPath = FileHelper.buildUnixAppPath(FileHelper.getParentPath());
 	   resourcePath = StringHelper.replaceAll(resourcePath, "file:/..", "file:/" + (parentPath.startsWith("/") ? parentPath.substring(1) : parentPath));

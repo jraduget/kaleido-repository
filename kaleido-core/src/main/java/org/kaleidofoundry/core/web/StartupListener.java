@@ -15,25 +15,17 @@
  */
 package org.kaleidofoundry.core.web;
 
-import static org.kaleidofoundry.core.cache.CacheConstants.CACHE_PROVIDER_ENV;
-import static org.kaleidofoundry.core.i18n.InternalBundleHelper.WebMessageBundle;
+import java.util.Enumeration;
 
-import java.util.Locale;
-
+import javax.naming.Binding;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.kaleidofoundry.core.cache.CacheConstants;
-import org.kaleidofoundry.core.cache.CacheManagerFactory;
-import org.kaleidofoundry.core.config.ConfigurationConstants;
-import org.kaleidofoundry.core.config.ConfigurationFactory;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
-import org.kaleidofoundry.core.i18n.I18nMessagesProvider;
-import org.kaleidofoundry.core.plugin.PluginFactory;
-import org.kaleidofoundry.core.store.FileStoreProvider;
-import org.kaleidofoundry.core.store.ResourceException;
-import org.kaleidofoundry.core.util.StringHelper;
-import org.kaleidofoundry.core.util.locale.LocaleFactory;
+import org.kaleidofoundry.core.config.EnvironmentInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +46,8 @@ public class StartupListener implements ServletContextListener {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(StartupListener.class);
 
+   private final EnvironmentInitializer initializer = new EnvironmentInitializer(LOGGER);
+
    /*
     * (non-Javadoc)
     * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
@@ -62,58 +56,34 @@ public class StartupListener implements ServletContextListener {
    public void contextInitialized(final ServletContextEvent sce) {
 	ServletContextProvider.init(sce.getServletContext());
 
-	// I18n JPA enable or not
-	I18nMessagesFactory.disableJpaControl();
-	String enableI18nJpa = sce.getServletContext().getInitParameter(I18nMessagesProvider.ENABLE_JPA_PROPERTY);
-	enableI18nJpa = StringHelper.isEmpty(enableI18nJpa) ? Boolean.FALSE.toString() : enableI18nJpa;
+	// load operating system and java system env variables
+	initializer.load();
 
-	if (Boolean.valueOf(enableI18nJpa)) {
-	   LOGGER.info(WebMessageBundle.getMessage("web.filter.start.i18n.jpa.enabled"));
-	   I18nMessagesFactory.enableJpaControl();
-	} else {
-	   LOGGER.info(WebMessageBundle.getMessage("web.filter.start.i18n.jpa.disabled"));
-	   I18nMessagesFactory.disableJpaControl();
+	// Then, load web application init parameters
+	@SuppressWarnings("unchecked")
+	Enumeration<String> names = sce.getServletContext().getInitParameterNames();
+	while (names != null && names.hasMoreElements()) {
+	   String name = names.nextElement();
+	   initializer.getEnvironments().put(name, sce.getServletContext().getInitParameter(name));
 	}
 
-	// Static load of the plugin registry
-	PluginFactory.getInterfaceRegistry();
-	LOGGER.info(StringHelper.replicate("*", 120));
-
-	// Cache provider init
-	final String cacheProvider = sce.getServletContext().getInitParameter(CacheConstants.CACHE_PROVIDER_ENV);
-	if (!StringHelper.isEmpty(cacheProvider)) {
-	   System.getProperties().setProperty(CACHE_PROVIDER_ENV, cacheProvider);
-	}
-
-	// Cache manager static init
-	CacheManagerFactory.getRegistry();
-	// only needed to static initialize of FileStoreProvider, and log info message first
-	@SuppressWarnings("unused") String initBaseDir = FileStoreProvider.BASE_DIR;
-
-	// Parse and set default locale if needed
-	final String webappDefaultLocale = sce.getServletContext().getInitParameter(LocaleFactory.JavaEnvProperties);
-	if (!StringHelper.isEmpty(webappDefaultLocale)) {
-	   LOGGER.info(WebMessageBundle.getMessage("web.filter.start.locale", webappDefaultLocale));
-	   final Locale setDefaultLocale = LocaleFactory.parseLocale(webappDefaultLocale);
-	   Locale.setDefault(setDefaultLocale);
-	   LOGGER.info(StringHelper.replicate("*", 120));
-	}
-
-	// Parse the default configurations and load it if needed
-	final String kaleidoConfigurations = sce.getServletContext().getInitParameter(ConfigurationConstants.JavaEnvProperties);
-	if (!StringHelper.isEmpty(kaleidoConfigurations)) {
-	   LOGGER.info(WebMessageBundle.getMessage("web.filter.start.configurations",
-		   StringHelper.replaceAll(kaleidoConfigurations, "\n", ",").replaceAll("\\s+", "")));
-	   System.getProperties().setProperty(ConfigurationConstants.JavaEnvProperties,
-		   StringHelper.replaceAll(kaleidoConfigurations, "\n", ConfigurationConstants.JavaEnvPropertiesSeparator));
-	   // load and register given configurations ids / url
-	   try {
-		ConfigurationFactory.init();
-	   } catch (final ResourceException rse) {
-		throw new IllegalStateException(WebMessageBundle.getMessage("web.filter.start.configurations.error", kaleidoConfigurations), rse);
+	// Then load web application environment parameters
+	try {
+	   Context initCtx = new InitialContext();
+	   NamingEnumeration<Binding> bindingsEnum = initCtx.listBindings("java:comp/env");
+	   while (bindingsEnum.hasMore()) {
+		Binding binding = bindingsEnum.next();
+		initializer.getEnvironments().put(binding.getName(), binding.getObject().toString());
 	   }
-	   LOGGER.info(StringHelper.replicate("*", 120));
+	} catch (NamingException e) {
+	   if (LOGGER.isDebugEnabled()) {
+		LOGGER.debug("Loading webapp environment entries is not enabled", e);
+	   } else {
+		LOGGER.warn("Loading webapp environment entries is not enabled");
+	   }
 	}
+
+	initializer.start();
    }
 
    /*
@@ -122,13 +92,7 @@ public class StartupListener implements ServletContextListener {
     */
    @Override
    public void contextDestroyed(final ServletContextEvent sce) {
-	// unload and unregister given configurations ids / url
-	try {
-	   LOGGER.info(WebMessageBundle.getMessage("web.filter.stop.configurations"));
-	   ConfigurationFactory.unregisterAll();
-	} catch (final ResourceException rse) {
-	   throw new IllegalStateException(rse);
-	}
+	initializer.stop();
    }
 
 }

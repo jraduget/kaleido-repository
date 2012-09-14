@@ -19,6 +19,7 @@ import java.text.ParseException;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.store.ResourceException;
@@ -29,6 +30,10 @@ import org.kaleidofoundry.core.store.ResourceException;
 public abstract class AbstractMyServiceTest extends Assert implements MyServiceTest {
 
    public abstract MyService getMyService();
+
+   @BeforeClass
+   public static void setupStatic() {
+   }
 
    @AfterClass
    public static void cleanupStatic() throws ResourceException {

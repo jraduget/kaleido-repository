@@ -1,5 +1,5 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ * Copyright 2008-2010 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,9 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.kaleidofoundry.core.lang.annotation.Nullable;
 
@@ -84,6 +86,32 @@ public abstract class CollectionsHelper {
 	}
 
 	return results;
+   }
+
+   /**
+    * @param properties
+    * @return convert a properties to a Map<String, String)
+    */
+   @Nullable
+   public static Map<String, String> toMap(final Properties properties) {
+	return toMap(properties, new HashMap<String, String>());
+   }
+
+   /**
+    * @param properties
+    * @return convert a properties to a ConcurrentHashMap<String, String)
+    */
+   @Nullable
+   public static ConcurrentHashMap<String, String> toConcurrentHashMap(final Properties properties) {
+	return toMap(properties, new ConcurrentHashMap<String, String>());
+   }
+
+   private static <M extends Map<String, String>> M toMap(final Properties properties, final M map) {
+	if (properties == null || map == null) { return null; }
+	for (String propName : properties.stringPropertyNames()) {
+	   map.put(propName, properties.getProperty(propName));
+	}
+	return map;
    }
 
    /**

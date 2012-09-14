@@ -37,7 +37,10 @@ import org.kaleidofoundry.core.plugin.Declare;
  * <p>
  * You can use following variable in the file system uri:
  * <ul>
- * <li><code>file:/${basedir}</code> - your application basedir (it can be override using the java system properties -Dkaleido.basedir=...)</li>
+ * <li><code>file:/${basedir.default}</code> - the default application basedir (it can be override using the java system properties
+ * -Dbasedir.default=...)</li>
+ * <li><code>file:/${yourapp.basedir}</code> - your custom application basedir (it can be override using the java system properties
+ * -Dyourapp.basedir=...)</li>
  * <li><code>file:/.</code> - the current system path</li>
  * <li><code>file:/..</code> - the parent of the current system path</li>
  * </ul>
@@ -70,15 +73,6 @@ public class FileSystemStore extends AbstractFileStore implements FileStore {
     */
    FileSystemStore() {
 	super();
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.store.AbstractFileStore#buildResourceURi(java.lang.String)
-    */
-   @Override
-   protected String buildResourceURi(final String resourceRelativePath) {
-	return FileStoreProvider.buildFullResourceURi(super.buildResourceURi(resourceRelativePath));
    }
 
    /*

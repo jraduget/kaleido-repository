@@ -109,7 +109,8 @@ public class FileSystemStoreTest extends AbstractFileStoreTest {
 
    @Test
    public void baseDirTest() throws ResourceException {
-	FileStore fileStore = FileStoreFactory.provides("file:/${basedir}");
+	FileStoreProvider.init(null);
+	FileStore fileStore = FileStoreFactory.provides("file:/${" + FileStoreConstants.DEFAULT_BASE_DIR_PROP + "}");
 	ResourceHandler resourceHandler = fileStore.get("src/test/resources/store/foo.txt");
 	assertNotNull(resourceHandler);
 	assertNotNull(resourceHandler.getResourceUri());

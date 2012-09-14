@@ -38,7 +38,7 @@ public class NamedConfigurationInitializer {
     * @param annotatedClass
     */
    public NamedConfigurationInitializer(@NotNull final Class<?> annotatedClass) {
-	this.configurations = new ArrayList<NamedConfiguration>();
+	configurations = new ArrayList<NamedConfiguration>();
 	this.annotatedClass = annotatedClass;
    }
 
@@ -60,7 +60,9 @@ public class NamedConfigurationInitializer {
 	for (NamedConfiguration namedConfig : configurations) {
 	   if (StringHelper.isEmpty(namedConfig.name())) { throw new ConfigurationException("config.annotation.illegal.name", annotatedClass.getName()); }
 	   if (StringHelper.isEmpty(namedConfig.uri())) { throw new ConfigurationException("config.annotation.illegal.uri", annotatedClass.getName()); }
-	   ConfigurationFactory.provides(namedConfig.name(), namedConfig.uri());
+	   if (!ConfigurationFactory.getRegistry().contains(namedConfig.name())) {
+		ConfigurationFactory.provides(namedConfig.name(), namedConfig.uri());
+	   }
 	}
    }
 

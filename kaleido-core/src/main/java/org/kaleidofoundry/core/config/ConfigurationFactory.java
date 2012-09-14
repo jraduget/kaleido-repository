@@ -15,7 +15,6 @@
  */
 package org.kaleidofoundry.core.config;
 
-import static org.kaleidofoundry.core.config.ConfigurationConstants.JavaEnvProperties;
 import static org.kaleidofoundry.core.config.ConfigurationConstants.JavaEnvPropertiesSeparator;
 import static org.kaleidofoundry.core.config.ConfigurationConstants.JavaEnvPropertiesValueSeparator;
 
@@ -38,13 +37,13 @@ import org.kaleidofoundry.core.util.StringHelper;
  * Define the following java environment variable {@link ConfigurationConstants#JavaEnvProperties} like this :
  * <p>
  * <code>
- * -Dkaleido.configurations=configurationName01:configurationUri01;configurationName02:configurationUri02;...
+ * -Dkaleido.configurations=configurationName01=configurationUri01,configurationName02=configurationUri02,...
  * </code>
  * </p>
  * <p>
  * <b>Example :</b> <br/>
  * <code>
- * 	java -Dkaleido.configurations=datasource:classpath:/datasource.properties;otherResource:http:/host/path/otherResource;...  ...
+ * 	java -Dkaleido.configurations=datasource=classpath:/datasource.properties,otherResource=http:/host/path/otherResource;...  ...
  * </code>
  * </p>
  * </p>
@@ -72,13 +71,14 @@ public abstract class ConfigurationFactory {
     * <br/>
     * If load have already be called, it does nothing more.
     * 
+    * @param configurations configurationName01=configurationUri01,configurationName02=configurationUri02,...
     * @throws ResourceException
     * @see ConfigurationConstants#JavaEnvProperties
     */
-   public static synchronized final void init() throws ResourceException {
+   public static synchronized final void init(final String configurations) throws ResourceException {
 
 	if (!INIT_LOADED) {
-	   final StringTokenizer strConfigToken = new StringTokenizer(System.getProperty(JavaEnvProperties), JavaEnvPropertiesSeparator);
+	   final StringTokenizer strConfigToken = new StringTokenizer(configurations, JavaEnvPropertiesSeparator);
 	   while (strConfigToken.hasMoreTokens()) {
 		final String configItemStr = strConfigToken.nextToken().trim();
 		final String[] configItem = StringHelper.split(configItemStr, JavaEnvPropertiesValueSeparator);
@@ -91,6 +91,8 @@ public abstract class ConfigurationFactory {
 		   provides(configItem[0].trim(), configItem[0].trim());
 		}
 	   }
+
+	   // Init is successful
 	   INIT_LOADED = true;
 	}
 
@@ -328,9 +330,7 @@ public abstract class ConfigurationFactory {
     * @see Configuration
     */
    public static Configuration provides(@NotNull final String name, @NotNull final URI resourceURI, @NotNull final RuntimeContext<Configuration> runtimeContext) {
-
 	return CONFIGURATION_PROVIDER.provides(name, resourceURI, runtimeContext);
-
    }
 
 }

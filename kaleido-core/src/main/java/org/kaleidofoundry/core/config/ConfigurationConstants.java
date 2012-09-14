@@ -15,6 +15,9 @@
  */
 package org.kaleidofoundry.core.config;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +30,9 @@ public interface ConfigurationConstants {
 
    /** Common configuration Logger */
    Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
+
+   /** Some static environments / configurations parameters that could be shared */
+   Map<String, String> STATIC_ENV_PARAMETERS = new ConcurrentHashMap<String, String>();
 
    /**
     * Configuration java environment name which specify the default configurations to load <br/>

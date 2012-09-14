@@ -131,8 +131,8 @@ public interface CacheManager {
    void destroy(@NotNull final Class<?> cl);
 
    /**
-    * Destroy all registered cache manager
-    * stop / destroy / shutdown all cache factory instances
+    * Destroy all registered cache
+    * stop / destroy / shutdown all cache instances
     */
    void destroyAll();
 

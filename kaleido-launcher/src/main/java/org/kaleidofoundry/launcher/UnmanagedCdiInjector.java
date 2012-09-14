@@ -19,6 +19,7 @@ import java.lang.annotation.Annotation;
 
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
+import org.kaleidofoundry.core.config.EnvironmentInitializer;
 import org.kaleidofoundry.core.config.NamedConfigurationInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,7 @@ public class UnmanagedCdiInjector {
    private static WeldContainer weldContainer;
    private static Weld weldSE;
 
+   private static EnvironmentInitializer environmentInitializer;
    private static NamedConfigurationInitializer configurationInitializer;
 
    /**
@@ -44,6 +46,11 @@ public class UnmanagedCdiInjector {
    public static synchronized void init(final Class<?> mainClass) {
 	if (!weldSEInitialize) {
 
+	   // load env variables and start kaleido components
+	   environmentInitializer = new EnvironmentInitializer(LOGGER);
+	   environmentInitializer.load();
+	   environmentInitializer.start();
+	   
 	   // create and init the configurations initializer
 	   if (mainClass != null) {
 		configurationInitializer = new NamedConfigurationInitializer(mainClass);

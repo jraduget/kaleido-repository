@@ -16,7 +16,6 @@
 package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.AbstractCacheManager.LOGGER;
-import static org.kaleidofoundry.core.cache.CacheConstants.CACHE_PROVIDER_ENV;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreUri;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ProviderCode;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.CacheMessageBundle;
@@ -25,6 +24,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.kaleidofoundry.core.context.AbstractProviderService;
@@ -48,15 +48,16 @@ import org.kaleidofoundry.core.util.StringHelper;
 @ThreadSafe
 public class CacheManagerProvider extends AbstractProviderService<CacheManager> {
 
-   /**
-    * main configuration registry instance (shared between providers instances)
-    */
+   // default cache provider code to use
+   static String DEFAULT_CACHE_PROVIDER = CacheProvidersEnum.local.name();
+   // set of reserved cache name
+   static Set<String> RESERVED_CACHE_NAME = Collections.synchronizedSet(new HashSet<String>());;
+
+   // main configuration registry instance (shared between providers instances)
    private static final Registry<String, CacheManager> REGISTRY = new Registry<String, CacheManager>();
 
-   // default cache provider code to use
-   static String DEFAULT_CACHE_PROVIDER;
-   // set of reserved cache name
-   static Set<String> RESERVED_CACHE_NAME;
+   // does default init have occurred
+   private static boolean INIT_LOADED = false;
 
    /**
     * load the default cache provider to use
@@ -64,29 +65,30 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
     * @param cacheProviderCode
     * @see CacheProvidersEnum
     */
-   static synchronized void init(final String cacheProviderCode) {
+   public static synchronized void init(final String cacheProviderCode) {
 
-	Plugin<CacheManager> defaultCachePlugin = null;
-	boolean userCacheImplNotFound = false;
+	if (!INIT_LOADED) {
 
-	if (cacheProviderCode != null && !"".equals(cacheProviderCode.trim())) {
-	   defaultCachePlugin = findCacheManagerByPluginCode(CacheConstants.CacheManagerPluginName + "." + cacheProviderCode);
-	   if (defaultCachePlugin == null) {
-		userCacheImplNotFound = true;
+	   Plugin<CacheManager> defaultCachePlugin = null;
+	   boolean userCacheImplNotFound = false;
+
+	   if (cacheProviderCode != null && !"".equals(cacheProviderCode.trim())) {
+		defaultCachePlugin = findCacheManagerByPluginCode(CacheConstants.CacheManagerPluginName + "." + cacheProviderCode);
+		if (defaultCachePlugin == null) {
+		   userCacheImplNotFound = true;
+		}
 	   }
+	   DEFAULT_CACHE_PROVIDER = defaultCachePlugin != null ? defaultCachePlugin.getName() : CacheConstants.CacheManagerPluginName + "."
+		   + CacheProvidersEnum.local.name();
+
+	   if (userCacheImplNotFound && StringHelper.isEmpty(cacheProviderCode)) {
+		LOGGER.warn(CacheMessageBundle.getMessage("cacheprovider.notfound", cacheProviderCode));
+	   }
+
+	   LOGGER.info(CacheMessageBundle.getMessage("cacheprovider.customize"));
+	   LOGGER.info(CacheMessageBundle.getMessage("cacheprovider.default", DEFAULT_CACHE_PROVIDER));
+	   INIT_LOADED = true;
 	}
-	DEFAULT_CACHE_PROVIDER = defaultCachePlugin != null ? defaultCachePlugin.getName() : CacheConstants.CacheManagerPluginName + "."
-		+ CacheProvidersEnum.local.name();
-	RESERVED_CACHE_NAME = Collections.synchronizedSet(new HashSet<String>());
-
-	if (userCacheImplNotFound && StringHelper.isEmpty(cacheProviderCode)) {
-	   LOGGER.warn(CacheMessageBundle.getMessage("cacheprovider.notfound", cacheProviderCode));
-	}
-
-	LOGGER.info(CacheMessageBundle.getMessage("cacheprovider.customize"));
-	LOGGER.info(CacheMessageBundle.getMessage("cacheprovider.default", DEFAULT_CACHE_PROVIDER));
-
-	System.getProperties().setProperty(CACHE_PROVIDER_ENV, DEFAULT_CACHE_PROVIDER);
    }
 
    /**
@@ -261,8 +263,19 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 	}
    }
 
-   static {
-	// try to get java env variable : -Dkaleido.cacheprovider=local|ehCache|jbossCache3x|coherence3x|infinispan
-	init(System.getProperties().getProperty(CACHE_PROVIDER_ENV));
+   /**
+    * Free all cache managers instances
+    */
+   public void destroyAll() {
+	for (Entry<String, CacheManager> entry : REGISTRY.entrySet()) {
+	   try {
+		entry.getValue().destroyAll();
+	   } catch (Throwable th) {
+		LOGGER.info(CacheMessageBundle.getMessage("cachemanager.destroyall.error", entry.getKey()), th);
+	   }
+	}
+	INIT_LOADED = false;
+	DEFAULT_CACHE_PROVIDER = CacheProvidersEnum.local.name();
    }
+
 }

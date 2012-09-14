@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
@@ -687,4 +688,102 @@ public abstract class StringHelper {
 	}
 	return null;
    }
+
+   /**
+    * Extract variables ${...} from a string expressions
+    * 
+    * <pre>
+    * <b>Assertions :</b>
+    * assertNotNull(StringHelper.extractToken(null));
+    * 	assertEquals(0, StringHelper.extractToken(null).size());
+    * 
+    * 	assertNotNull(StringHelper.extractToken(""));
+    * 	assertEquals(0, StringHelper.extractToken("").size());
+    * 
+    * 	assertNotNull(StringHelper.extractToken("abcdefgh"));
+    * 	assertEquals(0, StringHelper.extractToken("abcdefgh").size());
+    * 
+    * 	assertNotNull(StringHelper.extractToken("abcd${efgh"));
+    * 	assertEquals(0, StringHelper.extractToken("abcd${efgh").size());
+    * 
+    * 	assertNotNull(StringHelper.extractToken("${a}"));
+    * 	assertEquals(1, StringHelper.extractToken("${a}").size());
+    * 	assertEquals("a", StringHelper.extractToken("${a}").get(0));
+    * 
+    * 	assertNotNull(StringHelper.extractToken("${ab}"));
+    * 	assertEquals(1, StringHelper.extractToken("${ab}").size());
+    * 	assertEquals("ab", StringHelper.extractToken("${ab}").iterator().next());
+    * 
+    * 
+    * 	assertNotNull(StringHelper.extractToken("abcd${efgh}"));
+    * 	assertEquals(1, StringHelper.extractToken("abcd${efgh}").size());
+    * 	assertEquals("efgh", StringHelper.extractToken("abcd${efgh}").get(0));
+    * 
+    * 	assertNotNull(StringHelper.extractToken("${abcd}efgh"));
+    * 	assertEquals(1, StringHelper.extractToken("${abcd}efgh").size());
+    * 	assertEquals("abcd", StringHelper.extractToken("${abcd}efgh").get(0));
+    * 
+    * 	assertNotNull(StringHelper.extractToken("abcd${efgh}ghij"));
+    * 	assertEquals(1, StringHelper.extractToken("abcd${efgh}ghij").size());
+    * 	assertEquals("efgh", StringHelper.extractToken("abcd${efgh}ghij").get(0));
+    * 
+    * 	assertNotNull(StringHelper.extractToken("${a}${b}"));
+    * 	assertEquals(2, StringHelper.extractToken("${a}${b}").size());
+    * 	assertEquals("a", StringHelper.extractToken("${a}${b}").get(0));
+    * 	assertEquals("b", StringHelper.extractToken("${a}${b}").get(1));
+    * 
+    * 	assertNotNull(StringHelper.extractToken("${a}${b}cde${f}${g}"));
+    * 	assertEquals(4, StringHelper.extractToken("${a}${b}cde${f}${g}").size());
+    * 	assertEquals("a", StringHelper.extractToken("${a}${b}cde${f}${g}").get(0));
+    * 	assertEquals("b", StringHelper.extractToken("${a}${b}cde${f}${g}").get(1));
+    * 	assertEquals("f", StringHelper.extractToken("${a}${b}cde${f}${g}").get(2));
+    * 	assertEquals("g", StringHelper.extractToken("${a}${b}cde${f}${g}").get(3));
+    * </pre>
+    * 
+    * @param expression
+    * @return
+    */
+   @NotNull
+   public static List<String> extractToken(final String expression) {
+
+	List<String> tokens = new ArrayList<String>();
+	if (expression != null) {
+	   for (int cpt = 0; cpt < expression.length(); cpt++) {
+		if (expression.charAt(cpt) == '$') {
+		   cpt++;
+		   int startTokenPos = cpt;
+		   int endTokenPos = cpt;
+		   if (cpt < expression.length() && expression.charAt(cpt) == '{') {
+			while (++cpt < expression.length() && expression.charAt(cpt) != '}') {
+			   endTokenPos++;
+			}
+			if (cpt < expression.length() && expression.charAt(cpt) == '}' && endTokenPos > startTokenPos) {
+			   tokens.add(expression.substring(startTokenPos + 1, endTokenPos + 1));
+			}
+		   }
+		}
+	   }
+	}
+	return tokens;
+   }
+
+   /**
+    * @param expression
+    * @param tokensValues
+    * @return
+    */
+   public static String resolveExpression(final String expression, final Map<String, String> tokensValues) {
+	if (expression == null) { return null; }
+	String result = expression;
+
+	List<String> tokens = extractToken(expression);
+	for (String token : tokens) {
+	   String tokenValue = tokensValues.get(token);
+	   if (tokenValue != null) {
+		result = result.replaceAll("[$][{]" + token + "[}]", tokenValue);
+	   }
+	}
+	return result;
+   }
+
 }

@@ -155,4 +155,13 @@ public abstract class CacheManagerFactory {
 	return CACHEMANAGER_PROVIDER.getRegistry();
    }
 
+   /**
+    * Destroy all cache manager instances
+    * 
+    * @see CacheManagerProvider#destroyAll()
+    */
+   public static void destroyAll() {
+	CACHEMANAGER_PROVIDER.destroyAll();
+   }
+
 }

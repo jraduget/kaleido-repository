@@ -18,6 +18,8 @@ package org.kaleidofoundry.core.util;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -263,6 +265,81 @@ public class StringHelperTest extends Assert {
 	assertEquals("", StringHelper.valueOf(null, ""));
 	assertEquals("a", StringHelper.valueOf(null, "a"));
 	assertEquals("foo", StringHelper.valueOf("foo", "a"));
+   }
+
+   @Test
+   public void extractToken() {
+
+	assertNotNull(StringHelper.extractToken(null));
+	assertEquals(0, StringHelper.extractToken(null).size());
+
+	assertNotNull(StringHelper.extractToken(""));
+	assertEquals(0, StringHelper.extractToken("").size());
+
+	assertNotNull(StringHelper.extractToken("abcdefgh"));
+	assertEquals(0, StringHelper.extractToken("abcdefgh").size());
+
+	assertNotNull(StringHelper.extractToken("abcd${efgh"));
+	assertEquals(0, StringHelper.extractToken("abcd${efgh").size());
+
+	assertNotNull(StringHelper.extractToken("${a}"));
+	assertEquals(1, StringHelper.extractToken("${a}").size());
+	assertEquals("a", StringHelper.extractToken("${a}").get(0));
+
+	assertNotNull(StringHelper.extractToken("${ab}"));
+	assertEquals(1, StringHelper.extractToken("${ab}").size());
+	assertEquals("ab", StringHelper.extractToken("${ab}").iterator().next());
+
+
+	assertNotNull(StringHelper.extractToken("abcd${efgh}"));
+	assertEquals(1, StringHelper.extractToken("abcd${efgh}").size());
+	assertEquals("efgh", StringHelper.extractToken("abcd${efgh}").get(0));
+
+	assertNotNull(StringHelper.extractToken("${abcd}efgh"));
+	assertEquals(1, StringHelper.extractToken("${abcd}efgh").size());
+	assertEquals("abcd", StringHelper.extractToken("${abcd}efgh").get(0));
+
+	assertNotNull(StringHelper.extractToken("abcd${efgh}ghij"));
+	assertEquals(1, StringHelper.extractToken("abcd${efgh}ghij").size());
+	assertEquals("efgh", StringHelper.extractToken("abcd${efgh}ghij").get(0));
+
+	assertNotNull(StringHelper.extractToken("${a}${b}"));
+	assertEquals(2, StringHelper.extractToken("${a}${b}").size());
+	assertEquals("a", StringHelper.extractToken("${a}${b}").get(0));
+	assertEquals("b", StringHelper.extractToken("${a}${b}").get(1));
+
+	assertNotNull(StringHelper.extractToken("${a}${b}cde${f}${g}"));
+	assertEquals(4, StringHelper.extractToken("${a}${b}cde${f}${g}").size());
+	assertEquals("a", StringHelper.extractToken("${a}${b}cde${f}${g}").get(0));
+	assertEquals("b", StringHelper.extractToken("${a}${b}cde${f}${g}").get(1));
+	assertEquals("f", StringHelper.extractToken("${a}${b}cde${f}${g}").get(2));
+	assertEquals("g", StringHelper.extractToken("${a}${b}cde${f}${g}").get(3));
+   }
+
+   @Test
+   public void resolveExpression() {
+	Map<String, String> tokensValue = new HashMap<String, String>();
+	tokensValue.put("a", "b");
+	tokensValue.put("b", "c");
+	tokensValue.put("f", "g");
+	tokensValue.put("g", "h");
+
+	assertNull(StringHelper.resolveExpression(null, tokensValue));
+
+	assertNotNull(StringHelper.resolveExpression("${a", tokensValue));
+	assertEquals("${a", StringHelper.resolveExpression("${a", tokensValue));
+
+	assertNotNull(StringHelper.resolveExpression("${a}", tokensValue));
+	assertEquals("b", StringHelper.resolveExpression("${a}", tokensValue));
+
+	assertNotNull(StringHelper.resolveExpression("${a}${b}", tokensValue));
+	assertEquals("bc", StringHelper.resolveExpression("${a}${b}", tokensValue));
+
+	assertNotNull(StringHelper.resolveExpression("${a}${b}${c}", tokensValue));
+	assertEquals("bc${c}", StringHelper.resolveExpression("${a}${b}${c}", tokensValue));
+
+	assertNotNull(StringHelper.resolveExpression("${a}${b}cde${f}${g}", tokensValue));
+	assertEquals("bccdegh", StringHelper.resolveExpression("${a}${b}cde${f}${g}", tokensValue));
    }
 
 }

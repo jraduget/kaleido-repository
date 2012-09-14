@@ -29,6 +29,7 @@ import org.junit.Test;
  * <li>-Dkaleido.cacheprovider=coherence3x</li>
  * <li>-Dkaleido.cacheprovider=infinispan</li>
  * <li>-Dkaleido.cacheprovider=gigaspace7x</li>
+ * <li>-Dkaleido.cacheprovider=websphere</li>
  * </ul>
  * 
  * @author Jerome RADUGET
@@ -37,8 +38,7 @@ public class CacheFactoryDefaultTest extends Assert {
 
    @After
    public void cleanup() {
-	// reset default to the cache provider
-	CacheManagerProvider.init(null);
+	CacheManagerFactory.destroyAll();
    }
 
    @Test

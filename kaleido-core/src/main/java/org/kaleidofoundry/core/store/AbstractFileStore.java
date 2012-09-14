@@ -203,21 +203,24 @@ public abstract class AbstractFileStore implements FileStore {
 	   resourceUri.append(relativePath);
 	}
 
+	// merge variables that could be contains in the resource path
+	final StringBuilder mergedResourceUri = new StringBuilder(FileStoreProvider.buildFullResourceURi(resourceUri.toString()));
+
 	// remove '/' is baseUri ends with '/' and relativePath starts with a '/'
 	if (appendBaseUri && baseUri != null && baseUri.endsWith("/") && relativePath != null && relativePath.startsWith("/")) {
-	   resourceUri.deleteCharAt(resourceUri.length() - 1);
+	   mergedResourceUri.deleteCharAt(mergedResourceUri.length() - 1);
 	} else {
 	   // add '/' if needed
 	   if (appendBaseUri && baseUri != null && !baseUri.endsWith("/") && relativePath != null && !relativePath.startsWith("/")) {
-		resourceUri.append("/");
+		mergedResourceUri.append("/");
 	   }
 	}
 
 	if (appendBaseUri) {
-	   resourceUri.append(relativePath);
+	   mergedResourceUri.append(relativePath);
 	}
 
-	String result = resourceUri.toString();
+	String result = mergedResourceUri.toString();
 	// normalize uri by using '/' as path separator
 	result = FileHelper.buildCustomPath(result, FileHelper.UNIX_SEPARATOR, false);
 	// normalize uri by replacing spaces by %20
