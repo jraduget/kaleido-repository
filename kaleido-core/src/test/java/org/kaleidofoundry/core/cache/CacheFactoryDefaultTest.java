@@ -17,7 +17,6 @@ package org.kaleidofoundry.core.cache;
 
 import junit.framework.Assert;
 
-import org.junit.After;
 import org.junit.Test;
 
 /**
@@ -35,11 +34,6 @@ import org.junit.Test;
  * @author Jerome RADUGET
  */
 public class CacheFactoryDefaultTest extends Assert {
-
-   @After
-   public void cleanup() {
-	CacheManagerFactory.destroyAll();
-   }
 
    @Test
    public void defaultCacheFactoryImplementation() {
@@ -82,7 +76,8 @@ public class CacheFactoryDefaultTest extends Assert {
 	} finally {
 	   if (cacheManager != null) {
 		cacheManager.destroyAll();
-	   }
+	   }	 
+	   CacheManagerFactory.destroyAll();	   
 	}
    }
 }

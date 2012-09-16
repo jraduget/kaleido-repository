@@ -267,11 +267,13 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
     * Free all cache managers instances
     */
    public void destroyAll() {
-	for (Entry<String, CacheManager> entry : REGISTRY.entrySet()) {
-	   try {
-		entry.getValue().destroyAll();
-	   } catch (Throwable th) {
-		LOGGER.info(CacheMessageBundle.getMessage("cachemanager.destroyall.error", entry.getKey()), th);
+	if (INIT_LOADED) {
+	   for (Entry<String, CacheManager> entry : REGISTRY.entrySet()) {
+		try {
+		   entry.getValue().destroyAll();
+		} catch (Throwable th) {
+		   LOGGER.info(CacheMessageBundle.getMessage("cachemanager.destroyall.error", entry.getKey()), th);
+		}
 	   }
 	}
 	INIT_LOADED = false;
