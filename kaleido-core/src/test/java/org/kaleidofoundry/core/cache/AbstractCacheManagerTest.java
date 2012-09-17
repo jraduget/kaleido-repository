@@ -63,6 +63,7 @@ public abstract class AbstractCacheManagerTest extends Assert {
 	   cacheManager.destroyAll();
 	}
 	if (cacheManagerCountBeforeCreation >= 0) {
+	   System.out.println(CacheManagerFactory.getRegistry());
 	   assertEquals("Leak detected on cache manager destroyAll", cacheManagerCountBeforeCreation, CacheManagerFactory.getRegistry().size());
 	}
    }
