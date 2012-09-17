@@ -45,14 +45,15 @@ public class UnmanagedCdiInjector {
     */
    public static synchronized void init(final Class<?> mainClass) {
 	if (!weldSEInitialize) {
-
-	   // load env variables and start kaleido components
-	   environmentInitializer = new EnvironmentInitializer(LOGGER);
-	   environmentInitializer.load();
-	   environmentInitializer.start();
 	   
 	   // create and init the configurations initializer
 	   if (mainClass != null) {
+		// load env variables and start kaleido components
+		environmentInitializer = new EnvironmentInitializer(LOGGER);
+		environmentInitializer.load();
+		environmentInitializer.start();
+
+		// load the configuration annotations present in the main class
 		configurationInitializer = new NamedConfigurationInitializer(mainClass);
 		configurationInitializer.init();
 	   }

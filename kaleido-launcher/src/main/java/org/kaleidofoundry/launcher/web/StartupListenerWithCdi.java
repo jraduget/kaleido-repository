@@ -16,8 +16,18 @@ package org.kaleidofoundry.launcher.web;
  */
 
 
-import javax.servlet.ServletContextEvent;
+import static org.kaleidofoundry.core.i18n.InternalBundleHelper.WebMessageBundle;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.Set;
+
+import javax.inject.Inject;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletException;
+
+import org.kaleidofoundry.core.context.Context;
+import org.kaleidofoundry.core.util.ReflectionHelper;
 import org.kaleidofoundry.core.web.StartupListener;
 import org.kaleidofoundry.launcher.UnmanagedCdiInjector;
 
@@ -35,8 +45,11 @@ public class StartupListenerWithCdi extends StartupListener {
     */
    @Override
    public void contextInitialized(final ServletContextEvent sce) {
-	UnmanagedCdiInjector.init();
 	super.contextInitialized(sce);
+	// CDI weld start
+	UnmanagedCdiInjector.init();
+	// init @Inject bean
+	initCdiInjection();
    }
 
    /*
@@ -49,4 +62,34 @@ public class StartupListenerWithCdi extends StartupListener {
 	super.contextDestroyed(sce);
    }
 
+   /**
+    * @param type
+    * @param annotations
+    * @return
+    */
+   public <T> T getBean(final Class<T> type, final Annotation... annotations) {
+	return UnmanagedCdiInjector.getBean(type, annotations);
+   }
+   
+   /**
+    * CDI injection
+    * 
+    * @param servletInstance
+    * @throws ServletException
+    */
+   void initCdiInjection()  {
+	Set<Field> fields = ReflectionHelper.getAllDeclaredFields(this.getClass());
+	for (Field field : fields) {
+	   if (field != null && field.isAnnotationPresent(Inject.class) && !field.isAnnotationPresent(Context.class)) {
+		Object fieldValue = getBean(field.getType());
+		try {
+		   // set the field that was not yet injected
+		   field.setAccessible(true);
+		   field.set(this, fieldValue);
+		} catch (Throwable th) {		   
+		   throw new IllegalStateException(WebMessageBundle.getMessage("web.context.init.error"), th);
+		}
+	   }
+	}
+   }
 }
