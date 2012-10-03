@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.core.web;
 
+import static org.kaleidofoundry.core.i18n.InternalBundleHelper.WebMessageBundle;
+
 import java.util.Enumeration;
 
 import javax.naming.Binding;
@@ -74,6 +76,7 @@ public class StartupListener implements ServletContextListener {
 	   while (bindingsEnum.hasMore()) {
 		Binding binding = bindingsEnum.next();
 		initializer.getEnvironments().put(binding.getName(), binding.getObject().toString());
+		LOGGER.info(WebMessageBundle.getMessage("loader.define.environment.parameter", binding.getName(), binding.getObject().toString()));
 	   }
 	} catch (NamingException e) {
 	   if (LOGGER.isDebugEnabled()) {

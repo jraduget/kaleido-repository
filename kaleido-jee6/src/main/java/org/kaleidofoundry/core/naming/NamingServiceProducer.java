@@ -53,9 +53,9 @@ public class NamingServiceProducer extends NamingServiceProvider {
 	// context needed annotation
 	context = injectionPoint.getAnnotated().getAnnotation(Context.class);
 
-	// if no @Context annotation is present, create a default one with no name
+	// if no @Context annotation is present, create a default one
 	if (context == null) {
-	   context = ContextHelper.createContext("");
+	   context = ContextHelper.createContext(defaultName);
 	}
 
 	return provides(context, defaultName, NamingService.class);

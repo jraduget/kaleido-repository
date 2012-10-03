@@ -53,7 +53,7 @@ public class FileStoreProducer extends FileStoreProvider {
 
 	// if no @Context annotation is present, create a default one with no name
 	if (context == null) {
-	   context = ContextHelper.createContext("");
+	   context = ContextHelper.createContext(defaultName);
 	}
 
 	return provides(context, defaultName, FileStore.class);

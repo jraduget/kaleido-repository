@@ -50,6 +50,7 @@
 			<version>7.4</version>
 			<systemPath>${basedir}/lib/tibrvj-7.4.jar</systemPath>	
 			<scope>system</scope>				
+			<optional>true</optional>
 		</dependency>
 
 		<!-- IBM MQ transport librairies -->
