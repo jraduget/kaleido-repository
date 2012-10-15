@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
@@ -49,6 +50,9 @@ public abstract class AbstractConsumer implements Consumer {
    /** Default consumers logger */
    protected static final Logger LOGGER = LoggerFactory.getLogger(Consumer.class);
 
+   /** Consumers logger use for statistics */
+   protected final Logger STATISTICS_LOGGER;
+   
    /** Logger line separator */
    static final String DEBUG_SEPARATOR = StringHelper.replicate("-", 120);
 
@@ -56,6 +60,7 @@ public abstract class AbstractConsumer implements Consumer {
    private final AtomicInteger ProcessedMessagesOK = new AtomicInteger(0);
    private final AtomicInteger ProcessedMessagesKO = new AtomicInteger(0);
    private final AtomicInteger ProcessedMessagesSKIPPED = new AtomicInteger(0);
+   private final AtomicLong AverageResponseTime = new AtomicLong(0);
 
    /** I18n messaging bundle */
    protected final I18nMessages MESSAGING_BUNDLE = I18nMessagesFactory.provides(I18N_RESOURCE, InternalBundleHelper.CoreMessageBundle);
@@ -170,20 +175,35 @@ public abstract class AbstractConsumer implements Consumer {
 		   // all must have been done in the receive or onceReceived methods
 		   noError = false;
 		} finally {
-		   if (isDebug() && noError) {
-			printResponseTime(beginTimeStamp);
-		   }
 
 		   // handle the minimum response time of a message (if specified)
 		   final long responseTime = System.currentTimeMillis() - beginTimeStamp;
 		   final long waitingDuration = context.getLong(CONSUMER_RESPONSE_DURATION, 0l) - responseTime;
 
-		   if (waitingDuration > 0) {
+		   if (!noError && waitingDuration > 0) {
 			try {
 			   sleep(waitingDuration);
 			} catch (InterruptedException ite) {
 			}
 		   }
+
+		   // print statistics about processed messages
+		   int printProcessedMessagesModulo = context.getInteger(CONSUMER_PRINT_PROCESSED_MESSAGES_MODULO, -1);
+		   if (printProcessedMessagesModulo > 0) {
+			int processedMessagesOK = ProcessedMessagesOK.get();
+			int processedMessagesKO = ProcessedMessagesKO.get();
+			int processedMessagesSkipped = ProcessedMessagesSKIPPED.get();
+
+			if ((processedMessagesOK + processedMessagesKO + processedMessagesSkipped) % printProcessedMessagesModulo == 0) {
+			   long averageResponseTime = (AverageResponseTime.get() + responseTime) / 2;
+
+			   if ((processedMessagesOK + processedMessagesKO + processedMessagesSkipped) % printProcessedMessagesModulo == 0) {
+				STATISTICS_LOGGER.info("consumer statistics : name={} ; msg OK={} ; msg KO={} ; msg SKIPPED={} ; msg response time={}ms", new Object[] {
+					getName(), processedMessagesOK, processedMessagesKO, processedMessagesSkipped, averageResponseTime });
+			   }
+			}
+		   }
+
 		}
 	   }
 
@@ -227,7 +247,10 @@ public abstract class AbstractConsumer implements Consumer {
 	   if (!messageWrapper.hasError() && messageWrapper.getMessage() != null) {
 
 		if (isDebug()) {
-		   LOGGER.info("<<< receiving message with providerId={} , correlationId={} , parameters={}", new String[] {messageWrapper.getMessage().getProviderId() ,  messageWrapper.getMessage().getCorrelationId(), String.valueOf(messageWrapper.getMessage().getParameters())});		   
+		   LOGGER.info(
+			   "<<< receiving message with providerId={} , correlationId={} , parameters={}",
+			   new String[] { messageWrapper.getMessage().getProviderId(), messageWrapper.getMessage().getCorrelationId(),
+				   String.valueOf(messageWrapper.getMessage().getParameters()) });
 		   LOGGER.info("{}", messageWrapper.getMessage().toString());
 		}
 
@@ -252,24 +275,11 @@ public abstract class AbstractConsumer implements Consumer {
 		   ProcessedMessagesSKIPPED.incrementAndGet();
 		}
 
-		// print processed messages each
-		int printProcessedMessagesModulo = context.getInteger(CONSUMER_PRINT_PROCESSED_MESSAGES_MODULO, -1);
-		if (printProcessedMessagesModulo > 0) {
-		   int processedMessagesOK = ProcessedMessagesOK.get();
-		   int processedMessagesKO = ProcessedMessagesKO.get();
-		   int processedMessagesSkipped = ProcessedMessagesSKIPPED.get();
-
-		   if ((processedMessagesOK + processedMessagesKO + processedMessagesSkipped) % printProcessedMessagesModulo == 0) {
-			LOGGER.info("messages processed : {} OK ; {} KO ; {} SKIPPED ", new Object[] { processedMessagesOK, processedMessagesKO,
-				processedMessagesSkipped });
-		   }
-		}
-
 	   }
 
 	   // check again if the message wrapper has error, if can occurred during the handler chain processing
 	   if (messageWrapper.hasError()) {
-		
+
 		if (messageWrapper.getError() instanceof MessageTimeoutException) {
 
 		   // nothing to do, but skip the loop
@@ -283,7 +293,7 @@ public abstract class AbstractConsumer implements Consumer {
 		   ProcessedMessagesKO.incrementAndGet();
 
 		   if (handlerInError != null) {
-			LOGGER.error("an error occurred on the chain handler processing of this consumer",  messageWrapper.getError());
+			LOGGER.error("an error occurred on the chain handler processing of this consumer", messageWrapper.getError());
 			handlerInError.onError(messageWrapper.getMessage(), messageWrapper.getError());
 		   } else {
 			LOGGER.error("an error occurred on this consumer", messageWrapper.getError());
@@ -291,20 +301,19 @@ public abstract class AbstractConsumer implements Consumer {
 
 		}
 	   }
-	   
+
 	   return noError;
 	}
 
 	protected final void printResponseTime(long beginTimeStamp) {
 	   final long responseTime = System.currentTimeMillis() - beginTimeStamp;
 	   LOGGER.info("processing message in {} ms", String.valueOf(responseTime));
-	   LOGGER.info(DEBUG_SEPARATOR);
 	}
    }
 
    protected final RuntimeContext<Consumer> context;
    protected final Transport transport;
-   @Task(comment="Lazy creation of the executor service for google application engine, use com.google.appengine.api.taskqueue.Queue ?")
+   @Task(comment = "Lazy creation of the executor service for google application engine, use com.google.appengine.api.taskqueue.Queue ?")
    protected ExecutorService pool;
 
    private final List<MessageHandler> messageHandlers;
@@ -321,6 +330,8 @@ public abstract class AbstractConsumer implements Consumer {
 	   throw new EmptyContextParameterException(CONSUMER_TRANSPORT_REF, context);
 	}
 
+	// logger use for statistics
+	STATISTICS_LOGGER = LoggerFactory.getLogger(Consumer.class.getName()+"."+getName());
    }
 
    /*
