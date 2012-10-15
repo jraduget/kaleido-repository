@@ -99,7 +99,7 @@ public abstract class AbstractFileStore implements FileStore {
    public AbstractFileStore(String baseUri, @NotNull final RuntimeContext<FileStore> context) {
 
 	// base uri parameter
-	baseUri = !StringHelper.isEmpty(baseUri) ? baseUri : context.getString(BaseUri);
+	baseUri = FileStoreProvider.buildFullResourceURi(!StringHelper.isEmpty(baseUri) ? baseUri : context.getString(BaseUri));
 
 	// context check
 	if (StringHelper.isEmpty(baseUri)) { throw new EmptyContextParameterException(BaseUri, context); }

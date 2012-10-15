@@ -45,6 +45,7 @@ import org.kaleidofoundry.core.lang.annotation.Nullable;
 import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.FileStoreContextBuilder;
 import org.kaleidofoundry.core.store.FileStoreFactory;
+import org.kaleidofoundry.core.store.FileStoreProvider;
 import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceNotFoundException;
 import org.kaleidofoundry.core.store.SingleFileStore;
@@ -109,7 +110,7 @@ public abstract class AbstractCacheManager implements CacheManager {
 	   try {
 		if (!StringHelper.isEmpty(fileStoreRef)) {
 		   RuntimeContext<FileStore> fileStoreContext = new RuntimeContext<FileStore>(fileStoreRef, FileStore.class, context);
-		   String baseUri = fileStoreContext.getString(FileStoreContextBuilder.BaseUri);
+		   String baseUri = FileStoreProvider.buildFullResourceURi(fileStoreContext.getString(FileStoreContextBuilder.BaseUri));
 		   if (!fileStoreUri.contains(baseUri)) {
 			fileStoreUri = baseUri + fileStoreUri;
 		   }

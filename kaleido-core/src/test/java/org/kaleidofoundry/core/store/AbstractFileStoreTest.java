@@ -103,7 +103,7 @@ public abstract class AbstractFileStoreTest extends Assert {
 	// load not existing resource, throws ResourceNotFoundException
 	for (final String uriToTest : nonExistingResources) {
 	   try {
-		fileStore.get(uriToTest);
+		fileStore.get(uriToTest).close();
 		fail("uri <" + uriToTest + "> must throws ResourceNotFoundException");
 	   } catch (final ResourceNotFoundException rnfe) {
 	   }
@@ -152,7 +152,7 @@ public abstract class AbstractFileStoreTest extends Assert {
 
 	   // get initial content
 	   try {
-		fileStore.get(uriToTest);
+		fileStore.get(uriToTest).close();
 		fail("resource '" + uriToTest + "' already exists");
 	   } catch (final ResourceNotFoundException rnfe) {
 	   }
@@ -164,8 +164,14 @@ public abstract class AbstractFileStoreTest extends Assert {
 
 	   // get the stored resource
 	   final ResourceHandler resourceToGet = fileStore.get(uriToTest);
-	   assertNotNull(resourceToGet);
-	   assertEquals(resourceToStoreAsText, resourceToGet.getText());
+	   try {
+		assertNotNull(resourceToGet);
+		assertEquals(resourceToStoreAsText, resourceToGet.getText());
+	   } finally {
+		if (resourceToGet != null) {
+		   resourceToGet.close();
+		}
+	   }
 	}
    }
 
@@ -247,7 +253,7 @@ public abstract class AbstractFileStoreTest extends Assert {
 
 	   // get resource
 	   try {
-		fileStore.get(uriToTest);
+		fileStore.get(uriToTest).close();
 	   } catch (final ResourceNotFoundException rnfe) {
 		fail("resource '" + rnfe.getMessage() + "' does not exists");
 	   }
@@ -257,7 +263,7 @@ public abstract class AbstractFileStoreTest extends Assert {
 
 	   // get remove resource
 	   try {
-		fileStore.get(uriToTest);
+		fileStore.get(uriToTest).close();
 		fail("remove failed, resource '" + uriToTest + "' already exists");
 	   } catch (final ResourceNotFoundException rnfe) {
 	   }

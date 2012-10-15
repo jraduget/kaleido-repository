@@ -155,7 +155,8 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
     */
    public FileStore provides(@NotNull final String pBaseUri, @NotNull final RuntimeContext<FileStore> pContext) throws ProviderException {
 
-	final URI baseURI = createURI(pBaseUri);
+	final String mergedBaseUri = buildFullResourceURi(pBaseUri);
+	final URI baseURI = createURI(mergedBaseUri);
 	final FileStoreType fileStoreType = FileStoreTypeEnum.match(baseURI);
 
 	if (fileStoreType != null) {
@@ -166,11 +167,11 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 		final Class<? extends FileStore> impl = pi.getAnnotatedClass();
 		try {
 		   final Constructor<? extends FileStore> constructor = impl.getConstructor(String.class, pContext.getClass());
-		   final FileStore fileStore = constructor.newInstance(pBaseUri, pContext);
+		   final FileStore fileStore = constructor.newInstance(mergedBaseUri, pContext);
 
 		   try {
-			if (fileStore.isUriManageable(pBaseUri)) {
-			   getRegistry().put(pBaseUri, fileStore);
+			if (fileStore.isUriManageable(mergedBaseUri)) {
+			   getRegistry().put(mergedBaseUri, fileStore);
 			   return fileStore;
 			}
 		   } catch (final Throwable th) {
@@ -195,10 +196,10 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 		}
 	   }
 
-	   throw new IllegalArgumentException(StoreMessageBundle.getMessage("store.uri.notmanaged.illegal", pBaseUri.toString()));
+	   throw new IllegalArgumentException(StoreMessageBundle.getMessage("store.uri.notmanaged.illegal", mergedBaseUri.toString()));
 	}
 
-	throw new IllegalArgumentException(StoreMessageBundle.getMessage("store.uri.notmanaged", pBaseUri.toString(), baseURI.getScheme()));
+	throw new IllegalArgumentException(StoreMessageBundle.getMessage("store.uri.notmanaged", mergedBaseUri.toString(), baseURI.getScheme()));
    }
 
    // use to resolve uri although pUri contains only the uri scheme like ftp|http|classpath...

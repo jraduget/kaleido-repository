@@ -17,8 +17,6 @@ package org.kaleidofoundry.core.store;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -33,8 +31,6 @@ import org.kaleidofoundry.core.io.FileHelper;
  */
 public class FileSystemStoreTest extends AbstractFileStoreTest {
 
-   private final List<File> filesToDelete = new ArrayList<File>();
-
    @Rule
    public TemporaryFolder folder = new TemporaryFolder();
 
@@ -46,7 +42,6 @@ public class FileSystemStoreTest extends AbstractFileStoreTest {
 	// create a temporary file, in order to get the temp directory
 	final File tmpFile = folder.newFile("kaleido-store-get.test");
 	final String tempPath = tmpFile.getCanonicalPath().substring(0, tmpFile.getCanonicalPath().lastIndexOf(File.separator));
-	filesToDelete.add(tmpFile);
 
 	String tempPathUri = FileHelper.buildUnixAppPath(tempPath);
 	tempPathUri = tempPath.startsWith("/") ? "file:" + tempPathUri : "file:/" + tempPathUri;
@@ -58,7 +53,6 @@ public class FileSystemStoreTest extends AbstractFileStoreTest {
 	FileWriter fout = new FileWriter(tmpFileToGet);
 	fout.append(DEFAULT_RESOURCE_MOCK_TEST);
 	fout.flush();
-	filesToDelete.add(tmpFileToGet);
 	fout.close();
 	existingResources.put(FileHelper.getFileName(tmpFileToGet.getCanonicalPath()), DEFAULT_RESOURCE_MOCK_TEST);
 
@@ -68,7 +62,6 @@ public class FileSystemStoreTest extends AbstractFileStoreTest {
 	// 3. resources to store
 	final File tmpFileToStore = folder.newFile("kaleido-resource-store.test");
 	final String filenameToStore = FileHelper.getFileName(tmpFileToStore.getCanonicalPath());
-	filesToDelete.add(tmpFileToStore);
 	tmpFileToStore.delete();
 	existingResourcesForStore.put(filenameToStore, DEFAULT_RESOURCE_MOCK_TEST);
 
@@ -77,17 +70,15 @@ public class FileSystemStoreTest extends AbstractFileStoreTest {
 	fout = new FileWriter(tmpFileToRemmove);
 	fout.append(DEFAULT_RESOURCE_MOCK_TEST);
 	fout.flush();
-	filesToDelete.add(tmpFileToRemmove);
 	fout.close();
 	existingResources.put(FileHelper.getFileName(tmpFileToRemmove.getCanonicalPath()), DEFAULT_RESOURCE_MOCK_TEST);
 	existingResourcesForRemove.put(FileHelper.getFileName(tmpFileToRemmove.getCanonicalPath()), DEFAULT_RESOURCE_MOCK_TEST);
-	
+
 	// 5. resources to move
 	final File tmpFileToMove = folder.newFile("kaleido-resource-move.test");
 	fout = new FileWriter(tmpFileToMove);
 	fout.append(DEFAULT_RESOURCE_MOCK_TEST);
 	fout.flush();
-	filesToDelete.add(tmpFileToMove);
 	fout.close();
 
 	final String fileToMovePath = FileHelper.getFileName(tmpFileToMove.getCanonicalPath());
@@ -99,13 +90,7 @@ public class FileSystemStoreTest extends AbstractFileStoreTest {
    @After
    @Override
    public void cleanup() throws Throwable {
-	super.cleanup();
-
-	// for (final File file : filesToDelete) {
-	// if (file.exists()) {
-	// System.out.printf("cleanup resources - deleted \"%s\" is %s", file.getCanonicalFile(), file.delete() ? "OK\n" : "KO\n");
-	// }
-	// }
+	folder.delete();
    }
 
    @Test
