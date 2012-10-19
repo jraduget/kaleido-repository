@@ -11,7 +11,7 @@
 	
 	<logger name="org.kaleidofoundry.core.config.Configuration" level="INFO" />
 	<logger name="org.kaleidofoundry.core.cache.CacheManager" level="INFO" />
-	<logger name="org.kaleidofoundry.core.store.FileStore" level="INFO" />
+	<logger name="org.kaleidofoundry.core.store.FileStore" level="DEBUG" />
 
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />

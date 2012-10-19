@@ -15,6 +15,7 @@
  */
 package org.kaleidofoundry.core.store;
 
+import static org.kaleidofoundry.core.store.FileStoreConstants.DEFAULT_BUFFER_SIZE;
 import static org.kaleidofoundry.core.store.FileStoreConstants.FileSystemStorePluginName;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.BufferSize;
 
@@ -128,7 +129,7 @@ public class FileSystemStore extends AbstractFileStore implements FileStore {
 	   file = new File(resourceUri.getPath());
 	   out = new FileOutputStream(file, false);
 
-	   final byte[] buff = new byte[context.getInteger(BufferSize, 128)];
+	   final byte[] buff = new byte[context.getInteger(BufferSize, DEFAULT_BUFFER_SIZE)];
 	   int lengthToWrite = resource.getInputStream().read(buff);
 	   while (lengthToWrite != -1) {
 		out.write(buff, 0, lengthToWrite);

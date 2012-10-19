@@ -18,6 +18,7 @@ package org.kaleidofoundry.core.store;
 import static org.kaleidofoundry.core.store.FileStoreConstants.FileStorePluginName;
 
 import java.io.InputStream;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
@@ -207,6 +208,15 @@ public interface FileStore extends Store<String, ResourceHandler> {
     * @return
     */
    ResourceHandler createResourceHandler(String resourceUri, String content, String charset);
+
+   /**
+    * Create a resource handler that will use a specific charset encoding
+    * 
+    * @param resourceUri
+    * @param reader
+    * @param charset
+    */
+   ResourceHandler createResourceHandler(final String resourceUri, final Reader reader, final String charset);
 
    /**
     * close all opened resources, that have not been closed using {@link ResourceHandler#close()} <br/>

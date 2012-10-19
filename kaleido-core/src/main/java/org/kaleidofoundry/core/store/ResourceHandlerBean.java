@@ -15,8 +15,10 @@
  */
 package org.kaleidofoundry.core.store;
 
+import static org.kaleidofoundry.core.i18n.InternalBundleHelper.StoreMessageBundle;
 import static org.kaleidofoundry.core.store.FileStoreConstants.DEFAULT_CHARSET;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.Charset;
+import static org.kaleidofoundry.core.util.ObjectHelper.firstNonNull;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -30,12 +32,10 @@ import java.io.UnsupportedEncodingException;
 
 import javax.persistence.Transient;
 
-import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.io.IOHelper;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
-import org.kaleidofoundry.core.util.ObjectHelper;
 
 /**
  * Default {@link ResourceHandler} implementation <br/>
@@ -60,8 +60,8 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 
    private boolean closed;
 
-   private final byte[] bytes;
-   private final String text;
+   private byte[] bytes;
+   private String text;
 
    @Transient
    private transient InputStream input;
@@ -71,7 +71,7 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
    /**
     * @param store
     * @param resourceUri
-    * @param datas
+    * @param content
     */
    ResourceHandlerBean(final AbstractFileStore store, final String resourceUri, @NotNull final byte[] content) {
 	this.store = store;
@@ -88,7 +88,7 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
    /**
     * @param store
     * @param resourceUri
-    * @param input
+    * @param content
     * @throws UnsupportedEncodingException default text encoding is UTF-8
     */
    ResourceHandlerBean(final AbstractFileStore store, final String resourceUri, @NotNull final String content) {
@@ -105,7 +105,8 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
    /**
     * @param store
     * @param resourceUri
-    * @param input
+    * @param content
+    * @param charset
     * @throws UnsupportedEncodingException default text encoding is UTF-8
     */
    ResourceHandlerBean(final AbstractFileStore store, final String resourceUri, @NotNull final String content, final String charset) {
@@ -115,6 +116,25 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	text = content;
 	this.charset = charset;
 	reader = null;
+	bytes = null;
+	closed = false;
+	lastModified = 0;
+   }
+
+   /**
+    * @param store
+    * @param resourceUri
+    * @param reader
+    * @param charset
+    * @throws UnsupportedEncodingException default text encoding is UTF-8
+    */
+   ResourceHandlerBean(final AbstractFileStore store, final String resourceUri, @NotNull final Reader reader, final String charset) {
+	this.store = store;
+	this.resourceUri = resourceUri;
+	input = null;
+	text = null;
+	this.charset = charset;
+	this.reader = reader;
 	bytes = null;
 	closed = false;
 	lastModified = 0;
@@ -143,7 +163,17 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
    }
 
    @Override
-   public InputStream getInputStream() {
+   public boolean isEmpty() {
+	return input == null && reader == null && text == null && bytes == null;
+   }
+
+   @Override
+   public boolean isClosed() {
+	return closed;
+   }
+
+   @Override
+   public InputStream getInputStream() throws ResourceException {
 
 	if (input != null) {
 	   return input;
@@ -151,9 +181,9 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	   input = new ByteArrayInputStream(bytes);
 	   return input;
 	} else {
-	   String charset = ObjectHelper.firstNonNull(this.charset, store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
+	   String charset = firstNonNull(this.charset, store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
 	   try {
-		input = new ByteArrayInputStream(text.getBytes(charset));
+		input = new ByteArrayInputStream(getText().getBytes(charset));
 		return input;
 	   } catch (UnsupportedEncodingException uee) {
 		throw new IllegalStateException("Invalid charset encoding " + charset, uee);
@@ -168,7 +198,7 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	if (bytes != null) {
 	   return bytes;
 	} else if (text != null) {
-	   String charset = ObjectHelper.firstNonNull(this.charset, store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
+	   String charset = firstNonNull(this.charset, store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
 	   try {
 		return text.getBytes(charset);
 	   } catch (UnsupportedEncodingException uee) {
@@ -176,7 +206,8 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	   }
 	} else {
 	   try {
-		return IOHelper.toByteArray(input);
+		bytes = IOHelper.toByteArray(input);
+		return bytes;
 	   } catch (final IOException ioe) {
 		throw new ResourceException(ioe, resourceUri);
 	   } finally {
@@ -188,7 +219,7 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 
    @Override
    public Reader getReader() throws ResourceException {
-	String charset = ObjectHelper.firstNonNull(this.charset, store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
+	String charset = firstNonNull(this.charset, store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
 	return getReader(charset);
    }
 
@@ -216,7 +247,7 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	if (text != null) {
 	   return text;
 	} else {
-	   String charset = ObjectHelper.firstNonNull(this.charset, store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
+	   String charset = firstNonNull(this.charset, store.context.getString(Charset, DEFAULT_CHARSET.getCode()));
 	   return getText(charset);
 	}
    }
@@ -227,33 +258,24 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	if (text != null) {
 	   return text;
 	} else {
-	   BufferedReader reader = null;
+	   BufferedReader buffReader = null;
 	   String inputLine;
 
 	   try {
 		final StringBuilder stb = new StringBuilder();
-		reader = new BufferedReader(getReader(charset));
-		while ((inputLine = reader.readLine()) != null) {
+		buffReader = new BufferedReader(getReader(charset));
+		while ((inputLine = buffReader.readLine()) != null) {
 		   stb.append(inputLine.trim()).append("\n");
 		}
 		if (stb.length() <= 0) {
-		   return "";
+		   text = "";
 		} else {
-		   return stb.toString().substring(0, stb.length() - 1);
+		   text = stb.toString().substring(0, stb.length() - 1);
 		}
-
+		return text;
 	   } catch (final IOException ioe) {
 		throw new ResourceException(ioe, resourceUri);
 	   } finally {
-		// free buffered reader
-		try {
-		   if (reader != null) {
-			reader.close();
-		   }
-		} catch (final IOException ioe) {
-		   throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.inputstream.close.error", ioe.getMessage(), ioe), ioe);
-		}
-
 		// free resource handler
 		close();
 	   }
@@ -270,7 +292,7 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 		   store.unregisterOpenedResource(resourceUri);
 		}
 	   } catch (final IOException ioe) {
-		throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.inputstream.close.error", ioe.getMessage(), ioe), ioe);
+		throw new IllegalStateException(StoreMessageBundle.getMessage("store.resource.close.error", ioe.getMessage(), ioe), ioe);
 	   }
 	}
 
@@ -282,7 +304,7 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 		   store.unregisterOpenedResource(resourceUri);
 		}
 	   } catch (final IOException ioe) {
-		throw new IllegalStateException(InternalBundleHelper.StoreMessageBundle.getMessage("store.inputstream.close.error", ioe.getMessage(), ioe), ioe);
+		throw new IllegalStateException(StoreMessageBundle.getMessage("store.resource.close.error", ioe.getMessage(), ioe), ioe);
 	   }
 	}
    }
@@ -314,7 +336,12 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	this.charset = charset;
    }
 
-   // only used by for cacheable resource handler
+
+   /**
+    * this method is only used by for caching resource handler (if caching is enable)
+    * 
+    * @param inputStream
+    */
    void setInputStream(final InputStream inputStream) {
 	input = inputStream;
    }

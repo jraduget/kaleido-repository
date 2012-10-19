@@ -28,6 +28,7 @@ import static org.kaleidofoundry.core.store.FileStoreContextBuilder.UseCaches;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLConnection;
@@ -249,6 +250,13 @@ public abstract class AbstractFileStore implements FileStore {
    }
 
    @Override
+   public ResourceHandler createResourceHandler(final String resourceUri, final Reader reader, final String charset) {
+	ResourceHandler resource = new ResourceHandlerBean(this, resourceUri, reader, charset);
+	openedResources.put(resourceUri, resource);
+	return resource;
+   }
+
+   @Override
    public ResourceHandler createResourceHandler(final String resourceUri, final byte[] content) {
 	ResourceHandler resource = new ResourceHandlerBean(this, resourceUri, content);
 	return resource;
@@ -365,7 +373,7 @@ public abstract class AbstractFileStore implements FileStore {
 	   try {
 		// try to get the resource
 		final ResourceHandler in = doGet(URI.create(resourceUri));
-		if (in == null || in.getInputStream() == null) { throw new ResourceNotFoundException(resourceRelativePath); }
+		if (in == null || in.isEmpty()) { throw new ResourceNotFoundException(resourceRelativePath); }
 		// if caching is enabled : put to cache
 		if (resourcesByUri != null) {
 		   final ResourceHandler cacheableResource = createResourceHandler(resourceUri, in.getBytes());

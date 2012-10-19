@@ -239,7 +239,7 @@ public abstract class AbstractFileStoreTest extends Assert {
    @Test
    public void remove() throws ResourceException {
 	assertNotNull(fileStore);
-	assertTrue("there is no resource entry to remove in the test", existingResourcesForStore.size() > 0);
+	assertTrue("there is no resource entry to remove in the test", existingResourcesForRemove.size() > 0);
 
 	// null argument not allowed
 	try {

@@ -18,6 +18,7 @@ package org.kaleidofoundry.core.store;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.StoreMessageBundle;
 import static org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory.KaleidoPersistentContextUnitName;
 import static org.kaleidofoundry.core.store.FileStoreConstants.ClobJpaStorePluginName;
+import static org.kaleidofoundry.core.store.FileStoreConstants.DEFAULT_BUFFER_SIZE;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.BufferSize;
 
 import java.io.ByteArrayInputStream;
@@ -170,7 +171,7 @@ public class JpaFileStore extends AbstractFileStore implements FileStore {
 
 	if (resource.getInputStream() != null) {
 
-	   final byte[] buffer = new byte[context.getInteger(BufferSize, 128)];
+	   final byte[] buffer = new byte[context.getInteger(BufferSize, DEFAULT_BUFFER_SIZE)];
 	   final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
 	   try {

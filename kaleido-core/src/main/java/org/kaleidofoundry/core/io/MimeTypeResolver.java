@@ -127,7 +127,7 @@ public class MimeTypeResolver {
     * @return does the mimeType parameter is a text type ?
     */
    public boolean isText(final String mimeType) {
-	return mimeType.startsWith("text/") || mimeType.contains("xml") || mimeType.contains("js") || mimeType.contains("json");
+	return mimeType != null && (mimeType.startsWith("text/") || mimeType.contains("xml") || mimeType.contains("js") || mimeType.contains("json"));
    }
 
 }

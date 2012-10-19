@@ -50,7 +50,7 @@ public interface ResourceHandler extends Serializable {
     * @return input stream of the resource
     */
    @NotNull
-   InputStream getInputStream();
+   InputStream getInputStream() throws ResourceException;
 
    /**
     * Get the reader used to get the content of the resource<br/>
@@ -135,5 +135,15 @@ public interface ResourceHandler extends Serializable {
     * @return the charset of the resource. By default it will be the {@link FileStore} default charset
     */
    String getCharset();
+
+   /**
+    * @return do the resource have been closed
+    */
+   boolean isClosed();
+
+   /**
+    * @return do this resource have data
+    */
+   boolean isEmpty();
 
 }
