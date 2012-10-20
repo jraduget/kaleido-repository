@@ -149,11 +149,14 @@ public class DefaultMessageBundle extends ResourceBundle implements I18nMessages
    public String getMessage(final String key, final Object... array) throws MissingResourceException {
 	String msg = null;
 
-	msg = getString(key);
+	try {
+	   msg = getString(key);
+	} catch (MissingResourceException mre) {
+	}
 
 	if (msg == null) {
 	   // it can't be an i18n message, where are inside the bundle currently instantiate
-	   throw new MissingResourceException("Cannot find message key '" + key + "' in resource '" + resourceName + "'", String.class.getName(), key);
+	   throw new MissingResourceException("Cannot find message key '" + key + "' in resource '" + resourceName + "'", DefaultMessageBundle.class.getName(), key);
 	}
 
 	// with locale specifics

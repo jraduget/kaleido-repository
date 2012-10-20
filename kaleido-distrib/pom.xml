@@ -51,7 +51,7 @@
 							<projectName>kaleido-foundry</projectName>
 							<uploads>
 								<upload>
-									<file>${project.build.directory}/kaleidofoundry-${project.version}-bundle.zip</file>
+									<file>${project.build.directory}/kaleidofoundry-${project.version}-Rev${buildNumber}-bundle.zip</file>
 									<summary>${project.name} ${project.version} - Revision ${buildNumber}</summary>
 									<labels>
 										<label>Featured</label>
