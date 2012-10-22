@@ -39,6 +39,15 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <td>cacheManagerRef</td>
  * <td>reference name of the cache manager context to use</td>
  * </tr>
+ * <tr>
+ * <td>gaeExpirationDelta</td>
+ * <td>Google application engine - expire values the given amount of time relative to when they are put, as an Integer number of
+ * milliseconds</td>
+ * </tr>
+ * <tr>
+ * <td>gaeExpirationAt</td>
+ * <td>Google application engine - expire values at the given date and time, as a java.util.Date</td>
+ * </tr>
  * </table>
  * </p>
  * 
@@ -52,6 +61,20 @@ public class CacheContextBuilder extends AbstractRuntimeContextBuilder<Cache> {
    public static final String CacheName = "cacheName";
    /** reference name of the cache manager context to use */
    public static final String CacheManagerRef = "cacheManagerRef";
+
+   /**
+    * Google application engine - expire values the given amount of time relative to when they are put, as an Integer number of milliseconds
+    */
+   public static final String GaeCacheExpirationDelta = "gaeExpirationDelta";
+   /** Google application engine - expire values at the given date and time, as a java.util.Date */
+   public static final String GaeCacheExpiration = "gaeExpirationAt";
+   /**
+    * Google application engine - Property key that determines whether to throw a {@link GCacheException} if a put method fails.
+    * The value should be a boolean value, and defaults to {@code false}.
+    * If you set this to true, you should be prepared to catch any {@link GCacheException} thrown from {@code put} or {@code putAll} as this
+    * may happen sporadically or during scheduled maintenance.
+    */
+   public static final String GaeThrowOnPutFailure = "ThrowOnPutFailure";
 
    /**
     * 
@@ -181,4 +204,23 @@ public class CacheContextBuilder extends AbstractRuntimeContextBuilder<Cache> {
 	getContextParameters().put(CacheManagerRef, cacheManagerRef);
 	return this;
    }
+
+   /**
+    * @param cacheManagerRef
+    * @return current builder instance
+    */
+   public CacheContextBuilder withGaeCacheExpirationDelta(final String gaeCacheExpirationDelta) {
+	getContextParameters().put(GaeCacheExpirationDelta, gaeCacheExpirationDelta);
+	return this;
+   }
+
+   /**
+    * @param cacheManagerRef
+    * @return current builder instance
+    */
+   public CacheContextBuilder withGaeCacheExpiration(final String gaeCacheExpiration) {
+	getContextParameters().put(GaeCacheExpiration, gaeCacheExpiration);
+	return this;
+   }
+
 }

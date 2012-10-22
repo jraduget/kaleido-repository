@@ -35,5 +35,7 @@ public enum CacheProvidersEnum {
 
    websphere,
 
+   gae,
+
    local;
 }

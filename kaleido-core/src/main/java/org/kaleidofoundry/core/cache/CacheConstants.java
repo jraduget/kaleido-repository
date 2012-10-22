@@ -67,4 +67,10 @@ public interface CacheConstants {
    /** IBM Websphere cache manager implementation declare plugin name */
    String WebsphereCacheManagerPluginName = "cacheManagers.websphere";
 
+   /** Google application engine cache implementation declare plugin name */
+   String GaeCachePluginName = "caches.gae";
+
+   /** Google application engine cache manager implementation declare plugin name */
+   String GaeCacheManagerPluginName = "cacheManagers.gae";
+
 }

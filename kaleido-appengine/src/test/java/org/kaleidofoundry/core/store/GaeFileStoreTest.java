@@ -51,7 +51,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
  * 
  * @author Jerome RADUGET
  */
-public class GsFileStoreTest extends AbstractFileStoreTest {
+public class GaeFileStoreTest extends AbstractFileStoreTest {
 
    protected static LocalServiceTestHelper helper;
    protected static FileService fileService;
@@ -85,7 +85,7 @@ public class GsFileStoreTest extends AbstractFileStoreTest {
 	final String baseUri = "gs:/kaleido/store/test";
 	final String bucketName = baseUri.replace("gs:/", "");
 	final RuntimeContext<FileStore> context = new FileStoreContextBuilder().withBaseUri(baseUri).build();
-	fileStore = new GSFileStore(context);
+	fileStore = new GaeFileStore(context);
 
 	// get
 	existingResources.put("gs:/kaleido/store/test/path/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);

@@ -30,7 +30,7 @@ import com.google.appengine.api.files.FileReadChannel;
  * 
  * @author Jerome RADUGET
  */
-public class GsResourceHandlerBean extends ResourceHandlerBean {
+public class GaeResourceHandlerBean extends ResourceHandlerBean {
 
    private static final long serialVersionUID = 3788713169684887718L;
 
@@ -41,7 +41,7 @@ public class GsResourceHandlerBean extends ResourceHandlerBean {
     * @param resourceUri
     * @param content
     */
-   public GsResourceHandlerBean(AbstractFileStore store, String resourceUri, @NotNull byte[] content) {
+   public GaeResourceHandlerBean(AbstractFileStore store, String resourceUri, @NotNull byte[] content) {
 	super(store, resourceUri, content);
    }
 
@@ -50,7 +50,7 @@ public class GsResourceHandlerBean extends ResourceHandlerBean {
     * @param resourceUri
     * @param content
     */
-   public GsResourceHandlerBean(AbstractFileStore store, String resourceUri, @NotNull String content) {
+   public GaeResourceHandlerBean(AbstractFileStore store, String resourceUri, @NotNull String content) {
 	super(store, resourceUri, content);
    }
 
@@ -60,7 +60,7 @@ public class GsResourceHandlerBean extends ResourceHandlerBean {
     * @param content
     * @param charset
     */
-   public GsResourceHandlerBean(AbstractFileStore store, String resourceUri, @NotNull String content, String charset) {
+   public GaeResourceHandlerBean(AbstractFileStore store, String resourceUri, @NotNull String content, String charset) {
 	super(store, resourceUri, content, charset);
    }
 
@@ -71,7 +71,7 @@ public class GsResourceHandlerBean extends ResourceHandlerBean {
     * @param reader
     * @param charset
     */
-   public GsResourceHandlerBean(AbstractFileStore store, String resourceUri, FileReadChannel readChannel, @NotNull Reader reader, String charset) {
+   public GaeResourceHandlerBean(AbstractFileStore store, String resourceUri, FileReadChannel readChannel, @NotNull Reader reader, String charset) {
 	super(store, resourceUri, reader, charset);
 	this.readChannel = readChannel;
    }
@@ -82,7 +82,7 @@ public class GsResourceHandlerBean extends ResourceHandlerBean {
     * @param reader
     * @param charset
     */
-   public GsResourceHandlerBean(AbstractFileStore store, String resourceUri, @NotNull Reader reader, String charset) {
+   public GaeResourceHandlerBean(AbstractFileStore store, String resourceUri, @NotNull Reader reader, String charset) {
 	super(store, resourceUri, reader, charset);
    }
 
@@ -91,7 +91,7 @@ public class GsResourceHandlerBean extends ResourceHandlerBean {
     * @param resourceUri
     * @param input
     */
-   public GsResourceHandlerBean(AbstractFileStore store, String resourceUri, FileReadChannel readChannel, InputStream input) {
+   public GaeResourceHandlerBean(AbstractFileStore store, String resourceUri, FileReadChannel readChannel, InputStream input) {
 	super(store, resourceUri, input);
 	this.readChannel = readChannel;
    }
@@ -101,7 +101,7 @@ public class GsResourceHandlerBean extends ResourceHandlerBean {
     * @param resourceUri
     * @param input
     */
-   public GsResourceHandlerBean(AbstractFileStore store, String resourceUri, InputStream input) {
+   public GaeResourceHandlerBean(AbstractFileStore store, String resourceUri, InputStream input) {
 	super(store, resourceUri, input);
    }
 

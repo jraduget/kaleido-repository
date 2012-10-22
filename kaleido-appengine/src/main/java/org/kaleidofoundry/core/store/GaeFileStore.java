@@ -53,14 +53,14 @@ import com.google.appengine.api.files.GSFileOptions.GSFileOptionsBuilder;
  * 
  * @author Jerome RADUGET
  */
-public class GSFileStore extends AbstractFileStore {
+public class GaeFileStore extends AbstractFileStore {
 
    protected final FileService fileService = FileServiceFactory.getFileService();
 
    /**
     * @param context
     */
-   public GSFileStore(final RuntimeContext<FileStore> context) {
+   public GaeFileStore(final RuntimeContext<FileStore> context) {
 	super(context);
    }
 
@@ -68,7 +68,7 @@ public class GSFileStore extends AbstractFileStore {
     * @param baseUri
     * @param context
     */
-   public GSFileStore(final String baseUri, final RuntimeContext<FileStore> context) {
+   public GaeFileStore(final String baseUri, final RuntimeContext<FileStore> context) {
 	super(baseUri, context);
    }
 
@@ -211,13 +211,13 @@ public class GSFileStore extends AbstractFileStore {
    }
    
    public ResourceHandler createResourceHandler(final String resourceUri, final FileReadChannel fileReadChannel, final Reader reader, final String charset) {
-	ResourceHandler resource = new GsResourceHandlerBean(this, resourceUri, fileReadChannel, reader, charset);
+	ResourceHandler resource = new GaeResourceHandlerBean(this, resourceUri, fileReadChannel, reader, charset);
 	openedResources.put(resourceUri, resource);
 	return resource;
    }
 
    public ResourceHandler createResourceHandler(final String resourceUri, final FileReadChannel fileReadChannel, final InputStream input) {
-	ResourceHandler resource = new GsResourceHandlerBean(this, resourceUri, fileReadChannel, input);
+	ResourceHandler resource = new GaeResourceHandlerBean(this, resourceUri, fileReadChannel, input);
 	openedResources.put(resourceUri, resource);
 	return resource;
    }

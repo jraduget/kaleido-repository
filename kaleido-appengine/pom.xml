@@ -38,6 +38,16 @@
 			<artifactId>appengine-api-stubs</artifactId>
 			<version>${appengine.version}</version>
 		</dependency>		
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-jsr107cache</artifactId>
+			<version>${appengine.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jsr107cache</groupId>
+			<artifactId>jsr107cache</artifactId>
+			<version>1.1</version>
+		</dependency>		
 
 		<!-- kaleido-core tests cases -->
 		<dependency>
@@ -54,6 +64,17 @@
 			<scope>test</scope>
 		</dependency>
 		
+		<!-- ** Testing part **************************************************************** -->
+		
+		<!-- kaleido-core tests cases -->
+		<dependency>
+			<groupId>org.kaleidofoundry</groupId>
+			<artifactId>kaleido-core</artifactId>
+			<version>${project.version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+						
 		<!-- Logging with logback -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
