@@ -102,7 +102,7 @@ public class GaeCacheManagerImpl extends AbstractCacheManager {
     */
    @Override
    public String getMetaInformations() {	
-	return "google app engine (jcache)";
+	return "google app engine - jcache / memcache";
    }
 
    /*

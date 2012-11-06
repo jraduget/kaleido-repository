@@ -314,6 +314,7 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	return lastModified;
    }
 
+
    void setLastModified(final long lastModified) {
 	this.lastModified = lastModified;
    }
