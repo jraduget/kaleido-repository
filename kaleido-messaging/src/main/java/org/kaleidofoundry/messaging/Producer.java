@@ -62,6 +62,12 @@ public interface Producer extends Client {
     */
    void send(Collection<Message> messages, long timeout) throws MessagingException;
    
+   /**
+    * Stop the producer
+    * 
+    * @throws TransportException
+    */
+   void stop() throws TransportException;   
    
    
 }

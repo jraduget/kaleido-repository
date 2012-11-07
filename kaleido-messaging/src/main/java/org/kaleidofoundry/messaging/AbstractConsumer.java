@@ -15,19 +15,21 @@
  */
 package org.kaleidofoundry.messaging;
 
-import static org.kaleidofoundry.messaging.MessagingConstants.CONSUMER_DEBUG_PROPERTY;
-import static org.kaleidofoundry.messaging.MessagingConstants.CONSUMER_PRINT_PROCESSED_MESSAGES_MODULO;
-import static org.kaleidofoundry.messaging.MessagingConstants.CONSUMER_RESPONSE_DURATION;
-import static org.kaleidofoundry.messaging.MessagingConstants.THREAD_POOL_COUNT_PROPERTY;
-import static org.kaleidofoundry.messaging.MessagingConstants.CONSUMER_THREAD_PREFIX_PROPERTY;
-import static org.kaleidofoundry.messaging.MessagingConstants.CONSUMER_TRANSPORT_REF;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.DEBUG_PROPERTY;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_PRINT_PROCESSED_MESSAGES_MODULO;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_RESPONSE_DURATION;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_THREAD_POOL_WAIT_ON_SHUTDOWN;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_THREAD_PREFIX_PROPERTY;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.TRANSPORT_REF;
 import static org.kaleidofoundry.messaging.MessagingConstants.I18N_RESOURCE;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.THREAD_POOL_COUNT_PROPERTY;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -52,7 +54,7 @@ public abstract class AbstractConsumer implements Consumer {
 
    /** Consumers logger use for statistics */
    protected final Logger STATISTICS_LOGGER;
-   
+
    /** Logger line separator */
    static final String DEBUG_SEPARATOR = StringHelper.replicate("-", 120);
 
@@ -154,7 +156,7 @@ public abstract class AbstractConsumer implements Consumer {
 
 	   initRun();
 
-	   while (!pool.isTerminated()) {
+	   while (!pool.isShutdown()) {
 
 		long beginTimeStamp = 0;
 		boolean noError = true;
@@ -220,7 +222,7 @@ public abstract class AbstractConsumer implements Consumer {
 	}
 
 	protected boolean isDebug() {
-	   return context.getBoolean(CONSUMER_DEBUG_PROPERTY, false) || LOGGER.isDebugEnabled();
+	   return context.getBoolean(DEBUG_PROPERTY, false) || LOGGER.isDebugEnabled();
 	}
 
 	protected final void initRun() {
@@ -323,15 +325,16 @@ public abstract class AbstractConsumer implements Consumer {
 	this.messageHandlers = Collections.synchronizedList(new LinkedList<MessageHandler>());
 
 	// transport
-	String transportRef = this.context.getString(CONSUMER_TRANSPORT_REF);
+	String transportRef = this.context.getString(TRANSPORT_REF);
 	if (!StringHelper.isEmpty(transportRef)) {
 	   this.transport = TransportFactory.provides(transportRef, context);
+	   this.transport.getConsumers().put(getName(), this);
 	} else {
-	   throw new EmptyContextParameterException(CONSUMER_TRANSPORT_REF, context);
+	   throw new EmptyContextParameterException(TRANSPORT_REF, context);
 	}
 
 	// logger use for statistics
-	STATISTICS_LOGGER = LoggerFactory.getLogger(Consumer.class.getName()+"."+getName());
+	STATISTICS_LOGGER = LoggerFactory.getLogger(Consumer.class.getName() + "." + getName());
    }
 
    /*
@@ -387,9 +390,24 @@ public abstract class AbstractConsumer implements Consumer {
    @Override
    public synchronized void stop() throws TransportException {
 	if (pool != null) {
+	   
+	   int shutdownWaitInSeconds = this.context.getInteger(CONSUMER_THREAD_POOL_WAIT_ON_SHUTDOWN, 5);
+	   
 	   LOGGER.info("Shutdown consumer [{}] thread pool", context.getName());
 	   pool.shutdown();
+	   try {
+		if (!pool.awaitTermination(shutdownWaitInSeconds, TimeUnit.SECONDS)) {
+		   pool.shutdownNow();
+		   if (!pool.awaitTermination(shutdownWaitInSeconds, TimeUnit.SECONDS)) {
+			LOGGER.error("Error trying shutdown consumer [{}] thread pool", context.getName());
+		   }
+		}
+	   } catch (InterruptedException ie) {
+		 pool.shutdownNow();
+		 Thread.currentThread().interrupt();
+	   }
 	}
+	this.transport.getConsumers().remove(getName());
    }
 
    /*

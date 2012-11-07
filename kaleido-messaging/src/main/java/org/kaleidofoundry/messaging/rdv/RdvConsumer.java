@@ -15,13 +15,13 @@
  */
 package org.kaleidofoundry.messaging.rdv;
 
-import static org.kaleidofoundry.messaging.MessagingConstants.CONSUMER_RECEIVE_TIMEOUT_PROPERTY;
-import static org.kaleidofoundry.messaging.MessagingConstants.CONSUMER_TRANSPORT_REF;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_RECEIVE_TIMEOUT_PROPERTY;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.TRANSPORT_REF;
 import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_BODY_BYTES_FIELD;
 import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_BODY_TEXT_FIELD;
 import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_ID_FIELD;
 import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_TYPE_FIELD;
-import static org.kaleidofoundry.messaging.rdv.RdvMessaginsConstants.RDV_SUBJECTS;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.RDV_SUBJECTS;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -115,9 +115,9 @@ public class RdvConsumer extends AbstractConsumer implements Consumer {
 
 	if (StringHelper.isEmpty(context.getString(RDV_SUBJECTS))) throw new EmptyContextParameterException(RDV_SUBJECTS, context);
 
-	if (!(getTransport() instanceof RdvTransport)) { throw new IllegalContextParameterException(CONSUMER_TRANSPORT_REF,
-		context.getString(CONSUMER_TRANSPORT_REF), context, MESSAGING_BUNDLE.getMessage("messaging.consumer.rdv.transport.illegal",
-			context.getString(CONSUMER_TRANSPORT_REF))); }
+	if (!(getTransport() instanceof RdvTransport)) { throw new IllegalContextParameterException(TRANSPORT_REF,
+		context.getString(TRANSPORT_REF), context, MESSAGING_BUNDLE.getMessage("messaging.consumer.rdv.transport.illegal",
+			context.getString(TRANSPORT_REF))); }
    }
 
    @Override

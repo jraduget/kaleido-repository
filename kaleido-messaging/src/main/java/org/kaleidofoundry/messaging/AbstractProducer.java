@@ -15,10 +15,10 @@
  */
 package org.kaleidofoundry.messaging;
 
-import static org.kaleidofoundry.messaging.MessagingConstants.THREAD_POOL_COUNT_PROPERTY;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.THREAD_POOL_COUNT_PROPERTY;
 import static org.kaleidofoundry.messaging.MessagingConstants.I18N_RESOURCE;
-import static org.kaleidofoundry.messaging.MessagingConstants.PRODUCER_DEBUG_PROPERTY;
-import static org.kaleidofoundry.messaging.MessagingConstants.PRODUCER_TRANSPORT_REF;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.DEBUG_PROPERTY;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.TRANSPORT_REF;
 
 import java.util.Collection;
 import java.util.concurrent.Callable;
@@ -66,11 +66,12 @@ public abstract class AbstractProducer implements Producer {
 	this.context = context;
 
 	// transport
-	String transportRef = this.context.getString(PRODUCER_TRANSPORT_REF);
+	String transportRef = this.context.getString(TRANSPORT_REF);
 	if (!StringHelper.isEmpty(transportRef)) {
 	   this.transport = TransportFactory.provides(transportRef, context);
+	   this.transport.getProducers().put(getName(), this);
 	} else {
-	   throw new EmptyContextParameterException(PRODUCER_TRANSPORT_REF, context);
+	   throw new EmptyContextParameterException(TRANSPORT_REF, context);
 	}
 
 	// thread executor service
@@ -181,6 +182,12 @@ public abstract class AbstractProducer implements Producer {
 	return context.getName();
    }
 
+   @Override
+   public void stop() throws TransportException {
+	pool.shutdown();	
+	this.transport.getProducers().remove(getName());
+   }
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.messaging.Client#getStatistics()
@@ -191,7 +198,7 @@ public abstract class AbstractProducer implements Producer {
    }
 
    protected boolean isDebug() {
-	return context.getBoolean(PRODUCER_DEBUG_PROPERTY, false) || LOGGER.isDebugEnabled();
+	return context.getBoolean(DEBUG_PROPERTY, false) || LOGGER.isDebugEnabled();
    }
 
    protected void debugMessage(Message message) {
@@ -202,4 +209,5 @@ public abstract class AbstractProducer implements Producer {
 	}
    }
 
+   
 }

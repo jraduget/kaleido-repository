@@ -15,12 +15,15 @@
  */
 package org.kaleidofoundry.messaging;
 
+import static org.kaleidofoundry.messaging.TransportContextBuilder.TRANSPORT_PROVIDER;
+
+import java.util.Map;
+
 import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
+import org.kaleidofoundry.core.util.Registry;
 import org.kaleidofoundry.core.util.StringHelper;
-
-import static org.kaleidofoundry.messaging.MessagingConstants.TRANSPORT_PROVIDER;
 
 /**
  * Abstract TransportMessaging
@@ -33,16 +36,17 @@ public abstract class AbstractTransport implements Transport {
    protected String providerVersion;
    protected final RuntimeContext<Transport> context;
 
+   protected final Registry<String, Consumer> ConsumerRegistry = new Registry<String, Consumer>();
+   protected final Registry<String, Producer> ProducerRegistry = new Registry<String, Producer>();
+
    /**
     * @param context
     * @throws TransportException
     */
    public AbstractTransport(@NotNull final RuntimeContext<Transport> context) throws TransportException {
 	this.context = context;
-	this.providerCode = context.getString(TRANSPORT_PROVIDER);	
-	if (StringHelper.isEmpty(this.providerCode)) {
-	   throw new EmptyContextParameterException(TRANSPORT_PROVIDER, context);
-	}
+	this.providerCode = context.getString(TRANSPORT_PROVIDER);
+	if (StringHelper.isEmpty(this.providerCode)) { throw new EmptyContextParameterException(TRANSPORT_PROVIDER, context); }
 	this.providerVersion = TransportProviderEnum.valueOf(providerCode) != null ? TransportProviderEnum.valueOf(providerCode).getVersion() : null;
    }
 
@@ -52,6 +56,26 @@ public abstract class AbstractTransport implements Transport {
 
    public String getProviderVersion() {
 	return providerVersion;
+   }
+
+   @Override
+   public Map<String, Consumer> getConsumers() {
+	return ConsumerRegistry;
+   }
+
+   @Override
+   public Map<String, Producer> getProducers() {
+	return ProducerRegistry;
+   }
+
+   @Override
+   public void close() throws TransportException {
+	for (Consumer consumer : ConsumerRegistry.values()) {
+	   consumer.stop();
+	}
+	for (Producer producer : ProducerRegistry.values()) {
+	   producer.stop();
+	}
    }
 
 }

@@ -19,8 +19,8 @@ import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_BODY_BYTES
 import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_BODY_TEXT_FIELD;
 import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_ID_FIELD;
 import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_TYPE_FIELD;
-import static org.kaleidofoundry.messaging.MessagingConstants.PRODUCER_TRANSPORT_REF;
-import static org.kaleidofoundry.messaging.rdv.RdvMessaginsConstants.RDV_SUBJECTS;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.TRANSPORT_REF;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.RDV_SUBJECTS;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -86,9 +86,9 @@ public class RdvProducer extends AbstractProducer {
    protected void checkContext(final RuntimeContext<Producer> context) throws TransportException {
 	if (StringHelper.isEmpty(context.getString(RDV_SUBJECTS))) { throw new EmptyContextParameterException(RDV_SUBJECTS, context); }
 	
-	if (!(getTransport() instanceof RdvTransport)) { throw new IllegalContextParameterException(PRODUCER_TRANSPORT_REF,
-		context.getString(PRODUCER_TRANSPORT_REF), context, MESSAGING_BUNDLE.getMessage("messaging.consumer.rdv.transport.illegal",
-			context.getString(PRODUCER_TRANSPORT_REF))); }	
+	if (!(getTransport() instanceof RdvTransport)) { throw new IllegalContextParameterException(TRANSPORT_REF,
+		context.getString(TRANSPORT_REF), context, MESSAGING_BUNDLE.getMessage("messaging.consumer.rdv.transport.illegal",
+			context.getString(TRANSPORT_REF))); }	
    }
 
 

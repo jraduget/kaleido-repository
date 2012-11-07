@@ -16,11 +16,11 @@
 package org.kaleidofoundry.messaging.jms;
 
 import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_TYPE_FIELD;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.MESSAGE_EXPIRATION;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.MESSAGE_FULL_DATE_FORMAT;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.MESSAGE_PRIORITY;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.PRODUCER_DESTINATIONS;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.PRODUCER_DESTINATIONS_SEPARATOR;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.MESSAGE_EXPIRATION;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.MESSAGE_FULL_DATE_FORMAT;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.MESSAGE_PRIORITY;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.PRODUCER_DESTINATIONS;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.PRODUCER_DESTINATIONS_SEPARATOR;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

@@ -15,7 +15,7 @@
  */
 package org.kaleidofoundry.messaging;
 
-import static org.kaleidofoundry.messaging.MessagingConstants.CONSUMER_TRANSPORT_REF;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.TRANSPORT_REF;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -69,13 +69,13 @@ public class ConsumerProvider extends AbstractProviderService<Consumer> {
    protected Consumer _provides(String name, RuntimeContext<Consumer> context) throws ProviderException {
 
 	// consumer transport
-	String transportRef = context.getString(CONSUMER_TRANSPORT_REF);
+	String transportRef = context.getString(TRANSPORT_REF);
 	Transport transport;
 	
 	if (!StringHelper.isEmpty(transportRef)) {
 	   transport = TransportFactory.provides(transportRef, context);
 	} else {
-	   throw new EmptyContextParameterException(CONSUMER_TRANSPORT_REF, context);
+	   throw new EmptyContextParameterException(TRANSPORT_REF, context);
 	}
 	
 	String type = transport.getProviderCode();
@@ -114,4 +114,14 @@ public class ConsumerProvider extends AbstractProviderService<Consumer> {
 	throw new ProviderException(new TransportException("messaging.consumer.provider.illegal", transport.getProviderCode()));
    }
 
+   /**
+    * Stop / destroy all consumers
+    *  
+    * @throws TransportException
+    */
+   public void stopAll() throws TransportException {	
+	for (Consumer consumer : REGISTRY.values()) {
+	   consumer.stop();
+	}
+   }
 }

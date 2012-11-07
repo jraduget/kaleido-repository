@@ -15,10 +15,10 @@
  */
 package org.kaleidofoundry.messaging.jms.amq;
 
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONNECTION_FACTORY_PASSWORD;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONNECTION_FACTORY_URL;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONNECTION_FACTORY_USER;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.DESTINATION_TYPE;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_CONNECTION_FACTORY_PASSWORD;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_CONNECTION_FACTORY_URL;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_CONNECTION_FACTORY_USER;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_DESTINATION_TYPE;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -57,11 +57,11 @@ public class AmqTransport extends AbstractJmsTransport<ActiveMQConnectionFactory
    public AmqTransport(RuntimeContext<Transport> context) throws TransportException {
 	super(context);
 
-	if (StringHelper.isEmpty(context.getString(CONNECTION_FACTORY_USER))) {
-	   activeMQConnectionFactory = new ActiveMQConnectionFactory(context.getString(CONNECTION_FACTORY_URL));
+	if (StringHelper.isEmpty(context.getString(JMS_CONNECTION_FACTORY_USER))) {
+	   activeMQConnectionFactory = new ActiveMQConnectionFactory(context.getString(JMS_CONNECTION_FACTORY_URL));
 	} else {
-	   activeMQConnectionFactory = new ActiveMQConnectionFactory(context.getString(CONNECTION_FACTORY_URL), context.getString(CONNECTION_FACTORY_USER),
-		   context.getString(CONNECTION_FACTORY_PASSWORD));
+	   activeMQConnectionFactory = new ActiveMQConnectionFactory(context.getString(JMS_CONNECTION_FACTORY_URL), context.getString(JMS_CONNECTION_FACTORY_USER),
+		   context.getString(JMS_CONNECTION_FACTORY_PASSWORD));
 	}
 
    }
@@ -74,24 +74,24 @@ public class AmqTransport extends AbstractJmsTransport<ActiveMQConnectionFactory
    @Override
    protected void checkContext() {
 
-	if (StringHelper.isEmpty(context.getString(CONNECTION_FACTORY_URL))) {
-	   throw new EmptyContextParameterException(CONNECTION_FACTORY_URL, context);
+	if (StringHelper.isEmpty(context.getString(JMS_CONNECTION_FACTORY_URL))) {
+	   throw new EmptyContextParameterException(JMS_CONNECTION_FACTORY_URL, context);
 	} else {
 	   try {
-		new URI(context.getString(CONNECTION_FACTORY_URL));
+		new URI(context.getString(JMS_CONNECTION_FACTORY_URL));
 	   } catch (URISyntaxException rse) {
-		throw new IllegalContextParameterException(CONNECTION_FACTORY_URL, context.getString(CONNECTION_FACTORY_URL), context, "It is not a valid uri");
+		throw new IllegalContextParameterException(JMS_CONNECTION_FACTORY_URL, context.getString(JMS_CONNECTION_FACTORY_URL), context, "It is not a valid uri");
 	   }
 	}
 
-	if (DestinationEnum.valueOf(context.getString(DESTINATION_TYPE, DestinationEnum.queue.name())) == null) { throw new IllegalContextParameterException(
-		DESTINATION_TYPE, context.getString(DESTINATION_TYPE), context, "The value should be: queue|topic"); }
+	if (DestinationEnum.valueOf(context.getString(JMS_DESTINATION_TYPE, DestinationEnum.queue.name())) == null) { throw new IllegalContextParameterException(
+		JMS_DESTINATION_TYPE, context.getString(JMS_DESTINATION_TYPE), context, "The value should be: queue|topic"); }
 
    }
 
    @Override
    protected ActiveMQDestination getDestination(Session session, String name) throws TransportException {
-	String destinationType = context.getString(DESTINATION_TYPE, DestinationEnum.queue.name());
+	String destinationType = context.getString(JMS_DESTINATION_TYPE, DestinationEnum.queue.name());
 	Destination destination;
 
 	try {

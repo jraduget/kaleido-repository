@@ -15,9 +15,9 @@
  */
 package org.kaleidofoundry.messaging.jms;
 
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONNECTION_FACTORY_NAME;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONNECTION_FACTORY_NAMING_SERVICE_REF;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.SESSION_ACKNOLEDGE_MODE;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_CONNECTION_FACTORY_NAME;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_CONNECTION_FACTORY_NAMING_SERVICE_REF;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_SESSION_ACKNOLEDGE_MODE;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -64,7 +64,7 @@ public class JmsTransport extends AbstractJmsTransport<ConnectionFactory, Connec
    public JmsTransport(final RuntimeContext<Transport> context) throws TransportException {
 	super(context);
 
-	final String connectionFactoryJndiName = context.getString(CONNECTION_FACTORY_NAME);
+	final String connectionFactoryJndiName = context.getString(JMS_CONNECTION_FACTORY_NAME);
 
 	// ConnectionFactory creation
 	final RuntimeContext<NamingService> namingServiceContext = new RuntimeContext<NamingService>(getNamingServiceRef(), NamingService.class, context);
@@ -81,17 +81,17 @@ public class JmsTransport extends AbstractJmsTransport<ConnectionFactory, Connec
    @Override
    protected void checkContext() {
 
-	if (StringHelper.isEmpty(context.getString(CONNECTION_FACTORY_NAME))) { 
-	   throw new EmptyContextParameterException(CONNECTION_FACTORY_NAME, context); 
+	if (StringHelper.isEmpty(context.getString(JMS_CONNECTION_FACTORY_NAME))) { 
+	   throw new EmptyContextParameterException(JMS_CONNECTION_FACTORY_NAME, context); 
 	}
 
-	final String strAcknowledgeMode = context.getString(SESSION_ACKNOLEDGE_MODE);
+	final String strAcknowledgeMode = context.getString(JMS_SESSION_ACKNOLEDGE_MODE);
 
 	if (!StringHelper.isEmpty(strAcknowledgeMode)) {
 	   try {
 		Integer.valueOf(strAcknowledgeMode);
 	   } catch (final NumberFormatException nfe) {
-		throw new IllegalContextParameterException(SESSION_ACKNOLEDGE_MODE, strAcknowledgeMode, context, nfe);
+		throw new IllegalContextParameterException(JMS_SESSION_ACKNOLEDGE_MODE, strAcknowledgeMode, context, nfe);
 	   }
 	}
    }
@@ -111,7 +111,7 @@ public class JmsTransport extends AbstractJmsTransport<ConnectionFactory, Connec
     * @return JNDI context name, used to access ConnectionFactory
     */
    public String getNamingServiceRef() {
-	return context.getString(CONNECTION_FACTORY_NAMING_SERVICE_REF);
+	return context.getString(JMS_CONNECTION_FACTORY_NAMING_SERVICE_REF);
    }
 
    /**

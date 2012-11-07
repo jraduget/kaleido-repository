@@ -15,7 +15,7 @@
  */
 package org.kaleidofoundry.messaging;
 
-import static org.kaleidofoundry.messaging.MessagingConstants.TRANSPORT_PROVIDER;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.TRANSPORT_PROVIDER;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -111,5 +111,18 @@ public class TransportProvider extends AbstractProviderService<Transport> {
 	}
 	throw new ProviderException(new TransportException("messaging.transport.provider.illegal", providerCode));
    }
+   
+
+   /**
+    * Close all transport with the associated consumers / producers
+    *  
+    * @throws TransportException
+    */
+   public void closeAll() throws TransportException {	
+	for (Transport transport : REGISTRY.values()) {
+	   transport.close();
+	}
+   }
+   
 
 }

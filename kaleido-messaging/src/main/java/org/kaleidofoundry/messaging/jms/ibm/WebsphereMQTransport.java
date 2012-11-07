@@ -15,13 +15,13 @@
  */
 package org.kaleidofoundry.messaging.jms.ibm;
 
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONNECTION_FACTORY_CHANNEL;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONNECTION_FACTORY_HOST;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONNECTION_FACTORY_PORT;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONNECTION_FACTORY_TRANSPORT_TYPE;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.DESTINATION_PERSISTENT_TYPE;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.DESTINATION_TARGET_CLIENT;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.DESTINATION_TYPE;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.MQ_CONNECTION_FACTORY_CHANNEL;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.MQ_CONNECTION_FACTORY_HOST;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.MQ_CONNECTION_FACTORY_PORT;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.MQ_CONNECTION_FACTORY_TRANSPORT_TYPE;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.MQ_DESTINATION_PERSISTENT_TYPE;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.MQ_DESTINATION_TARGET_CLIENT;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_DESTINATION_TYPE;
 
 import javax.jms.Connection;
 import javax.jms.Destination;
@@ -62,14 +62,14 @@ public class WebsphereMQTransport extends AbstractJmsTransport<MQConnectionFacto
 
 	try {
 	   mqConnectionFactory = new MQConnectionFactory();
-	   mqConnectionFactory.setTransportType(context.getInteger(CONNECTION_FACTORY_TRANSPORT_TYPE, defaultTransportType));
-	   mqConnectionFactory.setHostName(context.getString(CONNECTION_FACTORY_HOST));
-	   mqConnectionFactory.setPort(context.getInteger(CONNECTION_FACTORY_PORT, defaultMQPort));
-	   mqConnectionFactory.setChannel(context.getString(CONNECTION_FACTORY_CHANNEL));
+	   mqConnectionFactory.setTransportType(context.getInteger(MQ_CONNECTION_FACTORY_TRANSPORT_TYPE, defaultTransportType));
+	   mqConnectionFactory.setHostName(context.getString(MQ_CONNECTION_FACTORY_HOST));
+	   mqConnectionFactory.setPort(context.getInteger(MQ_CONNECTION_FACTORY_PORT, defaultMQPort));
+	   mqConnectionFactory.setChannel(context.getString(MQ_CONNECTION_FACTORY_CHANNEL));
 	} catch (JMSException jmse) {
-	   throw new TransportException("messaging.transport.connectionFactory.create", jmse, context.getString(CONNECTION_FACTORY_HOST), context.getString(
-		   CONNECTION_FACTORY_PORT, String.valueOf(defaultMQPort)), context.getString(CONNECTION_FACTORY_CHANNEL), context.getString(
-		   CONNECTION_FACTORY_TRANSPORT_TYPE, String.valueOf(defaultTransportType)));
+	   throw new TransportException("messaging.transport.connectionFactory.create", jmse, context.getString(MQ_CONNECTION_FACTORY_HOST), context.getString(
+		   MQ_CONNECTION_FACTORY_PORT, String.valueOf(defaultMQPort)), context.getString(MQ_CONNECTION_FACTORY_CHANNEL), context.getString(
+			   MQ_CONNECTION_FACTORY_TRANSPORT_TYPE, String.valueOf(defaultTransportType)));
 	}
    }
 
@@ -80,17 +80,17 @@ public class WebsphereMQTransport extends AbstractJmsTransport<MQConnectionFacto
 
    @Override
    protected void checkContext() {
-	if (StringHelper.isEmpty(context.getString(CONNECTION_FACTORY_HOST))) { throw new EmptyContextParameterException(CONNECTION_FACTORY_HOST, context); }
-	if (StringHelper.isEmpty(context.getString(CONNECTION_FACTORY_CHANNEL))) { throw new EmptyContextParameterException(CONNECTION_FACTORY_CHANNEL, context); }
+	if (StringHelper.isEmpty(context.getString(MQ_CONNECTION_FACTORY_HOST))) { throw new EmptyContextParameterException(MQ_CONNECTION_FACTORY_HOST, context); }
+	if (StringHelper.isEmpty(context.getString(MQ_CONNECTION_FACTORY_CHANNEL))) { throw new EmptyContextParameterException(MQ_CONNECTION_FACTORY_CHANNEL, context); }
 
-	if (DestinationEnum.valueOf(context.getString(DESTINATION_TYPE, DestinationEnum.queue.name())) == null) { throw new IllegalContextParameterException(
-		DESTINATION_TYPE, context.getString(DESTINATION_TYPE), context, "The value should be: queue|topic"); }
+	if (DestinationEnum.valueOf(context.getString(JMS_DESTINATION_TYPE, DestinationEnum.queue.name())) == null) { throw new IllegalContextParameterException(
+		JMS_DESTINATION_TYPE, context.getString(JMS_DESTINATION_TYPE), context, "The value should be: queue|topic"); }
 
    }
 
    @Override
    protected MQDestination getDestination(Session session, String name) throws TransportException {
-	String destinationType = context.getString(DESTINATION_TYPE, DestinationEnum.queue.name());
+	String destinationType = context.getString(JMS_DESTINATION_TYPE, DestinationEnum.queue.name());
 	Destination destination;
 
 	try {
@@ -102,8 +102,8 @@ public class WebsphereMQTransport extends AbstractJmsTransport<MQConnectionFacto
 		throw new IllegalStateException();
 	   }
 	   
-	   ((MQDestination) destination).setTargetClient(context.getInteger(DESTINATION_TARGET_CLIENT, JMSC.MQJMS_CLIENT_NONJMS_MQ));
-	   ((MQDestination) destination).setPersistence(context.getInteger(DESTINATION_PERSISTENT_TYPE, MQC.MQPER_PERSISTENT));
+	   ((MQDestination) destination).setTargetClient(context.getInteger(MQ_DESTINATION_TARGET_CLIENT, JMSC.MQJMS_CLIENT_NONJMS_MQ));
+	   ((MQDestination) destination).setPersistence(context.getInteger(MQ_DESTINATION_PERSISTENT_TYPE, MQC.MQPER_PERSISTENT));
 	   
 	   return (MQDestination) destination;
 	} catch (JMSException jmse) {

@@ -19,6 +19,7 @@ import static org.kaleidofoundry.core.config.ConfigurationConstants.STATIC_ENV_P
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.CoreMessageBundle;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,6 +37,7 @@ import org.kaleidofoundry.core.store.FileStoreConstants;
 import org.kaleidofoundry.core.store.FileStoreProvider;
 import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.system.OsEnvironment;
+import org.kaleidofoundry.core.util.ReflectionHelper;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.kaleidofoundry.core.util.locale.LocaleFactory;
 import org.slf4j.Logger;
@@ -162,8 +164,15 @@ public class EnvironmentInitializer {
     * destroy and free
     */
    public void stop() {
-	// unload and unregister given configurations ids / url
 	try {
+	   // unload messaging resources if it is in the classpath
+	   try {
+		Class<?> transportClass = Class.forName("org.kaleidofoundry.messaging.TransportFactory");
+		Method closeAllMethod = ReflectionHelper.getMethodWithNoArgs(transportClass, "closeAll");
+		ReflectionHelper.invokeStaticMethodSilently(closeAllMethod);
+	   } catch (ClassNotFoundException cnfe) {
+	   }
+	   // unload and unregister given configurations ids / url
 	   ConfigurationFactory.unregisterAll();
 	} catch (final ResourceException rse) {
 	   throw new IllegalStateException(rse);

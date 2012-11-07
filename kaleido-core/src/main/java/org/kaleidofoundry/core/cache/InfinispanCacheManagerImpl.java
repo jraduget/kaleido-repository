@@ -75,6 +75,9 @@ public class InfinispanCacheManagerImpl extends org.kaleidofoundry.core.cache.Ab
 		   throw new CacheConfigurationNotFoundException("cache.configuration.notfound", InfinispanCacheManagerPluginName, configuration);
 		}
 	   }
+
+	   infiniSpanCacheManager.start();
+
 	} catch (final ConfigurationException cfe) {
 	   throw new CacheConfigurationException("cache.configuration.error", cfe, InfinispanCacheManagerPluginName, getCurrentConfiguration());
 	} catch (final IOException ioe) {

@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.messaging;
 
+import java.util.Map;
+
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.kaleidofoundry.core.plugin.Declare;
 
@@ -36,6 +38,16 @@ public interface Transport {
     * @return Transport provider version API
     */
    String getProviderVersion();
+
+   /**
+    * @return current consumers by name
+    */
+   Map<String, Consumer> getConsumers();
+
+   /**
+    * @return current producers by name
+    */
+   Map<String, Producer> getProducers();
 
    /**
     * Close and free transport resources

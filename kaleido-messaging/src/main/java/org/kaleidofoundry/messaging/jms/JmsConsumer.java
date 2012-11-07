@@ -15,12 +15,12 @@
  */
 package org.kaleidofoundry.messaging.jms;
 
-import static org.kaleidofoundry.messaging.MessagingConstants.CONSUMER_READ_BUFFER_SIZE;
-import static org.kaleidofoundry.messaging.MessagingConstants.CONSUMER_RECEIVE_TIMEOUT_PROPERTY;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_READ_BUFFER_SIZE;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_RECEIVE_TIMEOUT_PROPERTY;
 import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_TYPE_FIELD;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONSUMER_DESTINATION;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONSUMER_MESSAGE_SELECTOR_PROPERTY;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONSUMER_NOLOCAL_PROPERTY;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_DESTINATION;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_MESSAGE_SELECTOR_PROPERTY;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_NOLOCAL_PROPERTY;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;

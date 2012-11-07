@@ -32,22 +32,25 @@ public abstract class TransportFactory {
    public static Registry<String, Transport> getRegistry() {
 	return TransportProvider.REGISTRY;
    }
-   
+
    public static Transport provides(String name) throws ProviderException {
 	return PROVIDER.provides(name);
    }
-   
+
    public static Transport provides(String name, RuntimeContext<?> context) throws ProviderException {
 	return PROVIDER.provides(name, context);
    }
-   
+
    public static Transport provides(String providerCode, String name) throws ProviderException {
 	return PROVIDER.provides(providerCode, name);
    }
-      
+
    public static Transport provides(RuntimeContext<Transport> context) throws ProviderException {
 	return PROVIDER.provides(context);
    }
-   
-   
+
+   public static void closeAll() throws TransportException {
+	PROVIDER.closeAll();
+   }
+
 }

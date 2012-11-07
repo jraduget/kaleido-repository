@@ -15,11 +15,11 @@
  */
 package org.kaleidofoundry.messaging.jms;
 
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONNECTION_FACTORY_PASSWORD;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONNECTION_FACTORY_URL;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.CONNECTION_FACTORY_USER;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.SESSION_ACKNOLEDGE_MODE;
-import static org.kaleidofoundry.messaging.jms.JmsMessagingConstants.SESSION_TRANSACTED;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_CONNECTION_FACTORY_PASSWORD;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_CONNECTION_FACTORY_URL;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_CONNECTION_FACTORY_USER;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_SESSION_ACKNOLEDGE_MODE;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_SESSION_TRANSACTED;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -184,6 +184,8 @@ public abstract class AbstractJmsTransport<CF extends ConnectionFactory, C exten
     */
    public void close() throws TransportException {
 
+	super.close();
+	
 	Iterator<Connection> connIterator = connections.iterator();
 	while (connIterator.hasNext()) {
 	   try {
@@ -205,6 +207,7 @@ public abstract class AbstractJmsTransport<CF extends ConnectionFactory, C exten
 		throw new TransportException("messaging.transport.jms.session.close", jmse);
 	   }
 	}
+		
    }
 
    /**
@@ -214,7 +217,7 @@ public abstract class AbstractJmsTransport<CF extends ConnectionFactory, C exten
     * @see JmsMessagingConstants.PATH_KEY_SessionTransacted
     */
    public boolean isSessionTransacted() {
-	final String strSessionTransacted = context.getString(SESSION_TRANSACTED);
+	final String strSessionTransacted = context.getString(JMS_SESSION_TRANSACTED);
 	return Boolean.parseBoolean(strSessionTransacted);
    }
 
@@ -237,7 +240,7 @@ public abstract class AbstractJmsTransport<CF extends ConnectionFactory, C exten
     * @see javax.jms.Session.DUPS_OK_ACKNOWLEDGE
     */
    public int getAcknowledgeMode() {
-	final String strAcknowledgeMode = context.getString(SESSION_ACKNOLEDGE_MODE);
+	final String strAcknowledgeMode = context.getString(JMS_SESSION_ACKNOLEDGE_MODE);
 
 	if (!StringHelper.isEmpty(strAcknowledgeMode)) {
 	   try {
@@ -253,21 +256,21 @@ public abstract class AbstractJmsTransport<CF extends ConnectionFactory, C exten
     * @return ConnectionFactory url (for non jndi access)
     */
    public String getURL() {
-	return context.getString(CONNECTION_FACTORY_URL);
+	return context.getString(JMS_CONNECTION_FACTORY_URL);
    }
 
    /**
     * @return ConnectionFactory user name
     */
    public String getUser() {
-	return context.getString(CONNECTION_FACTORY_USER);
+	return context.getString(JMS_CONNECTION_FACTORY_USER);
    }
 
    /**
     * @return ConnectionFactory user password
     */
    public String getPassword() {
-	return context.getString(CONNECTION_FACTORY_PASSWORD);
+	return context.getString(JMS_CONNECTION_FACTORY_PASSWORD);
    }
 
 }

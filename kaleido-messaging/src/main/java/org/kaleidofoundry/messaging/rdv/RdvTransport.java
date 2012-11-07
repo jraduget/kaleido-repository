@@ -15,12 +15,12 @@
  */
 package org.kaleidofoundry.messaging.rdv;
 
-import static org.kaleidofoundry.messaging.rdv.RdvMessaginsConstants.RDV_CERTIFIED_CMNAME;
-import static org.kaleidofoundry.messaging.rdv.RdvMessaginsConstants.RDV_DAEMON_PARAMETER;
-import static org.kaleidofoundry.messaging.rdv.RdvMessaginsConstants.RDV_NETWORK_PARAMETER;
-import static org.kaleidofoundry.messaging.rdv.RdvMessaginsConstants.RDV_SERVICE_PARAMETER;
-import static org.kaleidofoundry.messaging.rdv.RdvMessaginsConstants.RDV_CERTIFIED_TIMEOUT;
-import static org.kaleidofoundry.messaging.rdv.RdvMessaginsConstants.RDV_TRANSPORT_TYPE;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.RDV_CERTIFIED_CMNAME;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.RDV_DAEMON_PARAMETER;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.RDV_NETWORK_PARAMETER;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.RDV_SERVICE_PARAMETER;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.RDV_CERTIFIED_TIMEOUT;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.RDV_TRANSPORT_TYPE;
 
 import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
@@ -81,16 +81,16 @@ public class RdvTransport extends AbstractTransport implements Transport {
     * @throws TransportException
     */
    protected void createTransport() throws TransportException {
-	try {	   
+	try {
 	   // Native implem
-	   Tibrv.open(Tibrv.IMPL_NATIVE);	   
+	   Tibrv.open(Tibrv.IMPL_NATIVE);
 	} catch (final TibrvException rvde) {
 	   throw new TransportException("messaging.transport.rdv.open", rvde);
 	}
 
 	try {
 	   // Create RVD transport
-	   transport = new TibrvRvdTransport(getService(), getNetwork(), getDaemon());	   
+	   transport = new TibrvRvdTransport(getService(), getNetwork(), getDaemon());
 	} catch (final TibrvException rvde) {
 	   throw new TransportException("messaging.transport.rdv.create", rvde);
 	}
@@ -131,16 +131,29 @@ public class RdvTransport extends AbstractTransport implements Transport {
 	}
    }
 
+   @Override
    public void close() throws TransportException {
 
-	if (transport != null) {
-	   transport.destroy();
-	}
-
+	super.close();
+	
 	try {
-	   Tibrv.close();
-	} catch (final TibrvException trve) {
-	   throw new TransportException("messaging.transport.rdv.close", trve);
+	   if (transport != null) {
+		transport.destroy();
+	   }
+
+	   if (cmTransport != null) {
+		cmTransport.destroy();
+	   }
+
+	   if (cmQueueTransport != null) {
+		transport.destroy();
+	   }
+	} finally {
+	   try {
+		Tibrv.close();
+	   } catch (final TibrvException trve) {
+		throw new TransportException("messaging.transport.rdv.close", trve);
+	   }
 	}
    }
 
@@ -218,6 +231,5 @@ public class RdvTransport extends AbstractTransport implements Transport {
 	   throw new IllegalStateException("use only for distributed queue transport");
 	}
    }
-
 
 }

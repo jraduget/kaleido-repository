@@ -59,40 +59,7 @@ public interface MessagingConstants {
    /** Tibco Rdv consumer plugin name */
    String RDV_CONSUMER_PLUGIN = "messaging.consumers.rdv";
    
-
-   /** Transport type : see {@link TransportProviderEnum} */
-   String TRANSPORT_PROVIDER = "provider";   
-   /** Consumer / Producer thread pool count */
-   String THREAD_POOL_COUNT_PROPERTY = "threadCount";
-   
-   
-   /** Consumer thread prefix */
-   String CONSUMER_THREAD_PREFIX_PROPERTY = "threadPrefix";
-
-   /** Consumer receive timeout */
-   String CONSUMER_RECEIVE_TIMEOUT_PROPERTY = "timeout";   
-   
-   /** Print handled messages by the consumer each */
-   String CONSUMER_PRINT_PROCESSED_MESSAGES_MODULO = "printProcessedMsgModulo";    
-   
-   /** Enable / disable consumer debugging information  */
-   String CONSUMER_DEBUG_PROPERTY = "debug";
-   
-   /** Use to fix a minimum response time for message consuming */
-   String CONSUMER_RESPONSE_DURATION = "responseDuration";
-   
-   /** Consumer transport reference */
-   String CONSUMER_TRANSPORT_REF = "transport-ref";
-
-   /** Buffer size when consumer read a raw bytes or stream message */
-   String CONSUMER_READ_BUFFER_SIZE = "readBufferSier";
-   
-   
-   /** Producer transport reference */
-   String PRODUCER_TRANSPORT_REF = "transport-ref";
-
-   /** Enable / disable producer debugging information  */
-   String PRODUCER_DEBUG_PROPERTY = "debug";
+  
    
    /** message field which can store the unique id of the message */
    String MESSAGE_ID_FIELD = "$id";
