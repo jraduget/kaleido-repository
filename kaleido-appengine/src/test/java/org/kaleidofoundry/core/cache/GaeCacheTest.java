@@ -127,4 +127,12 @@ public class GaeCacheTest extends AbstractCacheTest {
 	assertEquals(mockPersonToCompare2.getBirthdate(), mockPerson2.getBirthdate());
    }
 
+   /**
+    * {@link Cache#keySet()} is not supported with google application engine
+    */
+   @Override
+   @Test(expected = UnsupportedOperationException.class)
+   public void keys() {
+	super.keys();
+   }
 }

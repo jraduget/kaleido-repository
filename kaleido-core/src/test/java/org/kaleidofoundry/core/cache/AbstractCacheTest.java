@@ -94,6 +94,24 @@ public abstract class AbstractCacheTest extends Assert {
 	assertNull(cache.get(-1));
    }
 
+   @Test
+   public void containsKey() {
+	Person mockPerson1 = Person.newMockInstance();
+	assertFalse(cache.containsKey(mockPerson1.getId()));
+	cache.put(mockPerson1.getId(), mockPerson1);
+	assertTrue(cache.containsKey(mockPerson1.getId()));
+   }
+   
+   @Test
+   public void keys() {
+	Person mockPerson1 = Person.newMockInstance();
+	assertFalse(cache.keys().contains(mockPerson1.getId()));
+	cache.put(mockPerson1.getId(), mockPerson1);
+	assertTrue(cache.keys().contains(mockPerson1.getId()));
+	cache.removeAll();
+	assertTrue(cache.keys().isEmpty());
+   }
+   
    /**
     * test put and size features
     */
@@ -180,4 +198,11 @@ public abstract class AbstractCacheTest extends Assert {
 	cache.removeAll();
 	assertEquals(0, cache.size());
    }
+   
+   @Test
+   public void delegate() {	
+	assertNotNull(cache.getDelegate());
+   }
+   
+   
 }
