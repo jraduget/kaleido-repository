@@ -77,8 +77,10 @@ public class UnmanagedCdiInjector {
    public static synchronized void shutdown() {
 	if (weldSE != null && weldSEInitialize) {
 
-	   // 
-	   environmentInitializer.stop();
+	   // unload resources like configurations / caches ...
+	   if (environmentInitializer != null) {
+		environmentInitializer.stop();
+	   }
 	   
 	   // unload current configurations
 	   if (configurationInitializer != null) {
