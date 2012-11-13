@@ -296,7 +296,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
 	if (!isLoaded()) { throw new ConfigurationException("config.load.notloaded", name); }
 	LOGGER.info(ConfigurationMessageBundle.getMessage("config.unload.info", name, getResourceUri()));
 	// cleanup cache entries
-	cacheProperties.removeAll();
+	cacheProperties.clear();
 	// unload store
 	singleFileStore.unload();
 	// fire unload event
@@ -317,7 +317,7 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
 	}
 	LOGGER.info(ConfigurationMessageBundle.getMessage("config.unload.info", name, getResourceUri()));
 	// cleanup cache entries
-	cacheProperties.removeAll();
+	cacheProperties.clear();
 	// unload store
 	singleFileStore.unload();
 	// load it
