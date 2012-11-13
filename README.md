@@ -1,7 +1,7 @@
 KaleidoFoundry project
 =============
 
-[KaleidoFoundry][KaleidoFoundry] is a java technical foundation, **productive, plugeable, scalable and extensible**. It provides modules for configuration, caching, i18n, messaging... Start simple, and when you will need a more complex architecture like a clustered environment, a robust caching provider solution, a messaging system...**kaleido will fit** without changing your java code. The main modules are:
+[KaleidoFoundry][KaleidoFoundry] is a java technical foundation, **productive, plugeable, scalable and extensible**. It provides modules for configuration, caching, i18n, messaging... Start simple, and when you will need a more complex architecture like a clustered environment, a robust caching provider solution, a messaging system... **kaleido will fit** without changing your java code. The main modules are:
 
  * a `configuration` service management, dynamic and centralized (across cluster or local), manageable using REST API,
  * a `file storage` abstraction (`file` / `classpath` / `http` / `ftp` / `webapp` / `clob` / `ssh`),
