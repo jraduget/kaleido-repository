@@ -23,7 +23,6 @@ import java.io.IOException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.kaleidofoundry.core.config.ConfigurationConstants;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 
 /**
@@ -33,10 +32,8 @@ public class FileStoreIntegrationTest {
 
    @BeforeClass
    public static void setupClass() throws ResourceException {
-	// -Dkaleido.configurations=myContext=classpath:/store/myContext.properties
-	System.getProperties().put(ConfigurationConstants.JavaEnvProperties, "myContext=classpath:/store/myContext.properties");
 	// load given configurations
-	ConfigurationFactory.init();
+	ConfigurationFactory.init("myContext=classpath:/store/myContext.properties");
    }
 
    @AfterClass

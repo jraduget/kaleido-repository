@@ -31,10 +31,8 @@ public class FileStoreMainLauncher {
    public static void main(final String[] args) throws ResourceException, IOException {
 
 	try {
-	   // -Dkaleido.configurations=myContext=classpath:/store/myContext.properties
-	   System.getProperties().put(ConfigurationConstants.JavaEnvProperties, "myContext=classpath:/store/myContext.properties");
 	   // load given configurations
-	   ConfigurationFactory.init();
+	   ConfigurationFactory.init("myContext=classpath:/store/myContext.properties");
 
 	   // launch first test
 	   try {
