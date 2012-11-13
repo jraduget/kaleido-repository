@@ -108,7 +108,7 @@ public abstract class AbstractCacheTest extends Assert {
 	assertFalse(cache.keys().contains(mockPerson1.getId()));
 	cache.put(mockPerson1.getId(), mockPerson1);
 	assertTrue(cache.keys().contains(mockPerson1.getId()));
-	cache.removeAll();
+	cache.clear();
 	assertTrue(cache.keys().isEmpty());
    }
    
@@ -195,7 +195,7 @@ public abstract class AbstractCacheTest extends Assert {
 	assertEquals(maxSize - 2, cache.size());
 	assertFalse(cache.containsKey(1));
 
-	cache.removeAll();
+	cache.clear();
 	assertEquals(0, cache.size());
    }
    
