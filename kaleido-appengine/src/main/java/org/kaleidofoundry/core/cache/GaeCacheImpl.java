@@ -164,7 +164,7 @@ public class GaeCacheImpl<K extends Serializable, V extends Serializable> extend
     * @see org.kaleidofoundry.core.cache.Cache#removeAll()
     */
    @Override
-   public void removeAll() {
+   public void clear() {
 	cache.clear();
    }
 

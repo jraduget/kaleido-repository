@@ -65,7 +65,7 @@ public class GaeCacheTest extends AbstractCacheTest {
    @After
    public void cleanup() throws IOException {
 	if (cache != null) {
-	   cache.removeAll();
+	   cache.clear();
 	}
    }
 
