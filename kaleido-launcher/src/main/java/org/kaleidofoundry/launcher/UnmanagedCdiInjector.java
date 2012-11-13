@@ -48,14 +48,14 @@ public class UnmanagedCdiInjector {
 	   
 	   // create and init the configurations initializer
 	   if (mainClass != null) {
+		// load the configuration annotations present in the main class
+		configurationInitializer = new NamedConfigurationInitializer(mainClass);
+		configurationInitializer.init();
+
 		// load env variables and start kaleido components
 		environmentInitializer = new EnvironmentInitializer(LOGGER);
 		environmentInitializer.load();
 		environmentInitializer.start();
-
-		// load the configuration annotations present in the main class
-		configurationInitializer = new NamedConfigurationInitializer(mainClass);
-		configurationInitializer.init();
 	   }
 
 	   // create weld container
@@ -77,11 +77,6 @@ public class UnmanagedCdiInjector {
    public static synchronized void shutdown() {
 	if (weldSE != null && weldSEInitialize) {
 
-	   // unload resources like configurations / caches ...
-	   if (environmentInitializer != null) {
-		environmentInitializer.stop();
-	   }
-	   
 	   // unload current configurations
 	   if (configurationInitializer != null) {
 		try {
@@ -91,6 +86,11 @@ public class UnmanagedCdiInjector {
 		}
 	   }
 
+	   // unload other resources like configurations / caches ...
+	   if (environmentInitializer != null) {
+		environmentInitializer.stop();
+	   }
+	   
 	   // shutdown weld container
 	   LOGGER.info("Shutdown weldSE container");
 	   weldSE.shutdown();
