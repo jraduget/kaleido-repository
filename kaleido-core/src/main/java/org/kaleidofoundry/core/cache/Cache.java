@@ -73,7 +73,7 @@ public interface Cache<K extends Serializable, V extends Serializable> {
    /**
     * Remove all entries from the cache
     */
-   void removeAll();
+   void clear();
 
    /**
     * Set of keys presents in the cache

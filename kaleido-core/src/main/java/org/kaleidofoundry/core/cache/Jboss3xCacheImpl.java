@@ -199,7 +199,7 @@ public class Jboss3xCacheImpl<K extends Serializable, V extends Serializable> ex
     * @see org.kaleidofoundry.core.cache.Cache#removeAll()
     */
    @Override
-   public void removeAll() {
+   public void clear() {
 	root.clearData();
    }
 

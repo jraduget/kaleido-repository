@@ -188,7 +188,7 @@ public class EhCacheImpl<K extends Serializable, V extends Serializable> extends
     * @see org.kaleidofoundry.core.cache.Cache#removeAll()
     */
    @Override
-   public void removeAll() {
+   public void clear() {
 	cache.removeAll();
    }
 

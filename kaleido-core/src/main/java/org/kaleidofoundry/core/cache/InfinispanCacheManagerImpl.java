@@ -134,7 +134,7 @@ public class InfinispanCacheManagerImpl extends org.kaleidofoundry.core.cache.Ab
    public synchronized void destroy(final String cacheName) {
 	final Cache<?, ?> cache = cachesByName.get(cacheName);
 	if (cache != null) {
-	   cache.removeAll();
+	   cache.clear();
 	   ((InfinispanCacheImpl<?, ?>) cache).destroy();
 	   cachesByName.remove(cacheName);
 	}

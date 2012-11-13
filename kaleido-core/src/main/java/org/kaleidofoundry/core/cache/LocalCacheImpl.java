@@ -168,7 +168,7 @@ public class LocalCacheImpl<K extends Serializable, V extends Serializable> exte
     * @see org.kaleidofoundry.core.cache.Cache#removeAll()
     */
    @Override
-   public void removeAll() {
+   public void clear() {
 	CacheableMap.clear();
    }
 

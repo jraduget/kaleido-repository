@@ -168,7 +168,7 @@ org.kaleidofoundry.core.cache.Cache<K, V> {
     * @see org.kaleidofoundry.core.cache.Cache#removeAll()
     */
    @Override
-   public void removeAll() {
+   public void clear() {
 	cache.clear();
 
    }
