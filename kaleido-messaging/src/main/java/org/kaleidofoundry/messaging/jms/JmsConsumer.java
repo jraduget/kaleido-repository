@@ -64,7 +64,7 @@ import org.kaleidofoundry.messaging.TransportRegistryException;
  */
 @Declare(MessagingConstants.JMS_CONSUMER_PLUGIN)
 @Tasks(tasks = { @Task(comment = "Handle manual jms session commit / rollback ? Keep a reference to the session in the message handle ?"),	
-	@Task(comment = "Handle request / reply: http://activemq.apache.org/how-should-i-implement-request-response-with-jms.html"), })
+	@Task(comment = "Handle request / reply: http://activemq.apache.org/how-should-i-implement-request-response-with-jms.html") })
 public class JmsConsumer extends AbstractConsumer {
 
    private AbstractJmsTransport<ConnectionFactory, Connection, Destination> transport;
