@@ -45,7 +45,7 @@ public class FileSystemStoreTest extends AbstractFileStoreTest {
 
 	String tempPathUri = FileHelper.buildUnixAppPath(tempPath);
 	tempPathUri = tempPath.startsWith("/") ? "file:" + tempPathUri : "file:/" + tempPathUri;
-	final RuntimeContext<FileStore> context = new FileStoreContextBuilder().withBaseUri(tempPathUri).build();
+	final RuntimeContext<FileStore> context = new FileStoreContextBuilder("fsStore").withBaseUri(tempPathUri).build();
 	fileStore = new FileSystemStore(context);
 
 	// 1. existing resources (to get) - create temp file as mock

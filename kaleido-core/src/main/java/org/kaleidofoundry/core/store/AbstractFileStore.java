@@ -127,7 +127,7 @@ public abstract class AbstractFileStore implements FileStore {
 	}
 
 	// register the file store instance
-	FileStoreFactory.getRegistry().put(getBaseUri(), this);
+	FileStoreFactory.getRegistry().put(context.getName(), this);
    }
 
    /*

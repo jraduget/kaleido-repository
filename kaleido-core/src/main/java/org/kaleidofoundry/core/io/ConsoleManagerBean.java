@@ -174,9 +174,9 @@ public class ConsoleManagerBean {
 	if (!REGISTERED_RESOURCES.contains(resource)) {
 	   boolean found = false;
 	   // looking at registered file store
-	   for (Entry<String, FileStore> storeEntry : FileStoreFactory.getRegistry().entrySet()) {
-		if (resource.toLowerCase().contains(storeEntry.getKey().toLowerCase())) {
-		   if (storeEntry.getValue().isUriManageable(resource)) {
+	   for (FileStore storeEntry : FileStoreFactory.getRegistry().values()) {
+		if (resource.toLowerCase().contains(storeEntry.getBaseUri().toLowerCase())) {
+		   if (storeEntry.isUriManageable(resource)) {
 			found = true;
 			break;
 		   }
@@ -609,9 +609,9 @@ public class ConsoleManagerBean {
 	// search in console resource registry
 	if (REGISTERED_RESOURCES.contains(resource)) {
 	   // looking at registered file store
-	   for (Entry<String, FileStore> storeEntry : FileStoreFactory.getRegistry().entrySet()) {
-		if (resource.toLowerCase().contains(storeEntry.getKey().toLowerCase())) { return storeEntry.getValue().get(
-			resource.substring(storeEntry.getKey().length())); }
+	   for (FileStore storeEntry : FileStoreFactory.getRegistry().values()) {
+		if (resource.toLowerCase().contains(storeEntry.getBaseUri().toLowerCase())) { return storeEntry.get(
+			resource.substring(storeEntry.getBaseUri().length())); }
 	   }
 	}
 

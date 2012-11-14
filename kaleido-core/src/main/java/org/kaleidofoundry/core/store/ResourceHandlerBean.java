@@ -31,6 +31,11 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 import org.kaleidofoundry.core.io.IOHelper;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
@@ -46,11 +51,15 @@ import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
  */
 @Immutable
 @NotThreadSafe(comment = "for the instances built by calling constructor with an inputstream or a reader")
+@XmlRootElement(name = "resource")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(propOrder = { "resourceUri", "lastModified", "mimeType", "charset" })
 class ResourceHandlerBean implements ResourceHandler, Serializable {
 
    private static final long serialVersionUID = 1L;
 
    @Transient
+   @XmlTransient
    private final transient AbstractFileStore store;
 
    private final String resourceUri;
@@ -58,14 +67,19 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
    private String mimeType;
    private String charset;
 
+   @XmlTransient
    private boolean closed;
 
+   @XmlTransient
    private byte[] bytes;
+   @XmlTransient
    private String text;
 
    @Transient
+   @XmlTransient
    private transient InputStream input;
    @Transient
+   @XmlTransient
    private transient Reader reader;
 
    /**

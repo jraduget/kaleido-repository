@@ -128,7 +128,7 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 
 	FileStore fileStore = getRegistry().get(baseUri);
 	if (fileStore == null) {
-	   fileStore = provides(baseUri, new FileStoreContextBuilder().withBaseUri(baseUri).build());
+	   fileStore = provides(baseUri, new FileStoreContextBuilder(baseUri).withBaseUri(baseUri).build());
 	}
 	return fileStore;
    }
@@ -171,14 +171,14 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 
 		   try {
 			if (fileStore.isUriManageable(mergedBaseUri)) {
-			   getRegistry().put(mergedBaseUri, fileStore);
+			   getRegistry().put(pContext.getName(), fileStore);
 			   return fileStore;
 			}
 		   } catch (final Throwable th) {
 		   }
 
 		   // unregister wrong file store
-		   getRegistry().remove(fileStore.getBaseUri());
+		   getRegistry().remove(pContext.getName());
 
 		} catch (final NoSuchMethodException e) {
 		   throw new ProviderException("context.provider.error.NoSuchConstructorException", impl.getName(), "RuntimeContext<FileStore> context");

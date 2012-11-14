@@ -84,7 +84,7 @@ public class GaeFileStoreTest extends AbstractFileStoreTest {
 
 	final String baseUri = "gs:/kaleido/store/test";
 	final String bucketName = baseUri.replace("gs:/", "");
-	final RuntimeContext<FileStore> context = new FileStoreContextBuilder().withBaseUri(baseUri).build();
+	final RuntimeContext<FileStore> context = new FileStoreContextBuilder("gaeFileStore").withBaseUri(baseUri).build();
 	fileStore = new GaeFileStore(context);
 
 	// get

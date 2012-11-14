@@ -14,7 +14,11 @@
 	<context-param>
 		<description>the configurations to load separated by a comma</description>
 		<param-name>kaleido.configurations</param-name>
-		<param-value>myConfig=classpath:/config/myConfig.properties,myCacheConfig=classpath:/cache/myContext.properties,myI18nConfig=classpath:/i18n/myContext.properties,myStore=classpath:/store/myContext.properties</param-value>
+		<param-value>
+			myConfig=classpath:/config/myConfig.properties
+			myCacheConfig=classpath:/cache/myContext.properties
+			myI18nConfig=classpath:/i18n/myContext.properties
+			myStore=classpath:/store/myContext.properties</param-value>
 	</context-param>
 
 	<listener>

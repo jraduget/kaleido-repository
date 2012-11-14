@@ -32,7 +32,7 @@ public class ClasspathFileStoreTest extends AbstractFileStoreTest {
 
 	super.setup();
 
-	final RuntimeContext<FileStore> context = new FileStoreContextBuilder().withBaseUri("classpath:/").build();
+	final RuntimeContext<FileStore> context = new FileStoreContextBuilder("cpStore").withBaseUri("classpath:/").build();
 	fileStore = new ClasspathFileStore(context);
 
 	existingResources.put("store/foo.txt", DEFAULT_RESOURCE_MOCK_TEST);
