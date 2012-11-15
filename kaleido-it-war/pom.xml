@@ -83,6 +83,18 @@
 			</exclusions>
 		</dependency>
 
+		<!-- REST / JAXB - JSON -->
+		<dependency>
+    		<groupId>com.sun.jersey</groupId>
+   			<artifactId>jersey-server</artifactId>
+    		<version>1.13</version>
+		</dependency>
+		<dependency>
+    		<groupId>com.sun.jersey</groupId>
+   			<artifactId>jersey-servlet</artifactId>
+    		<version>1.13</version>
+		</dependency>
+			
 	</dependencies>
 
 	<reporting>
@@ -98,5 +110,45 @@
 			</plugin>
 		</plugins>
 	</reporting>
+	
+	<profiles>
+		<!-- JavaEE 5 profile - Ejb 3.0, JPA 1.x, JMS 1.1 ... -->
+		<profile>
+			<id>javaee5</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>javaee</name>
+					<value>5</value>
+				</property>
+			</activation>			
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.persistence</groupId>
+					<artifactId>javax.persistence</artifactId>
+					<version>1.2.0</version>
+				</dependency>						
+			</dependencies>
+		</profile>
+		
+		<!-- JavaEE 6 profile - Ejb 3.1, JPA 2.x, ... -->
+		<profile>
+			<id>javaee6</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>javaee</name>
+					<value>6</value>
+				</property>				
+			</activation>				
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.persistence</groupId>
+					<artifactId>javax.persistence</artifactId>
+					<version>2.0.0</version>
+				</dependency>
+			</dependencies>
+		</profile>		
+	</profiles>
 
 </project>
