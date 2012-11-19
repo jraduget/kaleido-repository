@@ -28,6 +28,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -52,6 +53,7 @@ import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
 import org.kaleidofoundry.core.config.entity.FireChangesReport;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.lang.annotation.TaskLabel;
+import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.StringHelper;
 
@@ -94,7 +96,7 @@ import org.kaleidofoundry.core.util.StringHelper;
 @Path("/configurations/")
 @Task(labels = TaskLabel.Defect, comment = "restore 'implements ConfigurationManager which cause a bug' - I open a GF3.x bug for this : GLASSFISH-16199")
 public class ConfigurationManagerBean { // implements ConfigurationManager {
-
+	
    /** injected and used to handle security context */
    @Context
    SecurityContext securityContext;
@@ -109,6 +111,17 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 
    // ### Property management methods ############################################################################################
 
+   public ConfigurationManagerBean() {
+	 try {
+		 // em will be injected by by java ee container or if not by aspectj 
+		 if (em == null) {
+		   em = UnmanagedEntityManagerFactory.currentEntityManager(KaleidoPersistentContextUnitName);
+		 }
+	 } catch (PersistenceException pe) {
+	    em = null;
+	 }
+   }
+   
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.ConfigurationManager#getProperty(java.lang.String, java.lang.String)

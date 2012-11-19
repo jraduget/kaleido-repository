@@ -69,4 +69,14 @@ public class PluginImplementationRegistry extends Registry<String, Plugin<?>> {
 
 	return result;
    }
+   
+   @Override
+   public String toString() {
+	StringBuilder builder = new StringBuilder();
+	builder.append("Plugin provider registry:").append("\n");
+	for (Plugin<?> plugin : values()) {
+	   builder.append(plugin.getName()).append(" - ").append(plugin.getVersion()).append(" - ").append(plugin.getDescription());
+	}
+	return builder.toString();
+   }
 }

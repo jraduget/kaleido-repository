@@ -38,12 +38,14 @@
 	<bean id="myStore" class="org.kaleidofoundry.core.store.ClasspathFileStore">		
 		<constructor-arg>		
 			<bean class="org.kaleidofoundry.core.context.RuntimeContext">
+				<constructor-arg type="java.lang.String" value="myStore"/>
 				<constructor-arg type="java.lang.Class" value="org.kaleidofoundry.core.store.FileStore"/>
 				<constructor-arg type="java.util.concurrent.ConcurrentMap" >
 					<util:map map-class="java.util.concurrent.ConcurrentHashMap">
 						<entry key="baseUri" value="classpath:/store" />
 					</util:map>
-				</constructor-arg>				
+				</constructor-arg>	
+				<constructor-arg type="org.kaleidofoundry.core.config.Configuration[]"><null/></constructor-arg>			
 			</bean>
 		</constructor-arg>
 	</bean>

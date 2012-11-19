@@ -16,6 +16,10 @@
 package org.kaleidofoundry.core.persistence;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -47,6 +51,8 @@ public class PersistenceContextAspect {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(PersistenceContextAspect.class);
 
+   private List<String> initializedPU =  Collections.synchronizedList(new ArrayList<String>());
+   
    public PersistenceContextAspect() {
 	LOGGER.debug("@Aspect(PersistenceContextAspect) new instance");
    }
@@ -77,8 +83,9 @@ public class PersistenceContextAspect {
 	   field.setAccessible(true);
 	   Object currentValue = field.get(target);
 
-	   if (currentValue == null) {
-		String persistenceUnit = annotation.unitName();
+	   String persistenceUnit = annotation.unitName();
+	   if (currentValue == null && !initializedPU.contains(persistenceUnit)) {
+		initializedPU.add(persistenceUnit);
 		EntityManagerFactory entityManagerFactory = UnmanagedEntityManagerFactory.getEntityManagerFactory(persistenceUnit);
 		field.set(target, entityManagerFactory);
 		return entityManagerFactory;

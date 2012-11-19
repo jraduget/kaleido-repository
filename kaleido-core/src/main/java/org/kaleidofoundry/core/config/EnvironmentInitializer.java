@@ -17,20 +17,37 @@ package org.kaleidofoundry.core.config;
 
 import static org.kaleidofoundry.core.config.ConfigurationConstants.STATIC_ENV_PARAMETERS;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.CoreMessageBundle;
+import static org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory.KaleidoPersistentContextUnitName;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.jar.Manifest;
+
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 
 import org.kaleidofoundry.core.cache.CacheConstants;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.cache.CacheManagerProvider;
+import org.kaleidofoundry.core.config.EnvironmentStatus.Status;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.i18n.I18nMessagesProvider;
+import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 import org.kaleidofoundry.core.plugin.PluginFactory;
 import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.FileStoreConstants;
@@ -39,6 +56,7 @@ import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.system.OsEnvironment;
 import org.kaleidofoundry.core.util.ReflectionHelper;
 import org.kaleidofoundry.core.util.StringHelper;
+import org.kaleidofoundry.core.util.ThrowableHelper;
 import org.kaleidofoundry.core.util.locale.LocaleFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,19 +72,91 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Jerome RADUGET
  */
+@Stateless(mappedName = "ejb/environment")
+// @Singleton
+@Path("/environment/")
 public class EnvironmentInitializer {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(EnvironmentInitializer.class);
 
    private final Logger logger;
 
+   private Status status;
+   private Throwable error;
 
-   protected EnvironmentInitializer() {
+   /** injected and used to handle security context */
+   @Context
+   SecurityContext securityContext;
+
+   /** injected and used to handle URIs */
+   @Context
+   UriInfo uriInfo;
+
+   /** injected entity manager */
+   @PersistenceContext(unitName = KaleidoPersistentContextUnitName)
+   EntityManager em;
+
+   public EnvironmentInitializer() {
 	this(LOGGER);
    }
 
    public EnvironmentInitializer(final Logger logger) {
 	this.logger = logger == null ? LOGGER : logger;
+	this.status = Status.STOPPED;
+	try {
+	   // em will be injected by by java ee container or if not by aspectj
+	   if (em == null) {
+		em = UnmanagedEntityManagerFactory.currentEntityManager(KaleidoPersistentContextUnitName);
+	   }
+	} catch (PersistenceException pe) {
+	   LOGGER.info("No jpa provider detected: '{}'", pe.getMessage());
+	   em = null;
+	}
+   }
+
+   /**
+    * @return application status
+    */
+   @GET
+   @Path("status")
+   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+   public EnvironmentInfo getInfo() {
+	StringBuilder pluginInfo = new StringBuilder();
+	pluginInfo.append(PluginFactory.getInterfaceRegistry().toString());
+	pluginInfo.append("\n");
+	pluginInfo.append(PluginFactory.getImplementationRegistry().toString());
+
+	StringBuilder osInfo = new StringBuilder();
+	try {
+	   final OsEnvironment environment = new OsEnvironment();
+	   for (final String key : environment.stringPropertyNames()) {
+		osInfo.append(key).append("=").append(environment.getProperty(key)).append("\n");
+	   }
+	} catch (IOException ioe) {
+	   osInfo.append("Error retrieving this info: " + ioe.getMessage());
+	}
+
+	StringBuilder manifestInfo = new StringBuilder();
+	InputStream inputStream = Thread.currentThread().getClass().getResourceAsStream("/META-INF/MANIFEST.MF");
+	if (inputStream != null) {
+	   try {
+		Manifest manifest = new Manifest(inputStream);
+		manifestInfo.append(manifest.toString());
+	   } catch (IOException ioe) {
+	   }
+	}
+
+	return new EnvironmentInfo(manifestInfo.toString(), System.getProperties().toString(), osInfo.toString(), pluginInfo.toString());
+   }
+
+   /**
+    * @return application environment
+    */
+   @GET
+   @Path("info")
+   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+   public EnvironmentStatus getStatus() {
+	return new EnvironmentStatus(status, ThrowableHelper.getStackTrace(error));
    }
 
    /**
@@ -111,53 +201,62 @@ public class EnvironmentInitializer {
     */
    public void start() {
 
-	// Merge static environment variable values, to have the final value
-	for (Entry<String, String> entry : STATIC_ENV_PARAMETERS.entrySet()) {
-	   LOGGER.debug("Define environment variable {}={}", entry.getKey(), entry.getValue());
-	   STATIC_ENV_PARAMETERS.put(entry.getKey(), StringHelper.resolveExpression(entry.getValue(), STATIC_ENV_PARAMETERS));
-	}
-
-	// I18n JPA enable or not
-	I18nMessagesFactory.disableJpaControl();
-	String enableI18nJpa = STATIC_ENV_PARAMETERS.get(I18nMessagesProvider.ENABLE_JPA_PROPERTY);
-	enableI18nJpa = StringHelper.isEmpty(enableI18nJpa) ? Boolean.FALSE.toString() : enableI18nJpa;
-
-	if (Boolean.valueOf(enableI18nJpa)) {
-	   LOGGER.info(CoreMessageBundle.getMessage("loader.define.i18n.jpa.enabled"));
-	   I18nMessagesFactory.enableJpaControl();
-	} else {
-	   LOGGER.info(CoreMessageBundle.getMessage("loader.define.i18n.jpa.disabled"));
-	   I18nMessagesFactory.disableJpaControl();
-	}
-
-	// Parse and set default locale if needed
-	final String defaultLocale = STATIC_ENV_PARAMETERS.get(LocaleFactory.JavaEnvProperties);
-	if (!StringHelper.isEmpty(defaultLocale)) {
-	   LOGGER.info(CoreMessageBundle.getMessage("loader.define.locale", defaultLocale));
-	   final Locale setDefaultLocale = LocaleFactory.parseLocale(defaultLocale);
-	   Locale.setDefault(setDefaultLocale);
-	   LOGGER.info(StringHelper.replicate("*", 120));
-	}
-
-	// FileStore init (basedir ...)
-	FileStoreProvider.init(STATIC_ENV_PARAMETERS.get(FileStoreConstants.DEFAULT_BASE_DIR_PROP));
-
-	// Cache provider init (default cache provider ...)
-	CacheManagerProvider.init(STATIC_ENV_PARAMETERS.get(CacheConstants.CACHE_PROVIDER_ENV));
-
-	// Parse the default configurations and load it if needed
-	final String kaleidoConfigurations = STATIC_ENV_PARAMETERS.get(ConfigurationConstants.JavaEnvProperties);
-	if (!StringHelper.isEmpty(kaleidoConfigurations)) {
-	   LOGGER.info(CoreMessageBundle.getMessage("loader.define.configurations",
-		   StringHelper.replaceAll(kaleidoConfigurations, "\n", ",").replaceAll("\\s+", "")));
-	   // load and register given configurations ids / url
-	   try {
-		ConfigurationFactory.init(StringHelper.replaceAll(kaleidoConfigurations, "\n", ConfigurationConstants.JavaEnvPropertiesSeparator));
-	   } catch (final ResourceException rse) {
-		throw new IllegalStateException(CoreMessageBundle.getMessage("loader.define.configurations.error", kaleidoConfigurations), rse);
+	try {
+	   // Merge static environment variable values, to have the final value
+	   for (Entry<String, String> entry : STATIC_ENV_PARAMETERS.entrySet()) {
+		LOGGER.debug("Define environment variable {}={}", entry.getKey(), entry.getValue());
+		STATIC_ENV_PARAMETERS.put(entry.getKey(), StringHelper.resolveExpression(entry.getValue(), STATIC_ENV_PARAMETERS));
 	   }
-	   LOGGER.info(StringHelper.replicate("*", 120));
+
+	   // I18n JPA enable or not
+	   I18nMessagesFactory.disableJpaControl();
+	   String enableI18nJpa = STATIC_ENV_PARAMETERS.get(I18nMessagesProvider.ENABLE_JPA_PROPERTY);
+	   enableI18nJpa = StringHelper.isEmpty(enableI18nJpa) ? Boolean.FALSE.toString() : enableI18nJpa;
+
+	   if (Boolean.valueOf(enableI18nJpa)) {
+		LOGGER.info(CoreMessageBundle.getMessage("loader.define.i18n.jpa.enabled"));
+		I18nMessagesFactory.enableJpaControl();
+	   } else {
+		LOGGER.info(CoreMessageBundle.getMessage("loader.define.i18n.jpa.disabled"));
+		I18nMessagesFactory.disableJpaControl();
+	   }
+
+	   // Parse and set default locale if needed
+	   final String defaultLocale = STATIC_ENV_PARAMETERS.get(LocaleFactory.JavaEnvProperties);
+	   if (!StringHelper.isEmpty(defaultLocale)) {
+		LOGGER.info(CoreMessageBundle.getMessage("loader.define.locale", defaultLocale));
+		final Locale setDefaultLocale = LocaleFactory.parseLocale(defaultLocale);
+		Locale.setDefault(setDefaultLocale);
+		LOGGER.info(StringHelper.replicate("*", 120));
+	   }
+
+	   // FileStore init (basedir ...)
+	   FileStoreProvider.init(STATIC_ENV_PARAMETERS.get(FileStoreConstants.DEFAULT_BASE_DIR_PROP));
+
+	   // Cache provider init (default cache provider ...)
+	   CacheManagerProvider.init(STATIC_ENV_PARAMETERS.get(CacheConstants.CACHE_PROVIDER_ENV));
+
+	   // Parse the default configurations and load it if needed
+	   final String kaleidoConfigurations = STATIC_ENV_PARAMETERS.get(ConfigurationConstants.JavaEnvProperties);
+	   if (!StringHelper.isEmpty(kaleidoConfigurations)) {
+		LOGGER.info(CoreMessageBundle.getMessage("loader.define.configurations",
+			StringHelper.replaceAll(kaleidoConfigurations, "\n", ",").replaceAll("\\s+", "")));
+		// load and register given configurations ids / url
+		try {
+		   ConfigurationFactory.init(StringHelper.replaceAll(kaleidoConfigurations, "\n", ConfigurationConstants.JavaEnvPropertiesSeparator));
+		} catch (final ResourceException rse) {
+		   throw new IllegalStateException(CoreMessageBundle.getMessage("loader.define.configurations.error", kaleidoConfigurations), rse);
+		}
+		LOGGER.info(StringHelper.replicate("*", 120));
+	   }
+
+	   this.status = Status.RUNNING;
+	} catch (RuntimeException re) {
+	   this.status = Status.ERROR;
+	   this.error = re;
+	   throw re;
 	}
+
    }
 
    /**
@@ -174,12 +273,22 @@ public class EnvironmentInitializer {
 	   }
 	   // unload and unregister given configurations ids / url
 	   ConfigurationFactory.unregisterAll();
-	} catch (final ResourceException rse) {
-	   throw new IllegalStateException(rse);
-	} finally {
+
 	   // unload all cache manager instances
 	   CacheManagerFactory.destroyAll();
-	}
 
+	   // if unmanaged entity manager used, clean all
+	   UnmanagedEntityManagerFactory.closeAll();
+
+	   this.status = Status.STOPPED;
+	} catch (final ResourceException rse) {
+	   this.error = rse;
+	   this.status = Status.ERROR;
+	   throw new IllegalStateException(rse);
+	} catch (RuntimeException re) {
+	   this.error = re;
+	   this.status = Status.ERROR;
+	   throw re;
+	}
    }
 }
