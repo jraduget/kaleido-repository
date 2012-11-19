@@ -192,7 +192,6 @@ public class LocalCacheImpl<K extends Serializable, V extends Serializable> exte
 
    @Override
    void destroy() {
-	CacheableMap.clear();
 	cacheManager.cachesByName.remove(getName());
 	super.destroy();
    }

@@ -204,7 +204,6 @@ org.kaleidofoundry.core.cache.Cache<K, V> {
     */
    @Override
    void destroy() {
-	cache.clear();
 	cache.stop();
 	cacheManager.cachesByName.remove(getName());
 	super.destroy();
