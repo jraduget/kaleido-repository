@@ -59,7 +59,7 @@ public class StartupListener implements ServletContextListener {
 	ServletContextProvider.init(sce.getServletContext());
 
 	// load operating system and java system env variables
-	initializer.load();
+	initializer.init();
 
 	// Then, load web application init parameters
 	@SuppressWarnings("unchecked")

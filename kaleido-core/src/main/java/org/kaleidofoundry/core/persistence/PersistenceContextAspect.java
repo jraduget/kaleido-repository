@@ -19,7 +19,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -51,7 +50,8 @@ public class PersistenceContextAspect {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(PersistenceContextAspect.class);
 
-   private List<String> initializedPU =  Collections.synchronizedList(new ArrayList<String>());
+   private final List<String> InitaliazedPersistenceUnit =  Collections.synchronizedList(new ArrayList<String>());
+   private final List<String> InitaliazedPersistenceContext =  Collections.synchronizedList(new ArrayList<String>());
    
    public PersistenceContextAspect() {
 	LOGGER.debug("@Aspect(PersistenceContextAspect) new instance");
@@ -84,10 +84,11 @@ public class PersistenceContextAspect {
 	   Object currentValue = field.get(target);
 
 	   String persistenceUnit = annotation.unitName();
-	   if (currentValue == null && !initializedPU.contains(persistenceUnit)) {
-		initializedPU.add(persistenceUnit);
+	   if (currentValue == null && !InitaliazedPersistenceUnit.contains(persistenceUnit)) {
+		InitaliazedPersistenceUnit.add(persistenceUnit);
 		EntityManagerFactory entityManagerFactory = UnmanagedEntityManagerFactory.getEntityManagerFactory(persistenceUnit);
 		field.set(target, entityManagerFactory);
+		InitaliazedPersistenceUnit.add(persistenceUnit);
 		return entityManagerFactory;
 	   } else {
 		return thisJoinPoint.proceed();
@@ -109,10 +110,11 @@ public class PersistenceContextAspect {
 	   field.setAccessible(true);
 	   Object currentValue = field.get(target);
 
-	   if (currentValue == null) {
-		String persistenceUnit = annotation.unitName();
-		EntityManager entityManager = UnmanagedEntityManagerFactory.currentEntityManager(persistenceUnit);
+	   String persistenceContext = annotation.unitName();
+	   if (currentValue == null && InitaliazedPersistenceContext.contains(persistenceContext)) {
+		EntityManager entityManager = UnmanagedEntityManagerFactory.currentEntityManager(persistenceContext);
 		field.set(target, entityManager);
+		InitaliazedPersistenceContext.add(persistenceContext);
 		return entityManager;
 	   } else {
 		return thisJoinPoint.proceed();

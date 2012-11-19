@@ -91,7 +91,7 @@ public class KaleidoCdiJunit4ClassRunner extends BlockJUnit4ClassRunner {
 
 	// 
 	environmentInitializer = new EnvironmentInitializer(null);
-	environmentInitializer.load();
+	environmentInitializer.init();
 	environmentInitializer.start();
 	   
 	// create and init the configurations initializer

@@ -30,6 +30,7 @@ import java.util.Set;
 import org.kaleidofoundry.core.context.AbstractProviderService;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.i18n.InternalBundleEnum;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.kaleidofoundry.core.plugin.Declare;
@@ -270,7 +271,9 @@ public class CacheManagerProvider extends AbstractProviderService<CacheManager> 
 	if (INIT_LOADED) {
 	   for (Entry<String, CacheManager> entry : REGISTRY.entrySet()) {
 		try {
-		   entry.getValue().destroyAll();
+		   if (InternalBundleEnum.isInternalBundle(entry.getValue().getName())) {
+			entry.getValue().destroyAll();
+		   }
 		} catch (Throwable th) {
 		   LOGGER.info(CacheMessageBundle.getMessage("cachemanager.destroyall.error", entry.getKey()), th);
 		}

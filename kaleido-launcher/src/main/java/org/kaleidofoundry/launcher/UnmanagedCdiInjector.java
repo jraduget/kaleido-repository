@@ -54,7 +54,7 @@ public class UnmanagedCdiInjector {
 
 		// load env variables and start kaleido components
 		environmentInitializer = new EnvironmentInitializer(LOGGER);
-		environmentInitializer.load();
+		environmentInitializer.init();
 		environmentInitializer.start();
 	   }
 
