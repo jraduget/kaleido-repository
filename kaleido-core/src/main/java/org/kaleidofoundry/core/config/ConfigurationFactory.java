@@ -106,10 +106,11 @@ public abstract class ConfigurationFactory {
    public static synchronized final void unregisterAll() throws ResourceException {
 
 	for (final Configuration configuration : getRegistry().values()) {
-	   configuration.unload();
+	   if (configuration.isLoaded()) {
+		configuration.unload();
+	   }
+	   getRegistry().remove(configuration.getName());
 	}
-
-	getRegistry().clear();
 
 	INIT_LOADED = false;
 

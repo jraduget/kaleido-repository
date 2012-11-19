@@ -30,8 +30,8 @@ import org.kaleidofoundry.core.config.ConfigurationListener;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginHelper;
-import org.kaleidofoundry.core.util.ObjectHelper;
 import org.kaleidofoundry.core.util.Registry;
+import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * Base implementation for {@link ProviderService} <br/>
@@ -92,7 +92,7 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
    @Override
    public final T provides(final Context context, final String defaultName, final Class<T> genericClassInterface) throws ProviderException {
 
-	String name = ObjectHelper.firstNonNull(context.value(), defaultName);
+	String name = StringHelper.isEmpty(context.value()) ? defaultName : context.value();
 	T instance = keepInstanceInRegistry ? getRegistry().get(name) : null;
 
 	if (instance == null) {
