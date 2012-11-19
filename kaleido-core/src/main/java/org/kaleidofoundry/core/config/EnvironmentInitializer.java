@@ -83,8 +83,9 @@ public class EnvironmentInitializer {
 
    private final Logger logger;
 
-   private Status status;
-   private Throwable error;
+   // static shared variables, because of the javax rest controller create multiple instances at each request
+   private static Status status;
+   private static Throwable error;
 
    /** injected and used to handle security context */
    @Context
@@ -104,7 +105,7 @@ public class EnvironmentInitializer {
 
    public EnvironmentInitializer(final Logger logger) {
 	this.logger = logger == null ? LOGGER : logger;
-	this.status = Status.STOPPED;
+	status = Status.STOPPED;
 	try {
 	   // em will be injected by by java ee container or if not by aspectj
 	   if (em == null) {
@@ -164,7 +165,7 @@ public class EnvironmentInitializer {
     * Load environment settings before {@link #start()} <br/>
     * It can be overloaded
     */
-   public void init() {
+   public synchronized void init() {
 
 	// Plugin registry loading
 	PluginFactory.getInterfaceRegistry();
@@ -187,7 +188,7 @@ public class EnvironmentInitializer {
 	   STATIC_ENV_PARAMETERS.put(key, javaEnvVariables.getProperty(key));
 	}
 
-	this.status = Status.INIT;
+	status = Status.INIT;
 
    }
 
@@ -204,13 +205,13 @@ public class EnvironmentInitializer {
     */
    @PUT
    @Path("start")
-   public Response start() {
+   public synchronized Response start() {
 
-	if (this.status == Status.STOPPED) {
+	if (status == Status.STOPPED) {
 	   init();
 	}
 
-	if (this.status == Status.INIT) {
+	if (status == Status.INIT) {
 	   try {
 		// Merge static environment variable values, to have the final value
 		for (Entry<String, String> entry : STATIC_ENV_PARAMETERS.entrySet()) {
@@ -260,13 +261,13 @@ public class EnvironmentInitializer {
 		   LOGGER.info(StringHelper.replicate("*", 120));
 		}
 
-		this.status = Status.STARTED;
+		status = Status.STARTED;
 		
 		return Response.ok(getStatus()).build();
 		
 	   } catch (RuntimeException re) {
-		this.status = Status.ERROR;
-		this.error = re;
+		status = Status.ERROR;
+		error = re;
 		
 		// not a rest request
 		if (uriInfo == null) {
@@ -287,7 +288,7 @@ public class EnvironmentInitializer {
     */
    @PUT
    @Path("stop")
-   public Response stop() {
+   public synchronized Response stop() {
 
 	if (status == Status.STARTED) {
 	   try {
@@ -307,13 +308,13 @@ public class EnvironmentInitializer {
 		// if unmanaged entity manager used, clean all
 		UnmanagedEntityManagerFactory.closeAll();
 
-		this.status = Status.STOPPED;
+		status = Status.STOPPED;
 		
 		return Response.ok(getStatus()).build();
 		
 	   } catch (final ResourceException rse) {
-		this.error = rse;
-		this.status = Status.ERROR;
+		error = rse;
+		status = Status.ERROR;
 		// not a rest request
 		if (uriInfo == null) {
 		   throw new IllegalStateException(rse);
@@ -322,8 +323,8 @@ public class EnvironmentInitializer {
 		   return Response.serverError().build();
 		}
 	   } catch (RuntimeException re) {
-		this.error = re;
-		this.status = Status.ERROR;
+		error = re;
+		status = Status.ERROR;
 		// not a rest request
 		if (uriInfo == null) {
 		   throw re;

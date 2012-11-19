@@ -15,6 +15,10 @@
  */
 package org.kaleidofoundry.core.store;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
+
 import javax.ejb.Stateless;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,6 +28,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+
+import org.kaleidofoundry.core.store.entity.FileStoreEntry;
 
 @Stateless(mappedName = "ejb/filestore/manager")
 @Path("/filestores/")
@@ -36,6 +42,16 @@ public class FileStoreManagerBean {
    /** injected and used to handle URIs */
    @Context
    UriInfo uriInfo;
+
+   @GET
+   @Path("/")
+   public List<FileStoreEntry> getStores() {
+	List<FileStoreEntry> stores = new ArrayList<FileStoreEntry>();
+	for (Entry<String, FileStore> storeEntry : FileStoreFactory.getRegistry().entrySet()) {
+	   stores.add(new FileStoreEntry(storeEntry.getKey(), storeEntry.getValue().getBaseUri()));
+	}
+	return stores;
+   }
 
    @GET
    @Path("{store}/get/{resource}")

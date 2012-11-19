@@ -445,6 +445,18 @@ public class ConfigurationManagerBean { // implements ConfigurationManager {
 
    // ### Configuration management methods #######################################################################################
 
+   @GET
+   @Path("/")
+   public List<ConfigurationModel> getStores() {
+	List<ConfigurationModel> configurations = new ArrayList<ConfigurationModel>();
+	for (Entry<String, Configuration> configEntry : ConfigurationFactory.getRegistry().entrySet()) {
+	   ConfigurationModel configModel = getModel(configEntry.getKey());
+	   configModel.getProperties().clear(); // no properties here
+	   configurations.add(configModel);
+	}
+	return configurations;
+   }
+   
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.ConfigurationManager#getModel(java.lang.String)
