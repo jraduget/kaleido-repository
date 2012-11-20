@@ -18,7 +18,10 @@ package org.kaleidofoundry.core.persistence;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -50,8 +53,9 @@ public class PersistenceContextAspect {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(PersistenceContextAspect.class);
 
-   private final List<String> InitaliazedPersistenceUnit =  Collections.synchronizedList(new ArrayList<String>());
-   private final List<String> InitaliazedPersistenceContext =  Collections.synchronizedList(new ArrayList<String>());
+   // map of @Persistence... field injected state
+   private static final List<Object> _$injectedObjects = Collections.synchronizedList(new ArrayList<Object>());
+
    
    public PersistenceContextAspect() {
 	LOGGER.debug("@Aspect(PersistenceContextAspect) new instance");
@@ -83,12 +87,11 @@ public class PersistenceContextAspect {
 	   field.setAccessible(true);
 	   Object currentValue = field.get(target);
 
-	   String persistenceUnit = annotation.unitName();
-	   if (currentValue == null && !InitaliazedPersistenceUnit.contains(persistenceUnit)) {
-		InitaliazedPersistenceUnit.add(persistenceUnit);
+	   if (currentValue == null && !_$injectedObjects.contains(target)) {
+		_$injectedObjects.add(target);
+		String persistenceUnit = annotation.unitName();
 		EntityManagerFactory entityManagerFactory = UnmanagedEntityManagerFactory.getEntityManagerFactory(persistenceUnit);
-		field.set(target, entityManagerFactory);
-		InitaliazedPersistenceUnit.add(persistenceUnit);
+		field.set(target, entityManagerFactory);		
 		return entityManagerFactory;
 	   } else {
 		return thisJoinPoint.proceed();
@@ -110,11 +113,11 @@ public class PersistenceContextAspect {
 	   field.setAccessible(true);
 	   Object currentValue = field.get(target);
 
-	   String persistenceContext = annotation.unitName();
-	   if (currentValue == null && InitaliazedPersistenceContext.contains(persistenceContext)) {
+	   if (currentValue == null && !_$injectedObjects.contains(target)) {
+		_$injectedObjects.add(target);
+		String persistenceContext = annotation.unitName();
 		EntityManager entityManager = UnmanagedEntityManagerFactory.currentEntityManager(persistenceContext);
 		field.set(target, entityManager);
-		InitaliazedPersistenceContext.add(persistenceContext);
 		return entityManager;
 	   } else {
 		return thisJoinPoint.proceed();
