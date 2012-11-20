@@ -19,8 +19,8 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.kaleidofoundry.core.config.entity.ConfigurationModel;
-import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
+import org.kaleidofoundry.core.config.model.ConfigurationModel;
+import org.kaleidofoundry.core.config.model.ConfigurationProperty;
 import org.kaleidofoundry.core.store.ResourceException;
 
 /**

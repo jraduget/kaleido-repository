@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core.i18n.entity;
+package org.kaleidofoundry.core.i18n.model;
 
 /**
  * Constants for {@link I18nMessage}

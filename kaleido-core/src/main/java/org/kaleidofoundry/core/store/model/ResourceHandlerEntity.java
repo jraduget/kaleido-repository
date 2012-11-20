@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core.store.entity;
+package org.kaleidofoundry.core.store.model;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -33,6 +33,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
+import javax.xml.bind.annotation.XmlType;
 
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.util.locale.LocaleFactory;
@@ -47,6 +48,7 @@ import org.kaleidofoundry.core.util.locale.LocaleFactory;
 @Entity(name = "FileStore")
 // @Access(AccessType.PROPERTY)
 @Table(name = "FILESTORE")
+@XmlType
 @Task(comment = "Audit information (locale zone for the date, user information...)")
 public class ResourceHandlerEntity implements Serializable {
 

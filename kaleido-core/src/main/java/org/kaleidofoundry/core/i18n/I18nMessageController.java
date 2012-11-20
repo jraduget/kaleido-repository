@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core.i18n.entity;
+package org.kaleidofoundry.core.i18n;
 
-import static org.kaleidofoundry.core.i18n.entity.I18nMessageConstants.Query_MessagesByLocale.Name;
-import static org.kaleidofoundry.core.i18n.entity.I18nMessageConstants.Query_MessagesByLocale.Parameter_Locale;
-import static org.kaleidofoundry.core.i18n.entity.I18nMessageConstants.Query_MessagesByLocale.Parameter_ResourceName;
+import static org.kaleidofoundry.core.i18n.model.I18nMessageConstants.Query_MessagesByLocale.Name;
+import static org.kaleidofoundry.core.i18n.model.I18nMessageConstants.Query_MessagesByLocale.Parameter_Locale;
+import static org.kaleidofoundry.core.i18n.model.I18nMessageConstants.Query_MessagesByLocale.Parameter_ResourceName;
 import static org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory.KaleidoPersistentContextUnitName;
 
 import java.util.List;
@@ -32,6 +32,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.kaleidofoundry.core.i18n.model.I18nMessage;
+import org.kaleidofoundry.core.i18n.model.I18nMessageLanguage;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Task;
 
@@ -43,7 +45,7 @@ import org.kaleidofoundry.core.lang.annotation.Task;
 @Stateless(mappedName = "ejb/i18n")
 @Path("/i18n/")
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-public class I18nMessageManagerBean {
+public class I18nMessageController {
 
    @PersistenceContext(unitName = KaleidoPersistentContextUnitName)
    EntityManager em;

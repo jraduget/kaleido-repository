@@ -26,7 +26,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.kaleidofoundry.core.cache.Cache;
-import org.kaleidofoundry.core.config.entity.FireChangesReport;
+import org.kaleidofoundry.core.config.model.FireChangesReport;
 import org.kaleidofoundry.core.context.Provider;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Nullable;

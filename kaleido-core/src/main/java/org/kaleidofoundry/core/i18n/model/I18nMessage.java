@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core.i18n.entity;
+package org.kaleidofoundry.core.i18n.model;
 
-import static org.kaleidofoundry.core.i18n.entity.I18nMessageConstants.DefaultMessageGroup;
-import static org.kaleidofoundry.core.i18n.entity.I18nMessageConstants.Table_I18nMessage;
+import static org.kaleidofoundry.core.i18n.model.I18nMessageConstants.DefaultMessageGroup;
+import static org.kaleidofoundry.core.i18n.model.I18nMessageConstants.Table_I18nMessage;
 import static org.kaleidofoundry.core.lang.annotation.TaskLabel.Enhancement;
 
 import java.io.Serializable;

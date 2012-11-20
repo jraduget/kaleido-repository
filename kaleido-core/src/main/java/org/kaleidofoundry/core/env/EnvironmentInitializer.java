@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core.config;
+package org.kaleidofoundry.core.env;
 
 import static org.kaleidofoundry.core.config.ConfigurationConstants.STATIC_ENV_PARAMETERS;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.CoreMessageBundle;
@@ -28,25 +28,20 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.jar.Manifest;
 
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
 
 import org.kaleidofoundry.core.cache.CacheConstants;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.cache.CacheManagerProvider;
-import org.kaleidofoundry.core.config.EnvironmentStatus.Status;
+import org.kaleidofoundry.core.config.Configuration;
+import org.kaleidofoundry.core.config.ConfigurationConstants;
+import org.kaleidofoundry.core.config.ConfigurationFactory;
+import org.kaleidofoundry.core.env.model.EnvironmentInfo;
+import org.kaleidofoundry.core.env.model.EnvironmentStatus;
+import org.kaleidofoundry.core.env.model.EnvironmentStatus.Status;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.i18n.I18nMessagesProvider;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
@@ -72,28 +67,22 @@ import org.slf4j.LoggerFactory;
  * <li>{@link #stop()} : stop and free the components started</li>
  * </ul>
  * 
+ * @see EnvironmentStatus
+ * @see EnvironmentInfo
+ * 
  * @author Jerome RADUGET
  */
-@Stateless(mappedName = "ejb/environment")
-// @Singleton
-@Path("/environment/")
 public class EnvironmentInitializer {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(EnvironmentInitializer.class);
+
+   static EnvironmentInitializer instance;
 
    private final Logger logger;
 
    // static shared variables, because of the javax rest controller create multiple instances at each request
    private static Status status;
    private static Throwable error;
-
-   /** injected and used to handle security context */
-   @Context
-   SecurityContext securityContext;
-
-   /** injected and used to handle URIs */
-   @Context
-   UriInfo uriInfo;
 
    /** injected entity manager */
    @PersistenceContext(unitName = KaleidoPersistentContextUnitName)
@@ -104,6 +93,13 @@ public class EnvironmentInitializer {
    }
 
    public EnvironmentInitializer(final Logger logger) {
+
+	if (instance != null) {
+	   throw new IllegalStateException("environment have already been initialized");
+	} else {
+	   instance = this;
+	}
+
 	this.logger = logger == null ? LOGGER : logger;
 	status = Status.STOPPED;
 	try {
@@ -119,9 +115,6 @@ public class EnvironmentInitializer {
    /**
     * @return application status
     */
-   @GET
-   @Path("info")
-   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public EnvironmentInfo getInfo() {
 	StringBuilder pluginInfo = new StringBuilder();
 	pluginInfo.append(PluginFactory.getInterfaceRegistry().toString());
@@ -154,9 +147,6 @@ public class EnvironmentInitializer {
    /**
     * @return application environment
     */
-   @GET
-   @Path("status")
-   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public EnvironmentStatus getStatus() {
 	return new EnvironmentStatus(status, ThrowableHelper.getStackTrace(error));
    }
@@ -200,12 +190,11 @@ public class EnvironmentInitializer {
    }
 
    /**
-    * Load I18n / FileStore / CacheManager / Configuration <br/>
-    * it can be overloaded
+    * start and load I18n / FileStore / CacheManager / Configuration <br/>
+    * 
+    * @throws IllegalStateException if you try to start it from an invalid state (started, error)
     */
-   @PUT
-   @Path("start")
-   public synchronized Response start() {
+   public synchronized EnvironmentInitializer start() throws IllegalStateException {
 
 	if (status == Status.STOPPED) {
 	   init();
@@ -262,35 +251,28 @@ public class EnvironmentInitializer {
 		}
 
 		status = Status.STARTED;
-		
-		return Response.ok(getStatus()).build();
-		
+
+		return this;
+
 	   } catch (RuntimeException re) {
 		status = Status.ERROR;
 		error = re;
-		
-		// not a rest request
-		if (uriInfo == null) {
-		   throw re;
-		} else {
-		   LOGGER.error("start error", re);
-		   return Response.serverError().build();
-		}
+		throw re;
 	   }
 	} else {
-	   return Response.status(javax.ws.rs.core.Response.Status.FORBIDDEN).build();
+	   throw new IllegalStateException("Environment could not be started. The current state is " + status.name());
 	}
 
    }
 
    /**
-    * destroy and free
+    * stop and free resources
+    * 
+    * @throws IllegalStateException if you try to start it from an invalid state (started, error)
     */
-   @PUT
-   @Path("stop")
-   public synchronized Response stop() {
+   public synchronized EnvironmentInitializer stop() {
 
-	if (status == Status.STARTED) {
+	if (status == Status.STARTED || status == Status.ERROR) {
 	   try {
 		// unload messaging resources if it is in the classpath
 		try {
@@ -309,32 +291,25 @@ public class EnvironmentInitializer {
 		UnmanagedEntityManagerFactory.closeAll();
 
 		status = Status.STOPPED;
-		
-		return Response.ok(getStatus()).build();
-		
+
+		return this;
+
 	   } catch (final ResourceException rse) {
 		error = rse;
 		status = Status.ERROR;
-		// not a rest request
-		if (uriInfo == null) {
-		   throw new IllegalStateException(rse);
-		} else {
-		   LOGGER.error("stop error", rse);
-		   return Response.serverError().build();
-		}
+		throw new IllegalStateException(rse);
 	   } catch (RuntimeException re) {
 		error = re;
 		status = Status.ERROR;
-		// not a rest request
-		if (uriInfo == null) {
-		   throw re;
-		} else {
-		   LOGGER.error("stop error", re);
-		   return Response.serverError().build();
-		}
+		throw re;
 	   }
 	} else {
-	   return Response.status(javax.ws.rs.core.Response.Status.FORBIDDEN).build();
+	   throw new IllegalStateException("Environment could not be stop. The current state is " + status.name());
 	}
    }
+
+   Logger getLogger() {
+      return logger;
+   }
+   
 }

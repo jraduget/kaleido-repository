@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core.i18n.entity;
+package org.kaleidofoundry.core.i18n.model;
 
-import static org.kaleidofoundry.core.i18n.entity.I18nMessageConstants.Table_I18nMessageGroupe;
+import static org.kaleidofoundry.core.i18n.model.I18nMessageConstants.Table_I18nMessageGroupe;
 
 import java.io.Serializable;
 

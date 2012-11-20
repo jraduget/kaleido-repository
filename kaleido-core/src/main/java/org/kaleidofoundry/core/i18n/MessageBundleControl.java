@@ -28,8 +28,7 @@ import java.util.ResourceBundle;
 import java.util.ResourceBundle.Control;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.i18n.entity.I18nMessageLanguage;
-import org.kaleidofoundry.core.i18n.entity.I18nMessageManagerBean;
+import org.kaleidofoundry.core.i18n.model.I18nMessageLanguage;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 import org.kaleidofoundry.core.lang.annotation.Tasks;
@@ -145,7 +144,7 @@ public class MessageBundleControl extends Control {
 	   if (format == MessageBundleControlFormat.JPA_ENTITY_PROPERTIES && I18nMessagesProvider.JpaIsEnabled) {
 
 		@Task(comment = "create a service injector (local / guice / spring / ejb3 local or remote...)")
-		final I18nMessageManagerBean messageService = new I18nMessageManagerBean();
+		final I18nMessageController messageService = new I18nMessageController();
 		final List<I18nMessageLanguage> messagesLanguage = messageService.findMessagesByLocale(baseName, locale);
 
 		if (!messagesLanguage.isEmpty()) {

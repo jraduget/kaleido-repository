@@ -46,7 +46,7 @@ import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.config.ConfigurationChangeEvent.ConfigurationChangeType;
-import org.kaleidofoundry.core.config.entity.FireChangesReport;
+import org.kaleidofoundry.core.config.model.FireChangesReport;
 import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.Immutable;

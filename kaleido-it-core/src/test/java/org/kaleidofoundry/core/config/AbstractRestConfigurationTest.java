@@ -25,9 +25,9 @@ import javax.ws.rs.core.UriBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.kaleidofoundry.core.config.entity.ConfigurationModel;
-import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
-import org.kaleidofoundry.core.config.entity.FireChangesReport;
+import org.kaleidofoundry.core.config.model.ConfigurationModel;
+import org.kaleidofoundry.core.config.model.ConfigurationProperty;
+import org.kaleidofoundry.core.config.model.FireChangesReport;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;

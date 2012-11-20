@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core.i18n.entity;
+package org.kaleidofoundry.core.i18n.model;
 
-import static org.kaleidofoundry.core.i18n.entity.I18nMessageConstants.Table_I18nMessageLanguage;
+import static org.kaleidofoundry.core.i18n.model.I18nMessageConstants.Table_I18nMessageLanguage;
 
 import java.io.Serializable;
 import java.util.Locale;
@@ -40,7 +40,7 @@ import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.kaleidofoundry.core.i18n.entity.I18nMessageConstants.Query_MessagesByLocale;
+import org.kaleidofoundry.core.i18n.model.I18nMessageConstants.Query_MessagesByLocale;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.util.StringHelper;

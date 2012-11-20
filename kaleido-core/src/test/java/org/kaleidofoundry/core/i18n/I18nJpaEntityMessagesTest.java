@@ -27,10 +27,9 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.kaleidofoundry.core.i18n.entity.I18nMessage;
-import org.kaleidofoundry.core.i18n.entity.I18nMessageGroup;
-import org.kaleidofoundry.core.i18n.entity.I18nMessageLanguage;
-import org.kaleidofoundry.core.i18n.entity.I18nMessageManagerBean;
+import org.kaleidofoundry.core.i18n.model.I18nMessage;
+import org.kaleidofoundry.core.i18n.model.I18nMessageGroup;
+import org.kaleidofoundry.core.i18n.model.I18nMessageLanguage;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
@@ -118,7 +117,7 @@ public class I18nJpaEntityMessagesTest extends AbstractI18nMessagesTest {
 	   em.merge(message);
 
 	   // print mock entities that have been persist
-	   final I18nMessageManagerBean i18nMessageService = new I18nMessageManagerBean();
+	   final I18nMessageController i18nMessageService = new I18nMessageController();
 
 	   for (final Locale currentLocale : Arrays.asList(Locale.FRENCH, Locale.ENGLISH, Locale.GERMAN)) {
 

@@ -13,15 +13,18 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.kaleidofoundry.core.lang.label;
+package org.kaleidofoundry.core.lang.label.model;
 
 import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlType;
 
 /**
  * Use to classify label items by category
  * 
  * @author Jerome RADUGET
  */
+@XmlType
 public enum LabelCategory implements Serializable {
 
    Configuration,

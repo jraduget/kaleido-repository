@@ -23,8 +23,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.kaleidofoundry.core.config.entity.ConfigurationModel;
-import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
+import org.kaleidofoundry.core.config.model.ConfigurationModel;
+import org.kaleidofoundry.core.config.model.ConfigurationProperty;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 import org.kaleidofoundry.core.store.ResourceException;
 

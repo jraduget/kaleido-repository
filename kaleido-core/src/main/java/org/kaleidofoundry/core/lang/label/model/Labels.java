@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.kaleidofoundry.core.lang.label;
+package org.kaleidofoundry.core.lang.label.model;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -27,6 +27,7 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.util.CollectionsHelper;
@@ -38,6 +39,7 @@ import org.kaleidofoundry.core.util.CollectionsHelper;
  */
 @Embeddable
 // @Access(AccessType.PROPERTY)
+@XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Labels implements Serializable, Iterable<String> {
 
@@ -107,7 +109,6 @@ public class Labels implements Serializable, Iterable<String> {
     */
    public void setCategory(final LabelCategory category) {
 	this.category = category;
-	LabelManager.putLabels(this);
    }
 
    /**

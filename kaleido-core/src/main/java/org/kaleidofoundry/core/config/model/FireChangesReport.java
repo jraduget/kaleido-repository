@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.kaleidofoundry.core.config.entity;
+package org.kaleidofoundry.core.config.model;
 
 import java.io.Serializable;
 

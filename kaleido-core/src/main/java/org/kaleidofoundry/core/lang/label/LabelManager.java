@@ -15,9 +15,13 @@
  */
 package org.kaleidofoundry.core.lang.label;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.kaleidofoundry.core.lang.label.model.LabelCategory;
+import org.kaleidofoundry.core.lang.label.model.Labels;
 
 /**
  * Label manager is used to categorize some labels items, like configuration properties, i18n messages... <br/>
@@ -33,12 +37,15 @@ public class LabelManager {
     * 
     * @param labels
     */
-   static void putLabels(final Labels labels) {
+   public static void putLabels(final Labels labels) {
 	if (labels.getCategory() != null) {
 	   if (labelsByCategory.get(labels.getCategory()) == null) {
 		labelsByCategory.put(labels.getCategory(), new TreeSet<String>());
 	   }
-	   labelsByCategory.get(labels.getCategory()).addAll(labels.itemSet);
+	   Iterator<String> labelIt = labels.iterator();
+	   while (labelIt.hasNext()) {
+		labelsByCategory.get(labels.getCategory()).add(labelIt.next());
+	   }
 	}
    }
 

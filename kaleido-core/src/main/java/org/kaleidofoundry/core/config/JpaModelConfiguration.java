@@ -25,9 +25,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.kaleidofoundry.core.cache.Cache;
-import org.kaleidofoundry.core.config.entity.ConfigurationModel;
-import org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Query_FindConfigurationByName;
-import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
+import org.kaleidofoundry.core.config.model.ConfigurationModel;
+import org.kaleidofoundry.core.config.model.ConfigurationProperty;
+import org.kaleidofoundry.core.config.model.ConfigurationModelConstants.Query_FindConfigurationByName;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.store.ResourceException;

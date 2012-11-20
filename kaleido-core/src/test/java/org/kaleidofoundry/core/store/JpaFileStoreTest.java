@@ -31,7 +31,7 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.io.MimeTypeResolverFactory;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
-import org.kaleidofoundry.core.store.entity.ResourceHandlerEntity;
+import org.kaleidofoundry.core.store.model.ResourceHandlerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

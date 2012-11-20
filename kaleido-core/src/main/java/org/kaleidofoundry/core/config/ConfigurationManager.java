@@ -22,9 +22,9 @@ import java.util.Set;
 import javax.ejb.Local;
 import javax.ejb.Remote;
 
-import org.kaleidofoundry.core.config.entity.ConfigurationModel;
-import org.kaleidofoundry.core.config.entity.ConfigurationProperty;
-import org.kaleidofoundry.core.config.entity.FireChangesReport;
+import org.kaleidofoundry.core.config.model.ConfigurationModel;
+import org.kaleidofoundry.core.config.model.ConfigurationProperty;
+import org.kaleidofoundry.core.config.model.FireChangesReport;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.store.ResourceException;
 

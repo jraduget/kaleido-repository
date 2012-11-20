@@ -21,9 +21,9 @@ import java.util.Set;
 import javax.ws.rs.core.Application;
 
 import org.kaleidofoundry.core.config.ConfigurationManagerBean;
-import org.kaleidofoundry.core.config.EnvironmentInitializer;
+import org.kaleidofoundry.core.env.EnvironmentController;
 import org.kaleidofoundry.core.io.ConsoleManagerBean;
-import org.kaleidofoundry.core.store.FileStoreManagerBean;
+import org.kaleidofoundry.core.store.FileStoreController;
 
 /**
  * Rest application servlet used to exposed REST resources
@@ -40,10 +40,10 @@ public class RestResourcesApp extends Application {
 	s.add(RestResourceNotFoundMapper.class);
 	s.add(RestPropertyNotFoundMapper.class);
 	// manager module
-	s.add(EnvironmentInitializer.class);
+	s.add(EnvironmentController.class);
 	s.add(ConsoleManagerBean.class);
 	s.add(ConfigurationManagerBean.class);
-	s.add(FileStoreManagerBean.class);
+	s.add(FileStoreController.class);
 	
 	return s;
    }

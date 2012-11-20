@@ -37,7 +37,7 @@ import org.kaleidofoundry.core.io.MimeTypeResolverFactory;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.store.entity.ResourceHandlerEntity;
+import org.kaleidofoundry.core.store.model.ResourceHandlerEntity;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.kaleidofoundry.core.util.locale.LocaleFactory;
 

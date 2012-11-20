@@ -22,10 +22,10 @@ import javax.persistence.PersistenceUnit;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
-import org.kaleidofoundry.core.config.EnvironmentInitializer;
 import org.kaleidofoundry.core.config.NamedConfiguration;
 import org.kaleidofoundry.core.config.NamedConfigurationInitializer;
 import org.kaleidofoundry.core.config.NamedConfigurations;
+import org.kaleidofoundry.core.env.EnvironmentInitializer;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 import org.kaleidofoundry.launcher.UnmanagedCdiInjector;
 

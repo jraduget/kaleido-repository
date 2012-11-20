@@ -27,7 +27,7 @@ import javax.naming.NamingException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.kaleidofoundry.core.config.EnvironmentInitializer;
+import org.kaleidofoundry.core.env.EnvironmentInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

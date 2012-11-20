@@ -28,7 +28,7 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.kaleidofoundry.core.store.entity.ResourceHandlerEntity;
+import org.kaleidofoundry.core.store.model.ResourceHandlerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

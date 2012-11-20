@@ -19,8 +19,8 @@ import java.lang.annotation.Annotation;
 
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
-import org.kaleidofoundry.core.config.EnvironmentInitializer;
 import org.kaleidofoundry.core.config.NamedConfigurationInitializer;
+import org.kaleidofoundry.core.env.EnvironmentInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

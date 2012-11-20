@@ -13,10 +13,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.kaleidofoundry.core.config.entity;
+package org.kaleidofoundry.core.config.model;
 
-import static org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Entity_Property;
-import static org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Table_Property;
+import static org.kaleidofoundry.core.config.model.ConfigurationModelConstants.Entity_Property;
+import static org.kaleidofoundry.core.config.model.ConfigurationModelConstants.Table_Property;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -40,10 +40,10 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import org.kaleidofoundry.core.config.AbstractConfiguration;
-import org.kaleidofoundry.core.config.entity.ConfigurationModelConstants.Query_FindPropertyByName;
+import org.kaleidofoundry.core.config.model.ConfigurationModelConstants.Query_FindPropertyByName;
 import org.kaleidofoundry.core.lang.annotation.Task;
-import org.kaleidofoundry.core.lang.label.LabelCategory;
-import org.kaleidofoundry.core.lang.label.Labels;
+import org.kaleidofoundry.core.lang.label.model.LabelCategory;
+import org.kaleidofoundry.core.lang.label.model.Labels;
 import org.kaleidofoundry.core.util.PrimitiveTypeToStringSerializer;
 import org.kaleidofoundry.core.util.ToStringSerializer;
 
