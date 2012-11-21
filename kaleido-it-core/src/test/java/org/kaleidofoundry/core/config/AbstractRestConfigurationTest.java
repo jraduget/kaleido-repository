@@ -38,7 +38,7 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 /**
- * {@link ConfigurationManagerBean} integration test
+ * {@link ConfigurationControllerBean} integration test
  * 
  * @author Jerome RADUGET
  */
@@ -173,14 +173,14 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	assertNotNull(response);
 	// assertEquals("myConfig", response.getConfiguration().getName());
 	assertEquals("//myapp/name", response.getName());
-	assertEquals(ConfigurationManagerBean.DefaultDescription, response.getDescription());
+	assertEquals(ConfigurationControllerBean.DefaultDescription, response.getDescription());
 
 	response = getMyConfigBaseResource().path("getProperty").path("myapp.sample.float").accept(getMedia().getType()).get(ConfigurationProperty.class);
 	System.out.println(response);
 	assertNotNull(response);
 	// assertEquals("myConfig", response.getConfiguration().getName());
 	assertEquals("//myapp/sample/float", response.getName());
-	assertEquals(ConfigurationManagerBean.DefaultDescription, response.getDescription());
+	assertEquals(ConfigurationControllerBean.DefaultDescription, response.getDescription());
 
 	try {
 	   response = getMyConfigBaseResource().path("get").path("noKey").accept(getMedia().getType()).get(ConfigurationProperty.class);
@@ -304,7 +304,7 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 		.get(ConfigurationProperty.class);
 	assertNotNull(property);
 	assertEquals("//myapp/name", property.getName());
-	assertEquals(ConfigurationManagerBean.DefaultDescription, property.getDescription());
+	assertEquals(ConfigurationControllerBean.DefaultDescription, property.getDescription());
 
 	// create or update an exiting property
 	ClientResponse response = getMyConfigBaseResource().path("putProperty").accept(getMedia().getType())

@@ -37,14 +37,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Test {@link ConfigurationManagerBean} with a configuration model that have been persisted, but not registered
+ * Test {@link ConfigurationControllerBean} with a configuration model that have been persisted, but not registered
  * 
  * @author Jerome RADUGET
  */
 public class ConfigurationManager01Test extends AbstractConfigurationManagerTest {
 
    public ConfigurationManager01Test() {
-	super(new ConfigurationManagerBean());
+	super(new ConfigurationControllerBean());
    }
 
    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationManager01Test.class);

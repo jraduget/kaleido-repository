@@ -29,14 +29,14 @@ import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 import org.kaleidofoundry.core.store.ResourceException;
 
 /**
- * Test {@link ConfigurationManagerBean} with a configuration that have been registered and whose meta model have not been persisted
+ * Test {@link ConfigurationControllerBean} with a configuration that have been registered and whose meta model have not been persisted
  * 
  * @author Jerome RADUGET
  */
 public class ConfigurationManager03Test extends AbstractConfigurationManagerTest {
 
    public ConfigurationManager03Test() {
-	super(new ConfigurationManagerBean());
+	super(new ConfigurationControllerBean());
    }
 
    protected EntityManager em;

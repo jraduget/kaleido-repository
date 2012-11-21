@@ -17,12 +17,15 @@ package org.kaleidofoundry.core.store.model;
 
 import java.io.Serializable;
 
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author Jerome RADUGET
  */
-@XmlType
+@XmlRootElement(name = "fileStore")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class FileStoreEntry implements Serializable {
 
    private static final long serialVersionUID = 1L;

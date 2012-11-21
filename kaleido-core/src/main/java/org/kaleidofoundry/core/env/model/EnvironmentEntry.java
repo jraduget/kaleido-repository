@@ -18,12 +18,10 @@ package org.kaleidofoundry.core.env.model;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 
 /**
  * @author Jerome RADUGET
  */
-@XmlType
 @XmlRootElement(name = "entry")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class EnvironmentEntry {

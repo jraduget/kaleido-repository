@@ -28,6 +28,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import javax.xml.bind.annotation.XmlElement;
 
 import org.kaleidofoundry.core.store.model.FileStoreEntry;
 
@@ -44,7 +45,8 @@ public class FileStoreController {
    UriInfo uriInfo;
 
    @GET
-   @Path("/")
+   @Path("")
+   @XmlElement(name="fileStores")
    public List<FileStoreEntry> getStores() {
 	List<FileStoreEntry> stores = new ArrayList<FileStoreEntry>();
 	for (Entry<String, FileStore> storeEntry : FileStoreFactory.getRegistry().entrySet()) {

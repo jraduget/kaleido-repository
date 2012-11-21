@@ -44,7 +44,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.lang.label.model.LabelCategory;
@@ -84,7 +83,7 @@ public class ConfigurationModel implements Serializable {
    private boolean storable;
    private boolean updateable;
    @Version
-   @XmlTransient
+   //@XmlTransient
    Integer version;
 
    public ConfigurationModel() {

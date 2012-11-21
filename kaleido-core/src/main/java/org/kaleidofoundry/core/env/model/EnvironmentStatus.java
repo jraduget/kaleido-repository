@@ -25,7 +25,6 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * @author Jerome RADUGET
  */
-@XmlType
 @XmlRootElement(name = "status")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class EnvironmentStatus implements Serializable {

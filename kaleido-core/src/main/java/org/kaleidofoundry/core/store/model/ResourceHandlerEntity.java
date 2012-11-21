@@ -33,7 +33,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.util.locale.LocaleFactory;
@@ -48,7 +50,8 @@ import org.kaleidofoundry.core.util.locale.LocaleFactory;
 @Entity(name = "FileStore")
 // @Access(AccessType.PROPERTY)
 @Table(name = "FILESTORE")
-@XmlType
+@XmlRootElement(name = "resource")
+@XmlAccessorType(XmlAccessType.FIELD)
 @Task(comment = "Audit information (locale zone for the date, user information...)")
 public class ResourceHandlerEntity implements Serializable {
 
