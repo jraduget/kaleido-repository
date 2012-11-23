@@ -37,4 +37,7 @@ import org.kaleidofoundry.core.lang.NotNullException;
 @Target( { ElementType.METHOD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NotNull {
+   
+   /** Custom message of the thrown {@link NotNullException} */
+   String message() default "";
 }

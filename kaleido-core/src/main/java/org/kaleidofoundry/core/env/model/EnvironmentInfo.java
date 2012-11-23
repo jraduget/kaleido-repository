@@ -16,66 +16,99 @@
 package org.kaleidofoundry.core.env.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.kaleidofoundry.core.plugin.model.Plugin;
 
 /**
  * @author Jerome RADUGET
  */
-@XmlRootElement(name = "info")
+@XmlRootElement(name = "environment")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class EnvironmentInfo implements Serializable {
 
    private static final long serialVersionUID = 1L;
 
-   public EnvironmentInfo() {
+   protected EnvironmentInfo() {
+	this.versions = null;
+	this.manifestInfos = null;
+	this.runnerManifestInfos = null;
+	this.plugins = null;
+	this.pluginImplementations = null;
+	this.systemInfos = null;
+	this.osInfos = null;
    }
 
-   public EnvironmentInfo(String manifest, String systemInfo, String osInfo, String plugins) {
+   public EnvironmentInfo(EnvironmentVersions versions, List<EnvironmentEntry> manifestInfos, List<EnvironmentEntry> runnerManifestInfos,
+	   List<EnvironmentEntry> systemInfos, List<EnvironmentEntry> osInfos, List<Plugin<?>> plugins, List<Plugin<?>> pluginImpls) {
 	super();
-	this.manifest = manifest;
-	this.systemInfo = systemInfo;
-	this.osInfo = osInfo;
+	this.versions = versions;
+	this.manifestInfos = manifestInfos;
+	this.runnerManifestInfos = runnerManifestInfos;
 	this.plugins = plugins;
+	this.pluginImplementations = pluginImpls;
+	this.systemInfos = systemInfos;
+	this.osInfos = osInfos;
    }
 
-   private String manifest;
-   private String systemInfo;
-   private String osInfo;
-   private String plugins;
+   private final EnvironmentVersions versions;
 
-   public String getManifest() {
-	return manifest;
+   @XmlElementWrapper(name = "applicationManifest")
+   @XmlElement(name = "attribute")
+   private final List<EnvironmentEntry> manifestInfos;
+
+   @XmlElementWrapper(name = "runnerManifest")
+   @XmlElement(name = "attribute")
+   private final List<EnvironmentEntry> runnerManifestInfos;
+
+   @XmlElementWrapper(name = "system")
+   @XmlElement(name = "property")
+   private final List<EnvironmentEntry> systemInfos;
+
+   @XmlElementWrapper(name = "os")
+   @XmlElement(name = "path")
+   private final List<EnvironmentEntry> osInfos;
+
+   @XmlElementWrapper(name = "plugin")
+   @XmlElement(name = "plugin")
+   private final List<Plugin<?>> plugins;
+
+   @XmlElementWrapper(name = "pluginClasses")
+   @XmlElement(name = "plugin")
+   private final List<Plugin<?>> pluginImplementations;
+
+   public EnvironmentVersions getVersions() {
+	return versions;
    }
 
-   public void setVersion(String manifest) {
-	this.manifest = manifest;
+   public List<EnvironmentEntry> getManifestInfos() {
+	return manifestInfos;
    }
 
-   public String getSystemInfo() {
-	return systemInfo;
+   public List<EnvironmentEntry> getRunnerManifestInfos() {
+	return runnerManifestInfos;
    }
 
-   public void setSystemInfo(String systemInfo) {
-	this.systemInfo = systemInfo;
+   public List<EnvironmentEntry> getSystemInfos() {
+	return systemInfos;
    }
 
-   public String getOsInfo() {
-	return osInfo;
+   public List<EnvironmentEntry> getOsInfos() {
+	return osInfos;
    }
 
-   public void setOsInfo(String osInfo) {
-	this.osInfo = osInfo;
-   }
-
-   public String getPlugins() {
+   public List<Plugin<?>> getPlugins() {
 	return plugins;
    }
 
-   public void setPlugins(String plugins) {
-	this.plugins = plugins;
+   public List<Plugin<?>> getPluginImplementations() {
+	return pluginImplementations;
    }
 
 }

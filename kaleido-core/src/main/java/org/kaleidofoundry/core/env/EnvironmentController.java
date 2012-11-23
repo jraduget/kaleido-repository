@@ -34,9 +34,10 @@ import org.kaleidofoundry.core.env.model.EnvironmentStatus;
  * 
  * @author Jerome RADUGET
  */
-@Stateless(mappedName = "ejb/environment")
+@Stateless(mappedName = "ejb/environment/manager")
 // @Singleton
 @Path("/environment/")
+@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class EnvironmentController {
 
    private final EnvironmentInitializer envInitializer;
@@ -58,7 +59,6 @@ public class EnvironmentController {
     */
    @GET
    @Path("info")
-   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public EnvironmentInfo getInfo() {
 	return envInitializer.getInfo();
    }
@@ -68,7 +68,6 @@ public class EnvironmentController {
     */
    @GET
    @Path("status")
-   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public EnvironmentStatus getStatus() {
 	return envInitializer.getStatus();
    }

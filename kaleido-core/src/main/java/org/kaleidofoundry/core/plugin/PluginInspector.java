@@ -34,6 +34,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.kaleidofoundry.core.plugin.model.Plugin;
 import org.kaleidofoundry.core.plugin.processor.PluginAnnotationProcessor;
 import org.kaleidofoundry.core.system.JavaSystemHelper;
 import org.kaleidofoundry.core.util.ReflectionHelper;
@@ -300,7 +301,7 @@ public class PluginInspector {
 
 	final Declare declarePlugin = classToinspect.getAnnotation(Declare.class);
 	if (declarePlugin != null) {
-	   return Plugin.create(declarePlugin, classToinspect);
+	   return PluginFactory.create(declarePlugin, classToinspect);
 	} else {
 	   return null;
 	}
@@ -317,7 +318,7 @@ public class PluginInspector {
 
 	final Declare declarePluginImpl = classToinspect.getAnnotation(Declare.class);
 	if (declarePluginImpl != null) {
-	   return Plugin.create(declarePluginImpl, classToinspect);
+	   return PluginFactory.create(declarePluginImpl, classToinspect);
 	} else {
 	   return null;
 	}

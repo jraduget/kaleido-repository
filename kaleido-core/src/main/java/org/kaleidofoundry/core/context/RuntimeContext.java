@@ -38,8 +38,8 @@ import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 import org.kaleidofoundry.core.lang.annotation.Tasks;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
-import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginHelper;
+import org.kaleidofoundry.core.plugin.model.Plugin;
 import org.kaleidofoundry.core.util.AbstractPropertyAccessor;
 import org.kaleidofoundry.core.util.StringHelper;
 

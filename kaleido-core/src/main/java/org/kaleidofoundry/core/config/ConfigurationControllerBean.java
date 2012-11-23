@@ -43,44 +43,79 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 
 import org.kaleidofoundry.core.config.model.ConfigurationModel;
-import org.kaleidofoundry.core.config.model.ConfigurationProperty;
-import org.kaleidofoundry.core.config.model.FireChangesReport;
 import org.kaleidofoundry.core.config.model.ConfigurationModelConstants.Query_FindAllConfiguration;
 import org.kaleidofoundry.core.config.model.ConfigurationModelConstants.Query_FindConfigurationByName;
 import org.kaleidofoundry.core.config.model.ConfigurationModelConstants.Query_FindConfigurationByText;
 import org.kaleidofoundry.core.config.model.ConfigurationModelConstants.Query_FindPropertyByName;
+import org.kaleidofoundry.core.config.model.ConfigurationProperty;
+import org.kaleidofoundry.core.config.model.FireChangesReport;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.lang.annotation.TaskLabel;
+import org.kaleidofoundry.core.lang.annotation.Tasks;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
- * Configuration manager is used to manage the configuration model and properties <br/>
- * It expose manager as REST Web service or as an EJB / JPA managed bean <br/>
+ * Configuration controller is used to expose configuration management.<br/>
+ * With it you can manage the configuration model and its properties <br/>
+ * It is exposed as a RESTful service or as an EJB managed bean.<br/>
  * <br/>
  * <p>
- * For the following properties file (named "appConfig" in the following javadoc) implements by {@link PropertiesConfiguration} :
- * 
- * <pre>
- * application.name=app
- * application.version=1.0.0
- * application.description=description of the application...
- * application.date=2006-09-01T00:00:00
- * application.librairies=dom4j.jar log4j.jar mail.jar
- * 
- * application.modules.sales=Sales
- * application.modules.sales.version=1.1.0
- * application.modules.marketing=Market.
- * application.modules.netbusiness=
- * </pre>
- * 
- * </p>
+ * <h4>RESTful API urls :</h4>
+ * <table border="1">
+ * <tr>
+ * <td>Action</td>
+ * <td>Url</td>
+ * <td>Filter parameter / Remarks</td>
+ * </tr>
+ * <tr>
+ * <td>GET</td>
+ * <td>/configurations/</td>
+ * <td>"text" is filter to search by name, url, description</td>
+ * </tr>
+ * <tr>
+ * <td>GET|DELETE</td>
+ * <td>/configurations/{config}/</td>
+ * <td>&nbsp;</td>
+ * </tr>
+ * <tr>
+ * <td>GET</td>
+ * <td>/configurations/{config}/keys</td>
+ * <td>"text" is a filter to search keys containing this token</td>
+ * </tr>
+ * <tr>
+ * <td>GET|PUT</td>
+ * <td>/configurations/{config}/{property}</td>
+ * <td>for {property} use the java propety syntax like "application.version"</td>
+ * </tr>
+ * <tr>
+ * <td>GET|PUT|DELETE</td>
+ * <td>/configurations/{config}/property/{property}</td>
+ * <td>for {property} use the java propety syntax like "application.version"</td>
+ * </tr>
+ * <tr>
+ * <td>GET</td>
+ * <td>/configurations/properties</td>
+ * <td>"config" is a filter on the configuration name | "text" is a filter on name / description</td>
+ * </tr>
+ * </table>
  * <p>
- * For more informations about JAXRS (REST)
+ * TODO refactor following actions PUT {config}/register (Refactor some rest actions url: rest url is resources not action)<br/>
+ * PUT {config}/unregister <br/>
+ * GET {config}/registered<br/>
+ * GET {config}/fireChanges<br/>
+ * PUT {config}/store<br/>
+ * PUT {config}/load<br/>
+ * PUT {config}/unload<br/>
+ * PUT {config}/reload<br/>
+ * GET {config}/loaded<br/>
+ * </p>
+ * </p> <h4>RESTful resources :</h4>
+ * <p>
  * <ul>
  * <li>jee5 : http://blogs.sun.com/enterprisetechtips/entry/implementing_restful_web_services_in</li>
  * <li>jee6 : http://java.sun.com/developer/technicalArticles/WebServices/jax-rs/index.html</li>
@@ -93,11 +128,13 @@ import org.kaleidofoundry.core.util.StringHelper;
  * @see Configuration
  * @see ConfigurationProperty
  */
-@Stateless(mappedName = "ejb/configuration/manager")
+@Stateless(mappedName = "ejb/configurations/manager")
 @Path("/configurations/")
-@Task(labels = TaskLabel.Defect, comment = "restore 'implements ConfigurationController which cause a bug' - I open a GF3.x bug for this : GLASSFISH-16199")
+@Tasks(tasks = {
+	@Task(labels = TaskLabel.Defect, comment = "restore 'implements ConfigurationController which cause a bug' - I open a GF3.x bug for this : GLASSFISH-16199"),
+	@Task(labels = TaskLabel.Documentation, comment = "Refactor some rest actions url: rest url is resources not action") })
 public class ConfigurationControllerBean { // implements ConfigurationController {
-	
+
    /** injected and used to handle security context */
    @Context
    SecurityContext securityContext;
@@ -113,22 +150,22 @@ public class ConfigurationControllerBean { // implements ConfigurationController
    // ### Property management methods ############################################################################################
 
    public ConfigurationControllerBean() {
-	 try {
-		 // em will be injected by by java ee container or if not by aspectj 
-		 if (em == null) {
-		   em = UnmanagedEntityManagerFactory.currentEntityManager(KaleidoPersistentContextUnitName);
-		 }
-	 } catch (PersistenceException pe) {
-	    em = null;
-	 }
+	try {
+	   // em will be injected by by java ee container or if not by aspectj
+	   if (em == null) {
+		em = UnmanagedEntityManagerFactory.currentEntityManager(KaleidoPersistentContextUnitName);
+	   }
+	} catch (PersistenceException pe) {
+	   em = null;
+	}
    }
-   
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.ConfigurationController#getProperty(java.lang.String, java.lang.String)
     */
    @GET
-   @Path("{config}/get/{property}")
+   @Path("/{config}/{property}")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public String getPropertyValue(final @PathParam("config") String config, final @PathParam("property") String property) {
 	try {
@@ -159,7 +196,7 @@ public class ConfigurationControllerBean { // implements ConfigurationController
     * @see org.kaleidofoundry.core.config.ConfigurationController#setPropertyValue(java.lang.String, java.lang.String, java.lang.String)
     */
    @PUT
-   @Path("{config}/set/{property}")
+   @Path("/{config}/{property}")
    public void setPropertyValue(final @PathParam("config") String config, @PathParam("property") final String property, @QueryParam("value") final String value) {
 	setPropertyValue(config, property, value, String.class);
    }
@@ -212,7 +249,7 @@ public class ConfigurationControllerBean { // implements ConfigurationController
     * @see org.kaleidofoundry.core.config.ConfigurationController#getProperty(java.lang.String, java.lang.String)
     */
    @GET
-   @Path("{config}/getProperty/{property}")
+   @Path("/{config}/property/{property}")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public ConfigurationProperty getProperty(final @PathParam("config") String config, final @PathParam("property") String property) {
 
@@ -248,7 +285,7 @@ public class ConfigurationControllerBean { // implements ConfigurationController
     * @see org.kaleidofoundry.core.config.ConfigurationController#putProperty(java.lang.String, ConfigurationProperty)
     */
    @PUT
-   @Path("{config}/putProperty")
+   @Path("/{config}/property")
    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
    public void putProperty(final @PathParam("config") String config, final ConfigurationProperty property) {
 	ConfigurationProperty currentProperty = findConfigurationPropertyByName(config, property.getName(), false);
@@ -284,7 +321,7 @@ public class ConfigurationControllerBean { // implements ConfigurationController
     * @see org.kaleidofoundry.core.config.ConfigurationController#removeProperty(java.lang.String, java.lang.String)
     */
    @DELETE
-   @Path("{config}/removeProperty/{property}")
+   @Path("/{config}/property/{property}")
    public void removeProperty(final @PathParam("config") String config, @PathParam("property") final String property) {
 	boolean foundConfiguration = false;
 	boolean foundConfigurationProperty = false;
@@ -328,7 +365,7 @@ public class ConfigurationControllerBean { // implements ConfigurationController
     * @see org.kaleidofoundry.core.config.ConfigurationController#findProperties(java.lang.String, java.lang.String)
     */
    @GET
-   @Path("findProperties")
+   @Path("/properties")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public List<ConfigurationProperty> findProperties(final @QueryParam("config") String config, @QueryParam("text") final String text) {
 	final List<ConfigurationProperty> properties = new ArrayList<ConfigurationProperty>();
@@ -398,7 +435,7 @@ public class ConfigurationControllerBean { // implements ConfigurationController
     * @throws ConfigurationNotFoundException
     */
    @GET
-   @Path("{config}/keys")
+   @Path("/{config}/keys")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public Response keys(@PathParam("config") final String config, @QueryParam("text") final String text) throws ConfigurationNotFoundException {
 	Set<String> result = keySet(config);
@@ -437,28 +474,8 @@ public class ConfigurationControllerBean { // implements ConfigurationController
 	return keySet(config, null).contains(property);
    }
 
-   @GET
-   @Path("{config}/contains/{property}")
-   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-   public Response containsKeyForRest(final @PathParam("config") String config, @PathParam("property") final String property) {
-	return Response.ok(containsKey(config, property)).build();
-   }
-
    // ### Configuration management methods #######################################################################################
 
-   @GET
-   @Path("")
-   @XmlElement(name="configurations")
-   public List<ConfigurationModel> getConfigurations() {
-	List<ConfigurationModel> configurations = new ArrayList<ConfigurationModel>();
-	for (Entry<String, Configuration> configEntry : ConfigurationFactory.getRegistry().entrySet()) {
-	   ConfigurationModel configModel = getModel(configEntry.getKey());
-	   configModel.getProperties().clear(); // no properties here
-	   configurations.add(configModel);
-	}
-	return configurations;
-   }
-   
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.ConfigurationController#getModel(java.lang.String)
@@ -488,8 +505,8 @@ public class ConfigurationControllerBean { // implements ConfigurationController
     * @see org.kaleidofoundry.core.config.ConfigurationController#findModel(java.lang.String)
     */
    @GET
-   @Path("find")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+   @XmlElementWrapper(name = "configurations")
    @SuppressWarnings("unchecked")
    public List<ConfigurationModel> findModel(final @QueryParam("text") String text) {
 
@@ -531,19 +548,12 @@ public class ConfigurationControllerBean { // implements ConfigurationController
 	return findConfigurationModelByName(config, false) != null;
    }
 
-   @GET
-   @Path("{config}/exists")
-   @Produces({ MediaType.TEXT_PLAIN })
-   public Response existsForRest(final @PathParam("config") String config) {
-	return Response.ok(Boolean.valueOf(exists(config)).toString()).build();
-   }
-
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.core.config.ConfigurationController#removeModel(java.lang.String)
     */
    @DELETE
-   @Path("{config}/delete")
+   @Path("{config}")
    public void removeModel(@PathParam("config") final String config) {
 	ConfigurationModel configurationModel = findConfigurationModelByName(config, true);
 	if (em != null) {

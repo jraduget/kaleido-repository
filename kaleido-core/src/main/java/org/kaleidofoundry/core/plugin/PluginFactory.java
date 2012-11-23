@@ -15,8 +15,12 @@
  */
 package org.kaleidofoundry.core.plugin;
 
+import static org.kaleidofoundry.core.plugin.PluginConstants.PACKAGE_STANDARD;
+
 import java.util.Set;
 
+import org.kaleidofoundry.core.plugin.model.Plugin;
+import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,5 +114,23 @@ public final class PluginFactory {
     */
    public final static synchronized void reload() throws PluginRegistryException {
 	loadPluginInspector();
+   }
+
+   /**
+    * helper method, used to create a new plugin instance, using {@link Declare} annotation meta-data
+    * 
+    * @param declarePlugin
+    * @param annotatedClass
+    * @return new plugin instance
+    */
+   static <T> Plugin<T> create(final Declare declarePlugin, final Class<? extends T> annotatedClass) {
+
+	String annotatedClassVersion = annotatedClass.getPackage().getImplementationVersion() != null ? annotatedClass.getPackage().getImplementationVersion()
+		: annotatedClass.getPackage().getSpecificationVersion();
+	
+	final Plugin<T> plugin = new Plugin<T>(declarePlugin.value(), annotatedClass.getPackage().getName().contains(PACKAGE_STANDARD), annotatedClass,
+		declarePlugin.description(), !StringHelper.isEmpty(declarePlugin.version()) ? declarePlugin.version() : annotatedClassVersion, declarePlugin.enable());
+
+	return plugin;
    }
 }

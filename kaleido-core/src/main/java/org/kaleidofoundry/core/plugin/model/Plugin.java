@@ -13,15 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core.plugin;
-
-import static org.kaleidofoundry.core.plugin.PluginConstants.PACKAGE_STANDARD;
+package org.kaleidofoundry.core.plugin.model;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
 import java.util.Comparator;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.kaleidofoundry.core.lang.annotation.Immutable;
+import org.kaleidofoundry.core.plugin.ClassXmlAdpater;
+import org.kaleidofoundry.core.plugin.Declare;
 
 /**
  * Plugin bean class representation <br/>
@@ -29,6 +34,8 @@ import org.kaleidofoundry.core.lang.annotation.Immutable;
  * @author Jerome RADUGET
  * @param <T> Interface plugin type
  */
+@XmlRootElement(name = "plugin")
+@XmlAccessorType(XmlAccessType.FIELD)
 @Immutable
 public class Plugin<T> implements Serializable, Comparator<Plugin<T>> {
 
@@ -37,13 +44,24 @@ public class Plugin<T> implements Serializable, Comparator<Plugin<T>> {
    // PRIVATE VARIABLES INSTANCES *************************************************************************************
    private final String name;
    private final boolean standard;
+   @XmlJavaTypeAdapter(ClassXmlAdpater.class)
    private final Class<? extends T> annotatedClass;
    private final String description;
    private final String version;
    private final boolean enable;
 
    // CONSTRUCTOR *****************************************************************************************************
-
+   
+   // JAXB needed
+   protected Plugin() {
+	this.name = null;
+	this.standard = false;
+	this.annotatedClass = null;
+	this.description = null;
+	this.version = null;
+	this.enable = false;
+   }
+   
    /**
     * Field constructor
     * 
@@ -62,20 +80,6 @@ public class Plugin<T> implements Serializable, Comparator<Plugin<T>> {
 	this.description = description;
 	this.version = version;
 	this.enable = enable;
-   }
-
-   /**
-    * helper method, used to create a new plugin instance, using {@link Declare} annotation meta-data
-    * 
-    * @param declarePlugin
-    * @param annotatedClass
-    * @return new plugin instance
-    */
-   static <T> Plugin<T> create(final Declare declarePlugin, final Class<? extends T> annotatedClass) {
-	final Plugin<T> plugin = new Plugin<T>(declarePlugin.value(), annotatedClass.getPackage().getName().contains(PACKAGE_STANDARD), annotatedClass,
-		declarePlugin.description(), declarePlugin.version(), declarePlugin.enable());
-
-	return plugin;
    }
 
    /**

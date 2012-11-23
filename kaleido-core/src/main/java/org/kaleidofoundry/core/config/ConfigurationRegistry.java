@@ -20,9 +20,9 @@ import java.util.Set;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Nullable;
-import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginFactory;
 import org.kaleidofoundry.core.plugin.PluginImplementationRegistry;
+import org.kaleidofoundry.core.plugin.model.Plugin;
 import org.kaleidofoundry.core.util.Registry;
 
 /**

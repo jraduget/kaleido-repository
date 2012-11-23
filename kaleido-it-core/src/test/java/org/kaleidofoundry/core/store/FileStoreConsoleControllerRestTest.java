@@ -13,10 +13,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.kaleidofoundry.core.io;
+package org.kaleidofoundry.core.store;
 
-import static org.kaleidofoundry.core.io.ConsoleManagerBean.BEGINLINE_ARGS;
-import static org.kaleidofoundry.core.io.ConsoleManagerBean.MAXLINE_COUNT_ARGS;
+import static org.kaleidofoundry.core.store.FileStoreConsoleController.BEGINLINE_ARGS;
+import static org.kaleidofoundry.core.store.FileStoreConsoleController.MAXLINE_COUNT_ARGS;
 
 import java.net.URI;
 
@@ -37,7 +37,7 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 /**
  * @author Jerome RADUGET
  */
-public class ConsoleManagerRestTest extends Assert {
+public class FileStoreConsoleControllerRestTest extends Assert {
 
    private static final String RESOURCE_TO_TEST = "classpath:/io/java_install.txt";
 
@@ -159,6 +159,6 @@ public class ConsoleManagerRestTest extends Assert {
 
    private WebResource getBaseResource() {
 	WebResource resource = client.resource(getBaseURI());
-	return resource.path("rest").path("consoles");
+	return resource.path("rest").path("console/filestores");
    }
 }

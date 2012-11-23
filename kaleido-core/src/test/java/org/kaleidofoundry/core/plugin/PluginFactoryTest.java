@@ -20,6 +20,7 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.kaleidofoundry.core.plugin.model.Plugin;
 
 /**
  * @author Jerome RADUGET

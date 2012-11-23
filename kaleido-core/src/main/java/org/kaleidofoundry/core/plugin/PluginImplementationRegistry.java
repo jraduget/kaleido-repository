@@ -19,6 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
+import org.kaleidofoundry.core.plugin.model.Plugin;
 import org.kaleidofoundry.core.util.ReflectionHelper;
 import org.kaleidofoundry.core.util.Registry;
 

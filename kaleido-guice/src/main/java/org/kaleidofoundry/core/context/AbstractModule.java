@@ -25,9 +25,9 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.core.plugin.Plugin;
 import org.kaleidofoundry.core.plugin.PluginFactory;
 import org.kaleidofoundry.core.plugin.PluginImplementationRegistry;
+import org.kaleidofoundry.core.plugin.model.Plugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

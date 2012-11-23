@@ -90,7 +90,7 @@ public class KaleidoCdiJunit4ClassRunner extends BlockJUnit4ClassRunner {
    public void run(final RunNotifier notifier) {
 
 	// 
-	environmentInitializer = new EnvironmentInitializer(null);
+	environmentInitializer = new EnvironmentInitializer(BlockJUnit4ClassRunner.class);
 	environmentInitializer.init();
 	environmentInitializer.start();
 	   

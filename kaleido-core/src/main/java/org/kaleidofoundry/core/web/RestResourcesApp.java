@@ -22,7 +22,7 @@ import javax.ws.rs.core.Application;
 
 import org.kaleidofoundry.core.config.ConfigurationControllerBean;
 import org.kaleidofoundry.core.env.EnvironmentController;
-import org.kaleidofoundry.core.io.ConsoleManagerBean;
+import org.kaleidofoundry.core.store.FileStoreConsoleController;
 import org.kaleidofoundry.core.store.FileStoreController;
 
 /**
@@ -41,7 +41,7 @@ public class RestResourcesApp extends Application {
 	s.add(RestPropertyNotFoundMapper.class);
 	// manager module
 	s.add(EnvironmentController.class);
-	s.add(ConsoleManagerBean.class);
+	s.add(FileStoreConsoleController.class);
 	s.add(ConfigurationControllerBean.class);
 	s.add(FileStoreController.class);
 	

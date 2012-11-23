@@ -22,10 +22,13 @@ import static org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory.
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 import javax.persistence.EntityManager;
@@ -39,13 +42,16 @@ import org.kaleidofoundry.core.cache.CacheManagerProvider;
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.config.ConfigurationConstants;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
+import org.kaleidofoundry.core.env.model.EnvironmentEntry;
 import org.kaleidofoundry.core.env.model.EnvironmentInfo;
 import org.kaleidofoundry.core.env.model.EnvironmentStatus;
 import org.kaleidofoundry.core.env.model.EnvironmentStatus.Status;
+import org.kaleidofoundry.core.env.model.EnvironmentVersions;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.i18n.I18nMessagesProvider;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 import org.kaleidofoundry.core.plugin.PluginFactory;
+import org.kaleidofoundry.core.plugin.model.Plugin;
 import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.FileStoreConstants;
 import org.kaleidofoundry.core.store.FileStoreProvider;
@@ -69,7 +75,6 @@ import org.slf4j.LoggerFactory;
  * 
  * @see EnvironmentStatus
  * @see EnvironmentInfo
- * 
  * @author Jerome RADUGET
  */
 public class EnvironmentInitializer {
@@ -78,6 +83,7 @@ public class EnvironmentInitializer {
 
    static EnvironmentInitializer instance;
 
+   private final Class<?> applicationClass;
    private final Logger logger;
 
    // static shared variables, because of the javax rest controller create multiple instances at each request
@@ -89,10 +95,10 @@ public class EnvironmentInitializer {
    EntityManager em;
 
    public EnvironmentInitializer() {
-	this(LOGGER);
+	this(EnvironmentInitializer.class);
    }
 
-   public EnvironmentInitializer(final Logger logger) {
+   public EnvironmentInitializer(final Class<?> applicationClass) {
 
 	if (instance != null) {
 	   throw new IllegalStateException("environment have already been initialized");
@@ -100,7 +106,9 @@ public class EnvironmentInitializer {
 	   instance = this;
 	}
 
-	this.logger = logger == null ? LOGGER : logger;
+	this.applicationClass = applicationClass;
+	this.logger = applicationClass == null ? LOGGER : LoggerFactory.getLogger(applicationClass);
+
 	status = Status.STOPPED;
 	try {
 	   // em will be injected by by java ee container or if not by aspectj
@@ -116,32 +124,74 @@ public class EnvironmentInitializer {
     * @return application status
     */
    public EnvironmentInfo getInfo() {
-	StringBuilder pluginInfo = new StringBuilder();
-	pluginInfo.append(PluginFactory.getInterfaceRegistry().toString());
-	pluginInfo.append("\n");
-	pluginInfo.append(PluginFactory.getImplementationRegistry().toString());
 
-	StringBuilder osInfo = new StringBuilder();
+	String applicationVersion = applicationClass != null ? applicationClass.getPackage().getImplementationVersion() : null;
+	String kaleidoVersion = this.getClass().getPackage().getImplementationVersion();
+	String runnerVersion = Thread.currentThread().getClass().getPackage().getImplementationVersion();
+	if (runnerVersion == null) {
+	   runnerVersion = Thread.currentThread().getClass().getPackage().getSpecificationVersion();
+	}
+
+	EnvironmentVersions versions = new EnvironmentVersions(applicationVersion, runnerVersion, kaleidoVersion);
+
+	List<EnvironmentEntry> manifestInfos = new ArrayList<EnvironmentEntry>();
+	List<EnvironmentEntry> runnerManifestInfos = new ArrayList<EnvironmentEntry>();
+	List<EnvironmentEntry> osInfos = new ArrayList<EnvironmentEntry>();
+	List<EnvironmentEntry> systemInfos = new ArrayList<EnvironmentEntry>();
+	List<Plugin<?>> plugins = new ArrayList<Plugin<?>>();
+	List<Plugin<?>> pluginImpls = new ArrayList<Plugin<?>>();
+
+	plugins.addAll(PluginFactory.getInterfaceRegistry().values());
+	pluginImpls.addAll(PluginFactory.getImplementationRegistry().values());
+
 	try {
 	   final OsEnvironment environment = new OsEnvironment();
 	   for (final String key : environment.stringPropertyNames()) {
-		osInfo.append(key).append("=").append(environment.getProperty(key)).append("\n");
+		osInfos.add(new EnvironmentEntry(key, environment.getProperty(key)));
 	   }
-	} catch (IOException ioe) {
-	   osInfo.append("Error retrieving this info: " + ioe.getMessage());
+	} catch (Throwable th) {
+	   LOGGER.error("Error retrieving the OS environment informations", th);
 	}
 
-	StringBuilder manifestInfo = new StringBuilder();
-	InputStream inputStream = Thread.currentThread().getClass().getResourceAsStream("/META-INF/MANIFEST.MF");
-	if (inputStream != null) {
-	   try {
+	try {
+	   for (String propName : System.getProperties().stringPropertyNames()) {
+		systemInfos.add(new EnvironmentEntry(propName, System.getProperty(propName)));
+	   }
+	} catch (Throwable th) {
+	   LOGGER.error("Error retrieving the java system properties informations", th);
+	}
+
+	try {
+	   InputStream inputStream = applicationClass.getResourceAsStream("classpath:/META-INF/MANIFEST.MF");
+	   if (inputStream != null) {
 		Manifest manifest = new Manifest(inputStream);
-		manifestInfo.append(manifest.toString());
-	   } catch (IOException ioe) {
+		for (Entry<Object, Object> entry : manifest.getMainAttributes().entrySet()) {
+		   manifestInfos.add(new EnvironmentEntry(String.valueOf(entry.getKey()), String.valueOf(entry.getValue())));
+		}
+		for (Entry<String, Attributes> entry : manifest.getEntries().entrySet()) {
+		   manifestInfos.add(new EnvironmentEntry(entry.getKey(), entry.getValue().toString()));
+		}
 	   }
+	} catch (Throwable th) {
+	   LOGGER.error("Error retrieving the manifest informations", th);
+	}
+	
+	try {
+	   InputStream inputStream = Thread.currentThread().getClass().getResourceAsStream("/META-INF/MANIFEST.MF");
+	   if (inputStream != null) {
+		Manifest manifest = new Manifest(inputStream);
+		for (Entry<Object, Object> entry : manifest.getMainAttributes().entrySet()) {
+		   runnerManifestInfos.add(new EnvironmentEntry(String.valueOf(entry.getKey()), String.valueOf(entry.getValue())));
+		}
+		for (Entry<String, Attributes> entry : manifest.getEntries().entrySet()) {
+		   runnerManifestInfos.add(new EnvironmentEntry(entry.getKey(), entry.getValue().toString()));
+		}
+	   }
+	} catch (Throwable th) {
+	   LOGGER.error("Error retrieving the manifest informations of the runner", th);
 	}
 
-	return new EnvironmentInfo(manifestInfo.toString(), System.getProperties().toString(), osInfo.toString(), pluginInfo.toString());
+	return new EnvironmentInfo(versions, manifestInfos, runnerManifestInfos, systemInfos, osInfos, plugins, pluginImpls);
    }
 
    /**
@@ -309,7 +359,7 @@ public class EnvironmentInitializer {
    }
 
    Logger getLogger() {
-      return logger;
+	return logger;
    }
-   
+
 }

@@ -28,7 +28,7 @@ public class JsonRestConfigurationTest extends AbstractRestConfigurationTest {
     */
    @Override
    public MediaType getMedia() {
-	return MediaType.APPLICATION_XML_TYPE;
+	return MediaType.APPLICATION_JSON_TYPE;
    }
 
 }

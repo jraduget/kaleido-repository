@@ -42,7 +42,7 @@ import org.kaleidofoundry.core.lang.annotation.Task;
  * 
  * @author Jerome RADUGET
  */
-@Stateless(mappedName = "ejb/i18n")
+@Stateless(mappedName = "ejb/i18n/manager")
 @Path("/i18n/")
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class I18nMessageController {

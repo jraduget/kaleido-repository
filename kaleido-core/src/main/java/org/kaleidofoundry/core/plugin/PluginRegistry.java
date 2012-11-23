@@ -15,6 +15,7 @@
  */
 package org.kaleidofoundry.core.plugin;
 
+import org.kaleidofoundry.core.plugin.model.Plugin;
 import org.kaleidofoundry.core.util.Registry;
 
 /**

@@ -20,27 +20,28 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.kaleidofoundry.core.store.FileStoreConsoleController;
 import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * {@link ConsoleManagerBean} Tests
+ * {@link FileStoreConsoleController} Tests
  * 
  * @author Jerome RADUGET
  */
 public class ConsoleManagerTest extends Assert {
 
-   static final Logger LOGGER = LoggerFactory.getLogger(ConsoleManagerBean.class);
+   static final Logger LOGGER = LoggerFactory.getLogger(FileStoreConsoleController.class);
 
    static final String ClassPathResource = "classpath:/io/java_install.txt";
 
-   private ConsoleManagerBean console;
+   private FileStoreConsoleController console;
 
    @Before
    public void setUp() throws ResourceNotFoundException {
-	console = new ConsoleManagerBean();
+	console = new FileStoreConsoleController();
 	console.register("classpath:/io/java_install.txt");
    }
 

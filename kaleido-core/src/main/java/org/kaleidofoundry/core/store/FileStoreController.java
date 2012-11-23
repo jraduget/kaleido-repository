@@ -28,11 +28,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 
 import org.kaleidofoundry.core.store.model.FileStoreEntry;
 
-@Stateless(mappedName = "ejb/filestore/manager")
+@Stateless(mappedName = "ejb/filestores/manager")
 @Path("/filestores/")
 public class FileStoreController {
 
@@ -45,8 +45,7 @@ public class FileStoreController {
    UriInfo uriInfo;
 
    @GET
-   @Path("")
-   @XmlElement(name="fileStores")
+   @XmlElementWrapper(name="fileStores")
    public List<FileStoreEntry> getStores() {
 	List<FileStoreEntry> stores = new ArrayList<FileStoreEntry>();
 	for (Entry<String, FileStore> storeEntry : FileStoreFactory.getRegistry().entrySet()) {

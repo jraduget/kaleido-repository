@@ -28,6 +28,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.kaleidofoundry.core.env.EnvironmentInitializer;
+import org.kaleidofoundry.core.env.model.EnvironmentConstants;
+import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +50,7 @@ public class StartupListener implements ServletContextListener {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(StartupListener.class);
 
-   private final EnvironmentInitializer initializer = new EnvironmentInitializer(LOGGER);
+   private EnvironmentInitializer initializer;
 
    /*
     * (non-Javadoc)
@@ -57,6 +59,23 @@ public class StartupListener implements ServletContextListener {
    @Override
    public void contextInitialized(final ServletContextEvent sce) {
 	ServletContextProvider.init(sce.getServletContext());
+
+	// can specify a class from your application, in order to get the version of your application
+	String applicationClassName = sce.getServletContext().getInitParameter(EnvironmentConstants.ApplicationClassProperties);
+	Class<?> applicationClass = getClass();
+
+	try {
+	   if (!StringHelper.isEmpty(applicationClassName)) {
+		applicationClass = Class.forName(applicationClassName);
+	   }
+	} catch (ClassNotFoundException cnfe) {
+	   throw new IllegalArgumentException(EnvironmentConstants.ApplicationClassProperties+"="+applicationClassName);
+	} catch (Throwable th) {
+	   LOGGER.error("Error loading class {}", applicationClassName, th);
+	}
+
+	// create the initializer
+	initializer = new EnvironmentInitializer(applicationClass);
 
 	// load operating system and java system env variables
 	initializer.init();
