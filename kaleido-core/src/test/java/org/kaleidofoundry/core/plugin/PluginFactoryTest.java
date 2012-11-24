@@ -21,6 +21,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.kaleidofoundry.core.plugin.model.Plugin;
+import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * @author Jerome RADUGET
@@ -47,7 +48,9 @@ public class PluginFactoryTest extends Assert {
 	assertNotNull(newPlugin);
 	assertEquals(declarePlugin.value(), newPlugin.getName());
 	assertEquals(declarePlugin.description(), newPlugin.getDescription());
-	assertEquals(declarePlugin.version(), newPlugin.getVersion());
+	if (!StringHelper.isEmpty(declarePlugin.version())) {
+	   assertEquals(declarePlugin.version(), newPlugin.getVersion());
+	}
 	assertEquals(declarePlugin.enable(), newPlugin.isEnable());
 	assertTrue(newPlugin.isStandard());
 	assertNotNull(newPlugin.getAnnotatedClass());

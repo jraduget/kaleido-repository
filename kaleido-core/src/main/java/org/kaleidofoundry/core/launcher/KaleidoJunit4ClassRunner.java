@@ -21,6 +21,7 @@ import org.junit.runners.model.InitializationError;
 import org.kaleidofoundry.core.config.NamedConfiguration;
 import org.kaleidofoundry.core.config.NamedConfigurationInitializer;
 import org.kaleidofoundry.core.config.NamedConfigurations;
+import org.kaleidofoundry.core.env.EnvironmentInitializer;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 
 /**
@@ -68,7 +69,8 @@ import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
  */
 public class KaleidoJunit4ClassRunner extends BlockJUnit4ClassRunner {
 
-   private NamedConfigurationInitializer configurationInitializer;
+   private static EnvironmentInitializer environmentInitializer;
+   private static NamedConfigurationInitializer configurationInitializer;
 
    public KaleidoJunit4ClassRunner(final Class<?> klass) throws InitializationError {
 	super(klass);
@@ -85,17 +87,32 @@ public class KaleidoJunit4ClassRunner extends BlockJUnit4ClassRunner {
 	configurationInitializer = new NamedConfigurationInitializer(getTestClass().getJavaClass());
 	configurationInitializer.init();
 
+	// load env variables and start kaleido components
+	environmentInitializer = new EnvironmentInitializer(getTestClass().getJavaClass());
+	environmentInitializer.init();
+	environmentInitializer.start();
+
 	// run tests
 	super.run(notifier);
 
 	// cleanup at end
-	try {
-	   configurationInitializer.shutdown();
-	} catch (Throwable th) {
-	   throw new IllegalStateException("error during the configurations unregister processing", th);
-	} finally {
-	   UnmanagedEntityManagerFactory.closeAll();
+
+	// unload current configurations
+	if (configurationInitializer != null) {
+	   try {
+		configurationInitializer.shutdown();
+	   } catch (Throwable th) {
+		throw new IllegalStateException("error during the configurations unregister processing", th);
+	   }
 	}
+
+	// unload other resources like configurations / caches ...
+	if (environmentInitializer != null) {
+	   environmentInitializer.stop();
+	}
+
+	// release entity manager factory is used
+	UnmanagedEntityManagerFactory.closeAll();
    }
 
 }

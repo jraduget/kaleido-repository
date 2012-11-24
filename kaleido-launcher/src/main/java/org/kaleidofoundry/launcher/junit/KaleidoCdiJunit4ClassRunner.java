@@ -23,10 +23,7 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 import org.kaleidofoundry.core.config.NamedConfiguration;
-import org.kaleidofoundry.core.config.NamedConfigurationInitializer;
 import org.kaleidofoundry.core.config.NamedConfigurations;
-import org.kaleidofoundry.core.env.EnvironmentInitializer;
-import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 import org.kaleidofoundry.launcher.UnmanagedCdiInjector;
 
 /**
@@ -75,9 +72,6 @@ import org.kaleidofoundry.launcher.UnmanagedCdiInjector;
  */
 public class KaleidoCdiJunit4ClassRunner extends BlockJUnit4ClassRunner {
 
-   private NamedConfigurationInitializer configurationInitializer;
-   private EnvironmentInitializer environmentInitializer;
-
    public KaleidoCdiJunit4ClassRunner(final Class<?> klass) throws InitializationError {
 	super(klass);
    }
@@ -89,31 +83,14 @@ public class KaleidoCdiJunit4ClassRunner extends BlockJUnit4ClassRunner {
    @Override
    public void run(final RunNotifier notifier) {
 
-	// 
-	environmentInitializer = new EnvironmentInitializer(BlockJUnit4ClassRunner.class);
-	environmentInitializer.init();
-	environmentInitializer.start();
-	   
-	// create and init the configurations initializer
-	configurationInitializer = new NamedConfigurationInitializer(getTestClass().getJavaClass());
-	configurationInitializer.init();
-
 	// init once weld-se
-	UnmanagedCdiInjector.init();
+	UnmanagedCdiInjector.init(getTestClass().getJavaClass());
 
 	// run tests
 	super.run(notifier);
 
 	// cleanup at end
-	try {
-	   configurationInitializer.shutdown();
-	   environmentInitializer.stop();	   
-	} catch (Throwable th) {
-	   throw new IllegalStateException("error during the configurations unregister processing", th);
-	} finally {
-	   UnmanagedEntityManagerFactory.closeAll();
-	   UnmanagedCdiInjector.shutdown();
-	}
+	UnmanagedCdiInjector.shutdown();
    }
 
    /*

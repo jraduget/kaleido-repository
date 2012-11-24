@@ -24,6 +24,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.plugin.model.Plugin;
+import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * @author Jerome RADUGET
@@ -60,8 +61,9 @@ public class PluginInspectorTest extends Assert {
 	   Declare declarePlugin = plugin.getAnnotatedClass().getAnnotation(Declare.class);
 	   assertNotNull(declarePlugin);
 	   assertEquals(declarePlugin.value(), plugin.getName());
-	   assertEquals(declarePlugin.description(), plugin.getDescription());
-	   assertEquals(declarePlugin.version(), plugin.getVersion());
+	   if (!StringHelper.isEmpty(declarePlugin.version())) {
+		assertEquals(declarePlugin.version(), plugin.getVersion());
+	   }
 	   assertEquals(declarePlugin.enable(), plugin.isEnable());
 	   assertTrue(plugin.isStandard());
 	   assertNotNull(plugin.getAnnotatedClass());
@@ -88,7 +90,9 @@ public class PluginInspectorTest extends Assert {
 	   Declare declarePlugin = pluginImpl.getAnnotatedClass().getAnnotation(Declare.class);
 	   assertNotNull(declarePlugin);
 	   assertEquals(declarePlugin.value(), pluginImpl.getName());
-	   assertEquals(declarePlugin.version(), pluginImpl.getVersion());
+	   if (!StringHelper.isEmpty(declarePlugin.version())) {
+		assertEquals(declarePlugin.version(), pluginImpl.getVersion());
+	   }
 	   assertEquals(declarePlugin.description(), pluginImpl.getDescription());
 	   assertEquals(declarePlugin.enable(), pluginImpl.isEnable());
 	   assertTrue(pluginImpl.isStandard());

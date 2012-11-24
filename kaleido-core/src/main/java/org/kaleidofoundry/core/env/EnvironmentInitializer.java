@@ -31,6 +31,8 @@ import java.util.Properties;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
@@ -77,6 +79,8 @@ import org.slf4j.LoggerFactory;
  * @see EnvironmentInfo
  * @author Jerome RADUGET
  */
+@Stateless
+//@Singleton
 public class EnvironmentInitializer {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(EnvironmentInitializer.class);
@@ -102,24 +106,15 @@ public class EnvironmentInitializer {
 
 	if (instance != null) {
 	   throw new IllegalStateException("environment have already been initialized");
-	} else {
-	   instance = this;
-	}
+	} 
 
 	this.applicationClass = applicationClass;
 	this.logger = applicationClass == null ? LOGGER : LoggerFactory.getLogger(applicationClass);
 
 	status = Status.STOPPED;
-	try {
-	   // em will be injected by by java ee container or if not by aspectj
-	   if (em == null) {
-		em = UnmanagedEntityManagerFactory.currentEntityManager(KaleidoPersistentContextUnitName);
-	   }
-	} catch (PersistenceException pe) {
-	   em = null;
-	}
-   }
 
+   }
+   
    /**
     * @return application status
     */
@@ -205,8 +200,18 @@ public class EnvironmentInitializer {
     * Load environment settings before {@link #start()} <br/>
     * It can be overloaded
     */
+   @PostConstruct
    public synchronized void init() {
 
+	// em will be injected by by java ee container or if not by aspectj
+	try {
+	   if (em == null) {
+		em = UnmanagedEntityManagerFactory.currentEntityManager(KaleidoPersistentContextUnitName);
+	   }
+	} catch (PersistenceException pe) {
+	   em = null;
+	}
+	
 	// Plugin registry loading
 	PluginFactory.getInterfaceRegistry();
 	logger.info(StringHelper.replicate("*", 120));
@@ -229,6 +234,9 @@ public class EnvironmentInitializer {
 	}
 
 	status = Status.INIT;
+	
+	// memorize current instance
+	instance = this;
 
    }
 
@@ -342,6 +350,8 @@ public class EnvironmentInitializer {
 
 		status = Status.STOPPED;
 
+		instance = null;
+		
 		return this;
 
 	   } catch (final ResourceException rse) {
