@@ -21,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.PersistenceUnit;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
@@ -126,6 +127,9 @@ public abstract class UnmanagedEntityManagerFactory {
 	if (DefaultEmf == null) {
 	   synchronized (UnmanagedEntityManagerFactory.class) {
 		DefaultEmf = Persistence.createEntityManagerFactory(KaleidoPersistentContextUnitName);
+		if (DefaultEmf == null) {
+		   throw new PersistenceException("JPA provider return a null entity manager factory");
+		}
 	   }
 	}
 	return DefaultEmf;
@@ -145,6 +149,9 @@ public abstract class UnmanagedEntityManagerFactory {
 	   EntityManagerFactory emf = CustomEmfRegistry.get(persistenceUnitName);
 	   if (emf == null) {
 		emf = Persistence.createEntityManagerFactory(persistenceUnitName);
+		if (emf == null) {
+		   throw new PersistenceException("JPA provider return a null entity manager factory");
+		}
 		CustomEmfRegistry.put(persistenceUnitName, emf);
 	   }
 	   return emf;

@@ -49,15 +49,15 @@ public class UnmanagedCdiInjector {
    /**
     * initializer, call at startup (main, junit static setup, ...)
     */
-   public static synchronized void init(final Class<?> mainClass, EnvironmentInitializer environmentInitializer) {
+   public static synchronized void init(final Class<?> mainClass, final EnvironmentInitializer environmentInitializer) {
 	if (!weldSEInitialize) {
 
-	   environmentInitializerManaged = environmentInitializer == null;
+	   environmentInitializerManaged = (environmentInitializer == null);
 	   // load env variables and start kaleido components
 	   if (environmentInitializerManaged) {
-		environmentInitializer = new EnvironmentInitializer(mainClass);
-		environmentInitializer.init();
-		environmentInitializer.start();
+		   UnmanagedCdiInjector.environmentInitializer = new EnvironmentInitializer(mainClass);
+		   UnmanagedCdiInjector.environmentInitializer.init();
+		   UnmanagedCdiInjector.environmentInitializer.start();
 	   }
 
 	   // create weld container
