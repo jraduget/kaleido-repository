@@ -19,7 +19,6 @@ import java.lang.annotation.Annotation;
 
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
-import org.kaleidofoundry.core.config.NamedConfigurationInitializer;
 import org.kaleidofoundry.core.env.EnvironmentInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,25 +37,28 @@ public class UnmanagedCdiInjector {
    private static Weld weldSE;
 
    private static EnvironmentInitializer environmentInitializer;
-   private static NamedConfigurationInitializer configurationInitializer;
+   private static boolean environmentInitializerManaged = false;
 
    /**
     * initializer, call at startup (main, junit static setup, ...)
     */
    public static synchronized void init(final Class<?> mainClass) {
+	init(mainClass, null);
+   }
+
+   /**
+    * initializer, call at startup (main, junit static setup, ...)
+    */
+   public static synchronized void init(final Class<?> mainClass, EnvironmentInitializer environmentInitializer) {
 	if (!weldSEInitialize) {
 
-	   // create and init the configurations initializer
-	   if (mainClass != null) {
-		// load the configuration annotations present in the main class
-		configurationInitializer = new NamedConfigurationInitializer(mainClass);
-		configurationInitializer.init();
-	   }
-
+	   environmentInitializerManaged = environmentInitializer == null;
 	   // load env variables and start kaleido components
-	   environmentInitializer = new EnvironmentInitializer(mainClass);
-	   environmentInitializer.init();
-	   environmentInitializer.start();
+	   if (environmentInitializerManaged) {
+		environmentInitializer = new EnvironmentInitializer(mainClass);
+		environmentInitializer.init();
+		environmentInitializer.start();
+	   }
 
 	   // create weld container
 	   LOGGER.info("Initializing CDI using weldSE container");
@@ -77,17 +79,10 @@ public class UnmanagedCdiInjector {
    public static synchronized void shutdown() {
 	if (weldSE != null && weldSEInitialize) {
 
-	   // unload current configurations
-	   if (configurationInitializer != null) {
-		try {
-		   configurationInitializer.shutdown();
-		} catch (Throwable th) {
-		   throw new IllegalStateException("error during the configurations unregister processing", th);
-		}
-	   }
-
 	   // unload other resources like configurations / caches ...
-	   environmentInitializer.stop();
+	   if (environmentInitializerManaged && environmentInitializer != null) {
+		environmentInitializer.stop();
+	   }
 
 	   // shutdown weld container
 	   LOGGER.info("Shutdown weldSE container");

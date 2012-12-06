@@ -47,7 +47,7 @@ public class StartupListenerWithCdi extends StartupListener {
    public void contextInitialized(final ServletContextEvent sce) {
 	super.contextInitialized(sce);
 	// CDI weld start
-	UnmanagedCdiInjector.init();
+	UnmanagedCdiInjector.init(getClass(), initializer);
 	// init @Inject bean
 	initCdiInjection();
    }

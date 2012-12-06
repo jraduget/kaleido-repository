@@ -44,6 +44,7 @@ import org.kaleidofoundry.core.cache.CacheManagerProvider;
 import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.config.ConfigurationConstants;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
+import org.kaleidofoundry.core.config.NamedConfigurationInitializer;
 import org.kaleidofoundry.core.env.model.EnvironmentEntry;
 import org.kaleidofoundry.core.env.model.EnvironmentInfo;
 import org.kaleidofoundry.core.env.model.EnvironmentStatus;
@@ -80,7 +81,7 @@ import org.slf4j.LoggerFactory;
  * @author Jerome RADUGET
  */
 @Stateless
-//@Singleton
+// @Singleton
 public class EnvironmentInitializer {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(EnvironmentInitializer.class);
@@ -94,6 +95,9 @@ public class EnvironmentInitializer {
    private static Status status;
    private static Throwable error;
 
+   // configuration load by annotation
+   private NamedConfigurationInitializer configurationInitializer;
+
    /** injected entity manager */
    @PersistenceContext(unitName = KaleidoPersistentContextUnitName)
    EntityManager em;
@@ -104,9 +108,7 @@ public class EnvironmentInitializer {
 
    public EnvironmentInitializer(final Class<?> applicationClass) {
 
-	if (instance != null) {
-	   throw new IllegalStateException("environment have already been initialized");
-	} 
+	if (instance != null) { throw new IllegalStateException("environment have already been initialized"); }
 
 	this.applicationClass = applicationClass;
 	this.logger = applicationClass == null ? LOGGER : LoggerFactory.getLogger(applicationClass);
@@ -114,7 +116,7 @@ public class EnvironmentInitializer {
 	status = Status.STOPPED;
 
    }
-   
+
    /**
     * @return application status
     */
@@ -170,7 +172,7 @@ public class EnvironmentInitializer {
 	} catch (Throwable th) {
 	   LOGGER.error("Error retrieving the manifest informations", th);
 	}
-	
+
 	try {
 	   InputStream inputStream = Thread.currentThread().getClass().getResourceAsStream("/META-INF/MANIFEST.MF");
 	   if (inputStream != null) {
@@ -211,7 +213,7 @@ public class EnvironmentInitializer {
 	} catch (PersistenceException pe) {
 	   em = null;
 	}
-	
+
 	// Plugin registry loading
 	PluginFactory.getInterfaceRegistry();
 	logger.info(StringHelper.replicate("*", 120));
@@ -234,7 +236,7 @@ public class EnvironmentInitializer {
 	}
 
 	status = Status.INIT;
-	
+
 	// memorize current instance
 	instance = this;
 
@@ -294,7 +296,7 @@ public class EnvironmentInitializer {
 		// Cache provider init (default cache provider ...)
 		CacheManagerProvider.init(STATIC_ENV_PARAMETERS.get(CacheConstants.CACHE_PROVIDER_ENV));
 
-		// Parse the default configurations and load it if needed
+		// Configurations to load
 		final String kaleidoConfigurations = STATIC_ENV_PARAMETERS.get(ConfigurationConstants.JavaEnvProperties);
 		if (!StringHelper.isEmpty(kaleidoConfigurations)) {
 		   LOGGER.info(CoreMessageBundle.getMessage("loader.define.configurations",
@@ -306,6 +308,12 @@ public class EnvironmentInitializer {
 			throw new IllegalStateException(CoreMessageBundle.getMessage("loader.define.configurations.error", kaleidoConfigurations), rse);
 		   }
 		   LOGGER.info(StringHelper.replicate("*", 120));
+		}
+
+		if (applicationClass != null) {
+		   // load the configuration annotations present in the main class
+		   configurationInitializer = new NamedConfigurationInitializer(applicationClass);
+		   configurationInitializer.init();
 		}
 
 		status = Status.STARTED;
@@ -351,7 +359,7 @@ public class EnvironmentInitializer {
 		status = Status.STOPPED;
 
 		instance = null;
-		
+
 		return this;
 
 	   } catch (final ResourceException rse) {

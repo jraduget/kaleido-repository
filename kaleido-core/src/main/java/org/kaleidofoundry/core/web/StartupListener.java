@@ -50,7 +50,7 @@ public class StartupListener implements ServletContextListener {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(StartupListener.class);
 
-   private EnvironmentInitializer initializer;
+   protected EnvironmentInitializer initializer;
 
    /*
     * (non-Javadoc)
