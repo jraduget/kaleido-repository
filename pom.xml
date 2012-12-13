@@ -802,20 +802,42 @@
 				</dependency>
 				
 				<!-- full javaee 6 profile -->
-				<dependency>
-					<groupId>javax</groupId>
-					<artifactId>javaee-api</artifactId>
-					<version>6.0</version>
-					<scope>provided</scope>
-				</dependency>
-				<!-- javaee6 web profile 
-				<dependency> 
-					<groupId>javax</groupId>
-					<artifactId>javaee-web-api</artifactId> 
-					<version>6.0</version> 
-					<scope>provided</scope> 
-				</dependency> 
-				-->
+               <dependency>
+                       <groupId>org.apache.geronimo.specs</groupId>
+                       <artifactId>geronimo-servlet_3.0_spec</artifactId>
+                       <version>1.0</version>
+                       <scope>provided</scope>
+               </dependency>                                   
+               <dependency>
+                       <groupId>org.apache.geronimo.specs</groupId>
+                       <artifactId>geronimo-ejb_3.0_spec</artifactId>
+                       <version>1.0.1</version>
+                       <scope>provided</scope>
+               </dependency>
+               <dependency>
+                       <groupId>org.apache.geronimo.specs</groupId>
+                       <artifactId>geronimo-jaxb_2.2_spec</artifactId>
+                       <version>1.0.1</version>
+                       <scope>provided</scope>
+               </dependency>
+               <dependency>
+                       <groupId>org.apache.geronimo.specs</groupId>
+                       <artifactId>geronimo-jaxws_2.2_spec</artifactId>
+                       <version>1.1</version>
+                       <scope>provided</scope>
+               </dependency>
+               <dependency>
+                       <groupId>org.apache.geronimo.specs</groupId>
+                       <artifactId>geronimo-jaxrs_1.1_spec</artifactId>
+                       <version>1.0</version>
+                       <scope>provided</scope>
+               </dependency>
+               <dependency>
+                       <groupId>org.apache.geronimo.specs</groupId>
+                       <artifactId>geronimo-jms_1.1_spec</artifactId>
+                       <version>1.1.1</version>
+                       <scope>provided</scope>
+               </dependency>
 			</dependencies>
 		</profile>		
 	</profiles>
