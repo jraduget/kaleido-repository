@@ -160,8 +160,14 @@ public class NotNullAspect {
 		if (parameterAnnotations != null) {
 		   for (Annotation parameterAnnotation : parameterAnnotations) {
 			// parameter annotated with @NotNull + null value
-			if (NotNull.class == parameterAnnotation.annotationType() && jp.getArgs()[paramCpt] == null) { throw new NotNullException(jp.getStaticPart()
-				.getSignature().toString(), parametersName[paramCpt], jp.getSignature().toString(), jp.getSourceLocation().toString()); }
+			if (NotNull.class == parameterAnnotation.annotationType() && jp.getArgs()[paramCpt] == null) { 
+				throw new NotNullException(
+						jp.getStaticPart().getSignature().toString(), 
+						parametersName[paramCpt], 
+						jp.getSignature().toString(), 
+						jp.getSourceLocation().toString()
+				); 
+			}
 		   }
 		}
 	   }

@@ -16,7 +16,7 @@
 package org.kaleidofoundry.core.store;
 
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.StoreMessageBundle;
-import static org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory.KaleidoPersistentContextUnitName;
+import static org.kaleidofoundry.core.persistence.PersistenceConstants.KaleidoPersistentContextUnitName;
 import static org.kaleidofoundry.core.store.FileStoreConstants.ClobJpaStorePluginName;
 import static org.kaleidofoundry.core.store.FileStoreConstants.DEFAULT_BUFFER_SIZE;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.BufferSize;
@@ -55,6 +55,9 @@ public class JpaFileStore extends AbstractFileStore implements FileStore {
    private EntityManager em;
 
    /**
+    * The default entity manager is handle by kaleido persistent name.
+    * You can overide it, with your custom
+    * 
     * @return current entity manager (handle managed one or not)
     */
    @NotNull

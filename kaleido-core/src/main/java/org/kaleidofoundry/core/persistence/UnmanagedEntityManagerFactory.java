@@ -30,6 +30,8 @@ import org.kaleidofoundry.core.util.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.kaleidofoundry.core.persistence.PersistenceConstants.KaleidoPersistentContextUnitName;
+
 /**
  * Factory used to manage {@link EntityManagerFactory} and {@link EntityManager} in an <b>unmanaged</b> environment<br/>
  * You can use it in container that does not managed injection via {@link PersistenceContext} or {@link PersistenceUnit} annotation,
@@ -51,11 +53,6 @@ import org.slf4j.LoggerFactory;
 public abstract class UnmanagedEntityManagerFactory {
 
    private static Logger LOGGER = LoggerFactory.getLogger(UnmanagedEntityManagerFactory.class);
-
-   /**
-    * default name for internal kaleidofoundry persistent context unit name (declare into persitence.xml)
-    */
-   public static final String KaleidoPersistentContextUnitName = "kaleido";
 
    // default kaleidofoundry EntityManagerFactory
    private static EntityManagerFactory DefaultEmf;

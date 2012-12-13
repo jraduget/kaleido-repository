@@ -17,8 +17,12 @@ package org.kaleidofoundry.core.store;
 
 import static org.kaleidofoundry.core.store.FileStoreConstants.ClasspathStorePluginName;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.JarURLConnection;
 import java.net.URI;
+import java.net.URL;
 
 import org.kaleidofoundry.core.context.IllegalContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
@@ -112,20 +116,36 @@ public class ClasspathFileStore extends AbstractFileStore implements FileStore {
 	}
 	localPath.append(resourceBinding.getPath());
 
-	if (localPath.charAt(0) == '/') {
-	   final InputStream in = JavaSystemHelper.getResourceAsStream(getClassLoader(), localPath.substring(1));
-	   if (in != null) {
-		return createResourceHandler(resourceBinding.toString(), in);
-	   } else {
-		throw new ResourceNotFoundException(resourceBinding.toString());
+	final String localPathStr = (localPath.charAt(0) == '/') ? localPath.substring(1) : localPath.toString();
+	final InputStream in = JavaSystemHelper.getResourceAsStream(getClassLoader(), localPathStr);
+	final URL resourceUrl = JavaSystemHelper.getResource(getClassLoader(), localPathStr);
+	final ResourceHandler resourceHandler;
+
+	if (in != null) {
+	   resourceHandler = createResourceHandler(resourceBinding.toString(), in);
+	   if (resourceUrl != null) {
+		String resourceFileName = null;
+		if (resourceUrl.getProtocol().equals("file")) {
+		   resourceFileName = resourceUrl.getFile();
+		} else if (resourceUrl.getProtocol().equals("jar")) {
+		   try {
+			resourceFileName = resourceUrl.getFile();
+			JarURLConnection jarUrl = (JarURLConnection) resourceUrl.openConnection();
+			resourceFileName = jarUrl.getJarFile().getName();
+		   } catch (IOException ioe) {
+			throw new ResourceException(ioe, resourceBinding.toString());
+		   }
+		}
+
+		if (resourceFileName != null && resourceHandler instanceof ResourceHandlerBean) {
+		   File resourceFile = new File(resourceFileName);
+		   ((ResourceHandlerBean) resourceHandler).setLastModified(resourceFile.lastModified());
+		}
+
 	   }
+	   return resourceHandler;
 	} else {
-	   final InputStream in = JavaSystemHelper.getResourceAsStream(getClassLoader(), localPath.toString());
-	   if (in != null) {
-		return createResourceHandler(resourceBinding.toString(), in);
-	   } else {
-		throw new ResourceNotFoundException(resourceBinding.toString());
-	   }
+	   throw new ResourceNotFoundException(resourceBinding.toString());
 	}
    }
 

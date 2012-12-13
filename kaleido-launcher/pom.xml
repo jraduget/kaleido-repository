@@ -8,27 +8,29 @@
 	</parent>
 
 	<artifactId>kaleido-launcher</artifactId>
-	<name>KaleidoFoundry launcher extension</name>
+	<name>KaleidoFoundry cdi launcher extension</name>
+	<description>This module is used if you want to use CDI with an unmanaged env. like junit, tomcat or java main program</description>
+	
 	<packaging>jar</packaging>
 
 	<dependencies>
 
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
-			<artifactId>kaleido-core</artifactId>
+			<artifactId>kaleido-jee6</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.jboss.weld.se</groupId>
 			<artifactId>weld-se-core</artifactId>
-			<version>1.1.8.Final</version>
+			<version>${weld.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.jboss.weld</groupId>
 			<artifactId>weld-core</artifactId>
-			<version>1.1.8.Final</version>
+			<version>${weld.version}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-ext</artifactId>
@@ -40,7 +42,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.slf4j</groupId>

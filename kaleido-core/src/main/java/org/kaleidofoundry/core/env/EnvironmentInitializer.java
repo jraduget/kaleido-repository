@@ -17,7 +17,7 @@ package org.kaleidofoundry.core.env;
 
 import static org.kaleidofoundry.core.config.ConfigurationConstants.STATIC_ENV_PARAMETERS;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.CoreMessageBundle;
-import static org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory.KaleidoPersistentContextUnitName;
+import static org.kaleidofoundry.core.persistence.PersistenceConstants.KaleidoPersistentContextUnitName;
 
 import java.io.IOException;
 import java.io.InputStream;

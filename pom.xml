@@ -71,10 +71,12 @@
 		<!-- Cache implementation version -->
 		<jboss-cache.version>3.2.3.CR1</jboss-cache.version>
 		<terracotta-ehcache.version>2.4.6</terracotta-ehcache.version>
-		<jboss-infinispan.version>5.1.5.FINAL</jboss-infinispan.version>		
+		<jboss-infinispan.version>5.1.5.FINAL</jboss-infinispan.version>	
+		<!-- CDI -->
+		<cdi.version>1.0</cdi.version>
+		<weld.version>1.1.8.Final</weld.version>	
 		<!-- Testing -->		
 		<junit.version>4.10</junit.version>
-		<mockito.version>1.8.5</mockito.version>
 		<!--  Spring integration version -->
 		<spring.version>3.1.1.RELEASE</spring.version>
 		<!-- integration url properties -->
@@ -98,6 +100,7 @@
 		<module>kaleido-mailing</module> 
 		<module>kaleido-reporting</module> 
 		-->
+		<module>kaleido-sample</module>
 		<module>kaleido-distrib</module>
 	</modules>
 
@@ -115,12 +118,6 @@
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-		  	<artifactId>mockito-core</artifactId>  
-		  	<version>${mockito.version}</version> 
-		  	<scope>test</scope>	  
 		</dependency>		
 	</dependencies>
 
@@ -721,19 +718,14 @@
 				<webapp.xsd.version>2_5</webapp.xsd.version>
 			</properties>			
 			<dependencies>
-				<!-- jpa api - it is only used for testing (it have to be before javax.persistence in classpath) -->
+				<!-- jpa api for testing - it have to be first in classpath (before geronimo-jpa_1.0_spec)-->
 				<dependency>
 					<groupId>org.eclipse.persistence</groupId>
 					<artifactId>eclipselink</artifactId>
 					<version>1.2.0</version>
 					<scope>test</scope>
 				</dependency>
-				<dependency>
-					<groupId>org.eclipse.persistence</groupId>
-					<artifactId>javax.persistence</artifactId>
-					<version>1.2.0</version>
-					<scope>test</scope>
-				</dependency>
+				
 				<!-- jpa api -->
 				<dependency>
 					<groupId>org.apache.geronimo.specs</groupId>
@@ -764,18 +756,19 @@
 				</dependency>
 				<!-- jax-ws api -->
 				<dependency>
-					<groupId>javax.xml.ws</groupId>
-					<artifactId>jaxws-api</artifactId>
-					<version>2.0</version>
+					<groupId>org.apache.geronimo.specs</groupId>
+					<artifactId>geronimo-jaxws_2.1_spec</artifactId>
+					<version>1.0</version>
 					<scope>provided</scope>
 				</dependency>				
 				<!-- jax-rs api -->
 				<dependency>
-					<groupId>javax.ws.rs</groupId>
-					<artifactId>jsr311-api</artifactId>
+					<groupId>org.apache.geronimo.specs</groupId>
+					<artifactId>geronimo-jaxrs_1.1_spec</artifactId>
 					<version>1.0</version>
 					<scope>provided</scope>
 				</dependency>				
+				
 			</dependencies>
 		</profile>
 		
@@ -794,7 +787,7 @@
 				<webapp.xsd.version>3_0</webapp.xsd.version>
 			</properties>			
 			<dependencies>
-				<!-- persistence api - used only for testing (have to be before javaee-api in classpath) -->
+				<!-- jpa api for testing - it have to be before javaee-api in classpath -->
 				<dependency>
 					<groupId>org.eclipse.persistence</groupId>
 					<artifactId>eclipselink</artifactId>
@@ -807,6 +800,7 @@
 					<version>2.0.0</version>
 					<scope>test</scope>
 				</dependency>
+				
 				<!-- full javaee 6 profile -->
 				<dependency>
 					<groupId>javax</groupId>

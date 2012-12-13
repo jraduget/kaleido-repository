@@ -15,7 +15,7 @@
  */
 package org.kaleidofoundry.core.config;
 
-import static org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory.KaleidoPersistentContextUnitName;
+import static org.kaleidofoundry.core.persistence.PersistenceConstants.KaleidoPersistentContextUnitName;
 
 import java.io.Serializable;
 

@@ -43,6 +43,8 @@ import org.kaleidofoundry.core.context.RuntimeContext;
  * <li><code>classpath:/</code> <b>or</b> <code>classpath:/path</code></li>
  * <li><code>file:/</code> <b>or</b> <code>file:/path</code></li>
  * <li><code>webapp:/</code> <b>or</b> <code>webapp:/path</code></li>
+ * <li><code>memory:/</code> <b>or</b> <code>memory:/path</code></li>
+ * <li><code>gs:/</code> <b>or</b> <code>gs:/bucketName/path</code></li>
  * <li><code>...</code></li>
  * </ul>
  * <b>uri schemes handled</b>: <code>http|https|ftp|file|classpath|webapp|...</code></td>
@@ -185,6 +187,7 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
     * <li><code>classpath:/</code> <b>or</b> <code>classpath:/path</code></li>
     * <li><code>file:/</code> <b>or</b> <code>file:/path</code></li>
     * <li><code>webapp:/</code> <b>or</b> <code>webapp:/path</code></li>
+    * <li><code>gs:/</code> <b>or</b> <code>gs:/bucketName/path</code></li>
     * <li><code>...</code></li>
     * </ul>
     * <b>uri schemes handled</b>: <code>http|https|ftp|file|classpath|webapp|...</code>
@@ -229,11 +232,6 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
    public static final String ConnectTimeout = "connectTimeout";
    /** read timeout settings - see {@link URLConnection#setReadTimeout(int)} */
    public static final String ReadTimeout = "readTimeout";
-
-   /** Http method to get file content : GET, POST */
-   public static final String Method = "method";
-   /** Http response mime type */
-   public static final String ContentType = "contentType";
 
    // * proxy settings if needed ******************
    /** does proxy is enabled - usage <code>true|false</code> value */
@@ -526,27 +524,6 @@ public class FileStoreContextBuilder extends AbstractRuntimeContextBuilder<FileS
     */
    public FileStoreContextBuilder withCacheManagerRef(final String cacheManagerRef) {
 	getContextParameters().put(CacheManagerRef, cacheManagerRef);
-	return this;
-   }
-
-
-   /**
-    * @param method
-    * @return current builder instance
-    * @see FileStoreContextBuilder#Method
-    */
-   public FileStoreContextBuilder withMethod(final String method) {
-	getContextParameters().put(Method, method);
-	return this;
-   }
-
-   /**
-    * @param contentType
-    * @return current builder instance
-    * @see FileStoreContextBuilder#Classloader
-    */
-   public FileStoreContextBuilder withContentType(final String contentType) {
-	getContextParameters().put(ContentType, contentType);
 	return this;
    }
 

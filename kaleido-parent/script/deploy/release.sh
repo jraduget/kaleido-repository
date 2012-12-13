@@ -3,7 +3,7 @@ export MAVEN_OPT=-Xmx1024m
 # update version of test integration modules
 #---------------------------------------------
 cd kaleido-it-parent
-# edit and update pom.xml parent version removing SNAPSHOT
+mvn versions:set -DnewVersion=0.9.0
 mvn -N versions:update-child-modules
 svn commit -m "release XXX prepare"
 
@@ -32,8 +32,8 @@ mvn release:perform -Dgpg.passphrase=${GPG_PASSPHRASE} -Darguments=-Dgpg.passphr
 
 # git branch and tagging part
 #---------------------------------------------
-# git branch kaleido-0.8.2
+# git branch kaleido-0.9.0
 # git push --all
-# git tag -a kaleido-0.8.2 -m "maven central release"
+# git tag -a kaleido-0.9.0 -m "maven central release"
 # git push --tags
 

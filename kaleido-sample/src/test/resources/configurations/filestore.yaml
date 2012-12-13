@@ -1,0 +1,3 @@
+fileStores:
+  yourStore:
+    baseUri: classpath:/filestores/

@@ -374,14 +374,19 @@ public abstract class AbstractFileStore implements FileStore {
 		// try to get the resource
 		final ResourceHandler in = doGet(URI.create(resourceUri));
 		if (in == null || in.isEmpty()) { throw new ResourceNotFoundException(resourceRelativePath); }
+		
+		// some extra informations
+		if (in instanceof ResourceHandlerBean) {
+			((ResourceHandlerBean) in).setLastModified(in.getLastModified());
+			((ResourceHandlerBean) in).setMimeType(in.getMimeType() != null  ? 
+					in.getMimeType() : 
+					MimeTypeResolverFactory.getService().getMimeType(FileHelper.getFileNameExtension(resourceUri)));
+			((ResourceHandlerBean) in).setCharset(in.getCharset());
+		}
+		   
 		// if caching is enabled : put to cache
 		if (resourcesByUri != null) {
 		   final ResourceHandler cacheableResource = createResourceHandler(resourceUri, in.getBytes());
-		   if (cacheableResource instanceof ResourceHandlerBean) {
-			((ResourceHandlerBean) cacheableResource).setLastModified(in.getLastModified());
-			((ResourceHandlerBean) cacheableResource).setMimeType(in.getMimeType());
-			((ResourceHandlerBean) cacheableResource).setCharset(in.getCharset());
-		   }
 		   resourcesByUri.put(resourceUri, cacheableResource);
 		   return cacheableResource;
 		}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+
+	<persistence-unit name="kaleido" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+
+		<!-- entities declarations -->
+		<class>org.kaleidofoundry.core.store.model.ResourceHandlerEntity</class>		
+		<class>org.kaleidofoundry.core.config.model.ConfigurationModel</class>
+		<class>org.kaleidofoundry.core.config.model.ConfigurationProperty</class>
+		<class>org.kaleidofoundry.core.i18n.model.I18nMessage</class>
+		<class>org.kaleidofoundry.core.i18n.model.I18nMessageGroup</class>
+		<class>org.kaleidofoundry.core.i18n.model.I18nMessageLanguage</class>		
+		
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+
+		<properties>
+			<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:derby:target/kaleidoSamples;create=true" />
+			<property name="javax.persistence.jdbc.user" value="APP" />
+			<property name="javax.persistence.jdbc.password" value="APP" />
+			
+			<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+         	<property name="hibernate.hbm2ddl.auto" value="create-drop"/>			
+		</properties>
+
+	</persistence-unit>
+
+</persistence>

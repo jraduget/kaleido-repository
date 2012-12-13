@@ -18,7 +18,7 @@ package org.kaleidofoundry.core.i18n;
 import static org.kaleidofoundry.core.i18n.model.I18nMessageConstants.Query_MessagesByLocale.Name;
 import static org.kaleidofoundry.core.i18n.model.I18nMessageConstants.Query_MessagesByLocale.Parameter_Locale;
 import static org.kaleidofoundry.core.i18n.model.I18nMessageConstants.Query_MessagesByLocale.Parameter_ResourceName;
-import static org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory.KaleidoPersistentContextUnitName;
+import static org.kaleidofoundry.core.persistence.PersistenceConstants.KaleidoPersistentContextUnitName;
 
 import java.util.List;
 import java.util.Locale;
