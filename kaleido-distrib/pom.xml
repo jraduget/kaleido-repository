@@ -17,7 +17,7 @@
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
-					<finalName>kaleidofoundry-${project.version}</finalName>
+					<finalName>kaleidofoundry-${project.version}-Rev${buildNumber}</finalName>
 					<descriptors>
 						<descriptor>src/assemble/distribution.xml</descriptor>
 					</descriptors>
