@@ -2,9 +2,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.kaleidofoundry</groupId>
+	<parent>
+		<groupId>org.kaleidofoundry</groupId>
+		<artifactId>kaleido-parent</artifactId>
+		<version>0.9.0-SNAPSHOT</version>
+	</parent>
+	
 	<artifactId>kaleido-sample</artifactId>
-	<version>0.9.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>KaleidoFoundry wiki samples</name>
@@ -49,5 +53,27 @@
 
 	</dependencies>
 
-
+	<build>
+		<plugins>
+			<!-- skip aspectj plugin defined in parent (in order to use CDI injection) -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>aspectj-maven-plugin</artifactId>
+				<version>1.4</version>
+				<configuration>
+					<excludes>
+						<exclude>**/*.java</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	
 </project>
