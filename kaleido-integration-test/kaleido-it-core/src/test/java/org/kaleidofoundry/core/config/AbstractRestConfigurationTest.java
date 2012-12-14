@@ -44,8 +44,8 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
  */
 public abstract class AbstractRestConfigurationTest extends Assert {
 
-   private static final String SERVER_BASE_URL = "http://localhost:8080/kaleido-it";
-   // private static final String SERVER_BASE_URL = "http://localhost:8883/kaleido-it";
+   //private static final String SERVER_BASE_URL = "http://localhost:8080/kaleido-it";
+   private static final String SERVER_BASE_URL = "http://localhost:8380/kaleido-it";
 
    private static final List<String> KEYS = Arrays.asList("//myapp/name", "//myapp/admin/email", "//myapp/sample/date", "//myapp/sample/float",
 	   "//myapp/sample/boolean");

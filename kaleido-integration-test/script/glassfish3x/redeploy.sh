@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # current build version (TODO extract it from pom.xml)
-KALEIDO_VERSION=0.8.2-SNAPSHOT
+KALEIDO_VERSION=0.9.0-SNAPSHOT
 
 # script base dir
 BASE="$(cd -P -- $(dirname -- "$0"); pwd -P)"
@@ -31,6 +31,6 @@ echo "**************************************************************************
 cat /dev/null > $GLASSFISH_HOME/glassfish/domains/kaleido/logs/server.log
 $GLASSFISH_HOME/bin/asadmin start-domain kaleido 
 $GLASSFISH_HOME/bin/asadmin undeploy kaleido-it-ear 
-$GLASSFISH_HOME/bin/asadmin deploy --name=kaleido-it-ear $BASE/../../../kaleido-it-ear/target/kaleido-it-ear-$KALEIDO_VERSION.ear 
+$GLASSFISH_HOME/bin/asadmin deploy --name=kaleido-it-ear $BASE/../../kaleido-it-ear/target/kaleido-it-ear-$KALEIDO_VERSION.ear 
 
 

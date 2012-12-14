@@ -70,4 +70,4 @@ $GLASSFISH_HOME/bin/asadmin start-database
 echo 'start deployment...'
 $GLASSFISH_HOME/bin/asadmin stop-domain kaleido
 $GLASSFISH_HOME/bin/asadmin start-domain kaleido 
-$GLASSFISH_HOME/bin/asadmin deploy --name=kaleido-it-ear --dbvendorname=javadb --createtables=true  $BASE/../../../kaleido-it-ear/target/kaleido-it-ear-$KALEIDO_VERSION.ear
+$GLASSFISH_HOME/bin/asadmin deploy --name=kaleido-it-ear --dbvendorname=javadb --createtables=true  $BASE/../../kaleido-it-ear/target/kaleido-it-ear-$KALEIDO_VERSION.ear
