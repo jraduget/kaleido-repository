@@ -13,28 +13,27 @@
 
 	<dependencies>
 		
-		<!-- AOP -->
+		<!-- AOP with aspectj >= 1.6.0 -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
 			<version>${aspectj.version}</version>
 		</dependency>
 
-		<!-- Json configuration -->
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.6</version>
-		</dependency>	
-		<!-- Yamlconfiguration -->
+		<!-- Configuration providers -->
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
 			<version>1.10</version>
 		</dependency>
-		
-		
-		<!-- Cache implementations -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.6</version>
+			<scope>provided</scope>
+		</dependency>			
+				
+		<!-- Caching providers (provided) -->
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache-core</artifactId>
@@ -74,6 +73,14 @@
 			<optional>true</optional>			
 		</dependency>
 		
+		<!-- File store providers (provided) -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>1.3.26</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- Store FTP and SSH (SFTP / SCP ...) API
 		<dependency>
 			<groupId>commons-net</groupId>
@@ -95,28 +102,7 @@
 			<scope>provided</scope>
 		</dependency>
 		
-		<!-- Logging with log4j  
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.version}</version>
-			<scope>test</scope>
-		</dependency>		
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${slf4j.version}</version>
-			<scope>test</scope>
-		</dependency> 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jul-to-slf4j</artifactId>
-			<version>${slf4j.version}</version>
-			<scope>test</scope>
-		</dependency>		
-		-->
-		
-		<!-- Logging with logback -->
+		<!-- Logging with logback during the tests -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
