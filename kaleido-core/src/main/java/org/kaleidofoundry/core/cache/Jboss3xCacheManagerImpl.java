@@ -35,7 +35,7 @@ import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
- * Jboss3x factory implementation
+ * Jboss cache manager provider
  * 
  * @see CacheFactory
  * @author Jerome RADUGET

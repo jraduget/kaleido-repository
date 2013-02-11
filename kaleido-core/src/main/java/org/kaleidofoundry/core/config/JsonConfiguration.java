@@ -46,6 +46,8 @@ import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
+ * Json configuration implementation
+ * 
  * @author Jerome RADUGET
  */
 @Declare(ConfigurationConstants.JsonConfigurationPluginName)

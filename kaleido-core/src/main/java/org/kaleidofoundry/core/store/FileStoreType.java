@@ -16,7 +16,7 @@
 package org.kaleidofoundry.core.store;
 
 /**
- * Represents a store uri scheme
+ * Represents a store uri scheme, that will be mapped to a kaleido {@link FileStore}
  * 
  * @author Jerome RADUGET
  */

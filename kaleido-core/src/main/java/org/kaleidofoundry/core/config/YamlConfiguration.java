@@ -41,6 +41,8 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
 
 /**
+ * Yaml configuration implementation
+ * 
  * @author Jerome RADUGET
  */
 @Declare(ConfigurationConstants.YamlConfigurationPluginName)

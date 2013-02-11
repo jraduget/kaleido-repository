@@ -27,7 +27,7 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 
 /**
- * Internal kaleidofoundry cache manager, if no cache provider is specify
+ * The default cache manager (local in memory), if no cache provider is specify
  * 
  * @author Jerome RADUGET
  */

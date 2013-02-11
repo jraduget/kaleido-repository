@@ -26,7 +26,7 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import com.google.appengine.api.files.FileReadChannel;
 
 /**
- * Resource handler for GAE
+ * Resource handler for google application engine
  * 
  * @author Jerome RADUGET
  */

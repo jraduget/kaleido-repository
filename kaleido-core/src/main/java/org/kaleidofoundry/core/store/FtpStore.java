@@ -39,7 +39,8 @@ import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
- * FTP read only store implementation <br/>
+ * FTP {@link FileStore} implementation 
+ * <br/>
  * <b>This implementation is only for read only use</b> - the methods store, remove, move will throws {@link ResourceException}<br/>
  * <br/>
  * You can create your own store, by extending this class and overriding methods :

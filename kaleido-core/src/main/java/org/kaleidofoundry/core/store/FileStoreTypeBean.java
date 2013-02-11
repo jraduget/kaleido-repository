@@ -16,7 +16,7 @@
 package org.kaleidofoundry.core.store;
 
 /**
- * Represents handled uri schemes (default and custom implementations )
+ * This class is used to register an uri schemes to a kaleido {@link FileStore} implementation
  * 
  * @author Jerome RADUGET
  */

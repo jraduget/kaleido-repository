@@ -33,7 +33,7 @@ import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
- * EhCache factory implementation <br/>
+ * Terracotta ehcache manager provider <br/>
  * <br/>
  * http://ehcache.org/documentation/configuration.html <br/>
  * Cache statistics are disabled in this version for performance reason (prior to 1.7.x) <br/>

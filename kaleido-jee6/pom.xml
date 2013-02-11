@@ -10,6 +10,7 @@
 
 	<artifactId>kaleido-jee6</artifactId>
 	<name>KaleidoFoundry jee6 extension</name>
+	<description>Java EE6 CDI integration for the injection of kaleido components</description>
 	<packaging>jar</packaging>
 
 	<dependencies>

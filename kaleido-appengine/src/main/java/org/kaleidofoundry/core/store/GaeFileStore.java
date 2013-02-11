@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2011 the original author or authors.
+ *  Copyright 2008-2012 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -46,11 +46,15 @@ import com.google.appengine.api.files.FileWriteChannel;
 import com.google.appengine.api.files.GSFileOptions.GSFileOptionsBuilder;
 
 /**
- * https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/files/FileService
- * https://developers.google.com/storage/docs/hellogooglestorage
- * https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/files/AppEngineFile
- * https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/files/AppEngineFile.FileSystem
- * 
+ * Google application file store service
+ * <br/>
+ * <b>References</b>
+ * <ul>
+ * <li>https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/files/FileService</li>
+ * <li>https://developers.google.com/storage/docs/hellogooglestorage/li>
+ * <li>https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/files/AppEngineFile/li>
+ * <li>https://developers.google.com/appengine/docs/java/javadoc/com/google/appengine/api/files/AppEngineFile.FileSystem/li>
+ * </ul>
  * @author Jerome RADUGET
  */
 public class GaeFileStore extends AbstractFileStore {

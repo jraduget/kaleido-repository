@@ -88,13 +88,13 @@
 
 	<modules>
 		<!-- core modules -->
-		<module>kaleido-core</module>
+		<module>kaleido-messaging</module>
 		<!-- core extensions -->
 		<module>kaleido-jee6</module>
+		<module>kaleido-core</module>
 		<module>kaleido-launcher</module>
 		<module>kaleido-spring</module>
 		<module>kaleido-guice</module>
-		<module>kaleido-messaging</module>
 		<module>kaleido-appengine</module>
 		<!--incoming <module>kaleido-mailing</module> <module>kaleido-reporting</module> -->
 		<module>kaleido-sample</module>

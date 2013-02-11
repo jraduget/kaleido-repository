@@ -26,6 +26,7 @@ import javax.persistence.Query;
 
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.config.model.ConfigurationModel;
+import org.kaleidofoundry.core.config.model.ConfigurationModelConstants;
 import org.kaleidofoundry.core.config.model.ConfigurationProperty;
 import org.kaleidofoundry.core.config.model.ConfigurationModelConstants.Query_FindConfigurationByName;
 import org.kaleidofoundry.core.context.RuntimeContext;
@@ -34,6 +35,8 @@ import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceHandler;
 
 /**
+ * Configuration store in your database table {@link ConfigurationModelConstants#Table_Configuration} instead of a file
+ * 
  * @author Jerome RADUGET
  */
 // @Stateful(mappedName = "ejb/configuration/model")

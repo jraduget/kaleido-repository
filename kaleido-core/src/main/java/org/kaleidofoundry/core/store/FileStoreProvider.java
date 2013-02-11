@@ -37,7 +37,7 @@ import org.kaleidofoundry.core.util.Registry;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
- * FileStore Provider
+ * {@link FileStore} Provider
  * 
  * @author Jerome RADUGET
  */

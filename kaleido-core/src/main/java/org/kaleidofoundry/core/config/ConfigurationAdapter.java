@@ -18,6 +18,8 @@ package org.kaleidofoundry.core.config;
 import java.util.LinkedHashSet;
 
 /**
+ * An abstract and default configuration changes listener
+ * 
  * @author Jerome RADUGET
  */
 public abstract class ConfigurationAdapter implements ConfigurationListener {

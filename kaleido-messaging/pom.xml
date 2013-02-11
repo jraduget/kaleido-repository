@@ -10,6 +10,7 @@
 
 	<artifactId>kaleido-messaging</artifactId>
 	<name>KaleidoFoundry messaging</name>
+	<description>An asynchronous messaging solution for produce and consume messages on bus like jms, active mq, ibm mq, tibco rdv...</description>
 	<packaging>jar</packaging>
 
 	<dependencies>

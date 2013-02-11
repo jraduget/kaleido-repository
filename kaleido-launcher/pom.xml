@@ -9,7 +9,7 @@
 
 	<artifactId>kaleido-launcher</artifactId>
 	<name>KaleidoFoundry cdi launcher extension</name>
-	<description>This module is used if you want to use CDI with an unmanaged env. like junit, tomcat or java main program</description>
+	<description>Benefit from CDI in an unmanaged environment like junit, tomcat, jetty, or java main program</description>
 	
 	<packaging>jar</packaging>
 

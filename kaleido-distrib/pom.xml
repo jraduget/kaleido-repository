@@ -9,6 +9,7 @@
 
 	<artifactId>kaleido-distrib</artifactId>
 	<name>KaleidoFoundry assembly and distribution bundle</name>
+	<description>Distribution assembly bundles</description>
 	<packaging>jar</packaging>
 
 	<build>

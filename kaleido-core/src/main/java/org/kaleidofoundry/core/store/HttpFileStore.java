@@ -40,7 +40,8 @@ import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
- * Simple http & https store implementation<br/>
+ * Http & https {@link FileStore} implementation
+ * <br/>
  * <br/>
  * <b>This implementation is only for read only use</b> - the methods store, remove, move will throws {@link ResourceException}<br/>
  * <br/>
