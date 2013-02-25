@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -250,11 +249,18 @@
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>2.3</version>
 				</plugin>
-				<!-- release and sgpg sign provides by sonatype parent in a specific 
-					release profile -Psonatype-oss-release <plugin> <groupId>org.apache.maven.plugins</groupId> 
-					<artifactId>maven-release-plugin</artifactId> <version>2.2.1</version> </plugin> 
-					<plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-gpg-plugin</artifactId> 
-					<version>1.4</version> </plugin> -->
+				<!-- release and sgpg sign provides by sonatype parent in a specific  release profile -Psonatype-oss-release
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.2.1</version>
+				</plugin>
+				-->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.4</version>
+				</plugin> 
 
 				<!-- google code upload facilities -->
 				<plugin>
@@ -263,8 +269,7 @@
 					<version>1.1</version>
 				</plugin>
 
-				<!-- Eclipse m2e settings only. It has no influence on the Maven build 
-					itself. -->
+				<!-- Eclipse m2e settings only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -477,14 +482,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.7</version>
-				<!-- doclava configuration <configuration> <docletArtifact> <groupId>com.google.doclava</groupId> 
-					<artifactId>doclava</artifactId> <version>1.0.3</version> </docletArtifact> 
-					<doclet>com.google.doclava.Doclava</doclet> <bootclasspath>${sun.boot.class.path}</bootclasspath> 
-					<additionalparam> -quiet -federate JDK http://download.oracle.com/javase/6/docs/api/index.html? 
-					-federationxml JDK http://doclava.googlecode.com/svn/static/api/openjdk-6.xml 
-					-hdf project.name "${project.name}" -d ${project.build.directory}/apidocs 
-					</additionalparam> <useStandardDocletOptions>false</useStandardDocletOptions> 
-					<additionalJOption>-J-Xmx1024m</additionalJOption> </configuration> -->
 				<configuration>
 					<links>
 						<link>http://download.oracle.com/javase/6/docs/api/</link>
@@ -497,6 +494,22 @@
 					<maxmemory>512m</maxmemory>
 					<docfilessubdirs>true</docfilessubdirs>
 					<linksource>true</linksource>
+					<!-- doclava configuration 
+					<docletArtifact>
+						<groupId>com.google.doclava</groupId>
+						<artifactId>doclava</artifactId>
+						<version>1.0.6</version>
+					</docletArtifact>
+					<doclet>com.google.doclava.Doclava</doclet>
+					<bootclasspath>${sun.boot.class.path}</bootclasspath>
+					<additionalparam> 
+						-hdf project.name "${project.name}"
+            		-d ${project.build.directory}/apidocs
+            		-quiet						
+					</additionalparam>
+					<useStandardDocletOptions>false</useStandardDocletOptions>
+					<additionalJOption>-J-Xmx1024m</additionalJOption>	
+					-->
 				</configuration>
 				<executions>
 					<execution>
@@ -570,10 +583,19 @@
 								<aggregate>true</aggregate>
 							</configuration>
 						</plugin>
-						<!-- maven annotation processor incompatibles <plugin> <groupId>org.codehaus.mojo</groupId> 
-							<artifactId>cobertura-maven-plugin</artifactId> <version>2.4</version> <configuration> 
-							<formats> <format>xml</format> <format>html</format> </formats> </configuration> 
-							</plugin> -->
+						<!-- maven annotation processor incompatibles 
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>cobertura-maven-plugin</artifactId>
+							<version>2.4</version>
+							<configuration>
+								<formats>
+									<format>xml</format>
+									<format>html</format>
+								</formats>
+							</configuration>
+						</plugin>
+						-->
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-pmd-plugin</artifactId>
@@ -607,12 +629,21 @@
 				</configuration>
 			</plugin>
 
-			<!-- release and sgpg sign provides by sonatype parent in a specific release 
-				profile -Psonatype-oss-release <plugin> <groupId>org.apache.maven.plugins</groupId> 
-				<artifactId>maven-gpg-plugin</artifactId> <executions> <execution> <id>sign-artifacts</id> 
-				<phase>verify</phase> <goals> <goal>sign</goal> </goals> </execution> </executions> 
-				</plugin> -->
-
+			<!-- release and sgpg sign provides by sonatype parent in a specific release profile -Psonatype-oss-release  
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			-->
 			<plugin>
 				<groupId>org.codehaus.sonar</groupId>
 				<artifactId>sonar-dev-mojo</artifactId>
@@ -685,7 +716,6 @@
 					<version>1.2.0</version>
 					<scope>test</scope>
 				</dependency>
-
 				<!-- jpa api -->
 				<dependency>
 					<groupId>org.apache.geronimo.specs</groupId>
@@ -728,7 +758,6 @@
 					<version>1.0</version>
 					<scope>provided</scope>
 				</dependency>
-
 			</dependencies>
 		</profile>
 
@@ -747,92 +776,80 @@
 				<webapp.xsd.version>3_0</webapp.xsd.version>
 			</properties>
 			<dependencies>
-				<!-- jpa api for testing - it have to be before javaee-api in classpath -->
+				<!-- jpa api for testing - it have to be before jpa api spec in classpath -->
 				<dependency>
 					<groupId>org.eclipse.persistence</groupId>
 					<artifactId>eclipselink</artifactId>
-					<version>2.0.2</version>
+					<version>2.4.0</version>
 					<scope>test</scope>
 				</dependency>
+				<!-- javaee 6 profile -->
 				<dependency>
-					<groupId>org.eclipse.persistence</groupId>
-					<artifactId>javax.persistence</artifactId>
-					<version>2.0.0</version>
-					<scope>test</scope>
-				</dependency>
-
-				<!-- full javaee 6 profile -->
+					<groupId>org.apache.geronimo.specs</groupId>
+					<artifactId>geronimo-jpa_2.0_spec</artifactId>
+					<version>1.1</version>
+					<scope>provided</scope>					
+				</dependency>				            	
 				<dependency>
 					<groupId>org.apache.geronimo.specs</groupId>
 					<artifactId>geronimo-atinject_1.0_spec</artifactId>
 					<version>1.0</version>
 					<scope>provided</scope>
 				</dependency>
-
 				<dependency>
 					<groupId>org.apache.geronimo.specs</groupId>
 					<artifactId>geronimo-ejb_3.1_spec</artifactId>
 					<version>1.0.2</version>
 					<scope>provided</scope>
 				</dependency>
-
-
 				<dependency>
 					<groupId>org.apache.geronimo.specs</groupId>
 					<artifactId>geronimo-jta_1.1_spec</artifactId>
 					<version>1.1.1</version>
 					<scope>provided</scope>
 				</dependency>
-
 				<dependency>
 					<groupId>org.apache.geronimo.specs</groupId>
 					<artifactId>geronimo-servlet_3.0_spec</artifactId>
 					<version>1.0</version>
 					<scope>provided</scope>
 				</dependency>
-
 				<dependency>
 					<groupId>org.apache.geronimo.specs</groupId>
 					<artifactId>geronimo-jsp_2.2_spec</artifactId>
 					<version>1.1</version>
 					<scope>provided</scope>
 				</dependency>
-
 				<dependency>
 					<groupId>org.apache.geronimo.specs</groupId>
 					<artifactId>geronimo-jms_1.1_spec</artifactId>
 					<version>1.1.1</version>
 					<scope>provided</scope>
 				</dependency>
-
 				<dependency>
 					<groupId>org.apache.geronimo.specs</groupId>
 					<artifactId>geronimo-validation_1.0_spec</artifactId>
 					<version>1.1</version>
 					<scope>provided</scope>
 				</dependency>
-
 				<dependency>
 					<groupId>org.apache.geronimo.specs</groupId>
 					<artifactId>geronimo-jaxrs_1.1_spec</artifactId>
 					<version>1.0</version>
 					<scope>provided</scope>
 				</dependency>
-
 				<dependency>
 					<groupId>org.apache.geronimo.specs</groupId>
 					<artifactId>geronimo-jaxws_2.2_spec</artifactId>
 					<version>1.1</version>
 					<scope>provided</scope>
 				</dependency>
-
 				<dependency>
 					<groupId>org.apache.geronimo.specs</groupId>
 					<artifactId>geronimo-jaxb_2.2_spec</artifactId>
 					<version>1.0.1</version>
 					<scope>provided</scope>
 				</dependency>
-
 			</dependencies>
 		</profile>
 	</profiles>
