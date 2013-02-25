@@ -28,6 +28,8 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 
 /**
+ * Google application engine cache
+ * 
  * @author Jerome RADUGET
  */
 @Declare(value = GaeCachePluginName)

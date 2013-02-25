@@ -9,9 +9,9 @@
 	</parent>
 	
 	<artifactId>kaleido-sample</artifactId>
-	<packaging>jar</packaging>
-
 	<name>KaleidoFoundry wiki samples</name>
+	<description>Kaleido in actions, this module provides code samples used in the wiki</description>
+	<packaging>jar</packaging>
 
 	<dependencies>
 		

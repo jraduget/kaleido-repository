@@ -37,6 +37,8 @@ import org.kaleidofoundry.core.plugin.Declare;
 import com.google.appengine.api.memcache.jsr107cache.GCacheFactory;
 
 /**
+ * Google application engine caching manager
+ * 
  * https://developers.google.com/appengine/docs/java/memcache/overview
  * 
  * @author Jerome RADUGET

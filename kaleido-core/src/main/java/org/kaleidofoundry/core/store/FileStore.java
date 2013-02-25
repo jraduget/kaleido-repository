@@ -29,9 +29,11 @@ import org.kaleidofoundry.core.lang.annotation.Stateless;
 import org.kaleidofoundry.core.plugin.Declare;
 
 /**
- * It provides a file store interface to handle file content like :
- * <code>properties, xml datas, binary content (pdf report, email...) </code> <br/>
- * which need to be persist on a file storage. The storage type will be determining by the scheme of the URI
+ * <p>A file manager abstraction to get and store some file contents like. URIs are used to identify a resource. 
+ * This file store could be : a file system, a ftp/http host, a classpath, a webapp, a database clob / blob, a google app engine storage area ...,
+ * </p>
+ * 
+ * The kind of the file storage is determine by the scheme of the URI
  * <p>
  * The {@link URI} (Uniform Resource Identifier) allow to bind different kind of resource :<br/>
  * You can use classic {@link URL} like :
@@ -44,6 +46,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  * <li><code>webapp:/</code></li>
  * <li><code>jpa:/</code></li>
  * <li><code>memory:/</code></li>
+ * <li><code>gae:/</code></li>
  * <li><code>sftp://</code> - not yet implemented</li>
  * </ul>
  * <p>

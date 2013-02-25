@@ -9,6 +9,7 @@
 
 	<artifactId>kaleido-appengine</artifactId>
 	<name>KaleidoFoundry appengine extension</name>
+	<description>Extends kaleido core features for google application engine : file store service, caching, ...</description>
 	<packaging>jar</packaging>
 
 	<properties>

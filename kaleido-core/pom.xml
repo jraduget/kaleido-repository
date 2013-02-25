@@ -9,6 +9,7 @@
 
 	<artifactId>kaleido-core</artifactId>
 	<name>KaleidoFoundry core</name>
+	<description>Benefit from kaleido core features, like file store service, caching, configuration, naming service</description>
 	<packaging>jar</packaging>
 
 	<dependencies>

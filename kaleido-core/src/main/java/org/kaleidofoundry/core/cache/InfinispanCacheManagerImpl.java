@@ -36,7 +36,7 @@ import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
- * Jboss3x factory implementation
+ * Jboss infinispan cache manager provider
  * 
  * @see CacheManagerFactory
  * @author Jerome RADUGET

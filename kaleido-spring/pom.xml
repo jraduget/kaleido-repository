@@ -9,6 +9,7 @@
 
 	<artifactId>kaleido-spring</artifactId>
 	<name>KaleidoFoundry spring extension</name>
+	<description>Spring integration for the injection of kaleido components</description>
 	<packaging>jar</packaging>
 
 	<dependencies>

@@ -28,7 +28,7 @@ import org.kaleidofoundry.core.web.ServletContextProvider;
 import org.kaleidofoundry.core.web.StartupListener;
 
 /**
- * Webapp classpath file store<br/>
+ * Webapp classpath {@link FileStore} implementation
  * <br/>
  * It gave you access to WEB-INF/ classpath resources <br/>
  * <br/>

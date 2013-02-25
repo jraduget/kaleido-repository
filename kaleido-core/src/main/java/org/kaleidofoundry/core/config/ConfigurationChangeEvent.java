@@ -21,7 +21,7 @@ import java.io.Serializable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 
 /**
- * kind of configuration change
+ * The event which is propagated when a configuration changes occurred
  * 
  * @author Jerome RADUGET
  */
@@ -30,6 +30,8 @@ public class ConfigurationChangeEvent extends PropertyChangeEvent {
    private static final long serialVersionUID = -5595187652171425845L;
 
    /**
+    * Enumeration of a kind of configuration changes
+    * 
     * @author Jerome RADUGET
     */
    public static enum ConfigurationChangeType {

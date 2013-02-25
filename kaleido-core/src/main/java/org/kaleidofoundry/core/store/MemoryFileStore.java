@@ -26,7 +26,9 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.plugin.Declare;
 
 /**
- * Memory internal file store. <b>Avoid using it</b>, or only for small binary data, without multi-threading<br/>
+ * Memory internal {@link FileStore} implementations.
+ * <br/>
+ * <b>only use it for small binary or text data, without multi-threading<br/>
  * Be careful {@link ResourceHandler} is not thread safe. Internally, you can create {@link ResourceHandlerBean} giving an
  * {@link ByteArrayInputStream} in argument to use it. By this way, your binary data will be kept in memory
  * 

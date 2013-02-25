@@ -9,6 +9,7 @@
 
 	<artifactId>kaleido-guice</artifactId>
 	<name>KaleidoFoundry guice extension</name>
+	<description>Guice integration for the injection of kaleido components</description>
 	<packaging>jar</packaging>
 
 	<dependencies>

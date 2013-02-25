@@ -42,7 +42,10 @@ import org.kaleidofoundry.core.util.StringHelper;
 import org.kaleidofoundry.core.util.locale.LocaleFactory;
 
 /**
- * JPA file store. Resource will be stored in clob or / blob database<br/>
+ * Databse JPA {@link FileStore} implementation
+ * <br/>
+ * 
+ * The esource content will be stored in clob or / blob database<br/>
  * 
  * @author Jerome RADUGET
  * @see FileStoreContextBuilder enum of context configuration properties available
