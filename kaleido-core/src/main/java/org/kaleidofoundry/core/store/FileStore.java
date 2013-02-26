@@ -222,12 +222,16 @@ public interface FileStore extends Store<String, ResourceHandler> {
    ResourceHandler createResourceHandler(final String resourceUri, final Reader reader, final String charset);
 
    /**
-    * close all opened resources, that have not been closed using {@link ResourceHandler#close()} <br/>
+    * Close all opened resources, that have not been closed using {@link ResourceHandler#close()} <br/>
     * <b>the store is still functional after calling this method</b>
     * 
     * @return current instance of the store
     */
    FileStore closeAll();
 
+   /**
+    * Destroy the file store and unregister it, closing all opened resource.
+    */
+   void destroy();
 
 }

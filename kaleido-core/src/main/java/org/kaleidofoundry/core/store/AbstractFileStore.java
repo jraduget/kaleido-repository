@@ -288,6 +288,12 @@ public abstract class AbstractFileStore implements FileStore {
 	return this;
    }
 
+   @Override
+   public void destroy() {
+	FileStoreFactory.getRegistry().remove(context.getName());
+	closeAll();
+   }
+
    /**
     * opened resource cleanup
     * 

@@ -32,6 +32,8 @@ import org.kaleidofoundry.core.system.JavaSystemHelper;
 import org.kaleidofoundry.core.util.Registry;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.kaleidofoundry.core.util.locale.LocaleFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jerome RADUGET
@@ -41,6 +43,8 @@ public class I18nMessagesProvider extends AbstractProviderService<I18nMessages> 
    /** Enable or disable jpa entity manager resolution for resourceBundle */
    public static final String ENABLE_JPA_PROPERTY = "kaleidofoundry.i18n.jpa.enabled";
 
+   private static final Logger LOGGER = LoggerFactory.getLogger(I18nMessagesProvider.class);
+   
    /**
     * @param genericClassInterface
     */
@@ -192,6 +196,7 @@ public class I18nMessagesProvider extends AbstractProviderService<I18nMessages> 
     * @see ResourceBundle#clearCache()
     */
    public static void clearCache() {
+	LOGGER.info("Clear all resources bundles caches");
 	ResourceBundle.clearCache();
 	ResourceBundle.clearCache(I18nMessagesFactory.class.getClassLoader());
    }
