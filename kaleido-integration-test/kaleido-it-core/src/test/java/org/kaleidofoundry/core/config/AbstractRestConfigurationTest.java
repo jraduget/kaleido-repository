@@ -324,7 +324,7 @@ public abstract class AbstractRestConfigurationTest extends Assert {
 	assertEquals("new description", property.getDescription());
 
 	// update an exiting property
-	response = getMyConfigBaseResource().path("roperty").accept(getMedia().getType())
+	response = getMyConfigBaseResource().path("property").accept(getMedia().getType())
 		.put(ClientResponse.class, new ConfigurationProperty("myapp.name", "my new application", String.class, "new description2"));
 
 	// check updates
