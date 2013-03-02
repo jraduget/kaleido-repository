@@ -10,3 +10,6 @@ derby.log
 .svn/
 .DS_Store
 .tomcatplugin
+.idea/
+*.iml
+
