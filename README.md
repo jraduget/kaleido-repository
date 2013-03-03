@@ -4,7 +4,7 @@ KaleidoFoundry project [![Build Status](https://buildhive.cloudbees.com/job/kale
 [KaleidoFoundry][KaleidoFoundry] is a java technical foundation, **productive, plugeable, scalable and extensible**. It provides modules for configuration, caching, i18n, messaging... Start simple, and when you will need a more complex architecture like a clustered environment, a robust caching provider solution, a messaging system... **kaleido will fit** without changing your java code. The main features are:
 
  * `Configuration` management REST API, dynamic and centralized (across cluster or local), manageable using REST API,
- * `File storage` abstraction API (`file` / `classpath` / `http` / `ftp` / `webapp` / `clob` / 'gae' / `ssh`),
+ * `File storage` abstraction API (`file` / `classpath` / `http` / `ftp` / `webapp` / `clob` / `gae` / `ssh`),
  * `Caching` integration and abstraction API (`ehcache`, `infinispan`, `coherence`, `gae`, `local map`),
  * `I18n` service management for labels & exception messages (`resource bundle API extension`),
  * `Naming service` for local or remote jndi access (`datasource` / `jms queue` / `ejb`),
