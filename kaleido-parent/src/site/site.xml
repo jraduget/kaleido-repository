@@ -8,7 +8,7 @@
 	</bannerLeft>
 	<bannerRight>
 		<name></name>
-		<!-- <src>http://maven.apache.org/images/maven-logo-2.gif</src> -->
+		<src>http://www.kaleidofoundry.org/blog/wp-content/uploads/2013/03/logo-kaleido.png</src>
 	</bannerRight>
 
 	<version position="right" />
