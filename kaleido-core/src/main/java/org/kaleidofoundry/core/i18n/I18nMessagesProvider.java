@@ -219,7 +219,7 @@ public class I18nMessagesProvider extends AbstractProviderService<I18nMessages> 
     * Build full base name of a class, using its package name and class name
     */
    static String buildBaseName(final Class<?> baseClass) {
-	final StringBuffer str = new StringBuffer();
+	final StringBuilder str = new StringBuilder();
 
 	if (baseClass.getClass().getPackage() != null) {
 	   str.append(baseClass.getClass().getPackage().getName()).append(".");

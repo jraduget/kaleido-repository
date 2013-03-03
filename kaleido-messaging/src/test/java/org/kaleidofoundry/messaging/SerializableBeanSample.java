@@ -74,7 +74,7 @@ public class SerializableBeanSample implements Serializable {
 
    @Override
    public String toString() {
-	final StringBuffer str = new StringBuffer();
+	final StringBuilder str = new StringBuilder();
 	str.append("{");
 	str.append("name=").append(getName()).append(";");
 	str.append("firstName=").append(getFirstName()).append(";");

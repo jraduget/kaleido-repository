@@ -104,7 +104,7 @@ public class PluginInspector {
     * @return default full local path (from classpath) for plugin implementation declared file
     */
    public static String getDefaultPluginImplementationMetaInfPath() {
-	final StringBuffer path = new StringBuffer();
+	final StringBuilder path = new StringBuilder();
 
 	path.append(PluginConstants.META_PLUGIN_PATH);
 	if (path.length() > 0) {

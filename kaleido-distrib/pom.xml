@@ -13,6 +13,7 @@
 	<packaging>jar</packaging>
 
 	<build>
+		<finalName>kaleidofoundry-${project.version}-Rev${buildNumber}-bundle.zip</finalName>
 		<plugins>
 			<!-- assemble artifact -->
 			<plugin>

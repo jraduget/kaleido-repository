@@ -79,7 +79,7 @@ public class ExtendedProperties extends Properties {
     */
    @Nullable
    public String setMultiValueProperty(final String key, final String... values) {
-	final StringBuffer buffer = new StringBuffer();
+	final StringBuilder buffer = new StringBuilder();
 
 	for (int i = 0; i < values.length - 1; i++) {
 	   buffer.append(values[i] + ' ');

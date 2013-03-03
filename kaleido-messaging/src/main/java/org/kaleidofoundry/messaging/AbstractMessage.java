@@ -75,7 +75,7 @@ public abstract class AbstractMessage implements Message {
     */
    public String toString(final List<String> exeptions) {
 
-	final StringBuffer str = new StringBuffer();
+	final StringBuilder str = new StringBuilder();
 
 	if (parameters != null) {
 	   str.append("{");

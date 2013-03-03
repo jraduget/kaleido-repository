@@ -67,7 +67,7 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
 
 	// do we keep instances in registry
 	Provider providerAnnot = this.genericClassInterface.getAnnotation(Provider.class);
-	this.keepInstanceInRegistry = providerAnnot != null ? providerAnnot.singletons() : false;
+	this.keepInstanceInRegistry = providerAnnot != null && providerAnnot.singletons();
 
 	registerConfigurationsListeners();
    }
