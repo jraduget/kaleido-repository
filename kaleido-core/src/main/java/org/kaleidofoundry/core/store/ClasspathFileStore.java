@@ -140,6 +140,7 @@ public class ClasspathFileStore extends AbstractFileStore implements FileStore {
 		if (resourceFileName != null && resourceHandler instanceof ResourceHandlerBean) {
 		   File resourceFile = new File(resourceFileName);
 		   ((ResourceHandlerBean) resourceHandler).setLastModified(resourceFile.lastModified());
+		   ((ResourceHandlerBean) resourceHandler).setLength(resourceFile.length());
 		}
 
 	   }

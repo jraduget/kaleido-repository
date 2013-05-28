@@ -30,13 +30,6 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 
-import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
-
 import org.kaleidofoundry.core.io.IOHelper;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
@@ -51,131 +44,139 @@ import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
  */
 @Immutable
 @NotThreadSafe(comment = "for the instances built by calling constructor with an inputstream or a reader")
-@XmlRootElement(name = "resource")
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "resourceUri", "lastModified", "mimeType", "charset" })
 class ResourceHandlerBean implements ResourceHandler, Serializable {
 
    private static final long serialVersionUID = 1L;
 
-   @Transient
-   @XmlTransient
    private final transient AbstractFileStore store;
 
-   private final String resourceUri;
+   private final String uri;
    private long lastModified;
    private String mimeType;
    private String charset;
 
-   @XmlTransient
-   private boolean closed;
-
-   @XmlTransient
-   private byte[] bytes;
-   @XmlTransient
+   private boolean closed;   
+   private byte[] bytes;   
    private String text;
+   private long length;
 
-   @Transient
-   @XmlTransient
    private transient InputStream input;
-   @Transient
-   @XmlTransient
    private transient Reader reader;
 
    /**
+    * needed by REST javax.ws.rs controller
+    */
+   ResourceHandlerBean() {	
+	this(null, null, (InputStream)null);
+   }
+   
+   /**
     * @param store
-    * @param resourceUri
+    * @param uri
     * @param content
     */
-   ResourceHandlerBean(final AbstractFileStore store, final String resourceUri, @NotNull final byte[] content) {
+   ResourceHandlerBean(final AbstractFileStore store, final String uri, @NotNull final byte[] content) {
 	this.store = store;
-	this.resourceUri = resourceUri;
+	this.uri = uri;
 	input = null;
 	text = null;
 	reader = null;
 	bytes = content;
 	closed = false;
-	lastModified = 0;
-
+	lastModified = -1;
+	length = -1;
    }
 
    /**
     * @param store
-    * @param resourceUri
+    * @param uri
     * @param content
     * @throws UnsupportedEncodingException default text encoding is UTF-8
     */
-   ResourceHandlerBean(final AbstractFileStore store, final String resourceUri, @NotNull final String content) {
+   ResourceHandlerBean(final AbstractFileStore store, final String uri, @NotNull final String content) {
 	this.store = store;
-	this.resourceUri = resourceUri;
+	this.uri = uri;
 	input = null;
 	text = content;
 	reader = null;
 	bytes = null;
 	closed = false;
-	lastModified = 0;
+	lastModified = -1;
+	length = -1;
    }
 
    /**
     * @param store
-    * @param resourceUri
+    * @param uri
     * @param content
     * @param charset
     * @throws UnsupportedEncodingException default text encoding is UTF-8
     */
-   ResourceHandlerBean(final AbstractFileStore store, final String resourceUri, @NotNull final String content, final String charset) {
+   ResourceHandlerBean(final AbstractFileStore store, final String uri, @NotNull final String content, final String charset) {
 	this.store = store;
-	this.resourceUri = resourceUri;
+	this.uri = uri;
 	input = null;
 	text = content;
 	this.charset = charset;
 	reader = null;
 	bytes = null;
 	closed = false;
-	lastModified = 0;
+	lastModified = -1;
+	length = -1;
    }
 
    /**
     * @param store
-    * @param resourceUri
+    * @param uri
     * @param reader
     * @param charset
     * @throws UnsupportedEncodingException default text encoding is UTF-8
     */
-   ResourceHandlerBean(final AbstractFileStore store, final String resourceUri, @NotNull final Reader reader, final String charset) {
+   ResourceHandlerBean(final AbstractFileStore store, final String uri, @NotNull final Reader reader, final String charset) {
 	this.store = store;
-	this.resourceUri = resourceUri;
+	this.uri = uri;
 	input = null;
 	text = null;
 	this.charset = charset;
 	this.reader = reader;
 	bytes = null;
 	closed = false;
-	lastModified = 0;
+	lastModified = -1;
+	length = -1;
    }
 
    /**
     * @param store
-    * @param resourceUri
+    * @param uri
     * @param input
     */
-   ResourceHandlerBean(final AbstractFileStore store, final String resourceUri, final InputStream input) {
+   ResourceHandlerBean(final AbstractFileStore store, final String uri, final InputStream input) {
 	this.store = store;
-	this.resourceUri = resourceUri;
+	this.uri = uri;
 	this.input = input;
 	text = null;
 	reader = null;
 	bytes = null;
 	closed = false;
-	lastModified = 0;
+	lastModified = -1;
+	length = -1;
    }
 
 
    @Override
-   public String getResourceUri() {
-	return resourceUri;
+   public String getUri() {
+	return uri;
    }
 
+   @Override
+   public String getPath() {
+	if (store != null && store.getBaseUri() != null) {
+	   return uri.substring(store.getBaseUri().length());
+	} else {
+	   return uri;
+	}
+   }
+   
    @Override
    public boolean isEmpty() {
 	return input == null && reader == null && text == null && bytes == null;
@@ -223,7 +224,7 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 		bytes = IOHelper.toByteArray(input);
 		return bytes;
 	   } catch (final IOException ioe) {
-		throw new ResourceException(ioe, resourceUri);
+		throw new ResourceException(ioe, uri);
 	   } finally {
 		// free resource handler
 		close();
@@ -250,7 +251,7 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 		reader = new InputStreamReader(getInputStream(), charset);
 		return reader;
 	   } catch (final IOException ioe) {
-		throw new ResourceException(ioe, resourceUri);
+		throw new ResourceException(ioe, uri);
 	   }
 	}
    }
@@ -288,7 +289,7 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 		}
 		return text;
 	   } catch (final IOException ioe) {
-		throw new ResourceException(ioe, resourceUri);
+		throw new ResourceException(ioe, uri);
 	   } finally {
 		// free resource handler
 		close();
@@ -303,7 +304,7 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 		input.close();
 		closed = true;
 		if (store != null) {
-		   store.unregisterOpenedResource(resourceUri);
+		   store.unregisterOpenedResource(uri);
 		}
 	   } catch (final IOException ioe) {
 		throw new IllegalStateException(StoreMessageBundle.getMessage("store.resource.close.error", ioe.getMessage(), ioe), ioe);
@@ -315,7 +316,7 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 		reader.close();
 		closed = true;
 		if (store != null) {
-		   store.unregisterOpenedResource(resourceUri);
+		   store.unregisterOpenedResource(uri);
 		}
 	   } catch (final IOException ioe) {
 		throw new IllegalStateException(StoreMessageBundle.getMessage("store.resource.close.error", ioe.getMessage(), ioe), ioe);
@@ -351,6 +352,14 @@ class ResourceHandlerBean implements ResourceHandler, Serializable {
 	this.charset = charset;
    }
 
+   @Override
+   public long getLength() {
+      return length;
+   }
+
+   void setLength(long length) {
+      this.length = length;
+   }
 
    /**
     * this method is only used by for caching resource handler (if caching is enable)

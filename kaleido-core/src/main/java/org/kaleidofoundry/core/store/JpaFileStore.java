@@ -16,7 +16,7 @@
 package org.kaleidofoundry.core.store;
 
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.StoreMessageBundle;
-import static org.kaleidofoundry.core.persistence.PersistenceConstants.KaleidoPersistentContextUnitName;
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.KALEIDO_PERSISTENT_UNIT_NAME;
 import static org.kaleidofoundry.core.store.FileStoreConstants.ClobJpaStorePluginName;
 import static org.kaleidofoundry.core.store.FileStoreConstants.DEFAULT_BUFFER_SIZE;
 import static org.kaleidofoundry.core.store.FileStoreContextBuilder.BufferSize;
@@ -54,7 +54,7 @@ import org.kaleidofoundry.core.util.locale.LocaleFactory;
 @Task(comment = "Annotate it as @Stateless ejb to enable ejb exposition + injection - import right ejb 3.x library - problem : coupling it to ejb3")
 public class JpaFileStore extends AbstractFileStore implements FileStore {
 
-   @PersistenceContext(unitName = KaleidoPersistentContextUnitName)
+   @PersistenceContext(unitName = KALEIDO_PERSISTENT_UNIT_NAME)
    private EntityManager em;
 
    /**
@@ -128,7 +128,8 @@ public class JpaFileStore extends AbstractFileStore implements FileStore {
 		} else {
 		   ((ResourceHandlerBean) resource).setLastModified(entity.getCreationDate().getTime());
 		}
-		((ResourceHandlerBean) resource).setMimeType(entity.getContentMimeType());
+		((ResourceHandlerBean) resource).setMimeType(entity.getMimeType());
+		((ResourceHandlerBean) resource).setLength(entity.getSize());
 	   }
 	   return resource;
 	}
@@ -168,7 +169,7 @@ public class JpaFileStore extends AbstractFileStore implements FileStore {
 	   storeEntity.setName(FileHelper.getFileName(filename));
 	   storeEntity.setPath(filename);
 	   storeEntity.setCreationDate(Calendar.getInstance(locale).getTime());
-	   storeEntity.setContentMimeType(MimeTypeResolverFactory.getService().getMimeType(FileHelper.getFileNameExtension(resourceUri.getPath())));
+	   storeEntity.setMimeType(MimeTypeResolverFactory.getService().getMimeType(FileHelper.getFileNameExtension(resourceUri.getPath())));
 	   isNew = true;
 	} else {
 	   storeEntity.setUpdatedDate(Calendar.getInstance(locale).getTime());

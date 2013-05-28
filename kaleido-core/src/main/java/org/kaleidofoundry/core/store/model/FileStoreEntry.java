@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * @author Jerome RADUGET
  */
-@XmlRootElement(name = "fileStore")
+@XmlRootElement(name = "store")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class FileStoreEntry implements Serializable {
 

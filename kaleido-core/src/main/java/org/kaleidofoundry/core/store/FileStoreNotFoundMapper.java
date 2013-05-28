@@ -13,13 +13,12 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.kaleidofoundry.core.web;
+package org.kaleidofoundry.core.store;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import org.kaleidofoundry.core.store.FileStoreNotFoundException;
 
 /**
  * rest exception mapper for {@link FileStoreNotFoundException}
@@ -27,7 +26,7 @@ import org.kaleidofoundry.core.store.FileStoreNotFoundException;
  * @author Jerome RADUGET
  */
 @Provider
-public class RestFileStoreNotFoundMapper implements ExceptionMapper<FileStoreNotFoundException> {
+public class FileStoreNotFoundMapper implements ExceptionMapper<FileStoreNotFoundException> {
 
    public Response toResponse(final FileStoreNotFoundException ex) {
 	return Response.status(404).entity(ex.getMessage()).type("text/plain").build();

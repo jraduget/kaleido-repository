@@ -24,20 +24,17 @@
 		<dependency>
 			<groupId>javax.enterprise</groupId>
 			<artifactId>cdi-api</artifactId>
-			<version>${cdi.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- CDI weld, only used in a non manageable env. -->
 		<dependency>
 			<groupId>org.jboss.weld.se</groupId>
 			<artifactId>weld-se-core</artifactId>
-			<version>${weld.version}</version>
 			<scope>provided</scope>
 		</dependency>		
 		<dependency>
 			<groupId>org.jboss.weld</groupId>
 			<artifactId>weld-core</artifactId>
-			<version>${weld.version}</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
@@ -54,7 +51,6 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
 			<scope>provided</scope>
 		</dependency>
 				
@@ -67,39 +63,34 @@
 			<scope>test</scope>
 		</dependency>
 		
-		<!-- Loggings -->
+		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-ext</artifactId>
-			<version>${slf4j.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${slf4j.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jul-to-slf4j</artifactId>
-			<version>${slf4j.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>log4j-over-slf4j</artifactId>
-			<version>${slf4j.version}</version>
 			<scope>test</scope>
 		</dependency>
 		
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>${logback.version}</version>
 			<scope>test</scope>
 		</dependency>
 				
@@ -107,7 +98,6 @@
 		<dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-core</artifactId>
-			<version>${jboss-infinispan.version}</version>
 			<scope>test</scope>
 		</dependency>
 

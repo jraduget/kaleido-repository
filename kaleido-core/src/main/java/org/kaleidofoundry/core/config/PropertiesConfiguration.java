@@ -82,7 +82,7 @@ public class PropertiesConfiguration extends AbstractConfiguration {
 
 	   return cacheProperties;
 	} catch (final IOException ioe) {
-	   throw new ResourceException(ioe, resourceHandler.getResourceUri());
+	   throw new ResourceException(ioe, resourceHandler.getUri());
 	}
    }
 
@@ -97,12 +97,12 @@ public class PropertiesConfiguration extends AbstractConfiguration {
 	try {
 	   ByteArrayOutputStream out = new ByteArrayOutputStream();
 	   toProperties().store(out, Calendar.getInstance(LocaleFactory.getDefaultFactory().getCurrentLocale()).getTime().toString());
-	   singleFileStore.store(singleFileStore.createResourceHandler(resourceHandler.getResourceUri(), new ByteArrayInputStream(out.toByteArray())));
+	   singleFileStore.store(singleFileStore.createResourceHandler(resourceHandler.getUri(), new ByteArrayInputStream(out.toByteArray())));
 	   return cacheProperties;
 	} catch (ResourceException re) {
 	   throw re;
 	} catch (IOException ioe) {
-	   throw new ResourceException(ioe, resourceHandler.getResourceUri());
+	   throw new ResourceException(ioe, resourceHandler.getUri());
 	}
    }
 }

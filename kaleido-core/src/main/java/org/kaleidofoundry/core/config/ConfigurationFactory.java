@@ -15,8 +15,8 @@
  */
 package org.kaleidofoundry.core.config;
 
-import static org.kaleidofoundry.core.config.ConfigurationConstants.JavaEnvPropertiesSeparator;
-import static org.kaleidofoundry.core.config.ConfigurationConstants.JavaEnvPropertiesValueSeparator;
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.CONFIGURATIONS_PROPERTY_SEPARATOR;
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.CONFIGURATIONS_PROPERTY_VALUE_SEPARATOR;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
@@ -34,7 +34,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * <p>
  * <b>How to declare the configuration to load ?</b> <br/>
  * <br/>
- * Define the following java environment variable {@link ConfigurationConstants#JavaEnvProperties} like this :
+ * Define the following java environment variable {@link ConfigurationConstants#CONFIGURATIONS_PROPERTY} like this :
  * <p>
  * <code>
  * -Dkaleido.configurations=configurationName01=configurationUri01,configurationName02=configurationUri02,...
@@ -73,15 +73,15 @@ public abstract class ConfigurationFactory {
     * 
     * @param configurations configurationName01=configurationUri01,configurationName02=configurationUri02,...
     * @throws ResourceException
-    * @see ConfigurationConstants#JavaEnvProperties
+    * @see ConfigurationConstants#CONFIGURATIONS_PROPERTY
     */
    public static synchronized final void init(final String configurations) throws ResourceException {
 
 	if (!INIT_LOADED) {
-	   final StringTokenizer strConfigToken = new StringTokenizer(configurations, JavaEnvPropertiesSeparator);
+	   final StringTokenizer strConfigToken = new StringTokenizer(configurations, CONFIGURATIONS_PROPERTY_SEPARATOR);
 	   while (strConfigToken.hasMoreTokens()) {
 		final String configItemStr = strConfigToken.nextToken().trim();
-		final String[] configItem = StringHelper.split(configItemStr, JavaEnvPropertiesValueSeparator);
+		final String[] configItem = StringHelper.split(configItemStr, CONFIGURATIONS_PROPERTY_VALUE_SEPARATOR);
 		// named declaration
 		if (configItem.length == 2) {
 		   provides(configItem[0].trim(), configItem[1].trim());

@@ -45,8 +45,6 @@ public interface FileStoreConstants {
    /** mocked in memory implementation plugin name */
    String MemoryStorePluginName = "fileStores.memory";
 
-   /** The default and common ${basedir.default} variable name */
-   String DEFAULT_BASE_DIR_PROP = "basedir.default";
 
    /** Default buffer size for reading / writing */
    int DEFAULT_BUFFER_SIZE = 512;

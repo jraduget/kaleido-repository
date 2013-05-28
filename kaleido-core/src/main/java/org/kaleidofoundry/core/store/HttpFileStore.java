@@ -174,6 +174,7 @@ public class HttpFileStore extends AbstractFileStore implements FileStore {
 		// Set some meta datas
 		if (resource instanceof ResourceHandlerBean) {
 		   ((ResourceHandlerBean) resource).setLastModified(urlConnection.getLastModified());
+		   ((ResourceHandlerBean) resource).setLength(urlConnection.getContentLength());
 		   ((ResourceHandlerBean) resource).setMimeType(MimeTypeResolverFactory.getService().getMimeType(
 			   FileHelper.getFileNameExtension(resourceUri.getPath())));
 		}

@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.kaleidofoundry.core.store.ResourceException;
 
 /**
- * Test {@link ConfigurationControllerBean} with a configuration that have been registered and whose meta model have been persisted
+ * Test {@link ConfigurationController} with a configuration that have been registered and whose meta model have been persisted
  * 
  * @author Jerome RADUGET
  */

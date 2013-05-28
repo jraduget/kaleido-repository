@@ -136,7 +136,7 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
 	} catch (final SAXException sae) {
 	   throw new ConfigurationException("config.load.xml.parsing.error", sae, singleFileStore.getResourceBinding().toString());
 	} catch (final IOException ioe) {
-	   throw new ResourceException(ioe, resourceHandler.getResourceUri());
+	   throw new ResourceException(ioe, resourceHandler.getUri());
 	}
    }
 
@@ -196,7 +196,7 @@ public class XmlConfiguration extends AbstractConfiguration implements Configura
 	   transformer.transform(source, result);
 
 	   // Store the document content
-	   singleFileStore.store(singleFileStore.createResourceHandler(resourceHandler.getResourceUri(), new ByteArrayInputStream(out.toByteArray())));
+	   singleFileStore.store(singleFileStore.createResourceHandler(resourceHandler.getUri(), new ByteArrayInputStream(out.toByteArray())));
 
 	   return cacheProperties;
 	} catch (final ParserConfigurationException pce) {

@@ -91,7 +91,7 @@ public class JpaFileStoreTest extends AbstractFileStoreTest {
 	   entityToGet.setCreationDate(Calendar.getInstance().getTime());
 	   entityToGet.setPath(filenameToGet);
 	   entityToGet.setContent(DEFAULT_RESOURCE_MOCK_TEST.getBytes());
-	   entityToGet.setContentMimeType(MimeTypeResolverFactory.getService().getMimeType(FileHelper.getFileNameExtension(resourceUriToGet.getPath())));
+	   entityToGet.setMimeType(MimeTypeResolverFactory.getService().getMimeType(FileHelper.getFileNameExtension(resourceUriToGet.getPath())));
 	   em.persist(entityToGet);
 	   em.flush(); // flush to be sure, that entity is right persist
 	   existingResources.put(resourceUriToGet.getPath(), DEFAULT_RESOURCE_MOCK_TEST);
@@ -112,7 +112,7 @@ public class JpaFileStoreTest extends AbstractFileStoreTest {
 	   entityToRemove.setCreationDate(Calendar.getInstance().getTime());
 	   entityToRemove.setPath(filenameToRemove);
 	   entityToRemove.setContent(DEFAULT_RESOURCE_MOCK_TEST.getBytes());
-	   entityToGet.setContentMimeType(MimeTypeResolverFactory.getService().getMimeType(FileHelper.getFileNameExtension(resourceUriToGet.getPath())));
+	   entityToGet.setMimeType(MimeTypeResolverFactory.getService().getMimeType(FileHelper.getFileNameExtension(resourceUriToGet.getPath())));
 	   em.persist(entityToRemove);
 	   em.flush(); // flush to be sure, that entity is right persist
 	   existingResourcesForRemove.put(filenameToRemove, DEFAULT_RESOURCE_MOCK_TEST);

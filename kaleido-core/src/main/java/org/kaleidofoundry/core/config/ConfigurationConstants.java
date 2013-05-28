@@ -15,9 +15,6 @@
  */
 package org.kaleidofoundry.core.config;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,32 +27,6 @@ public interface ConfigurationConstants {
 
    /** Common configuration Logger */
    Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
-
-   /** Some static environments / configurations parameters that could be shared */
-   Map<String, String> STATIC_ENV_PARAMETERS = new ConcurrentHashMap<String, String>();
-
-   /**
-    * Configuration java environment name which specify the default configurations to load <br/>
-    * <br/>
-    * Syntax of the property value :
-    * 
-    * <pre>
-    * configurationId01:configurationUri01,configurationId02:configurationUri02,...
-    * </pre>
-    * 
-    * Example :
-    * 
-    * <pre>
-    * java -Dkaleido.configurations=dsConfig=classpath:/datasource.properties,otherResource=http:/host/path/otherResource,...  YourMainClass
-    * </pre>
-    */
-   String JavaEnvProperties = "kaleido.configurations";
-   /** Configuration item separator */
-   String JavaEnvPropertiesSeparator = ",";
-   /** Configurations name / value separator */
-   String JavaEnvPropertiesValueSeparator = "=";
-
-   // ** Plugin part ***************************************************************************************************
 
    /**
     * configuration file store handled extension<br/>

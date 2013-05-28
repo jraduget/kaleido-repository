@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core.spring.xml;
+package org.kaleidofoundry.spring.context.xml;
 
 import static org.kaleidofoundry.core.i18n.I18nContextBuilder.BaseName;
 

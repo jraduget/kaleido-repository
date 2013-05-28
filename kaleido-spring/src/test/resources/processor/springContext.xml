@@ -9,10 +9,10 @@
        		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
     ">
 	
-	<context:component-scan base-package="org.kaleidofoundry.core"/>
+	<context:component-scan base-package="org.kaleidofoundry.spring.context"/>
 	
 	<!-- if component scan is not enable , declare this 
-	<bean class="org.kaleidofoundry.core.context.spring.BeanContextPostProcessor" name="kaleidoPostProcessor"/>	
+	<bean class="org.kaleidofoundry.spring.context.BeanContextPostProcessor" name="kaleidoPostProcessor"/>	
  	-->
 
 	<bean id="mySpringContext" class="org.kaleidofoundry.core.context.RuntimeContext">

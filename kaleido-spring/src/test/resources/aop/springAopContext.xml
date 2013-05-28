@@ -8,7 +8,7 @@
            	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
         ">
 
-	<bean id="mySpringBean" class="org.kaleidofoundry.core.spring.aop.MySpringBean"  />
+	<bean id="mySpringBean" class="org.kaleidofoundry.spring.context.aop.MySpringBean"  />
 	
 	<!-- enable aspectj load time weaving (only for spring compatible aspect !!) 
 	     to use with :

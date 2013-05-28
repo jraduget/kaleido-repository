@@ -18,7 +18,7 @@ package org.kaleidofoundry.core.i18n;
 import static org.kaleidofoundry.core.i18n.model.I18nMessageConstants.Query_MessagesByLocale.Name;
 import static org.kaleidofoundry.core.i18n.model.I18nMessageConstants.Query_MessagesByLocale.Parameter_Locale;
 import static org.kaleidofoundry.core.i18n.model.I18nMessageConstants.Query_MessagesByLocale.Parameter_ResourceName;
-import static org.kaleidofoundry.core.persistence.PersistenceConstants.KaleidoPersistentContextUnitName;
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.KALEIDO_PERSISTENT_UNIT_NAME;
 
 import java.util.List;
 import java.util.Locale;
@@ -47,7 +47,7 @@ import org.kaleidofoundry.core.lang.annotation.Task;
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class I18nMessageController {
 
-   @PersistenceContext(unitName = KaleidoPersistentContextUnitName)
+   @PersistenceContext(unitName = KALEIDO_PERSISTENT_UNIT_NAME)
    EntityManager em;
 
    /**

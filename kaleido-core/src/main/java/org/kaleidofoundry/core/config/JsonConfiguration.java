@@ -94,7 +94,7 @@ public class JsonConfiguration extends AbstractConfiguration {
 	} catch (JsonMappingException jme) {
 	   throw new ConfigurationException("config.load.json.parsing.error", jme, singleFileStore.getResourceBinding().toString());
 	} catch (IOException ioe) {
-	   throw new ResourceException(ioe, resourceHandler.getResourceUri());
+	   throw new ResourceException(ioe, resourceHandler.getUri());
 	}
 
    }
@@ -165,7 +165,7 @@ public class JsonConfiguration extends AbstractConfiguration {
 	   // flush output stream writes
 	   jsonGenerator.close();
 	   // Store the document content
-	   singleFileStore.store(singleFileStore.createResourceHandler(resourceHandler.getResourceUri(), new ByteArrayInputStream(jsonOutput.toByteArray())));
+	   singleFileStore.store(singleFileStore.createResourceHandler(resourceHandler.getUri(), new ByteArrayInputStream(jsonOutput.toByteArray())));
 
 	   return properties;
 
@@ -173,14 +173,14 @@ public class JsonConfiguration extends AbstractConfiguration {
 	   if (ioe instanceof ResourceException) {
 		throw (ResourceException) ioe;
 	   } else {
-		throw new ResourceException(ioe, resourceHandler.getResourceUri());
+		throw new ResourceException(ioe, resourceHandler.getUri());
 	   }
 	} finally {
 	   if (jsonGenerator != null && !jsonGenerator.isClosed()) {
 		try {
 		   jsonGenerator.close();
 		} catch (IOException ioe) {
-		   throw new ResourceException(ioe, resourceHandler.getResourceUri());
+		   throw new ResourceException(ioe, resourceHandler.getUri());
 		}
 	   }
 	}

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kaleidofoundry.core.spring.aop;
+package org.kaleidofoundry.spring.context.aop;
 
 import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreUri;

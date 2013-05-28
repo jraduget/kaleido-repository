@@ -141,7 +141,7 @@ public class MessageBundleControl extends Control {
 	   }
 
 	   // jpa entity datas
-	   if (format == MessageBundleControlFormat.JPA_ENTITY_PROPERTIES && I18nMessagesProvider.JpaIsEnabled) {
+	   if (format == MessageBundleControlFormat.JPA_ENTITY_PROPERTIES && I18nMessagesProvider.isJpaEnabledForI18n()) {
 
 		@Task(comment = "create a service injector (local / guice / spring / ejb3 local or remote...)")
 		final I18nMessageController messageService = new I18nMessageController();

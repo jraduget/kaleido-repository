@@ -36,12 +36,13 @@ import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.util.locale.LocaleFactory;
 
 /**
- * Default entity to store a file content in a blob / clob ...<br/>
+ * Default entity used to store a file content in a blob / clob ...<br/>
  * You can extend it and override default mapping on getter / setter, to custom it to your need, otherwise you can have your own
  * persistent.xml
  * 
@@ -61,10 +62,12 @@ public class ResourceHandlerEntity implements Serializable {
    private String uri;
    private String name;
    private String path;
-   private Integer contentSize;
-   private String contentMimeType;
+   private Long size;
+   private String mimeType;
+   private String charset;
    @Lob
    @Basic(fetch = FetchType.LAZY)
+   @XmlTransient
    private byte[] content;
    @Column(insertable = true, updatable = false, nullable = false)
    @Temporal(TemporalType.TIMESTAMP)
@@ -80,7 +83,7 @@ public class ResourceHandlerEntity implements Serializable {
 	if (updatedDate == null) {
 	   Locale locale = LocaleFactory.getDefaultFactory().getCurrentLocale();
 	   updatedDate = Calendar.getInstance(locale).getTime();
-	   contentSize = content != null ? content.length : 0;
+	   size = content != null ? content.length : 0l;
 	}
    }
 
@@ -89,7 +92,7 @@ public class ResourceHandlerEntity implements Serializable {
 	if (creationDate == null) {
 	   Locale locale = LocaleFactory.getDefaultFactory().getCurrentLocale();
 	   creationDate = Calendar.getInstance(locale).getTime();
-	   contentSize = content != null ? content.length : 0;
+	   size = content != null ? content.length : 0l;
 	}
    }
 
@@ -111,8 +114,8 @@ public class ResourceHandlerEntity implements Serializable {
    /**
     * @return size in byte of the data
     */
-   public Integer getContentSize() {
-	return contentSize;
+   public Long getSize() {
+	return size;
    }
 
    /**
@@ -169,8 +172,8 @@ public class ResourceHandlerEntity implements Serializable {
    /**
     * @param size
     */
-   void setContentSize(final Integer size) {
-	contentSize = size;
+   public void setSize(final Long size) {
+	this.size = size;
    }
 
    /**
@@ -178,21 +181,35 @@ public class ResourceHandlerEntity implements Serializable {
     */
    public void setContent(final byte[] content) {
 	this.content = content;
-	contentSize = content != null ? content.length : 0;
+	this.size = content != null ? content.length : 0l;
    }
 
    /**
     * @return mime type of the resource
     */
-   public String getContentMimeType() {
-	return contentMimeType;
+   public String getMimeType() {
+	return mimeType;
    }
 
    /**
     * @param contentMimeType
     */
-   public void setContentMimeType(final String contentMimeType) {
-	this.contentMimeType = contentMimeType;
+   public void setMimeType(final String mimeType) {
+	this.mimeType = mimeType;
+   }
+
+   /**
+    * @return content charset
+    */
+   public String getCharset() {
+	return charset;
+   }
+
+   /**
+    * @param contentCharset
+    */
+   public void setCharset(String charset) {
+	this.charset = charset;
    }
 
    /**
@@ -218,8 +235,9 @@ public class ResourceHandlerEntity implements Serializable {
 	result = prime * result + (uri == null ? 0 : uri.hashCode());
 	result = prime * result + (name == null ? 0 : name.hashCode());
 	result = prime * result + (path == null ? 0 : path.hashCode());
-	result = prime * result + (contentMimeType == null ? 0 : contentMimeType.hashCode());
-	result = prime * result + (contentSize == null ? 0 : contentSize.hashCode());
+	result = prime * result + (mimeType == null ? 0 : mimeType.hashCode());
+	result = prime * result + (charset == null ? 0 : charset.hashCode());
+	result = prime * result + (size == null ? 0 : size.hashCode());
 	result = prime * result + (updatedDate == null ? 0 : updatedDate.hashCode());
 	return result;
    }
@@ -243,12 +261,15 @@ public class ResourceHandlerEntity implements Serializable {
 	if (path == null) {
 	   if (other.path != null) { return false; }
 	} else if (!path.equals(other.path)) { return false; }
-	if (contentSize == null) {
-	   if (other.contentSize != null) { return false; }
-	} else if (!contentSize.equals(other.contentSize)) { return false; }
-	if (contentMimeType == null) {
-	   if (other.contentMimeType != null) { return false; }
-	} else if (!contentMimeType.equals(other.contentMimeType)) { return false; }
+	if (size == null) {
+	   if (other.size != null) { return false; }
+	} else if (!size.equals(other.size)) { return false; }
+	if (mimeType == null) {
+	   if (other.mimeType != null) { return false; }
+	} else if (!mimeType.equals(other.mimeType)) { return false; }
+	if (charset == null) {
+	   if (other.charset != null) { return false; }
+	} else if (!charset.equals(other.charset)) { return false; }	
 	if (updatedDate == null) {
 	   if (other.updatedDate != null) { return false; }
 	} else if (!updatedDate.equals(other.updatedDate)) { return false; }

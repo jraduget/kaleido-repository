@@ -36,16 +36,24 @@ import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
 public interface ResourceHandler extends Serializable {
 
    /**
-    * Get the identifier of the file content resource {@link URI}
+    * Get the file resource {@link URI}, identifier of the resource
     * 
     * @return uri of the identifier of the file content resource
     */
-   String getResourceUri();
+   String getUri();
 
    /**
-    * Get the input stream to get the content of the resource<br/>
+    * Get the local path of the file resource
+    * 
+    * @return
+    */
+   String getPath();
+
+   /**
+    * Get an input stream to read the content of the resource<br/>
     * You can use {@link BufferedInputStream} to handle it.<br/>
-    * Once done, free resource with {@link #close()}
+    * Once done, free resource with {@link #close()}<br/>
+    * Be careful, if you call several time this method, the same inputStream instance will be return.
     * 
     * @return input stream of the resource
     */
@@ -53,9 +61,10 @@ public interface ResourceHandler extends Serializable {
    InputStream getInputStream() throws ResourceException;
 
    /**
-    * Get the reader used to get the content of the resource<br/>
+    * Get a reader used to read the content of the resource<br/>
     * You can use {@link BufferedReader} to handle it.<br/>
     * Once done, free resource with {@link #close()}
+    * Be careful, if you call several time this method, the same inputStream instance will be return.
     * 
     * @return input stream of the resource
     */
@@ -63,9 +72,10 @@ public interface ResourceHandler extends Serializable {
    Reader getReader() throws ResourceException;
 
    /**
-    * Get the reader used to get the content of the resource<br/>
+    * Get a reader used to read the content of the resource<br/>
     * You can use {@link BufferedReader} to handle it.<br/>
     * Once done, free resource with {@link #close()}
+    * Be careful, if you call several time this method, the same inputStream instance will be return.
     * 
     * @param charset The name of a supported {@link java.nio.charset.Charset </code>charset<code>}
     * @return input stream of the resource
@@ -115,6 +125,11 @@ public interface ResourceHandler extends Serializable {
     */
    @NotNull
    byte[] getBytes() throws ResourceException;
+
+   /**
+    * @return resource content length (-1, if it can't be obtained)
+    */
+   long getLength();
 
    /**
     * Release the resource and the eventual connections

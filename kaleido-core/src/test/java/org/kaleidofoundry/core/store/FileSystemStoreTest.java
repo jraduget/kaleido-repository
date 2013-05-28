@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.core.store;
 
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.DEFAULT_BASE_DIR_PROPERTY;
+
 import java.io.File;
 import java.io.FileWriter;
 
@@ -96,10 +98,10 @@ public class FileSystemStoreTest extends AbstractFileStoreTest {
    @Test
    public void baseDirTest() throws ResourceException {
 	FileStoreProvider.init(null);
-	FileStore fileStore = FileStoreFactory.provides("file:/${" + FileStoreConstants.DEFAULT_BASE_DIR_PROP + "}");
+	FileStore fileStore = FileStoreFactory.provides("file:/${" + DEFAULT_BASE_DIR_PROPERTY + "}");
 	ResourceHandler resourceHandler = fileStore.get("src/test/resources/store/foo.txt");
 	assertNotNull(resourceHandler);
-	assertNotNull(resourceHandler.getResourceUri());
+	assertNotNull(resourceHandler.getUri());
 	assertEquals("line1\nline2", resourceHandler.getText());
    }
 
@@ -108,7 +110,7 @@ public class FileSystemStoreTest extends AbstractFileStoreTest {
 	FileStore fileStore = FileStoreFactory.provides("file:/.");
 	ResourceHandler resourceHandler = fileStore.get("src/test/resources/store/foo.txt");
 	assertNotNull(resourceHandler);
-	assertNotNull(resourceHandler.getResourceUri());
+	assertNotNull(resourceHandler.getUri());
 	assertEquals("line1\nline2", resourceHandler.getText());
    }
 
@@ -117,7 +119,7 @@ public class FileSystemStoreTest extends AbstractFileStoreTest {
 	FileStore fileStore = FileStoreFactory.provides("file:/..");
 	ResourceHandler resourceHandler = fileStore.get("kaleido-core/src/test/resources/store/foo.txt");
 	assertNotNull(resourceHandler);
-	assertNotNull(resourceHandler.getResourceUri());
+	assertNotNull(resourceHandler.getUri());
 	assertEquals("line1\nline2", resourceHandler.getText());
    }
 

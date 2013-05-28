@@ -15,10 +15,10 @@
  */
 package org.kaleidofoundry.core.store;
 
-import static org.kaleidofoundry.core.config.ConfigurationConstants.STATIC_ENV_PARAMETERS;
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.DEFAULT_BASE_DIR_PROPERTY;
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.STATIC_ENV_PARAMETERS;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.StoreMessageBundle;
 import static org.kaleidofoundry.core.store.AbstractFileStore.LOGGER;
-import static org.kaleidofoundry.core.store.FileStoreConstants.DEFAULT_BASE_DIR_PROP;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -62,7 +62,7 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 	if (!INIT_LOADED) {
 
 	   // base dir if defined
-	   String currentBaseDir = StringHelper.isEmpty(basedir) ? System.getProperty(DEFAULT_BASE_DIR_PROP) : basedir;
+	   String currentBaseDir = StringHelper.isEmpty(basedir) ? System.getProperty(DEFAULT_BASE_DIR_PROPERTY) : basedir;
 	   if (StringHelper.isEmpty(currentBaseDir)) {
 		currentBaseDir = FileHelper.buildUnixAppPath(FileHelper.getCurrentPath());
 	   }
@@ -71,7 +71,7 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 
 	   STATIC_ENV_PARAMETERS.put("basedir", DEFAULT_BASE_DIR);
 	   STATIC_ENV_PARAMETERS.put("default.basedir", DEFAULT_BASE_DIR);
-	   STATIC_ENV_PARAMETERS.put(DEFAULT_BASE_DIR_PROP, DEFAULT_BASE_DIR);
+	   STATIC_ENV_PARAMETERS.put(DEFAULT_BASE_DIR_PROPERTY, DEFAULT_BASE_DIR);
 
 	   LOGGER.info(StoreMessageBundle.getMessage("store.basedir.info", "basedir", DEFAULT_BASE_DIR));
 
@@ -171,14 +171,18 @@ public class FileStoreProvider extends AbstractProviderService<FileStore> {
 
 		   try {
 			if (fileStore.isUriManageable(mergedBaseUri)) {
-			   getRegistry().put(pContext.getName(), fileStore);
+			   if (pContext.getName() != null) {
+				getRegistry().put(pContext.getName(), fileStore);
+			   }
 			   return fileStore;
 			}
-		   } catch (final Throwable th) {
+		   } catch (final IllegalArgumentException iae) {
 		   }
 
 		   // unregister wrong file store
-		   getRegistry().remove(pContext.getName());
+		   if (pContext.getName() != null) {
+			getRegistry().remove(pContext.getName());
+		   }
 
 		} catch (final NoSuchMethodException e) {
 		   throw new ProviderException("context.provider.error.NoSuchConstructorException", impl.getName(), "RuntimeContext<FileStore> context");

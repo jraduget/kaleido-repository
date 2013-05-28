@@ -13,25 +13,28 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.kaleidofoundry.core.spring.processor;
+package org.kaleidofoundry.spring.context.xml;
+
+import javax.inject.Inject;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kaleidofoundry.core.context.AbstractMyServiceTest;
 import org.kaleidofoundry.core.context.MyService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
+ * Test @{@link Inject} kaleido modules injection (declared in a xml spring bean file)
+ * 
  * @author Jerome RADUGET
  */
 @RunWith(value = SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/processor/springContext.xml" })
-public class MySpringServiceTest extends AbstractMyServiceTest {
+@ContextConfiguration(locations = { "/xml/springCdiContext.xml" })
+public class MyXmlCdiSpringServiceTest extends AbstractMyServiceTest {
 
-   @Autowired
-   private MyService myService;
+   @Inject
+   private MyXmlCdiSpringService myService;
 
    /*
     * (non-Javadoc)
@@ -60,15 +63,4 @@ public class MySpringServiceTest extends AbstractMyServiceTest {
    public void entityManagerInjectionTest() {
    }
 
-   /**
-    * Test that {@link MySpringService#getMySpringContext()} is well injected by spring, and not by spring post processor.
-    * The reason is that this field is annotated by {@link Autowired}, then it is handle by spring bean ioc
-    */
-   @Test
-   public void mySpringContext() {
-	assertNotNull(myService);
-	assertTrue(myService.getClass().equals(MySpringService.class));
-	assertNotNull(((MySpringService) myService).getMySpringContext());
-	assertEquals("classpath:/store", ((MySpringService) myService).getMySpringContext().getProperty("baseUri"));
-   }
 }

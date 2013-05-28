@@ -69,9 +69,6 @@ import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
  */
 public class KaleidoJunit4ClassRunner extends BlockJUnit4ClassRunner {
 
-   private static EnvironmentInitializer environmentInitializer;
-   private static NamedConfigurationInitializer configurationInitializer;
-
    public KaleidoJunit4ClassRunner(final Class<?> klass) throws InitializationError {
 	super(klass);
    }
@@ -84,11 +81,11 @@ public class KaleidoJunit4ClassRunner extends BlockJUnit4ClassRunner {
    public void run(final RunNotifier notifier) {
 
 	// create and init the configurations initializer
-	configurationInitializer = new NamedConfigurationInitializer(getTestClass().getJavaClass());
+	NamedConfigurationInitializer configurationInitializer = new NamedConfigurationInitializer(getTestClass().getJavaClass());
 	configurationInitializer.init();
 
 	// load env variables and start kaleido components
-	environmentInitializer = new EnvironmentInitializer(getTestClass().getJavaClass());
+	EnvironmentInitializer environmentInitializer = new EnvironmentInitializer(getTestClass().getJavaClass());
 	environmentInitializer.init();
 	environmentInitializer.start();
 

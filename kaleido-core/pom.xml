@@ -14,31 +14,26 @@
 
 	<dependencies>
 		
-		<!-- AOP with aspectj >= 1.6.0 -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
-			<version>${aspectj.version}</version>
 		</dependency>
 
 		<!-- Configuration providers -->
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
-			<version>1.10</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.6</version>
 			<scope>provided</scope>
 		</dependency>			
-				
+	
 		<!-- Caching providers (provided) -->
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache-core</artifactId>
-			<version>${terracotta-ehcache.version}</version>
 			<scope>provided</scope>
 			<optional>true</optional>
 			<exclusions>
@@ -51,7 +46,6 @@
 		<dependency>
 			<groupId>org.jboss.cache</groupId>
 			<artifactId>jbosscache-core</artifactId>
-			<version>${jboss-cache.version}</version>
 			<scope>provided</scope>
 			<optional>true</optional>
 			<exclusions>
@@ -69,7 +63,6 @@
 		<dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-core</artifactId>
-			<version>${jboss-infinispan.version}</version>
 			<scope>provided</scope>
 			<optional>true</optional>			
 		</dependency>
@@ -95,11 +88,17 @@
 		</dependency>
 		-->		
 		
+		<!-- Mail, file uploads... -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<scope>provided</scope>
+		</dependency>					
+				
 		<!-- ** Testing part **************************************************************** -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		
@@ -107,25 +106,21 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>${logback.version}</version>
 			<scope>test</scope>
 		</dependency>	
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>log4j-over-slf4j</artifactId>
-			<version>${slf4j.version}</version>
 			<scope>test</scope>
 		</dependency> 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${slf4j.version}</version>
 			<scope>test</scope>
 		</dependency> 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jul-to-slf4j</artifactId>
-			<version>${slf4j.version}</version>
 			<scope>test</scope>
 		</dependency>				 		 
 				 
@@ -162,7 +157,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
 	</dependencies>
 
 	<build>

@@ -60,8 +60,10 @@ public enum FileStoreTypeEnum implements FileStoreType {
    memory,
 
    /** google storage scheme */
-   gs
+   gs,
 
+   /** http servlet request scheme */
+   request
    ;
 
    private final boolean custom = false;

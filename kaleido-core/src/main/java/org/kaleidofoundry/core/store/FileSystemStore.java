@@ -89,6 +89,7 @@ public class FileSystemStore extends AbstractFileStore implements FileStore {
 	   // Set some meta datas
 	   if (resource instanceof ResourceHandlerBean) {
 		((ResourceHandlerBean) resource).setLastModified(file.lastModified());
+		((ResourceHandlerBean) resource).setLength(file.length());
 		((ResourceHandlerBean) resource).setMimeType(MimeTypeResolverFactory.getService().getMimeType(
 			FileHelper.getFileNameExtension(resourceUri.getPath())));
 	   }

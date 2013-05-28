@@ -188,8 +188,8 @@ public class PluginInspector {
 			while (line != null) {
 			   try {
 				if (!StringHelper.isEmpty(line)) {
-				   echoMessages.add(PluginMessageBundle.getMessage("plugin.info.visitor.resource.processing", "interface", line));
 				   pluginsSet.add(inspectPlugin(Class.forName(line.trim())));
+				   echoMessages.add(PluginMessageBundle.getMessage("plugin.info.visitor.resource.processing", "interface", line));
 				}
 				line = buffReader.readLine();
 			   } catch (final ClassNotFoundException cnfe) {

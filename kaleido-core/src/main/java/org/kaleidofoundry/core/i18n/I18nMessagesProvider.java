@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.core.i18n;
 
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.I18N_JPA_ACTIVATION_PROPERTY;
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.STATIC_ENV_PARAMETERS;
 import static org.kaleidofoundry.core.i18n.I18nContextBuilder.BaseName;
 import static org.kaleidofoundry.core.i18n.I18nContextBuilder.ClassLoaderClass;
 import static org.kaleidofoundry.core.i18n.I18nContextBuilder.LocaleCountry;
@@ -28,7 +30,6 @@ import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.IllegalContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.system.JavaSystemHelper;
 import org.kaleidofoundry.core.util.Registry;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.kaleidofoundry.core.util.locale.LocaleFactory;
@@ -40,11 +41,8 @@ import org.slf4j.LoggerFactory;
  */
 public class I18nMessagesProvider extends AbstractProviderService<I18nMessages> {
 
-   /** Enable or disable jpa entity manager resolution for resourceBundle */
-   public static final String ENABLE_JPA_PROPERTY = "kaleidofoundry.i18n.jpa.enabled";
-
    private static final Logger LOGGER = LoggerFactory.getLogger(I18nMessagesProvider.class);
-   
+
    /**
     * @param genericClassInterface
     */
@@ -201,20 +199,6 @@ public class I18nMessagesProvider extends AbstractProviderService<I18nMessages> 
 	ResourceBundle.clearCache(I18nMessagesFactory.class.getClassLoader());
    }
 
-   /**
-    * enable the jpa resource bundle control resolver
-    */
-   public static void enableJpaControl() {
-	JpaIsEnabled = true;
-   }
-
-   /**
-    * disable the jpa resource bundle control resolver
-    */
-   public static void disableJpaControl() {
-	JpaIsEnabled = false;
-   }
-
    /*
     * Build full base name of a class, using its package name and class name
     */
@@ -247,6 +231,33 @@ public class I18nMessagesProvider extends AbstractProviderService<I18nMessages> 
 	return bundle;
    }
 
+
+   /**
+    * enable the jpa resource bundle control resolver
+    */
+   public static void enableJpaControl() {
+	STATIC_ENV_PARAMETERS.put(I18N_JPA_ACTIVATION_PROPERTY, Boolean.TRUE.toString());
+   }
+
+   /**
+    * disable the jpa resource bundle control resolver
+    */
+   public static void disableJpaControl() {
+	STATIC_ENV_PARAMETERS.put(I18N_JPA_ACTIVATION_PROPERTY, Boolean.FALSE.toString());
+   }
+   
+   /**
+    * @return do JPA is enable to get and persist i18n messages bundle
+    */
+   public static boolean isJpaEnabledForI18n() {
+	String result = STATIC_ENV_PARAMETERS.get(I18N_JPA_ACTIVATION_PROPERTY);
+	if (result == null) {
+	   return false;
+	} else {
+	   return Boolean.valueOf(result);
+	}
+   }
+   
    /**
     * @return Default user or server local
     */
@@ -255,10 +266,4 @@ public class I18nMessagesProvider extends AbstractProviderService<I18nMessages> 
 	return LocaleFactory.getDefaultFactory().getCurrentLocale();
    }
 
-   // **** PRIVATE STATIC PART *************************************************************************************************************
-   static boolean JpaIsEnabled;
-
-   static {
-	JpaIsEnabled = Boolean.valueOf(JavaSystemHelper.getSystemProperty(ENABLE_JPA_PROPERTY, "false"));
-   }
 }

@@ -149,7 +149,7 @@ public class YamlConfiguration extends AbstractConfiguration {
 	   yaml.dump(rootYamlMap, yamlWriter);
 
 	   // Store the document content
-	   singleFileStore.store(singleFileStore.createResourceHandler(resourceHandler.getResourceUri(), yamlWriter.toString()));
+	   singleFileStore.store(singleFileStore.createResourceHandler(resourceHandler.getUri(), yamlWriter.toString()));
 
 	   return cacheProperties;
 
@@ -157,14 +157,14 @@ public class YamlConfiguration extends AbstractConfiguration {
 	   if (ioe instanceof ResourceException) {
 		throw (ResourceException) ioe;
 	   } else {
-		throw new ResourceException(ioe, resourceHandler.getResourceUri());
+		throw new ResourceException(ioe, resourceHandler.getUri());
 	   }
 	} finally {
 	   if (yamlWriter != null) {
 		try {
 		   yamlWriter.close();
 		} catch (IOException ioe) {
-		   throw new ResourceException(ioe, resourceHandler.getResourceUri());
+		   throw new ResourceException(ioe, resourceHandler.getUri());
 		}
 	   }
 	}

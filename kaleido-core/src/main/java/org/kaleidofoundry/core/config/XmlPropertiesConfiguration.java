@@ -81,7 +81,7 @@ public class XmlPropertiesConfiguration extends AbstractConfiguration implements
 
 	   return properties;
 	} catch (final IOException ioe) {
-	   throw new ResourceException(ioe, resourceHandler.getResourceUri());
+	   throw new ResourceException(ioe, resourceHandler.getUri());
 	}
    }
 
@@ -96,12 +96,12 @@ public class XmlPropertiesConfiguration extends AbstractConfiguration implements
 	try {
 	   ByteArrayOutputStream out = new ByteArrayOutputStream();
 	   toProperties().storeToXML(out, Calendar.getInstance(LocaleFactory.getDefaultFactory().getCurrentLocale()).getTime().toString());
-	   singleFileStore.store(singleFileStore.createResourceHandler(resourceHandler.getResourceUri(), new ByteArrayInputStream(out.toByteArray())));
+	   singleFileStore.store(singleFileStore.createResourceHandler(resourceHandler.getUri(), new ByteArrayInputStream(out.toByteArray())));
 	   return cacheProperties;
 	} catch (ResourceException re) {
 	   throw re;
 	} catch (IOException ioe) {
-	   throw new ResourceException(ioe, resourceHandler.getResourceUri());
+	   throw new ResourceException(ioe, resourceHandler.getUri());
 	}
    }
 

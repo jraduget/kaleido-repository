@@ -321,8 +321,36 @@ public abstract class StringHelper {
 	return split(str, " ");
    }
 
+    /**
+     * split the Input String with the given separator
+     * <p>
+     *
+     * <pre>
+     * <b>Assertions:</b>
+     * 	assertNull(StringHelper.split(null, '-'));
+     * 	assertNotNull(StringHelper.split("", '-'));
+     * 	assertEquals(0, StringHelper.split("", '-').length);
+     * 	assertEquals(1, StringHelper.split("aa", '-').length);
+     * 	assertEquals("aa", StringHelper.split("aa", '-')[0]);
+     * 	assertEquals(2, StringHelper.split("aa-bb", '-').length);
+     * 	assertEquals("aa", StringHelper.split("aa-bb", '-')[0]);
+     * 	assertEquals("bb", StringHelper.split("aa-bb", '-')[1]);
+     * 	assertEquals(2, StringHelper.split("aa-bb-", '-').length);
+     * </pre>
+     *
+     * </p>
+     *
+     * @param str String to tokenize
+     * @param separator Deliminator to use
+     * @return string[] splitted String
+     */
+    public static String[] split(final String str, final char separator) {
+
+        return split(str, String.valueOf(separator));
+    }
+
    /**
-    * split the Input String with the given delim
+    * split the Input String with the given separator
     * <p>
     * 
     * <pre>
@@ -341,12 +369,12 @@ public abstract class StringHelper {
     * </p>
     * 
     * @param str String to tokenize
-    * @param delim Deliminator to use
-    * @return string[] tokenized String
+    * @param separator Deliminator to use
+    * @return string[] splitted String
     */
-   public static String[] split(final String str, final String delim) {
+   public static String[] split(final String str, final String separator) {
 	if (str == null) { return null; }
-	final StringTokenizer strTokens = new StringTokenizer(str, delim);
+	final StringTokenizer strTokens = new StringTokenizer(str, separator);
 	final String[] result = new String[strTokens.countTokens()];
 	int i = 0;
 	while (strTokens.hasMoreTokens()) {
@@ -356,7 +384,7 @@ public abstract class StringHelper {
    }
 
    /**
-    * unsplit the Input String array using the given delim
+    * unsplit the Input String array using the given separator
     * 
     * <pre>
     * <b>Assertions:</b>
@@ -366,15 +394,15 @@ public abstract class StringHelper {
     * 	assertEquals("a-b-c", StringHelper.unsplit("-", "a", "b", "c"));
     * </pre>
     * 
-    * @param delim item separator
+    * @param separator item separator
     * @param values
     * @return string representation of a String[] using valueSeparator as string separator
     */
-   public static String unsplit(final String delim, final Object... values) {
+   public static String unsplit(final String separator, final Object... values) {
 	final StringBuilder buffer = new StringBuilder();
 	if (values != null) {
 	   for (int i = 0; i < values.length - 1; i++) {
-		buffer.append(String.valueOf(values[i]) + delim);
+		buffer.append(String.valueOf(values[i]) + separator);
 	   }
 	   buffer.append(String.valueOf(values[values.length - 1]));
 
@@ -409,7 +437,7 @@ public abstract class StringHelper {
    }
 
    /**
-    * convert a string with delimiter (delim) to a String List
+    * convert a string with delimiter (separator) to a String List
     * 
     * <pre>
     * <b>Assertions:</b>
@@ -427,12 +455,12 @@ public abstract class StringHelper {
     * </p>
     * 
     * @param str the input String
-    * @param delim delimiter
+    * @param separator delimiter
     * @return List of string
     */
-   public static List<String> toList(final String str, final String delim) {
+   public static List<String> toList(final String str, final String separator) {
 	if (str == null) { return null; }
-	return Arrays.asList(split(str, delim));
+	return Arrays.asList(split(str, separator));
    }
 
    /**

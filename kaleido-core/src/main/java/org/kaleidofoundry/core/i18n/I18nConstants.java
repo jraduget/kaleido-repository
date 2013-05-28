@@ -20,11 +20,9 @@ package org.kaleidofoundry.core.i18n;
  */
 public interface I18nConstants {
 
-   /** Enable or disable jpa entity manager resolution for resourceBundle */
-   String ENABLE_JPA_PROPERTY = "kaleidofoundry.i18n.jpa.enabled";
-
    /** i18n message bundle interface plugin name */
    String I18nMessageBundlePluginName = "i18ns";
+   
    /** i18n message bundle default implementation plugin name */
    String I18nDefaultMessageBundlePluginName = "i18ns.default";
 

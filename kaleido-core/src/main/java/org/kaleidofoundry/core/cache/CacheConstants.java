@@ -22,9 +22,6 @@ package org.kaleidofoundry.core.cache;
  */
 public interface CacheConstants {
 
-   /** Java system environment variable to set default cache provider to use */
-   String CACHE_PROVIDER_ENV = "kaleido.cacheprovider";
-
    /** interface cache manager declare plugin name */
    String CacheManagerPluginName = "cacheManagers";
 

@@ -24,7 +24,7 @@
 				<include>org.kaleidofoundry:kaleido-spring</include>
 				<include>org.kaleidofoundry:kaleido-launcher</include>
 				<include>org.kaleidofoundry:kaleido-messaging</include>
-				<include>org.kaleidofoundry:kaleido-samples</include>
+				<include>org.kaleidofoundry:kaleido-sample</include>
 			</includes>
 			<binaries>
 				<outputDirectory>distrib</outputDirectory>

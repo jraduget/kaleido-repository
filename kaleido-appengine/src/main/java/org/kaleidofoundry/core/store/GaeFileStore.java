@@ -160,7 +160,7 @@ public class GaeFileStore extends AbstractFileStore {
 	boolean isTextContent = false;
 	MimeTypeResolver mimeTypeResolver = MimeTypeResolverFactory.getService();
 
-	GSFileOptionsBuilder optionsBuilder = new GSFileOptionsBuilder().setBucket(bucketName).setKey(resource.getResourceUri());
+	GSFileOptionsBuilder optionsBuilder = new GSFileOptionsBuilder().setBucket(bucketName).setKey(resource.getUri());
 
 	if (!StringHelper.isEmpty(resource.getMimeType())) {
 	   optionsBuilder.setMimeType(resource.getMimeType());

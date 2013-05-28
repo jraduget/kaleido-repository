@@ -28,7 +28,7 @@ public class FileStoreSample {
 	ResourceHandler resource = yourStore.get("path/foo.txt");
 
 	// get its informations
-	System.out.printf("path: %s\n", resource.getResourceUri());
+	System.out.printf("path: %s\n", resource.getUri());
 	System.out.printf("mimeType: %s\n", resource.getMimeType());
 	System.out.printf("charset: %s\n", resource.getCharset());
 	System.out.printf("lastModified: %tc\n", new Date(resource.getLastModified()));

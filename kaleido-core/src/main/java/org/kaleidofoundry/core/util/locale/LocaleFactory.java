@@ -30,11 +30,6 @@ public abstract class LocaleFactory {
    }
 
    /**
-    * parameter name used to set default local settings (web init parameter or java system properties...)
-    */
-   public static final String JavaEnvProperties = "kaleido.locale";
-
-   /**
     * @return current locale for the user or server
     */
    public abstract Locale getCurrentLocale();

@@ -15,7 +15,7 @@
  */
 package org.kaleidofoundry.core.config;
 
-import static org.kaleidofoundry.core.persistence.PersistenceConstants.KaleidoPersistentContextUnitName;
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.KALEIDO_PERSISTENT_UNIT_NAME;
 
 import java.io.Serializable;
 
@@ -45,7 +45,7 @@ import org.kaleidofoundry.core.store.ResourceHandler;
 public class JpaModelConfiguration extends AbstractConfiguration {
 
    /** injected entity manager */
-   @PersistenceContext(unitName = KaleidoPersistentContextUnitName)
+   @PersistenceContext(unitName = KALEIDO_PERSISTENT_UNIT_NAME)
    EntityManager em;
 
    /**

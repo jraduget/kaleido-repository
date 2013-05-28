@@ -1,23 +1,27 @@
-/*  
- * Copyright 2008-2010 the original author or authors 
+/*
+ *  Copyright 2008-2011 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
-package org.kaleidofoundry.core.spring.xml;
+package org.kaleidofoundry.spring.context.processor;
 
+import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheManagerRef;
+import static org.kaleidofoundry.core.cache.CacheContextBuilder.CacheName;
+import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.ProviderCode;
+import static org.kaleidofoundry.core.config.ConfigurationContextBuilder.FileStoreUri;
 import static org.kaleidofoundry.core.i18n.I18nContextBuilder.BaseName;
+import static org.kaleidofoundry.core.store.FileStoreContextBuilder.BaseUri;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
@@ -31,47 +35,58 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.i18n.I18nMessages;
 import org.kaleidofoundry.core.naming.NamingService;
 import org.kaleidofoundry.core.store.FileStore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
- * Xml spring bean
- * 
  * @author Jerome RADUGET
  */
-public class MyXmlCdiSpringService implements MyService {
+@Service
+public class MySpringService implements MyService {
 
-   @Inject
+   //
+   // @PersistenceContext(unitName = "kaleido")
+   // private EntityManager entityManager;
+   //
+   // @PersistenceUnit(unitName = "kaleido")
+   // private EntityManagerFactory entityManagerFactory;
+
+   @Context
    private RuntimeContext<?> myContext;
 
-   @Inject
+   @Context("namedCtx")
    private RuntimeContext<?> myNamedContext;
 
-   @Inject
+   @Context("namedCtx")
+   // @Context must be ignored by spring post processor, because classic @Autowired is used
+   @Autowired
+   private RuntimeContext<?> mySpringContext;
+
+   @Context(value = "myStoreCtx", parameters = { @Parameter(name = BaseUri, value = "classpath:/store") })
    private FileStore myStore;
 
-   @Inject
+   @Context(parameters = { @Parameter(name = FileStoreUri, value = "classpath:/config/myConfig.properties") })
    private Configuration myConfig;
 
-   @Inject
+   @Context
    private CacheManager myDefaultCacheManager;
 
-   @Inject
+   @Context(parameters = { @Parameter(name = ProviderCode, value = "infinispan") })
    private CacheManager myCustomCacheManager;
 
-   @Inject
+   @Context
    private Cache<Integer, String> myDefaultCache;
 
-   @Inject
+   @Context(parameters = { @Parameter(name = CacheName, value = "myNamedCache"), @Parameter(name = CacheManagerRef, value = "myCustomCacheManager") })
    private Cache<Integer, String> myCustomCache;
 
-   // @Inject
    @Context
    private I18nMessages myDefaultMessages;
 
-   // @Inject
    @Context(parameters = { @Parameter(name = BaseName, value = "i18n/messages") })
    private I18nMessages myBaseMessages;
 
-   @Inject
+   @Context
    private NamingService myNamingService;
 
    /*
@@ -189,6 +204,13 @@ public class MyXmlCdiSpringService implements MyService {
    @Override
    public EntityManager getEntityManager() {
 	return null;
+   }
+
+   /**
+    * @return the mySpringContext
+    */
+   public RuntimeContext<?> getMySpringContext() {
+	return mySpringContext;
    }
 
 }

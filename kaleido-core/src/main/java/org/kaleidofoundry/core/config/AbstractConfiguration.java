@@ -55,6 +55,7 @@ import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.kaleidofoundry.core.store.FileStore;
+import org.kaleidofoundry.core.store.FileStoreContextBuilder;
 import org.kaleidofoundry.core.store.FileStoreFactory;
 import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceHandler;
@@ -131,14 +132,9 @@ public abstract class AbstractConfiguration extends AbstractPropertyAccessor imp
 	this.name = name;
 
 	// internal file store instantiation
-	final String fileStoreRef = context.getString(FileStoreRef);
-	final FileStore fileStore;
+	final String fileStoreRef = context.getString(FileStoreRef, "configurations." + this.name + ".unnamed");
+	final FileStore fileStore = FileStoreFactory.provides(resourceUri, new FileStoreContextBuilder(fileStoreRef).build());
 
-	if (!StringHelper.isEmpty(fileStoreRef)) {
-	   fileStore = FileStoreFactory.provides(resourceUri, new RuntimeContext<FileStore>(fileStoreRef, FileStore.class, context));
-	} else {
-	   fileStore = FileStoreFactory.provides(resourceUri);
-	}
 	singleFileStore = new SingleFileStore(resourceUri, fileStore);
 
 	// internal cache key / value instantiation

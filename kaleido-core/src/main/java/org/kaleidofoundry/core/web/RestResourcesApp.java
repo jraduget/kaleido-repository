@@ -20,10 +20,14 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
-import org.kaleidofoundry.core.config.ConfigurationControllerBean;
+import org.kaleidofoundry.core.config.ConfigurationController;
+import org.kaleidofoundry.core.config.ConfigurationNotFoundMapper;
+import org.kaleidofoundry.core.config.PropertyNotFoundMapper;
 import org.kaleidofoundry.core.env.EnvironmentController;
 import org.kaleidofoundry.core.store.FileStoreConsoleController;
 import org.kaleidofoundry.core.store.FileStoreController;
+import org.kaleidofoundry.core.store.FileStoreNotFoundMapper;
+import org.kaleidofoundry.core.store.ResourceNotFoundMapper;
 
 /**
  * Rest application servlet used to exposed REST resources
@@ -36,13 +40,14 @@ public class RestResourcesApp extends Application {
    public Set<Class<?>> getClasses() {
 	Set<Class<?>> s = new HashSet<Class<?>>();
 	// exception handler
-	s.add(RestConfigurationNotFoundMapper.class);
-	s.add(RestResourceNotFoundMapper.class);
-	s.add(RestPropertyNotFoundMapper.class);
+	s.add(ConfigurationNotFoundMapper.class);
+	s.add(FileStoreNotFoundMapper.class);
+	s.add(ResourceNotFoundMapper.class);
+	s.add(PropertyNotFoundMapper.class);
 	// manager module
 	s.add(EnvironmentController.class);
 	s.add(FileStoreConsoleController.class);
-	s.add(ConfigurationControllerBean.class);
+	s.add(ConfigurationController.class);
 	s.add(FileStoreController.class);
 	
 	return s;

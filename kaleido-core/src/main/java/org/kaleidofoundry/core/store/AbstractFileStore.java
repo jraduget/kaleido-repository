@@ -43,7 +43,6 @@ import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.io.MimeTypeResolverFactory;
 import org.kaleidofoundry.core.lang.annotation.Immutable;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
@@ -64,7 +63,6 @@ import org.slf4j.LoggerFactory;
  * @author Jerome RADUGET
  */
 @Immutable
-@Task(comment = "Caching resources")
 public abstract class AbstractFileStore implements FileStore {
 
    /** default fileStore logger */
@@ -126,8 +124,10 @@ public abstract class AbstractFileStore implements FileStore {
 	   resourcesByUri = null;
 	}
 
-	// register the file store instance
-	FileStoreFactory.getRegistry().put(context.getName(), this);
+	// register the named file store instance
+	if (context.getName() != null) {
+	   FileStoreFactory.getRegistry().put(context.getName(), this);
+	}
    }
 
    /*
@@ -272,7 +272,7 @@ public abstract class AbstractFileStore implements FileStore {
     * @throws ResourceException
     */
    protected ResourceHandler createCacheableResourceHandler(final ResourceHandler resourceHandler) throws ResourceException {
-	ResourceHandlerBean cacheableResource = new ResourceHandlerBean(this, resourceHandler.getResourceUri(), resourceHandler.getBytes());
+	ResourceHandlerBean cacheableResource = new ResourceHandlerBean(this, resourceHandler.getUri(), resourceHandler.getBytes());
 	cacheableResource.setLastModified(resourceHandler.getLastModified());
 	cacheableResource.setMimeType(resourceHandler.getMimeType());
 	cacheableResource.setCharset(resourceHandler.getCharset());
@@ -290,7 +290,9 @@ public abstract class AbstractFileStore implements FileStore {
 
    @Override
    public void destroy() {
-	FileStoreFactory.getRegistry().remove(context.getName());
+	if (context.getName() != null) {
+	   FileStoreFactory.getRegistry().remove(context.getName());
+	}
 	closeAll();
    }
 
@@ -301,7 +303,7 @@ public abstract class AbstractFileStore implements FileStore {
     * @see ResourceHandler#close()
     */
    void unregisterOpenedResource(final ResourceHandler resource) {
-	unregisterOpenedResource(resource.getResourceUri());
+	unregisterOpenedResource(resource.getUri());
    }
 
    /**
@@ -332,11 +334,11 @@ public abstract class AbstractFileStore implements FileStore {
    public boolean isUriManageable(@NotNull final String pResourceUri) {
 
 	final String resourceUri = buildResourceURi(pResourceUri);
-	final FileStoreType rst = FileStoreTypeEnum.match(resourceUri);
+	final FileStoreType resourceType = FileStoreTypeEnum.match(resourceUri);
 
-	if (rst != null) {
+	if (resourceType != null) {
 	   for (final FileStoreType t : getStoreType()) {
-		if (t.equals(rst)) { return true; }
+		if (t.equals(resourceType)) { return true; }
 	   }
 	}
 
@@ -499,7 +501,7 @@ public abstract class AbstractFileStore implements FileStore {
    @Override
    public final FileStore store(@NotNull final ResourceHandler resource) throws ResourceException {
 	if (isReadOnly()) { throw new ResourceException("store.readonly.illegal", context.getName() != null ? context.getName() : ""); }
-	final String resourceUri = buildResourceURi(resource.getResourceUri());
+	final String resourceUri = buildResourceURi(resource.getUri());
 	isUriManageable(resourceUri);
 
 	int retryCount = 0;
@@ -533,7 +535,7 @@ public abstract class AbstractFileStore implements FileStore {
 		   retryCount++;
 		   final int sleepTime = getSleepTimeBeforeRetryOnFailure();
 		   if (retryCount < maxRetryCount) {
-			LOGGER.warn(StoreMessageBundle.getMessage("store.failover.retry.store.info", resource.getResourceUri(), sleepTime, retryCount, maxRetryCount));
+			LOGGER.warn(StoreMessageBundle.getMessage("store.failover.retry.store.info", resource.getUri(), sleepTime, retryCount, maxRetryCount));
 			try {
 			   Thread.sleep((sleepTime));
 			} catch (final InterruptedException e) {
@@ -542,7 +544,7 @@ public abstract class AbstractFileStore implements FileStore {
 			}
 		   } else {
 			LOGGER.error(
-				StoreMessageBundle.getMessage("store.failover.retry.store.info", resource.getResourceUri(), sleepTime, retryCount, maxRetryCount), rse);
+				StoreMessageBundle.getMessage("store.failover.retry.store.info", resource.getUri(), sleepTime, retryCount, maxRetryCount), rse);
 		   }
 		}
 	   }

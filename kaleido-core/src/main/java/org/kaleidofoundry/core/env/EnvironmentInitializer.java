@@ -15,9 +15,14 @@
  */
 package org.kaleidofoundry.core.env;
 
-import static org.kaleidofoundry.core.config.ConfigurationConstants.STATIC_ENV_PARAMETERS;
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.CACHE_PROVIDER_PROPERTY;
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.CONFIGURATIONS_PROPERTY;
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.CONFIGURATIONS_PROPERTY_SEPARATOR;
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.DEFAULT_BASE_DIR_PROPERTY;
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.KALEIDO_PERSISTENT_UNIT_NAME;
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.LOCAL_PROPERTY;
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.STATIC_ENV_PARAMETERS;
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.CoreMessageBundle;
-import static org.kaleidofoundry.core.persistence.PersistenceConstants.KaleidoPersistentContextUnitName;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,26 +42,22 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
-import org.kaleidofoundry.core.cache.CacheConstants;
 import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.cache.CacheManagerProvider;
 import org.kaleidofoundry.core.config.Configuration;
-import org.kaleidofoundry.core.config.ConfigurationConstants;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.config.NamedConfigurationInitializer;
+import org.kaleidofoundry.core.env.model.EnvironmentConstants;
 import org.kaleidofoundry.core.env.model.EnvironmentEntry;
 import org.kaleidofoundry.core.env.model.EnvironmentInfo;
 import org.kaleidofoundry.core.env.model.EnvironmentStatus;
 import org.kaleidofoundry.core.env.model.EnvironmentStatus.Status;
 import org.kaleidofoundry.core.env.model.EnvironmentVersions;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
-import org.kaleidofoundry.core.i18n.I18nMessagesProvider;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 import org.kaleidofoundry.core.plugin.PluginFactory;
 import org.kaleidofoundry.core.plugin.model.Plugin;
 import org.kaleidofoundry.core.store.FileStore;
-import org.kaleidofoundry.core.store.FileStoreConstants;
 import org.kaleidofoundry.core.store.FileStoreProvider;
 import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.system.OsEnvironment;
@@ -78,9 +79,11 @@ import org.slf4j.LoggerFactory;
  * 
  * @see EnvironmentStatus
  * @see EnvironmentInfo
+ * @see EnvironmentConstants
+ * 
  * @author Jerome RADUGET
  */
-@Stateless
+@Stateless		
 // @Singleton
 public class EnvironmentInitializer {
 
@@ -99,7 +102,7 @@ public class EnvironmentInitializer {
    private NamedConfigurationInitializer configurationInitializer;
 
    /** injected entity manager */
-   @PersistenceContext(unitName = KaleidoPersistentContextUnitName)
+   @PersistenceContext(unitName = KALEIDO_PERSISTENT_UNIT_NAME)
    EntityManager em;
 
    public EnvironmentInitializer() {
@@ -208,7 +211,7 @@ public class EnvironmentInitializer {
 	// em will be injected by by java ee container or if not by aspectj
 	try {
 	   if (em == null) {
-		em = UnmanagedEntityManagerFactory.currentEntityManager(KaleidoPersistentContextUnitName);
+		em = UnmanagedEntityManagerFactory.currentEntityManager(KALEIDO_PERSISTENT_UNIT_NAME);
 	   }
 	} catch (PersistenceException pe) {
 	   em = null;
@@ -268,21 +271,15 @@ public class EnvironmentInitializer {
 		   STATIC_ENV_PARAMETERS.put(entry.getKey(), StringHelper.resolveExpression(entry.getValue(), STATIC_ENV_PARAMETERS));
 		}
 
-		// I18n JPA enable or not
-		I18nMessagesFactory.disableJpaControl();
-		String enableI18nJpa = STATIC_ENV_PARAMETERS.get(I18nMessagesProvider.ENABLE_JPA_PROPERTY);
-		enableI18nJpa = StringHelper.isEmpty(enableI18nJpa) ? Boolean.FALSE.toString() : enableI18nJpa;
-
-		if (Boolean.valueOf(enableI18nJpa)) {
+		// I18n JPA enable or no
+		if (org.kaleidofoundry.core.i18n.I18nMessagesProvider.isJpaEnabledForI18n()) {
 		   LOGGER.info(CoreMessageBundle.getMessage("loader.define.i18n.jpa.enabled"));
-		   I18nMessagesFactory.enableJpaControl();
 		} else {
 		   LOGGER.info(CoreMessageBundle.getMessage("loader.define.i18n.jpa.disabled"));
-		   I18nMessagesFactory.disableJpaControl();
 		}
 
 		// Parse and set default locale if needed
-		final String defaultLocale = STATIC_ENV_PARAMETERS.get(LocaleFactory.JavaEnvProperties);
+		final String defaultLocale = STATIC_ENV_PARAMETERS.get(LOCAL_PROPERTY);
 		if (!StringHelper.isEmpty(defaultLocale)) {
 		   LOGGER.info(CoreMessageBundle.getMessage("loader.define.locale", defaultLocale));
 		   final Locale setDefaultLocale = LocaleFactory.parseLocale(defaultLocale);
@@ -291,19 +288,19 @@ public class EnvironmentInitializer {
 		}
 
 		// FileStore init (basedir ...)
-		FileStoreProvider.init(STATIC_ENV_PARAMETERS.get(FileStoreConstants.DEFAULT_BASE_DIR_PROP));
+		FileStoreProvider.init(STATIC_ENV_PARAMETERS.get(DEFAULT_BASE_DIR_PROPERTY));
 
 		// Cache provider init (default cache provider ...)
-		CacheManagerProvider.init(STATIC_ENV_PARAMETERS.get(CacheConstants.CACHE_PROVIDER_ENV));
+		CacheManagerProvider.init(STATIC_ENV_PARAMETERS.get(CACHE_PROVIDER_PROPERTY));
 
 		// Configurations to load
-		final String kaleidoConfigurations = STATIC_ENV_PARAMETERS.get(ConfigurationConstants.JavaEnvProperties);
+		final String kaleidoConfigurations = STATIC_ENV_PARAMETERS.get(CONFIGURATIONS_PROPERTY);
 		if (!StringHelper.isEmpty(kaleidoConfigurations)) {
 		   LOGGER.info(CoreMessageBundle.getMessage("loader.define.configurations",
 			   StringHelper.replaceAll(kaleidoConfigurations, "\n", ",").replaceAll("\\s+", "")));
 		   // load and register given configurations ids / url
 		   try {
-			ConfigurationFactory.init(StringHelper.replaceAll(kaleidoConfigurations, "\n", ConfigurationConstants.JavaEnvPropertiesSeparator));
+			ConfigurationFactory.init(StringHelper.replaceAll(kaleidoConfigurations, "\n", CONFIGURATIONS_PROPERTY_SEPARATOR));
 		   } catch (final ResourceException rse) {
 			throw new IllegalStateException(CoreMessageBundle.getMessage("loader.define.configurations.error", kaleidoConfigurations), rse);
 		   }

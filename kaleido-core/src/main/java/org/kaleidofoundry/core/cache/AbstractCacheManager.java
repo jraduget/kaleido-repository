@@ -115,8 +115,8 @@ public abstract class AbstractCacheManager implements CacheManager {
 			fileStoreUri = baseUri + fileStoreUri;
 		   }
 		   fileStore = FileStoreFactory.provides(baseUri, fileStoreContext);
-		} else {
-		   fileStore = FileStoreFactory.provides(fileStoreUri);
+		} else {		  
+		   fileStore = FileStoreFactory.provides(fileStoreUri, new FileStoreContextBuilder("cachemanagers." + context.getName() + ".unnamed").build());
 		}
 
 		LOGGER.info(CacheMessageBundle.getMessage("cachemanager.loading.custom", getMetaInformations(), fileStoreUri));

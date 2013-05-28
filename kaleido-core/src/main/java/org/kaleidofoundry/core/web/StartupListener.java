@@ -24,6 +24,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -58,34 +59,54 @@ public class StartupListener implements ServletContextListener {
     */
    @Override
    public void contextInitialized(final ServletContextEvent sce) {
-	ServletContextProvider.init(sce.getServletContext());
+	initializer = createEnvironmentInitializerFrom(sce.getServletContext(), this.getClass());
+	initializer.start();
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
+    */
+   @Override
+   public void contextDestroyed(final ServletContextEvent sce) {
+	initializer.stop();
+   }
+   
+   /**
+    * create an {@link EnvironmentInitializer} from the current webapp servlet context 
+    * @param servletContext
+    * @param applicationInitClass
+    * @return
+    */
+   public static EnvironmentInitializer createEnvironmentInitializerFrom(ServletContext servletContext, Class<?> applicationInitClass) {
+	ServletContextProvider.init(servletContext);
 
 	// can specify a class from your application, in order to get the version of your application
-	String applicationClassName = sce.getServletContext().getInitParameter(EnvironmentConstants.ApplicationClassProperties);
-	Class<?> applicationClass = getClass();
+	String applicationClassName = servletContext.getInitParameter(EnvironmentConstants.INITIALIZER_CLASS_PROPERTY);
+	Class<?> applicationClass = applicationInitClass;
 
 	try {
 	   if (!StringHelper.isEmpty(applicationClassName)) {
 		applicationClass = Class.forName(applicationClassName);
 	   }
 	} catch (ClassNotFoundException cnfe) {
-	   throw new IllegalArgumentException(EnvironmentConstants.ApplicationClassProperties+"="+applicationClassName);
+	   throw new IllegalArgumentException(EnvironmentConstants.INITIALIZER_CLASS_PROPERTY+"="+applicationClassName);
 	} catch (Throwable th) {
 	   LOGGER.error("Error loading class {}", applicationClassName, th);
 	}
 
 	// create the initializer
-	initializer = new EnvironmentInitializer(applicationClass);
+	EnvironmentInitializer initializer = new EnvironmentInitializer(applicationClass);
 
 	// load operating system and java system env variables
 	initializer.init();
 
 	// Then, load web application init parameters
 	@SuppressWarnings("unchecked")
-	Enumeration<String> names = sce.getServletContext().getInitParameterNames();
+	Enumeration<String> names = servletContext.getInitParameterNames();
 	while (names != null && names.hasMoreElements()) {
 	   String name = names.nextElement();
-	   initializer.getEnvironments().put(name, sce.getServletContext().getInitParameter(name));
+	   initializer.getEnvironments().put(name, servletContext.getInitParameter(name));
 	}
 
 	// Then load web application environment parameters
@@ -104,17 +125,8 @@ public class StartupListener implements ServletContextListener {
 		LOGGER.warn("Loading webapp environment entries is not enabled");
 	   }
 	}
-
-	initializer.start();
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
-    */
-   @Override
-   public void contextDestroyed(final ServletContextEvent sce) {
-	initializer.stop();
+	
+	return initializer;
    }
 
 }

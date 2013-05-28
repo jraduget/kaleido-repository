@@ -10,9 +10,9 @@
     ">
 	
 	<!-- only used for injecting i18n messages with @Context (because java message bundle can't be directly instantiate like a POJO) -->
-	<bean class="org.kaleidofoundry.core.context.spring.BeanContextPostProcessor" name="kaleidoPostProcessor"/>
+	<bean class="org.kaleidofoundry.spring.context.BeanContextPostProcessor" name="kaleidoPostProcessor"/>
 	
-	<bean id="myCdiService" class="org.kaleidofoundry.core.spring.xml.MyXmlCdiSpringService"/>
+	<bean id="myCdiService" class="org.kaleidofoundry.spring.context.xml.MyXmlCdiSpringService"/>
 	
 	<bean id="myContext" class="org.kaleidofoundry.core.context.RuntimeContext">
 		<constructor-arg type="java.lang.String" value="myContext"/>

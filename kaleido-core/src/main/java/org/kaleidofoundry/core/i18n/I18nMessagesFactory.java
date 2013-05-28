@@ -134,7 +134,7 @@ public class I18nMessagesFactory {
    public static I18nMessages provides(@NotNull final String baseName, @NotNull final Locale locale, final ClassLoader loader) {
 	return I18N_MESSAGES_PROVIDER.provides(baseName, locale, loader);
    }
-
+   
    /**
     * enable the jpa resource bundle control resolver
     */
@@ -147,6 +147,6 @@ public class I18nMessagesFactory {
     */
    public static void disableJpaControl() {
 	I18nMessagesProvider.disableJpaControl();
-   }
+   }   
 
 }

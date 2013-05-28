@@ -30,7 +30,7 @@ import org.kaleidofoundry.core.util.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.kaleidofoundry.core.persistence.PersistenceConstants.KaleidoPersistentContextUnitName;
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.KALEIDO_PERSISTENT_UNIT_NAME;
 
 /**
  * Factory used to manage {@link EntityManagerFactory} and {@link EntityManager} in an <b>unmanaged</b> environment<br/>
@@ -69,7 +69,7 @@ public abstract class UnmanagedEntityManagerFactory {
    /**
     * @return kaleido default entity manager (thread local)<br/>
     *         it will create the EntityManager if needed. If previous entity manager thread was closed, a new one is created.
-    *         it will use as persistent unit name : {@link #KaleidoPersistentContextUnitName} <br/>
+    *         it will use as persistent unit name : {@link #KALEIDO_PERSISTENT_UNIT_NAME} <br/>
     */
    @NotNull
    public static final EntityManager currentEntityManager() {
@@ -92,7 +92,7 @@ public abstract class UnmanagedEntityManagerFactory {
    @NotNull
    public static final EntityManager currentEntityManager(@NotNull final String persistenceUnitName) {
 
-	if (KaleidoPersistentContextUnitName.equals(persistenceUnitName)) {
+	if (KALEIDO_PERSISTENT_UNIT_NAME.equals(persistenceUnitName)) {
 	   return currentEntityManager();
 	} else {
 
@@ -116,14 +116,14 @@ public abstract class UnmanagedEntityManagerFactory {
 
    /**
     * @return kaleido default entity manager factory<br/>
-    *         it will use as persistent unit name : {@link #KaleidoPersistentContextUnitName} <br/>
+    *         it will use as persistent unit name : {@link #KALEIDO_PERSISTENT_UNIT_NAME} <br/>
     *         it will create the EntityManagerFactory if needed
     */
    @NotNull
    public static final EntityManagerFactory getEntityManagerFactory() {
 	if (DefaultEmf == null) {
 	   synchronized (UnmanagedEntityManagerFactory.class) {
-		DefaultEmf = Persistence.createEntityManagerFactory(KaleidoPersistentContextUnitName);
+		DefaultEmf = Persistence.createEntityManagerFactory(KALEIDO_PERSISTENT_UNIT_NAME);
 		if (DefaultEmf == null) {
 		   throw new PersistenceException("JPA provider return a null entity manager factory");
 		}
@@ -140,7 +140,7 @@ public abstract class UnmanagedEntityManagerFactory {
    @NotNull
    public static final EntityManagerFactory getEntityManagerFactory(@NotNull final String persistenceUnitName) {
 
-	if (KaleidoPersistentContextUnitName.equals(persistenceUnitName)) {
+	if (KALEIDO_PERSISTENT_UNIT_NAME.equals(persistenceUnitName)) {
 	   return getEntityManagerFactory();
 	} else {
 	   EntityManagerFactory emf = CustomEmfRegistry.get(persistenceUnitName);

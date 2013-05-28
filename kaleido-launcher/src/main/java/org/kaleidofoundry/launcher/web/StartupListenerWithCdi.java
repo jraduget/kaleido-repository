@@ -32,7 +32,7 @@ import org.kaleidofoundry.core.web.StartupListener;
 import org.kaleidofoundry.launcher.UnmanagedCdiInjector;
 
 /**
- * Startup listener which support standalone CDI (unmanaged) 
+ * Startup listener which support stand-alone CDI (unmanaged) 
  *
  * @see StartupListener
  * @author Jerome RADUGET

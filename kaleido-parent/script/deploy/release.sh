@@ -2,8 +2,8 @@ export MAVEN_OPT=-Xmx1024m
 
 # update version of test integration modules
 #---------------------------------------------
-cd kaleido-it-parent
-mvn versions:set -DnewVersion=0.9.0
+cd kaleido-integration-test
+mvn versions:set -DnewVersion=0.9.1-SNAPSHOT
 mvn -N versions:update-child-modules
 svn commit -m "release XXX prepare"
 
@@ -18,22 +18,22 @@ find ./site/  -name '*.html' -exec dos2unix {} \;
 # signing gpg :  https://docs.sonatype.org/display/Repository/How+To+Generate+PGP+Signatures+With+Maven
 # sonatype :
 #	nexus for maven central : https://oss.sonatype.org/index.html#welcome
-#   stagin repo url : http://oss.sonatype.org/service/local/staging/deploy/maven2
+#   staging repo url : https://oss.sonatype.org/index.html#stagingRepositories
 # usefull : 
 # 	http://www.coding-stories.com/2010/09/02/signer-les-jars-avec-maven/
 # 	https://confluence.sakaiproject.org/display/REL/Maven+release+plugin+cheat+sheet
 #	http://www.sonatype.com/people/2010/01/how-to-generate-pgp-signatures-with-maven/
 #---------------------------------------------
-#mvn clean deploy -Dgpg.passphrase=${GPG_PASSPHRASE}
+#mvn clean deploy -P kaleido-gpg,javaee5
 mvn release:clean
 mvn release:prepare
 #mvn release:rollback
-mvn release:perform -Dgpg.passphrase=${GPG_PASSPHRASE} -Darguments=-Dgpg.passphrase=${GPG_PASSPHRASE}
+mvn release:perform -P kaleido-gpg,javaee5
 
 # git branch and tagging part
 #---------------------------------------------
-# git branch kaleido-0.9.0
+# git branch kaleido-0.9.1
 # git push --all
-# git tag -a kaleido-0.9.0 -m "maven central release"
+# git tag -a kaleido-0.9.1 -m "maven central release"
 # git push --tags
 

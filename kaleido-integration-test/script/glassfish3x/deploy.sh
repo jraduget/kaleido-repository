@@ -6,7 +6,7 @@ asadmin create-jdbc-resource --connectionpoolid modulorPool jdbc/modulor
 asadmin deploy --dbvendorname=javadb --createtables=true yourApplication.war
 
 # current build version (TODO extract it from pom.xml)
-KALEIDO_VERSION=0.9.0-SNAPSHOT
+KALEIDO_VERSION=0.9.1-SNAPSHOT
 
 # script base dir
 BASE="$(cd -P -- $(dirname -- "$0"); pwd -P)"

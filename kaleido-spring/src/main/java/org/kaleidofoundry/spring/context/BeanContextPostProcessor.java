@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.kaleidofoundry.core.context.spring;
+package org.kaleidofoundry.spring.context;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -28,6 +28,8 @@ import org.kaleidofoundry.core.context.Provider;
 import org.kaleidofoundry.core.context.ProviderService;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.util.ReflectionHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +55,8 @@ import org.springframework.util.ReflectionUtils;
 @Component
 public class BeanContextPostProcessor implements MergedBeanDefinitionPostProcessor {
 
+   final static Logger LOGGER = LoggerFactory.getLogger(BeanContextPostProcessor.class);
+	   
    @Override
    public Object postProcessAfterInitialization(final Object beanInstance, final String beanName) throws BeansException {
 	return beanInstance;
@@ -61,12 +65,12 @@ public class BeanContextPostProcessor implements MergedBeanDefinitionPostProcess
    @Override
    public Object postProcessBeforeInitialization(final Object beanInstance, final String beanName) throws BeansException {
 
-	// Field[] fields = beanInstance.getClass().getDeclaredFields();
 	Set<Field> fields = ReflectionHelper.getAllDeclaredFields(beanInstance.getClass());
 
 	for (Field field : fields) {
 	   // @Autowired is injected using spring bean
 	   if (!field.isAnnotationPresent(Autowired.class) && !field.isAnnotationPresent(Inject.class)) {
+	   //if (field.isAnnotationPresent(Context.class)) {
 		final Context context = field.getAnnotation(Context.class);
 		if (context != null) {
 		   // do field is a runtime context class
@@ -97,15 +101,15 @@ public class BeanContextPostProcessor implements MergedBeanDefinitionPostProcess
 			   }
 
 			} catch (IllegalArgumentException e) {
-			   throw new BeanCreationException("Unexpected error", e);
+			   throw new BeanCreationException("Unexpected error during injection", e);
 			} catch (IllegalAccessException e) {
-			   throw new BeanCreationException("Unexpected error", e);
+			   throw new BeanCreationException("Unexpected error during injection", e);
 			} catch (SecurityException e) {
-			   throw new BeanCreationException("Unexpected error", e);
+			   throw new BeanCreationException("Unexpected error during injection", e);
 			} catch (NoSuchMethodException e) {
-			   throw new BeanCreationException("Unexpected error", e);
+			   throw new BeanCreationException("Unexpected error during injection", e);
 			} catch (InstantiationException e) {
-			   throw new BeanCreationException("Unexpected error", e);
+			   throw new BeanCreationException("Unexpected error during injection", e);
 			} catch (InvocationTargetException ite) {
 			   throw new BeanCreationException("", ite.getCause() != null ? ite.getCause() : (ite.getTargetException() != null ? ite.getTargetException()
 				   : ite));
@@ -113,7 +117,6 @@ public class BeanContextPostProcessor implements MergedBeanDefinitionPostProcess
 
 			}
 		   }
-
 		}
 	   }
 	}

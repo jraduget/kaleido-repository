@@ -13,23 +13,22 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.kaleidofoundry.core.web;
+package org.kaleidofoundry.core.config;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import org.kaleidofoundry.core.config.ConfigurationNotFoundException;
 
 /**
- * rest exception mapper for {@link ConfigurationNotFoundException}
+ * rest exception mapper for {@link PropertyNotFoundException}
  * 
  * @author Jerome RADUGET
  */
 @Provider
-public class RestConfigurationNotFoundMapper implements ExceptionMapper<ConfigurationNotFoundException> {
+public class PropertyNotFoundMapper implements ExceptionMapper<PropertyNotFoundException> {
 
-   public Response toResponse(final ConfigurationNotFoundException ex) {
+   public Response toResponse(final PropertyNotFoundException ex) {
 	return Response.status(404).entity(ex.getMessage()).type("text/plain").build();
    }
 

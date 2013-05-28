@@ -15,25 +15,35 @@
  */
 package org.kaleidofoundry.core.store;
 
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map.Entry;
 
 import javax.ejb.Stateless;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
 import org.kaleidofoundry.core.store.model.FileStoreEntry;
+import org.kaleidofoundry.core.store.model.ResourceHandlerEntity;
+import org.kaleidofoundry.core.util.locale.LocaleFactory;
 
-@Stateless(mappedName = "ejb/filestores/manager")
-@Path("/filestores/")
+@Stateless(mappedName = "ejb/stores/manager")
+@Path("/stores/")
 public class FileStoreController {
 
    /** injected and used to handle security context */
@@ -44,8 +54,12 @@ public class FileStoreController {
    @Context
    UriInfo uriInfo;
 
+   /**
+    * @return get the list of registered file store
+    */
    @GET
-   @XmlElementWrapper(name="fileStores")
+   @XmlElementWrapper(name = "stores")
+   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public List<FileStoreEntry> getStores() {
 	List<FileStoreEntry> stores = new ArrayList<FileStoreEntry>();
 	for (Entry<String, FileStore> storeEntry : FileStoreFactory.getRegistry().entrySet()) {
@@ -54,27 +68,100 @@ public class FileStoreController {
 	return stores;
    }
 
+   /**
+    * fetch the content of a resource
+    * 
+    * @param store
+    * @param resource
+    * @return resource content, with the right charset, mime type ....
+    * @throws FileStoreNotFoundException
+    * @throws ResourceNotFoundException
+    * @throws ResourceException
+    */
    @GET
-   @Path("{store}/get/{resource}")
+   @Path("{store}/content/{resource}")
    @Produces(MediaType.APPLICATION_OCTET_STREAM)
-   public byte[] getResourceContent(final @PathParam("store") String store, final @PathParam("resource") String resource) throws FileStoreNotFoundException,
+   public Response getResourceContent(final @PathParam("store") String store, final @PathParam("resource") String resource) throws FileStoreNotFoundException,
 	   ResourceNotFoundException, ResourceException {
-	return findFileStore(store).get(resource).getBytes();
+
+	ResourceHandler rs = findFileStore(store).get(resource);
+	return Response.ok(rs.getBytes())
+		.type(rs.getMimeType())
+		.location(URI.create(rs.getUri()))
+		.lastModified(new Date(rs.getLastModified()))
+		.header(HttpHeaders.CONTENT_TYPE, rs.getMimeType() + "; " + rs.getCharset())
+		// .cacheControl(CacheControl.valueOf(value))
+		// .expires(date)
+		.status(Status.OK).build();
    }
 
+   /**
+    * fetch the meta information of a resource
+    * 
+    * @param store
+    * @param resource
+    * @return the resource meta info
+    * @throws FileStoreNotFoundException
+    * @throws ResourceNotFoundException
+    * @throws ResourceException
+    */
    @GET
-   @Path("{store}/info/{resource}")
+   @Path("{store}/meta/{resource}")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-   public ResourceHandler getResourceInfo(final @PathParam("store") String store, final @PathParam("resource") String resource)
+   public ResourceHandlerEntity getResourceMetaInfo(final @PathParam("store") String store, final @PathParam("resource") String resource)
 	   throws FileStoreNotFoundException, ResourceNotFoundException, ResourceException {
-	return findFileStore(store).get(resource);
+	return toResourceHandlerEntity(findFileStore(store).get(resource));
    }
 
-   private FileStore findFileStore(String storeName) throws FileStoreNotFoundException {
-	if (!FileStoreFactory.getRegistry().contains(storeName)) {
+   /**
+    * remove a resource
+    * 
+    * @param store
+    * @param resource
+    * @throws FileStoreNotFoundException
+    * @throws ResourceNotFoundException
+    * @throws ResourceException
+    */
+   @DELETE
+   @Path("{store}/{resource}")
+   public void removeResource(final @PathParam("store") String store, final @PathParam("resource") String resource) throws FileStoreNotFoundException,
+	   ResourceNotFoundException, ResourceException {
+	findFileStore(store).remove(resource);
+   }
+
+   /**
+    * find the store in the registry
+    * 
+    * @param storeName
+    * @return
+    * @throws FileStoreNotFoundException
+    */
+   static FileStore findFileStore(String storeName) throws FileStoreNotFoundException {
+	if (!FileStoreFactory.getRegistry().keySet().contains(storeName)) {
 	   throw new FileStoreNotFoundException(storeName);
 	} else {
 	   return FileStoreFactory.getRegistry().get(storeName);
 	}
+   }
+
+   /**
+    * converter
+    * 
+    * @param res
+    * @return
+    */
+   static ResourceHandlerEntity toResourceHandlerEntity(ResourceHandler res) {
+	Calendar calendar = new GregorianCalendar(LocaleFactory.getDefaultFactory().getCurrentLocale());
+	calendar.setTimeInMillis(res.getLastModified());
+
+	ResourceHandlerEntity facade = new ResourceHandlerEntity();
+	facade.setUri(res.getUri());
+	facade.setPath(res.getPath());
+	facade.setMimeType(res.getMimeType());
+	facade.setCharset(res.getCharset());
+	facade.setSize(res.getLength());
+	facade.setUpdatedDate(calendar.getTime());
+	facade.setCreationDate(calendar.getTime());
+	return facade;
    }
 }

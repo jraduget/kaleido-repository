@@ -31,9 +31,9 @@ public abstract class AbstractConfigurationManagerTest extends Assert {
    protected static final String MyConfigurationName = "myNamedConfig";
    protected static final String MyConfigurationUri = "classpath:/config/myNamedConfig.properties";
 
-   protected final ConfigurationControllerBean configurationManager;
+   protected final ConfigurationController configurationManager;
 
-   public AbstractConfigurationManagerTest(final ConfigurationControllerBean configurationManager) {
+   public AbstractConfigurationManagerTest(final ConfigurationController configurationManager) {
 	this.configurationManager = configurationManager;
    }
 

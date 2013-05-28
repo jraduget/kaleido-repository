@@ -17,6 +17,7 @@ package org.kaleidofoundry.launcher.web;
 
 import static org.kaleidofoundry.core.i18n.InternalBundleHelper.WebMessageBundle;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Set;
 
@@ -49,6 +50,14 @@ public class BaseServletWithCDI extends BaseServlet {
 
 	// CDI injection
 	initCdiInjection(this);
+   }
+
+   /**
+    * @param cl
+    * @return CDI beans accessor
+    */
+   protected <T> T getBean(final Class<T> type, final Annotation... annotations) {
+	return UnmanagedCdiInjector.getBean(type, annotations);
    }
 
    /**
