@@ -39,9 +39,9 @@ import org.kaleidofoundry.core.plugin.Declare;
 public interface Cache<K extends Serializable, V extends Serializable> {
 
    /**
-    * Cache name
+    * The cache name
     * 
-    * @return cache name
+    * @return the cache name
     */
    @NotNull
    String getName();
@@ -92,14 +92,20 @@ public interface Cache<K extends Serializable, V extends Serializable> {
    boolean containsKey(@NotNull K key);
 
    /**
-    * Collection of values presents in the cache
+    * Collection of values presents in the cache.
+    * <p>
+    * <b>Be careful :</b> in a distributed caching environment, the usage of this method is not efficient.
+    * Use the specifics caching provider features (distributed query, index, ...) to get or filter all the cache entries.
+    * <br/>
+    * If your cache is local and embedded to your application memory, there is less constraints to use this method.
+    * </p> 
     * 
     * @return all cache items values
     */
    Collection<V> values();
 
    /**
-    * Number of all entries that have been put in the cache
+    * Number of entries present in the cache
     * 
     * @return entries count of the cache
     */

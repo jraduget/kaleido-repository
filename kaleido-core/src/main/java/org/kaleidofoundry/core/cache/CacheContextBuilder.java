@@ -75,6 +75,11 @@ public class CacheContextBuilder extends AbstractRuntimeContextBuilder<Cache> {
     * may happen sporadically or during scheduled maintenance.
     */
    public static final String GaeThrowOnPutFailure = "ThrowOnPutFailure";
+   
+   /**
+    * Apache jcs group, to configuration your cache datas
+    */
+   public static final String JcsGroup = "jcsGroup";
 
    /**
     * 
@@ -223,4 +228,14 @@ public class CacheContextBuilder extends AbstractRuntimeContextBuilder<Cache> {
 	return this;
    }
 
+   /**
+    * @param cacheManagerRef
+    * @return current builder instance
+    */
+   public CacheContextBuilder withJcsGroup(final String jcsGroup) {
+	getContextParameters().put(JcsGroup, jcsGroup);
+	return this;
+   }
+   
+   
 }

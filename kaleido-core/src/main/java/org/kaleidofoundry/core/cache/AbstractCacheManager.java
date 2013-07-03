@@ -354,7 +354,7 @@ public abstract class AbstractCacheManager implements CacheManager {
     * @param configurationUri
     * @return InputStream of the input configuration url, or null if none found
     * @throws CacheException
-    */
+    */   
    @SuppressWarnings("resource")
    protected InputStream getConfiguration(final String configurationUri) throws CacheException {
 	if (singleFileStore != null) {

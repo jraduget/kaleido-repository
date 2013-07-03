@@ -40,6 +40,12 @@ public interface CacheConstants {
    /** EhCache implementation declare plugin name */
    String EhCachePluginName = "caches.ehCache";
 
+   /** Apache JCS cache manager implementation declare plugin name */
+   String JcsCacheManagerPluginName = "cacheManagers.jcs";
+
+   /** Apache JCS implementation declare plugin name */
+   String JcsCachePluginName = "caches.jcs";
+
    /** JbossCache implementation declare plugin name */
    String JbossCachePluginName = "caches.jbossCache3x";
 

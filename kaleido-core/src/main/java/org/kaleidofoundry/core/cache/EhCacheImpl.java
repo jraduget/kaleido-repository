@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.sf.ehcache.Cache;
@@ -123,7 +124,7 @@ public class EhCacheImpl<K extends Serializable, V extends Serializable> extends
    @SuppressWarnings("unchecked")
    @Override
    public V doGet(final K id) {
-	final Element elt = cache.getQuiet(id); // no stat, perf. decrease :(
+	final Element elt = cache.getQuiet(id); // no stat, perf. decrease a lot :(
 	return elt != null ? (V) elt.getObjectValue() : null;
    }
 
@@ -133,7 +134,7 @@ public class EhCacheImpl<K extends Serializable, V extends Serializable> extends
     */
    @Override
    public void doPut(final K key, final V entity) {
-	cache.putQuiet(new Element(key, entity)); // no stat, perf. decrease :(
+	cache.putQuiet(new Element(key, entity)); // no stat, perf. decrease a lot :(
    }
 
    /*
@@ -167,14 +168,15 @@ public class EhCacheImpl<K extends Serializable, V extends Serializable> extends
    /**
     * ehcache don't provide direct values access in the api. Values are encapsulated into {@link Element}<br/>
     * so for performance reason, this code is no very efficient if cache contains a lot of items. <br/>
+    * And moreover on a distributed caching configuration.
     */
    @SuppressWarnings("unchecked")
    @Override
    public Collection<V> values() {
-
-	final Collection<V> result = new ArrayList<V>();
+	final List<Object> keys = cache.getKeys();
+	final Collection<V> result = new ArrayList<V>(keys.size());
 	V value;
-	for (final Object key : cache.getKeys()) {
+	for (final Object key : keys) {
 	   value = get((K) key);
 	   if (value != null) {
 		result.add(value);

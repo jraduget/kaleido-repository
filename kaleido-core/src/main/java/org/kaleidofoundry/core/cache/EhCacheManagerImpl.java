@@ -113,7 +113,7 @@ public class EhCacheManagerImpl extends AbstractCacheManager {
     */
    @Override
    public String getMetaInformations() {
-	return "ehcache-2.x (1.2.x -> 2.4.x)";
+	return "ehcache-2.x (1.2.x -> 2.6.x)";
    }
 
    /*

@@ -40,7 +40,7 @@ public abstract class AbstractCacheManagerTest extends Assert {
    /** Cache type to test */
    protected abstract RuntimeContext<CacheManager> getCacheManagerContext();
 
-   private CacheManager cacheManager;
+   protected CacheManager cacheManager;
 
    //private int cacheManagerCountBeforeCreation = -1;
 
