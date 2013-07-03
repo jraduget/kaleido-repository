@@ -44,7 +44,7 @@ public class JcsCacheManagerTest extends AbstractCacheManagerTest {
 
    @Override
    @Test(expected = CacheConfigurationException.class)
-   
+   @Ignore
    public void illegalConfiguration() {
 	super.illegalConfiguration();	
 	// that's the getCache() which throws the exception

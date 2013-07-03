@@ -177,12 +177,12 @@ public abstract class AbstractCacheTest extends Assert {
 	assertEquals(Person.class.getName(), cache.getName());
 	assertEquals(0, cache.size());
 
-	final Collection<Person> personnes = new ArrayList<Person>();
+	final Collection<Person> persons = new ArrayList<Person>();
 
 	for (int id = 1; id < maxSize; id++) {
 	   final Person p = Person.newMockInstance();
 	   p.setId(id);
-	   personnes.add(p);
+	   persons.add(p);
 
 	   cache.put(p.getId(), p);
 	   assertEquals(id, cache.size());

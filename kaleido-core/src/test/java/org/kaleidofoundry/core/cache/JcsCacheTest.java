@@ -37,6 +37,9 @@ public class JcsCacheTest extends AbstractCacheTest {
 
    @After
    public void destroyAll() throws IOException {
+	if (cache != null) {
+	   cache.clear();
+	}
 	if (cacheManager != null) {
 	   // print all current method test cache statistics
 	   LOGGER.info(cacheManager.printStatistics());
