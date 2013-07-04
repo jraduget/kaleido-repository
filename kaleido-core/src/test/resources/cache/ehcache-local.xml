@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ehcache xmlns="http://ehcache.sourceforge.net/ehcache.xsd"
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
-		 xsi:schemaLocation="http://ehcache.sourceforge.net/ehcache.xsd">
+		 xsi:schemaLocation="http://ehcache.sourceforge.net/ehcache.xsd" updateCheck="false" name="ehcacheLocalManagment">
  		 
 	<diskStore path="java.io.tmpdir/ehcache-test" />
 

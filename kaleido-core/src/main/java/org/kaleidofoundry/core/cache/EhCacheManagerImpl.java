@@ -83,7 +83,7 @@ public class EhCacheManagerImpl extends AbstractCacheManager {
 		if (ehCacheManager == null) { throw newCacheException("cache.configuration.notfound", new String[] { EhCacheManagerPluginName, configuration }); }
 	   }
 
-	   if (!StringHelper.isEmpty(context.getName())) {
+	   if (!StringHelper.isEmpty(context.getName()) && StringHelper.isEmpty(ehCacheManager.getName())) {
 		ehCacheManager.setName(context.getName());
 	   }
 
