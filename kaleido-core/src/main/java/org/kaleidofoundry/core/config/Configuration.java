@@ -28,6 +28,7 @@ import java.util.Set;
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.config.model.FireChangesReport;
 import org.kaleidofoundry.core.context.Provider;
+import org.kaleidofoundry.core.context.Scope;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Nullable;
 import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
@@ -144,7 +145,7 @@ import org.kaleidofoundry.core.store.ResourceException;
  */
 @ThreadSafe
 @Declare(ConfigurationConstants.ConfigurationPluginName)
-@Provider(value = ConfigurationProvider.class, singletons = true)
+@Provider(value = ConfigurationProvider.class, scope=Scope.singleton)
 public interface Configuration {
 
    /**

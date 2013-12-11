@@ -86,6 +86,7 @@ public abstract class ContextHelper {
 	   public String[] configurations() {
 		return configurations;
 	   }
+
 	};
    }
 

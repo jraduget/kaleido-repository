@@ -22,7 +22,7 @@ import java.io.Serializable;
  * @author Jerome RADUGET
  *
  */
-public class Adress implements Serializable, Cloneable {
+public class Address implements Serializable, Cloneable {
 
    private static final long serialVersionUID = -7805257002388054653L;
    
@@ -31,7 +31,7 @@ public class Adress implements Serializable, Cloneable {
    private String zipCode;
    private String city;
    
-   public Adress(String adress1, String adress2, String zipCode, String city) {
+   public Address(String adress1, String adress2, String zipCode, String city) {
 	super();
 	this.adress1 = adress1;
 	this.adress2 = adress2;
@@ -125,8 +125,8 @@ public class Adress implements Serializable, Cloneable {
    public boolean equals(Object obj) {
 	if (this == obj) { return true; }
 	if (obj == null) { return false; }
-	if (!(obj instanceof Adress)) { return false; }
-	Adress other = (Adress) obj;
+	if (!(obj instanceof Address)) { return false; }
+	Address other = (Address) obj;
 	if (adress1 == null) {
 	   if (other.adress1 != null) { return false; }
 	} else if (!adress1.equals(other.adress1)) { return false; }
@@ -143,9 +143,9 @@ public class Adress implements Serializable, Cloneable {
    }
 
 
-   public Adress clone() {
+   public Address clone() {
 	try {
-	   return (Adress) super.clone();
+	   return (Address) super.clone();
 	} catch (final CloneNotSupportedException cne) {
 	   return null;
 	}

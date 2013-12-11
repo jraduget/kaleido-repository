@@ -22,6 +22,7 @@ import javax.jms.Destination;
 import javax.sql.DataSource;
 
 import org.kaleidofoundry.core.context.Provider;
+import org.kaleidofoundry.core.context.Scope;
 import org.kaleidofoundry.core.plugin.Declare;
 
 /**
@@ -35,7 +36,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  * @author Jerome RADUGET
  */
 @Declare(value = NamingPluginName, description = "naming service plugin interface")
-@Provider(value = NamingServiceProvider.class, singletons = true)
+@Provider(value = NamingServiceProvider.class, scope=Scope.singleton)
 public interface NamingService {
 
    /**

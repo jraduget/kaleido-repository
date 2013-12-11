@@ -31,7 +31,6 @@ import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 import org.kaleidofoundry.core.plugin.PluginHelper;
 import org.kaleidofoundry.core.plugin.model.Plugin;
 import org.kaleidofoundry.core.util.Registry;
-import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * Base implementation for {@link ProviderService} <br/>
@@ -67,7 +66,7 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
 
 	// do we keep instances in registry
 	Provider providerAnnot = this.genericClassInterface.getAnnotation(Provider.class);
-	this.keepInstanceInRegistry = providerAnnot != null && providerAnnot.singletons();
+	this.keepInstanceInRegistry = providerAnnot != null && providerAnnot.scope() == Scope.singleton;
 
 	registerConfigurationsListeners();
    }
@@ -91,17 +90,7 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
     */
    @Override
    public final T provides(final Context context, final String defaultName, final Class<T> genericClassInterface) throws ProviderException {
-
-	String name = StringHelper.isEmpty(context.value()) ? defaultName : context.value();
-	T instance = keepInstanceInRegistry ? getRegistry().get(name) : null;
-
-	if (instance == null) {
-	   instance = provides(RuntimeContext.createFrom(context, defaultName, genericClassInterface));
-	   if (keepInstanceInRegistry) {
-		getRegistry().put(name, instance);
-	   }
-	}
-	return instance;
+	return provides(RuntimeContext.createFrom(context, defaultName, genericClassInterface));
    }
 
    /*
@@ -111,17 +100,27 @@ public abstract class AbstractProviderService<T> implements ProviderService<T> {
    @Override
    public final T provides(final RuntimeContext<T> context) throws ProviderException {
 
-	T instance = keepInstanceInRegistry ? getRegistry().get(context.getName()) : null;
+	T instance = keepInstanceInRegistry(context) ? getRegistry().get(context.getName()) : null;
 
 	if (instance == null) {
 	   registerDynamicContext(context);
 	   instance = _provides(context);
 
-	   if (keepInstanceInRegistry) {
+	   if (keepInstanceInRegistry(context)) {
 		getRegistry().put(context.getName(), instance);
 	   }
 	}
 	return instance;
+   }
+
+   /**
+    * must we keep the instance in the registry as unique instance ?
+    * 
+    * @param context
+    * @return
+    */
+   protected boolean keepInstanceInRegistry(RuntimeContext<T> context) {
+	return keepInstanceInRegistry && context.getScope() == Scope.singleton;
    }
 
    /**

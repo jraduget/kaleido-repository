@@ -96,7 +96,7 @@
 		<module>kaleido-spring</module>
 		<module>kaleido-guice</module>
 		<module>kaleido-appengine</module>
-		<!--incoming <module>kaleido-mailing</module> <module>kaleido-reporting</module> -->
+		
 		<module>kaleido-sample</module>
 		<module>kaleido-distrib</module>
 	</modules>

@@ -97,9 +97,5 @@ public @interface Context {
     */
    Parameter[] parameters() default {};
 
-   /**
-    * @return when injected the {@link RuntimeContext}, default is lazy when getting {@link RuntimeContext} field
-    */
-   // When when() default When.LazyGet;
 
 }

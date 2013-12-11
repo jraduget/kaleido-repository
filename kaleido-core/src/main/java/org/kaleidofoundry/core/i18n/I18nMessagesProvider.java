@@ -56,7 +56,7 @@ public class I18nMessagesProvider extends AbstractProviderService<I18nMessages> 
     */
    @Override
    protected Registry<String, I18nMessages> getRegistry() {
-	return null;
+	throw new IllegalStateException("I18nMessages registry is managed by java ResourceBundle api");
    }
 
    /*

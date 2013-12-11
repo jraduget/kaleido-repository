@@ -35,7 +35,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  * @author Jerome RADUGET
  */
 @Declare(I18nMessageBundlePluginName)
-@Provider(value = I18nMessagesProvider.class, singletons = false)
+@Provider(value = I18nMessagesProvider.class)
 @Task(comment = "javadoc description & samples")
 public interface I18nMessages {
 
@@ -48,7 +48,7 @@ public interface I18nMessages {
     * (non-Javadoc)
     * @see java.util.ResourceBundle#getKeys()
     */
-   public Enumeration<String> getKeys();
+   Enumeration<String> getKeys();
 
    /**
     * @param key message code

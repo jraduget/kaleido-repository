@@ -166,8 +166,12 @@ import org.kaleidofoundry.core.util.StringHelper;
 public class RuntimeContext<T> extends AbstractPropertyAccessor {
 
    /** Context property name, used to enable the component listening of configuration parameters changes */
-   public static final String Dynamics = "dynamics";
+   public static final String DynamicsParameter = "dynamics";
 
+   /** Context property name, used to define the {@link Scope} of the configured context. If not defined, the default is {@link Scope#singleton} */
+   public static final String ScopeParameter = "scope";
+   
+   
    /*
     * Even if the field are not final, the class stay immutable.
     * a class instance which have been injected with @Context, can't be modifiable
@@ -393,7 +397,7 @@ public class RuntimeContext<T> extends AbstractPropertyAccessor {
 	// copy static annotation parameters
 	final ConcurrentMap<String, Serializable> parameters = new ConcurrentHashMap<String, Serializable>();
 	// fixed the dynamics status of the context
-	parameters.put(Dynamics, String.valueOf(context.dynamics()));
+	parameters.put(DynamicsParameter, String.valueOf(context.dynamics()));
 
 	for (final Parameter p : context.parameters()) {
 	   parameters.put(p.name(), p.value());
@@ -505,9 +509,18 @@ public class RuntimeContext<T> extends AbstractPropertyAccessor {
     * @return <code>true / false</code>, if not set return <code>true</code>
     */
    public boolean isDynamics() {
-	return getBoolean(Dynamics, true);
+	return getBoolean(DynamicsParameter, true);
    }
 
+   /**
+    * Scope defined in the context configuration
+    * 
+    * @return if not defined, {@link Scope#singleton} will be used
+    */
+   public Scope getScope() {
+	return Scope.valueOf(getString(ScopeParameter, Scope.singleton.name()));
+   }
+   
    /**
     * @param property local property name (without prefix and name)
     * @return value of the given property <br/>

@@ -42,9 +42,9 @@ public @interface Provider {
    Class<? extends ProviderService<?>> value();
 
    /**
-    * @return does instances have to be provides as a singleton. <br/>
-    *         In this case an internal registry instance will be created
+    * @return how the instances have to be provided : as a singleton, as a prototype.... <br/>
+    *         If the singleton is defined, an internal registry instances will be used to keep all the instances
     */
-   boolean singletons() default false;
+   Scope scope() default Scope.prototype;
 
 }

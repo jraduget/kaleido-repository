@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2013 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,18 @@
 package org.kaleidofoundry.core.context;
 
 /**
- * Enumeration use
+ * Scope enumeration of a {@link RuntimeContext}.
+ * This scope can only be defined using a context configuration file.
  * 
  * @author Jerome RADUGET
  */
-public enum When {
+public enum Scope {
 
-   /** Before constructor processing */
-   PreInit,
-   /** After constructor processing */
-   PostInit,
-   /** Before getting field, but only the first time */
-   LazyGet;
+   singleton,
+
+   prototype,
+
+   request,
+
+   session;
 }

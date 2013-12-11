@@ -14,7 +14,7 @@ import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.launcher.junit.KaleidoCdiJunit4ClassRunner;
 
 @RunWith(KaleidoCdiJunit4ClassRunner.class)
-@NamedConfiguration(name = "filestore", uri = "classpath:/configurations/filestore.yaml")
+@NamedConfiguration(name = "filestore", uri = "classpath:/filestores/filestore.yaml")
 public class FileStoreSample {
 
    @Inject

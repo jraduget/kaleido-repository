@@ -58,7 +58,7 @@ public class CacheProvider extends AbstractProviderService<Cache> {
     */
    @Override
    protected Registry<String, Cache> getRegistry() {
-	return null;
+	throw new IllegalStateException("Caches registry is managed by the CacheManager");
    }
 
    /**

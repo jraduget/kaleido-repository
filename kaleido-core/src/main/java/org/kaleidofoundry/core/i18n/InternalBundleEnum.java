@@ -38,7 +38,8 @@ public enum InternalBundleEnum {
    CONTEXT(true, "i18n/context/messages"),
    NAMING(true, "i18n/naming/messages"),
    WEB(true, "i18n/web/messages"),
-   UTIL(true, "i18n/util/messages"), ;
+   UTIL(true, "i18n/util/messages"),
+   MAIL(true, "i18n/mail/messages");
 
    private static Set<String> CustomReservedBundle = Collections.synchronizedSet(new HashSet<String>());
 

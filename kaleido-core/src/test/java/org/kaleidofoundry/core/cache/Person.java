@@ -35,14 +35,14 @@ public class Person implements Serializable, Cloneable {
    private String lastName;
    private String firstName;
    private Date birthdate;
-   private Adress mainAdress;
-   private final List<Adress> adresses;
+   private Address mainAdress;
+   private final List<Address> adresses;
 
    public Person() {
-	adresses = new LinkedList<Adress>();
+	adresses = new LinkedList<Address>();
    }
 
-   public Person(Integer id, String lastName, String firstName, Date birthdate, Adress mainAdress) {
+   public Person(Integer id, String lastName, String firstName, Date birthdate, Address mainAdress) {
 	this();
 	this.id = id;
 	this.lastName = lastName;
@@ -55,7 +55,7 @@ public class Person implements Serializable, Cloneable {
     * @param a
     * @return person instance
     */
-   public Person addAdress(Adress a) {
+   public Person addAdress(Address a) {
 	if (a != null) {
 	   adresses.add(a);
 	}
@@ -66,7 +66,7 @@ public class Person implements Serializable, Cloneable {
     * @param a
     * @return person instance
     */
-   public Person removeAdress(Adress a) {
+   public Person removeAdress(Address a) {
 	if (a != null) {
 	   adresses.remove(a);
 	}
@@ -76,7 +76,7 @@ public class Person implements Serializable, Cloneable {
    /**
     * @return the adresses
     */
-   public List<Adress> getAdresses() {
+   public List<Address> getAdresses() {
 	return adresses;
    }
 
@@ -139,14 +139,14 @@ public class Person implements Serializable, Cloneable {
    /**
     * @return the mainAdress
     */
-   public Adress getMainAdress() {
+   public Address getMainAdress() {
 	return mainAdress;
    }
 
    /**
     * @param mainAdress the mainAdress to set
     */
-   public void setMainAdress(Adress mainAdress) {
+   public void setMainAdress(Address mainAdress) {
 	this.mainAdress = mainAdress;
    }
 

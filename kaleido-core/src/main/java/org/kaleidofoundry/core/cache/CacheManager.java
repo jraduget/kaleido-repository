@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.kaleidofoundry.core.context.Provider;
 import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.context.Scope;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 
@@ -40,7 +41,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  * @see CacheManagerContextBuilder
  */
 @Declare(CacheManagerPluginName)
-@Provider(value = CacheManagerProvider.class, singletons = true)
+@Provider(value = CacheManagerProvider.class, scope=Scope.singleton)
 public interface CacheManager {
 
    /**

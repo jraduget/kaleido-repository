@@ -24,6 +24,7 @@ import java.net.URI;
 import java.net.URL;
 
 import org.kaleidofoundry.core.context.Provider;
+import org.kaleidofoundry.core.context.Scope;
 import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Stateless;
 import org.kaleidofoundry.core.plugin.Declare;
@@ -57,7 +58,7 @@ import org.kaleidofoundry.core.plugin.Declare;
  */
 @Stateless
 @Declare(FileStorePluginName)
-@Provider(value = FileStoreProvider.class, singletons = true)
+@Provider(value = FileStoreProvider.class, scope=Scope.singleton)
 public interface FileStore extends Store<String, ResourceHandler> {
 
    /**

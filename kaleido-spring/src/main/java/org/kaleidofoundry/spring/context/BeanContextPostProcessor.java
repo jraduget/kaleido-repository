@@ -28,18 +28,15 @@ import org.kaleidofoundry.core.context.Provider;
 import org.kaleidofoundry.core.context.ProviderService;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.util.ReflectionHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.support.MergedBeanDefinitionPostProcessor;
-import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * BeanPostProcessor used to inject to a spring bean, its class field annotated @{@link Context} <br/>
+ * BeanPostProcessor used to inject in a spring bean, the fields annotated @{@link Context} <br/>
  * <b>Be careful, if the class field is ever annotated with @{@link Autowired} or @ {@link Inject}, the classic spring bean injection will
  * be
  * used </b><br/>
@@ -52,15 +49,9 @@ import org.springframework.util.ReflectionUtils;
  * 
  * @author Jerome RADUGET
  */
+// http://www.joshlong.com/jl/blogPost/supporting_your_own_field_or_method_injection_annotation_processors_in_spring.html
 @Component
-public class BeanContextPostProcessor implements MergedBeanDefinitionPostProcessor {
-
-   final static Logger LOGGER = LoggerFactory.getLogger(BeanContextPostProcessor.class);
-	   
-   @Override
-   public Object postProcessAfterInitialization(final Object beanInstance, final String beanName) throws BeansException {
-	return beanInstance;
-   }
+public class BeanContextPostProcessor extends AutowiredAnnotationBeanPostProcessor {
 
    @Override
    public Object postProcessBeforeInitialization(final Object beanInstance, final String beanName) throws BeansException {
@@ -69,53 +60,51 @@ public class BeanContextPostProcessor implements MergedBeanDefinitionPostProcess
 
 	for (Field field : fields) {
 	   // @Autowired is injected using spring bean
-	   if (!field.isAnnotationPresent(Autowired.class) && !field.isAnnotationPresent(Inject.class)) {
-	   //if (field.isAnnotationPresent(Context.class)) {
+	   if (field.isAnnotationPresent(Context.class) && !field.isAnnotationPresent(Autowired.class) && !field.isAnnotationPresent(Inject.class)) {
+
 		final Context context = field.getAnnotation(Context.class);
-		if (context != null) {
-		   // do field is a runtime context class
-		   if (field.getType().isAssignableFrom(RuntimeContext.class)) {
+		// do field is a runtime context class
+		if (field.getType().isAssignableFrom(RuntimeContext.class)) {
+		   ReflectionUtils.makeAccessible(field);
+		   ReflectionUtils.setField(field, beanInstance, RuntimeContext.createFrom(context, field.getName(), field.getDeclaringClass()));
+		}
+		// does the plugin interface have a provider specify
+		else if (field.getType().isAnnotationPresent(Provider.class)) {
+
+		   try {
 			ReflectionUtils.makeAccessible(field);
-			ReflectionUtils.setField(field, beanInstance, RuntimeContext.createFrom(context, field.getName(), field.getDeclaringClass()));
-		   }
-		   // does the plugin interface have a provider specify
-		   else if (field.getType().isAnnotationPresent(Provider.class)) {
+			Object fieldValue = field.get(beanInstance);
 
-			try {
-			   ReflectionUtils.makeAccessible(field);
-			   Object fieldValue = field.get(beanInstance);
+			if (fieldValue == null) {
+			   // create provider using annotation meta-information
+			   final Provider provideInfo = field.getType().getAnnotation(Provider.class);
+			   final Constructor<? extends ProviderService<?>> providerConstructor = provideInfo.value().getConstructor(Class.class);
+			   final ProviderService<?> fieldProviderInstance = providerConstructor.newInstance(field.getType());
 
-			   if (fieldValue == null) {
-				// create provider using annotation meta-information
-				final Provider provideInfo = field.getType().getAnnotation(Provider.class);
-				final Constructor<? extends ProviderService<?>> providerConstructor = provideInfo.value().getConstructor(Class.class);
-				final ProviderService<?> fieldProviderInstance = providerConstructor.newInstance(field.getType());
-
-				// invoke provides method with Context annotation meta-informations
-				final Method providesMethod = ReflectionUtils.findMethod(provideInfo.value(), ProviderService.PROVIDES_METHOD, Context.class,
-					String.class, Class.class);
-				// get the provider result
-				fieldValue = ReflectionUtils.invokeMethod(providesMethod, fieldProviderInstance, context, field.getName(), field.getType());
-				// set the field that was not yet injected
-				ReflectionUtils.setField(field, beanInstance, fieldValue);
-			   }
-
-			} catch (IllegalArgumentException e) {
-			   throw new BeanCreationException("Unexpected error during injection", e);
-			} catch (IllegalAccessException e) {
-			   throw new BeanCreationException("Unexpected error during injection", e);
-			} catch (SecurityException e) {
-			   throw new BeanCreationException("Unexpected error during injection", e);
-			} catch (NoSuchMethodException e) {
-			   throw new BeanCreationException("Unexpected error during injection", e);
-			} catch (InstantiationException e) {
-			   throw new BeanCreationException("Unexpected error during injection", e);
-			} catch (InvocationTargetException ite) {
-			   throw new BeanCreationException("", ite.getCause() != null ? ite.getCause() : (ite.getTargetException() != null ? ite.getTargetException()
-				   : ite));
-			} finally {
-
+			   // invoke provides method with Context annotation meta-informations
+			   final Method providesMethod = ReflectionUtils.findMethod(provideInfo.value(), ProviderService.PROVIDES_METHOD, Context.class,
+				   String.class, Class.class);
+			   // get the provider result
+			   fieldValue = ReflectionUtils.invokeMethod(providesMethod, fieldProviderInstance, context, field.getName(), field.getType());
+			   // set the field that was not yet injected
+			   ReflectionUtils.setField(field, beanInstance, fieldValue);
 			}
+
+		   } catch (IllegalArgumentException e) {
+			throw new BeanCreationException("Unexpected error during injection", e);
+		   } catch (IllegalAccessException e) {
+			throw new BeanCreationException("Unexpected error during injection", e);
+		   } catch (SecurityException e) {
+			throw new BeanCreationException("Unexpected error during injection", e);
+		   } catch (NoSuchMethodException e) {
+			throw new BeanCreationException("Unexpected error during injection", e);
+		   } catch (InstantiationException e) {
+			throw new BeanCreationException("Unexpected error during injection", e);
+		   } catch (InvocationTargetException ite) {
+			throw new BeanCreationException("", ite.getCause() != null ? ite.getCause() : (ite.getTargetException() != null ? ite.getTargetException()
+				: ite));
+		   } finally {
+
 		   }
 		}
 	   }
@@ -125,8 +114,8 @@ public class BeanContextPostProcessor implements MergedBeanDefinitionPostProcess
    }
 
    @Override
-   @SuppressWarnings("rawtypes")
-   public void postProcessMergedBeanDefinition(final RootBeanDefinition beanDefinition, final Class beanClass, final String beanName) {
+   public Object postProcessAfterInitialization(final Object beanInstance, final String beanName) throws BeansException {
+	return beanInstance;
    }
 
 }

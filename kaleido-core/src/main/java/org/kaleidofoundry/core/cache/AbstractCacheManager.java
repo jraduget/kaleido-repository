@@ -115,7 +115,7 @@ public abstract class AbstractCacheManager implements CacheManager {
 			fileStoreUri = baseUri + fileStoreUri;
 		   }
 		   fileStore = FileStoreFactory.provides(baseUri, fileStoreContext);
-		} else {		  
+		} else {
 		   fileStore = FileStoreFactory.provides(fileStoreUri, new FileStoreContextBuilder("cachemanagers." + context.getName() + ".unnamed").build());
 		}
 
@@ -354,8 +354,7 @@ public abstract class AbstractCacheManager implements CacheManager {
     * @param configurationUri
     * @return InputStream of the input configuration url, or null if none found
     * @throws CacheException
-    */   
-   @SuppressWarnings("resource")
+    */
    protected InputStream getConfiguration(final String configurationUri) throws CacheException {
 	if (singleFileStore != null) {
 	   try {

@@ -152,7 +152,7 @@ public abstract class AbstractModule<T> extends com.google.inject.AbstractModule
 	final Provider declarePlugin = c.getAnnotation(Provider.class);
 
 	if (declarePlugin != null) {
-	   return declarePlugin.singletons() ? Scopes.SINGLETON : Scopes.NO_SCOPE;
+	   return declarePlugin.scope()==org.kaleidofoundry.core.context.Scope.singleton ? Scopes.SINGLETON : Scopes.NO_SCOPE;
 	} else {
 	   return Scopes.NO_SCOPE;
 	}
