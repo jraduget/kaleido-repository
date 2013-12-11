@@ -14,6 +14,7 @@ KaleidoFoundry project [![Build Status](https://buildhive.cloudbees.com/job/kale
 
 Kaleido's components are based on a runtime `@Context` **injection mecanism**. You benefit a **dynamic and centralized** configuration management in your modules (across clusters nodes...). It fits with your favorite IOC like Java `CDI`, `Spring` framework, `Guice`, or can be used standalone with aspectJ...
 
+The project wiki is for the moment on google code : [KaleidoFoundryWiki]
 
 Requirements
 ------------
@@ -22,3 +23,4 @@ Requirements
 
 
 [KaleidoFoundry]: http://http://www.kaleidofoundry.org
+[KaleidoFoundryWiki]: https://code.google.com/p/kaleido-foundry/wiki/Features
