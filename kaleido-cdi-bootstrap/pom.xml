@@ -7,8 +7,8 @@
 		<version>0.9.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>kaleido-launcher</artifactId>
-	<name>KaleidoFoundry cdi launcher extension</name>
+	<artifactId>kaleido-cdi-bootstrap</artifactId>
+	<name>KaleidoFoundry cdi bootstrap extension</name>
 	<description>Benefit from CDI in an unmanaged environment like junit, tomcat, jetty, or java main program</description>
 	
 	<packaging>jar</packaging>

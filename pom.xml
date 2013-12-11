@@ -92,10 +92,10 @@
 		<!-- core extensions -->
 		<module>kaleido-jee6</module>
 		<module>kaleido-core</module>
-		<module>kaleido-launcher</module>
 		<module>kaleido-spring</module>
 		<module>kaleido-guice</module>
 		<module>kaleido-appengine</module>
+		<module>kaleido-cdi-bootstrap</module>
 		
 		<module>kaleido-sample</module>
 		<module>kaleido-distrib</module>
