@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 import org.kaleidofoundry.launcher.junit.KaleidoCdiJunit4ClassRunner;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @RunWith(KaleidoCdiJunit4ClassRunner.class)
 public class MyServiceJavaEE6WithRunnerTest extends AbstractMyServiceTest {

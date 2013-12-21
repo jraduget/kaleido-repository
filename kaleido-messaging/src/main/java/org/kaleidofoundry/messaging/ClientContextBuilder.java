@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class ClientContextBuilder extends AbstractRuntimeContextBuilder<Client> {
 
@@ -46,7 +46,7 @@ public class ClientContextBuilder extends AbstractRuntimeContextBuilder<Client> 
 
    /** Full date format for date handling in message */
    public static final String MESSAGE_FULL_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
-   
+
    /** RDV listener subject */
    public static final String RDV_SUBJECTS = "tibco.rdv.sujects";
 

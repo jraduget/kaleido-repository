@@ -32,7 +32,7 @@ import org.kaleidofoundry.launcher.UnmanagedCdiInjector;
 /**
  * Use it when you want to use @Inject CDI in a servlet unmanaged env.
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class BaseServletWithCDI extends BaseServlet {
 

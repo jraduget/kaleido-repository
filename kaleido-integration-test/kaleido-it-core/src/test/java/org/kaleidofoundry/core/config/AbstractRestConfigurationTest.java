@@ -40,7 +40,7 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 /**
  * {@link ConfigurationController} integration test
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public abstract class AbstractRestConfigurationTest extends Assert {
 

@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,18 +41,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Client pour test EjbMailSender (Ejb gérant l'envoi de mail direct)
+ * Client pour test EjbMailSender (Ejb gï¿½rant l'envoi de mail direct)
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class EjbMailSenderClient {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(EjbMailSenderClient.class);
 
-   /** Nom du contexte jndi à utiliser dans le fichier de config */
+   /** Nom du contexte jndi ï¿½ utiliser dans le fichier de config */
    static final String JndiContextName = "jboss";
 
-   /** Nom jndi de l'ejb gérant l'envoi de mail */
+   /** Nom jndi de l'ejb gï¿½rant l'envoi de mail */
    static final String EjbMailSenderName = "ejbMailSender";
 
    public static void main(final String[] args) {
@@ -70,7 +70,7 @@ public class EjbMailSenderClient {
 	   // Context de connection JNDI
 	   final JndiContext context = new JndiContext(JndiContextName, config);
 
-	   // Locator pour le service (à n'instancier qu'une fois généralement.....)
+	   // Locator pour le service (ï¿½ n'instancier qu'une fois gï¿½nï¿½ralement.....)
 	   final JndiResourceLocator<EjbMailSenderHome> locator = new JndiResourceLocator<EjbMailSenderHome>(context);
 
 	   // Home de l'ejb

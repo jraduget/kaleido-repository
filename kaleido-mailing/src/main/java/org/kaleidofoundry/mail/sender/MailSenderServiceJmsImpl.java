@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,9 +35,9 @@ import org.kaleidofoundry.mail.MailMessageBean;
 import org.kaleidofoundry.mail.session.MailSessionContext;
 
 /**
- * MailSenderService, implémentation ejb
+ * MailSenderService, implï¿½mentation ejb
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class MailSenderServiceJmsImpl implements MailSenderService {
 
@@ -54,7 +54,7 @@ public class MailSenderServiceJmsImpl implements MailSenderService {
     */
    public MailSenderServiceJmsImpl(final String jndiQueueName, final String jndiQueueFactoryName,
 	   final JndiContext jndiContext, final boolean jmsSessionTransacted) throws JndiResourceException {
-	// Locator pour le service (à n'instancier qu'une fois généralement.....)
+	// Locator pour le service (ï¿½ n'instancier qu'une fois gï¿½nï¿½ralement.....)
 	final JndiResourceLocator<QueueConnectionFactory> locatorQueueFactory = new JndiResourceLocator<QueueConnectionFactory>(
 		jndiContext);
 
@@ -66,7 +66,7 @@ public class MailSenderServiceJmsImpl implements MailSenderService {
 	// Queue JMS
 	queue = locatorQueue.lookup(jndiQueueName, Queue.class);
 
-	// Transaction gérée ou non ?
+	// Transaction gï¿½rï¿½e ou non ?
 	sessionTransacted = jmsSessionTransacted;
    }
 

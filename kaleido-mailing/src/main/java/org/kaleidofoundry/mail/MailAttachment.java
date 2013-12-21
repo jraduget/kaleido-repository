@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,33 +19,27 @@ import java.io.Serializable;
 import java.net.URL;
 
 /**
- * Pièce jointe d'un mail.
- * On peut spécifier un chemin système
+ * Piï¿½ce jointe d'un mail.
+ * On peut spï¿½cifier un chemin systï¿½me
  * ou
- * une URL java pour localiser la pièce jointe
- * si il est spécifié, le chemin système est utilisé par défaut
+ * une URL java pour localiser la piï¿½ce jointe
+ * si il est spï¿½cifiï¿½, le chemin systï¿½me est utilisï¿½ par dï¿½faut
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public interface MailAttachment extends Serializable {
 
-   /** @return Nom de la pièce jointe */
+   /** @return attachment name */
    String getName();
 
-   /** @return Type mime de la pièce jointe */
+   /** @return attachment content type */
    String getContentType();
 
-   /** @return Chemin complet vers la pièce jointe */
+   /** @return attachment path */
    String getContentPath();
 
-   /** @return URL vers la pièce jointe */
+   /** @return attachment url */
    URL getContentURL();
 
-   void setName(String name);
-
-   void setContentType(String contentType);
-
-   void setContentPath(String contentPath);
-
-   void setContentURL(URL contentURL);
+ 
 }

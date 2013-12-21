@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.kaleidofoundry.core.lang.annotation.Immutable;
 /**
  * Ancestor exception for store module
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Immutable
 public class ResourceException extends IOException implements I18nException {

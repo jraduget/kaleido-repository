@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package org.kaleidofoundry.mail;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public interface MailTestConstants {
 
@@ -27,10 +27,10 @@ public interface MailTestConstants {
    public static final String MAIL_SUBJECT = "Kaleido integration test subject";
    public static final String MAIL_BODY_HTML = "<b>Kaleido integration test body</b><br/>Hello world!";
 
-   /** Fichier de configuration utilisé */
+   /** Fichier de configuration utilisï¿½ */
    public static final String CONFIG_RESOURCE = "classpath:/org/kaleidofoundry/mail/mailSession.properties";
 
-   /** Nom de context à utiliser pour récupérer les config de la session mail */
+   /** Nom de context ï¿½ utiliser pour rï¿½cupï¿½rer les config de la session mail */
    public static final String LOCAL_MAIL_CONTEXT_NAME = "kaleido-local";
 
 }

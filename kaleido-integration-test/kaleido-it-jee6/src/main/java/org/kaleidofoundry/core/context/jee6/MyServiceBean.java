@@ -50,7 +50,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Stateless(mappedName = "ejb/MyServiceBean6")
 public class MyServiceBean implements MyServiceRemoteBean {

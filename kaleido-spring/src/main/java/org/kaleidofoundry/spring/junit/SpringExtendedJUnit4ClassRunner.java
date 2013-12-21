@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 /**
  * {@link SpringJUnit4ClassRunner} extension for kaleido
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  *
  */
 public class SpringExtendedJUnit4ClassRunner extends SpringJUnit4ClassRunner {

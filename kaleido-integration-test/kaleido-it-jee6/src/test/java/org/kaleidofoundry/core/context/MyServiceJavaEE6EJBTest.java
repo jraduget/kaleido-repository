@@ -30,7 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class MyServiceJavaEE6EJBTest implements MyServiceTest {
 

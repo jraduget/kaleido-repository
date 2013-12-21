@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 /**
  * Annotation to inject many configuration resources {@link NamedConfiguration}
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Documented
 @Target({ TYPE })

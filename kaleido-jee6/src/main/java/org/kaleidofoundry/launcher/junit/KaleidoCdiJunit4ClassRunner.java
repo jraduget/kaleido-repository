@@ -68,7 +68,7 @@ import org.kaleidofoundry.launcher.UnmanagedCdiInjector;
  * 
  * </p>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class KaleidoCdiJunit4ClassRunner extends BlockJUnit4ClassRunner {
 

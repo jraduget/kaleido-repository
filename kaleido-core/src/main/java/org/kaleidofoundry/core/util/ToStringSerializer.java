@@ -9,7 +9,7 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 /**
  * A to string instance serializer interface
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public interface ToStringSerializer {
 

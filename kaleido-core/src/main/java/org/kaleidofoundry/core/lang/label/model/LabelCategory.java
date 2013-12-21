@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * Use to classify label items by category
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @XmlType
 public enum LabelCategory implements Serializable {

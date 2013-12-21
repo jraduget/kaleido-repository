@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
 import org.kaleidofoundry.messaging.rdv.RdvTransportTypeEnum;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class TransportContextBuilder extends AbstractRuntimeContextBuilder<Transport> {
 
@@ -129,11 +129,11 @@ public class TransportContextBuilder extends AbstractRuntimeContextBuilder<Trans
    public TransportContextBuilder(String name) {
 	super(name);
    }
-   
+
    public TransportContextBuilder withProvider(final String provider) {
 	getContextParameters().put(TRANSPORT_PROVIDER, provider);
 	return this;
-   }   
+   }
 
    public TransportContextBuilder withConnectionFactoryUrl(final String connectionFactoryUrl) {
 	getContextParameters().put(JMS_CONNECTION_FACTORY_URL, connectionFactoryUrl);

@@ -65,7 +65,7 @@ import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
  * 
  * </p>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class KaleidoJunit4ClassRunner extends BlockJUnit4ClassRunner {
 

@@ -21,7 +21,7 @@ import java.lang.annotation.Annotation;
 /**
  * {@link Context} creator helper
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public abstract class ContextHelper {
 

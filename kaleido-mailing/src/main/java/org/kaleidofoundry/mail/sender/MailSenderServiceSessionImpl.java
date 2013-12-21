@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,9 +45,9 @@ import org.kaleidofoundry.mail.session.MailSessionFactory;
 import org.kaleidofoundry.mail.session.MailSessionService;
 
 /**
- * Implémentation MailSenderService
+ * Implï¿½mentation MailSenderService
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 class MailSenderServiceSessionImpl implements MailSenderService {
 
@@ -68,7 +68,7 @@ class MailSenderServiceSessionImpl implements MailSenderService {
    }
 
    /**
-    * @return Accésseur au service qui donne un session
+    * @return Accï¿½sseur au service qui donne un session
     */
    protected MailSessionService getMailSessionService() {
 	if (sessionService == null) throw new IllegalStateException("sessionService is null");
@@ -90,7 +90,7 @@ class MailSenderServiceSessionImpl implements MailSenderService {
 	boolean hasIncorrectAddress = false;
 	boolean hasAdress = false;
 
-	// Si From / Emetteur, non renseigné, erreur
+	// Si From / Emetteur, non renseignï¿½, erreur
 	if (message.getFromAdress() == null) {
 	   final I18nMessages messages = I18nMessagesFactory.provides(I18nRessource);
 	   throw new AddressException(messages.getMessage("mail.service.fromadress.none"));
@@ -108,10 +108,10 @@ class MailSenderServiceSessionImpl implements MailSenderService {
 	// Type et sous-type du corps du message
 	messageBodyPart.setContent(message.getContent(), message.getContentType() + "; charset=" + message.getCharSet());
 
-	// Priorité
+	// Prioritï¿½
 	mimeMessage.addHeaderLine("X-Priority: " + String.valueOf(message.getPriority()));
 
-	// Ajout de la première partie du message dans un objet Multipart
+	// Ajout de la premiï¿½re partie du message dans un objet Multipart
 	multipart.addBodyPart(messageBodyPart);
 
 	// To Adresses
@@ -190,7 +190,7 @@ class MailSenderServiceSessionImpl implements MailSenderService {
 	   }
 	}
 
-	// Ajout du contenu à l'enveloppe
+	// Ajout du contenu ï¿½ l'enveloppe
 	mimeMessage.setContent(multipart);
 
 	// Envoie du message
@@ -201,7 +201,7 @@ class MailSenderServiceSessionImpl implements MailSenderService {
 	   throw new MessagingException(messages.getMessage("mail.service.adress.none"));
 	}
 
-	// Après envoie, si erreur d'adresse présente, on propage quand même l'exception
+	// Aprï¿½s envoie, si erreur d'adresse prï¿½sente, on propage quand mï¿½me l'exception
 	if (hasIncorrectAddress) {
 	   final I18nMessages messages = I18nMessagesFactory.provides(I18nRessource);
 	   throw new AddressException(messages.getMessage("mail.service.adress.invalid"));

@@ -31,7 +31,7 @@ import org.kaleidofoundry.core.store.ResourceException;
 /**
  * Test {@link ConfigurationController} with a configuration that have been registered and whose meta model have not been persisted
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class ConfigurationManager03Test extends AbstractConfigurationManagerTest {
 

@@ -32,7 +32,7 @@ import org.kaleidofoundry.core.store.ResourceNotFoundMapper;
 /**
  * Rest application servlet used to exposed REST resources
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class RestResourcesApp extends Application {
 

@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.kaleidofoundry.core.lang.annotation.Nullable;
  * application.modules=module1 module2
  * </code>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class ExtendedProperties extends Properties {
 

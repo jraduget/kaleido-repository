@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.kaleidofoundry.core.plugin.Declare;
 /**
  * Messages producer
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Declare(MessagingConstants.PRODUCER_PLUGIN)
 public interface Producer extends Client {
@@ -30,8 +30,8 @@ public interface Producer extends Client {
    /**
     * @return producer name
     */
-   String getName();        
-   
+   String getName();
+
    /**
     * @param message
     * @throws TransportException
@@ -46,13 +46,13 @@ public interface Producer extends Client {
     * @throws MessagingException
     */
    void send(Message message, long timeout) throws MessagingException;
-   
+
    /**
     * @param messages
     * @throws TransportException
     */
    void send(Collection<Message> messages) throws MessagingException;
-   
+
    /**
     * Send the message (with a maximum time)
     * 
@@ -61,13 +61,12 @@ public interface Producer extends Client {
     * @throws MessagingException
     */
    void send(Collection<Message> messages, long timeout) throws MessagingException;
-   
+
    /**
     * Stop the producer
     * 
     * @throws TransportException
     */
-   void stop() throws TransportException;   
-   
-   
+   void stop() throws TransportException;
+
 }

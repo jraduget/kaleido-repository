@@ -26,7 +26,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 /**
  * Test @{@link Autowired} kaleido modules injection (declared in a xml spring bean file)
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @RunWith(value = SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/xml/springContext.xml" })

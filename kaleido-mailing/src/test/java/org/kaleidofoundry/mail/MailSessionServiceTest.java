@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Test MailSessionService
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class MailSessionServiceTest {
 
@@ -75,7 +75,7 @@ public class MailSessionServiceTest {
 
 		Transport.send(message);
 
-		LOGGER.info("Message envoyé.");
+		LOGGER.info("Message envoyï¿½.");
 
 	   } catch (final MessagingException mee) {
 		LOGGER.error(mee.getMessage(), mee);

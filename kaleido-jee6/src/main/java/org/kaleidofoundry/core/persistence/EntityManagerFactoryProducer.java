@@ -59,7 +59,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * }
  * </pre>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class EntityManagerFactoryProducer {
 

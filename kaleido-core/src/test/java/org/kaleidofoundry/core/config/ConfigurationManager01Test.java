@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Test {@link ConfigurationController} with a configuration model that have been persisted, but not registered
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class ConfigurationManager01Test extends AbstractConfigurationManagerTest {
 

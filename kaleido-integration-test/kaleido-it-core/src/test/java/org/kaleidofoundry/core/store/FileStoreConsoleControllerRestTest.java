@@ -35,7 +35,7 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class FileStoreConsoleControllerRestTest extends Assert {
 

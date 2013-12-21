@@ -23,7 +23,7 @@ import javax.ws.rs.ext.Provider;
 /**
  * rest exception mapper for {@link FileStoreNotFoundException}
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Provider
 public class FileStoreNotFoundMapper implements ExceptionMapper<FileStoreNotFoundException> {

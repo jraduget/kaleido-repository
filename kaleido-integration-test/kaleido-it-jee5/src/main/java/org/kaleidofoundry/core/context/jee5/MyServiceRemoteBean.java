@@ -18,7 +18,7 @@ package org.kaleidofoundry.core.context.jee5;
 import javax.ejb.Remote;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Remote
 public interface MyServiceRemoteBean extends MyServiceLocalBean {

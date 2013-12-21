@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,17 @@
 package org.kaleidofoundry.messaging;
 
 /**
- * 
- * @author Jerome RADUGET
- *
+ * @author jraduget
  */
 public class UsageStatistics {
 
    private long messageOkCount;
    private long messageKoCount;
    private long messageSkippedCount;
-   
-   public UsageStatistics() {	
+
+   public UsageStatistics() {
    }
-   
+
    public UsageStatistics(long messageOkCount, long messageKoCount, long messageSkippedCount) {
 	super();
 	this.messageOkCount = messageOkCount;
@@ -40,38 +38,42 @@ public class UsageStatistics {
     * @return the messageOkCount
     */
    public long getMessageOkCount() {
-      return messageOkCount;
+	return messageOkCount;
    }
+
    /**
     * @param messageOkCount the messageOkCount to set
     */
    public void setMessageOkCount(long messageOkCount) {
-      this.messageOkCount = messageOkCount;
+	this.messageOkCount = messageOkCount;
    }
+
    /**
     * @return the messageKoCount
     */
    public long getMessageKoCount() {
-      return messageKoCount;
+	return messageKoCount;
    }
+
    /**
     * @param messageKoCount the messageKoCount to set
     */
    public void setMessageKoCount(long messageKoCount) {
-      this.messageKoCount = messageKoCount;
+	this.messageKoCount = messageKoCount;
    }
+
    /**
     * @return the messageSkippedCount
     */
    public long getMessageSkippedCount() {
-      return messageSkippedCount;
+	return messageSkippedCount;
    }
+
    /**
     * @param messageSkippedCount the messageSkippedCount to set
     */
    public void setMessageSkippedCount(long messageSkippedCount) {
-      this.messageSkippedCount = messageSkippedCount;
+	this.messageSkippedCount = messageSkippedCount;
    }
-   
-   
+
 }

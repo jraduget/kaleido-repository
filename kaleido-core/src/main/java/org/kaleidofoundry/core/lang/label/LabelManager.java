@@ -26,7 +26,7 @@ import org.kaleidofoundry.core.lang.label.model.Labels;
 /**
  * Label manager is used to categorize some labels items, like configuration properties, i18n messages... <br/>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class LabelManager {
 

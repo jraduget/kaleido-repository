@@ -29,7 +29,7 @@ import org.kaleidofoundry.core.lang.ErrorCode;
  * @see AbstractI18nException
  * @see AbstractI18nRuntimeException
  * @see AbstractI18nNullPointerException
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public interface I18nException extends ErrorCode, Serializable {
 

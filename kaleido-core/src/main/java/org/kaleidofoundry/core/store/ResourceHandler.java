@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2010 the original author or authors
+ * Copyright 2008-2014 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
  * Once {@link FileStore} client had get a ({@link ResourceHandler}), you have to free it, by calling {@link #close()} <br/>
  * Be careful, if you use {@link ResourceHandler#getInputStream()} : this class is not thread safe. Use a {@link ThreadLocal} to do this. <br/>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @NotThreadSafe
 public interface ResourceHandler extends Serializable {

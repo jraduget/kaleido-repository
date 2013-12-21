@@ -26,7 +26,7 @@ import java.net.URI;
 /**
  * Annotation to inject configuration resources
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Documented
 @Target({ TYPE })

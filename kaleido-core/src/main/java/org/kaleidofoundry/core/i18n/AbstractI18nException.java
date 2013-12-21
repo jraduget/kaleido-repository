@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2010 the original author or authors
+ * Copyright 2008-2014 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import java.util.Locale;
  * This exception can be extended and used in your service layer error, web service layer error (fault code...)
  * </p>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  * @see I18nMessagesFactory
  */
 public abstract class AbstractI18nException extends Exception implements I18nException {

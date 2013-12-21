@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,9 +48,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Gestionnaire d'envoi de mail via écoute sur queue JMS
+ * Gestionnaire d'envoi de mail via ï¿½coute sur queue JMS
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class EjbMailJmsReceiver implements MessageDrivenBean, MessageListener {
 
@@ -59,25 +59,25 @@ public class EjbMailJmsReceiver implements MessageDrivenBean, MessageListener {
    /** Logger du bean */
    protected static final Logger logger = LoggerFactory.getLogger(EjbMailJmsReceiver.class);
 
-   /** Nom du fichier de configuration de l'ejb par défaut */
+   /** Nom du fichier de configuration de l'ejb par dï¿½faut */
    public final static String ConfigurationName = "classpath:/META-INF/jmsReceiver.properties";
 
-   /** Nom par défaut de l'ejb envoyant les mail */
+   /** Nom par dï¿½faut de l'ejb envoyant les mail */
    public final static String DefaultEjbMailSender = "ejbMailSender";
-   /** Nom par défaut de la queue de mail en erreur */
+   /** Nom par dï¿½faut de la queue de mail en erreur */
    public final static String DefaultQueueError = "queue/queueMailSessionError";
-   /** Nom par défaut de la queue de message non destiné */
+   /** Nom par dï¿½faut de la queue de message non destinï¿½ */
    public final static String DefaultQueueBin = "queue/queueMailSessionBin";
-   /** Nom par défaut de la queue de message non destiné */
+   /** Nom par dï¿½faut de la queue de message non destinï¿½ */
    public final static String DefaultQueueConnectionFactory = "QueueConnectionFactory";
 
-   /** Nom de la propriété donnant le nom de l'ejb envoyant les mail */
+   /** Nom de la propriï¿½tï¿½ donnant le nom de l'ejb envoyant les mail */
    public final static String PropertyEjbMailSender = "ejb.mailsender.name";
-   /** Nom de la propriété donnant le nom de la queue d'erreur eventuelle */
+   /** Nom de la propriï¿½tï¿½ donnant le nom de la queue d'erreur eventuelle */
    public final static String PropertyQueueError = "queue.error.name";
-   /** Nom de la propriété donnant le nom de la queue poubelle eventuelle */
+   /** Nom de la propriï¿½tï¿½ donnant le nom de la queue poubelle eventuelle */
    public final static String PropertyQueueBin = "queue.bin.name";
-   /** Nom de la propriété donnant le nom de la queue factory */
+   /** Nom de la propriï¿½tï¿½ donnant le nom de la queue factory */
    public final static String PropertyQueueConnectionFactory = "queue.connection.factory.name";
 
    // Ejb Context
@@ -111,7 +111,7 @@ public class EjbMailJmsReceiver implements MessageDrivenBean, MessageListener {
 	   logger.warn(cfe.getMessage() + ". The default configuration will be used.");
 	}
 
-	// Si une configuration est trouvé
+	// Si une configuration est trouvï¿½
 	if (config != null) {
 	   ejbMailSender = config.getString(PropertyEjbMailSender);
 	   queueError = config.getString(PropertyQueueError);
@@ -125,7 +125,7 @@ public class EjbMailJmsReceiver implements MessageDrivenBean, MessageListener {
 		queueConnectionFactory = DefaultQueueConnectionFactory;
 	   }
 
-	   // Sinon option par défaut
+	   // Sinon option par dï¿½faut
 	} else {
 	   ejbMailSender = DefaultEjbMailSender;
 	   queueError = DefaultQueueError;
@@ -175,7 +175,7 @@ public class EjbMailJmsReceiver implements MessageDrivenBean, MessageListener {
 		   logger.debug("onMessage, this=" + hashCode() + ", MailMessage=" + mail.toString());
 		}
 
-		// Si message n'est pas "destiné"
+		// Si message n'est pas "destinï¿½"
 	   } else {
 		// Reroutage file poubelle ?
 		onMessageBin(message, null);
@@ -228,14 +228,14 @@ public class EjbMailJmsReceiver implements MessageDrivenBean, MessageListener {
 	   try {
 		redirectMessage(message, th, getJmsQueueErrorName());
 	   } catch (final Exception e) {
-		// Transaction à annuler ?
+		// Transaction ï¿½ annuler ?
 		// context.setRollbackOnly();
 	   }
 	}
    }
 
    /**
-    * Traitement des messages non désirés
+    * Traitement des messages non dï¿½sirï¿½s
     * 
     * @param message
     * @param th exception eventuelle
@@ -248,14 +248,14 @@ public class EjbMailJmsReceiver implements MessageDrivenBean, MessageListener {
 	   try {
 		redirectMessage(message, th, getJmsQueueBinName());
 	   } catch (final Exception e) {
-		// Transaction à annuler ?
+		// Transaction ï¿½ annuler ?
 	   }
 	}
    }
 
    /**
-    * @return Accès à l'ejb qui envoie les mail
-    * @param ejbMailSenderName Nom de l'ejb (accès local) qui envoi les mail
+    * @return Accï¿½s ï¿½ l'ejb qui envoie les mail
+    * @param ejbMailSenderName Nom de l'ejb (accï¿½s local) qui envoi les mail
     * @throws Exception
     */
    protected EjbMailSender createEjbMailSender(final String ejbMailSenderName) throws Exception {
@@ -303,14 +303,14 @@ public class EjbMailJmsReceiver implements MessageDrivenBean, MessageListener {
    }
 
    /**
-    * @return Nom JNDI de la queue JMS utilisée pour les messages rejetés
+    * @return Nom JNDI de la queue JMS utilisï¿½e pour les messages rejetï¿½s
     */
    protected String getJmsQueueErrorName() {
 	return queueError;
    }
 
    /**
-    * @return Nom JNDI de la queue JMS utilisée pour les messages poubelle
+    * @return Nom JNDI de la queue JMS utilisï¿½e pour les messages poubelle
     */
    protected String getJmsQueueBinName() {
 	return queueBin;

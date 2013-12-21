@@ -23,7 +23,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class NumberHelperTest extends Assert {
 

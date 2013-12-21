@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,15 +53,14 @@ import com.tibco.tibrv.TibrvMsg;
 /**
  * Producer for Tibco RDV
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Declare(MessagingConstants.RDV_PRODUCER_PLUGIN)
 public class RdvProducer extends AbstractProducer {
 
    private final List<String> rdvSubjectList;
    private final RdvTransport transport;
-   
-   
+
    /**
     * @param context
     */
@@ -85,21 +84,18 @@ public class RdvProducer extends AbstractProducer {
     */
    protected void checkContext(final RuntimeContext<Producer> context) throws TransportException {
 	if (StringHelper.isEmpty(context.getString(RDV_SUBJECTS))) { throw new EmptyContextParameterException(RDV_SUBJECTS, context); }
-	
-	if (!(getTransport() instanceof RdvTransport)) { throw new IllegalContextParameterException(TRANSPORT_REF,
-		context.getString(TRANSPORT_REF), context, MESSAGING_BUNDLE.getMessage("messaging.consumer.rdv.transport.illegal",
-			context.getString(TRANSPORT_REF))); }	
-   }
 
+	if (!(getTransport() instanceof RdvTransport)) { throw new IllegalContextParameterException(TRANSPORT_REF, context.getString(TRANSPORT_REF), context,
+		MESSAGING_BUNDLE.getMessage("messaging.consumer.rdv.transport.illegal", context.getString(TRANSPORT_REF))); }
+   }
 
    @Override
    public void send(Collection<Message> messages) throws MessagingException {
 	for (Message message : messages) {
 	   send(message);
-	}	
+	}
    }
-   
-   
+
    @Override
    public void send(final Message message) throws MessagingException {
 
@@ -118,7 +114,7 @@ public class RdvProducer extends AbstractProducer {
 		   }
 		}
 
-		// Message ID and type		
+		// Message ID and type
 		rvMessage.add(MESSAGE_ID_FIELD, UUID.randomUUID().toString(), TibrvMsg.STRING);
 		rvMessage.add(MESSAGE_TYPE_FIELD, message.getType().getCode(), TibrvMsg.STRING);
 
@@ -175,7 +171,7 @@ public class RdvProducer extends AbstractProducer {
 
 		// debug facilities
 		debugMessage(message);
-		
+
 		// Send the request without blocking
 		transport.getRdvTransport().send(rvMessage);
 

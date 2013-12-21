@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Use it when you want to use CDI in a unmanaged env. (java main program, ...)
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class UnmanagedCdiInjector {
 

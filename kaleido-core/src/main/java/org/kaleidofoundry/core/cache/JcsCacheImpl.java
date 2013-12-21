@@ -30,7 +30,7 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Declare(value = JcsCachePluginName)
 public class JcsCacheImpl<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> {

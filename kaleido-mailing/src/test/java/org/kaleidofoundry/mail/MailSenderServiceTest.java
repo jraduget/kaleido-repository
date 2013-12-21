@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,16 +45,16 @@ import org.slf4j.LoggerFactory;
 /**
  * Test MailSenderService
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class MailSenderServiceTest {
 
    static final Logger LOGGER = LoggerFactory.getLogger(MailSenderServiceTest.class);
 
-   /** Nom du contexte jndi à utiliser dans le fichier de config */
+   /** Nom du contexte jndi ï¿½ utiliser dans le fichier de config */
    static final String JNDI_CONTEXT_NAME = "jboss";
 
-   /** Nom jndi de l'ejb gérant l'envoi de mail */
+   /** Nom jndi de l'ejb gï¿½rant l'envoi de mail */
    static final String EJBMAIL_SENDER_NAME = "ejbMailSender";
 
    /** Nom jndi de la QueueConnectionFactory JMS */
@@ -78,8 +78,8 @@ public class MailSenderServiceTest {
 	   message.getToAdress().add(TO_ADRESS);
 	   message.getCcAdress().add(CC_ADRESS);
 
-	   // Fichiers attachés eventuels
-	   // TODO : dépacer attachment test dans MailTestConstatns
+	   // Fichiers attachï¿½s eventuels
+	   // TODO : dï¿½pacer attachment test dans MailTestConstatns
 	   message.addAttachment("image-mail-test.jpg", new URL("http://www.kaleido.fr/images/image-mail-test.jpg"));
 	   // message.addAttachment("image.bmp", "C:\\WINDOWS\\Zapotec.bmp");
 	   // message.addAttachment("new.doc", "C:\\WINDOWS\\SHELLNEW\\WINWORD8.doc");
@@ -146,7 +146,7 @@ public class MailSenderServiceTest {
 	// MailSessionContext, instanciation et chargement
 	mailContext = new MailSessionContext(LOCAL_MAIL_CONTEXT_NAME, config);
 
-	// Factory pour obtenir le service et pour créer un message
+	// Factory pour obtenir le service et pour crï¿½er un message
 	mailService = MailSenderFactory.createSessionService(mailContext);
 
 	mailService.send(message);

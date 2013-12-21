@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * Abstract Message
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public abstract class AbstractMessage implements Message {
 
@@ -31,18 +31,17 @@ public abstract class AbstractMessage implements Message {
    private String correlationId;
    private final Map<String, Object> parameters;
 
-   public AbstractMessage(final Map<String, Object> parameters) {	
+   public AbstractMessage(final Map<String, Object> parameters) {
 	this.parameters = new HashMap<String, Object>();
 	if (parameters != null) {
 	   this.parameters.putAll(parameters);
 	}
    }
-   
+
    public AbstractMessage(String correlationId, Map<String, Object> parameters) {
 	this(parameters);
-	this.correlationId = correlationId;	
+	this.correlationId = correlationId;
    }
-
 
    public String getProviderId() {
 	return providerId;
@@ -51,17 +50,17 @@ public abstract class AbstractMessage implements Message {
    public void setProviderId(String id) {
 	this.providerId = id;
    }
-   
+
    public String getCorrelationId() {
-      return correlationId;
+	return correlationId;
    }
 
    public void setCorrelationId(String correlationId) {
-      this.correlationId = correlationId;
+	this.correlationId = correlationId;
    }
 
    public Map<String, Object> getParameters() {
-	return  Collections.unmodifiableMap(parameters);
+	return Collections.unmodifiableMap(parameters);
    }
 
    @Override

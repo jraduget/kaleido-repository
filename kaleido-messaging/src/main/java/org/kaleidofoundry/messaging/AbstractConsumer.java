@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Task(comment = "I18n messages")
 public abstract class AbstractConsumer implements Consumer {
@@ -390,9 +390,9 @@ public abstract class AbstractConsumer implements Consumer {
    @Override
    public synchronized void stop() throws TransportException {
 	if (pool != null) {
-	   
+
 	   int shutdownWaitInSeconds = this.context.getInteger(CONSUMER_THREAD_POOL_WAIT_ON_SHUTDOWN, 5);
-	   
+
 	   LOGGER.info("Shutdown consumer [{}] thread pool", context.getName());
 	   pool.shutdown();
 	   try {
@@ -403,8 +403,8 @@ public abstract class AbstractConsumer implements Consumer {
 		   }
 		}
 	   } catch (InterruptedException ie) {
-		 pool.shutdownNow();
-		 Thread.currentThread().interrupt();
+		pool.shutdownNow();
+		Thread.currentThread().interrupt();
 	   }
 	}
 	this.transport.getConsumers().remove(getName());

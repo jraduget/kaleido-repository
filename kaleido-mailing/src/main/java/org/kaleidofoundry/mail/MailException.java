@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.kaleidofoundry.core.i18n.InternalBundleEnum;
 /**
  * MailSessionException
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class MailException extends AbstractI18nException {
 
@@ -61,13 +61,9 @@ public class MailException extends AbstractI18nException {
 	super(code);
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.i18n.AbstractI18nException#getI18nBundleName()
-    */
    @Override
    public String getI18nBundleName() {
-	return InternalBundleEnum.MAIL;
+	return InternalBundleEnum.MAIL.getResourceName();
    }
 
 }

@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,23 +24,23 @@ import java.util.Set;
 
 /**
  * <p>
- * Interface d'un MailMessage. Modélisation java bean d'un Mail.
+ * Interface d'un MailMessage. Modï¿½lisation java bean d'un Mail.
  * </p>
  * <p>
  * <a href="package-summary.html"/>Voir la description du package</a>
  * </p>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public interface MailMessage extends Serializable, Cloneable {
 
    /**
-    * @return Sujet du message
+    * @return mail subject
     */
    String getSubject();
 
    /**
-    * @return Corps du message
+    * @return mailboty
     */
    String getContent();
 
@@ -65,31 +65,31 @@ public interface MailMessage extends Serializable, Cloneable {
    List<String> getCciAdress();
 
    /**
-    * @return Récupère l'importance d'envoie des message - A vérifier ci-dessous <li>0 - Normal</li> <li>1 - Urgent</li> <li>4 - Faible</li>
+    * @return Rï¿½cupï¿½re l'importance d'envoie des message - A vï¿½rifier ci-dessous <li>0 - Normal</li> <li>1 - Urgent</li> <li>4 - Faible</li>
     */
    int getPriority();
 
    /**
-    * @return CharSet utilisé pour encoder le message
+    * @return CharSet utilisï¿½ pour encoder le message
     */
    String getCharSet();
 
    /**
-    * @return ContentType du message définit dans le header (text brut / html)
+    * @return ContentType du message dï¿½finit dans le header (text brut / html)
     */
    String getContentType();
 
    /**
-    * Définit le Charset à utiliser. Par défaut ISO-8859-1 est utilisé
+    * Dï¿½finit le Charset ï¿½ utiliser. Par dï¿½faut ISO-8859-1 est utilisï¿½
     * 
     * @param charset
     */
    void setCharSet(String charset);
 
    /**
-    * Ajout d'un fichier attaché
+    * Ajout d'un fichier attachï¿½
     * 
-    * @param attachName nom du fichier attaché
+    * @param attachName nom du fichier attachï¿½
     * @param filename Chemin complet avec nom de fichier
     * @throws FileNotFoundException
     * @throws IOException Type mime inconnu
@@ -97,9 +97,9 @@ public interface MailMessage extends Serializable, Cloneable {
    void addAttachment(String attachName, String filename) throws FileNotFoundException, IOException;
 
    /**
-    * Ajout d'un fichier attaché à partir d'une URL
+    * Ajout d'un fichier attachï¿½ ï¿½ partir d'une URL
     * 
-    * @param attachName nom du fichier attaché
+    * @param attachName nom du fichier attachï¿½
     * @param fileURL Chemin complet avec nom de fichier
     * @throws IOException Type mime inconnu
     */
@@ -111,14 +111,14 @@ public interface MailMessage extends Serializable, Cloneable {
     */
    void addAttachment(MailAttachment attach);
 
-   /** Définit un envoi de message avec HTML en contenu */
+   /** Dï¿½finit un envoi de message avec HTML en contenu */
    void setBodyContentHtml();
 
-   /** Définit un envoi de message avec Text brut en contenu */
+   /** Dï¿½finit un envoi de message avec Text brut en contenu */
    void setBodyContentText();
 
    /**
-    * @return Ensemble des noms des pièces attachés
+    * @return Ensemble des noms des piï¿½ces attachï¿½s
     */
    Set<String> getAttachments();
 
@@ -129,25 +129,25 @@ public interface MailMessage extends Serializable, Cloneable {
    MailAttachment getAttachmentFilename(String attachName);
 
    /**
-    * Définit le sujet du message
+    * Dï¿½finit le sujet du message
     * @param subject 
     */
    void setSubject(String subject);
 
    /**
-    * Définit l'adresse de l'emetteur
+    * Dï¿½finit l'adresse de l'emetteur
     * @param adress 
     */
    void setFromAdress(String adress);
 
    /**
-    * Définit le corps du message
+    * Dï¿½finit le corps du message
     * @param content 
     */
    void setContent(String content);
 
    /**
-    * Définit la priorité du message
+    * Dï¿½finit la prioritï¿½ du message
     * 
     * @param priority
     */

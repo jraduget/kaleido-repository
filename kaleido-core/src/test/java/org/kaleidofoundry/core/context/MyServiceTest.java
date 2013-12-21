@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.kaleidofoundry.core.store.ResourceException;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public interface MyServiceTest {
 

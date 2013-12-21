@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,21 +40,21 @@ import org.slf4j.LoggerFactory;
 /**
  * Jms 1.1 MessagingTransport
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Declare(MessagingConstants.JMS_TRANSPORT_PLUGIN)
 public class JmsTransport extends AbstractJmsTransport<ConnectionFactory, Connection, Destination> implements Transport {
 
    static final Logger LOGGER = LoggerFactory.getLogger(JmsTransport.class);
 
-   private final NamingService namingService;   
-   
+   private final NamingService namingService;
+
    /*
     * A connection factory is the object a client uses to create a connection to a provider.
     * A connection factory encapsulates a set of connection configuration parameters
     * that has been defined by an administrator. Each connection factory is an instance of the
     * ConnectionFactory, QueueConnectionFactory, or TopicConnectionFactory interface.
-    */   
+    */
    private final ConnectionFactory connectionFactory;
 
    /**
@@ -81,9 +81,7 @@ public class JmsTransport extends AbstractJmsTransport<ConnectionFactory, Connec
    @Override
    protected void checkContext() {
 
-	if (StringHelper.isEmpty(context.getString(JMS_CONNECTION_FACTORY_NAME))) { 
-	   throw new EmptyContextParameterException(JMS_CONNECTION_FACTORY_NAME, context); 
-	}
+	if (StringHelper.isEmpty(context.getString(JMS_CONNECTION_FACTORY_NAME))) { throw new EmptyContextParameterException(JMS_CONNECTION_FACTORY_NAME, context); }
 
 	final String strAcknowledgeMode = context.getString(JMS_SESSION_ACKNOLEDGE_MODE);
 
@@ -101,7 +99,6 @@ public class JmsTransport extends AbstractJmsTransport<ConnectionFactory, Connec
 	return connectionFactory;
    }
 
-   
    @Override
    protected Destination getDestination(Session session, String destName) throws TransportException {
 	return namingService.locate(destName, Destination.class);
@@ -118,11 +115,11 @@ public class JmsTransport extends AbstractJmsTransport<ConnectionFactory, Connec
     * @return the namingService
     */
    public NamingService getNamingService() {
-      return namingService;
+	return namingService;
    }
-   
+
    // only needed for unit test
-   RuntimeContext<Transport> getTransport() {	
+   RuntimeContext<Transport> getTransport() {
 	return context;
    }
 

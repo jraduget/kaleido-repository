@@ -26,7 +26,7 @@ import org.kaleidofoundry.core.util.StringHelper;
 /**
  * {@link Configuration} producer is used to extend {@link Inject} in order to use {@link Context} annotation
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class ConfigurationProducer extends ConfigurationProvider {
 

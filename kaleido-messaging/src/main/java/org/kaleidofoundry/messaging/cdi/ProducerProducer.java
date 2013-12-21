@@ -28,7 +28,7 @@ import org.kaleidofoundry.messaging.ProducerProvider;
 /**
  * {@link Producer} producer is used to extend {@link Inject} in order to use {@link Context} annotation
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class ProducerProducer extends ProducerProvider {
 

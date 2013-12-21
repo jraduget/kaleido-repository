@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * -Dlog4j.configuration=file:/... -Dapp.config.file=...
  * </pre>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Declare(ConfigurationConstants.JavaSystemConfigurationPluginName)
 public class JavaSystemConfiguration extends AbstractConfiguration implements Configuration {

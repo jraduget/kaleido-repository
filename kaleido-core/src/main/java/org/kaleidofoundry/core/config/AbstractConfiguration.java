@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2010 the original author or authors
+ * Copyright 2008-2014 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ import org.slf4j.LoggerFactory;
  * It uses internally a {@link Cache} instance (thread safe) to handle key / property items<br/>
  * </p>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Immutable
 @ThreadSafe

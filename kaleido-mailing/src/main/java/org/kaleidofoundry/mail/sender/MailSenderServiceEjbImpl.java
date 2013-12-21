@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,6 @@ import javax.ejb.CreateException;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
-import org.kaleidofoundry.core.naming.JndiContext;
-import org.kaleidofoundry.core.naming.JndiResourceException;
-import org.kaleidofoundry.core.naming.JndiResourceLocator;
 import org.kaleidofoundry.mail.MailException;
 import org.kaleidofoundry.mail.MailMessage;
 import org.kaleidofoundry.mail.MailMessageBean;
@@ -32,9 +29,9 @@ import org.kaleidofoundry.mail.sender.ejb.EjbMailSenderHome;
 import org.kaleidofoundry.mail.session.MailSessionContext;
 
 /**
- * MailSenderService, implémentation ejb
+ * MailSenderService, implï¿½mentation ejb
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class MailSenderServiceEjbImpl implements MailSenderService {
 
@@ -43,7 +40,7 @@ public class MailSenderServiceEjbImpl implements MailSenderService {
 
    public MailSenderServiceEjbImpl(final String jndiName, final JndiContext jndiContext) throws JndiResourceException,
 	   RemoteException, CreateException {
-	// Locator pour le service (à n'instancier qu'une fois généralement.....)
+	// Locator pour le service (ï¿½ n'instancier qu'une fois gï¿½nï¿½ralement.....)
 	final JndiResourceLocator<EjbMailSenderHome> locator = new JndiResourceLocator<EjbMailSenderHome>(jndiContext);
 
 	// Home de l'ejb

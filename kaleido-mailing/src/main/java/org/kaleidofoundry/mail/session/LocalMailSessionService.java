@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,93 +15,78 @@
  */
 package org.kaleidofoundry.mail.session;
 
+import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_AUTH;
+import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_HOST;
+import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_PASSWORD;
+import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_PORT;
+import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_SSL;
+import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_SSL_SOCKETFACTORY;
+import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_SSL_SOCKETFACTORY_FALLBACK;
+import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_SSL_SOCKETFACTORY_PORT;
+import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_USER;
+import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SSL_FACTORY;
+
 import java.util.Properties;
 
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 
+import org.kaleidofoundry.core.context.EmptyContextParameterException;
+import org.kaleidofoundry.core.context.RuntimeContext;
+import org.kaleidofoundry.core.plugin.Declare;
+import org.kaleidofoundry.core.util.StringHelper;
 
 /**
- * Implémentation avec envoi en local du service Mail
+ * Local mail session provider
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
+@Declare(value = "mailSessions.local")
 public class LocalMailSessionService implements MailSessionService {
 
-   private MailSessionContext context;
+   private final RuntimeContext<MailSessionService> context;
 
-   public LocalMailSessionService(final MailSessionContext context) {
+   public LocalMailSessionService(RuntimeContext<MailSessionService> context) {
+	super();
 	this.context = context;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailSessionService#getContext()
-    */
-   public MailSessionContext getContext() {
-	return context;
-   }
+   public Session createSession() {
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailSessionService#newSession()
-    */
-   public Session createSession() throws MailSessionException {
+	final String hostName = context.getString(LOCAL_SMTP_HOST);
+	final int portName = context.getInteger(LOCAL_SMTP_PORT, 25);
+	final boolean authen = context.getBoolean(LOCAL_SMTP_AUTH, false);
 
-	if (getContext() == null) throw new MailSessionException("mail.session.context.null");
+	if (StringHelper.isEmpty(hostName)) throw new EmptyContextParameterException(LOCAL_SMTP_HOST, context);
 
-	// HostName
-	final String hostName = getContext().getProperty(MailSessionConstants.LocalMailSessionHost);
-	// Numéro de port à utiliser
-	String portName = getContext().getProperty(MailSessionConstants.LocalMailSessionPort);
-	// Authentification ?
-	final String authen = getContext().getProperty(MailSessionConstants.LocalMailSessionAuthen);
-	// SSL ?
-	final boolean ssl = false;
-	// Session en retour
-	Session mailSession = null;
+	final boolean ssl = context.getBoolean(LOCAL_SMTP_SSL, false);
 
 	final Properties mailProps = new Properties();
 
-	portName = portName == null ? String.valueOf(MailSessionConstants.DEFAULT_SMTP_PORT) : portName;
-
-	if (hostName == null) throw new MailSessionException("mail.session.context.property", new String[] { MailSessionConstants.LocalMailSessionHost });
-
-	if (hostName != null) {
-	   mailProps.setProperty(MailSessionConstants.LocalMailSessionHost, hostName);
-	}
-	if (portName != null) {
-	   mailProps.setProperty(MailSessionConstants.LocalMailSessionPort, portName);
-	}
-	if (authen != null) {
-	   mailProps.setProperty(MailSessionConstants.LocalMailSessionAuthen, authen);
-	}
+	mailProps.put("mail.smtp.host", hostName);
+	mailProps.put("mail.smtp.port", portName);
+	mailProps.put("mail.smtp.auth", authen);
 
 	if (ssl) {
 	   // check with jdk6 ... Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
-	   mailProps.put("mail.smtp.socketFactory.class", MailSessionConstants.SSL_FACTORY);
-	   mailProps.put("mail.smtp.socketFactory.fallback", "false");
+	   mailProps.put("mail.smtp.socketFactory.class", context.getString(LOCAL_SMTP_SSL_SOCKETFACTORY, LOCAL_SSL_FACTORY));
+	   mailProps.put("mail.smtp.socketFactory.fallback", context.getBoolean(LOCAL_SMTP_SSL_SOCKETFACTORY_FALLBACK, false));
 	   mailProps.put("mail.smtp.auth", "true");
-	   mailProps.put("mail.smtp.socketFactory.port", portName);
+	   mailProps.put("mail.smtp.socketFactory.port", context.getString(LOCAL_SMTP_SSL_SOCKETFACTORY_PORT));
 	}
 
-	if (authen == null || Boolean.valueOf(authen).booleanValue() == false) {
-	   mailSession = Session.getDefaultInstance(mailProps, null);
+	if (authen == false) {
+	   return Session.getDefaultInstance(mailProps, null);
 	} else {
-	   mailSession = Session.getDefaultInstance(mailProps, new Authenticator() {
+	   return Session.getDefaultInstance(mailProps, new Authenticator() {
 		@Override
 		protected PasswordAuthentication getPasswordAuthentication() {
-		   return new PasswordAuthentication(getContext().getProperty(MailSessionConstants.LocalMailSessionAuthenUser), getContext().getProperty(
-			   MailSessionConstants.LocalMailSessionAuthenPwd));
+		   return new PasswordAuthentication(context.getString(LOCAL_SMTP_USER), context.getString(LOCAL_SMTP_PASSWORD));
 		}
 	   });
 	}
 
-	return mailSession;
    }
 
-   protected void setContext(final MailSessionContext context) {
-	this.context = context;
-   }
 }

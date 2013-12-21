@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,41 +20,38 @@ import org.kaleidofoundry.core.plugin.Declare;
 /**
  * Messages consumer
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Declare(MessagingConstants.CONSUMER_PLUGIN)
 public interface Consumer extends Client {
-  
+
    /**
     * @return consumer name
     */
-   String getName();     
-   
+   String getName();
+
    /**
     * Start the the consumer processing
     * 
     * @throws TransportException
     */
    void start() throws TransportException;
-   
+
    /**
     * Stop the consumer processing
     * 
     * @throws TransportException
     */
    void stop() throws TransportException;
-      
-      
+
    /**
-    * Add a message handler for each received message.
-    * <br/>
-    * It is a processing chain, and {@link MessageHandler} will be executed in the insertion order.
-    * <br/>
+    * Add a message handler for each received message. <br/>
+    * It is a processing chain, and {@link MessageHandler} will be executed in the insertion order. <br/>
     * During the chain processing, if an {@link MessageHandler#onReceive(Message)}, the rest of the chain will not be executed
-    *  
+    * 
     * @param handler
     * @return current consumer instance
     */
    Consumer addMessageHandler(MessageHandler handler);
-   
+
 }

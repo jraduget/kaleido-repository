@@ -19,7 +19,7 @@ package org.kaleidofoundry.core.context;
  * Scope enumeration of a {@link RuntimeContext}.
  * This scope can only be defined using a context configuration file.
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public enum Scope {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2010 the original author or authors
+ * Copyright 2008-2014 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import org.kaleidofoundry.core.lang.annotation.NotThreadSafe;
  * If the class is built using constructor with a {@link Reader} or an {@link InputStream}, the instance will not be thread safe ! <br/>
  * If the class is built with the raw data of the resource, there is no problem.
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Immutable
 @NotThreadSafe(comment = "for the instances built by calling constructor with an inputstream or a reader")

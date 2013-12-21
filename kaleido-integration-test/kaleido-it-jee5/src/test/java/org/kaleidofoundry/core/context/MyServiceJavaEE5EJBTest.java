@@ -28,7 +28,7 @@ import org.kaleidofoundry.core.naming.NamingServiceFactory;
 import org.kaleidofoundry.core.store.ResourceException;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class MyServiceJavaEE5EJBTest implements MyServiceTest {
 

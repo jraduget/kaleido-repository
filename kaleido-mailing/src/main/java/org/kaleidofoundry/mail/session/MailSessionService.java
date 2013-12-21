@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,31 +17,25 @@ package org.kaleidofoundry.mail.session;
 
 import javax.mail.Session;
 
+import org.kaleidofoundry.core.context.Provider;
+import org.kaleidofoundry.core.plugin.Declare;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p>
- * Interface de Service fourniseur d'une Session Mail Smtp utilisée pour envoyer des mails
- * </p>
- * <p>
- * <a href="package-summary.html"/>Voir la description du package</a>
- * </p>
+ * Mail session service, used to send mail using smtp protocol
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
+@Declare("mailSessions")
+@Provider(value = MailSessionProvider.class)
 public interface MailSessionService {
 
    /** Logger */
    static final Logger LOGGER = LoggerFactory.getLogger(MailSessionService.class);
 
    /**
-    * @return Contexte de connection
-    */
-   MailSessionContext getContext();
-
-   /**
-    * @return Session javaMail pour envoi de mail
+    * @return {@link Session} creation
     * @throws MailSessionException
     */
    Session createSession() throws MailSessionException;

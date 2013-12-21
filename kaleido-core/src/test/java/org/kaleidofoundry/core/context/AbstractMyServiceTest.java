@@ -25,7 +25,7 @@ import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.store.ResourceException;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public abstract class AbstractMyServiceTest extends Assert implements MyServiceTest {
 

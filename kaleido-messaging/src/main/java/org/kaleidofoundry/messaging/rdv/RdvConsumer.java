@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ import com.tibco.tibrv.TibrvQueue;
 /**
  * Consumer for Tibco RDV
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Declare(MessagingConstants.RDV_CONSUMER_PLUGIN)
 public class RdvConsumer extends AbstractConsumer implements Consumer {
@@ -115,9 +115,8 @@ public class RdvConsumer extends AbstractConsumer implements Consumer {
 
 	if (StringHelper.isEmpty(context.getString(RDV_SUBJECTS))) throw new EmptyContextParameterException(RDV_SUBJECTS, context);
 
-	if (!(getTransport() instanceof RdvTransport)) { throw new IllegalContextParameterException(TRANSPORT_REF,
-		context.getString(TRANSPORT_REF), context, MESSAGING_BUNDLE.getMessage("messaging.consumer.rdv.transport.illegal",
-			context.getString(TRANSPORT_REF))); }
+	if (!(getTransport() instanceof RdvTransport)) { throw new IllegalContextParameterException(TRANSPORT_REF, context.getString(TRANSPORT_REF), context,
+		MESSAGING_BUNDLE.getMessage("messaging.consumer.rdv.transport.illegal", context.getString(TRANSPORT_REF))); }
    }
 
    @Override

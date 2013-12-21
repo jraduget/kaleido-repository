@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,10 +60,10 @@ import org.kaleidofoundry.messaging.TransportException;
 import org.kaleidofoundry.messaging.TransportRegistryException;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Declare(MessagingConstants.JMS_CONSUMER_PLUGIN)
-@Tasks(tasks = { @Task(comment = "Handle manual jms session commit / rollback ? Keep a reference to the session in the message handle ?"),	
+@Tasks(tasks = { @Task(comment = "Handle manual jms session commit / rollback ? Keep a reference to the session in the message handle ?"),
 	@Task(comment = "Handle request / reply: http://activemq.apache.org/how-should-i-implement-request-response-with-jms.html") })
 public class JmsConsumer extends AbstractConsumer {
 
@@ -116,7 +116,7 @@ public class JmsConsumer extends AbstractConsumer {
 
 		try {
 		   session = transport.createSession(connection);
-		   destination =  transport.getDestination(session, destinationJndiName);
+		   destination = transport.getDestination(session, destinationJndiName);
 		   jmsConsumer = session.createConsumer(destination, messageSelector, noLocal);
 		} catch (JMSException jmse) {
 		   messageWrapper.setError(new MessagingException("messaging.consumer.jms.create.error", jmse));
@@ -208,7 +208,7 @@ public class JmsConsumer extends AbstractConsumer {
 		   ((AbstractMessage) message).setProviderId(jmsMessage.getJMSMessageID());
 		   ((AbstractMessage) message).setCorrelationId(jmsMessage.getJMSCorrelationID());
 
-		   messageWrapper.setProviderObject(jmsMessage);		   
+		   messageWrapper.setProviderObject(jmsMessage);
 		   messageWrapper.setMessage(message);
 
 		} catch (JMSException jmse) {

@@ -10,7 +10,7 @@ import org.kaleidofoundry.core.launcher.KaleidoJunit4ClassRunner;
 /**
  * Tibco RDV reliable test for producer and consumer 
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  *
  */
 @RunWith(KaleidoJunit4ClassRunner.class)

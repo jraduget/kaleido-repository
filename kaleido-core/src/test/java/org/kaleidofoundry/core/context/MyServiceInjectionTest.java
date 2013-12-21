@@ -19,7 +19,7 @@ package org.kaleidofoundry.core.context;
 
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class MyServiceInjectionTest extends AbstractMyServiceTest {
 

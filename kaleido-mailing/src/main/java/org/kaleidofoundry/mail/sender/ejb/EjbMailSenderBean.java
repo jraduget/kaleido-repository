@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Encapsulation du service via un EJB
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class EjbMailSenderBean implements SessionBean {
 
@@ -63,7 +63,7 @@ public class EjbMailSenderBean implements SessionBean {
     * There must be one ejbCreate() method per create() method on the Home
     * interface, and with the same signature.
     * 
-    * @param mailsessionName Nom de la section sessionMail à utiliser
+    * @param mailsessionName Nom de la section sessionMail ï¿½ utiliser
     *           (voir mailSession.properties dans META-INF/
     * @throws CreateException
     */
@@ -82,7 +82,7 @@ public class EjbMailSenderBean implements SessionBean {
 	   config = ConfigurationFactory.provides("ejbCreate", classpathRessource, new RuntimeContext<Configuration>());
 	   config.load();
 
-	   // Détail de la configuration
+	   // Dï¿½tail de la configuration
 	   if (LOGGER.isDebugEnabled()) {
 		LOGGER.debug(config.toString());
 	   }
@@ -90,7 +90,7 @@ public class EjbMailSenderBean implements SessionBean {
 	   // MailSessionContext, instanciation et chargement
 	   mailContext = new MailSessionContext(mailsessionName, config);
 
-	   // Factory pour obtenir le service et pour créer un message
+	   // Factory pour obtenir le service et pour crï¿½er un message
 	   mailService = MailSenderFactory.createSessionService(mailContext);
 
 	} catch (final MailSessionException mse) {
@@ -106,7 +106,7 @@ public class EjbMailSenderBean implements SessionBean {
    /**
     * There must be one ejbCreate() method per create() method on the Home
     * interface, and with the same signature.
-    * Le section sessionMail utilisée sera "default"
+    * Le section sessionMail utilisï¿½e sera "default"
     * (voir mailSession.properties dans META-INF/
     * 
     * @throws CreateException

@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,15 +32,15 @@ import org.slf4j.LoggerFactory;
  * <a href="package-summary.html"/>Voir la description du package</a>
  * </p>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public interface MailSenderService {
 
-   /** Logger par défaut */
+   /** Logger par dï¿½faut */
    public static final Logger logger = LoggerFactory.getLogger(MailSenderService.class);
 
    /** 
-    * @return Création d'un nouveaux message à envoyer 
+    * @return Crï¿½ation d'un nouveaux message ï¿½ envoyer 
     */
    MailMessage createMessage();
 
@@ -48,14 +48,14 @@ public interface MailSenderService {
     * Envoie d'un message mail
     * 
     * @param message
-    * @throws MailException Si Problème d'obtention d'une Session mail
+    * @throws MailException Si Problï¿½me d'obtention d'une Session mail
     * @throws AddressException Si une des urls est invalide
-    * @throws MessagingException Si Problème lors de la construction du message
+    * @throws MessagingException Si Problï¿½me lors de la construction du message
     */
    void send(MailMessage message) throws MailException, AddressException, MessagingException;
 
    /**
-    * @return Contexte nécessaire pour obtenir une Session utilisée pour envoyer un mail
+    * @return Contexte nï¿½cessaire pour obtenir une Session utilisï¿½e pour envoyer un mail
     */
    MailSessionContext getSessionContext();
 

@@ -36,7 +36,7 @@ import org.kaleidofoundry.core.util.ReflectionHelper;
 /**
  * Handle context and module injection, by inherited this servlet class
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class BaseServlet extends HttpServlet {
 

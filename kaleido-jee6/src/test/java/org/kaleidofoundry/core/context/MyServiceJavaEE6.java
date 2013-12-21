@@ -37,7 +37,7 @@ import org.kaleidofoundry.core.naming.NamingService;
 import org.kaleidofoundry.core.store.FileStore;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Singleton
 public class MyServiceJavaEE6 implements MyService {

@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,21 +19,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Enumération des Implementation de MailSession Disponible
+ * Enumï¿½ration des Implementation de MailSession Disponible
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class MailSenderEnum {
 
    private static List<MailSenderEnum> dsEnum = new ArrayList<MailSenderEnum>();
 
-   /** Implementation Envoi Via accès JMS */
+   /** Implementation Envoi Via accï¿½s JMS */
    public static MailSenderEnum JMS = new MailSenderEnum(MailSenderConstants.JmsMailServiceType, MailSenderServiceJmsImpl.class, false);
 
-   /** Implementation Envoi Via accès EJB */
+   /** Implementation Envoi Via accï¿½s EJB */
    public static MailSenderEnum EJB = new MailSenderEnum(MailSenderConstants.EjbMailServiceType, MailSenderServiceEjbImpl.class, false);
 
-   /** Implementation Envoi Via accès mail Session */
+   /** Implementation Envoi Via accï¿½s mail Session */
    public static MailSenderEnum SESSION = new MailSenderEnum(MailSenderConstants.SessionMailServiceType, MailSenderServiceSessionImpl.class, true);
 
    MailSenderEnum(final String key, final Class<? extends MailSenderService> impl, final boolean needMailSession) {

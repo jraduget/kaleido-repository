@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public abstract class AbstractProducer implements Producer {
 
@@ -59,7 +59,7 @@ public abstract class AbstractProducer implements Producer {
    protected final Transport transport;
 
    /** Executor service used to implements timeout feature when sending message */
-   @Task(comment="Lazy creation of the executor service for google application engine, use com.google.appengine.api.taskqueue.Queue ?")
+   @Task(comment = "Lazy creation of the executor service for google application engine, use com.google.appengine.api.taskqueue.Queue ?")
    protected final ExecutorService pool;
 
    public AbstractProducer(RuntimeContext<Producer> context) {
@@ -88,7 +88,7 @@ public abstract class AbstractProducer implements Producer {
 	if (timeout <= 0) {
 	   send(message);
 	}
-	
+
 	FutureTask<Throwable> future = new FutureTask<Throwable>(new Callable<Throwable>() {
 	   public Throwable call() {
 		try {
@@ -124,7 +124,7 @@ public abstract class AbstractProducer implements Producer {
    }
 
    @Override
-   public void send(final Collection<Message> messages, final  long timeout) throws MessagingException {
+   public void send(final Collection<Message> messages, final long timeout) throws MessagingException {
 
 	if (timeout <= 0) {
 	   send(messages);
@@ -184,7 +184,7 @@ public abstract class AbstractProducer implements Producer {
 
    @Override
    public void stop() throws TransportException {
-	pool.shutdown();	
+	pool.shutdown();
 	this.transport.getProducers().remove(getName());
    }
 
@@ -209,5 +209,4 @@ public abstract class AbstractProducer implements Producer {
 	}
    }
 
-   
 }

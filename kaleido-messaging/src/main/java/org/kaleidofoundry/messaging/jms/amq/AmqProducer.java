@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,10 @@ import org.kaleidofoundry.messaging.Producer;
 import org.kaleidofoundry.messaging.jms.JmsProducer;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Declare(MessagingConstants.AMQ_PRODUCER_PLUGIN)
-public class AmqProducer extends JmsProducer implements Producer  {
+public class AmqProducer extends JmsProducer implements Producer {
 
    /**
     * @param context

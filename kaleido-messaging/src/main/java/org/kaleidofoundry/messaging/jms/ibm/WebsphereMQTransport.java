@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ import com.ibm.mq.jms.MQDestination;
 /**
  * Websphere MQ transport layer
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Declare(MessagingConstants.WMQ_TRANSPORT_PLUGIN)
 public class WebsphereMQTransport extends AbstractJmsTransport<MQConnectionFactory, Connection, MQDestination> {
@@ -69,7 +69,7 @@ public class WebsphereMQTransport extends AbstractJmsTransport<MQConnectionFacto
 	} catch (JMSException jmse) {
 	   throw new TransportException("messaging.transport.connectionFactory.create", jmse, context.getString(MQ_CONNECTION_FACTORY_HOST), context.getString(
 		   MQ_CONNECTION_FACTORY_PORT, String.valueOf(defaultMQPort)), context.getString(MQ_CONNECTION_FACTORY_CHANNEL), context.getString(
-			   MQ_CONNECTION_FACTORY_TRANSPORT_TYPE, String.valueOf(defaultTransportType)));
+		   MQ_CONNECTION_FACTORY_TRANSPORT_TYPE, String.valueOf(defaultTransportType)));
 	}
    }
 
@@ -81,7 +81,8 @@ public class WebsphereMQTransport extends AbstractJmsTransport<MQConnectionFacto
    @Override
    protected void checkContext() {
 	if (StringHelper.isEmpty(context.getString(MQ_CONNECTION_FACTORY_HOST))) { throw new EmptyContextParameterException(MQ_CONNECTION_FACTORY_HOST, context); }
-	if (StringHelper.isEmpty(context.getString(MQ_CONNECTION_FACTORY_CHANNEL))) { throw new EmptyContextParameterException(MQ_CONNECTION_FACTORY_CHANNEL, context); }
+	if (StringHelper.isEmpty(context.getString(MQ_CONNECTION_FACTORY_CHANNEL))) { throw new EmptyContextParameterException(MQ_CONNECTION_FACTORY_CHANNEL,
+		context); }
 
 	if (DestinationEnum.valueOf(context.getString(JMS_DESTINATION_TYPE, DestinationEnum.queue.name())) == null) { throw new IllegalContextParameterException(
 		JMS_DESTINATION_TYPE, context.getString(JMS_DESTINATION_TYPE), context, "The value should be: queue|topic"); }
@@ -95,16 +96,16 @@ public class WebsphereMQTransport extends AbstractJmsTransport<MQConnectionFacto
 
 	try {
 	   if (DestinationEnum.queue.name().equalsIgnoreCase(destinationType)) {
-		destination = session.createQueue(name);		
+		destination = session.createQueue(name);
 	   } else if (DestinationEnum.topic.name().equalsIgnoreCase(destinationType)) {
 		destination = session.createTopic(name);
 	   } else {
 		throw new IllegalStateException();
 	   }
-	   
+
 	   ((MQDestination) destination).setTargetClient(context.getInteger(MQ_DESTINATION_TARGET_CLIENT, JMSC.MQJMS_CLIENT_NONJMS_MQ));
 	   ((MQDestination) destination).setPersistence(context.getInteger(MQ_DESTINATION_PERSISTENT_TYPE, MQC.MQPER_PERSISTENT));
-	   
+
 	   return (MQDestination) destination;
 	} catch (JMSException jmse) {
 	   throw new TransportException("messaging.transport.destination.create", jmse, destinationType, name);

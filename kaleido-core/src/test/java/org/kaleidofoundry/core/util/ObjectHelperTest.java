@@ -24,7 +24,7 @@ import java.util.List;
 import org.junit.Test;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class ObjectHelperTest {
 
