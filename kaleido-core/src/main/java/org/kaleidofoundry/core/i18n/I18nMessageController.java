@@ -15,10 +15,10 @@
  */
 package org.kaleidofoundry.core.i18n;
 
+import static org.kaleidofoundry.core.env.model.EnvironmentConstants.KALEIDO_PERSISTENT_UNIT_NAME;
 import static org.kaleidofoundry.core.i18n.model.I18nMessageConstants.Query_MessagesByLocale.Name;
 import static org.kaleidofoundry.core.i18n.model.I18nMessageConstants.Query_MessagesByLocale.Parameter_Locale;
 import static org.kaleidofoundry.core.i18n.model.I18nMessageConstants.Query_MessagesByLocale.Parameter_ResourceName;
-import static org.kaleidofoundry.core.env.model.EnvironmentConstants.KALEIDO_PERSISTENT_UNIT_NAME;
 
 import java.util.List;
 import java.util.Locale;

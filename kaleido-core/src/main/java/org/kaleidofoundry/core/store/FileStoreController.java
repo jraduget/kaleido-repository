@@ -42,8 +42,8 @@ import org.kaleidofoundry.core.store.model.FileStoreEntry;
 import org.kaleidofoundry.core.store.model.ResourceHandlerEntity;
 import org.kaleidofoundry.core.util.locale.LocaleFactory;
 
-@Stateless(mappedName = "ejb/stores/manager")
-@Path("/stores/")
+@Stateless(mappedName = "ejb/fs/manager")
+@Path("/fs/")
 public class FileStoreController {
 
    /** injected and used to handle security context */
@@ -58,7 +58,7 @@ public class FileStoreController {
     * @return get the list of registered file store
     */
    @GET
-   @XmlElementWrapper(name = "stores")
+   @XmlElementWrapper(name = "fs")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public List<FileStoreEntry> getStores() {
 	List<FileStoreEntry> stores = new ArrayList<FileStoreEntry>();
@@ -85,10 +85,7 @@ public class FileStoreController {
 	   ResourceNotFoundException, ResourceException {
 
 	ResourceHandler rs = findFileStore(store).get(resource);
-	return Response.ok(rs.getBytes())
-		.type(rs.getMimeType())
-		.location(URI.create(rs.getUri()))
-		.lastModified(new Date(rs.getLastModified()))
+	return Response.ok(rs.getBytes()).type(rs.getMimeType()).location(URI.create(rs.getUri())).lastModified(new Date(rs.getLastModified()))
 		.header(HttpHeaders.CONTENT_TYPE, rs.getMimeType() + "; " + rs.getCharset())
 		// .cacheControl(CacheControl.valueOf(value))
 		// .expires(date)

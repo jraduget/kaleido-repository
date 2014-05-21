@@ -15,6 +15,11 @@
  */
 package org.kaleidofoundry.messaging;
 
+import org.kaleidofoundry.core.i18n.I18nMessages;
+import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
+import org.kaleidofoundry.core.i18n.InternalBundleEnum;
+import org.kaleidofoundry.core.i18n.InternalBundleHelper;
+
 /**
  * Constants for messaging module
  * 
@@ -22,8 +27,8 @@ package org.kaleidofoundry.messaging;
  */
 public interface MessagingConstants {
 
-   /** I18N resource name for messaging */
-   String I18N_RESOURCE = "i18n/messaging/messages";
+   /** Messaging message bundle */
+   I18nMessages MessagingMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.MESSAGING.getResourceName(), InternalBundleHelper.CoreMessageBundle);
 
    /** Transport interface plugin name */
    String TRANSPORT_PLUGIN = "messaging.transports";

@@ -15,9 +15,10 @@
  */
 package org.kaleidofoundry.mail;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,8 @@ import java.util.Set;
 import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.io.MimeTypeResolver;
 import org.kaleidofoundry.core.io.MimeTypeResolverFactory;
+import org.kaleidofoundry.core.lang.Charsets;
+import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * MailMessage implementation
@@ -41,277 +44,199 @@ public class MailMessageBean implements MailMessage {
    protected final static String HTML_CONTENT_TYPE = "text/html";
    protected final static String DEFAULT_CONTENT_TYPE = TEXT_CONTENT_TYPE;
 
-   protected final static String DEFAULT_CHARSET = "iso-8859-1";
+   protected final static String DEFAULT_CHARSET = Charsets.UTF_8.getCode();
 
    private String subject;
-   private String content;
-   private String fromAdress;
+   private String body;
+   private String fromAddress;
 
-   private ArrayList<String> toAdress;
-   private ArrayList<String> ccAdress;
-   private ArrayList<String> cciAdress;
+   private ArrayList<String> toAddresses;
+   private ArrayList<String> ccAddresses;
+   private ArrayList<String> cciAddresses;
 
    private int priority;
 
-   private final Map<String, MailAttachment> attachments;
-   private String contentType;
-   private String charset;
+   private final Map<String, MailAttachment> attachmentsByName;
+   private String bodyContentType;
+   private String bodyCharset;
 
    public MailMessageBean() {
-	attachments = new HashMap<String, MailAttachment>();
-	toAdress = new ArrayList<String>();
-	charset = DEFAULT_CHARSET;
-	contentType = TEXT_CONTENT_TYPE;
+	attachmentsByName = new HashMap<String, MailAttachment>();
+	toAddresses = new ArrayList<String>();
+	bodyCharset = DEFAULT_CHARSET;
+	bodyContentType = TEXT_CONTENT_TYPE;
 	priority = 0;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#addAttachment(java.lang.String, java.lang.String)
-    */
-   public void addAttachment(final String attachName, final String filename) throws FileNotFoundException, IOException {
+   @Override
+   public MailMessage attach(final MailAttachment attach) {
+	if (attach == null) { throw new IllegalArgumentException("Mail attachment is null"); }
+	if (StringHelper.isEmpty(attach.getName())) { throw new IllegalArgumentException("Mail attachment name is mandatory"); }
+	if (attach.getContentInputStream() == null) { throw new IllegalArgumentException("Mail attachment inpustream is null"); }
+	attachmentsByName.put(attach.getName(), attach);
+	return this;
+   }
+
+   @Override
+   public MailMessage attach(final String attachName, final String fileURI) throws FileNotFoundException, IOException {
 	MimeTypeResolver mimesSrv = MimeTypeResolverFactory.getService();
-	MailAttachment attach = null;
-	String fileExt = null;
-
-	fileExt = FileHelper.getFileNameExtension(filename);
-	if (fileExt == null) { throw new IOException("Filename " + filename + " have an unknown mime type"); }
-
-	attach = new MailAttachmentBean();
-	attach.setName(attachName);
-	attach.setContentPath(filename);
-	attach.setContentType(mimesSrv.getMimeType(fileExt));
-
-	attachments.put(attachName, attach);
+	String fileExt = FileHelper.getFileNameExtension(fileURI);
+	MailAttachmentBean attach = new MailAttachmentBean(attachName, (fileExt != null ? mimesSrv.getMimeType(fileExt) : null), fileURI, new FileInputStream(
+		fileURI));
+	return attach(attach);
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#addAttachment(java.lang.String, java.net.URL)
-    */
-   public void addAttachment(final String attachName, final URL fileURL) throws IOException {
-	MailAttachment attach = null;
-	MimeTypeResolver mimesSrv = MimeTypeResolverFactory.getService();
-	String fileExt = null;
-
-	fileExt = FileHelper.getFileNameExtension(fileURL.toExternalForm());
-	if (fileExt == null) { throw new IOException("Filename " + fileURL.toExternalForm() + " have an unknown mime type"); }
-
-	attach = new MailAttachmentBean();
-	attach.setName(attachName);
-	attach.setContentURL(fileURL);
-	attach.setContentType(mimesSrv.getMimeType(fileExt));
-
-	attachments.put(attachName, attach);
+   @Override
+   public MailMessage attach(String attachName, String mimeType, InputStream attachIn) {
+	return attach(new MailAttachmentBean(attachName, mimeType, null, attachIn));
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#getContent()
-    */
-   public String getContent() {
-	return content;
+   @Override
+   public String getBody() {
+	return body;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#getCcAdress()
-    */
-   public List<String> getCcAdress() {
-	if (ccAdress == null) {
-	   ccAdress = new ArrayList<String>();
+   @Override
+   public List<String> getCcAddresses() {
+	if (ccAddresses == null) {
+	   ccAddresses = new ArrayList<String>();
 	}
-	return ccAdress;
+	return ccAddresses;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#getCciAdress()
-    */
-   public List<String> getCciAdress() {
-	if (cciAdress == null) {
-	   cciAdress = new ArrayList<String>();
+   @Override
+   public List<String> getCciAddresses() {
+	if (cciAddresses == null) {
+	   cciAddresses = new ArrayList<String>();
 	}
-	return cciAdress;
+	return cciAddresses;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#getFromAdress()
-    */
-   public String getFromAdress() {
-	return fromAdress;
+   @Override
+   public String getFromAddress() {
+	return fromAddress;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#getPriority()
-    */
+   @Override
    public int getPriority() {
 	return priority;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#getSubject()
-    */
+   @Override
    public String getSubject() {
 	return subject;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#getToAdress()
-    */
-   public List<String> getToAdress() {
-	return toAdress;
+   @Override
+   public List<String> getToAddresses() {
+	return toAddresses;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#setBodyContentHtml()
-    */
-   public void setBodyContentHtml() {
-	contentType = HTML_CONTENT_TYPE;
+   @Override
+   public MailMessage withBodyAsHtml() {
+	bodyContentType = HTML_CONTENT_TYPE;
+	return this;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#setBodyContentText()
-    */
-   public void setBodyContentText() {
-	contentType = TEXT_CONTENT_TYPE;
+   @Override
+   public MailMessage withBodyAsText() {
+	bodyContentType = TEXT_CONTENT_TYPE;
+	return this;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#setCharSet(java.lang.String)
-    */
-   public void setCharSet(final String charset) {
-	this.charset = charset;
+   @Override
+   public MailMessage withBodyCharSet(final String charset) {
+	this.bodyCharset = charset;
+	return this;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#getCharSet()
-    */
-   public String getCharSet() {
-	return charset != null ? charset : DEFAULT_CHARSET;
+   @Override
+   public String getBodyCharSet() {
+	return bodyCharset != null ? bodyCharset : DEFAULT_CHARSET;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#getContentType()
-    */
-   public String getContentType() {
-	return contentType != null ? contentType : DEFAULT_CONTENT_TYPE;
+   @Override
+   public String getBodyContentType() {
+	return bodyContentType != null ? bodyContentType : DEFAULT_CONTENT_TYPE;
    }
 
    protected void setContentType(final String contentType) {
-	this.contentType = contentType;
+	this.bodyContentType = contentType;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#getAttachmentFilename(java.lang.String)
-    */
-   public MailAttachment getAttachmentFilename(final String attachName) {
-	return attachments.get(attachName);
+   @Override
+   public MailAttachment getAttachment(final String attachName) {
+	return attachmentsByName.get(attachName);
    }
 
-   public void addAttachment(final MailAttachment attach) {
-	if (attach != null && attach.getName() != null) {
-	   attachments.put(attach.getName(), attach);
-	}
+   @Override
+   public Set<String> getAttachmentNames() {
+	return attachmentsByName.keySet();
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#getAttachments()
-    */
-   public Set<String> getAttachments() {
-	return attachments.keySet();
+   @Override
+   public MailMessage withFromAddress(final String fromAdress) {
+	this.fromAddress = fromAdress;
+	return this;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#setFromAdress(java.lang.String)
-    */
-   public void setFromAdress(final String fromAdress) {
-	this.fromAdress = fromAdress;
+   @Override
+   public MailMessage withBody(final String content) {
+	this.body = content;
+	return this;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#setContent(java.lang.String)
-    */
-   public void setContent(final String content) {
-	this.content = content;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#setSubject(java.lang.String)
-    */
-   public void setSubject(final String subject) {
+   @Override
+   public MailMessage withSubject(final String subject) {
 	this.subject = subject;
+	return this;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailMessage#setPriority(int)
-    */
-   public void setPriority(final int priority) {
+   @Override
+   public MailMessage withPriority(final int priority) {
 	this.priority = priority;
+	return this;
    }
 
    protected void setCcAdress(final ArrayList<String> ccAdress) {
-	this.ccAdress = ccAdress;
+	this.ccAddresses = ccAdress;
    }
 
    protected void setCciAdress(final ArrayList<String> cciAdress) {
-	this.cciAdress = cciAdress;
+	this.cciAddresses = cciAdress;
    }
 
    protected void setToAdress(final ArrayList<String> toAdress) {
-	this.toAdress = toAdress;
+	this.toAddresses = toAdress;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see java.lang.Object#toString()
-    */
    @Override
    public String toString() {
 	final StringBuffer str = new StringBuffer();
 
 	str.append("Subject=").append(getSubject()).append("\n");
-	str.append("FROM=").append(getFromAdress()).append("\n");
-	str.append("TO=").append(getToAdress().toString()).append("\n");
-	str.append("CC=").append(getCcAdress().toString()).append("\n");
-	str.append("CCI=").append(getCciAdress().toString()).append("\n");
-	str.append("Content=").append(getContent()).append("\n");
+	str.append("FROM=").append(getFromAddress()).append("\n");
+	str.append("TO=").append(getToAddresses().toString()).append("\n");
+	str.append("CC=").append(getCcAddresses().toString()).append("\n");
+	str.append("CCI=").append(getCciAddresses().toString()).append("\n");
+	str.append("Body=").append(getBody()).append("\n");
 
 	return super.toString();
    }
 
-   /*
-    * (non-Javadoc)
-    * @see java.lang.Object#clone()
-    */
    @Override
    @SuppressWarnings("unchecked")
    public MailMessage clone() {
 	try {
 	   final MailMessageBean message = (MailMessageBean) super.clone();
-	   if (toAdress != null) {
-		message.setToAdress((ArrayList<String>) toAdress.clone());
+	   if (toAddresses != null) {
+		message.setToAdress((ArrayList<String>) toAddresses.clone());
 	   }
-	   if (ccAdress != null) {
-		message.setCcAdress((ArrayList<String>) ccAdress.clone());
+	   if (ccAddresses != null) {
+		message.setCcAdress((ArrayList<String>) ccAddresses.clone());
 	   }
-	   if (cciAdress != null) {
-		message.setCciAdress((ArrayList<String>) cciAdress.clone());
+	   if (cciAddresses != null) {
+		message.setCciAdress((ArrayList<String>) cciAddresses.clone());
 	   }
 	   return message;
 	} catch (final CloneNotSupportedException cne) {

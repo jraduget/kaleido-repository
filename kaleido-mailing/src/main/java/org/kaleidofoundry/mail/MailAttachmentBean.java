@@ -16,10 +16,9 @@
 package org.kaleidofoundry.mail;
 
 import java.io.InputStream;
-import java.net.URL;
 
 /**
- * Impl�m�ntation MailAttachment
+ * MailAttachment bean
  * 
  * @author jraduget
  */
@@ -29,88 +28,60 @@ public class MailAttachmentBean implements MailAttachment {
 
    private String name;
    private String contentType;
-   private InputStream content;
-   private String contentPath;
-   private URL contentURL;
+   private String contentURI;
+   private InputStream contentInputstream;
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailAttachment#getContent()
-    */
-   public InputStream getContent() {
-	return content;
+   public MailAttachmentBean() {
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailAttachment#getContentType()
+   /**
+    * @param name
+    * @param contentType
+    * @param contentURI
+    * @param contentInputstream
     */
+   public MailAttachmentBean(String name, String contentType, String contentURI, InputStream contentInputstream) {
+	super();
+	this.name = name;
+	this.contentType = contentType;
+	this.contentURI = contentURI;
+	this.contentInputstream = contentInputstream;
+   }
+
    public String getContentType() {
 	return contentType;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailAttachment#getName()
-    */
    public String getName() {
 	return name;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailAttachment#setContent(java.io.InputStream)
-    */
-   public void setContent(final InputStream in) {
-	this.content = in;
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailAttachment#setContentType(java.lang.String)
-    */
-   public void setContentType(final String contentType) {
+   public MailAttachmentBean withContentType(final String contentType) {
 	this.contentType = contentType;
+	return this;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailAttachment#setName(java.lang.String)
-    */
-   public void setName(final String name) {
+   public MailAttachmentBean withName(final String name) {
 	this.name = name;
+	return this;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailAttachment#getContentPath()
-    */
-   public String getContentPath() {
-	return contentPath;
+   public String getContentURI() {
+	return contentURI;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailAttachment#setContentPath(java.lang.String)
-    */
-   public void setContentPath(final String contentPath) {
-	this.contentPath = contentPath;
+   public MailAttachmentBean withContentURI(final String contentURI) {
+	this.contentURI = contentURI;
+	return this;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailAttachment#getContentURL()
-    */
-   public URL getContentURL() {
-	return contentURL;
+   public InputStream getContentInputStream() {
+	return contentInputstream;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.mail.MailAttachment#setContentURL(java.net.URL)
-    */
-   public void setContentURL(final URL contentURL) {
-	this.contentURL = contentURL;
+   public MailAttachmentBean withContentIntputStream(InputStream contentIn) {
+	this.contentInputstream = contentIn;
+	return this;
    }
 
 }

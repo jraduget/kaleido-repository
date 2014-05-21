@@ -15,6 +15,7 @@
  */
 package org.kaleidofoundry.mail.session;
 
+import static org.kaleidofoundry.mail.MailConstants.LocalMailSessionPluginName;
 import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_AUTH;
 import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_HOST;
 import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_PASSWORD;
@@ -42,7 +43,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * 
  * @author jraduget
  */
-@Declare(value = "mailSessions.local")
+@Declare(value = LocalMailSessionPluginName)
 public class LocalMailSessionService implements MailSessionService {
 
    private final RuntimeContext<MailSessionService> context;

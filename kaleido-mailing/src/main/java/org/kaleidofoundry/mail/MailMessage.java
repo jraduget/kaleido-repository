@@ -17,17 +17,15 @@ package org.kaleidofoundry.mail;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
-import java.net.URL;
+import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
 /**
  * <p>
- * Interface d'un MailMessage. Mod�lisation java bean d'un Mail.
- * </p>
- * <p>
- * <a href="package-summary.html"/>Voir la description du package</a>
+ * A mail message representation with a subject, addresses, body, priority, attachments...
  * </p>
  * 
  * @author jraduget
@@ -35,127 +33,146 @@ import java.util.Set;
 public interface MailMessage extends Serializable, Cloneable {
 
    /**
+    * Add an attachment
+    * 
+    * @param attach
+    * @return current instance
+    */
+   MailMessage attach(MailAttachment attach);
+
+   /**
+    * Add an attachment to the message
+    * 
+    * @param attachName attachment name
+    * @param fileURI attachment file {@link URI}
+    * @throws FileNotFoundException
+    * @throws IOException unknown mime type
+    * @return current instance
+    */
+   MailMessage attach(String attachName, String fileURI) throws FileNotFoundException, IOException;
+
+   /**
+    * Add an attachment to the message
+    * 
+    * @param attachName
+    * @param mimeType
+    * @param attachIn
+    * @return current instance
+    */
+   MailMessage attach(String attachName, String mimeType, InputStream attachIn);
+
+   /**
+    * @return Clone the current mail message into a new one
+    */
+   MailMessage clone();
+
+   /**
+    * @return get an attachment by its name
+    * @param attachName
+    */
+   MailAttachment getAttachment(String attachName);
+
+   /**
+    * @return all mail attachment names
+    */
+   Set<String> getAttachmentNames();
+
+   /**
+    * @return CC addresses
+    */
+   List<String> getCcAddresses();
+
+   /**
+    * @return CCI addresses
+    */
+   List<String> getCciAddresses();
+
+   /**
+    * @return CharSet used to encode the body of the message
+    */
+   String getBodyCharSet();
+
+   /**
+    * @return mailboty
+    */
+   String getBody();
+
+   /**
+    * @return ContentType used in the body of the message
+    */
+   String getBodyContentType();
+
+   /**
+    * @return sender address
+    */
+   String getFromAddress();
+
+   /**
+    * @return Message priority <li>0 - Normal</li> <li>1 - High</li> <li>4 - Low</li>
+    */
+   int getPriority();
+
+   /**
     * @return mail subject
     */
    String getSubject();
 
    /**
-    * @return mailboty
+    * @return TO addresses
     */
-   String getContent();
+   List<String> getToAddresses();
 
    /**
-    * @return Adresse de l'emetteur
+    * Define the body content
+    * 
+    * @param content
+    * @return current instance
     */
-   String getFromAdress();
+   MailMessage withBody(String content);
 
    /**
-    * @return Liste des destinataires TO
+    * Set the mail body as html content
+    * 
+    * @return current instance
     */
-   List<String> getToAdress();
+   MailMessage withBodyAsHtml();
 
    /**
-    * @return Liste des destinataires CC
+    * Set the mail body as plain text
+    * 
+    * @return current instance
     */
-   List<String> getCcAdress();
+   MailMessage withBodyAsText();
 
    /**
-    * @return Liste des destinataires CCI
-    */
-   List<String> getCciAdress();
-
-   /**
-    * @return R�cup�re l'importance d'envoie des message - A v�rifier ci-dessous <li>0 - Normal</li> <li>1 - Urgent</li> <li>4 - Faible</li>
-    */
-   int getPriority();
-
-   /**
-    * @return CharSet utilis� pour encoder le message
-    */
-   String getCharSet();
-
-   /**
-    * @return ContentType du message d�finit dans le header (text brut / html)
-    */
-   String getContentType();
-
-   /**
-    * D�finit le Charset � utiliser. Par d�faut ISO-8859-1 est utilis�
+    * CharSet used to encode the text of the message
     * 
     * @param charset
     */
-   void setCharSet(String charset);
+   MailMessage withBodyCharSet(String charset);
 
    /**
-    * Ajout d'un fichier attach�
+    * Define the from address
     * 
-    * @param attachName nom du fichier attach�
-    * @param filename Chemin complet avec nom de fichier
-    * @throws FileNotFoundException
-    * @throws IOException Type mime inconnu
+    * @param address
+    * @return current instance
     */
-   void addAttachment(String attachName, String filename) throws FileNotFoundException, IOException;
+   MailMessage withFromAddress(String address);
 
    /**
-    * Ajout d'un fichier attach� � partir d'une URL
-    * 
-    * @param attachName nom du fichier attach�
-    * @param fileURL Chemin complet avec nom de fichier
-    * @throws IOException Type mime inconnu
-    */
-   void addAttachment(String attachName, URL fileURL) throws IOException;
-
-   /**
-    * Ajout d'un fichier joint
-    * @param attach 
-    */
-   void addAttachment(MailAttachment attach);
-
-   /** D�finit un envoi de message avec HTML en contenu */
-   void setBodyContentHtml();
-
-   /** D�finit un envoi de message avec Text brut en contenu */
-   void setBodyContentText();
-
-   /**
-    * @return Ensemble des noms des pi�ces attach�s
-    */
-   Set<String> getAttachments();
-
-   /**
-    * @return Fichier joint
-    * @param attachName
-    */
-   MailAttachment getAttachmentFilename(String attachName);
-
-   /**
-    * D�finit le sujet du message
-    * @param subject 
-    */
-   void setSubject(String subject);
-
-   /**
-    * D�finit l'adresse de l'emetteur
-    * @param adress 
-    */
-   void setFromAdress(String adress);
-
-   /**
-    * D�finit le corps du message
-    * @param content 
-    */
-   void setContent(String content);
-
-   /**
-    * D�finit la priorit� du message
+    * Define the message priority
     * 
     * @param priority
+    * @return current instance
     */
-   void setPriority(int priority);
+   MailMessage withPriority(int priority);
 
    /**
-    * @return Clone de l'instance
+    * Define the mail subject
+    * 
+    * @param subject
+    * @return current instance
     */
-   MailMessage clone();
+   MailMessage withSubject(String subject);
 
 }

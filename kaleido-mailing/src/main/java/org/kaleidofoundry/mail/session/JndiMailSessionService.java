@@ -15,6 +15,7 @@
  */
 package org.kaleidofoundry.mail.session;
 
+import static org.kaleidofoundry.mail.MailConstants.JndiMailSessionPluginName;
 import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.JNDI_NAMING_SERVICE_NAME;
 import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.JNDI_NAMING_SERVICE_REF;
 
@@ -32,7 +33,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * 
  * @author jraduget
  */
-@Declare(value = "mailSessions.jndi")
+@Declare(value = JndiMailSessionPluginName)
 public class JndiMailSessionService implements MailSessionService {
 
    private final RuntimeContext<MailSessionService> context;

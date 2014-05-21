@@ -95,7 +95,7 @@
 		<module>kaleido-guice</module>
 		<module>kaleido-appengine</module>
 		<module>kaleido-messaging</module>
-<!-- 		<module>kaleido-mailing</module> -->
+		<module>kaleido-mailing</module>
 		<module>kaleido-bootstrap-cdi</module>
 
 		<module>kaleido-sample</module>

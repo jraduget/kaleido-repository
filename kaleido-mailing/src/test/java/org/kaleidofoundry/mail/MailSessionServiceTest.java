@@ -26,7 +26,6 @@ import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.store.ResourceException;
-import org.kaleidofoundry.mail.session.MailSessionContext;
 import org.kaleidofoundry.mail.session.MailSessionException;
 import org.kaleidofoundry.mail.session.MailSessionFactory;
 import org.kaleidofoundry.mail.session.MailSessionService;
@@ -45,7 +44,7 @@ public class MailSessionServiceTest {
    public static void main(final String[] args) {
 
 	Configuration config = null;
-	MailSessionContext mailContext = null;
+	RuntimeContext<MailSessionService> mailContext = null;
 	MailSessionService mailService = null;
 	Session mailSession = null;
 

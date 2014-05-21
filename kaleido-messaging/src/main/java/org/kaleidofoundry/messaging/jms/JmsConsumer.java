@@ -15,12 +15,13 @@
  */
 package org.kaleidofoundry.messaging.jms;
 
-import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_READ_BUFFER_SIZE;
-import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_RECEIVE_TIMEOUT_PROPERTY;
-import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_TYPE_FIELD;
 import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_DESTINATION;
 import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_MESSAGE_SELECTOR_PROPERTY;
 import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_NOLOCAL_PROPERTY;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_READ_BUFFER_SIZE;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_RECEIVE_TIMEOUT_PROPERTY;
+import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_TYPE_FIELD;
+import static org.kaleidofoundry.messaging.MessagingConstants.MessagingMessageBundle;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
@@ -67,7 +68,7 @@ import org.kaleidofoundry.messaging.TransportRegistryException;
 	@Task(comment = "Handle request / reply: http://activemq.apache.org/how-should-i-implement-request-response-with-jms.html") })
 public class JmsConsumer extends AbstractConsumer {
 
-   private AbstractJmsTransport<ConnectionFactory, Connection, Destination> transport;
+   private final AbstractJmsTransport<ConnectionFactory, Connection, Destination> transport;
 
    /**
     * @param context
@@ -245,7 +246,7 @@ public class JmsConsumer extends AbstractConsumer {
 		   try {
 			transport.closeConnection(connection);
 		   } catch (TransportException te) {
-			LOGGER.error(MESSAGING_BUNDLE.getMessage("messaging.transport.jms.connection.close"), te);
+			LOGGER.error(MessagingMessageBundle.getMessage("messaging.transport.jms.connection.close"), te);
 		   }
 		}
 	   }
@@ -257,7 +258,7 @@ public class JmsConsumer extends AbstractConsumer {
 		   try {
 			connection.stop();
 		   } catch (JMSException jmse) {
-			LOGGER.error(MESSAGING_BUNDLE.getMessage("messaging.transport.jms.connection.stop"), jmse);
+			LOGGER.error(MessagingMessageBundle.getMessage("messaging.transport.jms.connection.stop"), jmse);
 		   }
 
 		}

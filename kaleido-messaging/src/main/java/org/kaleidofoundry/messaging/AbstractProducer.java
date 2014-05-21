@@ -15,9 +15,8 @@
  */
 package org.kaleidofoundry.messaging;
 
-import static org.kaleidofoundry.messaging.ClientContextBuilder.THREAD_POOL_COUNT_PROPERTY;
-import static org.kaleidofoundry.messaging.MessagingConstants.I18N_RESOURCE;
 import static org.kaleidofoundry.messaging.ClientContextBuilder.DEBUG_PROPERTY;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.THREAD_POOL_COUNT_PROPERTY;
 import static org.kaleidofoundry.messaging.ClientContextBuilder.TRANSPORT_REF;
 
 import java.util.Collection;
@@ -32,9 +31,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.i18n.I18nMessages;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
-import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
@@ -54,7 +50,6 @@ public abstract class AbstractProducer implements Producer {
    protected final AtomicInteger ProcessedMessagesSKIPPED = new AtomicInteger(0);
 
    /** I18n messaging bundle */
-   protected final I18nMessages MESSAGING_BUNDLE = I18nMessagesFactory.provides(I18N_RESOURCE, InternalBundleHelper.CoreMessageBundle);
    protected final RuntimeContext<Producer> context;
    protected final Transport transport;
 

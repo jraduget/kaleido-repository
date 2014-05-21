@@ -18,6 +18,7 @@ package org.kaleidofoundry.messaging;
 import java.util.Locale;
 
 import org.kaleidofoundry.core.i18n.AbstractI18nException;
+import org.kaleidofoundry.core.i18n.InternalBundleEnum;
 
 /**
  * @author jraduget
@@ -58,13 +59,9 @@ public class MessagingException extends AbstractI18nException {
 	super(code);
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.i18n.AbstractI18nException#getI18nBundleName()
-    */
    @Override
    public String getI18nBundleName() {
-	return MessagingConstants.I18N_RESOURCE;
+	return InternalBundleEnum.MESSAGING.getResourceName();
    }
 
 }

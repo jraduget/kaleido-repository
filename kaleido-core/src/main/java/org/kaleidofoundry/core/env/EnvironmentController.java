@@ -34,9 +34,9 @@ import org.kaleidofoundry.core.env.model.EnvironmentStatus;
  * 
  * @author jraduget
  */
-@Stateless(mappedName = "ejb/environment/manager")
+@Stateless(mappedName = "ejb/environments/manager")
 // @Singleton
-@Path("/environment/")
+@Path("/environments/")
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class EnvironmentController {
 

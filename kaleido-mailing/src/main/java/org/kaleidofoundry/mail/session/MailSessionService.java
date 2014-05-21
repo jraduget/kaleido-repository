@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.mail.session;
 
+import static org.kaleidofoundry.mail.MailConstants.MailSessionPluginName;
+
 import javax.mail.Session;
 
 import org.kaleidofoundry.core.context.Provider;
@@ -27,7 +29,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author jraduget
  */
-@Declare("mailSessions")
+@Declare(value = MailSessionPluginName)
 @Provider(value = MailSessionProvider.class)
 public interface MailSessionService {
 

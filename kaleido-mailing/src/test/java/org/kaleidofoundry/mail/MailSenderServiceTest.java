@@ -36,8 +36,8 @@ import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.naming.JndiContext;
 import org.kaleidofoundry.core.naming.JndiResourceException;
 import org.kaleidofoundry.core.store.ResourceException;
-import org.kaleidofoundry.mail.sender.MailSenderFactory;
-import org.kaleidofoundry.mail.sender.MailSenderService;
+import org.kaleidofoundry.mail.dispatcher.MailSenderFactory;
+import org.kaleidofoundry.mail.dispatcher.MailDispatcher;
 import org.kaleidofoundry.mail.session.MailSessionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,17 +70,17 @@ public class MailSenderServiceTest {
 	try {
 	   message = MailSenderFactory.createMessage();
 
-	   message.setSubject(MAIL_SUBJECT);
-	   message.setContent(MAIL_BODY_HTML);
-	   message.setBodyContentHtml();
+	   message.withSubject(MAIL_SUBJECT);
+	   message.withBody(MAIL_BODY_HTML);
+	   message.withBodyAsHtml();
 
-	   message.setFromAdress(FROM_ADRESS);
-	   message.getToAdress().add(TO_ADRESS);
-	   message.getCcAdress().add(CC_ADRESS);
+	   message.withFromAddress(FROM_ADRESS);
+	   message.getToAddresses().add(TO_ADRESS);
+	   message.getCcAddresses().add(CC_ADRESS);
 
 	   // Fichiers attach�s eventuels
 	   // TODO : d�pacer attachment test dans MailTestConstatns
-	   message.addAttachment("image-mail-test.jpg", new URL("http://www.kaleido.fr/images/image-mail-test.jpg"));
+	   message.attach("image-mail-test.jpg", new URL("http://www.kaleido.fr/images/image-mail-test.jpg"));
 	   // message.addAttachment("image.bmp", "C:\\WINDOWS\\Zapotec.bmp");
 	   // message.addAttachment("new.doc", "C:\\WINDOWS\\SHELLNEW\\WINWORD8.doc");
 
@@ -117,7 +117,7 @@ public class MailSenderServiceTest {
    public static void ejbSender(final String[] args, final MailMessage message) throws ResourceException, MailException, MessagingException, RemoteException,
 	   CreateException, JndiResourceException {
 	Configuration config = null;
-	MailSenderService sender = null;
+	MailDispatcher sender = null;
 	JndiContext context = null;
 
 	// Recherche et chargement de la Configuration
@@ -137,7 +137,7 @@ public class MailSenderServiceTest {
    public static void sessionSender(final String[] args, final MailMessage message) throws ResourceException, MailException, MessagingException {
 	Configuration config = null;
 	MailSessionContext mailContext = null;
-	MailSenderService mailService = null;
+	MailDispatcher mailService = null;
 
 	// Recherche et chargement de la Configuration
 	config = ConfigurationFactory.provides("sessionSender", CONFIG_RESOURCE, new RuntimeContext<Configuration>());
@@ -156,7 +156,7 @@ public class MailSenderServiceTest {
    // Test sender via Ejb Service
    public static void jmsSender(final String[] args, final MailMessage message) throws ResourceException, MailException, MessagingException, JndiResourceException {
 	Configuration config = null;
-	MailSenderService sender = null;
+	MailDispatcher sender = null;
 	JndiContext context = null;
 
 	// Recherche et chargement de la Configuration
