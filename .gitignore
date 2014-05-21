@@ -13,3 +13,4 @@ derby.log
 .idea/
 *.iml
 
+/kaleido-admin/nbproject/private/
