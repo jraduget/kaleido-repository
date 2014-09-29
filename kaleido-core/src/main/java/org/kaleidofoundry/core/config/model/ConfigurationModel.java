@@ -40,7 +40,6 @@ import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -74,7 +73,6 @@ public class ConfigurationModel implements Serializable {
    private String name;
    private String description;
    @XmlElementWrapper(name = "properties")
-   @XmlElement(name = "property")
    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
    @JoinTable(name = Table_ConfigurationProperties, joinColumns = @JoinColumn(name = "CONFIGURATION_ID"), inverseJoinColumns = @JoinColumn(name = "PROPERTY_ID"))
    private Set<ConfigurationProperty> properties;
@@ -83,7 +81,7 @@ public class ConfigurationModel implements Serializable {
    private boolean storable;
    private boolean updateable;
    @Version
-   //@XmlTransient
+   // @XmlTransient
    Integer version;
 
    public ConfigurationModel() {

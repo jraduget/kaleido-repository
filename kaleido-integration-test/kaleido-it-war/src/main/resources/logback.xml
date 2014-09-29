@@ -8,6 +8,7 @@
 	</appender>
 
 	<logger name="org.kaleidofoundry" level="INFO" />
+	<logger name="com.sun.jersey" level="DEBUG" />
 
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />

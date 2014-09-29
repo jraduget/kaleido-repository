@@ -1,11 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>org.kaleidofoundry</groupId>
 		<artifactId>kaleido-it-parent</artifactId>
-		<version>0.9.1-SNAPSHOT</version>	
+		<version>0.9.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>kaleido-it-war</artifactId>
@@ -42,13 +41,13 @@
 				<version>2.1.1</version>
 				<configuration>
 					<webResources>
-						<resource>							
+						<resource>
 							<filtering>true</filtering>
 							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
 							<targetPath>WEB-INF</targetPath>
 							<includes>
-                				<include>web.xml</include>
-                			</includes>							
+								<include>web.xml</include>
+							</includes>
 						</resource>
 					</webResources>
 				</configuration>
@@ -64,7 +63,7 @@
 			<artifactId>kaleido-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
+		
 		<!-- Core integration testing -->
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
@@ -84,43 +83,36 @@
 
 		<!-- REST / JAXB - JSON -->
 		<dependency>
-    		<groupId>com.sun.jersey</groupId>
-   			<artifactId>jersey-server</artifactId>
-    		<version>1.13</version>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-server</artifactId>
 		</dependency>
 		<dependency>
-    		<groupId>com.sun.jersey</groupId>
-   			<artifactId>jersey-servlet</artifactId>
-    		<version>1.13</version>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-servlet</artifactId>
 		</dependency>
 		<dependency>
-    		<groupId>com.sun.jersey</groupId>
-   			<artifactId>jersey-json</artifactId>
-    		<version>1.13</version>
-		</dependency>		
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-json</artifactId>
+		</dependency>
 		
 		<!-- Logging with logback -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>${logback.version}</version>
-		</dependency>	
+		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>log4j-over-slf4j</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency> 
+		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency> 
+		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jul-to-slf4j</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>				
-			
+		</dependency>
+
 	</dependencies>
 
 	<reporting>
@@ -129,14 +121,13 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.7</version>
 				<configuration>
 					<skip>true</skip>
 				</configuration>
 			</plugin>
 		</plugins>
 	</reporting>
-	
+
 	<profiles>
 		<!-- JavaEE 5 profile - Ejb 3.0, JPA 1.x, JMS 1.1 ... -->
 		<profile>
@@ -147,13 +138,13 @@
 					<name>javaee</name>
 					<value>5</value>
 				</property>
-			</activation>			
+			</activation>
 			<dependencies>
 				<dependency>
 					<groupId>org.eclipse.persistence</groupId>
 					<artifactId>javax.persistence</artifactId>
 					<version>1.2.0</version>
-				</dependency>						
+				</dependency>
 			</dependencies>
 		</profile>
 		
@@ -165,8 +156,8 @@
 				<property>
 					<name>javaee</name>
 					<value>6</value>
-				</property>				
-			</activation>				
+				</property>
+			</activation>
 			<dependencies>
 				<dependency>
 					<groupId>org.eclipse.persistence</groupId>
@@ -174,7 +165,7 @@
 					<version>2.0.0</version>
 				</dependency>
 			</dependencies>
-		</profile>		
+		</profile>
 	</profiles>
 
 </project>

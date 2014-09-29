@@ -605,8 +605,8 @@ public class FileStoreConsoleController {
 	if (REGISTERED_RESOURCES.contains(resource)) {
 	   // looking at registered file store
 	   for (FileStore storeEntry : FileStoreFactory.getRegistry().values()) {
-		if (resource.toLowerCase().contains(storeEntry.getBaseUri().toLowerCase())) { return storeEntry.get(
-			resource.substring(storeEntry.getBaseUri().length())); }
+		if (resource.toLowerCase().contains(storeEntry.getBaseUri().toLowerCase())) { return storeEntry.get(resource.substring(storeEntry.getBaseUri()
+			.length())); }
 	   }
 	}
 

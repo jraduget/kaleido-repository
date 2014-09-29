@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_${webapp.xsd.version}.xsd"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_${webapp.xsd.version}.xsd"
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_${webapp.xsd.version}.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_${webapp.xsd.version}.xsd"
 	id="WebApp_ID" version="${webapp.version}">
 	<display-name>kaleido-it-war</display-name>
 
@@ -18,11 +16,12 @@
 			myConfig=classpath:/config/myConfig.properties
 			myCacheConfig=classpath:/cache/myContext.properties
 			myI18nConfig=classpath:/i18n/myContext.properties
-			myStore=classpath:/store/myContext.properties</param-value>
+			myStore=classpath:/store/myContext.properties
+		</param-value>
 	</context-param>
 
 	<listener>
-		<description>kaleido-foundry web startup listerner</description>
+		<description>kaleido-foundry web startup listener</description>
 		<display-name>kaleido web startup</display-name>
 		<listener-class>org.kaleidofoundry.core.web.StartupListener</listener-class>
 	</listener>
@@ -30,13 +29,13 @@
 	<servlet>
 		<servlet-name>RestResourcesServlet</servlet-name>
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-  		<init-param>
-               <param-name>javax.ws.rs.Application</param-name>
-               <param-value>org.kaleidofoundry.core.web.RestResourcesApp</param-value>
-        </init-param>
+		<init-param>
+			<param-name>javax.ws.rs.Application</param-name>
+			<param-value>org.kaleidofoundry.core.web.RestResourcesApp</param-value>
+		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	
+
 	<servlet-mapping>
 		<servlet-name>RestResourcesServlet</servlet-name>
 		<url-pattern>/rest/*</url-pattern>

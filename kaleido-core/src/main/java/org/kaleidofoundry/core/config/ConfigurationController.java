@@ -133,7 +133,7 @@ import org.kaleidofoundry.core.util.StringHelper;
 @Tasks(tasks = {
 	@Task(labels = TaskLabel.Defect, comment = "restore 'implements ConfigurationController which cause a bug' - I open a GF3.x bug for this : GLASSFISH-16199"),
 	@Task(labels = TaskLabel.Documentation, comment = "Refactor some rest actions url: rest url is resources not action") })
-public class ConfigurationController { 
+public class ConfigurationController {
 
    /** injected and used to handle security context */
    @Context

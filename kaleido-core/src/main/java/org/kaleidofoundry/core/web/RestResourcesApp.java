@@ -39,17 +39,16 @@ public class RestResourcesApp extends Application {
    @Override
    public Set<Class<?>> getClasses() {
 	Set<Class<?>> s = new HashSet<Class<?>>();
-	// exception handler
-	s.add(ConfigurationNotFoundMapper.class);
-	s.add(FileStoreNotFoundMapper.class);
-	s.add(ResourceNotFoundMapper.class);
-	s.add(PropertyNotFoundMapper.class);
 	// manager module
 	s.add(EnvironmentController.class);
 	s.add(FileStoreConsoleController.class);
 	s.add(ConfigurationController.class);
 	s.add(FileStoreController.class);
-	
+	// exception handler
+	s.add(ConfigurationNotFoundMapper.class);
+	s.add(FileStoreNotFoundMapper.class);
+	s.add(ResourceNotFoundMapper.class);
+	s.add(PropertyNotFoundMapper.class);
 	return s;
    }
 

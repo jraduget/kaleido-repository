@@ -55,11 +55,14 @@ public class FileStoreController {
    UriInfo uriInfo;
 
    /**
-    * @return get the list of registered file store
+    * list of the registered file-stores
+    * 
+    * @return list of the registered file-stores
     */
    @GET
-   @XmlElementWrapper(name = "stores")
+   @Path("")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+   @XmlElementWrapper(name = "stores")
    public List<FileStoreEntry> getStores() {
 	List<FileStoreEntry> stores = new ArrayList<FileStoreEntry>();
 	for (Entry<String, FileStore> storeEntry : FileStoreFactory.getRegistry().entrySet()) {
@@ -69,11 +72,11 @@ public class FileStoreController {
    }
 
    /**
-    * fetch the content of a resource
+    * download the content of a resource
     * 
-    * @param store
-    * @param resource
-    * @return resource content, with the right charset, mime type ....
+    * @param store store name identifier
+    * @param resource resource path
+    * @return the resource content, with the right charset, mime type ....
     * @throws FileStoreNotFoundException
     * @throws ResourceNotFoundException
     * @throws ResourceException
@@ -85,10 +88,7 @@ public class FileStoreController {
 	   ResourceNotFoundException, ResourceException {
 
 	ResourceHandler rs = findFileStore(store).get(resource);
-	return Response.ok(rs.getBytes())
-		.type(rs.getMimeType())
-		.location(URI.create(rs.getUri()))
-		.lastModified(new Date(rs.getLastModified()))
+	return Response.ok(rs.getBytes()).type(rs.getMimeType()).location(URI.create(rs.getUri())).lastModified(new Date(rs.getLastModified()))
 		.header(HttpHeaders.CONTENT_TYPE, rs.getMimeType() + "; " + rs.getCharset())
 		// .cacheControl(CacheControl.valueOf(value))
 		// .expires(date)
@@ -98,9 +98,9 @@ public class FileStoreController {
    /**
     * fetch the meta information of a resource
     * 
-    * @param store
-    * @param resource
-    * @return the resource meta info
+    * @param store store name identifier
+    * @param resource resource path
+    * @return the resource meta informations
     * @throws FileStoreNotFoundException
     * @throws ResourceNotFoundException
     * @throws ResourceException
@@ -116,8 +116,8 @@ public class FileStoreController {
    /**
     * remove a resource
     * 
-    * @param store
-    * @param resource
+    * @param store store name identifier
+    * @param resource resource path identifier
     * @throws FileStoreNotFoundException
     * @throws ResourceNotFoundException
     * @throws ResourceException
@@ -130,7 +130,7 @@ public class FileStoreController {
    }
 
    /**
-    * find the store in the registry
+    * find a store in the registry by its name
     * 
     * @param storeName
     * @return

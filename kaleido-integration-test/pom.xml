@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -25,21 +24,51 @@
 	<properties>
 		<terracotta-ehcache.version>2.4.6</terracotta-ehcache.version>
 		<jboss-infinispan.version>5.1.5.FINAL</jboss-infinispan.version>
-		<jmeter.version>2.8</jmeter.version>
+		<jersey.version>1.18</jersey.version>
+		<jmeter.version>2.11</jmeter.version>
 	</properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.apache.jmeter</groupId>
-			<artifactId>ApacheJMeter_core</artifactId>
-			<version>${jmeter.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.jmeter</groupId>
-			<artifactId>ApacheJMeter_java</artifactId>
-			<version>${jmeter.version}</version>
-		</dependency>
-	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.sun.jersey</groupId>
+				<artifactId>jersey-server</artifactId>
+				<version>${jersey.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey</groupId>
+				<artifactId>jersey-servlet</artifactId>
+				<version>${jersey.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey</groupId>
+				<artifactId>jersey-json</artifactId>
+				<version>${jersey.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey</groupId>
+				<artifactId>jersey-client</artifactId>
+				<version>${jersey.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey</groupId>
+				<artifactId>jersey-json</artifactId>
+				<version>${jersey.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.jmeter</groupId>
+				<artifactId>ApacheJMeter_core</artifactId>
+				<version>${jmeter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.jmeter</groupId>
+				<artifactId>ApacheJMeter_java</artifactId>
+				<version>${jmeter.version}</version>
+			</dependency>
+		</dependencies>
+
+	</dependencyManagement>
 
 	<profiles>
 		<profile>
