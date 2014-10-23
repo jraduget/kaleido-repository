@@ -28,6 +28,10 @@ public final class MailSessionFactory {
 
    static final MailSessionProvider PROVIDER = new MailSessionProvider(MailSessionService.class);
 
+   public static MailSessionService provides(String name) throws ProviderException {
+	return PROVIDER.provides(name, new RuntimeContext<MailSessionService>(name, MailSessionService.class));
+   }
+   
    public static MailSessionService provides(String name, RuntimeContext<MailSessionService> context) throws ProviderException {
 	return PROVIDER.provides(name, context);
    }

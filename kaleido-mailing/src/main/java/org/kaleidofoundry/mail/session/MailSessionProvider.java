@@ -51,6 +51,10 @@ public class MailSessionProvider extends AbstractProviderService<MailSessionServ
 	return provides(context.getName(), context);
    }
 
+   public MailSessionService provides(String name) {
+	return provides(name, new RuntimeContext<MailSessionService>(name, MailSessionService.class));
+   }
+
    public MailSessionService provides(@NotNull final String name, RuntimeContext<MailSessionService> context) throws ProviderException {
 
 	MailSessionService mailSessionService = getRegistry().get(name);

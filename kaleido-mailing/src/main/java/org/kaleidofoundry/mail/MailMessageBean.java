@@ -29,6 +29,8 @@ import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.io.MimeTypeResolver;
 import org.kaleidofoundry.core.io.MimeTypeResolverFactory;
 import org.kaleidofoundry.core.lang.Charsets;
+import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.util.StringHelper;
 
 /**
@@ -42,7 +44,7 @@ public class MailMessageBean implements MailMessage {
 
    protected final static String TEXT_CONTENT_TYPE = "text/plain";
    protected final static String HTML_CONTENT_TYPE = "text/html";
-   protected final static String DEFAULT_CONTENT_TYPE = TEXT_CONTENT_TYPE;
+   protected final static String DEFAULT_CONTENT_TYPE = HTML_CONTENT_TYPE;
 
    protected final static String DEFAULT_CHARSET = Charsets.UTF_8.getCode();
 
@@ -64,7 +66,7 @@ public class MailMessageBean implements MailMessage {
 	attachmentsByName = new HashMap<String, MailAttachment>();
 	toAddresses = new ArrayList<String>();
 	bodyCharset = DEFAULT_CHARSET;
-	bodyContentType = TEXT_CONTENT_TYPE;
+	bodyContentType = DEFAULT_CONTENT_TYPE;
 	priority = 0;
    }
 
@@ -74,6 +76,12 @@ public class MailMessageBean implements MailMessage {
 	if (StringHelper.isEmpty(attach.getName())) { throw new IllegalArgumentException("Mail attachment name is mandatory"); }
 	if (attach.getContentInputStream() == null) { throw new IllegalArgumentException("Mail attachment inpustream is null"); }
 	attachmentsByName.put(attach.getName(), attach);
+	return this;
+   }
+
+   @Override
+   public MailMessage attach(String name, ResourceHandler attach) throws ResourceException {
+	attach(new MailAttachmentBean(name, attach.getMimeType(), attach.getUri(), attach.getInputStream()));
 	return this;
    }
 

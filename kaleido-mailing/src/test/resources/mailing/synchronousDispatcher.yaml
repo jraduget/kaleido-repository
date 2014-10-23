@@ -1,0 +1,7 @@
+mailing:
+  dispatchers:
+    myDispatcher:
+      provider: sync
+      session:
+        service-ref: mySession
+        

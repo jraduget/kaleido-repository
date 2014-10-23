@@ -10,7 +10,7 @@ import org.kaleidofoundry.core.context.AbstractRuntimeContextBuilder;
 
 public class MailSessionContextBuilder extends AbstractRuntimeContextBuilder<MailSessionService> {
 
-   /** Transport type : see {@link MailSessionProviderEnum} */
+   /** see {@link MailSessionProviderEnum} */
    public static final String PROVIDER = "provider";
 
    /** Smtp host */
@@ -18,11 +18,14 @@ public class MailSessionContextBuilder extends AbstractRuntimeContextBuilder<Mai
    /** Smtp port */
    public static final String LOCAL_SMTP_PORT = "smtp.port";
    /** Smtp authentication <code>true|false</code> */
-   public static final String LOCAL_SMTP_AUTH = "smtp.auth";
+   public static final String LOCAL_SMTP_AUTH = "smtp.auth.enable";
    /** Smtp authentication user */
    public static final String LOCAL_SMTP_USER = "smtp.auth.user";
    /** Smtp authentication password */
    public static final String LOCAL_SMTP_PASSWORD = "smtp.auth.password";
+
+   /** Smtp TLS is enable */
+   public static final String LOCAL_SMTP_TLS = "smtp.tls";
 
    /** Smtp SSL is enabled */
    public static final String LOCAL_SMTP_SSL = "smtp.ssl";
@@ -95,10 +98,19 @@ public class MailSessionContextBuilder extends AbstractRuntimeContextBuilder<Mai
    }
 
    /**
+    * @param tls
+    * @return current builder instance
+    */
+   public MailSessionContextBuilder withSmtpTLS(final boolean tls) {
+	getContextParameters().put(LOCAL_SMTP_TLS, tls);
+	return this;
+   }
+
+   /**
     * @param ssl
     * @return current builder instance
     */
-   public MailSessionContextBuilder withSmtpSsl(final boolean ssl) {
+   public MailSessionContextBuilder withSmtpSSL(final boolean ssl) {
 	getContextParameters().put(LOCAL_SMTP_SSL, ssl);
 	return this;
    }

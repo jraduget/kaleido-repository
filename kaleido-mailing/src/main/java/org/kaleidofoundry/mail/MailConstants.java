@@ -28,16 +28,16 @@ public interface MailConstants {
    /** Mail message bundle */
    I18nMessages MailMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.MAIL.getResourceName(), InternalBundleHelper.CoreMessageBundle);
 
-   String MailSessionPluginName = "mailSessions";
+   String MailSessionPluginName = "mailing.sessions";
 
-   String LocalMailSessionPluginName = "mailSessions.local";
+   String LocalMailSessionPluginName = "mailing.sessions.local";
 
-   String JndiMailSessionPluginName = "mailSessions.jndi";
+   String JndiMailSessionPluginName = "mailing.sessions.jndi";
 
-   String MailDispatcherPluginName = "mailDispatchers";
+   String MailDispatcherPluginName = "mailing.dispatchers";
 
-   String AsynchronousMailDispatcherPluginName = "mailDispatchers.async";
+   String AsynchronousMailDispatcherPluginName = "mailing.dispatchers.async";
 
-   String SynchronousMailDispatcherPluginName = "mailDispatchers.sync";
+   String SynchronousMailDispatcherPluginName = "mailing.dispatchers.sync";
 
 }

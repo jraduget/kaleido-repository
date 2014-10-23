@@ -24,6 +24,7 @@ import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SM
 import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_SSL_SOCKETFACTORY;
 import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_SSL_SOCKETFACTORY_FALLBACK;
 import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_SSL_SOCKETFACTORY_PORT;
+import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_TLS;
 import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_USER;
 import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SSL_FACTORY;
 
@@ -46,7 +47,7 @@ import org.kaleidofoundry.core.util.StringHelper;
 @Declare(value = LocalMailSessionPluginName)
 public class LocalMailSessionService implements MailSessionService {
 
-   private final RuntimeContext<MailSessionService> context;
+   protected final RuntimeContext<MailSessionService> context;
 
    public LocalMailSessionService(RuntimeContext<MailSessionService> context) {
 	super();
@@ -62,14 +63,17 @@ public class LocalMailSessionService implements MailSessionService {
 	if (StringHelper.isEmpty(hostName)) throw new EmptyContextParameterException(LOCAL_SMTP_HOST, context);
 
 	final boolean ssl = context.getBoolean(LOCAL_SMTP_SSL, false);
-
+	final boolean tls = context.getBoolean(LOCAL_SMTP_TLS, false);	
+	
 	final Properties mailProps = new Properties();
 
 	mailProps.put("mail.smtp.host", hostName);
 	mailProps.put("mail.smtp.port", portName);
 	mailProps.put("mail.smtp.auth", authen);
 
-	if (ssl) {
+	if (tls) {
+	   mailProps.put("mail.smtp.starttls.enable", "true");   
+	} else if (ssl) {
 	   // check with jdk6 ... Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 	   mailProps.put("mail.smtp.socketFactory.class", context.getString(LOCAL_SMTP_SSL_SOCKETFACTORY, LOCAL_SSL_FACTORY));
 	   mailProps.put("mail.smtp.socketFactory.fallback", context.getBoolean(LOCAL_SMTP_SSL_SOCKETFACTORY_FALLBACK, false));

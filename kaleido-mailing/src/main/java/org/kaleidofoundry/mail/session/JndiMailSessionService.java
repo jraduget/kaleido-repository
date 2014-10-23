@@ -36,9 +36,9 @@ import org.kaleidofoundry.core.util.StringHelper;
 @Declare(value = JndiMailSessionPluginName)
 public class JndiMailSessionService implements MailSessionService {
 
-   private final RuntimeContext<MailSessionService> context;
+   protected final RuntimeContext<MailSessionService> context;
    
-   private final NamingService namingService;
+   protected final NamingService namingService;
 
    public JndiMailSessionService(RuntimeContext<MailSessionService> context) {
 

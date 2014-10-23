@@ -23,6 +23,9 @@ import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
+import org.kaleidofoundry.core.store.ResourceException;
+import org.kaleidofoundry.core.store.ResourceHandler;
+
 /**
  * <p>
  * A mail message representation with a subject, addresses, body, priority, attachments...
@@ -39,6 +42,16 @@ public interface MailMessage extends Serializable, Cloneable {
     * @return current instance
     */
    MailMessage attach(MailAttachment attach);
+
+   /**
+    * Add an attachment
+    * 
+    * @param name
+    * @param attach
+    * @return current instance
+    * @throws ResourceException
+    */
+   MailMessage attach(String name, ResourceHandler attach) throws ResourceException;
 
    /**
     * Add an attachment to the message

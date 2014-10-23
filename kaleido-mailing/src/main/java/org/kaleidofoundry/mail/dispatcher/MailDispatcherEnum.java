@@ -16,18 +16,15 @@
 package org.kaleidofoundry.mail.dispatcher;
 
 /**
- * Ways of sending mail
+ * Mail dispatcher type
  * 
  * @author jraduget
  */
 public enum MailDispatcherEnum {
 
-   /** Sending asynchronous mail using a JMS queue */
-   JMS(false),
-   /** Sending asynchronous mail using an EJB MDB */
-   EJB(false),
-   /** Sending synchronous mail using a mail session */
-   SESSION(true);
+   async(false),
+
+   sync(true);
 
    MailDispatcherEnum(final boolean needMailSession) {
 	this.mailSessionRequired = needMailSession;

@@ -20,17 +20,12 @@ package org.kaleidofoundry.mail;
  */
 public interface MailTestConstants {
 
-   String FROM_ADRESS = "integration.test@kaleidofoundry.org";
-   String TO_ADRESS = "integration.test@kaleidofoundry.org";
-   String CC_ADRESS = "jerome.raduget@gmail.com";
+   String FROM_ADRESS = "jerome.raduget@gmail.com";
+   String TO_ADRESS = "jraduget@gmail.com";
+   
+   String CC_ADRESS = "jraduget@yahoo.fr";
 
    String MAIL_SUBJECT = "Kaleido integration test subject";
    String MAIL_BODY_HTML = "<b>Kaleido integration test body</b><br/>Hello world!";
-
-   /** the configuration file used */
-   String CONFIG_RESOURCE = "classpath:/org/kaleidofoundry/mail/mailSession.properties";
-
-   /** context name used to get the mail session paramter */
-   String LOCAL_MAIL_CONTEXT_NAME = "kaleido-local";
 
 }

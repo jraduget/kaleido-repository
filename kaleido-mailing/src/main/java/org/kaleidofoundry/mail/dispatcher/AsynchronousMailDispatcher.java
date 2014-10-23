@@ -21,7 +21,6 @@ import static org.kaleidofoundry.mail.dispatcher.MailDispatcherContextBuilder.PR
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.mail.MailMessage;
-import org.kaleidofoundry.mail.MailMessageBean;
 import org.kaleidofoundry.messaging.JavaBeanMessage;
 import org.kaleidofoundry.messaging.Producer;
 import org.kaleidofoundry.messaging.ProducerFactory;
@@ -41,13 +40,8 @@ public class AsynchronousMailDispatcher implements MailDispatcher {
 	final String messageProducereRef = context.getString(PRODUCER_SERVICE_NAME);
 	final RuntimeContext<Producer> producerContext = new RuntimeContext<Producer>(messageProducereRef, Producer.class, this.context);
 	messageProducer = ProducerFactory.provides(producerContext);
-
    }
 
-   @Override
-   public MailMessage createMessage() {
-	return new MailMessageBean();
-   }
 
    @Override
    public void send(final MailMessage message) throws MailDispatcherException {

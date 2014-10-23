@@ -21,8 +21,6 @@ import javax.mail.Session;
 
 import org.kaleidofoundry.core.context.Provider;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Mail session service, used to send mail using smtp protocol
@@ -32,9 +30,6 @@ import org.slf4j.LoggerFactory;
 @Declare(value = MailSessionPluginName)
 @Provider(value = MailSessionProvider.class)
 public interface MailSessionService {
-
-   /** Logger */
-   static final Logger LOGGER = LoggerFactory.getLogger(MailSessionService.class);
 
    /**
     * @return {@link Session} creation

@@ -1,0 +1,17 @@
+mailing:
+  sessions:    
+    mySession:  
+      provider: jndi
+      namingService:
+        name: mail/smtp/session
+        service-ref: tomcat
+
+namingServices:
+  tomcat:
+    env-prefix: java:comp/env
+    factory-initial-class: org.apache.naming.java.javaURLContextFactory
+
+  jboss:    
+    factory-initial-class: org.jnp.interfaces.NamingContextFactory
+    factory-url-pkgs: org.jboss.naming:org.jnp.interfaces
+    provider-url: localhost:1099

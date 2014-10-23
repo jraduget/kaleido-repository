@@ -21,8 +21,6 @@ import org.kaleidofoundry.core.context.Provider;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.mail.MailException;
 import org.kaleidofoundry.mail.MailMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -34,13 +32,6 @@ import org.slf4j.LoggerFactory;
 @Declare(MailDispatcherPluginName)
 @Provider(value = MailDispatcherProvider.class)
 public interface MailDispatcher {
-
-   Logger LOGGER = LoggerFactory.getLogger(MailDispatcher.class);
-
-   /**
-    * @return create a new mail message
-    */
-   MailMessage createMessage();
 
    /**
     * send the message

@@ -1,0 +1,4 @@
+org.kaleidofoundry.mail.dispatcher.AsynchronousMailDispatcher
+org.kaleidofoundry.mail.dispatcher.SynchronousMailDispatcher
+org.kaleidofoundry.mail.session.JndiMailSessionService
+org.kaleidofoundry.mail.session.LocalMailSessionService

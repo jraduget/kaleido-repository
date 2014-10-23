@@ -44,8 +44,6 @@ import org.kaleidofoundry.core.util.StringHelper;
 import org.kaleidofoundry.mail.MailAttachment;
 import org.kaleidofoundry.mail.MailException;
 import org.kaleidofoundry.mail.MailMessage;
-import org.kaleidofoundry.mail.MailMessageBean;
-import org.kaleidofoundry.mail.session.MailSessionException;
 import org.kaleidofoundry.mail.session.MailSessionFactory;
 import org.kaleidofoundry.mail.session.MailSessionService;
 
@@ -61,7 +59,7 @@ public class SynchronousMailDispatcher implements MailDispatcher {
 
    private final MailSessionService sessionService;
 
-   public SynchronousMailDispatcher(final RuntimeContext<MailDispatcher> context) throws MailSessionException {
+   public SynchronousMailDispatcher(final RuntimeContext<MailDispatcher> context) {
 	String mailServiceContextName = context.getString(MAILSESSION_SERVICE_REF);
 	if (StringHelper.isEmpty(mailServiceContextName)) { throw new EmptyContextParameterException(MAILSESSION_SERVICE_REF, context); }
 	this.context = context;
@@ -193,11 +191,6 @@ public class SynchronousMailDispatcher implements MailDispatcher {
 	// propagate the error if one of the addresses is invalid
 	if (!incorrectAddresses.isEmpty()) { throw MailException.invalidMailAddressException(incorrectAddresses); }
 
-   }
-
-   @Override
-   public MailMessage createMessage() {
-	return new MailMessageBean();
    }
 
 }
