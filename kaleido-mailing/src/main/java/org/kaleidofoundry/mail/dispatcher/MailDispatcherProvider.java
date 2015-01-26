@@ -85,7 +85,6 @@ public class MailDispatcherProvider extends AbstractProviderService<MailDispatch
 	   try {
 
 		final Declare declarePlugin = impl.getAnnotation(Declare.class);
-
 		final String pluginName = declarePlugin.value().replace(MailDispatcherPluginName, "").toLowerCase();
 
 		if (pluginName.endsWith(provider)) {

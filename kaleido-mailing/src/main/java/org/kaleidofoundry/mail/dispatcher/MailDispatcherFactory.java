@@ -3,7 +3,6 @@ package org.kaleidofoundry.mail.dispatcher;
 import org.kaleidofoundry.core.context.ProviderException;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.util.Registry;
-import org.kaleidofoundry.mail.session.MailSessionProvider;
 
 
 public class MailDispatcherFactory {
