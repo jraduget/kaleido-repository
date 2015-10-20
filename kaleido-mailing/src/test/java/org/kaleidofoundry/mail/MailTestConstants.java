@@ -27,5 +27,7 @@ public interface MailTestConstants {
 
    String MAIL_SUBJECT = "Kaleido integration test subject";
    String MAIL_BODY_HTML = "<b>Kaleido integration test body</b><br/>Hello world!";
+   
+   String INVALID_MAIL_ADDRESS_01 = "wrongmail.com";
 
 }

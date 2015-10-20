@@ -75,13 +75,41 @@ public class MailAttachmentBean implements MailAttachment {
 	return this;
    }
 
-   public InputStream getContentInputStream() {
+   public InputStream getInputStream() {
 	return contentInputstream;
    }
 
    public MailAttachmentBean withContentIntputStream(InputStream contentIn) {
 	this.contentInputstream = contentIn;
 	return this;
+   }
+
+   @Override
+   public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((contentType == null) ? 0 : contentType.hashCode());
+	result = prime * result + ((contentURI == null) ? 0 : contentURI.hashCode());
+	result = prime * result + ((name == null) ? 0 : name.hashCode());
+	return result;
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+	if (this == obj) { return true; }
+	if (obj == null) { return false; }
+	if (!(obj instanceof MailAttachmentBean)) { return false; }
+	MailAttachmentBean other = (MailAttachmentBean) obj;
+	if (contentType == null) {
+	   if (other.contentType != null) { return false; }
+	} else if (!contentType.equals(other.contentType)) { return false; }
+	if (contentURI == null) {
+	   if (other.contentURI != null) { return false; }
+	} else if (!contentURI.equals(other.contentURI)) { return false; }
+	if (name == null) {
+	   if (other.name != null) { return false; }
+	} else if (!name.equals(other.name)) { return false; }
+	return true;
    }
 
 }

@@ -16,40 +16,77 @@
 package org.kaleidofoundry.mail.dispatcher;
 
 import static org.kaleidofoundry.mail.MailConstants.AsynchronousMailDispatcherPluginName;
-import static org.kaleidofoundry.mail.dispatcher.MailDispatcherContextBuilder.PRODUCER_SERVICE_NAME;
+import static org.kaleidofoundry.mail.dispatcher.MailDispatcherContextBuilder.THREAD_COUNT;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.plugin.Declare;
 import org.kaleidofoundry.mail.MailMessage;
-import org.kaleidofoundry.messaging.JavaBeanMessage;
-import org.kaleidofoundry.messaging.Producer;
-import org.kaleidofoundry.messaging.ProducerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author jraduget
  */
 @Declare(AsynchronousMailDispatcherPluginName)
-public class AsynchronousMailDispatcher implements MailDispatcher {
+public class AsynchronousMailDispatcher extends SynchronousMailDispatcher {
 
-   private final RuntimeContext<MailDispatcher> context;
+   private static final Logger LOGGER = LoggerFactory.getLogger(AsynchronousMailDispatcher.class);
 
-   private final Producer messageProducer;
+   private final ExecutorService executorService;
 
    public AsynchronousMailDispatcher(final RuntimeContext<MailDispatcher> context) {
-	this.context = context;
-	final String messageProducereRef = context.getString(PRODUCER_SERVICE_NAME);
-	final RuntimeContext<Producer> producerContext = new RuntimeContext<Producer>(messageProducereRef, Producer.class, this.context);
-	messageProducer = ProducerFactory.provides(producerContext);
+	super(context);
+	final int threadCount = context.getInteger(THREAD_COUNT, 10);
+	executorService = Executors.newFixedThreadPool(threadCount);
    }
-
 
    @Override
-   public void send(final MailMessage message) throws MailDispatcherException {
-	try {
-	   messageProducer.send(new JavaBeanMessage(message));
-	} catch (org.kaleidofoundry.messaging.MessagingException me) {
-	   throw new MailDispatcherException("mail.service.send.error", me);
-	}
+   public void send(final MailMessage... messages) throws MailDispatcherException {
+	this.send(null, messages);
    }
 
+   @Override
+   public void send(final MailMessageErrorHandler handler, final MailMessage... messages) {
+	List<Runnable> threads = new ArrayList<Runnable>();
+
+	for (final MailMessage message : messages) {
+	   threads.add(new Runnable() {
+		@Override
+		public void run() {
+		   AsynchronousMailDispatcher.super.send(handler, message);
+		}
+	   });
+	}
+
+	for (Runnable thread : threads) {
+	   executorService.execute(thread);
+	}
+
+   }
+
+   public void close() {
+	LOGGER.info("Closing mail dispatcher service {}", context.getName());
+
+	// Disable new tasks from being submitted
+	executorService.shutdown();
+	try {
+	   // Wait a while for existing tasks to terminate
+	   if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+		executorService.shutdownNow(); // Cancel currently executing tasks
+		// Wait a while for tasks to respond to being cancelled
+		if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) System.err.println("Pool did not terminate");
+	   }
+	} catch (InterruptedException ie) {
+	   // (Re-)Cancel if current thread also interrupted
+	   executorService.shutdownNow();
+	   // Preserve interrupt status
+	   Thread.currentThread().interrupt();
+	}
+   }
 }

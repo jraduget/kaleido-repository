@@ -1,0 +1,7 @@
+mailing:
+  dispatchers:
+    myDispatcher:
+      provider: async
+      session:
+        service-ref: mySession
+        

@@ -29,6 +29,7 @@ import org.kaleidofoundry.core.io.FileHelper;
 import org.kaleidofoundry.core.io.MimeTypeResolver;
 import org.kaleidofoundry.core.io.MimeTypeResolverFactory;
 import org.kaleidofoundry.core.lang.Charsets;
+import org.kaleidofoundry.core.store.FileStoreProvider;
 import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.util.StringHelper;
@@ -74,7 +75,7 @@ public class MailMessageBean implements MailMessage {
    public MailMessage attach(final MailAttachment attach) {
 	if (attach == null) { throw new IllegalArgumentException("Mail attachment is null"); }
 	if (StringHelper.isEmpty(attach.getName())) { throw new IllegalArgumentException("Mail attachment name is mandatory"); }
-	if (attach.getContentInputStream() == null) { throw new IllegalArgumentException("Mail attachment inpustream is null"); }
+	if (attach.getInputStream() == null) { throw new IllegalArgumentException("Mail attachment inpustream is null"); }
 	attachmentsByName.put(attach.getName(), attach);
 	return this;
    }
@@ -87,10 +88,11 @@ public class MailMessageBean implements MailMessage {
 
    @Override
    public MailMessage attach(final String attachName, final String fileURI) throws FileNotFoundException, IOException {
+	String mergedFileURI = FileStoreProvider.buildFullResourceURi(fileURI);
 	MimeTypeResolver mimesSrv = MimeTypeResolverFactory.getService();
-	String fileExt = FileHelper.getFileNameExtension(fileURI);
-	MailAttachmentBean attach = new MailAttachmentBean(attachName, (fileExt != null ? mimesSrv.getMimeType(fileExt) : null), fileURI, new FileInputStream(
-		fileURI));
+	String fileExt = FileHelper.getFileNameExtension(mergedFileURI);
+	MailAttachmentBean attach = new MailAttachmentBean(attachName, (fileExt != null ? mimesSrv.getMimeType(fileExt) : null), mergedFileURI,
+		new FileInputStream(mergedFileURI));
 	return attach(attach);
    }
 
@@ -250,6 +252,60 @@ public class MailMessageBean implements MailMessage {
 	} catch (final CloneNotSupportedException cne) {
 	   throw new IllegalStateException(cne);
 	}
+   }
+
+   @Override
+   public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((attachmentsByName == null) ? 0 : attachmentsByName.hashCode());
+	result = prime * result + ((body == null) ? 0 : body.hashCode());
+	result = prime * result + ((bodyCharset == null) ? 0 : bodyCharset.hashCode());
+	result = prime * result + ((bodyContentType == null) ? 0 : bodyContentType.hashCode());
+	result = prime * result + ((ccAddresses == null) ? 0 : ccAddresses.hashCode());
+	result = prime * result + ((cciAddresses == null) ? 0 : cciAddresses.hashCode());
+	result = prime * result + ((fromAddress == null) ? 0 : fromAddress.hashCode());
+	result = prime * result + priority;
+	result = prime * result + ((subject == null) ? 0 : subject.hashCode());
+	result = prime * result + ((toAddresses == null) ? 0 : toAddresses.hashCode());
+	return result;
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+	if (this == obj) { return true; }
+	if (obj == null) { return false; }
+	if (!(obj instanceof MailMessageBean)) { return false; }
+	MailMessageBean other = (MailMessageBean) obj;
+	if (attachmentsByName == null) {
+	   if (other.attachmentsByName != null) { return false; }
+	} else if (!attachmentsByName.equals(other.attachmentsByName)) { return false; }
+	if (body == null) {
+	   if (other.body != null) { return false; }
+	} else if (!body.equals(other.body)) { return false; }
+	if (bodyCharset == null) {
+	   if (other.bodyCharset != null) { return false; }
+	} else if (!bodyCharset.equals(other.bodyCharset)) { return false; }
+	if (bodyContentType == null) {
+	   if (other.bodyContentType != null) { return false; }
+	} else if (!bodyContentType.equals(other.bodyContentType)) { return false; }
+	if (ccAddresses == null) {
+	   if (other.ccAddresses != null) { return false; }
+	} else if (!ccAddresses.equals(other.ccAddresses)) { return false; }
+	if (cciAddresses == null) {
+	   if (other.cciAddresses != null) { return false; }
+	} else if (!cciAddresses.equals(other.cciAddresses)) { return false; }
+	if (fromAddress == null) {
+	   if (other.fromAddress != null) { return false; }
+	} else if (!fromAddress.equals(other.fromAddress)) { return false; }
+	if (priority != other.priority) { return false; }
+	if (subject == null) {
+	   if (other.subject != null) { return false; }
+	} else if (!subject.equals(other.subject)) { return false; }
+	if (toAddresses == null) {
+	   if (other.toAddresses != null) { return false; }
+	} else if (!toAddresses.equals(other.toAddresses)) { return false; }
+	return true;
    }
 
 }

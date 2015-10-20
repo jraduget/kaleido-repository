@@ -16,8 +16,11 @@ public class MailDispatcherContextBuilder extends AbstractRuntimeContextBuilder<
    /** {@link MailSessionService} name */
    public static final String MAILSESSION_SERVICE_REF = "session.service-ref";
 
-   /** {@link AsynchronousMailDispatcher} {@link Producer} */
+   /** {@link MessagingMailDispatcher} {@link Producer} */
    public static final String PRODUCER_SERVICE_NAME = "producer.service-ref";
+
+   /** {@link AsynchronousMailDispatcher} {@link Producer} thread count */
+   public static final String THREAD_COUNT = "threadCount";
 
    /** EJB service name */
    public static final String EJB_SERVICE_NAME = "namingService.name";
@@ -58,6 +61,24 @@ public class MailDispatcherContextBuilder extends AbstractRuntimeContextBuilder<
     */
    public MailDispatcherContextBuilder withNamingServiceRef(final String namingServiceRef) {
 	getContextParameters().put(EJB_NAMING_SERVICE_REF, namingServiceRef);
+	return this;
+   }
+
+   /**
+    * @param threadCount
+    * @return current builder instance
+    */
+   public MailDispatcherContextBuilder withThreadCount(final Integer threadCount) {
+	getContextParameters().put(THREAD_COUNT, threadCount);
+	return this;
+   }
+
+   /**
+    * @param serviceName
+    * @return current builder instance
+    */
+   public MailDispatcherContextBuilder withProducerServiceName(final String serviceName) {
+	getContextParameters().put(PRODUCER_SERVICE_NAME, serviceName);
 	return this;
    }
 }

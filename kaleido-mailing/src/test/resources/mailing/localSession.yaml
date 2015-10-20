@@ -8,7 +8,7 @@ mailing:
         auth:
           enable: true
           user: jerome.raduget@gmail.com
-          password: 
+          password: gmailmaeva2004
         ssl: true
         socketFactory:
           class: javax.net.ssl.SSLSocketFactory
@@ -22,7 +22,7 @@ mailing:
         auth:
           enable: true
           user: jerome.raduget@gmail.com
-          password: 
+          password: gmailmaeva2004
         tls: true
         
     mySession-ssl:

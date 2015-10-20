@@ -18,9 +18,10 @@ package org.kaleidofoundry.mail.dispatcher;
 import static org.kaleidofoundry.mail.MailConstants.MailDispatcherPluginName;
 
 import org.kaleidofoundry.core.context.Provider;
+import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.plugin.Declare;
-import org.kaleidofoundry.mail.MailException;
 import org.kaleidofoundry.mail.MailMessage;
+import org.kaleidofoundry.mail.session.MailSessionException;
 
 /**
  * <p>
@@ -34,12 +35,28 @@ import org.kaleidofoundry.mail.MailMessage;
 public interface MailDispatcher {
 
    /**
-    * send the message
+    * Send the given messages in a same mail session.
     * 
-    * @param message
-    * @throws MailException problem around the mail message (invalid address...)
-    * @throws MailDispatcherException problem around the dispatching of the mail message
+    * @param messages
+    * @throws MailSessionException problem around the creation of the mail session
+    * @throws MailDispatcherException problem with some mail message (illegal addresses, ...)
     */
-   void send(MailMessage message) throws MailException, MailDispatcherException;
+   void send(@NotNull MailMessage... messages) throws MailSessionException, MailDispatcherException;
 
+   /**
+    * Send the given messages in a same mail session.<br/>
+    * Errors while sending a mail are processed by the message error handler, in argument of the method
+    * 
+    * @param handler error handler if an error occurred sending an email
+    * @param messages
+    */
+   void send(@NotNull MailMessageErrorHandler handler, @NotNull MailMessage... messages);
+
+   /**
+    * Close properly all the resources used by the mail dispatcher, waiting the processing of the mails being sent.
+    * Then, the call of this method will give back the hand to the execution of the current thread. The call of this method is blocking.
+    * 
+    * @throws Exception
+    */
+   void close() throws Exception;
 }

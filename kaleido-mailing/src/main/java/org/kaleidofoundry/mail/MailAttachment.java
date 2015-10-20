@@ -44,6 +44,6 @@ public interface MailAttachment extends Serializable {
    /**
     * @return attachment input stream used to read the content
     */
-   InputStream getContentInputStream();
+   InputStream getInputStream();
 
 }

@@ -32,9 +32,11 @@ public class LocalMailSessionServiceTest {
 
 	LocalMailSessionService localMailSession = ((LocalMailSessionService) mailSessionService);
 	assertEquals("smtp.gmail.com", localMailSession.context.getString("smtp.host"));
-	assertEquals("25", localMailSession.context.getString("smtp.port"));
+	assertEquals(Integer.valueOf(465), localMailSession.context.getInteger("smtp.port"));
 	assertEquals(true, localMailSession.context.getBoolean("smtp.auth.enable"));
-	// ...
+	assertEquals(true, localMailSession.context.getBoolean("smtp.ssl"));
+	assertEquals("javax.net.ssl.SSLSocketFactory", localMailSession.context.getString("smtp.socketFactory.class"));
+	assertEquals(Integer.valueOf(465), localMailSession.context.getInteger("smtp.socketFactory.port"));
    }
 
 }

@@ -66,15 +66,4 @@ public class MailException extends AbstractI18nException {
 	return InternalBundleEnum.MAIL.getResourceName();
    }
 
-   public static MailException emptyFromMailAddressException() {
-	return new MailException("mail.service.fromaddress.none");
-   }
-
-   public static MailException emptyToMailAddressException() {
-	return new MailException("mail.service.address.none");
-   }
-
-   public static MailException invalidMailAddressException(Iterable<String> addresses) {
-	return new MailException("mail.service.address.invalid", addresses.toString());
-   }
 }

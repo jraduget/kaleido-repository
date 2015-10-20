@@ -15,9 +15,10 @@
  */
 package org.kaleidofoundry.mail.dispatcher;
 
-import java.util.Locale;
+import java.io.IOException;
 
 import org.kaleidofoundry.mail.MailException;
+import org.kaleidofoundry.mail.MailingDispatcherReport;
 
 /**
  * Mail dispatcher exception
@@ -28,36 +29,38 @@ public class MailDispatcherException extends MailException {
 
    private static final long serialVersionUID = -4072499048280078160L;
 
-   public MailDispatcherException(final String code, final Locale locale, final String... args) {
-	super(code, locale, args);
-   }
+   private final MailingDispatcherReport report;
 
-   public MailDispatcherException(final String code, final Locale locale) {
-	super(code, locale);
+   public MailDispatcherException(MailingDispatcherReport report) {
+	super("mail.service.send.error");
+	this.report = report;
    }
 
    public MailDispatcherException(final String code, final String... args) {
 	super(code, args);
-   }
-
-   public MailDispatcherException(final String code, final Throwable cause, final Locale locale, final String... args) {
-	super(code, cause, locale, args);
-   }
-
-   public MailDispatcherException(final String code, final Throwable cause, final Locale locale) {
-	super(code, cause, locale);
+	this.report = null;
    }
 
    public MailDispatcherException(final String code, final Throwable cause, final String... args) {
 	super(code, cause, args);
+	this.report = null;
    }
 
    public MailDispatcherException(final String code, final Throwable cause) {
 	super(code, cause);
+	this.report = null;
    }
 
    public MailDispatcherException(final String code) {
 	super(code);
+	this.report = null;
    }
 
+   public MailingDispatcherReport getReport() {
+	return report;
+   }
+
+   public static MailDispatcherException ioReadMailAttachmentException(String attachmentName, IOException ioe) {
+	return new MailDispatcherException("mail.service.message.attachment.ioread.error", ioe, attachmentName);
+   }
 }
