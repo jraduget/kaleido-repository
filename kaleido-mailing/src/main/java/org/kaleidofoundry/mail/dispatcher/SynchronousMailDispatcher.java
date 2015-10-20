@@ -177,15 +177,7 @@ public class SynchronousMailDispatcher implements MailDispatcher {
 	   try {
 		long currentTimeMillis = System.currentTimeMillis();
 		LOGGER.debug("mail sending starting at {}", new Date().toString());
-
-		if (false) {
-		   Transport.send(mimeMessage);
-		} else {
-		   try {
-			Thread.sleep(5000);
-		   } catch (InterruptedException e) {
-		   }
-		}
+		Transport.send(mimeMessage);
 		LOGGER.debug("mail sending ended in an elapsed time of {} ms", System.currentTimeMillis() - currentTimeMillis);
 
 	   } catch (MessagingException me) {

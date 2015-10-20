@@ -7,8 +7,8 @@ mailing:
         port: 465
         auth:
           enable: true
-          user: jerome.raduget@gmail.com
-          password: gmailmaeva2004
+          user: 
+          password: 
         ssl: true
         socketFactory:
           class: javax.net.ssl.SSLSocketFactory
@@ -21,8 +21,8 @@ mailing:
         port: 587
         auth:
           enable: true
-          user: jerome.raduget@gmail.com
-          password: gmailmaeva2004
+          user: 
+          password: 
         tls: true
         
     mySession-ssl:
@@ -32,7 +32,7 @@ mailing:
         port: 465
         auth:
           enable: true
-          user: jerome.raduget@gmail.com
+          user: 
           password: 
         ssl: true
         socketFactory:

@@ -28,4 +28,6 @@ public class AsynchronousMailDispatcherTest extends AbstractSynchronousMailDispa
    protected MailDispatcher getMailDispatcher() {
 	return mailDispatcher;
    }
+   
+   
 }
