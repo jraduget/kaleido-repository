@@ -27,7 +27,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * The annotations {@link NamedConfiguration} presents on the class are scan and use to load the needed {@link Configuration} resources<br/>
  * <br/>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class NamedConfigurationInitializer {
 

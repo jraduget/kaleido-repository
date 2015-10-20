@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,32 @@
  */
 package org.kaleidofoundry.messaging;
 
+import org.kaleidofoundry.core.i18n.I18nMessages;
+import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
+import org.kaleidofoundry.core.i18n.InternalBundleEnum;
+import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 
 /**
  * Constants for messaging module
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public interface MessagingConstants {
-   
-   /** I18N resource name for messaging */
-   String I18N_RESOURCE = "i18n/messaging/messages";
-   
+
+   /** Messaging message bundle */
+   I18nMessages MessagingMessageBundle = I18nMessagesFactory.provides(InternalBundleEnum.MESSAGING.getResourceName(), InternalBundleHelper.CoreMessageBundle);
+
    /** Transport interface plugin name */
    String TRANSPORT_PLUGIN = "messaging.transports";
    /** JMS transport plugin name (via JNDI access) */
    String JMS_TRANSPORT_PLUGIN = "messaging.transports.jms";
    /** AMQ transport plugin name */
-   String AMQ_TRANSPORT_PLUGIN = "messaging.transports.amq";   
-   /** Websphere MQ transport plugin name*/
+   String AMQ_TRANSPORT_PLUGIN = "messaging.transports.amq";
+   /** Websphere MQ transport plugin name */
    String WMQ_TRANSPORT_PLUGIN = "messaging.transports.wmq";
    /** Tibco RDV transport plugin name */
-   String RDV_TRANSPORT_PLUGIN = "messaging.transports.rdv";   
-   
+   String RDV_TRANSPORT_PLUGIN = "messaging.transports.rdv";
+
    /** Producer plugin name */
    String PRODUCER_PLUGIN = "messaging.producers";
    /** JMS producer plugin name */
@@ -44,10 +48,10 @@ public interface MessagingConstants {
    /** AMQ producer plugin name */
    String AMQ_PRODUCER_PLUGIN = "messaging.producers.amq";
    /** Websphere MQ producer plugin name */
-   String WMQ_PRODUCER_PLUGIN = "messaging.producers.wmq";   
+   String WMQ_PRODUCER_PLUGIN = "messaging.producers.wmq";
    /** Tibco RDV producer plugin name */
    String RDV_PRODUCER_PLUGIN = "messaging.producers.rdv";
-      
+
    /** Consumer plugin name */
    String CONSUMER_PLUGIN = "messaging.consumers";
    /** Jms consumer plugin name */
@@ -55,15 +59,13 @@ public interface MessagingConstants {
    /** Jms AMQ consumer plugin */
    String AMQ_CONSUMER_PLUGIN = "messaging.consumers.amq";
    /** Websphere MQ consumer plugin */
-   String WMQ_CONSUMER_PLUGIN = "messaging.consumers.wmq";   
+   String WMQ_CONSUMER_PLUGIN = "messaging.consumers.wmq";
    /** Tibco Rdv consumer plugin name */
    String RDV_CONSUMER_PLUGIN = "messaging.consumers.rdv";
-   
-  
-   
+
    /** message field which can store the unique id of the message */
    String MESSAGE_ID_FIELD = "$id";
-   
+
    /** message field which can store the type */
    String MESSAGE_TYPE_FIELD = "$type";
 
@@ -72,8 +74,8 @@ public interface MessagingConstants {
 
    /** message field which can store the bytes data */
    String MESSAGE_BODY_BYTES_FIELD = "$bytes";
-   
+
    /** message field which can store the java bean */
    String MESSAGE_BODY_BEAN_FIELD = "$bean";
-      
+
 }

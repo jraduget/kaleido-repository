@@ -18,7 +18,7 @@ package org.kaleidofoundry.core.cache;
 /**
  * cache providers codes enumeration
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public enum CacheProvidersEnum {
 

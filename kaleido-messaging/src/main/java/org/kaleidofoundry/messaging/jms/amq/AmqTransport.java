@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,24 +44,24 @@ import org.kaleidofoundry.messaging.TransportException;
 import org.kaleidofoundry.messaging.jms.AbstractJmsTransport;
 
 /**
- * Apache ActiveMQ transport layer 
+ * Apache ActiveMQ transport layer
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Declare(MessagingConstants.AMQ_TRANSPORT_PLUGIN)
 public class AmqTransport extends AbstractJmsTransport<ActiveMQConnectionFactory, ActiveMQConnection, ActiveMQDestination> {
 
    private final ActiveMQConnectionFactory activeMQConnectionFactory;
 
-   @Task(comment="use context to configure additional connection factory parameters", labels=TaskLabel.Enhancement)
+   @Task(comment = "use context to configure additional connection factory parameters", labels = TaskLabel.Enhancement)
    public AmqTransport(RuntimeContext<Transport> context) throws TransportException {
 	super(context);
 
 	if (StringHelper.isEmpty(context.getString(JMS_CONNECTION_FACTORY_USER))) {
 	   activeMQConnectionFactory = new ActiveMQConnectionFactory(context.getString(JMS_CONNECTION_FACTORY_URL));
 	} else {
-	   activeMQConnectionFactory = new ActiveMQConnectionFactory(context.getString(JMS_CONNECTION_FACTORY_URL), context.getString(JMS_CONNECTION_FACTORY_USER),
-		   context.getString(JMS_CONNECTION_FACTORY_PASSWORD));
+	   activeMQConnectionFactory = new ActiveMQConnectionFactory(context.getString(JMS_CONNECTION_FACTORY_URL),
+		   context.getString(JMS_CONNECTION_FACTORY_USER), context.getString(JMS_CONNECTION_FACTORY_PASSWORD));
 	}
 
    }
@@ -80,7 +80,8 @@ public class AmqTransport extends AbstractJmsTransport<ActiveMQConnectionFactory
 	   try {
 		new URI(context.getString(JMS_CONNECTION_FACTORY_URL));
 	   } catch (URISyntaxException rse) {
-		throw new IllegalContextParameterException(JMS_CONNECTION_FACTORY_URL, context.getString(JMS_CONNECTION_FACTORY_URL), context, "It is not a valid uri");
+		throw new IllegalContextParameterException(JMS_CONNECTION_FACTORY_URL, context.getString(JMS_CONNECTION_FACTORY_URL), context,
+			"It is not a valid uri");
 	   }
 	}
 

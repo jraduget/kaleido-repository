@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -155,7 +155,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * </p>
  * 
  * @param <T> service interface / implementation class to use with this context
- * @author Jerome RADUGET
+ * @author jraduget
  * @see Context inject {@link RuntimeContext} to a class field, method argument...
  */
 @Immutable(comment = "instance which have been injected using @Context are immutable after injection")

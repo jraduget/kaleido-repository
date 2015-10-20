@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import org.kaleidofoundry.core.lang.NotImplementedException;
  * Method annotated by {@link NotImplemented} have to throws {@link NotImplementedException}<br/>
  * I can be do manually, or with an aop proxy which intercept it, and throws the exception<br/>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Documented
 @Target( { ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.TYPE })

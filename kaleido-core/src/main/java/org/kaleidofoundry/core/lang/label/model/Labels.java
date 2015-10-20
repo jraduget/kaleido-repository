@@ -35,7 +35,7 @@ import org.kaleidofoundry.core.util.CollectionsHelper;
 /**
  * Common labels class, used to categorize some persistent entities with multiple text labels <br/>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Embeddable
 // @Access(AccessType.PROPERTY)

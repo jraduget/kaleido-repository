@@ -1,0 +1,2 @@
+org.kaleidofoundry.mail.dispatcher.MailDispatcher
+org.kaleidofoundry.mail.session.MailSessionService

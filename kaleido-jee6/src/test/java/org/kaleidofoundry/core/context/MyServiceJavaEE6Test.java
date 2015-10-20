@@ -25,7 +25,7 @@ import org.kaleidofoundry.core.cache.CacheProvidersEnum;
 import org.kaleidofoundry.launcher.UnmanagedCdiInjector;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class MyServiceJavaEE6Test extends AbstractMyServiceTest {
 

@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.kaleidofoundry.messaging.MessagingConstants;
 import org.kaleidofoundry.messaging.jms.JmsConsumer;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Declare(MessagingConstants.AMQ_CONSUMER_PLUGIN)
 public class WebsphereMQConsumer extends JmsConsumer implements Consumer {

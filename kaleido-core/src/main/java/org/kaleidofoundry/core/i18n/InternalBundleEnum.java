@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 /**
  * Internal resource bundle names
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public enum InternalBundleEnum {
 
@@ -39,6 +39,7 @@ public enum InternalBundleEnum {
    NAMING(true, "i18n/naming/messages"),
    WEB(true, "i18n/web/messages"),
    UTIL(true, "i18n/util/messages"),
+   MESSAGING(true, "i18n/messaging/messages"),
    MAIL(true, "i18n/mail/messages");
 
    private static Set<String> CustomReservedBundle = Collections.synchronizedSet(new HashSet<String>());

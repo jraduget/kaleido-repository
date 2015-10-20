@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import org.kaleidofoundry.core.lang.annotation.NotYetImplemented;
  * Throws this exception when portion of code is not yet implemented<br/>
  * You can use annotation {@link NotImplemented} on constructor / method / class , it will automated this behaviors without any code
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  * @see NotYetImplemented
  */
 public class NotYetImplementedException extends NotImplementedException {

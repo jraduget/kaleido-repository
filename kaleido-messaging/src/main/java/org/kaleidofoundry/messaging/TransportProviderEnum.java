@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,19 +23,19 @@ import org.kaleidofoundry.messaging.rdv.RdvTransport;
 /**
  * Transport provider enumeration
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public enum TransportProviderEnum {
 
    /** JMS 1.1, using JNDI to access ConnectionFactory */
    jms("jms", "1.1", "jms provider", JmsTransport.class),
-   
+
    /** AMQ 5.x using direct ConnectionFactory creation */
    amq("amq", "5.x", "active mq provider", AmqTransport.class),
 
    /** Webspjere MQ using direct ConnectionFactory creation */
    wmq("wmq", "6.x", "websphere mq provider", WebsphereMQTransport.class),
-   
+
    /** RVD 7.5 */
    rdv("rdv", "7.5", "tibco rdv prodiver", RdvTransport.class);
 

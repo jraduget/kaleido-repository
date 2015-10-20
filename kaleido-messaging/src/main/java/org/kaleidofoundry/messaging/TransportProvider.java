@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import org.kaleidofoundry.core.util.Registry;
 import org.kaleidofoundry.messaging.jms.JmsTransport;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class TransportProvider extends AbstractProviderService<Transport> {
 
@@ -111,18 +111,16 @@ public class TransportProvider extends AbstractProviderService<Transport> {
 	}
 	throw new ProviderException(new TransportException("messaging.transport.provider.illegal", providerCode));
    }
-   
 
    /**
     * Close all transport with the associated consumers / producers
-    *  
+    * 
     * @throws TransportException
     */
-   public void closeAll() throws TransportException {	
+   public void closeAll() throws TransportException {
 	for (Transport transport : REGISTRY.values()) {
 	   transport.close();
 	}
    }
-   
 
 }

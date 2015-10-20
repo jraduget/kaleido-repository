@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,13 @@
  */
 package org.kaleidofoundry.messaging;
 
-import static org.kaleidofoundry.messaging.ClientContextBuilder.DEBUG_PROPERTY;
 import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_PRINT_PROCESSED_MESSAGES_MODULO;
 import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_RESPONSE_DURATION;
 import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_THREAD_POOL_WAIT_ON_SHUTDOWN;
 import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_THREAD_PREFIX_PROPERTY;
-import static org.kaleidofoundry.messaging.ClientContextBuilder.TRANSPORT_REF;
-import static org.kaleidofoundry.messaging.MessagingConstants.I18N_RESOURCE;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.DEBUG_PROPERTY;
 import static org.kaleidofoundry.messaging.ClientContextBuilder.THREAD_POOL_COUNT_PROPERTY;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.TRANSPORT_REF;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -35,16 +34,13 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.i18n.I18nMessages;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
-import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Task(comment = "I18n messages")
 public abstract class AbstractConsumer implements Consumer {
@@ -63,10 +59,7 @@ public abstract class AbstractConsumer implements Consumer {
    private final AtomicInteger ProcessedMessagesKO = new AtomicInteger(0);
    private final AtomicInteger ProcessedMessagesSKIPPED = new AtomicInteger(0);
    private final AtomicLong AverageResponseTime = new AtomicLong(0);
-
-   /** I18n messaging bundle */
-   protected final I18nMessages MESSAGING_BUNDLE = I18nMessagesFactory.provides(I18N_RESOURCE, InternalBundleHelper.CoreMessageBundle);
-
+   
    /**
     * Message wrapper used by consumer processing
     */
@@ -390,9 +383,9 @@ public abstract class AbstractConsumer implements Consumer {
    @Override
    public synchronized void stop() throws TransportException {
 	if (pool != null) {
-	   
+
 	   int shutdownWaitInSeconds = this.context.getInteger(CONSUMER_THREAD_POOL_WAIT_ON_SHUTDOWN, 5);
-	   
+
 	   LOGGER.info("Shutdown consumer [{}] thread pool", context.getName());
 	   pool.shutdown();
 	   try {
@@ -403,8 +396,8 @@ public abstract class AbstractConsumer implements Consumer {
 		   }
 		}
 	   } catch (InterruptedException ie) {
-		 pool.shutdownNow();
-		 Thread.currentThread().interrupt();
+		pool.shutdownNow();
+		Thread.currentThread().interrupt();
 	   }
 	}
 	this.transport.getConsumers().remove(getName());

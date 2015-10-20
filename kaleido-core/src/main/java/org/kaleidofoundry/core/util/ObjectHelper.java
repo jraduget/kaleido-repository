@@ -22,7 +22,7 @@ import org.kaleidofoundry.core.lang.annotation.NotNull;
 import org.kaleidofoundry.core.lang.annotation.Nullable;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class ObjectHelper {
 

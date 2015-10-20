@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,8 @@
  */
 package org.kaleidofoundry.messaging;
 
-import static org.kaleidofoundry.messaging.ClientContextBuilder.THREAD_POOL_COUNT_PROPERTY;
-import static org.kaleidofoundry.messaging.MessagingConstants.I18N_RESOURCE;
 import static org.kaleidofoundry.messaging.ClientContextBuilder.DEBUG_PROPERTY;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.THREAD_POOL_COUNT_PROPERTY;
 import static org.kaleidofoundry.messaging.ClientContextBuilder.TRANSPORT_REF;
 
 import java.util.Collection;
@@ -32,16 +31,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
-import org.kaleidofoundry.core.i18n.I18nMessages;
-import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
-import org.kaleidofoundry.core.i18n.InternalBundleHelper;
 import org.kaleidofoundry.core.lang.annotation.Task;
 import org.kaleidofoundry.core.util.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public abstract class AbstractProducer implements Producer {
 
@@ -54,12 +50,11 @@ public abstract class AbstractProducer implements Producer {
    protected final AtomicInteger ProcessedMessagesSKIPPED = new AtomicInteger(0);
 
    /** I18n messaging bundle */
-   protected final I18nMessages MESSAGING_BUNDLE = I18nMessagesFactory.provides(I18N_RESOURCE, InternalBundleHelper.CoreMessageBundle);
    protected final RuntimeContext<Producer> context;
    protected final Transport transport;
 
    /** Executor service used to implements timeout feature when sending message */
-   @Task(comment="Lazy creation of the executor service for google application engine, use com.google.appengine.api.taskqueue.Queue ?")
+   @Task(comment = "Lazy creation of the executor service for google application engine, use com.google.appengine.api.taskqueue.Queue ?")
    protected final ExecutorService pool;
 
    public AbstractProducer(RuntimeContext<Producer> context) {
@@ -88,7 +83,7 @@ public abstract class AbstractProducer implements Producer {
 	if (timeout <= 0) {
 	   send(message);
 	}
-	
+
 	FutureTask<Throwable> future = new FutureTask<Throwable>(new Callable<Throwable>() {
 	   public Throwable call() {
 		try {
@@ -124,7 +119,7 @@ public abstract class AbstractProducer implements Producer {
    }
 
    @Override
-   public void send(final Collection<Message> messages, final  long timeout) throws MessagingException {
+   public void send(final Collection<Message> messages, final long timeout) throws MessagingException {
 
 	if (timeout <= 0) {
 	   send(messages);
@@ -184,7 +179,7 @@ public abstract class AbstractProducer implements Producer {
 
    @Override
    public void stop() throws TransportException {
-	pool.shutdown();	
+	pool.shutdown();
 	this.transport.getProducers().remove(getName());
    }
 
@@ -209,5 +204,4 @@ public abstract class AbstractProducer implements Producer {
 	}
    }
 
-   
 }

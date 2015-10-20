@@ -23,7 +23,7 @@ import java.util.Locale;
 /**
  * Some helper methods for number
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public abstract class NumberHelper {
 

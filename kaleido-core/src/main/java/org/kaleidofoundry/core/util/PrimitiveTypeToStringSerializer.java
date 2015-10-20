@@ -37,7 +37,7 @@ import org.kaleidofoundry.core.lang.annotation.ThreadSafe;
 /**
  * Primitives types (java.lang type) toString serializer
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @ThreadSafe
 public class PrimitiveTypeToStringSerializer implements ToStringSerializer {

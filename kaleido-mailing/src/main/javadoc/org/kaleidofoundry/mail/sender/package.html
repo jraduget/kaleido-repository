@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  @(#)package.html	1.60 98/01/27
+
+  Copyright 1998 Sun Microsystems, Inc. 901 San Antonio Road, 
+  Palo Alto, California, 94303, U.S.A.  All Rights Reserved.
+
+  This software is the confidential and proprietary information of Sun
+  Microsystems, Inc. ("Confidential Information").  You shall not
+  disclose such Confidential Information and shall use it only in
+  accordance with the terms of the license agreement you entered into
+  with Sun.
+
+  CopyrightVersion 1.2
+
+-->
+</head>
+<body bgcolor="white">
+
+  	<p>
+ 		<p>Service d'envoi</p>
+		
+		<p>Ce package permet une gestion simplifiée des envoies de mail. Le service principal est MailSenderService. Les mails envoyés sont de type MailMessage. Ce service possède plusieurs implémentations accessibles via la classe MailSenderFactory :</p>
+		<p>Implémentations disponibles :</p>
+
+		<ul>
+			<li>1.	MailSenderServiceSessionImpl : Cette implémentation permet l’envoie 
+			synchrone de MailMessage. Elle encapsule un MailSessionService. A 
+			l’instanciation de la classe, un MailSessionContext est passé 
+			au constructeur afin que le service sache quel fournisseur de 
+			Session instancier et utiliser pour envoyer les mails. Cette implémentation 
+			permet un envoi direct, mais ne permet pas une encapsulation JTA 
+			de la transaction.
+			</li>
+			<li>2.	MailSenderServiceEjbImpl : Cette implémentation permet l’envoie 
+			synchrone de MailMessage via un EJB (accédant à une Session définit 
+			sur le serveur d’application). L’avantage de cette solution est un 
+			envoie direct, avec possible utilisation de JTA. Cela permet donc une 
+			meilleur gestion des transactions en cas de problèmes d’envoie (transaction 
+			de plus haut niveau pour l’utilisateur).
+			<br/>
+			Pour être utilisé, l’EJB EjbMailSender doit être déployé et accessible sur 
+			un serveur d’application.	
+			</li>
+			<li>3.	MailSenderServiceJmsImpl : Cette implémentation permet l’envoie de 
+			MailMessage via le procole JMS (envoi asynchrone, dans une queue de 
+			traitement). De cette manière le processus d’envoi de mail peu être 
+			envoyé et confié à un service externe au process en cours (par exemple un 
+			serveur d’application tierce capable de traiter une plus grande charge 
+			d’envoie).
+			<br/>
+			Pour être utilisé, l’EJB EjbMailJmsReceiver doit être déployé et accessible 
+			sur un serveur d’application.
+			</li>
+		</ul>		
+		
+		<p><img src="doc-files/diagram.jpg"/></p>			
+	</p>
+</body>
+</html>

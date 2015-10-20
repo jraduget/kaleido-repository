@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Abstract Jms Transport
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public abstract class AbstractJmsTransport<CF extends ConnectionFactory, C extends Connection, D extends Destination> extends AbstractTransport implements
 	Transport {
@@ -78,7 +78,7 @@ public abstract class AbstractJmsTransport<CF extends ConnectionFactory, C exten
     * @throws TransportException
     */
    protected abstract CF getConnectionFactory() throws TransportException;
-   
+
    /**
     * @param session
     * @param name
@@ -153,7 +153,7 @@ public abstract class AbstractJmsTransport<CF extends ConnectionFactory, C exten
     * @throws TransportException
     */
    public void closeConnection(final Connection conn) throws TransportException {
-	if (conn == null) { return;}
+	if (conn == null) { return; }
 	try {
 	   conn.close();
 	   connections.remove(conn);
@@ -169,7 +169,7 @@ public abstract class AbstractJmsTransport<CF extends ConnectionFactory, C exten
     * @throws TransportException
     */
    public void closeSession(final Session session) throws TransportException {
-	if (session == null) { return;}
+	if (session == null) { return; }
 	try {
 	   session.close();
 	   sessions.remove(session);
@@ -185,7 +185,7 @@ public abstract class AbstractJmsTransport<CF extends ConnectionFactory, C exten
    public void close() throws TransportException {
 
 	super.close();
-	
+
 	Iterator<Connection> connIterator = connections.iterator();
 	while (connIterator.hasNext()) {
 	   try {
@@ -207,7 +207,7 @@ public abstract class AbstractJmsTransport<CF extends ConnectionFactory, C exten
 		throw new TransportException("messaging.transport.jms.session.close", jmse);
 	   }
 	}
-		
+
    }
 
    /**

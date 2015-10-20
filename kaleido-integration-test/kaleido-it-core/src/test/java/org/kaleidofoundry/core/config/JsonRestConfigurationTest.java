@@ -18,7 +18,7 @@ package org.kaleidofoundry.core.config;
 import javax.ws.rs.core.MediaType;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class JsonRestConfigurationTest extends AbstractRestConfigurationTest {
 

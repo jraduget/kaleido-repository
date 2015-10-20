@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.kaleidofoundry.core.util.StringHelper;
 import org.kaleidofoundry.messaging.jms.JmsConsumer;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class ConsumerProvider extends AbstractProviderService<Consumer> {
 
@@ -71,19 +71,17 @@ public class ConsumerProvider extends AbstractProviderService<Consumer> {
 	// consumer transport
 	String transportRef = context.getString(TRANSPORT_REF);
 	Transport transport;
-	
+
 	if (!StringHelper.isEmpty(transportRef)) {
 	   transport = TransportFactory.provides(transportRef, context);
 	} else {
 	   throw new EmptyContextParameterException(TRANSPORT_REF, context);
 	}
-	
+
 	String type = transport.getProviderCode();
 
 	// only for optimization reasons
-	if (type.equalsIgnoreCase(TransportProviderEnum.jms.name())) {
-	   return new JmsConsumer(context);
-	}
+	if (type.equalsIgnoreCase(TransportProviderEnum.jms.name())) { return new JmsConsumer(context); }
 
 	// dynamic lookup into register plugin
 	final Set<Plugin<Consumer>> pluginImpls = PluginFactory.getImplementationRegistry().findByInterface(Consumer.class);
@@ -107,8 +105,8 @@ public class ConsumerProvider extends AbstractProviderService<Consumer> {
 	   } catch (final IllegalAccessException e) {
 		throw new ProviderException("context.provider.error.IllegalAccessException", impl.getName(), "RuntimeContext<Consumer> context");
 	   } catch (final InvocationTargetException e) {
-		throw new ProviderException("context.provider.error.InvocationTargetException", e.getCause(), impl.getName(), "RuntimeContext<Consumer> context",
-			e.getCause().getClass().getName(), e.getMessage());
+		throw new ProviderException("context.provider.error.InvocationTargetException", e.getCause(), impl.getName(), "RuntimeContext<Consumer> context", e
+			.getCause().getClass().getName(), e.getMessage());
 	   }
 	}
 	throw new ProviderException(new TransportException("messaging.consumer.provider.illegal", transport.getProviderCode()));
@@ -116,10 +114,10 @@ public class ConsumerProvider extends AbstractProviderService<Consumer> {
 
    /**
     * Stop / destroy all consumers
-    *  
+    * 
     * @throws TransportException
     */
-   public void stopAll() throws TransportException {	
+   public void stopAll() throws TransportException {
 	for (Consumer consumer : REGISTRY.values()) {
 	   consumer.stop();
 	}

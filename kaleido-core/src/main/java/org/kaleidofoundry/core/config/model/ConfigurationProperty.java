@@ -50,7 +50,7 @@ import org.kaleidofoundry.core.util.ToStringSerializer;
 /**
  * Meta model of a configuration property
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Entity(name = Entity_Property)
 // @Access(AccessType.PROPERTY)

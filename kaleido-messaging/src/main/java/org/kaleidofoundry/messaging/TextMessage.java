@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ import org.kaleidofoundry.core.lang.annotation.Task;
 /**
  * A text message
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
-@Task(comment="handle charset accessor")
+@Task(comment = "handle charset accessor")
 public class TextMessage extends AbstractMessage {
 
    private final String text;
@@ -41,12 +41,12 @@ public class TextMessage extends AbstractMessage {
    public TextMessage(final String correlationId, final String text) {
 	this(correlationId, text, null);
    }
-   
+
    public TextMessage(final String correlationId, final String text, final Map<String, Object> parameters) {
 	super(correlationId, parameters);
 	this.text = text;
    }
-   
+
    /*
     * (non-Javadoc)
     * @see org.kaleidofoundry.messaging.Message#getType()
@@ -63,14 +63,13 @@ public class TextMessage extends AbstractMessage {
 	return text;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see java.lang.Object#toString()
     */
    @Override
    public String toString() {
 	return text;
    }
-   
-   
 
 }

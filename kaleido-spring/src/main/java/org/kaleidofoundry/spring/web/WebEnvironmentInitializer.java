@@ -23,7 +23,7 @@ import org.springframework.web.context.ServletContextAware;
  * <li>by extending this class, and adding annotation {@link NamedConfigurations} or {@link NamedConfiguration}</li>
  * </ul>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  * @see EnvironmentConstants
  * @see EnvironmentInitializer
  */

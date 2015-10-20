@@ -28,7 +28,7 @@ import org.kaleidofoundry.core.store.FileStore;
 /**
  * A service sample interface only use for integration tests (ejb, cdi, spring, guice...)
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public interface MyService {
 

@@ -124,7 +124,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * </ul>
  * </p>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  * @see Configuration
  * @see ConfigurationProperty
  */

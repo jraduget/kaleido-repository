@@ -42,7 +42,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * Apache JCS provider
  * 
  * @see CacheManagerFactory
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Declare(value = JcsCacheManagerPluginName)
 public class JcsCacheManagerImpl extends AbstractCacheManager {

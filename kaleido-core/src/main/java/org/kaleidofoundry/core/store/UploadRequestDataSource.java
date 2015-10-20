@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class UploadRequestDataSource implements DataSource {
 

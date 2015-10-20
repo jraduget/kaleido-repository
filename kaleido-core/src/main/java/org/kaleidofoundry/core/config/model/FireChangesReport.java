@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @XmlRootElement(name = "changes")
 @XmlAccessorType(XmlAccessType.FIELD)

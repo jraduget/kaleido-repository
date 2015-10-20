@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.kaleidofoundry.core.plugin.model.Plugin;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @XmlRootElement(name = "environment")
 @XmlAccessorType(XmlAccessType.FIELD)

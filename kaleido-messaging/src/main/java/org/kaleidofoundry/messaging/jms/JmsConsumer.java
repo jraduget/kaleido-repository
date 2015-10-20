@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,13 @@
  */
 package org.kaleidofoundry.messaging.jms;
 
-import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_READ_BUFFER_SIZE;
-import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_RECEIVE_TIMEOUT_PROPERTY;
-import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_TYPE_FIELD;
 import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_DESTINATION;
 import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_MESSAGE_SELECTOR_PROPERTY;
 import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_NOLOCAL_PROPERTY;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_READ_BUFFER_SIZE;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_RECEIVE_TIMEOUT_PROPERTY;
+import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_TYPE_FIELD;
+import static org.kaleidofoundry.messaging.MessagingConstants.MessagingMessageBundle;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
@@ -60,14 +61,14 @@ import org.kaleidofoundry.messaging.TransportException;
 import org.kaleidofoundry.messaging.TransportRegistryException;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Declare(MessagingConstants.JMS_CONSUMER_PLUGIN)
-@Tasks(tasks = { @Task(comment = "Handle manual jms session commit / rollback ? Keep a reference to the session in the message handle ?"),	
+@Tasks(tasks = { @Task(comment = "Handle manual jms session commit / rollback ? Keep a reference to the session in the message handle ?"),
 	@Task(comment = "Handle request / reply: http://activemq.apache.org/how-should-i-implement-request-response-with-jms.html") })
 public class JmsConsumer extends AbstractConsumer {
 
-   private AbstractJmsTransport<ConnectionFactory, Connection, Destination> transport;
+   private final AbstractJmsTransport<ConnectionFactory, Connection, Destination> transport;
 
    /**
     * @param context
@@ -116,7 +117,7 @@ public class JmsConsumer extends AbstractConsumer {
 
 		try {
 		   session = transport.createSession(connection);
-		   destination =  transport.getDestination(session, destinationJndiName);
+		   destination = transport.getDestination(session, destinationJndiName);
 		   jmsConsumer = session.createConsumer(destination, messageSelector, noLocal);
 		} catch (JMSException jmse) {
 		   messageWrapper.setError(new MessagingException("messaging.consumer.jms.create.error", jmse));
@@ -208,7 +209,7 @@ public class JmsConsumer extends AbstractConsumer {
 		   ((AbstractMessage) message).setProviderId(jmsMessage.getJMSMessageID());
 		   ((AbstractMessage) message).setCorrelationId(jmsMessage.getJMSCorrelationID());
 
-		   messageWrapper.setProviderObject(jmsMessage);		   
+		   messageWrapper.setProviderObject(jmsMessage);
 		   messageWrapper.setMessage(message);
 
 		} catch (JMSException jmse) {
@@ -245,7 +246,7 @@ public class JmsConsumer extends AbstractConsumer {
 		   try {
 			transport.closeConnection(connection);
 		   } catch (TransportException te) {
-			LOGGER.error(MESSAGING_BUNDLE.getMessage("messaging.transport.jms.connection.close"), te);
+			LOGGER.error(MessagingMessageBundle.getMessage("messaging.transport.jms.connection.close"), te);
 		   }
 		}
 	   }
@@ -257,7 +258,7 @@ public class JmsConsumer extends AbstractConsumer {
 		   try {
 			connection.stop();
 		   } catch (JMSException jmse) {
-			LOGGER.error(MESSAGING_BUNDLE.getMessage("messaging.transport.jms.connection.stop"), jmse);
+			LOGGER.error(MessagingMessageBundle.getMessage("messaging.transport.jms.connection.stop"), jmse);
 		   }
 
 		}

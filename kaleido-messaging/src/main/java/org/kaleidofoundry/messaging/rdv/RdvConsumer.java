@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,13 @@
 package org.kaleidofoundry.messaging.rdv;
 
 import static org.kaleidofoundry.messaging.ClientContextBuilder.CONSUMER_RECEIVE_TIMEOUT_PROPERTY;
+import static org.kaleidofoundry.messaging.ClientContextBuilder.RDV_SUBJECTS;
 import static org.kaleidofoundry.messaging.ClientContextBuilder.TRANSPORT_REF;
 import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_BODY_BYTES_FIELD;
 import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_BODY_TEXT_FIELD;
 import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_ID_FIELD;
 import static org.kaleidofoundry.messaging.MessagingConstants.MESSAGE_TYPE_FIELD;
-import static org.kaleidofoundry.messaging.ClientContextBuilder.RDV_SUBJECTS;
+import static org.kaleidofoundry.messaging.MessagingConstants.MessagingMessageBundle;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -68,7 +69,7 @@ import com.tibco.tibrv.TibrvQueue;
 /**
  * Consumer for Tibco RDV
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Declare(MessagingConstants.RDV_CONSUMER_PLUGIN)
 public class RdvConsumer extends AbstractConsumer implements Consumer {
@@ -113,11 +114,10 @@ public class RdvConsumer extends AbstractConsumer implements Consumer {
     */
    protected void checkContext(final RuntimeContext<Consumer> context) throws TransportException {
 
-	if (StringHelper.isEmpty(context.getString(RDV_SUBJECTS))) throw new EmptyContextParameterException(RDV_SUBJECTS, context);
+	if (StringHelper.isEmpty(context.getString(RDV_SUBJECTS))) { throw new EmptyContextParameterException(RDV_SUBJECTS, context); }
 
-	if (!(getTransport() instanceof RdvTransport)) { throw new IllegalContextParameterException(TRANSPORT_REF,
-		context.getString(TRANSPORT_REF), context, MESSAGING_BUNDLE.getMessage("messaging.consumer.rdv.transport.illegal",
-			context.getString(TRANSPORT_REF))); }
+	if (!(getTransport() instanceof RdvTransport)) { throw new IllegalContextParameterException(TRANSPORT_REF, context.getString(TRANSPORT_REF), context,
+		MessagingMessageBundle.getMessage("messaging.consumer.rdv.transport.illegal", context.getString(TRANSPORT_REF))); }
    }
 
    @Override

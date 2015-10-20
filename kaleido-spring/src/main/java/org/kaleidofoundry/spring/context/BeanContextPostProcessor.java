@@ -47,7 +47,7 @@ import org.springframework.util.ReflectionUtils;
  * <li>using a spring application context, with a bean declared with the spring xml descriptor</li>
  * </ul>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 // http://www.joshlong.com/jl/blogPost/supporting_your_own_field_or_method_injection_annotation_processors_in_spring.html
 @Component

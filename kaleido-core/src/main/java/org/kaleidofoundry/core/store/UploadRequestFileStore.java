@@ -38,7 +38,7 @@ import java.util.Set;
 /**
  * Expose a {@link HttpServletRequest} as a {@link FileStore}, in order to provide user-friendly accessor to get the uploaded attachments
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class UploadRequestFileStore extends AbstractFileStore {
 

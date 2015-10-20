@@ -16,7 +16,7 @@
 package org.kaleidofoundry.core.config.model;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public interface ConfigurationModelConstants {
 

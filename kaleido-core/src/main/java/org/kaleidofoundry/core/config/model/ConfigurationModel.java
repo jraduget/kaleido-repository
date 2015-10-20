@@ -49,7 +49,7 @@ import org.kaleidofoundry.core.lang.label.model.LabelCategory;
 import org.kaleidofoundry.core.lang.label.model.Labels;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Entity(name = Entity_Configuration)
 // @Access(AccessType.PROPERTY)

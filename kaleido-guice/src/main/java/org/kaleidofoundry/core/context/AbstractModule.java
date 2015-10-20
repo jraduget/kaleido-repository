@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ import com.google.inject.name.Names;
  * For more informations : http://code.google.com/p/google-guice/wiki/BindingAnnotations
  * </p>
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  * @param <T>
  */
 @Task(comment = "providers for RuntimeContext", labels = TaskLabel.ImplementIt)

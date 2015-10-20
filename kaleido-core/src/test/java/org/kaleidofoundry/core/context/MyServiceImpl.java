@@ -35,7 +35,7 @@ import org.kaleidofoundry.core.naming.NamingService;
 import org.kaleidofoundry.core.store.FileStore;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class MyServiceImpl implements MyService {
 

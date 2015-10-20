@@ -37,7 +37,7 @@ import org.kaleidofoundry.core.store.ResourceHandler;
 /**
  * Configuration store in your database table {@link ConfigurationModelConstants#Table_Configuration} instead of a file
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 // @Stateful(mappedName = "ejb/configuration/model")
 // @Singleton

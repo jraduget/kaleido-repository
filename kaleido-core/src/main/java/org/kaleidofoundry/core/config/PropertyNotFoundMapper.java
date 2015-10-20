@@ -23,7 +23,7 @@ import javax.ws.rs.ext.Provider;
 /**
  * rest exception mapper for {@link PropertyNotFoundException}
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Provider
 public class PropertyNotFoundMapper implements ExceptionMapper<PropertyNotFoundException> {

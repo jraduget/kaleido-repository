@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,10 @@ package org.kaleidofoundry.messaging;
 import java.util.Locale;
 
 import org.kaleidofoundry.core.i18n.AbstractI18nException;
+import org.kaleidofoundry.core.i18n.InternalBundleEnum;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class MessagingException extends AbstractI18nException {
 
@@ -58,13 +59,9 @@ public class MessagingException extends AbstractI18nException {
 	super(code);
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.kaleidofoundry.core.i18n.AbstractI18nException#getI18nBundleName()
-    */
    @Override
    public String getI18nBundleName() {
-	return MessagingConstants.I18N_RESOURCE;
+	return InternalBundleEnum.MESSAGING.getResourceName();
    }
 
 }

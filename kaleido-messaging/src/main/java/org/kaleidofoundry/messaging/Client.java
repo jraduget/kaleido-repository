@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,23 +18,23 @@ package org.kaleidofoundry.messaging;
 /**
  * ClientMessaging anc�tre
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public interface Client {
 
    /**
     * @return producer / consumer name
     */
-   String getName(); 
-   
+   String getName();
+
    /**
     * @return
     * @throws TransportException
     */
    Transport getTransport() throws TransportException;
-   
+
    /**
-    * @return some statistics about consumer / producer 
+    * @return some statistics about consumer / producer
     */
    UsageStatistics getStatistics();
 

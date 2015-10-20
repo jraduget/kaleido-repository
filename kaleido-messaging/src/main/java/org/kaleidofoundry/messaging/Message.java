@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,25 +23,24 @@ import org.kaleidofoundry.core.lang.annotation.TaskLabel;
 /**
  * Interface used to produce / consume messages
  * 
- * @author Jerome RADUGET
- * 
+ * @author jraduget
  * @see Transport
  * @see Producer
  * @see Consumer
  */
-@Task(comment="add uuid, timestamp (long), error destination, priority (int), expiration date (long)", labels=TaskLabel.Enhancement)
+@Task(comment = "add uuid, timestamp (long), error destination, priority (int), expiration date (long)", labels = TaskLabel.Enhancement)
 public interface Message {
-   
+
    /**
-    * @return internal provider id 
+    * @return internal provider id
     */
    String getProviderId();
-   
+
    /**
     * @return Correlation Id (may be unused if supported by the provider)
     */
    String getCorrelationId();
-   
+
    /**
     * @return Kind of message (XML, binary, javaBean, ... )
     * @see MessageTypeEnum

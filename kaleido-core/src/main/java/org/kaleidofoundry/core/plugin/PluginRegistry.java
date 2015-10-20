@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2010 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.kaleidofoundry.core.util.Registry;
  * Registry of all "enable" plugin interface<br/>
  * An enable plugin is an interface annotation by {@link Declare} with enable attribute set to true
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class PluginRegistry extends Registry<String, Plugin<?>> {
 

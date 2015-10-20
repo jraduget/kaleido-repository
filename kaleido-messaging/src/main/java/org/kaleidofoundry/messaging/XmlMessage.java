@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2012 the original author or authors 
+ * Copyright 2008-2014 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,18 +39,18 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * An xml message, with a {@link Document} accessor  
+ * An xml message, with a {@link Document} accessor
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class XmlMessage extends TextMessage {
 
    static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 
    static {
-	DOCUMENT_BUILDER_FACTORY.setNamespaceAware(true);	
+	DOCUMENT_BUILDER_FACTORY.setNamespaceAware(true);
    }
-   
+
    private final Document document;
 
    public XmlMessage(final String message) {
@@ -64,7 +64,7 @@ public class XmlMessage extends TextMessage {
    public XmlMessage(Reader reader, final Map<String, Object> parameters) {
 	this(null, reader, parameters);
    }
-	
+
    public XmlMessage(String message, final Map<String, Object> parameters) {
 	this(null, message, parameters);
    }
@@ -73,22 +73,22 @@ public class XmlMessage extends TextMessage {
 	super(correlationId, null, parameters);
 	try {
 	   final DocumentBuilder documentBuilder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
-	   document = documentBuilder.parse(new InputSource(in));	   
+	   document = documentBuilder.parse(new InputSource(in));
 	} catch (Exception e) {
 	   throw handleException(e);
 	}
    }
-   
+
    public XmlMessage(String correlationId, Reader reader, final Map<String, Object> parameters) {
 	super(correlationId, null, parameters);
 	try {
 	   final DocumentBuilder documentBuilder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
-	   document = documentBuilder.parse(new InputSource(reader));	   
+	   document = documentBuilder.parse(new InputSource(reader));
 	} catch (Exception e) {
 	   throw handleException(e);
-	}	
+	}
    }
-   
+
    public XmlMessage(String correlationId, String message, final Map<String, Object> parameters) {
 	super(correlationId, message, parameters);
 	try {
@@ -98,7 +98,7 @@ public class XmlMessage extends TextMessage {
 	   throw handleException(e);
 	}
    }
-   
+
    public XmlMessage(BytesMessage bytesMessage, Charset charset) {
 	this(bytesMessage.getCorrelationId(), bytesMessage.toString(charset), bytesMessage.getParameters());
    }
@@ -110,16 +110,16 @@ public class XmlMessage extends TextMessage {
    public XmlMessage(TextMessage textMessage) {
 	this(textMessage.getCorrelationId(), textMessage.getText(), textMessage.getParameters());
    }
-   
+
    public Document getDocument() {
 	return this.document;
    }
 
    @Override
-   public String getText() {	
+   public String getText() {
 	return toXml();
    }
-   
+
    public MessageTypeEnum getType() {
 	return MessageTypeEnum.Xml;
    }
@@ -127,7 +127,7 @@ public class XmlMessage extends TextMessage {
    public String toXml() {
 	return toXml(false);
    }
-   
+
    public String toXml(boolean formated) {
 	if (document != null) {
 
@@ -139,7 +139,7 @@ public class XmlMessage extends TextMessage {
 
 		// Write the DOM document to the file
 		Transformer transformer = TransformerFactory.newInstance().newTransformer();
-		transformer.setOutputProperty(OutputKeys.INDENT, formated ? "yes" :"no");
+		transformer.setOutputProperty(OutputKeys.INDENT, formated ? "yes" : "no");
 		if (formated) {
 		   transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 		}

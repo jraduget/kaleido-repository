@@ -43,7 +43,7 @@ import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceHandler;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class MyServiceAssertions {
 

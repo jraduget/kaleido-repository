@@ -24,7 +24,7 @@ import org.kaleidofoundry.core.config.model.ConfigurationProperty;
 import org.kaleidofoundry.core.store.ResourceException;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public abstract class AbstractConfigurationManagerTest extends Assert {
 

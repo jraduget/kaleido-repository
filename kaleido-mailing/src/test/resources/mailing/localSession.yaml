@@ -1,0 +1,40 @@
+mailing:
+  sessions:
+    mySession:
+      provider: local
+      smtp:
+        host: smtp.gmail.com
+        port: 465
+        auth:
+          enable: true
+          user: 
+          password: 
+        ssl: true
+        socketFactory:
+          class: javax.net.ssl.SSLSocketFactory
+          port: 465
+
+    mySession-tls:
+      provider: local
+      smtp:
+        host: smtp.gmail.com
+        port: 587
+        auth:
+          enable: true
+          user: 
+          password: 
+        tls: true
+        
+    mySession-ssl:
+      provider: local
+      smtp:
+        host: smtp.gmail.com
+        port: 465
+        auth:
+          enable: true
+          user: 
+          password: 
+        ssl: true
+        socketFactory:
+          class: javax.net.ssl.SSLSocketFactory
+          port: 465

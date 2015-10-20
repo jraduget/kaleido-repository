@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2012 the original author or authors.
+ *  Copyright 2008-2014 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
  * https://developers.google.com/appengine/docs/java/tools/localunittesting/javadoc/com/google/appengine/tools/development/testing/
  * LocalServiceTestConfig
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 public class GaeFileStoreTest extends AbstractFileStoreTest {
 

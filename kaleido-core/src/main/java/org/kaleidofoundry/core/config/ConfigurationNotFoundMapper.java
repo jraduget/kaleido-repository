@@ -23,7 +23,7 @@ import javax.ws.rs.ext.Provider;
 /**
  * rest exception mapper for {@link ConfigurationNotFoundException}
  * 
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Provider
 public class ConfigurationNotFoundMapper implements ExceptionMapper<ConfigurationNotFoundException> {

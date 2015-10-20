@@ -39,7 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @author Jerome RADUGET
+ * @author jraduget
  */
 @Service
 public class MySpringService implements MyService {

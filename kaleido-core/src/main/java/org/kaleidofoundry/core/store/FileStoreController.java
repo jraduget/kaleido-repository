@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2012 the original author or authors.
+ *  Copyright 2008-2014 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@ import org.kaleidofoundry.core.store.model.FileStoreEntry;
 import org.kaleidofoundry.core.store.model.ResourceHandlerEntity;
 import org.kaleidofoundry.core.util.locale.LocaleFactory;
 
-@Stateless(mappedName = "ejb/stores/manager")
-@Path("/stores/")
+@Stateless(mappedName = "ejb/fs/manager")
+@Path("/fs/")
 public class FileStoreController {
 
    /** injected and used to handle security context */
@@ -55,14 +55,11 @@ public class FileStoreController {
    UriInfo uriInfo;
 
    /**
-    * list of the registered file-stores
-    * 
-    * @return list of the registered file-stores
+    * @return get the list of registered file store
     */
    @GET
-   @Path("")
+   @XmlElementWrapper(name = "fs")
    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-   @XmlElementWrapper(name = "stores")
    public List<FileStoreEntry> getStores() {
 	List<FileStoreEntry> stores = new ArrayList<FileStoreEntry>();
 	for (Entry<String, FileStore> storeEntry : FileStoreFactory.getRegistry().entrySet()) {
@@ -72,11 +69,11 @@ public class FileStoreController {
    }
 
    /**
-    * download the content of a resource
+    * fetch the content of a resource
     * 
-    * @param store store name identifier
-    * @param resource resource path
-    * @return the resource content, with the right charset, mime type ....
+    * @param store
+    * @param resource
+    * @return resource content, with the right charset, mime type ....
     * @throws FileStoreNotFoundException
     * @throws ResourceNotFoundException
     * @throws ResourceException
@@ -98,9 +95,9 @@ public class FileStoreController {
    /**
     * fetch the meta information of a resource
     * 
-    * @param store store name identifier
-    * @param resource resource path
-    * @return the resource meta informations
+    * @param store
+    * @param resource
+    * @return the resource meta info
     * @throws FileStoreNotFoundException
     * @throws ResourceNotFoundException
     * @throws ResourceException
@@ -116,8 +113,8 @@ public class FileStoreController {
    /**
     * remove a resource
     * 
-    * @param store store name identifier
-    * @param resource resource path identifier
+    * @param store
+    * @param resource
     * @throws FileStoreNotFoundException
     * @throws ResourceNotFoundException
     * @throws ResourceException
@@ -130,7 +127,7 @@ public class FileStoreController {
    }
 
    /**
-    * find a store in the registry by its name
+    * find the store in the registry
     * 
     * @param storeName
     * @return
