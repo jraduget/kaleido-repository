@@ -84,6 +84,9 @@
 		<jenkins.host.url>https://buildhive.cloudbees.com/job/kaleidofoundry/job/kaleido-repository/</jenkins.host.url>
 		<!-- source encoding options -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<!-- Control IT tests execution -->
+		<skipITtests>true</skipITtests>		
 	</properties>
 
 	<modules>
@@ -105,14 +108,14 @@
 	<dependencyManagement>
 
 		<dependencies>
-				
+
 			<!-- aop needed aspectj >= 1.6.0 -->
 			<dependency>
 				<groupId>org.aspectj</groupId>
 				<artifactId>aspectjrt</artifactId>
 				<version>${aspectj.version}</version>
 			</dependency>
-							
+
 			<!-- configurations -->
 			<dependency>
 				<groupId>org.yaml</groupId>
@@ -123,9 +126,9 @@
 				<groupId>org.codehaus.jackson</groupId>
 				<artifactId>jackson-mapper-asl</artifactId>
 				<version>1.9.6</version>
-			</dependency>			
-			
-			<!-- cdi api-->
+			</dependency>
+
+			<!-- cdi api -->
 			<dependency>
 				<groupId>javax.enterprise</groupId>
 				<artifactId>cdi-api</artifactId>
@@ -151,7 +154,7 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
-								
+
 			<!-- spring -->
 			<dependency>
 				<groupId>org.springframework</groupId>
@@ -183,7 +186,7 @@
 				<artifactId>javax.inject</artifactId>
 				<version>1</version>
 			</dependency>
-			
+
 			<!-- caching -->
 			<dependency>
 				<groupId>net.sf.ehcache</groupId>
@@ -229,7 +232,7 @@
 				<artifactId>mail</artifactId>
 				<version>1.4.7</version>
 			</dependency>
-				
+
 			<!-- logging -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -271,7 +274,7 @@
 				<artifactId>log4j-over-slf4j</artifactId>
 				<version>${slf4j.version}</version>
 			</dependency>
-					
+
 			<!-- testing -->
 			<dependency>
 				<groupId>junit</groupId>
@@ -412,44 +415,49 @@
 		</notifiers>
 	</ciManagement>
 
-	<!-- <distributionManagement> -->
-	<!-- <site> -->
-	<!-- <id>googlecode.kaleido</id> -->
-	<!-- <name>googlecode maven site</name> -->
-	<!-- <url>scm:svn:https://kaleido-foundry.googlecode.com/svn/www/site</url> -->
-	<!-- </site> -->
-	<!-- </distributionManagement> -->
-
 	<build>
-
 		<pluginManagement>
 			<plugins>
+				<!-- unit tests -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.19</version>
+					<configuration>
+						<excludes>
+							<exclude>**/IT*.java</exclude>
+						</excludes>
+					</configuration>
+				</plugin>			
+				<!-- integration tests -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>2.19</version>
+					<configuration>
+						<skipTests>${skipITtests}</skipTests>
+						<includes>
+							<include>**/IT*.java</include>
+						</includes>
+					</configuration>
+					<executions>
+						<execution>
+							<id>integration-test</id>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 				<!-- assembly facilities -->
 				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>2.3</version>
 				</plugin>
-				<!-- release and sgpg sign provides by sonatype parent in a specific  release profile -Psonatype-oss-release
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-release-plugin</artifactId>
-					<version>2.2.1</version>
-				</plugin>
-				-->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-gpg-plugin</artifactId>
-					<version>1.4</version>
-				</plugin> 
+				<!-- release and sgpg sign are provided by sonatype parent profile -Psonatype-oss-release -->
 
-				<!-- google code upload facilities -->
-				<plugin>
-					<groupId>com.googlecode.maven-gcu-plugin</groupId>
-					<artifactId>maven-gcu-plugin</artifactId>
-					<version>1.1</version>
-				</plugin>
-
-				<!-- Eclipse m2e settings only. It has no influence on the Maven build itself. -->
+				<!-- eclipse m2e settings only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -485,6 +493,19 @@
 										<ignore />
 									</action>
 								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-enforcer-plugin</artifactId>
+										<versionRange>[1.0,)</versionRange>
+										<goals>
+											<goal>enforce</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>								
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
@@ -497,7 +518,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.3</version>
 				<configuration>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
@@ -511,7 +532,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.5</version>
+				<version>2.7</version>
 			</plugin>
 			<!-- annotation processor jdk 6 - http://maven-annotation-plugin.googlecode.com/svn/docs/usage.html -->
 			<plugin>
@@ -586,7 +607,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.1</version>
+				<version>2.6</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -616,10 +637,6 @@
 				<configuration>
 					<doCheck>false</doCheck>
 					<doUpdate>false</doUpdate>
-					<!-- <format>{0,date,yyyy-MM-dd HH:mm:ss}</format> -->
-					<!-- <items> -->
-					<!-- <item>timestamp</item> -->
-					<!-- </items> -->
 				</configuration>
 			</plugin>
 			<!-- deploying -->
@@ -813,21 +830,6 @@
 				</configuration>
 			</plugin>
 
-			<!-- release and sgpg sign provides by sonatype parent in a specific release profile -Psonatype-oss-release  
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			-->
 			<plugin>
 				<groupId>org.codehaus.sonar</groupId>
 				<artifactId>sonar-dev-mojo</artifactId>

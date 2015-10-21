@@ -20,10 +20,9 @@ package org.kaleidofoundry.mail;
  */
 public interface MailTestConstants {
 
-   String FROM_ADRESS = "jerome.raduget@gmail.com";
-   String TO_ADRESS = "jraduget@gmail.com";
-   
-   String CC_ADRESS = "jraduget@yahoo.fr";
+   String FROM_ADRESS = "kaleido-user@googlegroups.com";
+   String TO_ADRESS = "kaleido-dev@googlegroups.com";   
+   String CC_ADRESS = "kaleido-dev@googlegroups.com";
 
    String MAIL_SUBJECT = "Kaleido integration test subject";
    String MAIL_BODY_HTML = "<b>Kaleido integration test body</b><br/>Hello world!";

@@ -3,5 +3,5 @@ mailing:
     myDispatcher:
       provider: async
       session:
-        service-ref: mySession
+        service-ref: mySession-tls
         
