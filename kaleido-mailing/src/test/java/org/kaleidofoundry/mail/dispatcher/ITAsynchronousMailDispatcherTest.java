@@ -22,11 +22,13 @@ public class ITAsynchronousMailDispatcherTest extends AbstractSynchronousMailDis
 		String smtpUserName = System.getProperty("smtpUser");
 		String smtpUserPassword = System.getProperty("smtpPassword");
 		
-		Configuration sessionConfig = ConfigurationFactory.getRegistry().get("local-session");
-		sessionConfig.setProperty("mailing.sessions.mySession-ssl.smtp.auth.user", smtpUserName);
-		sessionConfig.setProperty("mailing.sessions.mySession-ssl.smtp.auth.password", smtpUserPassword);
-		sessionConfig.setProperty("mailing.sessions.mySession-tls.smtp.auth.user", smtpUserName);
-		sessionConfig.setProperty("mailing.sessions.mySession-tls.smtp.auth.password", smtpUserPassword);
+		if (smtpUserName != null) {
+		   Configuration sessionConfig = ConfigurationFactory.getRegistry().get("local-session");
+		   sessionConfig.setProperty("mailing.sessions.mySession-ssl.smtp.auth.user", smtpUserName);
+		   sessionConfig.setProperty("mailing.sessions.mySession-ssl.smtp.auth.password", smtpUserPassword);
+		   sessionConfig.setProperty("mailing.sessions.mySession-tls.smtp.auth.user", smtpUserName);
+		   sessionConfig.setProperty("mailing.sessions.mySession-tls.smtp.auth.password", smtpUserPassword);
+		}
 		
 		mailDispatcher = MailDispatcherFactory.provides("myDispatcher");
 	}

@@ -22,7 +22,7 @@ public class LocalMailSessionServiceTest {
 
    @Before
    public void setup() {
-	mailSessionService = MailSessionFactory.provides("mySession");
+	mailSessionService = MailSessionFactory.provides("mySession-ssl");
    }
 
    @Test
