@@ -333,5 +333,23 @@ public abstract class ConfigurationFactory {
    public static Configuration provides(@NotNull final String name, @NotNull final URI resourceURI, @NotNull final RuntimeContext<Configuration> runtimeContext) {
 	return CONFIGURATION_PROVIDER.provides(name, resourceURI, runtimeContext);
    }
-
+   
+   /**
+    * Provides a new configuration instance exposing the java system properties
+    *  
+    * @return a convenient {@link Configuration} accessor to java {@link System#getProperties()} through {@link Configuration} interface
+    */
+   public static Configuration javaSystemConfiguration() {
+	 return ConfigurationFactory.provides("javaSystem", "memory:/internal/configuration.osenv");
+   }
+   
+   /**
+    * Provides a new configuration instance exposing the OS environment variables
+    * 
+    * @return a convenient {@link Configuration} accessor to OS environment variables through {@link Configuration} interface
+    */
+   public static Configuration osEnvironmentConfiguration() {
+	 return ConfigurationFactory.provides("osEnvironment", "memory:/internal/configuration.javasystem");
+   }
+   
 }

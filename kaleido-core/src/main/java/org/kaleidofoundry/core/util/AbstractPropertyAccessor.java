@@ -153,6 +153,15 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
 	return getPropertyList(key, String.class);
    }
 
+   public String[] getStrings(final String key) {
+	return getProperty(key, String[].class);
+   }
+
+   public String[] getStrings(final String key, final String[] defaultValues) {
+	final String[] values = getStrings(key);
+	return values == null ? defaultValues : values;
+   }
+   
    public BigDecimal getBigDecimal(final String key) {
 	return getProperty(key, BigDecimal.class);
    }
@@ -165,6 +174,15 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
    public List<BigDecimal> getBigDecimalList(final String key) {
 	return getPropertyList(key, BigDecimal.class);
    }
+   
+   public BigDecimal[] getBigDecimals(final String key) {
+	return getProperty(key, BigDecimal[].class);
+   }
+
+   public BigDecimal[] getBigDecimals(final String key, final BigDecimal[] defaultValues) {
+	final BigDecimal[] values = getBigDecimals(key);
+	return values == null ? defaultValues : values;
+   }   
 
    public BigInteger getBigInteger(final String key) {
 	return getProperty(key, BigInteger.class);
@@ -179,6 +197,15 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
 	return getPropertyList(key, BigInteger.class);
    }
 
+   public BigInteger[] getBigIntegers(final String key) {
+	return getProperty(key, BigInteger[].class);
+   }
+
+   public BigInteger[] getBigIntegers(final String key, final BigInteger[] defaultValues) {
+	final BigInteger[] values = getBigIntegers(key);
+	return values == null ? defaultValues : values;
+   }   
+   
    public Boolean getBoolean(final String key) {
 	return getProperty(key, Boolean.class);
    }
@@ -192,6 +219,15 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
 	return getPropertyList(key, Boolean.class);
    }
 
+   public Boolean[] getBooleans(final String key) {
+	return getProperty(key, Boolean[].class);
+   }
+
+   public Boolean[] getBooleans(final String key, final Boolean[] defaultValues) {
+	final Boolean[] values = getBooleans(key);
+	return values == null ? defaultValues : values;
+   }  
+   
    public Byte getByte(final String key) {
 	return getProperty(key, Byte.class);
    }
@@ -205,6 +241,15 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
 	return getPropertyList(key, Byte.class);
    }
 
+   public Byte[] getBytes(final String key) {
+	return getProperty(key, Byte[].class);
+   }
+
+   public Byte[] getBytes(final String key, final Byte[] defaultValues) {
+	final Byte[] values = getBytes(key);
+	return values == null ? defaultValues : values;
+   } 
+   
    public Double getDouble(final String key) {
 	return getProperty(key, Double.class);
    }
@@ -218,6 +263,16 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
 	return getPropertyList(key, Double.class);
    }
 
+
+   public Double[] getDoubles(final String key) {
+	return getProperty(key, Double[].class);
+   }
+
+   public Double[] getDoubles(final String key, final Double[] defaultValues) {
+	final Double[] values = getDoubles(key);
+	return values == null ? defaultValues : values;
+   } 
+   
    public Float getFloat(final String key) {
 	return getProperty(key, Float.class);
    }
@@ -231,6 +286,16 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
 	return getPropertyList(key, Float.class);
    }
 
+   public Float[] getFloats(final String key) {
+	return getProperty(key, Float[].class);
+   }
+
+   public Float[] getFloats(final String key, final Float[] defaultValues) {
+	final Float[] values = getFloats(key);
+	return values == null ? defaultValues : values;
+   } 
+   
+   
    public Integer getInteger(final String key) {
 	return getProperty(key, Integer.class);
    }
@@ -244,6 +309,16 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
 	return getPropertyList(key, Integer.class);
    }
 
+   public Integer[] getIntegers(final String key) {
+	return getProperty(key, Integer[].class);
+   }
+
+   public Integer[] getIntegers(final String key, final Integer[] defaultValues) {
+	final Integer[] values = getIntegers(key);
+	return values == null ? defaultValues : values;
+   } 
+   
+   
    public Long getLong(final String key) {
 	return getProperty(key, Long.class);
    }
@@ -257,6 +332,16 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
 	return getPropertyList(key, Long.class);
    }
 
+   public Long[] getLongs(final String key) {
+	return getProperty(key, Long[].class);
+   }
+
+   public Long[] getLongs(final String key, final Long[] defaultValues) {
+	final Long[] values = getLongs(key);
+	return values == null ? defaultValues : values;
+   } 
+   
+   
    public Short getShort(final String key) {
 	return getProperty(key, Short.class);
    }
@@ -270,6 +355,16 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
 	return getPropertyList(key, Short.class);
    }
 
+   public Short[] getShorts(final String key) {
+	return getProperty(key, Short[].class);
+   }
+
+   public Short[] getShorts(final String key, final Short[] defaultValues) {
+	final Short[] values = getShorts(key);
+	return values == null ? defaultValues : values;
+   } 
+   
+   
    public Date getDate(final String key) {
 	return getProperty(key, Date.class);
    }
@@ -283,4 +378,14 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
 	return d == null ? defaultValue : d;
    }
 
+   public Date[] getDates(final String key) {
+	return getProperty(key, Date[].class);
+   }
+
+   public Date[] getDates(final String key, final Date[] defaultValues) {
+	final Date[] values = getDates(key);
+	return values == null ? defaultValues : values;
+   } 
+   
+   
 }

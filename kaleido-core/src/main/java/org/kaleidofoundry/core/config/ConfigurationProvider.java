@@ -199,7 +199,7 @@ public class ConfigurationProvider extends AbstractProviderService<Configuration
 	   }
 	}
 
-	throw new ProviderException(new ResourceException("store.uri.custom.notmanaged", resourceURI.getScheme(), resourceURI.toString()));
+	throw new ProviderException(new ResourceException("store.uri.notmanaged.illegal", resourceURI.toString()));
    }
 
 }

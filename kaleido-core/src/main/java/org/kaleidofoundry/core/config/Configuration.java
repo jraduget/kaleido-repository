@@ -549,6 +549,7 @@ public interface Configuration {
    @Nullable
    List<String> getStringList(@NotNull String key);
 
+      
    // **************************************************************************
    // -> Typed property value accessors
    // **************************************************************************
