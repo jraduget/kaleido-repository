@@ -74,10 +74,6 @@ public interface MailMessage extends Serializable, Cloneable {
     */
    MailMessage attach(String attachName, String mimeType, InputStream attachIn);
 
-   /**
-    * @return Clone the current mail message into a new one
-    */
-   MailMessage clone();
 
    /**
     * @return get an attachment by its name
@@ -96,9 +92,9 @@ public interface MailMessage extends Serializable, Cloneable {
    List<String> getCcAddresses();
 
    /**
-    * @return CCI addresses
+    * @return BCC addresses
     */
-   List<String> getCciAddresses();
+   List<String> getBccAddresses();
 
    /**
     * @return CharSet used to encode the body of the message
@@ -136,6 +132,14 @@ public interface MailMessage extends Serializable, Cloneable {
    List<String> getToAddresses();
 
    /**
+    * Define the mail subject
+    * 
+    * @param subject
+    * @return current instance
+    */
+   MailMessage withSubject(String subject);
+   
+   /**
     * Define the body content
     * 
     * @param content
@@ -143,6 +147,14 @@ public interface MailMessage extends Serializable, Cloneable {
     */
    MailMessage withBody(String content);
 
+   /**
+    * Define if the body is html content or text plan
+    * 
+    * @param html 
+    * @return
+    */
+   MailMessage withBodyAs(boolean html);
+   
    /**
     * Set the mail body as html content
     * 
@@ -173,6 +185,30 @@ public interface MailMessage extends Serializable, Cloneable {
    MailMessage withFromAddress(String address);
 
    /**
+    * Define the to addresses
+    * 
+    * @param addresses
+    * @return current instance
+    */
+   MailMessage withToAddresses(String... addresses);
+   
+   /**
+    * Define the cc addresses
+    * 
+    * @param addresses
+    * @return current instance
+    */
+   MailMessage withCcAddresses(String... addresses);
+   
+   /**
+    * Define the bcc addresses
+    * 
+    * @param addresses
+    * @return current instance
+    */
+   MailMessage withBccAddresses(String... addresses);
+   
+   /**
     * Define the message priority
     * 
     * @param priority
@@ -180,12 +216,10 @@ public interface MailMessage extends Serializable, Cloneable {
     */
    MailMessage withPriority(int priority);
 
-   /**
-    * Define the mail subject
-    * 
-    * @param subject
-    * @return current instance
-    */
-   MailMessage withSubject(String subject);
 
+   /**
+    * @return Clone the current mail message into a new one
+    */
+   MailMessage clone();
+   
 }

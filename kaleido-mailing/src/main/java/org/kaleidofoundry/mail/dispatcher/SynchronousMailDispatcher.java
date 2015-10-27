@@ -134,8 +134,8 @@ public class SynchronousMailDispatcher implements MailDispatcher {
 		}
 	   }
 	   // BCC Addresses
-	   if (message.getCciAddresses() != null) {
-		for (iterator = message.getCciAddresses().iterator(); iterator.hasNext();) {
+	   if (message.getBccAddresses() != null) {
+		for (iterator = message.getBccAddresses().iterator(); iterator.hasNext();) {
 		   String mail = iterator.next();
 		   try {
 			mimeMessage.addRecipient(Message.RecipientType.BCC, new InternetAddress(mail, true));

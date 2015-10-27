@@ -71,6 +71,12 @@
 			<artifactId>jul-to-slf4j</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.bitmechanic</groupId>
+			<artifactId>dumbster</artifactId>
+			<version>1.9.0.2</version>
+			<scope>test</scope>
+		</dependency>
 
 	</dependencies>
 	<build>

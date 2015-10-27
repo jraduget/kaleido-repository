@@ -1,0 +1,10 @@
+mailing:
+  sessions:
+    mySession-ssl:
+      provider: local
+      smtp:
+        host: localhost
+        port: 25
+        auth:
+          enable: false
+        ssl: false
