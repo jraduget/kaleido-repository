@@ -37,19 +37,17 @@ import org.kaleidofoundry.core.util.StringHelper;
 public class JndiMailSessionService implements MailSessionService {
 
    protected final RuntimeContext<MailSessionService> context;
-   
+
    protected final NamingService namingService;
 
    public JndiMailSessionService(RuntimeContext<MailSessionService> context) {
 
 	this.context = context;
-	
-	if (StringHelper.isEmpty(context.getString(JNDI_NAMING_SERVICE_NAME))) { 
-	   throw new EmptyContextParameterException(JNDI_NAMING_SERVICE_NAME, context); 
-	}
 
-	final RuntimeContext<NamingService> namingServiceContext = 
-		new RuntimeContext<NamingService>(context.getString(JNDI_NAMING_SERVICE_REF), NamingService.class, context);
+	if (StringHelper.isEmpty(context.getString(JNDI_NAMING_SERVICE_NAME))) { throw new EmptyContextParameterException(JNDI_NAMING_SERVICE_NAME, context); }
+
+	final RuntimeContext<NamingService> namingServiceContext = new RuntimeContext<NamingService>(context.getString(JNDI_NAMING_SERVICE_REF),
+		NamingService.class, context);
 	this.namingService = NamingServiceFactory.provides(namingServiceContext);
 
    }

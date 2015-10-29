@@ -25,29 +25,29 @@ import java.io.Serializable;
  */
 public interface MailAttachment extends Serializable {
 
-    /**
-     * @return attachment name
-     */
-    String getName();
+   /**
+    * @return attachment name
+    */
+   String getName();
 
-    /**
-     * @return attachment uri information
-     */
-    String getContentURI();
+   /**
+    * @return attachment uri information
+    */
+   String getContentURI();
 
-    /**
-     * @return attachment content type
-     */
-    String getContentType();
+   /**
+    * @return attachment content type
+    */
+   String getContentType();
 
-    /**
-     * @return attachment content charset
-     */
-    String getContentCharset();
+   /**
+    * @return attachment content charset
+    */
+   String getContentCharset();
 
-    /**
-     * @return attachment input stream used to read the content
-     */
-    InputStream getInputStream();
+   /**
+    * @return attachment input stream used to read the content
+    */
+   InputStream getInputStream();
 
 }

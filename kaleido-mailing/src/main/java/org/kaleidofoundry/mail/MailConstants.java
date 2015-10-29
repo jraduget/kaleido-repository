@@ -37,7 +37,7 @@ public interface MailConstants {
    String MailDispatcherPluginName = "mailing.dispatchers";
 
    String MessagingMailDispatcherPluginName = "mailing.dispatchers.messaging";
-   
+
    String AsynchronousMailDispatcherPluginName = "mailing.dispatchers.async";
 
    String SynchronousMailDispatcherPluginName = "mailing.dispatchers.sync";

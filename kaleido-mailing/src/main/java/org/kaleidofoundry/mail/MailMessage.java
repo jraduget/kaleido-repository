@@ -76,8 +76,7 @@ public interface MailMessage extends Serializable, Cloneable {
     * @return current instance
     */
    MailMessage attach(String attachName, String fileURI, String charset) throws FileNotFoundException, IOException;
-   
-   
+
    /**
     * Add an attachment to the message
     * 
@@ -98,7 +97,6 @@ public interface MailMessage extends Serializable, Cloneable {
     * @return current instance
     */
    MailMessage attach(String attachName, InputStream attachIn, String mimeType, String charset);
-   
 
    /**
     * @return get an attachment by its name
@@ -163,7 +161,7 @@ public interface MailMessage extends Serializable, Cloneable {
     * @return current instance
     */
    MailMessage withSubject(String subject);
-   
+
    /**
     * Define the body content
     * 
@@ -175,11 +173,11 @@ public interface MailMessage extends Serializable, Cloneable {
    /**
     * Define if the body is html content or text plan
     * 
-    * @param html 
+    * @param html
     * @return
     */
    MailMessage withBodyAs(boolean html);
-   
+
    /**
     * Set the mail body as html content
     * 
@@ -216,7 +214,7 @@ public interface MailMessage extends Serializable, Cloneable {
     * @return current instance
     */
    MailMessage withToAddresses(String... addresses);
-   
+
    /**
     * Define the cc addresses
     * 
@@ -224,7 +222,7 @@ public interface MailMessage extends Serializable, Cloneable {
     * @return current instance
     */
    MailMessage withCcAddresses(String... addresses);
-   
+
    /**
     * Define the bcc addresses
     * 
@@ -232,7 +230,7 @@ public interface MailMessage extends Serializable, Cloneable {
     * @return current instance
     */
    MailMessage withBccAddresses(String... addresses);
-   
+
    /**
     * Define the message priority
     * 
@@ -241,10 +239,9 @@ public interface MailMessage extends Serializable, Cloneable {
     */
    MailMessage withPriority(int priority);
 
-
    /**
     * @return Clone the current mail message into a new one
     */
    MailMessage clone();
-   
+
 }

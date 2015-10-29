@@ -63,8 +63,8 @@ public class LocalMailSessionService implements MailSessionService {
 	if (StringHelper.isEmpty(hostName)) throw new EmptyContextParameterException(LOCAL_SMTP_HOST, context);
 
 	final boolean ssl = context.getBoolean(LOCAL_SMTP_SSL, false);
-	final boolean tls = context.getBoolean(LOCAL_SMTP_TLS, false);	
-	
+	final boolean tls = context.getBoolean(LOCAL_SMTP_TLS, false);
+
 	final Properties mailProps = new Properties();
 
 	mailProps.put("mail.smtp.host", hostName);
@@ -72,7 +72,7 @@ public class LocalMailSessionService implements MailSessionService {
 	mailProps.put("mail.smtp.auth", authen);
 
 	if (tls) {
-	   mailProps.put("mail.smtp.starttls.enable", "true");   
+	   mailProps.put("mail.smtp.starttls.enable", "true");
 	} else if (ssl) {
 	   // check with jdk6 ... Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 	   mailProps.put("mail.smtp.socketFactory.class", context.getString(LOCAL_SMTP_SSL_SOCKETFACTORY, LOCAL_SSL_FACTORY));

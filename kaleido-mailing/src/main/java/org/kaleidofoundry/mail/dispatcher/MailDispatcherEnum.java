@@ -25,7 +25,7 @@ public enum MailDispatcherEnum {
    async(false),
 
    messaging(false),
-   
+
    sync(true);
 
    MailDispatcherEnum(final boolean needMailSession) {

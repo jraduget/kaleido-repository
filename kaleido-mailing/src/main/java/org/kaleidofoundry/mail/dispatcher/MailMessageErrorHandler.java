@@ -8,7 +8,7 @@ import org.kaleidofoundry.mail.MailMessage;
  * @param <E>
  */
 public interface MailMessageErrorHandler {
-   
+
    /**
     * @param message
     * @param me

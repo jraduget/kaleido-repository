@@ -23,7 +23,7 @@ package org.kaleidofoundry.mail.session;
 public enum MailSessionProviderEnum {
 
    /* If you change an enum name, please apply changes to MailSessionConstants too... */
-   
+
    /** Local using java mail smtp api */
    local,
 
