@@ -87,12 +87,11 @@ public abstract class AbstractSynchronousMailDispatcherTest {
 		    .withBccAddresses(BCC_ADRESS);		    
 
 	  // first attach using POJO
-	  message.attach(new MailAttachmentBean("helloworld.xml", "text/xml", null,
-		    attachementStore.get("attachments/helloworld.xml").getInputStream()));
+	  message.attach(new MailAttachmentBean("helloworld.xml", attachementStore.get("attachments/helloworld.xml").getInputStream(), null, "text/xml", "UTF-8"));
 	  // second attach using filestore
 	  message.attach("helloworld.gif", attachementStore.get("attachments/helloworld.gif"));
 	  // third attach using uri
-	  message.attach("helloworld.txt", "/${basedir}/src/test/resources/attachments/helloworld.txt");
+	  message.attach("helloworld.txt", "/${basedir}/src/test/resources/attachments/helloworld.txt", "UTF-8");
 
 	  try {
 		getMailDispatcher().send(message);

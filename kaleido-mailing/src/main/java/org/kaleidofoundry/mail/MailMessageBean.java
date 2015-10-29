@@ -83,23 +83,35 @@ public class MailMessageBean implements MailMessage {
 
     @Override
     public MailMessage attach(String name, ResourceHandler attach) throws ResourceException {
-	  attach(new MailAttachmentBean(name, attach.getMimeType(), attach.getUri(), attach.getInputStream()));
+	  attach(new MailAttachmentBean(name, attach.getInputStream(), attach.getUri(), attach.getMimeType(), attach.getCharset()));
 	  return this;
     }
 
     @Override
-    public MailMessage attach(final String attachName, final String fileURI) throws FileNotFoundException, IOException {
+    public MailMessage attach(final String attachName, final String fileURI, final String charset)
+		throws FileNotFoundException, IOException {
 	  String mergedFileURI = FileStoreProvider.buildFullResourceURi(fileURI);
 	  MimeTypeResolver mimesSrv = MimeTypeResolverFactory.getService();
 	  String fileExt = FileHelper.getFileNameExtension(mergedFileURI);
-	  MailAttachmentBean attach = new MailAttachmentBean(attachName, (fileExt != null ? mimesSrv.getMimeType(fileExt) : null),
-		    mergedFileURI, new FileInputStream(mergedFileURI));
+
+	  MailAttachmentBean attach = new MailAttachmentBean(attachName, new FileInputStream(mergedFileURI), mergedFileURI,
+		    fileExt != null ? mimesSrv.getMimeType(fileExt) : null, !StringHelper.isEmpty(charset) ? charset : null);
 	  return attach(attach);
     }
 
     @Override
-    public MailMessage attach(String attachName, String mimeType, InputStream attachIn) {
-	  return attach(new MailAttachmentBean(attachName, mimeType, null, attachIn));
+    public MailMessage attach(final String attachName, final String fileURI) throws FileNotFoundException, IOException {
+	  return attach(attachName, fileURI, null);
+    }
+
+    @Override
+    public MailMessage attach(String attachName, InputStream attachIn, String mimeType, String charset) {
+	  return attach(new MailAttachmentBean(attachName, attachIn, null, mimeType, charset));
+    }
+
+    @Override
+    public MailMessage attach(String attachName, InputStream attachIn, String mimeType) {
+	  return attach(attachName, attachIn, mimeType, null);
     }
 
     @Override

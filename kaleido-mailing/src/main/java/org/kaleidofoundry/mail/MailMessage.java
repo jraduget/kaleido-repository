@@ -65,15 +65,40 @@ public interface MailMessage extends Serializable, Cloneable {
    MailMessage attach(String attachName, String fileURI) throws FileNotFoundException, IOException;
 
    /**
+    * Add an attachment to the message.<br/>
+    * Attachment mime type will be computed based on the file extension
+    * 
+    * @param attachName attachment name
+    * @param fileURI attachment file {@link URI}
+    * @param charset optional charset of the file
+    * @throws FileNotFoundException
+    * @throws IOException unknown mime type
+    * @return current instance
+    */
+   MailMessage attach(String attachName, String fileURI, String charset) throws FileNotFoundException, IOException;
+   
+   
+   /**
     * Add an attachment to the message
     * 
     * @param attachName
-    * @param mimeType
     * @param attachIn
+    * @param mimeType
     * @return current instance
     */
-   MailMessage attach(String attachName, String mimeType, InputStream attachIn);
+   MailMessage attach(String attachName, InputStream attachIn, String mimeType);
 
+   /**
+    * Add an attachment to the message
+    * 
+    * @param attachName
+    * @param attachIn
+    * @param mimeType
+    * @param charset optional charset of the file
+    * @return current instance
+    */
+   MailMessage attach(String attachName, InputStream attachIn, String mimeType, String charset);
+   
 
    /**
     * @return get an attachment by its name

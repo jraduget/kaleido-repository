@@ -153,9 +153,20 @@ public class SynchronousMailDispatcher implements MailDispatcher {
 
 		   try {
 			final MailAttachment mailAttach = message.getAttachment(attachName);
+			StringBuilder contentType = new StringBuilder();
+			if (mailAttach.getContentType() != null) {
+			    contentType.append(mailAttach.getContentType());
+			}
+			if (mailAttach.getContentCharset() != null) {
+			    if (contentType.length()>0) {
+				  contentType.append("; ");
+			    }
+			    contentType.append("charset=").append(mailAttach.getContentCharset());
+			}
+			
 			messageBodyPart = new MimeBodyPart();
 			messageBodyPart.setFileName(attachName);
-			messageBodyPart.setDataHandler(new DataHandler(new ByteArrayDataSource(mailAttach.getInputStream(), mailAttach.getContentType())));
+			messageBodyPart.setDataHandler(new DataHandler(new ByteArrayDataSource(mailAttach.getInputStream(), contentType.length()>0?contentType.toString():null)));
 			multipart.addBodyPart(messageBodyPart);
 		   } catch (IOException ioe) {
 			// skip the send
@@ -235,7 +246,7 @@ public class SynchronousMailDispatcher implements MailDispatcher {
 
    @Override
    public void close() throws Exception {
-	LOGGER.info("Closing mail dispatcher service {}", context.getName());
-   }
+	  LOGGER.info("Closing mail dispatcher service {}", context.getName());
+    }
 
 }
