@@ -61,24 +61,24 @@
 
 	<properties>
 		<!-- JDK / Java EE global version dependencies -->
-		<jdk.version>1.6</jdk.version>
+		<jdk.version>1.7</jdk.version>
 		<!-- AOP / Aspectj compatible [1.6.8,) -->
-		<aspectj.version>1.7.1</aspectj.version>
+		<aspectj.version>1.7.4</aspectj.version>
 		<!-- Logging version (logback is used only for testing) -->
-		<slf4j.version>1.6.4</slf4j.version>
-		<logback.version>1.0.3</logback.version>
+		<slf4j.version>1.7.12</slf4j.version>
+		<logback.version>1.1.3</logback.version>
 		<!-- Cache implementation version -->
 		<apache-jcs-cache.version>1.3</apache-jcs-cache.version>
 		<jboss-cache.version>3.2.4.GA</jboss-cache.version>
-		<terracotta-ehcache.version>2.6.6</terracotta-ehcache.version>
+		<terracotta-ehcache.version>2.6.11</terracotta-ehcache.version>
 		<jboss-infinispan.version>5.1.5.FINAL</jboss-infinispan.version>
 		<!-- CDI -->
 		<cdi.version>1.0</cdi.version>
 		<weld.version>1.1.8.Final</weld.version>
 		<!-- Testing -->
-		<junit.version>4.10</junit.version>
+		<junit.version>4.12</junit.version>
 		<!-- Spring integration version -->
-		<spring.version>3.2.2.RELEASE</spring.version>
+		<spring.version>4.2.2.RELEASE</spring.version>
 		<!-- integration url properties -->
 		<sonar.host.url>http://localhost:8080/sonar</sonar.host.url>
 		<jenkins.host.url>https://buildhive.cloudbees.com/job/kaleidofoundry/job/kaleido-repository/</jenkins.host.url>
@@ -120,12 +120,12 @@
 			<dependency>
 				<groupId>org.yaml</groupId>
 				<artifactId>snakeyaml</artifactId>
-				<version>1.10</version>
+				<version>1.13</version>
 			</dependency>
 			<dependency>
 				<groupId>org.codehaus.jackson</groupId>
 				<artifactId>jackson-mapper-asl</artifactId>
-				<version>1.9.6</version>
+				<version>1.9.13</version>
 			</dependency>
 
 			<!-- cdi api -->
@@ -573,7 +573,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.4</version>
+				<version>1.8</version>
 				<configuration>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>

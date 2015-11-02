@@ -15,8 +15,6 @@
  */
 package org.kaleidofoundry.core.store.module;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.Context;
@@ -37,10 +35,12 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.name.Named;
 
+import static org.junit.Assert.*;
+
 /**
  * @author jraduget
  */
-public class RawResourceModuleTest extends Assert {
+public class RawResourceModuleTest {
 
    private Injector injector;
    private Sample sample;

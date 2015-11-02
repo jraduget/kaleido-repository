@@ -15,8 +15,6 @@
  */
 package org.kaleidofoundry.core.store.module;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.Context;
@@ -27,12 +25,14 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
+import static org.junit.Assert.*;
+
 /**
  * Test contextual injection for fileStore Module
  * 
  * @author jraduget
  */
-public class ContextualResourceModuleTest extends Assert {
+public class ContextualResourceModuleTest {
 
    private Injector injector;
    private SampleWithContext sampleWithContext;

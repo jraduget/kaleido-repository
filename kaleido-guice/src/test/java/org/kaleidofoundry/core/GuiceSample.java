@@ -15,7 +15,7 @@
  */
 package org.kaleidofoundry.core;
 
-import junit.framework.Assert;
+
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,11 +35,13 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 
+import static org.junit.Assert.*;
+
 /**
  * @author jraduget
  */
 @Task(comment = "provider , bindConstant")
-public class GuiceSample extends Assert {
+public class GuiceSample  {
 
    private Injector injector;
    private FileStoreSample fileStoreSample;
