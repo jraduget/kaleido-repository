@@ -12,7 +12,7 @@ import org.kaleidofoundry.core.launcher.KaleidoJunit4ClassRunner;
 @RunWith(KaleidoJunit4ClassRunner.class)
 @NamedConfigurations(value = { @NamedConfiguration(name = "local-session", uri = "classpath:/mailing/localSession.yaml"),
 	@NamedConfiguration(name = "synchronous-dispatcher", uri = "classpath:/mailing/synchronousDispatcher.yaml") })
-public class ITSynchronousMailDispatcherTest extends AbstractSynchronousMailDispatcherTest {
+public class ITSynchronousMailDispatcherTest extends AbstractMailDispatcherTest {
 
    private MailDispatcher mailDispatcher;
 
@@ -23,6 +23,8 @@ public class ITSynchronousMailDispatcherTest extends AbstractSynchronousMailDisp
 
 	if (smtpUserName != null) {
 	   Configuration sessionConfig = ConfigurationFactory.getRegistry().get("local-session");
+	   sessionConfig.setProperty("mailing.sessions.mySession.smtp.auth.user", smtpUserName);
+	   sessionConfig.setProperty("mailing.sessions.mySession.smtp.auth.password", smtpUserPassword);
 	   sessionConfig.setProperty("mailing.sessions.mySession-ssl.smtp.auth.user", smtpUserName);
 	   sessionConfig.setProperty("mailing.sessions.mySession-ssl.smtp.auth.password", smtpUserPassword);
 	   sessionConfig.setProperty("mailing.sessions.mySession-tls.smtp.auth.user", smtpUserName);

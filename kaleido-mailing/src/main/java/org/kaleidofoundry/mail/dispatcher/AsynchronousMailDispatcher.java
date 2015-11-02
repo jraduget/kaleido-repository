@@ -43,6 +43,7 @@ public class AsynchronousMailDispatcher extends SynchronousMailDispatcher {
    public AsynchronousMailDispatcher(final RuntimeContext<MailDispatcher> context) {
 	super(context);
 	final int threadCount = context.getInteger(THREAD_COUNT, 10);
+	LOGGER.info("Starting mail dispatcher service {} with a thread pool size of {}", context.getName(), threadCount);
 	executorService = Executors.newFixedThreadPool(threadCount);
    }
 
@@ -71,7 +72,7 @@ public class AsynchronousMailDispatcher extends SynchronousMailDispatcher {
    }
 
    public void close() {
-	LOGGER.info("Closing mail dispatcher service {}", context.getName());
+	LOGGER.info("Closing mail dispatcher service {}...", context.getName());
 
 	// Disable new tasks from being submitted
 	executorService.shutdown();
@@ -80,13 +81,15 @@ public class AsynchronousMailDispatcher extends SynchronousMailDispatcher {
 	   if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
 		executorService.shutdownNow(); // Cancel currently executing tasks
 		// Wait a while for tasks to respond to being cancelled
-		if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) System.err.println("Pool did not terminate");
-	   }
+		if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) LOGGER.error("Mail dispatcher service pool did not terminate");
+	   }	   
 	} catch (InterruptedException ie) {
 	   // (Re-)Cancel if current thread also interrupted
 	   executorService.shutdownNow();
 	   // Preserve interrupt status
 	   Thread.currentThread().interrupt();
+	} finally {
+	   LOGGER.info("Mail dispatcher service {} closed", context.getName());
 	}
    }
 }

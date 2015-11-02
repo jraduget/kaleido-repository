@@ -3,5 +3,5 @@ mailing:
     myDispatcher:
       provider: sync
       session:
-        service-ref: mySession-ssl
+        service-ref: mySession
         

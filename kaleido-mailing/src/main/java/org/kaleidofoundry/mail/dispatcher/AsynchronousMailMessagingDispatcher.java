@@ -34,15 +34,15 @@ import org.slf4j.LoggerFactory;
  * @author jraduget
  */
 @Declare(MessagingMailDispatcherPluginName)
-public class MessagingMailDispatcher implements MailDispatcher {
+public class AsynchronousMailMessagingDispatcher implements MailDispatcher {
 
-   private static Logger LOGGER = LoggerFactory.getLogger(MessagingMailDispatcher.class);
+   private static Logger LOGGER = LoggerFactory.getLogger(AsynchronousMailMessagingDispatcher.class);
 
    private final RuntimeContext<MailDispatcher> context;
 
    private final Producer messageProducer;
 
-   public MessagingMailDispatcher(final RuntimeContext<MailDispatcher> context) {
+   public AsynchronousMailMessagingDispatcher(final RuntimeContext<MailDispatcher> context) {
 	this.context = context;
 	final String messageProducereRef = context.getString(PRODUCER_SERVICE_NAME);
 	final RuntimeContext<Producer> producerContext = new RuntimeContext<Producer>(messageProducereRef, Producer.class, this.context);

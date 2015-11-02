@@ -23,6 +23,7 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.kaleidofoundry.core.store.FileStore;
 import org.kaleidofoundry.core.store.FileStoreFactory;
+import org.kaleidofoundry.core.util.StringHelper;
 import org.kaleidofoundry.mail.InvalidMailAddressException;
 import org.kaleidofoundry.mail.MailAttachmentBean;
 import org.kaleidofoundry.mail.MailException;
@@ -33,13 +34,15 @@ import org.kaleidofoundry.mail.session.MailSessionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractSynchronousMailDispatcherTest {
+import com.dumbster.smtp.SmtpServer;
 
-   private static Logger LOGGER = LoggerFactory.getLogger(AbstractSynchronousMailDispatcherTest.class);
+public abstract class AbstractMailDispatcherTest {
+
+   private static Logger LOGGER = LoggerFactory.getLogger(AbstractMailDispatcherTest.class);
 
    private FileStore attachementStore;
 
-   public AbstractSynchronousMailDispatcherTest() {
+   public AbstractMailDispatcherTest() {
 	attachementStore = FileStoreFactory.provides("classpath:/");
    }
 
@@ -49,7 +52,6 @@ public abstract class AbstractSynchronousMailDispatcherTest {
    public void sendMail() throws MailException {
 
 	assertNotNull(getMailDispatcher());
-	assertTrue(getMailDispatcher() instanceof SynchronousMailDispatcher);
 
 	MailMessage message = new MailMessageBean();
 	message.withSubject(MAIL_SUBJECT).withBody(MAIL_BODY_HTML).withBodyAs(MAIL_HTML).withBodyCharSet(MAIL_ENCODING).withFromAddress(FROM_ADRESS)
@@ -69,7 +71,6 @@ public abstract class AbstractSynchronousMailDispatcherTest {
    @Test
    public void sendMailWithAttachments() throws MailDispatcherException, MailException, FileNotFoundException, IOException {
 	assertNotNull(getMailDispatcher());
-	assertTrue(getMailDispatcher() instanceof SynchronousMailDispatcher);
 
 	MailMessage message = new MailMessageBean();
 	message.withSubject(MAIL_SUBJECT).withBody(MAIL_BODY_HTML).withBodyAs(MAIL_HTML).withBodyCharSet(MAIL_ENCODING).withFromAddress(FROM_ADRESS)
@@ -235,4 +236,58 @@ public abstract class AbstractSynchronousMailDispatcherTest {
 	}
    }
 
+
+   public static void mailAssertions(SmtpServer server, int mailIndex) {
+	assertEquals(1, server.getEmailCount());
+	assertEquals(String.valueOf(MAIL_PRIORITY), server.getMessage(mailIndex).getFirstHeaderValue("X-Priority"));
+	assertEquals(FROM_ADRESS, server.getMessage(mailIndex).getFirstHeaderValue("From"));
+	assertArrayEquals(TO_ADRESS, extractEmails(server.getMessage(mailIndex), "To"));
+	assertArrayEquals(CC_ADRESS, extractEmails(server.getMessage(mailIndex), "Cc"));
+	// assertArrayEquals(BCC_ADRESS, extractEmails(server.getMessage(mailIndex), "Bcc"));
+	assertEquals(MAIL_SUBJECT, server.getMessage(mailIndex).getFirstHeaderValue("Subject"));
+	assertTrue(server.getMessage(mailIndex).getBody().contains(MAIL_BODY_HTML));
+	assertTrue(server.getMessage(mailIndex).getBody().contains("Content-Type: " + (MAIL_HTML ? "text/html" : "text/plain")));
+	assertTrue(server.getMessage(mailIndex).getBody().contains("charset=" + MAIL_ENCODING));
+   }
+
+   public static void mailWithAttachmentsAssertions(SmtpServer server, int mailIndex) {
+	assertEquals(1, server.getEmailCount());
+	assertEquals(String.valueOf(MAIL_PRIORITY), server.getMessage(mailIndex).getFirstHeaderValue("X-Priority"));
+	assertEquals(FROM_ADRESS, server.getMessage(mailIndex).getFirstHeaderValue("From"));
+	assertArrayEquals(TO_ADRESS, extractEmails(server.getMessage(mailIndex), "To"));
+	assertArrayEquals(CC_ADRESS, extractEmails(server.getMessage(mailIndex), "Cc"));
+	// assertArrayEquals(BCC_ADRESS, extractEmails(server.getMessage(mailIndex), "Bcc"));
+	assertEquals(MAIL_SUBJECT, server.getMessage(mailIndex).getFirstHeaderValue("Subject"));
+	assertTrue(server.getMessage(mailIndex).getBody().contains(MAIL_BODY_HTML));
+	assertTrue(server.getMessage(mailIndex).getBody().contains("Content-Type: " + (MAIL_HTML ? "text/html" : "text/plain")));
+	assertTrue(server.getMessage(mailIndex).getBody().contains("charset=" + MAIL_ENCODING));
+
+	assertTrue(server.getMessage(mailIndex).getBody().contains("Content-Type: text/html; charset=UTF-8"));
+	assertTrue(server.getMessage(mailIndex).getBody().contains("Content-Transfer-Encoding: 7bit"));
+
+	assertTrue(server.getMessage(mailIndex).getBody().contains("Content-Type: text/xml; charset=UTF-8; name=helloworld.xml"));
+	assertTrue(server.getMessage(mailIndex).getBody().contains("Content-Transfer-Encoding: quoted-printable"));
+	assertTrue(server.getMessage(mailIndex).getBody().contains("Content-Disposition: attachment; filename=helloworld.xml"));
+	assertTrue(server.getMessage(mailIndex).getBody().contains("<line>this is an email attachment with some specials characters</line>"));
+
+	assertTrue(server.getMessage(mailIndex).getBody().contains("Content-Type: image/gif; name=helloworld.gif"));
+	assertTrue(server.getMessage(mailIndex).getBody().contains("Content-Transfer-Encoding: base64"));
+	assertTrue(server.getMessage(mailIndex).getBody().contains("Content-Disposition: attachment; filename=helloworld.gif"));
+	assertTrue(server.getMessage(mailIndex).getBody().contains("R0lGODlhvAIsAfcAAHPLLiEkIqQnKhkoKjNKYjNUJ9Amc3FrJJAmarInV/LMmP4mavvmsycoHTYo"));
+
+	assertTrue(server.getMessage(mailIndex).getBody().contains("Content-Type: text/plain; charset=UTF-8; name=helloworld.txt"));
+	assertTrue(server.getMessage(mailIndex).getBody().contains("Content-Transfer-Encoding: 7bit"));
+	assertTrue(server.getMessage(mailIndex).getBody().contains("Content-Disposition: attachment; filename=helloworld.txt"));
+	assertTrue(server.getMessage(mailIndex).getBody().contains("this is an email attachment"));
+   }
+
+   public static String[] extractEmails(com.dumbster.smtp.MailMessage message, String headerField) {
+	String[] adresses = StringHelper.split(message.getFirstHeaderValue(headerField), ",");
+	if (adresses != null) {
+	   for (int i = 0; i < adresses.length; i++) {
+		adresses[i] = adresses[i].trim();
+	   }
+	}
+	return adresses;
+   }   
 }

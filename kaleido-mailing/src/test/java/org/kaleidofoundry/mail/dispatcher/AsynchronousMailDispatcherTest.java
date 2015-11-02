@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.config.NamedConfiguration;
@@ -20,8 +21,8 @@ import com.dumbster.smtp.SmtpServerFactory;
 
 @RunWith(KaleidoJunit4ClassRunner.class)
 @NamedConfigurations(value = { @NamedConfiguration(name = "local-dumbster-session", uri = "classpath:/mailing/localDumbsterSession.yaml"),
-	@NamedConfiguration(name = "synchronous-dispatcher", uri = "classpath:/mailing/synchronousDispatcher.yaml") })
-public class SynchronousMailDispatcherTest extends AbstractMailDispatcherTest {
+	@NamedConfiguration(name = "asynchronous-dispatcher", uri = "classpath:/mailing/asynchronousDispatcher.yaml") })
+public class AsynchronousMailDispatcherTest extends AbstractMailDispatcherTest {
 
    private SmtpServer server;
 
@@ -39,6 +40,7 @@ public class SynchronousMailDispatcherTest extends AbstractMailDispatcherTest {
 
    @After
    public void cleanup() throws Exception {
+	Thread.sleep(5000);
 	server.stop();
 	mailDispatcher.close();
    }
@@ -48,16 +50,18 @@ public class SynchronousMailDispatcherTest extends AbstractMailDispatcherTest {
 	return mailDispatcher;
    }
 
+   @Test
    @Override
    public void sendMail() throws MailException {
-	assertTrue(getMailDispatcher() instanceof SynchronousMailDispatcher);
+	assertTrue(getMailDispatcher() instanceof AsynchronousMailDispatcher);
 	super.sendMail();
 	mailAssertions(server, 0);
    }
 
+   @Test
    @Override
    public void sendMailWithAttachments() throws MailDispatcherException, MailException, FileNotFoundException, IOException {
-	assertTrue(getMailDispatcher() instanceof SynchronousMailDispatcher);
+	assertTrue(getMailDispatcher() instanceof AsynchronousMailDispatcher);
 	super.sendMailWithAttachments();
 	mailWithAttachmentsAssertions(server, 0);
    }
