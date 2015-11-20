@@ -71,11 +71,15 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
 	} else if (type.isAssignableFrom(value.getClass())) {
 	   return (T) value;
 	} else if (value instanceof Collection) {
-	   return (T) serialize((Collection) value, type);
+	   return (T) serialize((Collection) value, type);	   
 	} else if (String.class == type) {
 	   return (T) serialize((T) value, type);
-	} else {
-	   return convert(value, type);
+	} else {	    
+	    if (type.isArray()) {
+		  return (T) convertToList(value, type).toArray(new Object[0]);
+	    } else {
+		  return convert(value, type);
+	    }
 	}
    }
 
@@ -154,7 +158,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
    }
 
    public String[] getStrings(final String key) {
-	return getProperty(key, String[].class);
+	return getPropertyList(key, String.class).toArray(new String[0]);
    }
 
    public String[] getStrings(final String key, final String[] defaultValues) {
@@ -176,7 +180,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
    }
    
    public BigDecimal[] getBigDecimals(final String key) {
-	return getProperty(key, BigDecimal[].class);
+	return getPropertyList(key, BigDecimal.class).toArray(new BigDecimal[0]);
    }
 
    public BigDecimal[] getBigDecimals(final String key, final BigDecimal[] defaultValues) {
@@ -198,7 +202,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
    }
 
    public BigInteger[] getBigIntegers(final String key) {
-	return getProperty(key, BigInteger[].class);
+	return getPropertyList(key, BigInteger.class).toArray(new BigInteger[0]);
    }
 
    public BigInteger[] getBigIntegers(final String key, final BigInteger[] defaultValues) {
@@ -219,8 +223,8 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
 	return getPropertyList(key, Boolean.class);
    }
 
-   public Boolean[] getBooleans(final String key) {
-	return getProperty(key, Boolean[].class);
+   public Boolean[] getBooleans(final String key) {	
+	return getPropertyList(key, Boolean.class).toArray(new Boolean[0]);
    }
 
    public Boolean[] getBooleans(final String key, final Boolean[] defaultValues) {
@@ -242,7 +246,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
    }
 
    public Byte[] getBytes(final String key) {
-	return getProperty(key, Byte[].class);
+	return getPropertyList(key, Byte.class).toArray(new Byte[0]);
    }
 
    public Byte[] getBytes(final String key, final Byte[] defaultValues) {
@@ -265,7 +269,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
 
 
    public Double[] getDoubles(final String key) {
-	return getProperty(key, Double[].class);
+	return getPropertyList(key, Double.class).toArray(new Double[0]);
    }
 
    public Double[] getDoubles(final String key, final Double[] defaultValues) {
@@ -287,7 +291,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
    }
 
    public Float[] getFloats(final String key) {
-	return getProperty(key, Float[].class);
+	return getPropertyList(key, Float.class).toArray(new Float[0]);
    }
 
    public Float[] getFloats(final String key, final Float[] defaultValues) {
@@ -310,7 +314,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
    }
 
    public Integer[] getIntegers(final String key) {
-	return getProperty(key, Integer[].class);
+	return getPropertyList(key, Integer.class).toArray(new Integer[0]);
    }
 
    public Integer[] getIntegers(final String key, final Integer[] defaultValues) {
@@ -333,7 +337,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
    }
 
    public Long[] getLongs(final String key) {
-	return getProperty(key, Long[].class);
+	return getPropertyList(key, Long.class).toArray(new Long[0]);
    }
 
    public Long[] getLongs(final String key, final Long[] defaultValues) {
@@ -356,7 +360,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
    }
 
    public Short[] getShorts(final String key) {
-	return getProperty(key, Short[].class);
+	return getPropertyList(key, Short.class).toArray(new Short[0]);
    }
 
    public Short[] getShorts(final String key, final Short[] defaultValues) {
@@ -379,7 +383,7 @@ public abstract class AbstractPropertyAccessor extends PrimitiveTypeToStringSeri
    }
 
    public Date[] getDates(final String key) {
-	return getProperty(key, Date[].class);
+	return getPropertyList(key, Date.class).toArray(new Date[0]);
    }
 
    public Date[] getDates(final String key, final Date[] defaultValues) {
