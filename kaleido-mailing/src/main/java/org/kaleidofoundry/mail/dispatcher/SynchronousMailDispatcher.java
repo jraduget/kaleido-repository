@@ -235,7 +235,9 @@ public class SynchronousMailDispatcher implements MailDispatcher {
 		try {
 		   send(message, session);
 		} catch (MailException mae) {
+		   LOGGER.debug("Error sending mail", mae);
 		   if (handler != null) {
+			LOGGER.debug("Processing message handler");
 			handler.process(message, mae);
 		   }
 		}

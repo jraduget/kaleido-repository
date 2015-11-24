@@ -40,9 +40,8 @@ public class AsynchronousMailDispatcherTest extends AbstractMailDispatcherTest {
 
    @After
    public void cleanup() throws Exception {
-	Thread.sleep(5000);
-	server.stop();
 	mailDispatcher.close();
+	server.stop();
    }
 
    @Override

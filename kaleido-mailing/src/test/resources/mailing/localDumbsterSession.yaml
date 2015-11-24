@@ -8,3 +8,4 @@ mailing:
         auth:
           enable: false
         ssl: false
+        debug: true

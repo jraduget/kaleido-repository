@@ -26,6 +26,7 @@ import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SM
 import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_SSL_SOCKETFACTORY_PORT;
 import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_TLS;
 import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_USER;
+import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SMTP_DEBUG;
 import static org.kaleidofoundry.mail.session.MailSessionContextBuilder.LOCAL_SSL_FACTORY;
 
 import java.util.Properties;
@@ -59,7 +60,8 @@ public class LocalMailSessionService implements MailSessionService {
 	final String hostName = context.getString(LOCAL_SMTP_HOST);
 	final int portName = context.getInteger(LOCAL_SMTP_PORT, 25);
 	final boolean authen = context.getBoolean(LOCAL_SMTP_AUTH, false);
-
+	final boolean debug = context.getBoolean(LOCAL_SMTP_DEBUG, false);
+	
 	if (StringHelper.isEmpty(hostName)) throw new EmptyContextParameterException(LOCAL_SMTP_HOST, context);
 
 	final boolean ssl = context.getBoolean(LOCAL_SMTP_SSL, false);
@@ -81,16 +83,20 @@ public class LocalMailSessionService implements MailSessionService {
 	   mailProps.put("mail.smtp.socketFactory.port", context.getString(LOCAL_SMTP_SSL_SOCKETFACTORY_PORT));
 	}
 
+	Session session = null;
 	if (authen == false) {
-	   return Session.getDefaultInstance(mailProps, null);
+	   session = Session.getDefaultInstance(mailProps, null);
 	} else {
-	   return Session.getDefaultInstance(mailProps, new Authenticator() {
+	   session = Session.getDefaultInstance(mailProps, new Authenticator() {
 		@Override
 		protected PasswordAuthentication getPasswordAuthentication() {
 		   return new PasswordAuthentication(context.getString(LOCAL_SMTP_USER), context.getString(LOCAL_SMTP_PASSWORD));
 		}
 	   });
 	}
+	
+	session.setDebug(debug);
+	return session;
 
    }
 

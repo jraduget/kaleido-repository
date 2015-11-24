@@ -17,12 +17,15 @@ package org.kaleidofoundry.mail.dispatcher;
 
 import static org.kaleidofoundry.mail.MailConstants.AsynchronousMailDispatcherPluginName;
 import static org.kaleidofoundry.mail.dispatcher.MailDispatcherContextBuilder.THREAD_COUNT;
+import static org.kaleidofoundry.mail.dispatcher.MailDispatcherContextBuilder.TIMEOUT;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.plugin.Declare;
@@ -54,19 +57,29 @@ public class AsynchronousMailDispatcher extends SynchronousMailDispatcher {
 
    @Override
    public void send(final MailMessageErrorHandler handler, final MailMessage... messages) {
-	List<Runnable> threads = new ArrayList<Runnable>();
 
-	for (final MailMessage message : messages) {
-	   threads.add(new Runnable() {
-		@Override
-		public void run() {
-		   AsynchronousMailDispatcher.super.send(handler, message);
-		}
-	   });
-	}
+	final Integer timeout = context.getInteger(TIMEOUT);
+	Future<Void> sendFuture = executorService.submit(new Callable<Void>() {
+	   public Void call() {
+		AsynchronousMailDispatcher.super.send(handler, messages);
+		return null;
+	   }
+	});
 
-	for (Runnable thread : threads) {
-	   executorService.execute(thread);
+	try {
+	   if (timeout != null) {
+		sendFuture.get(timeout, TimeUnit.MILLISECONDS);
+	   } else {
+		sendFuture.get();
+	   }
+	} catch (InterruptedException e) {
+	   LOGGER.error("Error while sending mail messages", e);
+	} catch (ExecutionException e) {
+	   //e.getCause()
+	   //handler.
+	   LOGGER.error("Error while sending mail messages", e);
+	} catch (TimeoutException e) {
+	   LOGGER.error("Error while sending mail messages in the configured time %d ms", timeout, e);	   
 	}
 
    }
@@ -82,7 +95,7 @@ public class AsynchronousMailDispatcher extends SynchronousMailDispatcher {
 		executorService.shutdownNow(); // Cancel currently executing tasks
 		// Wait a while for tasks to respond to being cancelled
 		if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) LOGGER.error("Mail dispatcher service pool did not terminate");
-	   }	   
+	   }
 	} catch (InterruptedException ie) {
 	   // (Re-)Cancel if current thread also interrupted
 	   executorService.shutdownNow();
