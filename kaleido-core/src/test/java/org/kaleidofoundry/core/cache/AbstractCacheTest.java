@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2014 the original author or authors
+ * Copyright 2008-2016 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,18 +19,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.kaleidofoundry.core.lang.NotNullException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.junit.Assert.*;
 
 /**
  * Test Cache Factory
  * 
  * @author jraduget
  */
-public abstract class AbstractCacheTest extends Assert {
+public abstract class AbstractCacheTest  {
 
    protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractCacheTest.class);
 

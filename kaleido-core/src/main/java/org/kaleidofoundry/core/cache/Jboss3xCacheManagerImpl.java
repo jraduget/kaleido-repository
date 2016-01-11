@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2014 the original author or authors
+ * Copyright 2008-2016 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,7 +98,7 @@ public class Jboss3xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstr
     */
    @Override
    public String getMetaInformations() {
-	return "jboss-cache-3.x (3.0.x -> 3.2.x)";
+	return "jboss-cache[3.0.x -> 3.2.x]";
    }
 
    /*
@@ -182,7 +182,7 @@ public class Jboss3xCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstr
 	try {
 	   final org.jboss.cache.Cache<K, V> cache;
 
-	   LOGGER.info(CacheMessageBundle.getMessage("cachemanager.create.default", name, getName()));
+	   traceCacheCreation(name);
 
 	   if (StringHelper.isEmpty(getCurrentConfiguration())) {
 		cache = cacheManager.createCache(true);

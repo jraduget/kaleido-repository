@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2016 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package org.kaleidofoundry.core.context;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
@@ -33,7 +33,7 @@ import org.kaleidofoundry.core.store.ResourceException;
  * @author jraduget
  */
 @Task(comment = "test parameters builder priority to configuration")
-public class RuntimeContextTest extends Assert {
+public class RuntimeContextTest  {
 
    private static final String TomcatContextName = "tomcat";
    private static final String ContextPrefix = "namingServices";

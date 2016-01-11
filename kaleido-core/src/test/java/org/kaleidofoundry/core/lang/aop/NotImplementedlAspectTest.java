@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2016 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package org.kaleidofoundry.core.lang.aop;
 
 import static org.kaleidofoundry.core.lang.NotImplementedException.ERROR_NotImplemented;
 import static org.kaleidofoundry.core.lang.NotImplementedException.ERROR_NotImplementedCustom;
-import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.kaleidofoundry.core.lang.NotImplementedException;
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author jraduget
  */
-public class NotImplementedlAspectTest extends Assert {
+public class NotImplementedlAspectTest  {
 
    static Logger LOGGER = LoggerFactory.getLogger(NotImplementedlAspectTest.class);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2014 the original author or authors
+ * Copyright 2008-2016 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.kaleidofoundry.core.util.locale.LocaleFactory;
@@ -36,7 +36,7 @@ import org.kaleidofoundry.core.util.locale.LocaleFactory;
  * 
  * @author jraduget
  */
-public class DateHelperTest extends Assert {
+public class DateHelperTest  {
 
    @Test
    public void testNewDate() {
@@ -56,8 +56,8 @@ public class DateHelperTest extends Assert {
 
    @Test
    public void testGetAgeFromCurrent() {
-	float age = getAge(newDate(1, 1, 2000), newDate(16, 11, 1978));
-	assertEquals(21.083334f, age);
+	double age = getAge(newDate(1, 1, 2000), newDate(16, 11, 1978));
+	assertEquals(21.08333396911621d, age, 0d);
    }
 
    @Test

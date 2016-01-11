@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2013 the original author or authors 
+ * Copyright 2008-2016 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,7 +126,7 @@ public class JcsCacheManagerImpl extends AbstractCacheManager {
     */
    @Override
    public String getMetaInformations() {
-	return "Apache JCS 1.3";
+	return "ApacheJCS[1.3]";
    }
 
    /*
@@ -194,7 +194,7 @@ public class JcsCacheManagerImpl extends AbstractCacheManager {
     */
    protected JCS createCache(final String name) {
 
-	LOGGER.info(CacheMessageBundle.getMessage("cachemanager.create.default", name, getName()));
+	traceCacheCreation(name);
 
 	try {
 	   return JCS.getInstance(name);

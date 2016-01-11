@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2014 the original author or authors
+ * Copyright 2008-2016 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,7 +108,7 @@ public class InfinispanCacheManagerImpl extends org.kaleidofoundry.core.cache.Ab
     */
    @Override
    public String getMetaInformations() {
-	return "infinispan (4.0.x -> 5.1.x)";
+	return "infinispan[4.0.x -> 5.1.x]";
    }
 
    /*
@@ -188,7 +188,8 @@ public class InfinispanCacheManagerImpl extends org.kaleidofoundry.core.cache.Ab
     */
    protected <K, V> org.infinispan.Cache<K, V> createCache(final String name) {
 
-	LOGGER.info(CacheMessageBundle.getMessage("cachemanager.create.default", name, getName()));
+	traceCacheCreation(name);
+	
 	try {
 	   return infiniSpanCacheManager.getCache(name);
 	} catch (final ConfigurationException cfe) {

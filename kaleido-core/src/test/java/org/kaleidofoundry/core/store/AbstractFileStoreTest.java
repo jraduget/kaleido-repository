@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2014 the original author or authors
+ * Copyright 2008-2016 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
@@ -33,7 +33,7 @@ import org.kaleidofoundry.core.lang.NotNullException;
 /**
  * @author jraduget
  */
-public abstract class AbstractFileStoreTest extends Assert {
+public abstract class AbstractFileStoreTest  {
 
    /** mock resource default content */
    static final String DEFAULT_RESOURCE_MOCK_TEST = "line1\nline2";

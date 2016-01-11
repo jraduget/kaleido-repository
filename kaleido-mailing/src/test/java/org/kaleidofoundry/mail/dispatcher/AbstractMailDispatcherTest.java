@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.kaleidofoundry.mail.MailTestConstants.BCC_ADRESS;
 import static org.kaleidofoundry.mail.MailTestConstants.CC_ADRESS;
 import static org.kaleidofoundry.mail.MailTestConstants.FROM_ADRESS;
 import static org.kaleidofoundry.mail.MailTestConstants.INVALID_MAIL_ADDRESS_01;
@@ -29,6 +28,7 @@ import org.kaleidofoundry.mail.MailAttachmentBean;
 import org.kaleidofoundry.mail.MailException;
 import org.kaleidofoundry.mail.MailMessage;
 import org.kaleidofoundry.mail.MailMessageBean;
+import org.kaleidofoundry.mail.MailTestConstants;
 import org.kaleidofoundry.mail.MailingDispatcherReport;
 import org.kaleidofoundry.mail.session.MailSessionException;
 import org.slf4j.Logger;
@@ -53,9 +53,7 @@ public abstract class AbstractMailDispatcherTest {
 
 	assertNotNull(getMailDispatcher());
 
-	MailMessage message = new MailMessageBean();
-	message.withSubject(MAIL_SUBJECT).withBody(MAIL_BODY_HTML).withBodyAs(MAIL_HTML).withBodyCharSet(MAIL_ENCODING).withFromAddress(FROM_ADRESS)
-		.withPriority(MAIL_PRIORITY).withToAddresses(TO_ADRESS).withCcAddresses(CC_ADRESS).withBccAddresses(BCC_ADRESS);
+	MailMessage message = MailTestConstants.createDefaultMailMessage();
 
 	try {
 	   getMailDispatcher().send(message);
@@ -72,10 +70,7 @@ public abstract class AbstractMailDispatcherTest {
    public void sendMailWithAttachments() throws MailDispatcherException, MailException, FileNotFoundException, IOException {
 	assertNotNull(getMailDispatcher());
 
-	MailMessage message = new MailMessageBean();
-	message.withSubject(MAIL_SUBJECT).withBody(MAIL_BODY_HTML).withBodyAs(MAIL_HTML).withBodyCharSet(MAIL_ENCODING).withFromAddress(FROM_ADRESS)
-		.withPriority(MAIL_PRIORITY).withToAddresses(TO_ADRESS).withCcAddresses(CC_ADRESS).withBccAddresses(BCC_ADRESS);
-
+	MailMessage message = MailTestConstants.createDefaultMailMessage();
 	// first attach using POJO
 	message.attach(new MailAttachmentBean("helloworld.xml", attachementStore.get("attachments/helloworld.xml").getInputStream(), null, "text/xml", "UTF-8"));
 	// second attach using filestore

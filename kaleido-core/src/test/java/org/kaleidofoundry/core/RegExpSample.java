@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2016 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.kaleidofoundry.core.util.StringHelper;
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author jraduget
  */
-public class RegExpSample extends Assert {
+public class RegExpSample  {
 
    static final Logger LOGGER = LoggerFactory.getLogger(RegExpSample.class);
 
