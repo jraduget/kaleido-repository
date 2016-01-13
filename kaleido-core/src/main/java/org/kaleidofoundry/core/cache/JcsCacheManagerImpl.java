@@ -17,8 +17,6 @@ package org.kaleidofoundry.core.cache;
 
 import static org.kaleidofoundry.core.cache.CacheConstants.JcsCacheManagerPluginName;
 import static org.kaleidofoundry.core.cache.CacheManagerContextBuilder.FileStoreUri;
-import static org.kaleidofoundry.core.i18n.InternalBundleHelper.CacheMessageBundle;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

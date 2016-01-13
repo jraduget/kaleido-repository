@@ -244,7 +244,7 @@ public abstract class AbstractConsumer implements Consumer {
 		if (isDebug()) {
 		   LOGGER.info(
 			   "<<< receiving message with providerId={} , correlationId={} , parameters={}",
-			   new String[] { messageWrapper.getMessage().getProviderId(), messageWrapper.getMessage().getCorrelationId(),
+			   new Object[] { messageWrapper.getMessage().getProviderId(), messageWrapper.getMessage().getCorrelationId(),
 				   String.valueOf(messageWrapper.getMessage().getParameters()) });
 		   LOGGER.info("{}", messageWrapper.getMessage().toString());
 		}

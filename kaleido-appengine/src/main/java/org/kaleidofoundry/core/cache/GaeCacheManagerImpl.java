@@ -19,8 +19,6 @@ import static org.kaleidofoundry.core.cache.CacheConstants.GaeCacheManagerPlugin
 import static org.kaleidofoundry.core.cache.CacheContextBuilder.GaeCacheExpiration;
 import static org.kaleidofoundry.core.cache.CacheContextBuilder.GaeCacheExpirationDelta;
 import static org.kaleidofoundry.core.cache.CacheContextBuilder.GaeThrowOnPutFailure;
-import static org.kaleidofoundry.core.i18n.InternalBundleHelper.CacheMessageBundle;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;

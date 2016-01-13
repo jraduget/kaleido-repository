@@ -199,7 +199,7 @@ public abstract class AbstractProducer implements Producer {
    protected void debugMessage(Message message) {
 	if (isDebug()) {
 	   LOGGER.info(">>> sending message with providerId={} , correlationId={} , parameters={}",
-		   new String[] { message.getProviderId(), message.getCorrelationId(), String.valueOf(message.getParameters()) });
+		   new Object[] { message.getProviderId(), message.getCorrelationId(), String.valueOf(message.getParameters()) });
 	   LOGGER.info("{}", message.toString());
 	}
    }

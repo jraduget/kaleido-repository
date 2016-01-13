@@ -15,7 +15,6 @@
  */
 package org.kaleidofoundry.messaging.rdv;
 
-import static junit.framework.Assert.assertNotNull;
 import static org.kaleidofoundry.messaging.MessagingConstantsTests.RDV_CERTIFIED_CONFIG_PATH;
 import static org.kaleidofoundry.messaging.MessagingConstantsTests.RDV_CERTIFIED_CONFIG_TRANSPORT_KEY;
 import static org.kaleidofoundry.messaging.MessagingConstantsTests.RDV_RELIABLE_CONFIG_PATH;
@@ -29,6 +28,8 @@ import org.kaleidofoundry.core.config.Configuration;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.messaging.Transport;
+
+import static org.junit.Assert.*;
 
 /**
  * Test Tibco RDV transport

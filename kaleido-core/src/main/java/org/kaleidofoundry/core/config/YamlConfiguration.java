@@ -125,15 +125,6 @@ public class YamlConfiguration extends AbstractConfiguration {
 		   currentYamlMap = newYamlMap;
 		} else {
 		   currentYamlMap.put(nodeName, getProperty(key));
-
-		   /*
-		    * List<String> values = getStringList(key);
-		    * if (values == null || values.size() == 1) {
-		    * currentYamlMap.put(nodeName, getProperty(key));
-		    * } else {
-		    * currentYamlMap.put(nodeName, values);
-		    * }
-		    */
 		   currentYamlMap = newYamlMap;
 		}
 	   }
@@ -186,36 +177,17 @@ public class YamlConfiguration extends AbstractConfiguration {
 		feedProperties(node.getValue(), newKeyName, cacheProperties);
 	   }
 	} else if (values instanceof Collection) {
-
 	   cacheProperties.put(keyName.toString(), (Serializable) values);
-	   /*
-	    * Collection<?> result = Collection.class.cast(values);
-	    * List<String> serializedValues = new LinkedList<String>();
-	    * int cpt = 0;
-	    * for (Object o : result) {
-	    * T value = (T) o;
-	    * Class<T> c = (Class<T>) o.getClass();
-	    * LOGGER.debug("{}[{}] : {value='{}', class='{}' serialization='{}'}", new String[] { keyName.toString(), String.valueOf(cpt),
-	    * String.valueOf(value),
-	    * value.getClass().getName(), serialize(value, c) });
-	    * serializedValues.add(serialize(value, c));
-	    * cpt++;
-	    * }
-	    * // properties.put(keyName.toString(), StringHelper.unsplit(MultiValuesSeparator, serializedValues.toArray(new
-	    * // Object[serializedValues.size()])));
-	    * cacheProperties.put(keyName.toString(), (Serializable) serializedValues);
-	    */
 	} else {
 	   if (values != null) {
 		T value = (T) values;
 		Class<T> c = (Class<T>) values.getClass();
 
 		if (LOGGER.isDebugEnabled()) {
-		   LOGGER.debug("{} : {value='{}', class='{}' serialization='{}'}", new String[] { keyName.toString(), String.valueOf(value),
+		   LOGGER.debug("{} : {value='{}', class='{}' serialization='{}'}", new Object[] { keyName.toString(), String.valueOf(value),
 			   value.getClass().getName(), serialize(value, c) });
 		}
 
-		// properties.put(keyName.toString(), serialize(value, c));
 		cacheProperties.put(keyName.toString(), value);
 	   } else {
 		cacheProperties.put(keyName.toString(), "");

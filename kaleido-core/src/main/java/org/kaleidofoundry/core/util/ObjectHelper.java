@@ -61,6 +61,7 @@ public class ObjectHelper {
     * @return first not null value in argument
     */
    @Nullable
+   @SafeVarargs
    public static <T> T firstNonNull(final T... values) {
 	for (T value : values) {
 	   if (value != null) { return value; }
@@ -76,6 +77,7 @@ public class ObjectHelper {
     * @return list without the null argument
     */
    @NotNull
+   @SafeVarargs
    public static <T> List<T> withNoNull(final T... values) {
 	List<T> list = new ArrayList<T>();
 	if (values != null) {

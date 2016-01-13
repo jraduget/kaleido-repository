@@ -167,7 +167,6 @@ interface LocalInterface2 {
 
 class LocalAncestor implements LocalInterface1, LocalInterface2 {
 
-   @SuppressWarnings("unused")
    @Column
    private String privateLocalAncestorField;
    protected String protectedLocalAncestorField;
@@ -189,7 +188,6 @@ class LocalAncestor implements LocalInterface1, LocalInterface2 {
 class LocalFirstAncestor extends LocalAncestor implements Serializable {
    private static final long serialVersionUID = 6056399394375997622L;
 
-   @SuppressWarnings("unused")
    // @Column a runtime annotation to test field filter
    @Column
    private String privateLocalFirstAncestorField;
@@ -210,7 +208,6 @@ class LocalFirstAncestor extends LocalAncestor implements Serializable {
 class LocalSecondAncestor extends LocalFirstAncestor {
    private static final long serialVersionUID = -4618815239259030789L;
 
-   @SuppressWarnings("unused")
    @Column
    private String privateLocalSecondAncestorField;
    protected String protectedLocalSecondAncestorField;
