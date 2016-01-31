@@ -47,6 +47,8 @@ public abstract class AbstractMailDispatcherTest {
    }
 
    protected abstract MailDispatcher getMailDispatcher();
+   
+   protected abstract MailMessageErrorHandler getMailMessageErrorHandler();
 
    @Test
    public void sendMail() throws MailException {
@@ -56,7 +58,11 @@ public abstract class AbstractMailDispatcherTest {
 	MailMessage message = MailTestConstants.createDefaultMailMessage();
 
 	try {
-	   getMailDispatcher().send(message);
+	   if (getMailMessageErrorHandler() != null) {
+		getMailDispatcher().send(getMailMessageErrorHandler(), message);
+	   } else {
+		getMailDispatcher().send(message);
+	   }
 	} catch (MailException mae) {
 	   LOGGER.error("sendMail.send", mae);
 	   if (mae instanceof MailDispatcherException) {
@@ -79,8 +85,11 @@ public abstract class AbstractMailDispatcherTest {
 	message.attach("helloworld.txt", "/${basedir}/src/test/resources/attachments/helloworld.txt", "UTF-8");
 
 	try {
-	   getMailDispatcher().send(message);
-
+	   if (getMailMessageErrorHandler() != null) {
+		getMailDispatcher().send(getMailMessageErrorHandler(), message);
+	   } else {
+		getMailDispatcher().send(message);
+	   }	   
 	} catch (MailException mae) {
 	   LOGGER.error("sendMailWithAttachments.send", mae);
 	   if (mae instanceof MailDispatcherException) {
@@ -96,26 +105,16 @@ public abstract class AbstractMailDispatcherTest {
 	try {
 	   message.withSubject(MAIL_SUBJECT).withBody(MAIL_BODY_HTML).withBodyAs(MAIL_HTML).withBodyCharSet(MAIL_ENCODING).withPriority(MAIL_PRIORITY)
 		   .withToAddresses(TO_ADRESS);
-	   getMailDispatcher().send(message);
-	   fail();
+	   
+	   if (getMailMessageErrorHandler() != null) {
+		getMailDispatcher().send(getMailMessageErrorHandler(), message);
+	   } else {
+		getMailDispatcher().send(message);
+		fail();
+	   }	   
+	   
 	} catch (MailDispatcherException mde) {
-
-	   LOGGER.debug("sendMailWithAUniqueInvalidAddress.MailDispatcherException", mde);
-	   assertEquals("mail.service.send.error", mde.getCode());
-
-	   final MailingDispatcherReport mailReport = mde.getReport();
-
-	   assertNotNull(mailReport);
-	   assertNotNull(mailReport.getInvalidAddresses());
-	   assertTrue(mailReport.getInvalidAddresses().isEmpty());
-
-	   assertNotNull(mailReport.getMailExceptions());
-	   assertEquals(1, mailReport.getMailExceptions().size());
-
-	   MailException mae = mailReport.getMailExceptions().get(message);
-	   assertTrue(mae instanceof InvalidMailAddressException);
-	   assertEquals("mail.service.message.fromaddress.none", mae.getCode());
-	   assertTrue(((InvalidMailAddressException) mae).getInvalidAddresses().isEmpty());
+	   sendMailWithoutFromAddressAssertions(message, mde);
 	} catch (MailException mae) {
 	   LOGGER.error(mae.getMessage(), mae);
 	   if (mae instanceof MailDispatcherException) {
@@ -131,7 +130,14 @@ public abstract class AbstractMailDispatcherTest {
 	try {
 	   message.withSubject(MAIL_SUBJECT).withBody(MAIL_BODY_HTML).withBodyAs(MAIL_HTML).withBodyCharSet(MAIL_ENCODING).withFromAddress(FROM_ADRESS)
 		   .withPriority(MAIL_PRIORITY);
-	   getMailDispatcher().send(message);
+	   
+	   if (getMailMessageErrorHandler() != null) {
+		getMailDispatcher().send(getMailMessageErrorHandler(), message);
+	   } else {
+		getMailDispatcher().send(message);
+		fail();
+	   }	
+	   
 	} catch (MailDispatcherException mde) {
 	   LOGGER.debug("sendMailWithAUniqueInvalidAddress.MailDispatcherException", mde);
 	   assertEquals("mail.service.send.error", mde.getCode());
@@ -165,8 +171,14 @@ public abstract class AbstractMailDispatcherTest {
 	   message = new MailMessageBean();
 	   message.withSubject(MAIL_SUBJECT).withBody(MAIL_BODY_HTML).withBodyAs(MAIL_HTML).withBodyCharSet(MAIL_ENCODING).withFromAddress(FROM_ADRESS)
 		   .withPriority(MAIL_PRIORITY).getToAddresses().add(INVALID_MAIL_ADDRESS_01);
-	   getMailDispatcher().send(message);
-	   fail();
+
+	   if (getMailMessageErrorHandler() != null) {
+		getMailDispatcher().send(getMailMessageErrorHandler(), message);
+	   } else {
+		getMailDispatcher().send(message);
+		fail();
+	   }	
+	   
 	} catch (MailDispatcherException mde) {
 	   LOGGER.debug("sendMailWithAUniqueInvalidAddress.MailDispatcherException", mde);
 	   final MailingDispatcherReport mailReport = mde.getReport();
@@ -203,9 +215,14 @@ public abstract class AbstractMailDispatcherTest {
 		   .withPriority(MAIL_PRIORITY);
 	   message.withToAddresses(TO_ADRESS);
 	   message.getToAddresses().add("wrongmail.com");
-	   getMailDispatcher().send(message);
-	   fail();
 
+	   if (getMailMessageErrorHandler() != null) {
+		getMailDispatcher().send(getMailMessageErrorHandler(), message);
+	   } else {
+		getMailDispatcher().send(message);
+		fail();
+	   }	
+	   
 	} catch (MailDispatcherException mde) {
 	   LOGGER.debug("sendMailWithAUniqueInvalidAddress.MailDispatcherException", mde);
 	   assertEquals("mail.service.send.error", mde.getCode());
@@ -230,7 +247,6 @@ public abstract class AbstractMailDispatcherTest {
 	   fail();
 	}
    }
-
 
    public static void mailAssertions(SmtpServer server, int mailIndex) {
 	assertEquals(1, server.getEmailCount());
@@ -276,6 +292,27 @@ public abstract class AbstractMailDispatcherTest {
 	assertTrue(server.getMessage(mailIndex).getBody().contains("this is an email attachment"));
    }
 
+   public static void sendMailWithoutFromAddressAssertions(MailMessage message, MailDispatcherException mde) {
+
+	LOGGER.debug("sendMailWithAUniqueInvalidAddress.MailDispatcherException", mde);
+	assertEquals("mail.service.send.error", mde.getCode());
+
+	final MailingDispatcherReport mailReport = mde.getReport();
+
+	assertNotNull(mailReport);
+	assertNotNull(mailReport.getInvalidAddresses());
+	assertTrue(mailReport.getInvalidAddresses().isEmpty());
+
+	assertNotNull(mailReport.getMailExceptions());
+	assertEquals(1, mailReport.getMailExceptions().size());
+
+	MailException mae = mailReport.getMailExceptions().get(message);
+	assertTrue(mae instanceof InvalidMailAddressException);
+	assertEquals("mail.service.message.fromaddress.none", mae.getCode());
+	assertTrue(((InvalidMailAddressException) mae).getInvalidAddresses().isEmpty());
+
+   }
+   
    public static String[] extractEmails(com.dumbster.smtp.MailMessage message, String headerField) {
 	String[] adresses = StringHelper.split(message.getFirstHeaderValue(headerField), ",");
 	if (adresses != null) {
@@ -284,5 +321,7 @@ public abstract class AbstractMailDispatcherTest {
 	   }
 	}
 	return adresses;
-   }   
+   }
+   
+   
 }

@@ -31,12 +31,12 @@ public class EnvironmentStatus implements Serializable {
 
    @XmlType
    public static enum Status {
-	/** Not yet started, only init phase have been done */
-	INIT,
-	/** Configurations are loaded */
-	STARTED,
 	/** Stopped */
 	STOPPED,
+	/** Initialized but not yet started */
+	INITIALIZED,	
+	/** Configurations are loaded */
+	STARTED,
 	/** In error */
 	ERROR;
    }

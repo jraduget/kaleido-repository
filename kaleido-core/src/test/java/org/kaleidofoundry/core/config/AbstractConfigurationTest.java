@@ -182,7 +182,8 @@ public abstract class AbstractConfigurationTest  {
 	assertEquals(Character.valueOf('l'), values.get(1));
 	assertEquals(Character.valueOf('m'), values.get(2));
 	// test unknown key
-	assertNull(configuration.getCharacterList("foo"));
+	assertNotNull(configuration.getCharacterList("foo"));
+	assertTrue(configuration.getCharacterList("foo").isEmpty());
 	// test raw property
 	// assertEquals("d|l|m", configuration.getString("//application/librairies"));
    }
@@ -209,7 +210,8 @@ public abstract class AbstractConfigurationTest  {
 	assertEquals("log4j.jar", values.get(1));
 	assertEquals("mail.jar", values.get(2));
 	// test unknown key
-	assertNull(configuration.getStringList("foo"));
+	assertNotNull(configuration.getStringList("foo"));
+	assertTrue(configuration.getStringList("foo").isEmpty());
    }
 
    @Test
@@ -235,7 +237,8 @@ public abstract class AbstractConfigurationTest  {
 	assertEquals(df.parse("2009-12-31"), configuration.getDateList("//application/array/date").get(1));
 	assertEquals(df.parse("2012-05-15"), configuration.getDateList("//application/array/date").get(2));
 	// test unknown key
-	assertNull(configuration.getDateList("foo"));
+	assertNotNull(configuration.getDateList("foo"));
+	assertTrue(configuration.getDateList("foo").isEmpty());
 	// test raw property
 	assertEquals("2009-01-02T00:00:00|2009-12-31T00:00:00|2012-05-15T00:00:00", configuration.getString("//application/array/date"));
    }
@@ -258,7 +261,8 @@ public abstract class AbstractConfigurationTest  {
 	assertEquals(new BigDecimal("987.5"), configuration.getBigDecimalList("//application/array/bigdecimal").get(0));
 	assertEquals(new BigDecimal("1.123456789"), configuration.getBigDecimalList("//application/array/bigdecimal").get(1));
 	// test unknown key
-	assertNull(configuration.getBigDecimalList("foo"));
+	assertNotNull(configuration.getBigDecimalList("foo"));
+	assertTrue(configuration.getBigDecimalList("foo").isEmpty());
 	// test raw property
 	assertEquals("987.5|1.123456789", configuration.getString("//application/array/bigdecimal"));
    }
@@ -281,7 +285,8 @@ public abstract class AbstractConfigurationTest  {
 	assertTrue(!configuration.getBooleanList("//application/array/boolean").get(0));
 	assertTrue(configuration.getBooleanList("//application/array/boolean").get(1));
 	// test unknown key
-	assertNull(configuration.getBooleanList("foo"));
+	assertNotNull(configuration.getBooleanList("foo"));
+	assertTrue(configuration.getBooleanList("foo").isEmpty());
 	// test raw property
 	assertEquals("false|true", configuration.getString("//application/array/boolean"));
    }

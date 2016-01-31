@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kaleidofoundry.core.lang.annotation.NotNull;
-import org.kaleidofoundry.core.store.ResourceException;
-import org.kaleidofoundry.core.util.StringHelper;
 
 /**
  * This class is used to load some configurations at startup (for java main, junit launcher...) <br/>
@@ -29,7 +27,7 @@ import org.kaleidofoundry.core.util.StringHelper;
  * 
  * @author jraduget
  */
-public class NamedConfigurationInitializer {
+public class NamedConfigurationProcessor {
 
    private final Class<?> annotatedClass;
    private final List<NamedConfiguration> configurations;
@@ -37,15 +35,9 @@ public class NamedConfigurationInitializer {
    /**
     * @param annotatedClass
     */
-   public NamedConfigurationInitializer(@NotNull final Class<?> annotatedClass) {
+   public NamedConfigurationProcessor(@NotNull final Class<?> annotatedClass) {
 	configurations = new ArrayList<NamedConfiguration>();
 	this.annotatedClass = annotatedClass;
-   }
-
-   /**
-    * load declared configurations (using {@link NamedConfiguration})
-    */
-   public void init() {
 
 	// register declared configurations
 	if (annotatedClass.isAnnotationPresent(NamedConfiguration.class)) {
@@ -56,25 +48,14 @@ public class NamedConfigurationInitializer {
 		configurations.add(namedConfig);
 	   }
 	}
-
-	for (NamedConfiguration namedConfig : configurations) {
-	   if (StringHelper.isEmpty(namedConfig.name())) { throw new ConfigurationException("config.annotation.illegal.name", annotatedClass.getName()); }
-	   if (StringHelper.isEmpty(namedConfig.uri())) { throw new ConfigurationException("config.annotation.illegal.uri", annotatedClass.getName()); }
-	   if (!ConfigurationFactory.getRegistry().contains(namedConfig.name())) {
-		ConfigurationFactory.provides(namedConfig.name(), namedConfig.uri());
-	   }
-	}
    }
 
-   /**
-    * unload all configurations that have been initialized in the init phase
-    * 
-    * @throws ResourceException
-    */
-   public void shutdown() throws ResourceException {
-	// cleanup at end
-	for (NamedConfiguration configuration : configurations) {
-	   ConfigurationFactory.unregister(configuration.name());
-	}
+   public Class<?> getAnnotatedClass() {
+	return annotatedClass;
    }
+
+   public List<NamedConfiguration> getConfigurations() {
+	return configurations;
+   }
+
 }
