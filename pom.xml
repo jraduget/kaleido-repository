@@ -78,7 +78,7 @@
 		<!-- Testing -->
 		<junit.version>4.10</junit.version>
 		<!-- Spring integration version -->
-		<spring.version>3.2.2.RELEASE</spring.version>
+		<spring.version>5.3.6</spring.version>
 		<!-- integration url properties -->
 		<sonar.host.url>http://localhost:8080/sonar</sonar.host.url>
 		<jenkins.host.url>https://buildhive.cloudbees.com/job/kaleidofoundry/job/kaleido-repository/</jenkins.host.url>
