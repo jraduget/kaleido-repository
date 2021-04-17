@@ -153,7 +153,7 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-webapp</artifactId>
-			<version>7.1.4.v20100610</version>
+			<version>9.4.34.v20201102</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- FTP embedded Server -->
