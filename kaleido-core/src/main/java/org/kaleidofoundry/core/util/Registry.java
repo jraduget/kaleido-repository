@@ -57,16 +57,6 @@ public class Registry<K, T> extends ConcurrentHashMap<K, T> implements Concurren
    }
 
    /**
-    * Set return ware not modifiable
-    * 
-    * @see java.util.HashMap#keySet()
-    */
-   @Override
-   public Set<K> keySet() {
-	return Collections.unmodifiableSet(super.keySet());
-   }
-
-   /**
     * Collection return ware not modifiable
     * 
     * @see java.util.HashMap#values()

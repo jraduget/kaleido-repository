@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author jraduget
  */
-public class RegExpSample  {
+public class RegExpSample {
 
    static final Logger LOGGER = LoggerFactory.getLogger(RegExpSample.class);
 
@@ -69,7 +69,7 @@ public class RegExpSample  {
 	 * <li>http://localhost:8080?id=1234</li>
 	 * </ul>
 	 */
-	http("//(HOST)[/|?]((PATH)/(FILENAME))|(FILENAME)|(RESOURCEID)"), ;
+	http("//(HOST)[/|?]((PATH)/(FILENAME))|(FILENAME)|(RESOURCEID)"),;
 
 	// *** static part **************************************************************************************************
 
@@ -167,25 +167,23 @@ public class RegExpSample  {
 			for (int i = 0; i <= localMatcher.groupCount(); i++) {
 			   LOGGER.debug("token {} : {}", new Object[] { i, localMatcher.group(i) });
 			}
-			if (localMatcher.groupCount() >= 4) {
-			   bean = new ResourceBean();
-			   bean.setType(type);
-			   if (localMatcher.group(4) == null) {
-				bean.setName(localMatcher.group(3));
-				bean.setPath(localMatcher.group(2));
-			   } else {
-				bean.setName(localMatcher.group(4));
-				bean.setPath(null);
-			   }
-			} else {
-			   bean = null;
-			}
 		   }
-
-		   return bean;
+		   if (localMatcher.groupCount() >= 4) {
+			bean = new ResourceBean();
+			bean.setType(type);
+			if (localMatcher.group(4) == null) {
+			   bean.setName(localMatcher.group(3));
+			   bean.setPath(localMatcher.group(2));
+			} else {
+			   bean.setName(localMatcher.group(4));
+			   bean.setPath(null);
+			}
+		   } else {
+			bean = null;
+		   }
 		}
 
-		return null;
+		return bean;
 	   }
 	   return null;
 	}
@@ -358,12 +356,4 @@ public class RegExpSample  {
 	}
    }
 
-   /**
-    * 
-    */
-   @Test
-   public void singleTest() {
-	assertEquals("file:/_/lulu", "file:/${gg}/lulu".replaceFirst("\\$\\{.+\\}", "_"));
-	assertEquals("file:/_/lulu/_/", "file:/${gg}/lulu/${hhhh}/".replaceAll("\\$\\{.+\\}", "_"));
-   }
 }

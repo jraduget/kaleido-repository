@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.kaleidofoundry</groupId>
 		<artifactId>kaleido-parent</artifactId>
-		<version>0.9.1-SNAPSHOT</version>
+		<version>0.10.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>kaleido-jee6</artifactId>
@@ -22,8 +22,8 @@
 
 		<!-- CDI API -->
 		<dependency>
-			<groupId>javax.enterprise</groupId>
-			<artifactId>cdi-api</artifactId>
+			<groupId>jakarta.enterprise</groupId>
+			<artifactId>jakarta.enterprise.cdi-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<!-- CDI weld, only used in a non manageable env. -->
@@ -31,29 +31,14 @@
 			<groupId>org.jboss.weld.se</groupId>
 			<artifactId>weld-se-core</artifactId>
 			<scope>provided</scope>
-		</dependency>		
-		<dependency>
-			<groupId>org.jboss.weld</groupId>
-			<artifactId>weld-core</artifactId>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-ext</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>			
 		</dependency>
-		
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>provided</scope>
 		</dependency>
-				
+
 		<!-- kaleido-core tests cases -->
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
@@ -62,7 +47,7 @@
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -87,13 +72,13 @@
 			<artifactId>log4j-over-slf4j</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<scope>test</scope>
 		</dependency>
-				
+
 		<!-- Caching specific provider -->
 		<dependency>
 			<groupId>org.infinispan</groupId>

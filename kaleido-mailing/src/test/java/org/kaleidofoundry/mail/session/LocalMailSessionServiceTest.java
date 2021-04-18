@@ -8,10 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kaleidofoundry.core.config.NamedConfiguration;
 import org.kaleidofoundry.core.launcher.KaleidoJunit4ClassRunner;
-import org.kaleidofoundry.mail.session.LocalMailSessionService;
-import org.kaleidofoundry.mail.session.MailSessionFactory;
-import org.kaleidofoundry.mail.session.MailSessionService;
-
 import static org.junit.Assert.*;
 
 @RunWith(KaleidoJunit4ClassRunner.class)

@@ -56,7 +56,6 @@ import org.kaleidofoundry.core.env.model.EnvironmentInfo;
 import org.kaleidofoundry.core.env.model.EnvironmentStatus;
 import org.kaleidofoundry.core.env.model.EnvironmentStatus.Status;
 import org.kaleidofoundry.core.env.model.EnvironmentVersions;
-import org.kaleidofoundry.core.i18n.I18nMessagesProvider;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 import org.kaleidofoundry.core.plugin.PluginFactory;
 import org.kaleidofoundry.core.plugin.model.Plugin;

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.kaleidofoundry</groupId>
 		<artifactId>kaleido-it-parent</artifactId>
-		<version>0.9.1-SNAPSHOT</version>
+		<version>0.10.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>kaleido-it-ear</artifactId>
@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-core</artifactId>
-			<version>${jboss-infinispan.version}</version>
+			<version>${infinispan.version}</version>
 			<type>jar</type>
 		</dependency>		
 		<dependency>

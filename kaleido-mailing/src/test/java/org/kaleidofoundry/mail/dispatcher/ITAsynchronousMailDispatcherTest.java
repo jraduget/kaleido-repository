@@ -8,12 +8,17 @@ import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.config.NamedConfiguration;
 import org.kaleidofoundry.core.config.NamedConfigurations;
 import org.kaleidofoundry.core.launcher.KaleidoJunit4ClassRunner;
+import org.kaleidofoundry.mail.MailMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith(KaleidoJunit4ClassRunner.class)
 @NamedConfigurations(value = { @NamedConfiguration(name = "local-session", uri = "classpath:/mailing/localSession.yaml"),
 	@NamedConfiguration(name = "asynchronous-dispatcher", uri = "classpath:/mailing/asynchronousDispatcher.yaml") })
 public class ITAsynchronousMailDispatcherTest extends AbstractMailDispatcherTest {
 
+   private static Logger LOGGER = LoggerFactory.getLogger(ITAsynchronousMailDispatcherTest.class);
+   
    private static MailDispatcher mailDispatcher;
 
    @BeforeClass
@@ -42,6 +47,16 @@ public class ITAsynchronousMailDispatcherTest extends AbstractMailDispatcherTest
    @Override
    protected MailDispatcher getMailDispatcher() {
 	return mailDispatcher;
+   }
+
+   @Override
+   protected MailMessageErrorHandler getMailMessageErrorHandler() {
+	return new MailMessageErrorHandler() {
+	   @Override
+	   public void process(MailMessage message, Exception e) {
+		LOGGER.error("MailMessageErrorHandler: {}", message.toString(), e);
+	   }
+	};
    }
 
 }

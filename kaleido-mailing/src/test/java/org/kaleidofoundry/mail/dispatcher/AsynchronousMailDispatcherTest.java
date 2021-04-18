@@ -14,6 +14,9 @@ import org.kaleidofoundry.core.config.NamedConfiguration;
 import org.kaleidofoundry.core.config.NamedConfigurations;
 import org.kaleidofoundry.core.launcher.KaleidoJunit4ClassRunner;
 import org.kaleidofoundry.mail.MailException;
+import org.kaleidofoundry.mail.MailMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dumbster.smtp.ServerOptions;
 import com.dumbster.smtp.SmtpServer;
@@ -24,6 +27,8 @@ import com.dumbster.smtp.SmtpServerFactory;
 	@NamedConfiguration(name = "asynchronous-dispatcher", uri = "classpath:/mailing/asynchronousDispatcher.yaml") })
 public class AsynchronousMailDispatcherTest extends AbstractMailDispatcherTest {
 
+   private static Logger LOGGER = LoggerFactory.getLogger(AsynchronousMailDispatcherTest.class);
+   
    private SmtpServer server;
 
    private MailDispatcher mailDispatcher;
@@ -65,4 +70,13 @@ public class AsynchronousMailDispatcherTest extends AbstractMailDispatcherTest {
 	mailWithAttachmentsAssertions(server, 0);
    }
 
+   @Override
+   protected MailMessageErrorHandler getMailMessageErrorHandler() {
+	return new MailMessageErrorHandler() {
+	   @Override
+	   public void process(MailMessage message, Exception e) {
+		LOGGER.error("MailMessageErrorHandler: {}", message.toString(), e);
+	   }
+	};
+   }
 }

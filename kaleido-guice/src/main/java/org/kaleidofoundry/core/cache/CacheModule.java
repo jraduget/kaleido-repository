@@ -17,7 +17,6 @@ package org.kaleidofoundry.core.cache;
 
 import org.kaleidofoundry.core.cache.annotation.EhCache;
 import org.kaleidofoundry.core.cache.annotation.InfinispanCache;
-import org.kaleidofoundry.core.cache.annotation.JbossCache;
 import org.kaleidofoundry.core.context.AbstractModule;
 
 /**
@@ -50,7 +49,6 @@ public class CacheModule extends AbstractModule<Cache> {
 
 	// bind custom annotation
 	bind(Cache.class).annotatedWith(EhCache.class).to(EhCacheImpl.class).in(scope(EhCacheImpl.class));
-	bind(Cache.class).annotatedWith(JbossCache.class).to(Jboss3xCacheImpl.class).in(scope(Jboss3xCacheImpl.class));
 	bind(Cache.class).annotatedWith(InfinispanCache.class).to(InfinispanCacheImpl.class).in(scope(InfinispanCacheImpl.class));	
    }
 }

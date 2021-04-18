@@ -55,11 +55,6 @@ public class CacheFactoryDefaultTest  {
 	testCacheFactory(CacheProvidersEnum.ehCache, EhCacheManagerImpl.class, EhCacheImpl.class);
    }
 
-   @Test
-   public void jbossFactoryImplementation() {
-	testCacheFactory(CacheProvidersEnum.jbossCache3x, Jboss3xCacheManagerImpl.class, Jboss3xCacheImpl.class);
-   }
-
    @SuppressWarnings("rawtypes")
    void testCacheFactory(final CacheProvidersEnum provider, final Class<? extends CacheManager> cacheManagerClass, final Class<? extends Cache> cacheClass) {
 

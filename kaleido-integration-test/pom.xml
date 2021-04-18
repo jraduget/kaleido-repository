@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.kaleidofoundry</groupId>
 		<artifactId>kaleido-parent</artifactId>
-		<version>0.9.1-SNAPSHOT</version>
+		<version>0.10.0-SNAPSHOT</version>
 		<relativePath>../kaleido-parent/pom.xml</relativePath>
 	</parent>
 
@@ -23,7 +23,7 @@
 
 	<properties>
 		<terracotta-ehcache.version>2.4.6</terracotta-ehcache.version>
-		<jboss-infinispan.version>5.1.5.FINAL</jboss-infinispan.version>
+		<infinispan.version>5.1.5.FINAL</infinispan.version>
 		<jersey.version>1.18</jersey.version>
 		<jmeter.version>2.11</jmeter.version>
 	</properties>

@@ -115,7 +115,7 @@ public class JavaSystemHelperTest  {
 	// existing jar resource
 	url = JavaSystemHelper.getResource(META_INF_JAR_RESOURCE);
 	assertNotNull(url);
-	assertTrue(url.toExternalForm().contains("jar:file:"));
+	assertTrue(url.toExternalForm().startsWith("file:/"));
    }
 
    @Test

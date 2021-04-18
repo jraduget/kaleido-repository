@@ -30,14 +30,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
 import org.kaleidofoundry.core.cache.Cache;
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.plugin.Declare;
@@ -45,8 +37,17 @@ import org.kaleidofoundry.core.store.ResourceException;
 import org.kaleidofoundry.core.store.ResourceHandler;
 import org.kaleidofoundry.core.util.StringHelper;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 /**
- * Json configuration implementation
+ * JSON configuration implementation
  * 
  * @author jraduget
  */
@@ -85,7 +86,7 @@ public class JsonConfiguration extends AbstractConfiguration {
 	try {
 	   JsonNode rootNode = mapper.readValue(resourceHandler.getReader(), JsonNode.class);
 	   if (rootNode != null) {
-		feedProperties(rootNode.getFields(), new StringBuilder(), properties);
+		feedProperties(rootNode.fields(), new StringBuilder(), properties);
 	   }
 	   return properties;
 
@@ -132,7 +133,7 @@ public class JsonConfiguration extends AbstractConfiguration {
 		}
 
 		if (strToken.hasMoreElements()) {
-		   node.put(nodeName, newNode);
+		   node.set(nodeName, newNode);
 		   node = newNode;
 		} else {
 		   List<String> values = getStringList(key);
@@ -143,7 +144,7 @@ public class JsonConfiguration extends AbstractConfiguration {
 			for (String value : values) {
 			   arrayNode.add(value);
 			}
-			node.put(nodeName, arrayNode);
+			node.set(nodeName, arrayNode);
 		   }
 		   node = newNode;
 		}
@@ -156,7 +157,7 @@ public class JsonConfiguration extends AbstractConfiguration {
 	try {
 	   // create output stream and json serializer
 	   jsonOutput = new ByteArrayOutputStream();
-	   jsonGenerator = JSON_FACTORY.createJsonGenerator(jsonOutput);
+	   jsonGenerator = JSON_FACTORY.createGenerator(jsonOutput);
 	   jsonGenerator.useDefaultPrettyPrinter();
 	   // jsonGenerator.setPrettyPrinter(new DefaultPrettyPrinter());
 
@@ -194,7 +195,8 @@ public class JsonConfiguration extends AbstractConfiguration {
     * @param keyName
     * @param properties
     */
-   protected void feedProperties(final Iterator<Entry<String, JsonNode>> nodesByName, final StringBuilder keyName, final Cache<String, Serializable> properties) {
+   protected void feedProperties(final Iterator<Entry<String, JsonNode>> nodesByName, final StringBuilder keyName,
+	   final Cache<String, Serializable> properties) {
 
 	while (nodesByName.hasNext()) {
 	   Entry<String, JsonNode> node = nodesByName.next();
@@ -211,10 +213,10 @@ public class JsonConfiguration extends AbstractConfiguration {
 		   properties.put(newKeyName.toString(), StringHelper.unsplit(MultiValuesSeparator, result.toArray(new Object[result.size()])));
 
 		} else {
-		   feedProperties(node.getValue().getFields(), newKeyName, properties);
+		   feedProperties(node.getValue().fields(), newKeyName, properties);
 		}
 	   } else {
-		properties.put(newKeyName.toString(), node.getValue().getTextValue());
+		properties.put(newKeyName.toString(), node.getValue().asText());
 	   }
 	}
    }

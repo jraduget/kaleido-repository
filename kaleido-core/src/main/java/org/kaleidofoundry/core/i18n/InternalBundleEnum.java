@@ -70,7 +70,7 @@ public enum InternalBundleEnum {
     * @param name
     */
    public static void addCustomReservedBundle(@NotNull final String name) {
-	if (Arrays.asList(values()).contains(name)) { throw new IllegalStateException("ResourceBundle '" + name + "' is standard and reserved"); }
+	if (Arrays.asList(values()).contains(valueOf(name))) { throw new IllegalStateException("ResourceBundle '" + name + "' is standard and reserved"); }
 	if (CustomReservedBundle.contains(name)) { throw new IllegalStateException("ResourceBundle '" + name + "' is already registered"); }
 	CustomReservedBundle.add(name);
    }

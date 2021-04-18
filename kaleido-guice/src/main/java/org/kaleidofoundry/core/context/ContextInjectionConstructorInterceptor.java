@@ -19,7 +19,6 @@ import java.lang.annotation.Annotation;
 
 import org.aopalliance.intercept.ConstructorInterceptor;
 import org.aopalliance.intercept.ConstructorInvocation;
-import org.kaleidofoundry.core.context.RuntimeContext;
 import org.slf4j.Logger;
 
 /**

@@ -46,12 +46,6 @@ public interface CacheConstants {
    /** Apache JCS implementation declare plugin name */
    String JcsCachePluginName = "caches.jcs";
 
-   /** JbossCache implementation declare plugin name */
-   String JbossCachePluginName = "caches.jbossCache3x";
-
-   /** JbossCache manager implementation declare plugin name */
-   String JbossCacheManagerPluginName = "cacheManagers.jbossCache3x";
-
    /** Jboss Infinispan cache implementation declare plugin name */
    String InfinispanCachePluginName = "caches.infinispan";
 

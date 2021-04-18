@@ -68,7 +68,7 @@ import org.kaleidofoundry.core.plugin.PluginRegistryException;
  * @author jraduget
  */
 @SupportedAnnotationTypes({ "org.kaleidofoundry.core.plugin.*" })
-@SupportedSourceVersion(SourceVersion.RELEASE_6)
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 // @SupportedOptions( { "outputFile" })
 public class PluginAnnotationProcessor extends AbstractProcessor {
 
