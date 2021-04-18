@@ -1,8 +1,7 @@
-pom versions upgrade
+# Versions upgrade 
 
-javaee5 drop
-javaee6 update
 
-kaleido-core (derby, jetty...)
+kaleido-core (derby, jetty, infinispan)
 
-infinispan
+javaee5 profile drop
+javaee6 artefact update
