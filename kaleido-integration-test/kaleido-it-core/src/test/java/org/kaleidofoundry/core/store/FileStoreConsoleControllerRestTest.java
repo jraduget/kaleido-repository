@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2016 the original author or authors.
+ *  Copyright 2008-2021 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.core.store;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.kaleidofoundry.core.store.FileStoreConsoleController.BEGINLINE_ARGS;
 import static org.kaleidofoundry.core.store.FileStoreConsoleController.MAXLINE_COUNT_ARGS;
 
@@ -23,7 +25,6 @@ import java.net.URI;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.util.URLEncoderHelper;

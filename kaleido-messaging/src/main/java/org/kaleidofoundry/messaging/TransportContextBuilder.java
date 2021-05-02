@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2016 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,11 @@ public class TransportContextBuilder extends AbstractRuntimeContextBuilder<Trans
    public static final String JMS_CONNECTION_FACTORY_USER = "connectionFactory.user";
    /** ConnectionFactory password */
    public static final String JMS_CONNECTION_FACTORY_PASSWORD = "connectionFactory.password";
+   /**
+    * Trust All Packages parameter to allow the serialization of more classes by allowing any object to be serialized and deserialized, this
+    * is not as secure as leaving it disabled in most cases
+    */
+   public static final String JMS_CONNECTION_FACTORY_TRUSTALLPACKAGES = "connectionFactory.trustAllPackages";
    /** Session transacted property */
    public static final String JMS_SESSION_TRANSACTED = "session.transacted";
    /** Destination type : queue|topic (queue is the default) */
@@ -147,6 +152,11 @@ public class TransportContextBuilder extends AbstractRuntimeContextBuilder<Trans
 
    public TransportContextBuilder withConnectionFactoryPassword(final String connectionFactoryPassword) {
 	getContextParameters().put(JMS_CONNECTION_FACTORY_PASSWORD, connectionFactoryPassword);
+	return this;
+   }
+
+   public TransportContextBuilder withConnectionFactoryTrustAllPackages(final Boolean trustAllPackages) {
+	getContextParameters().put(JMS_CONNECTION_FACTORY_TRUSTALLPACKAGES, trustAllPackages);
 	return this;
    }
 

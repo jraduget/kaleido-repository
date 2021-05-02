@@ -19,6 +19,13 @@
 			<artifactId>aspectjrt</artifactId>
 		</dependency>
 
+		<!-- Java EE API -->
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- Configuration providers Yaml, Json... -->
 		<dependency>
 			<groupId>org.yaml</groupId>
@@ -61,13 +68,10 @@
 		</dependency>
 
 
-		<!-- Store FTP and SSH (SFTP / SCP ...) API <dependency> <groupId>commons-net</groupId> <artifactId>commons-net</artifactId> <version>2.2</version> </dependency> <dependency> <groupId>com.jcraft</groupId> <artifactId>jsch</artifactId> <version>0.1.42</version> 
-			</dependency> -->
-
 		<!-- Mail, file uploads... -->
 		<dependency>
 			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
+			<artifactId>javax.mail-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 
@@ -76,6 +80,12 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>eclipselink</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- Logging with logback during the tests -->
@@ -104,28 +114,23 @@
 		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derbyclient</artifactId>
-			<version>10.6.1.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derby</artifactId>
-			<version>10.6.1.0</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- HTTP embedded Server -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-webapp</artifactId>
-			<version>7.1.4.v20100610</version>
-			<!-- <version>11.0.2</version> -->
 			<scope>test</scope>
 		</dependency>
 		<!-- FTP embedded Server -->
 		<dependency>
 			<groupId>org.mockftpserver</groupId>
 			<artifactId>MockFtpServer</artifactId>
-			<version>2.2</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>

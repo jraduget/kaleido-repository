@@ -6,36 +6,33 @@
 		<artifactId>kaleido-parent</artifactId>
 		<version>0.10.0-SNAPSHOT</version>
 	</parent>
-	
+
 	<artifactId>kaleido-sample</artifactId>
 	<name>KaleidoFoundry wiki samples</name>
 	<description>Kaleido in actions, this module provides code samples used in the wiki</description>
 	<packaging>jar</packaging>
 
 	<dependencies>
-		
+
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
-			<artifactId>kaleido-launcher</artifactId>
+			<artifactId>kaleido-bootstrap-cdi</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
+
 		<dependency>
-			<groupId>hibernate</groupId>
+			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
-			<version>3.4.0.GA</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derbyclient</artifactId>
-			<version>10.6.1.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derby</artifactId>
-			<version>10.6.1.0</version>
 		</dependency>
 
 		<dependency>
@@ -56,7 +53,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.8</version>
 				<configuration>
 					<excludes>
 						<exclude>**/*.java</exclude>
@@ -72,5 +68,5 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 </project>

@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2016 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.kaleidofoundry.messaging.jms.amq;
 
 import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_CONNECTION_FACTORY_PASSWORD;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_CONNECTION_FACTORY_TRUSTALLPACKAGES;
 import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_CONNECTION_FACTORY_URL;
 import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_CONNECTION_FACTORY_USER;
 import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_DESTINATION_TYPE;
@@ -53,6 +54,7 @@ public class AmqTransport extends AbstractJmsTransport<ActiveMQConnectionFactory
 
    private final ActiveMQConnectionFactory activeMQConnectionFactory;
 
+   
    @Task(comment = "use context to configure additional connection factory parameters", labels = TaskLabel.Enhancement)
    public AmqTransport(RuntimeContext<Transport> context) throws TransportException {
 	super(context);
@@ -64,6 +66,7 @@ public class AmqTransport extends AbstractJmsTransport<ActiveMQConnectionFactory
 		   context.getString(JMS_CONNECTION_FACTORY_USER), context.getString(JMS_CONNECTION_FACTORY_PASSWORD));
 	}
 
+	activeMQConnectionFactory.setTrustAllPackages(context.getBoolean(JMS_CONNECTION_FACTORY_TRUSTALLPACKAGES, false));
    }
 
    @Override

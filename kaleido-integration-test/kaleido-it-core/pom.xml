@@ -17,7 +17,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.4</version>
 				<configuration>
 					<aspectLibraries>
 						<aspectLibrary>
@@ -40,12 +39,19 @@
 
 	<dependencies>
 
-		<!-- Logging (first in classpath to avoid version conflict)-->
+		<!-- Java EE API -->
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Logging (first in classpath to avoid version conflict) -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
-		
+
 		<!-- Core -->
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
@@ -55,7 +61,7 @@
 
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
-			<artifactId>kaleido-it-jee5</artifactId>
+			<artifactId>kaleido-it-cdi</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
@@ -76,14 +82,14 @@
 			<artifactId>ApacheJMeter_java</artifactId>
 			<scope>provided</scope>
 		</dependency>
-					
+
 		<!-- Logging with logback during tests -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- REST / JAXB - JSON -->
 		<dependency>
 			<groupId>com.sun.jersey</groupId>

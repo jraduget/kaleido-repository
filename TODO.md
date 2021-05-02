@@ -1,7 +1,8 @@
-# Versions upgrade 
+# Wiki 
 
+Google code to githubg migration
 
-kaleido-core (derby, jetty, infinispan)
+# CI
 
-javaee5 profile drop
-javaee6 artefact update
+- github actions
+- OWASP - owasp-dependency-check tests
