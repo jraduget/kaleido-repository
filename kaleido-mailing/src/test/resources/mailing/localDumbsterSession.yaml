@@ -4,7 +4,7 @@ mailing:
       provider: local
       smtp:
         host: localhost
-        port: 1025
+        port: 25
         auth:
           enable: false
         ssl: false

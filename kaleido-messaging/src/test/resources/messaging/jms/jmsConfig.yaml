@@ -8,6 +8,7 @@ messaging:
       connectionFactory:  
         password: guest
         user: guest
+        trustAllPackages: false
       session:  
         acknowledgeMode: 1
         transacted: false

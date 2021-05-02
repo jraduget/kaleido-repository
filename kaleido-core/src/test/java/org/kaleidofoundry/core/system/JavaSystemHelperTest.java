@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2016 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,7 +115,7 @@ public class JavaSystemHelperTest  {
 	// existing jar resource
 	url = JavaSystemHelper.getResource(META_INF_JAR_RESOURCE);
 	assertNotNull(url);
-	assertTrue(url.toExternalForm().startsWith("file:/"));
+	assertTrue(url.toExternalForm().contains("file:/"));
    }
 
    @Test
