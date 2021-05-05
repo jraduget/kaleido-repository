@@ -102,7 +102,6 @@ public class StartupListener implements ServletContextListener {
 	initializer.init();
 
 	// Then, load web application init parameters
-	@SuppressWarnings("unchecked")
 	Enumeration<String> names = servletContext.getInitParameterNames();
 	while (names != null && names.hasMoreElements()) {
 	   String name = names.nextElement();
