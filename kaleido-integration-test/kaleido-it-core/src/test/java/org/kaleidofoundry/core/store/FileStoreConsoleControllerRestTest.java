@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.core.store;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.kaleidofoundry.core.store.FileStoreConsoleController.BEGINLINE_ARGS;
 import static org.kaleidofoundry.core.store.FileStoreConsoleController.MAXLINE_COUNT_ARGS;
 
@@ -23,7 +25,6 @@ import java.net.URI;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.util.URLEncoderHelper;

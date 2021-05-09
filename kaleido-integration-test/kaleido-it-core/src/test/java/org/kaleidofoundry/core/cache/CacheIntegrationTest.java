@@ -15,11 +15,14 @@
  */
 package org.kaleidofoundry.core.cache;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.kaleidofoundry.core.cache.CacheManagerIntegrationTest.assertions;
 
 import java.util.Map;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kaleidofoundry.core.config.NamedConfiguration;

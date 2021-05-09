@@ -1,16 +1,6 @@
-# Versions upgrade 
-
-
-## kaleido-core (derby, jetty, infinispan)
-
-- javaee6 artefact update
-
-## kaleido-jee6
-
-- move kaleido-jee6 => kaleido-cdi
-
 # Wiki 
 
+Google code to githubg migration
 
 # CI
 

@@ -15,6 +15,10 @@
  */
 package org.kaleidofoundry.core.naming;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
 import java.sql.SQLException;
 
 import javax.jms.JMSException;
@@ -22,13 +26,11 @@ import javax.jms.TextMessage;
 import javax.sql.DataSource;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.store.ResourceException;
-
 /**
  * @author jraduget
  */

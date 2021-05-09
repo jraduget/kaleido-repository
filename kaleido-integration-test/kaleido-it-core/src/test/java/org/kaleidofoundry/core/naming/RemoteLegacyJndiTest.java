@@ -15,6 +15,9 @@
  */
 package org.kaleidofoundry.core.naming;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import java.sql.SQLException;
 
 import javax.naming.Context;
@@ -23,7 +26,6 @@ import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
 import javax.sql.DataSource;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
 

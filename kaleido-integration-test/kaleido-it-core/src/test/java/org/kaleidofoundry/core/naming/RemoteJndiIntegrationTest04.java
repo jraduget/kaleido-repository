@@ -15,6 +15,8 @@
  */
 package org.kaleidofoundry.core.naming;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.kaleidofoundry.core.naming.NamingContextBuilder.Caching;
 import static org.kaleidofoundry.core.naming.NamingContextBuilder.FailoverEnabled;
 import static org.kaleidofoundry.core.naming.NamingContextBuilder.InitialContextFactory;

@@ -21,6 +21,13 @@
 			<version>${project.version}</version>
 		</dependency>
 
+		<!-- Java EE API -->
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
 		<!-- IOC Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>

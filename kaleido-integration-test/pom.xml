@@ -15,15 +15,14 @@
 
 	<modules>
 		<module>kaleido-it-core</module>
-		<module>kaleido-it-jee5</module>
-		<module>kaleido-it-jee6</module>
+		<module>kaleido-it-cdi</module>
 		<module>kaleido-it-war</module>
 		<module>kaleido-it-ear</module>
 	</modules>
 
 	<properties>
-		<jersey.version>1.18</jersey.version>
-		<jmeter.version>2.11</jmeter.version>
+		<jersey.version>1.19.4</jersey.version>
+		<jmeter.version>5.4.1</jmeter.version>
 	</properties>
 
 	<dependencyManagement>
@@ -53,7 +52,12 @@
 				<artifactId>jersey-json</artifactId>
 				<version>${jersey.version}</version>
 			</dependency>
-
+			
+			<dependency>
+				<groupId>org.glassfish.main.packager</groupId>
+				<artifactId>glassfish-appclient</artifactId>
+				<version>4.1.2</version>
+			</dependency>
 			<dependency>
 				<groupId>org.apache.jmeter</groupId>
 				<artifactId>ApacheJMeter_core</artifactId>
@@ -68,48 +72,6 @@
 
 	</dependencyManagement>
 
-	<profiles>
-		<profile>
-			<id>glassfishv30x</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-				<property>
-					<name>glassfish</name>
-					<value>3.0</value>
-				</property>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>org.glassfish.appclient</groupId>
-					<artifactId>gf-client-module</artifactId>
-					<version>3.1.x</version>
-					<systemPath>${glassfishv3.home}/glassfish/modules/gf-client.jar</systemPath>
-					<optional>true</optional>
-					<scope>system</scope>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>glassfishv31x</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-				<property>
-					<name>glassfish</name>
-					<value>3.1</value>
-				</property>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>org.glassfish.appclient</groupId>
-					<artifactId>gf-client-module</artifactId>
-					<version>3.1.x</version>
-					<systemPath>${glassfishv3.home}/glassfish/lib/gf-client.jar</systemPath>
-					<optional>true</optional>
-					<scope>system</scope>
-				</dependency>
-			</dependencies>
-		</profile>
-	</profiles>
 
 	<build>
 		<plugins>
