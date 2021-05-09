@@ -44,7 +44,7 @@
 
 		<dependency>
 			<groupId>org.kaleidofoundry</groupId>
-			<artifactId>kaleido-jee6</artifactId>
+			<artifactId>kaleido-javaee</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
