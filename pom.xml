@@ -1,11 +1,13 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
+	<!-- <parent> -->
+	<!-- <groupId>org.sonatype.oss</groupId> -->
+	<!-- <artifactId>oss-parent</artifactId> -->
+	<!-- <version>7</version> -->
+	<!-- </parent> -->
 
 	<groupId>org.kaleidofoundry</groupId>
 	<artifactId>kaleido-parent</artifactId>
@@ -44,7 +46,7 @@
 	</developers>
 
 	<properties>
-		<!-- JDK / Java EE global version dependencies -->
+		<!-- Java version -->
 		<jdk.version>1.8</jdk.version>
 		<aspectj.version>1.9.6</aspectj.version>
 		<!-- Logging version (logback is used only for testing) -->
@@ -75,8 +77,7 @@
 		<!-- OWASP -->
 		<dependency-check-maven.version>6.1.1</dependency-check-maven.version>
 		<!-- integration url properties -->
-		<sonar.host.url>http://localhost:8080/sonar</sonar.host.url>
-		<jenkins.host.url>https://buildhive.cloudbees.com/job/kaleidofoundry/job/kaleido-repository/</jenkins.host.url>
+		<ci.url>https://github.com/jraduget/kaleido-repository/actions/</ci.url>
 		<!-- source encoding options -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -122,7 +123,6 @@
 			</dependency>
 
 			<!-- cdi api -->
-			<!-- TODO update -->
 			<dependency>
 				<groupId>javax.inject</groupId>
 				<artifactId>javax.inject</artifactId>
@@ -235,7 +235,8 @@
 				<artifactId>javaee-api</artifactId>
 				<version>8.0</version>
 			</dependency>
-			<!-- <dependency> <groupId>jakarta.platform</groupId> <artifactId>jakarta.jakartaee-api</artifactId> <version>8.0.0</version> <scope>provided</scope> </dependency> -->
+			<!-- <dependency> <groupId>jakarta.platform</groupId> <artifactId>jakarta.jakartaee-api</artifactId> 
+				<version>8.0.0</version> <scope>provided</scope> </dependency> -->
 
 			<!-- testing -->
 			<dependency>
@@ -267,7 +268,7 @@
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-server</artifactId>
 				<version>9.4.40.v20210413</version>
-			</dependency>			
+			</dependency>
 			<dependency>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-webapp</artifactId>
@@ -350,7 +351,7 @@
 
 	<ciManagement>
 		<system>jenkins</system>
-		<url>${jenkins.host.url}</url>
+		<url>${ci.url}</url>
 		<notifiers>
 			<notifier>
 				<type>mail</type>
@@ -399,12 +400,19 @@
 				</plugin>
 				<!-- assembly facilities -->
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>3.3.0</version>
 				</plugin>
 				<!-- release and sgpg sign are provided by sonatype parent profile -Psonatype-oss-release -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.6</version>
+				</plugin>
 
-				<!-- eclipse m2e settings only. It has no influence on the Maven build itself. -->
+				<!-- eclipse m2e settings only. It has no influence on the Maven build 
+					itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -469,7 +477,8 @@
 				<configuration>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
-					<!-- disable annotation processors during normal compilation, use maven-processor-plugin, waiting maven compiler plugin handle it -->
+					<!-- disable annotation processors during normal compilation, use maven-processor-plugin, 
+						waiting maven compiler plugin handle it -->
 					<compilerArgument>-proc:none</compilerArgument>
 				</configuration>
 			</plugin>
@@ -527,7 +536,8 @@
 					<showWeaveInfo>false</showWeaveInfo>
 					<encoding>${project.build.sourceEncoding}</encoding>
 					<Xlint>ignore</Xlint>
-					<!-- disable ajc annotation processing, that conflict and break the mvn build -->
+					<!-- disable ajc annotation processing, that conflict and break the 
+						mvn build -->
 					<proc>none</proc>
 				</configuration>
 				<executions>
@@ -638,23 +648,45 @@
 					<source>${jdk.version}</source>
 					<docfilessubdirs>true</docfilessubdirs>
 					<linksource>true</linksource>
-					<!-- doclava configuration <docletArtifact> <groupId>com.google.doclava</groupId> <artifactId>doclava</artifactId> <version>1.0.6</version> </docletArtifact> <doclet>com.google.doclava.Doclava</doclet> <bootclasspath>${sun.boot.class.path}</bootclasspath> 
-						<additionalparam> -hdf project.name "${project.name}" -d ${project.build.directory}/apidocs -quiet </additionalparam> <useStandardDocletOptions>false</useStandardDocletOptions> <additionalJOption>-J-Xmx1024m</additionalJOption> -->
+					<failOnError>false</failOnError>
 				</configuration>
-				<executions>
-					<execution>
-						<inherited>true</inherited>
-						<phase>deploy</phase>
-						<goals>
-							<goal>aggregate</goal>
-						</goals>
-					</execution>
-				</executions>
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<inherited>true</inherited> -->
+<!-- 						<phase></phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>aggregate</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+			</plugin>
+
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.8</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
 			</plugin>
 
 		</plugins>
 
 	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>oss.sonatype.org</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+		<snapshotRepository>
+			<id>oss.sonatype.org</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<reporting>
 		<plugins>
@@ -715,8 +747,6 @@
 					<aggregate>true</aggregate>
 				</configuration>
 			</plugin>
-			<!-- maven annotation processor incompatibles <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>cobertura-maven-plugin</artifactId> <version>2.4</version> <configuration> <formats> <format>xml</format> <format>html</format> </formats> </configuration> 
-				</plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
@@ -752,10 +782,31 @@
 	<profiles>
 		<!-- GPG sign profile -->
 		<profile>
-			<id>kaleido-gpg</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<configuration>
+							<!-- Prevent gpg from using pinentry programs -->
+							<gpgArguments>
+								<arg>--pinentry-mode</arg>
+								<arg>loopback</arg>
+							</gpgArguments>
+						</configuration>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 		<!-- OWASP report -->
 		<profile>

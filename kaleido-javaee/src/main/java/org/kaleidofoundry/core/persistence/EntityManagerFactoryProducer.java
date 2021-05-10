@@ -162,7 +162,7 @@ public class EntityManagerFactoryProducer {
 		   return unitNameToUse;
 		}
 
-		@Override
+		//@Override
 		public SynchronizationType synchronization() {
 		   return SynchronizationType.UNSYNCHRONIZED;
 		}
