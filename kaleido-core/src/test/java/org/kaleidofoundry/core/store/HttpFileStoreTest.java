@@ -15,19 +15,20 @@
  */
 package org.kaleidofoundry.core.store;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.bio.SocketConnector;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
-
-import static org.junit.Assert.*;
 
 /**
  * @author jraduget
@@ -38,10 +39,9 @@ public class HttpFileStoreTest extends AbstractFileStoreTest {
 
    @BeforeClass
    public static void setupStatic() throws Exception {
-	// jetty http server start
-	final SocketConnector connector = new SocketConnector();
-	connector.setPort(9090);
 	server = new Server();
+	final ServerConnector connector = new ServerConnector(server);
+	connector.setPort(9090);
 	server.setConnectors(new Connector[] { connector });
 	final WebAppContext context = new WebAppContext();
 	context.setServer(server);

@@ -265,8 +265,13 @@
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-server</artifactId>
+				<version>9.4.40.v20210413</version>
+			</dependency>			
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-webapp</artifactId>
-				<version>7.1.4.v20100610</version>
+				<version>9.4.40.v20210413</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mockftpserver</groupId>
