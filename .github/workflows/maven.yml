@@ -35,6 +35,7 @@ jobs:
       uses: actions/setup-java@v2
       with: # running setup-java again overwrites the settings.xml
         java-version: '8'
+        distribution: 'adopt'
         server-id: oss.sonatype.org
         server-username: MAVEN_USERNAME
         server-password: MAVEN_CENTRAL_TOKEN
