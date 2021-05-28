@@ -405,7 +405,8 @@
 					<version>3.3.0</version>
 				</plugin>
 
-				<!-- eclipse m2e settings only. It has no influence on the Maven build itself. -->
+				<!-- eclipse m2e settings only. It has no influence on the Maven build 
+					itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -781,6 +782,13 @@
 								<goals>
 									<goal>sign</goal>
 								</goals>
+								<configuration>
+									<!-- Prevent gpg from using pinentry programs -->
+									<gpgArguments>
+										<arg>--pinentry-mode</arg>
+										<arg>loopback</arg>
+									</gpgArguments>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
