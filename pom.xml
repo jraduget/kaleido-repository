@@ -14,7 +14,7 @@
 	<version>0.10.0-SNAPSHOT</version>
 
 	<name>KaleidoFoundry parent POM</name>
-	<url>http://code.google.com/p/kaleido-foundry/</url>
+	<url>https://github.com/jraduget/kaleido-repository/</url>
 	<description>Parent POM for all kaleido-foundry modules. It provides default build configurations.</description>
 	<packaging>pom</packaging>
 
@@ -404,15 +404,8 @@
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>3.3.0</version>
 				</plugin>
-				<!-- release and sgpg sign are provided by sonatype parent profile -Psonatype-oss-release -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-gpg-plugin</artifactId>
-					<version>1.6</version>
-				</plugin>
 
-				<!-- eclipse m2e settings only. It has no influence on the Maven build 
-					itself. -->
+				<!-- eclipse m2e settings only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -488,7 +481,7 @@
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>3.2.0</version>
 			</plugin>
-			<!-- annotation processor - http://maven-annotation-plugin.googlecode.com/svn/docs/usage.html -->
+			<!-- annotation processor -->
 			<plugin>
 				<groupId>org.bsc.maven</groupId>
 				<artifactId>maven-processor-plugin</artifactId>
@@ -650,27 +643,8 @@
 					<linksource>true</linksource>
 					<failOnError>false</failOnError>
 				</configuration>
-<!-- 				<executions> -->
-<!-- 					<execution> -->
-<!-- 						<inherited>true</inherited> -->
-<!-- 						<phase></phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>aggregate</goal> -->
-<!-- 						</goals> -->
-<!-- 					</execution> -->
-<!-- 				</executions> -->
-			</plugin>
-
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.8</version>
-				<extensions>true</extensions>
-				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
-				</configuration>
+				<!-- <executions> <execution> <inherited>true</inherited> <phase></phase> 
+					<goals> <goal>aggregate</goal> </goals> </execution> </executions> -->
 			</plugin>
 
 		</plugins>
@@ -780,21 +754,26 @@
 	</reporting>
 
 	<profiles>
-		<!-- GPG sign profile -->
+		<!-- Deploy to maven central -->
 		<profile>
-			<id>release</id>
+			<id>kaleido-central-deploy</id>
 			<build>
 				<plugins>
 					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.8</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<configuration>
-							<!-- Prevent gpg from using pinentry programs -->
-							<gpgArguments>
-								<arg>--pinentry-mode</arg>
-								<arg>loopback</arg>
-							</gpgArguments>
-						</configuration>
+						<version>3.0.1</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
