@@ -35,7 +35,7 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots verify -Dmaven.test.skip=true
+        run: mvn --batch-mode verify -Dmaven.test.skip=true
 
       - name: Set up Apache Maven Central
         uses: actions/setup-java@v2
