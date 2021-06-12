@@ -35,7 +35,7 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots verify
+        run: mvn --batch-mode --update-snapshots verify -Dmaven.test.skip=true
 
       - name: Set up Apache Maven Central
         uses: actions/setup-java@v2
@@ -49,7 +49,7 @@ jobs:
 
 
       - name: Publish Snapshot to Apache Maven Central
-        run: mvn --batch-mode deploy -Pkaleido-central-deploy
+        run: mvn --batch-mode deploy -Pkaleido-central-deploy -Dmaven.test.skip=true
         env:
           OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
