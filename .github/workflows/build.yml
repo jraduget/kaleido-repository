@@ -8,15 +8,14 @@ on:
   push:
     branches: 
     - develop
+    tags-ignore:
+      - v*
   pull_request:
-    branches:
-    - develop
-    - master
-    - 'releases/**'
+    branches: [ develop ]
 
 jobs:
   build:
-
+    name: Buil on Sonatype OSS
     runs-on: ubuntu-latest
 
     steps:
@@ -38,7 +37,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build with Maven
-        run: mvn --batch-mode -pl kaleido-core package -Dmaven.test.skip=true
+        run: mvn --batch-mode -Dmaven.test.skip=true package
 
       - name: Set up Apache Maven Central
         uses: actions/setup-java@v2
@@ -52,7 +51,7 @@ jobs:
 #          gpg-passphrase:  MAVEN_GPG_PASSPHRASE
 
       - name: Publish Snapshot to Apache Maven Central
-        run: mvn --batch-mode -pl kaleido-core deploy -Pkaleido-central-deploy
+        run: mvn --batch-mode -Pkaleido-central-deploy -Dmaven.test.skip=true deploy
         env:
           OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
