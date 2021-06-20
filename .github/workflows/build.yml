@@ -29,15 +29,15 @@ jobs:
           java-version: '8'
           distribution: 'adopt'
 
-      - name: Cache Maven packages
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+#      - name: Cache Maven packages
+#        uses: actions/cache@v2
+#        with:
+#          path: ~/.m2
+#          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: ${{ runner.os }}-m2
 
       - name: Build with Maven
-        run: mvn --batch-mode -Dmaven.test.skip=true package
+        run: mvn --batch-mode package
 
       - name: Set up Apache Maven Central
         uses: actions/setup-java@v2
@@ -51,7 +51,7 @@ jobs:
 #          gpg-passphrase:  MAVEN_GPG_PASSPHRASE
 
       - name: Publish Snapshot to Apache Maven Central
-        run: mvn --batch-mode -Pkaleido-central-deploy -Dmaven.test.skip=true deploy
+        run: mvn --batch-mode -Pkaleido-central-deploy deploy
         env:
           OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
