@@ -15,7 +15,7 @@ on:
 
 jobs:
   build:
-    name: Buil on Sonatype OSS
+    name: Build and deploy to Sonatype OSS
     runs-on: ubuntu-latest
 
     steps:
