@@ -35,18 +35,15 @@ jobs:
         with: # running setup-java again overwrites the settings.xml
           java-version: '8'
           distribution: 'adopt'
-          server-id: oss.sonatype.org
+          server-id: ossrh
           server-username: OSS_SONATYPE_USERNAME
           server-password: OSS_SONATYPE_PASSWORD
-          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-          gpg-passphrase:  MAVEN_GPG_PASSPHRASE
+#          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+#          gpg-passphrase:  MAVEN_GPG_PASSPHRASE
 
-      - name: Build with Maven
-        run: mvn --batch-mode package
-
-      - name: Publish Snapshot to Apache Maven Central
-        run: mvn --batch-mode -Pkaleido-central-deploy deploy
+      - name: Build & Publish to Apache Maven Central
+        run: mvn --batch-mode package deploy
         env:
           OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+#          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}

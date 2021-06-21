@@ -755,9 +755,9 @@
 	</reporting>
 
 	<profiles>
-		<!-- Deploy to maven central -->
+		<!-- Release to maven central -->
 		<profile>
-			<id>kaleido-central-deploy</id>
+			<id>release</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -771,32 +771,31 @@
 							<autoReleaseAfterClose>true</autoReleaseAfterClose>
 						</configuration>
 					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-<!-- 						<version>3.0.1</version> -->
-                        <configuration>
-                            <gpgArguments>
-                                <arg>--pinentry-mode</arg>
-                                <arg>loopback</arg>
-                            </gpgArguments>
-                        </configuration>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
+<!-- 					<plugin> -->
+<!-- 						<groupId>org.apache.maven.plugins</groupId> -->
+<!-- 						<artifactId>maven-gpg-plugin</artifactId> -->
+<!--                         <configuration> -->
+<!--                             <gpgArguments> -->
+<!--                                 <arg>--pinentry-mode</arg> -->
+<!--                                 <arg>loopback</arg> -->
+<!--                             </gpgArguments> -->
+<!--                         </configuration> -->
+<!-- 						<executions> -->
+<!-- 							<execution> -->
+<!-- 								<id>sign-artifacts</id> -->
+<!-- 								<phase>verify</phase> -->
+<!-- 								<goals> -->
+<!-- 									<goal>sign</goal> -->
+<!-- 								</goals> -->
+<!-- 							</execution> -->
+<!-- 						</executions> -->
+<!-- 					</plugin> -->
 				</plugins>
 			</build>
 		</profile>
 		<!-- OWASP report -->
 		<profile>
-			<id>owasp-dependency-check</id>
+			<id>owasp</id>
 			<build>
 				<plugins>
 					<plugin>
