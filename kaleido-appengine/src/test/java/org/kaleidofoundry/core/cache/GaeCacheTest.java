@@ -32,7 +32,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import static org.junit.Assert.*;
 
 /**
- * Test ehCache(c) Cache Manager
+ * Test GAE Cache Manager
  * 
  * @author jraduget
  */
