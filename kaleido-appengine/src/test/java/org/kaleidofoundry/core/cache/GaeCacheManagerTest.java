@@ -27,7 +27,7 @@ import com.google.appengine.tools.development.testing.LocalMemcacheServiceTestCo
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
 /**
- * Test ehCache (c) Cache Manager
+ * GAE Cache Manager
  * 
  * @author jraduget
  */

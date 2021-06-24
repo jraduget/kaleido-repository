@@ -19,11 +19,11 @@
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
-					<finalName>kaleidofoundry-${project.version}-Rev${buildNumber}</finalName>
+					<finalName>kaleidofoundry-${project.version}</finalName>
 					<descriptors>
 						<descriptor>src/assemble/distribution.xml</descriptor>
 					</descriptors>
-					<siteDirectory>../target/site</siteDirectory>
+<!-- 					<siteDirectory>../target/site</siteDirectory> -->
 				</configuration>
 				<executions>
 					<execution>

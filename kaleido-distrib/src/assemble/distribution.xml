@@ -12,7 +12,7 @@
 	</formats>
 	
 	<includeBaseDirectory>false</includeBaseDirectory>
-	<includeSiteDirectory>true</includeSiteDirectory>
+	<includeSiteDirectory>false</includeSiteDirectory>
 	
 	<moduleSets>
 		<!-- binaries distrib and dependencies -->

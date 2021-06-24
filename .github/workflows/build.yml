@@ -8,49 +8,42 @@ on:
   push:
     branches: 
     - develop
+    tags-ignore:
+      - v*
   pull_request:
-    branches:
-    - develop
-    - master
-    - 'releases/**'
+    branches: [ develop ]
 
 jobs:
   build:
-
+    name: Build and deploy to Sonatype OSS
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of SonarQube analysis
-      - name: Set up JDK 8
-        uses: actions/setup-java@v2
-        with:
-          java-version: '8'
-          distribution: 'adopt'
-      - name: Cache Maven packages
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots verify
+
+#      - name: Cache Maven packages
+#        uses: actions/cache@v2
+#        with:
+#          path: ~/.m2
+#          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: ${{ runner.os }}-m2
 
       - name: Set up Apache Maven Central
         uses: actions/setup-java@v2
         with: # running setup-java again overwrites the settings.xml
-          java-version: 8
-          server-id: oss.sonatype.org
+          java-version: '8'
+          distribution: 'adopt'
+          server-id: ossrh
           server-username: OSS_SONATYPE_USERNAME
           server-password: OSS_SONATYPE_PASSWORD
 #          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
 #          gpg-passphrase:  MAVEN_GPG_PASSPHRASE
 
-
-      - name: Publish Snapshot to Apache Maven Central
-        run: mvn --batch-mode deploy -Pkaleido-central-deploy
+      - name: Build & Publish to Apache Maven Central
+        run: mvn --batch-mode package deploy
         env:
           OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
-          #MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+#          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
