@@ -1,5 +1,5 @@
 # This workflow will build a Java project with Maven
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+# For more information see: https://docs.github.com/en/actions/guides/publishing-java-packages-with-maven#introduction
 
 name: Java CI build with Maven
 
@@ -8,10 +8,16 @@ on:
   push:
     branches: 
     - develop
-    tags-ignore:
+    tags:
       - v*
+#    tags-ignore:
+#      - v*
+
   pull_request:
     branches: [ develop ]
+
+#  release:
+#    types: [created]
 
 jobs:
   build:
@@ -23,12 +29,12 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of SonarQube analysis
 
-#      - name: Cache Maven packages
-#        uses: actions/cache@v2
-#        with:
-#          path: ~/.m2
-#          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-#          restore-keys: ${{ runner.os }}-m2
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
 
       - name: Set up Apache Maven Central
         uses: actions/setup-java@v2
@@ -42,8 +48,14 @@ jobs:
 #          gpg-passphrase:  MAVEN_GPG_PASSPHRASE
 
       - name: Build & Publish to Apache Maven Central
-        run: mvn --batch-mode package deploy
+        run: mvn --batch-mode --show-version validate deploy
         env:
           OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
 #          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+      - name: Show git information
+        run: | 
+          git status
+          git log --no-color --graph --oneline -n 10
+          git tag --list
