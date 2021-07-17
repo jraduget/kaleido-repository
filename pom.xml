@@ -3,15 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<!-- <parent> -->
-	<!-- <groupId>org.sonatype.oss</groupId> -->
-	<!-- <artifactId>oss-parent</artifactId> -->
-	<!-- <version>7</version> -->
-	<!-- </parent> -->
-
 	<groupId>org.kaleidofoundry</groupId>
 	<artifactId>kaleido-parent</artifactId>
-	<version>0.10.0-SNAPSHOT</version>
+	<version>0</version>
 
 	<name>KaleidoFoundry parent POM</name>
 	<url>https://github.com/jraduget/kaleido-repository/</url>
@@ -76,8 +70,6 @@
 		<spring.version>5.3.6</spring.version>
 		<!-- OWASP -->
 		<dependency-check-maven.version>6.1.1</dependency-check-maven.version>
-		<!-- integration url properties -->
-		<ci.url>https://github.com/jraduget/kaleido-repository/actions/</ci.url>
 		<!-- source encoding options -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -342,6 +334,7 @@
 		<connection>scm:git:https://github.com/jraduget/kaleido-repository.git</connection>
 		<developerConnection>scm:git:https://github.com/jraduget/kaleido-repository.git</developerConnection>
 		<url>https://github.com/jraduget/kaleido-repository.git/</url>
+		<tag>HEAD</tag>
 	</scm>
 
 	<issueManagement>
@@ -350,17 +343,8 @@
 	</issueManagement>
 
 	<ciManagement>
-		<system>jenkins</system>
-		<url>${ci.url}</url>
-		<notifiers>
-			<notifier>
-				<type>mail</type>
-				<sendOnError>true</sendOnError>
-				<sendOnFailure>true</sendOnFailure>
-				<sendOnSuccess>false</sendOnSuccess>
-				<sendOnWarning>false</sendOnWarning>
-			</notifier>
-		</notifiers>
+		<system>github-actions</system>
+		<url>https://github.com/jraduget/kaleido-repository/actions</url>
 	</ciManagement>
 
 	<build>
@@ -404,9 +388,44 @@
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>3.3.0</version>
 				</plugin>
+				<!-- print jgitver metadatas -->
+				<plugin>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>3.0.0</version>
+					<executions>
+						<execution>
+							<phase>validate</phase>
+							<goals>
+								<goal>run</goal>
+							</goals>
+							<configuration>
+								<tasks>
+									<echo>used version: ${jgitver.used_version}</echo>
+									<echo>version calculated: ${jgitver.calculated_version}</echo>
+									<echo>dirty: ${jgitver.dirty}</echo>
+									<echo>head_committer_name: ${jgitver.head_committer_name}</echo>
+									<echo>head_commiter_email: ${jgitver.head_commiter_email}</echo>
+									<echo>head_commit_datetime: ${jgitver.head_commit_datetime}</echo>
+									<echo>git_sha1_full: ${jgitver.git_sha1_full}</echo>
+									<echo>git_sha1_8: ${jgitver.git_sha1_8}</echo>
+									<echo>branch_name: ${jgitver.branch_name}</echo>
+									<echo>head_tags: ${jgitver.head_tags}</echo>
+									<echo>head_annotated_tags: ${jgitver.head_annotated_tags}</echo>
+									<echo>head_lightweight_tags: ${jgitver.head_lightweight_tags}</echo>
+									<echo>base_tag: ${jgitver.base_tag}</echo>
+									<echo>all_tags: ${jgitver.all_tags}</echo>
+									<echo>all_annotated_tags: ${jgitver.all_annotated_tags}</echo>
+									<echo>all_lightweight_tags: ${jgitver.all_lightweight_tags}</echo>
+									<echo>all_version_tags: ${jgitver.all_version_tags}</echo>
+									<echo>all_version_annotated_tags: ${jgitver.all_version_annotated_tags}</echo>
+									<echo>all_version_lightweight_tags: ${jgitver.all_version_lightweight_tags}</echo>
+								</tasks>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 
-				<!-- eclipse m2e settings only. It has no influence on the Maven build 
-					itself. -->
+				<!-- eclipse m2e settings only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -530,8 +549,7 @@
 					<showWeaveInfo>false</showWeaveInfo>
 					<encoding>${project.build.sourceEncoding}</encoding>
 					<Xlint>ignore</Xlint>
-					<!-- disable ajc annotation processing, that conflict and break the 
-						mvn build -->
+					<!-- disable ajc annotation processing, that conflict and break the mvn build -->
 					<proc>none</proc>
 				</configuration>
 				<executions>
@@ -592,60 +610,6 @@
 					<doCheck>false</doCheck>
 					<doUpdate>false</doUpdate>
 				</configuration>
-			</plugin>
-			<!-- deploying -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>3.0.0-M1</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-scm-plugin</artifactId>
-				<version>1.11.2</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>3.0.0-M4</version>
-				<configuration>
-					<autoVersionSubmodules>true</autoVersionSubmodules>
-					<tagNameFormat>kaleido-@{project.version}</tagNameFormat>
-				</configuration>
-			</plugin>
-			<!-- attach sources -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>3.2.0</version>
-				<executions>
-					<execution>
-						<inherited>true</inherited>
-						<phase>deploy</phase>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<!-- report -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.2.0</version>
-				<configuration>
-					<links>
-						<link>http://download.oracle.com/javase/8/docs/api/</link>
-						<link>http://download.oracle.com/javaee/8/api/</link>
-						<link>http://www.slf4j.org/api/</link>
-					</links>
-					<source>${jdk.version}</source>
-					<docfilessubdirs>true</docfilessubdirs>
-					<linksource>true</linksource>
-					<failOnError>false</failOnError>
-				</configuration>
-				<!-- <executions> <execution> <inherited>true</inherited> <phase></phase> 
-					<goals> <goal>aggregate</goal> </goals> </execution> </executions> -->
 			</plugin>
 
 		</plugins>
@@ -760,6 +724,59 @@
 			<id>release</id>
 			<build>
 				<plugins>
+					<!-- attach sources -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>3.2.0</version>
+						<executions>
+							<execution>
+								<inherited>true</inherited>
+								<phase>deploy</phase>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- report -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>3.2.0</version>
+						<configuration>
+							<links>
+								<link>http://download.oracle.com/javase/8/docs/api/</link>
+								<link>http://download.oracle.com/javaee/8/api/</link>
+								<link>http://www.slf4j.org/api/</link>
+							</links>
+							<source>${jdk.version}</source>
+							<docfilessubdirs>true</docfilessubdirs>
+							<linksource>true</linksource>
+							<failOnError>false</failOnError>
+						</configuration>
+						<!-- <executions> <execution> <inherited>true</inherited> <phase></phase> 
+							<goals> <goal>aggregate</goal> </goals> </execution> </executions> -->
+					</plugin>
+					<plugin>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+								<goal>sign</goal>
+								</goals>
+								<configuration>
+								<executable>gpg</executable>
+								<useAgent>false</useAgent>
+								<keyname>${gpg.keyname}</keyname>
+								<passphraseServerId>${gpg.keyname}</passphraseServerId>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
