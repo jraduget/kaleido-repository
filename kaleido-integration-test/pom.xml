@@ -84,7 +84,7 @@
 				<dependency>
 					<groupId>org.glassfish.appclient</groupId>
 					<artifactId>gf-client-module</artifactId>
-					<version>3.1.x</version>
+					<version>3.1.1</version>
 					<systemPath>${glassfishv3.home}/glassfish/modules/gf-client.jar</systemPath>
 					<optional>true</optional>
 					<scope>system</scope>
@@ -104,7 +104,7 @@
 				<dependency>
 					<groupId>org.glassfish.appclient</groupId>
 					<artifactId>gf-client-module</artifactId>
-					<version>3.1.x</version>
+					<version>3.1.1</version>
 					<systemPath>${glassfishv3.home}/glassfish/lib/gf-client.jar</systemPath>
 					<optional>true</optional>
 					<scope>system</scope>
@@ -160,7 +160,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -174,7 +174,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore/>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
