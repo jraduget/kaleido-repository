@@ -76,7 +76,7 @@
 		<cdi.version>1.0</cdi.version>
 		<weld.version>1.1.8.Final</weld.version>
 		<!-- Testing -->
-		<junit.version>4.10</junit.version>
+		<junit.version>4.13.2</junit.version>
 		<!-- Spring integration version -->
 		<spring.version>3.2.2.RELEASE</spring.version>
 		<!-- integration url properties -->
@@ -476,7 +476,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -490,7 +490,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -503,7 +503,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>								
 							</pluginExecutions>
@@ -567,7 +567,7 @@
 						</configuration>
 					</execution>
 				</executions>
-				<dependencies />
+				<dependencies/>
 			</plugin>
 			<!-- aop compile weaving -->
 			<plugin>
