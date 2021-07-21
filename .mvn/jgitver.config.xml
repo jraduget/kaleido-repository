@@ -6,7 +6,7 @@
     <strategy>MAVEN</strategy>
 
     <autoIncrementPatch>true</autoIncrementPatch>
-
+    
     <useCommitDistance>false</useCommitDistance>
 
     <useDirty>false</useDirty>
@@ -16,5 +16,10 @@
     <useSnapshot>true</useSnapshot>
 
     <useDefaultBranchingPolicy>true</useDefaultBranchingPolicy>
+    
 
+    <!-- https://github.com/jgitver/jgitver/issues/33 
+    <strategy>PATTERN</strategy>
+    <versionPattern>${v}${+:meta.QUALIFIED_BRANCH_NAME}</versionPattern>
+    -->
 </configuration>

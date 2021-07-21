@@ -6,15 +6,14 @@ name: Java CI build with Maven
 on:
  
   push:
-    branches: 
-    - develop
+    branches: [ develop , master ]
     tags:
       - v*
 #    tags-ignore:
 #      - v*
 
   pull_request:
-    branches: [ develop ]
+    branches: [ develop , master ]
 
 #  release:
 #    types: [created]
