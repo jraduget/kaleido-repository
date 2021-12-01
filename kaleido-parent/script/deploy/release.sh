@@ -5,7 +5,7 @@ export MAVEN_OPT=-Xmx1024m
 cd kaleido-integration-test
 mvn versions:set -DnewVersion=0.9.1-SNAPSHOT
 mvn -N versions:update-child-modules
-svn commit -m "release XXX prepare"
+git commit -m "release XXX prepare" .
 
 # site 
 #---------------------------------------------
@@ -28,7 +28,8 @@ find ./site/  -name '*.html' -exec dos2unix {} \;
 mvn release:clean
 mvn release:prepare
 #mvn release:rollback
-mvn release:perform -P kaleido-gpg,javaee5
+mvn release:perform -P kaleido-gpg
+
 
 # git branch and tagging part
 #---------------------------------------------

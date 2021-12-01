@@ -1,23 +1,15 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://docs.github.com/en/actions/guides/publishing-java-packages-with-maven#introduction
+# For workflow syntax see: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions
 
 name: Java CI build with Maven
 
-on:
- 
+on: 
   push:
-    branches: 
-    - develop
-    tags:
-      - v*
-#    tags-ignore:
-#      - v*
+    branches: [ develop, release/*, master ]
 
   pull_request:
     branches: [ develop ]
-
-#  release:
-#    types: [created]
 
 jobs:
   build:
@@ -41,7 +33,7 @@ jobs:
         with: # running setup-java again overwrites the settings.xml
           java-version: '8'
           distribution: 'adopt'
-          server-id: ossrh
+          server-id: ossrh-staging
           server-username: OSS_SONATYPE_USERNAME
           server-password: OSS_SONATYPE_PASSWORD
 #          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}

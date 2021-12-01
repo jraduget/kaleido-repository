@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.kaleidofoundry</groupId>
 		<artifactId>kaleido-parent</artifactId>
-		<version>0</version>
+		<version>0.10.0</version>
 		<relativePath>../kaleido-parent/pom.xml</relativePath>
 	</parent>
 
