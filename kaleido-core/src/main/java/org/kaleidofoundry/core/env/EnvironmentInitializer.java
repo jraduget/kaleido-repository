@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2014 the original author or authors
+ * Copyright 2008-2021 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,8 +46,10 @@ import org.kaleidofoundry.core.cache.CacheManager;
 import org.kaleidofoundry.core.cache.CacheManagerFactory;
 import org.kaleidofoundry.core.cache.CacheManagerProvider;
 import org.kaleidofoundry.core.config.Configuration;
+import org.kaleidofoundry.core.config.ConfigurationException;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
-import org.kaleidofoundry.core.config.NamedConfigurationInitializer;
+import org.kaleidofoundry.core.config.NamedConfiguration;
+import org.kaleidofoundry.core.config.NamedConfigurationProcessor;
 import org.kaleidofoundry.core.env.model.EnvironmentConstants;
 import org.kaleidofoundry.core.env.model.EnvironmentEntry;
 import org.kaleidofoundry.core.env.model.EnvironmentInfo;
@@ -80,10 +82,9 @@ import org.slf4j.LoggerFactory;
  * @see EnvironmentStatus
  * @see EnvironmentInfo
  * @see EnvironmentConstants
- * 
  * @author jraduget
  */
-@Stateless		
+@Stateless
 // @Singleton
 public class EnvironmentInitializer {
 
@@ -99,7 +100,7 @@ public class EnvironmentInitializer {
    private static Throwable error;
 
    // configuration load by annotation
-   private NamedConfigurationInitializer configurationInitializer;
+   private NamedConfigurationProcessor configurationInitializer;
 
    /** injected entity manager */
    @PersistenceContext(unitName = KALEIDO_PERSISTENT_UNIT_NAME)
@@ -115,9 +116,7 @@ public class EnvironmentInitializer {
 
 	this.applicationClass = applicationClass;
 	this.logger = applicationClass == null ? LOGGER : LoggerFactory.getLogger(applicationClass);
-
-	status = Status.STOPPED;
-
+	EnvironmentInitializer.status = Status.STOPPED;
    }
 
    /**
@@ -232,13 +231,13 @@ public class EnvironmentInitializer {
 	   logger.error("Unable to load operating system environment", ioe);
 	}
 
-	// Then, load java system variables
-	final Properties javaEnvVariables = System.getProperties();
-	for (final String key : javaEnvVariables.stringPropertyNames()) {
-	   STATIC_ENV_PARAMETERS.put(key, javaEnvVariables.getProperty(key));
+	// Then, load java system properties
+	final Properties javaProperties = System.getProperties();
+	for (final String key : javaProperties.stringPropertyNames()) {
+	   STATIC_ENV_PARAMETERS.put(key, javaProperties.getProperty(key));
 	}
 
-	status = Status.INIT;
+	status = Status.INITIALIZED;
 
 	// memorize current instance
 	instance = this;
@@ -263,7 +262,7 @@ public class EnvironmentInitializer {
 	   init();
 	}
 
-	if (status == Status.INIT) {
+	if (status == Status.INITIALIZED) {
 	   try {
 		// Merge static environment variable values, to have the final value
 		for (Entry<String, String> entry : STATIC_ENV_PARAMETERS.entrySet()) {
@@ -307,10 +306,20 @@ public class EnvironmentInitializer {
 		   LOGGER.info(StringHelper.replicate("*", 120));
 		}
 
+		// load the configuration annotations present in the main class (if defined)
 		if (applicationClass != null) {
-		   // load the configuration annotations present in the main class
-		   configurationInitializer = new NamedConfigurationInitializer(applicationClass);
-		   configurationInitializer.init();
+		   configurationInitializer = new NamedConfigurationProcessor(applicationClass);
+
+		   for (NamedConfiguration namedConfig : configurationInitializer.getConfigurations()) {
+			if (StringHelper
+				.isEmpty(namedConfig.name())) { throw new ConfigurationException("config.annotation.illegal.name", applicationClass.getName()); }
+			if (StringHelper
+				.isEmpty(namedConfig.uri())) { throw new ConfigurationException("config.annotation.illegal.uri", applicationClass.getName()); }
+			if (!ConfigurationFactory.getRegistry().contains(namedConfig.name())) {
+			   ConfigurationFactory.provides(namedConfig.name(), namedConfig.uri());
+			}
+		   }
+
 		}
 
 		status = Status.STARTED;
@@ -338,6 +347,7 @@ public class EnvironmentInitializer {
 	if (status == Status.STARTED || status == Status.ERROR) {
 	   try {
 		// unload messaging resources if it is in the classpath
+		// TODO Find an elegant way to do that...
 		try {
 		   Class<?> transportClass = Class.forName("org.kaleidofoundry.messaging.TransportFactory");
 		   Method closeAllMethod = ReflectionHelper.getMethodWithNoArgs(transportClass, "closeAll");

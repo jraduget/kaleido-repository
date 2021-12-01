@@ -12,7 +12,7 @@
 	</formats>
 	
 	<includeBaseDirectory>false</includeBaseDirectory>
-	<includeSiteDirectory>true</includeSiteDirectory>
+	<includeSiteDirectory>false</includeSiteDirectory>
 	
 	<moduleSets>
 		<!-- binaries distrib and dependencies -->
@@ -20,9 +20,10 @@
 			<useAllReactorProjects>true</useAllReactorProjects>
 			<includes>
 				<include>org.kaleidofoundry:kaleido-core</include>
-				<include>org.kaleidofoundry:kaleido-jee6</include>
+				<include>org.kaleidofoundry:kaleido-javaee</include>
 				<include>org.kaleidofoundry:kaleido-spring</include>
-				<include>org.kaleidofoundry:kaleido-launcher</include>
+				<include>org.kaleidofoundry:kaleido-bootstrap-cdi</include>
+				<include>org.kaleidofoundry:kaleido-mailing</include>
 				<include>org.kaleidofoundry:kaleido-messaging</include>
 				<include>org.kaleidofoundry:kaleido-sample</include>
 			</includes>
@@ -42,11 +43,12 @@
 			<useAllReactorProjects>true</useAllReactorProjects>
 			<includes>
 				<include>org.kaleidofoundry:kaleido-core</include>
-				<include>org.kaleidofoundry:kaleido-jee6</include>	
+				<include>org.kaleidofoundry:kaleido-javaee</include>
 				<include>org.kaleidofoundry:kaleido-spring</include>
-				<include>org.kaleidofoundry:kaleido-launcher</include>	
-				<include>org.kaleidofoundry:kaleido-messaging</include>	
-				<include>org.kaleidofoundry:kaleido-samples</include>	
+				<include>org.kaleidofoundry:kaleido-bootstrap-cdi</include>
+				<include>org.kaleidofoundry:kaleido-mailing</include>
+				<include>org.kaleidofoundry:kaleido-messaging</include>
+				<include>org.kaleidofoundry:kaleido-sample</include>	
 			</includes>
 			<binaries>
 				<attachmentClassifier>javadoc</attachmentClassifier>

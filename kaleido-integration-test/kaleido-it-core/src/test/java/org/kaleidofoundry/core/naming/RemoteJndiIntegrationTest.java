@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2014 the original author or authors.
+ *  Copyright 2008-2021 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
  */
 package org.kaleidofoundry.core.naming;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
 import java.sql.SQLException;
 
 import javax.jms.JMSException;
@@ -22,17 +26,15 @@ import javax.jms.TextMessage;
 import javax.sql.DataSource;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.ConfigurationFactory;
 import org.kaleidofoundry.core.i18n.I18nMessagesFactory;
 import org.kaleidofoundry.core.store.ResourceException;
-
 /**
  * @author jraduget
  */
-public abstract class RemoteJndiIntegrationTest extends Assert {
+public abstract class RemoteJndiIntegrationTest  {
 
    /**
     * @return naming service instance to test

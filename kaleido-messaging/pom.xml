@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.kaleidofoundry</groupId>
 		<artifactId>kaleido-parent</artifactId>
-		<version>0.9.1-SNAPSHOT</version>
+		<version>0.10.0</version>
 	</parent>
 
 	<artifactId>kaleido-messaging</artifactId>
@@ -20,35 +20,28 @@
 			<version>${project.version}</version>
 		</dependency>
 
-		<!-- JavaEE 6 CDI API -->
-		<dependency>
-			<groupId>javax.enterprise</groupId>
-			<artifactId>cdi-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		
 		<!-- JMS API -->
 		<dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-jms_1.1_spec</artifactId>
-			<version>1.1</version>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
-				
+    		
 		<!-- Active MQ transport librairies -->
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
-			<artifactId>activemq-core</artifactId>
-			<version>5.5.1</version>
+			<artifactId>activemq-broker</artifactId>
+			<version>${activemq.version}</version>
 			<scope>provided</scope>
 		</dependency>
-						
+
 		<!-- Tibco RDV transport librairies -->
 		<dependency>
 			<groupId>com.tibco.tibrv</groupId>
 			<artifactId>tibrvj</artifactId>
 			<version>7.4</version>
-			<systemPath>${basedir}/lib/tibrvj-7.4.jar</systemPath>	
-			<scope>system</scope>				
+			<systemPath>${basedir}/lib/tibrvj-7.4.jar</systemPath>
+			<scope>system</scope>
 			<optional>true</optional>
 		</dependency>
 
@@ -57,27 +50,27 @@
 			<groupId>com.ibm.mq</groupId>
 			<artifactId>mq</artifactId>
 			<version>6.0.1.1</version>
-			<systemPath>${basedir}/lib/com.ibm.mq-6.0.1.1.jar</systemPath>	
-			<scope>system</scope>		
+			<systemPath>${basedir}/lib/com.ibm.mq-6.0.1.1.jar</systemPath>
+			<scope>system</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.ibm.mq</groupId>
 			<artifactId>mqjms</artifactId>
 			<version>6.0.1.1</version>
-			<systemPath>${basedir}/lib/com.ibm.mqjms-6.0.1.1.jar</systemPath>	
-			<scope>system</scope>	
-			<optional>true</optional>	
+			<systemPath>${basedir}/lib/com.ibm.mqjms-6.0.1.1.jar</systemPath>
+			<scope>system</scope>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.ibm</groupId>
 			<artifactId>dhbcore</artifactId>
 			<version>1.0</version>
-			<systemPath>${basedir}/lib/com.ibm.dhbcore.jar</systemPath>	
-			<scope>system</scope>	
-			<optional>true</optional>	
+			<systemPath>${basedir}/lib/com.ibm.dhbcore.jar</systemPath>
+			<scope>system</scope>
+			<optional>true</optional>
 		</dependency>
-		
+
 		<!-- Logging with logback for test -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
@@ -101,13 +94,12 @@
 		</dependency>
 
 	</dependencies>
-	
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.1</version>
 				<inherited>true</inherited>
 				<!-- build jar test in order to be reused between module -->
 				<executions>

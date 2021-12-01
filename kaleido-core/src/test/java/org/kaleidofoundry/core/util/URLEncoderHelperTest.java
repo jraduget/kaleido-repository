@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.kaleidofoundry.core.util;
 
-import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.kaleidofoundry.core.lang.Charsets;
@@ -23,7 +23,7 @@ import org.kaleidofoundry.core.lang.Charsets;
 /**
  * @author jraduget
  */
-public class URLEncoderHelperTest extends Assert {
+public class URLEncoderHelperTest  {
 
    private static final String TEST_STRING_TO_ENCODE = "123éàèabcbïî";
    private static final String TEST_STRING_UTF8_ENCODED = "123%C3%A9%C3%A0%C3%A8abcb%C3%AF%C3%AE";

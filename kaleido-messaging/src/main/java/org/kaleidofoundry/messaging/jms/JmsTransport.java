@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.kaleidofoundry.messaging.jms;
 
 import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_CONNECTION_FACTORY_NAME;
 import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_CONNECTION_FACTORY_NAMING_SERVICE_REF;
+import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_CONNECTION_FACTORY_TRUSTALLPACKAGES;
 import static org.kaleidofoundry.messaging.TransportContextBuilder.JMS_SESSION_ACKNOLEDGE_MODE;
 
 import javax.jms.Connection;
@@ -24,6 +25,7 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.Session;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.kaleidofoundry.core.context.EmptyContextParameterException;
 import org.kaleidofoundry.core.context.IllegalContextParameterException;
 import org.kaleidofoundry.core.context.RuntimeContext;
@@ -71,6 +73,10 @@ public class JmsTransport extends AbstractJmsTransport<ConnectionFactory, Connec
 	namingService = NamingServiceFactory.provides(namingServiceContext);
 
 	connectionFactory = namingService.locate(connectionFactoryJndiName, ConnectionFactory.class);
+	
+	if (connectionFactory instanceof ActiveMQConnectionFactory) {
+	   ((ActiveMQConnectionFactory)connectionFactory).setTrustAllPackages(context.getBoolean(JMS_CONNECTION_FACTORY_TRUSTALLPACKAGES, false));
+	}
    }
 
    /**

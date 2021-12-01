@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.kaleidofoundry</groupId>
 		<artifactId>kaleido-parent</artifactId>
-		<version>0.9.1-SNAPSHOT</version>
+		<version>0.10.0</version>
 	</parent>
 
 	<artifactId>kaleido-spring</artifactId>
@@ -21,6 +21,13 @@
 			<version>${project.version}</version>
 		</dependency>
 
+		<!-- Java EE API -->
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
 		<!-- IOC Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -101,7 +108,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.4</version>
 				<configuration>
 					<excludes>
 						<exclude>**/*.java</exclude>

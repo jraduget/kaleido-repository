@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package org.kaleidofoundry.core.context;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
@@ -29,7 +29,7 @@ import org.kaleidofoundry.core.store.ResourceException;
 /**
  * @author jraduget
  */
-public class RuntimeContextFieldInjectorTest extends Assert {
+public class RuntimeContextFieldInjectorTest  {
 
    @Before
    public void setup() throws IOException, ResourceException {

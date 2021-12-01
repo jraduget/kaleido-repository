@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2014 the original author or authors
+ * Copyright 2008-2021 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.kaleidofoundry.core.cache;
 
-import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -33,7 +33,7 @@ import org.junit.Test;
  * 
  * @author jraduget
  */
-public class CacheFactoryDefaultTest extends Assert {
+public class CacheFactoryDefaultTest  {
 
    @Test
    public void defaultCacheFactoryImplementation() {
@@ -53,11 +53,6 @@ public class CacheFactoryDefaultTest extends Assert {
    @Test(expected = CacheDefinitionNotFoundException.class)
    public void ehCacheFactoryImplementation() {
 	testCacheFactory(CacheProvidersEnum.ehCache, EhCacheManagerImpl.class, EhCacheImpl.class);
-   }
-
-   @Test
-   public void jbossFactoryImplementation() {
-	testCacheFactory(CacheProvidersEnum.jbossCache3x, Jboss3xCacheManagerImpl.class, Jboss3xCacheImpl.class);
    }
 
    @SuppressWarnings("rawtypes")

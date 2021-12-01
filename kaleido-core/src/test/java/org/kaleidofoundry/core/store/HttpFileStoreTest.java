@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,14 @@
  */
 package org.kaleidofoundry.core.store;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.bio.SocketConnector;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -36,10 +39,9 @@ public class HttpFileStoreTest extends AbstractFileStoreTest {
 
    @BeforeClass
    public static void setupStatic() throws Exception {
-	// jetty http server start
-	final SocketConnector connector = new SocketConnector();
-	connector.setPort(9090);
 	server = new Server();
+	final ServerConnector connector = new ServerConnector(server);
+	connector.setPort(9090);
 	server.setConnectors(new Connector[] { connector });
 	final WebAppContext context = new WebAppContext();
 	context.setServer(server);

@@ -16,11 +16,14 @@ public class MailDispatcherContextBuilder extends AbstractRuntimeContextBuilder<
    /** {@link MailSessionService} name */
    public static final String MAILSESSION_SERVICE_REF = "session.service-ref";
 
-   /** {@link MessagingMailDispatcher} {@link Producer} */
+   /** {@link AsynchronousMailMessagingDispatcher} {@link Producer} */
    public static final String PRODUCER_SERVICE_NAME = "producer.service-ref";
 
    /** {@link AsynchronousMailDispatcher} {@link Producer} thread count */
    public static final String THREAD_COUNT = "threadCount";
+
+   /** {@link AsynchronousMailDispatcher} send timeout in millisecond */
+   public static final String TIMEOUT = "timeout";
 
    /** EJB service name */
    public static final String EJB_SERVICE_NAME = "namingService.name";

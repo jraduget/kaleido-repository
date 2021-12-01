@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,16 +54,6 @@ public class Registry<K, T> extends ConcurrentHashMap<K, T> implements Concurren
    @Override
    public Set<Entry<K, T>> entrySet() {
 	return Collections.unmodifiableSet(super.entrySet());
-   }
-
-   /**
-    * Set return ware not modifiable
-    * 
-    * @see java.util.HashMap#keySet()
-    */
-   @Override
-   public Set<K> keySet() {
-	return Collections.unmodifiableSet(super.keySet());
    }
 
    /**

@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 
-import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author jraduget
  */
-public class OsEnvironmentTest extends Assert {
+public class OsEnvironmentTest  {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(OsEnvironmentTest.class);
 

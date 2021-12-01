@@ -17,13 +17,16 @@ public class MailSessionContextBuilder extends AbstractRuntimeContextBuilder<Mai
    public static final String LOCAL_SMTP_HOST = "smtp.host";
    /** Smtp port */
    public static final String LOCAL_SMTP_PORT = "smtp.port";
+   /** Smtp debug mod */
+   public static final String LOCAL_SMTP_DEBUG = "smtp.debug";
+   
    /** Smtp authentication <code>true|false</code> */
    public static final String LOCAL_SMTP_AUTH = "smtp.auth.enable";
    /** Smtp authentication user */
    public static final String LOCAL_SMTP_USER = "smtp.auth.user";
    /** Smtp authentication password */
    public static final String LOCAL_SMTP_PASSWORD = "smtp.auth.password";
-
+   
    /** Smtp TLS is enable */
    public static final String LOCAL_SMTP_TLS = "smtp.tls";
 
@@ -67,6 +70,15 @@ public class MailSessionContextBuilder extends AbstractRuntimeContextBuilder<Mai
     */
    public MailSessionContextBuilder withSmtpPort(final String port) {
 	getContextParameters().put(LOCAL_SMTP_PORT, port);
+	return this;
+   }
+
+   /**
+    * @param debug
+    * @return current builder instance
+    */
+   public MailSessionContextBuilder withSmtpDebug(final boolean debug) {
+	getContextParameters().put(LOCAL_SMTP_DEBUG, debug);
 	return this;
    }
 

@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import javax.jms.Session;
 import org.apache.activemq.broker.BrokerService;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -38,6 +37,8 @@ import org.kaleidofoundry.messaging.TransportProviderEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.junit.Assert.*;
+
 /**
  * Test JMS Transport
  * 
@@ -45,7 +46,7 @@ import org.slf4j.LoggerFactory;
  */
 @RunWith(KaleidoJunit4ClassRunner.class)
 @NamedConfiguration(name = "jmsTransport", uri = JMS_CONFIG_PATH)
-public class JmsTransportTest extends Assert {
+public class JmsTransportTest  {
 
    static final Logger LOGGER = LoggerFactory.getLogger(JmsTransportTest.class);
 
@@ -57,9 +58,6 @@ public class JmsTransportTest extends Assert {
    @BeforeClass
    public static void setupStatic() throws Exception {
 	
-	// get and start a embedded active MQ instance 
-	//new org.apache.activemq.ActiveMQConnectionFactory(MessagingTestsConstants.JmsBrokerURL);
-
 	// Manually configure a embedded active MQ instance
 	ActiveMqBroker = new BrokerService();
 	ActiveMqBroker.setPersistent(false);

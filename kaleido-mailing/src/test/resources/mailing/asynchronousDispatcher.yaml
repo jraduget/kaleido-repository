@@ -2,6 +2,7 @@ mailing:
   dispatchers:
     myDispatcher:
       provider: async
+      threadCount: 5
       session:
-        service-ref: mySession-tls
+        service-ref: mySession
         

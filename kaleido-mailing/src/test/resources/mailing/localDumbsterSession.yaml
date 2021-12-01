@@ -1,6 +1,6 @@
 mailing:
   sessions:
-    mySession-ssl:
+    mySession:
       provider: local
       smtp:
         host: localhost
@@ -8,3 +8,4 @@ mailing:
         auth:
           enable: false
         ssl: false
+        debug: true
