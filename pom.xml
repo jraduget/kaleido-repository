@@ -83,7 +83,6 @@
 
 		<snapshot.repository.url>https://oss.sonatype.org/content/repositories/snapshots</snapshot.repository.url>
 		<staging.repository.url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</staging.repository.url>
-		<release.repository.url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</release.repository.url>
 
 	</properties>
 
@@ -339,8 +338,8 @@
 		</repository>
 
 		<repository>
-			<id>${release.repository.id}</id>
-			<url>${release.repository.url}</url>
+			<id>${staging.repository.id}</id>
+			<url>${staging.repository.url}</url>
 		</repository>
 
 	</repositories>
@@ -469,7 +468,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <!-- Tell the plugins what repositories to use (by id) -->
-                    <releaseDeploymentRepository>${release.repository.id}</releaseDeploymentRepository>
+                    <releaseDeploymentRepository>${staging.repository.id}</releaseDeploymentRepository>
                     <stageDeploymentRepository>${staging.repository.id}</stageDeploymentRepository>
                     <snapshotDeploymentRepository>${snapshot.repository.id}</snapshotDeploymentRepository>
                     <!-- Allow branches starting with feature/poc to be published as automagically versioned branch-name-SNAPSHOT artifacts -->
@@ -480,7 +479,7 @@
                         <goals>
                             <goal>enforce-versions</goal>
                             <goal>set-properties</goal>
-                            <goal>retarget-deploy</goal>
+                            <!-- <goal>retarget-deploy</goal> -->
                             <goal>update-stage-dependencies</goal>
                             <goal>tag-master</goal>
                             <goal>promote-master</goal>
@@ -636,8 +635,8 @@
 
 	<distributionManagement>
 		<repository>
-			<id>${release.repository.id}</id>
-			<url>${release.repository.url}</url>
+			<id>${staging.repository.id}</id>
+			<url>${staging.repository.url}</url>
 		</repository>
 		<snapshotRepository>
 			<id>${snapshot.repository.id}</id>
