@@ -79,8 +79,7 @@
 
 		<!-- Target repo deployment -->
 		<snapshot.repository.id>ossrh-snapshot</snapshot.repository.id>
-		<staging.repository.id>ossrh-release</staging.repository.id>
-		<release.repository.id>ossrh-release</release.repository.id>
+		<staging.repository.id>ossrh-staging</staging.repository.id>
 
 		<snapshot.repository.url>https://oss.sonatype.org/content/repositories/snapshots</snapshot.repository.url>
 		<staging.repository.url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</staging.repository.url>
@@ -800,9 +799,8 @@
 						<version>1.6.8</version>
 						<extensions>true</extensions>
 						<configuration>
-							<serverId>ossrh-release</serverId>
+							<serverId>ossrh-staging</serverId>
 							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-							<autoReleaseAfterClose>true</autoReleaseAfterClose>
 						</configuration>
 					</plugin>
 				</plugins>
