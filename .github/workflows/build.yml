@@ -1,22 +1,15 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://docs.github.com/en/actions/guides/publishing-java-packages-with-maven#introduction
+# For workflow syntax see: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions
 
 name: Java CI build with Maven
 
-on:
- 
+on: 
   push:
-    branches: [ develop , master ]
-    tags:
-      - v*
-#    tags-ignore:
-#      - v*
+    branches: [ develop, release/*, master ]
 
   pull_request:
-    branches: [ develop , master ]
-
-#  release:
-#    types: [created]
+    branches: [ develop ]
 
 jobs:
   build:
