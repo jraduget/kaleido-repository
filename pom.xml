@@ -341,6 +341,10 @@
 			<id>${staging.repository.id}</id>
 			<url>${staging.repository.url}</url>
 		</repository>
+		<repository>
+			<id>${snapshot.repository.id}</id>
+			<url>${snapshot.repository.url}</url>
+		</repository>
 
 	</repositories>
 
