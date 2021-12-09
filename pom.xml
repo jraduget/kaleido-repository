@@ -5,7 +5,7 @@
 
 	<groupId>org.kaleidofoundry</groupId>
 	<artifactId>kaleido-parent</artifactId>
-	<version>0.10.0</version>
+	<version>0.10.1-SNAPSHOT</version>
 
 	<name>KaleidoFoundry parent POM</name>
 	<url>https://github.com/jraduget/kaleido-repository/</url>
@@ -479,7 +479,7 @@
                         <goals>
                             <goal>enforce-versions</goal>
                             <goal>set-properties</goal>
-                            <!-- <goal>retarget-deploy</goal> -->
+                            <goal>retarget-deploy</goal>
                             <goal>update-stage-dependencies</goal>
                             <goal>tag-master</goal>
                             <goal>promote-master</goal>
@@ -497,7 +497,7 @@
 						-->
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>			
         
 			<!-- compilation -->
 			<plugin>
@@ -626,6 +626,17 @@
 				<configuration>
 					<doCheck>false</doCheck>
 					<doUpdate>false</doUpdate>
+				</configuration>
+			</plugin>
+			<!-- staging / release -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>3.0.0-M4</version>
+				<configuration>
+					<tagNameFormat>v@{project.version}</tagNameFormat>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<releaseProfiles>release</releaseProfiles>
 				</configuration>
 			</plugin>
 
@@ -775,23 +786,22 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.6</version>
+						<version>3.0.1</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
 								<phase>verify</phase>
 								<goals>
-								<goal>sign</goal>
+									<goal>sign</goal>
 								</goals>
 								<configuration>
-								<executable>gpg</executable>
-								<useAgent>false</useAgent>
-								<keyname>${gpg.keyname}</keyname>
-								<passphraseServerId>${gpg.keyname}</passphraseServerId>
+									<keyname>${gpg.keyname}</keyname>
+									<passphraseServerId>gpg.passphrase</passphraseServerId>
 								</configuration>
 							</execution>
 						</executions>
 					</plugin>
+					<!--  Manually stage the published gitflow release -->
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
@@ -800,8 +810,10 @@
 						<configuration>
 							<serverId>ossrh-staging</serverId>
 							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<skipStaging>false</skipStaging>
 						</configuration>
 					</plugin>
+					
 				</plugins>
 			</build>
 		</profile>
