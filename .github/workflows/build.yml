@@ -6,7 +6,7 @@ name: Java CI build with Maven
 
 on: 
   push:
-    branches: [ develop, release/*, master ]
+    branches: [ develop ]
 
   pull_request:
     branches: [ develop ]
@@ -36,15 +36,12 @@ jobs:
           server-id: ossrh-staging
           server-username: OSS_SONATYPE_USERNAME
           server-password: OSS_SONATYPE_PASSWORD
-#          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-#          gpg-passphrase:  MAVEN_GPG_PASSPHRASE
 
       - name: Build & Publish to Apache Maven Central
         run: mvn --batch-mode --show-version validate deploy
         env:
           OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
-#          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
       - name: Show git information
         run: | 
