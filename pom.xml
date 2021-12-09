@@ -5,7 +5,7 @@
 
 	<groupId>org.kaleidofoundry</groupId>
 	<artifactId>kaleido-parent</artifactId>
-	<version>0.10.1-SNAPSHOT</version>
+	<version>0.10.1</version>
 
 	<name>KaleidoFoundry parent POM</name>
 	<url>https://github.com/jraduget/kaleido-repository/</url>
@@ -340,10 +340,14 @@
 		<repository>
 			<id>${staging.repository.id}</id>
 			<url>${staging.repository.url}</url>
+			<snapshots><enabled>false</enabled></snapshots>
+            <releases><enabled>true</enabled></releases>
 		</repository>
 		<repository>
 			<id>${snapshot.repository.id}</id>
 			<url>${snapshot.repository.url}</url>
+			<snapshots><enabled>true</enabled></snapshots>
+            <releases><enabled>false</enabled></releases>
 		</repository>
 
 	</repositories>
