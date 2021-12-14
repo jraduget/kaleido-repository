@@ -70,7 +70,7 @@
 		<spring.version>5.3.9</spring.version>
 
 		<!-- OWASP -->
-		<dependency-check-maven.version>6.1.1</dependency-check-maven.version>
+		<dependency-check-maven.version>6.5.0</dependency-check-maven.version>
 		<!-- source encoding options -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -644,7 +644,9 @@
 				<configuration>
 					<tagNameFormat>v@{project.version}</tagNameFormat>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<useReleaseProfile>false</useReleaseProfile>
 					<releaseProfiles>release</releaseProfiles>
+					<goals>deploy</goals>
 				</configuration>
 			</plugin>
 
@@ -752,7 +754,9 @@
 	</reporting>
 
 	<profiles>
-		<!-- Release to maven central -->
+		<!-- Release / Staging before maven central 
+			 https://central.sonatype.org/publish/publish-guide/
+		-->
 		<profile>
 			<id>release</id>
 			<build>
@@ -764,8 +768,7 @@
 						<version>3.2.0</version>
 						<executions>
 							<execution>
-								<inherited>true</inherited>
-								<phase>deploy</phase>
+								<id>attach-sources</id>
 								<goals>
 									<goal>jar-no-fork</goal>
 								</goals>
@@ -780,7 +783,7 @@
 						<configuration>
 							<links>
 								<link>https://download.oracle.com/javase/8/docs/api/</link>
-								<link>https://download.oracle.com/javaee/8/api/</link>
+								<link>https://docs.oracle.com/javaee/7/api/</link>
 								<link>https://www.slf4j.org/api/</link>
 							</links>
 							<source>${jdk.version}</source>
@@ -788,8 +791,14 @@
 							<linksource>true</linksource>
 							<failOnError>false</failOnError>
 						</configuration>
-						<!-- <executions> <execution> <inherited>true</inherited> <phase></phase> 
-							<goals> <goal>aggregate</goal> </goals> </execution> </executions> -->
+						<executions>
+							<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+							</execution>
+						</executions>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -802,14 +811,19 @@
 								<goals>
 									<goal>sign</goal>
 								</goals>
-								<configuration>
-									<keyname>${gpg.keyname}</keyname>
+                                <configuration>
+                                    <keyname>${gpg.keyname}</keyname>
 									<passphraseServerId>gpg.passphrase</passphraseServerId>
-								</configuration>
+									<!-- Prevent gpg from using pinentry programs -->
+									<gpgArguments>
+										<arg>--pinentry-mode</arg>
+										<arg>loopback</arg>
+									</gpgArguments>
+                                </configuration>
 							</execution>
 						</executions>
 					</plugin>
-					<!--  Manually stage the published gitflow release -->
+					<!--  Manually stage the published gitflow release 
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
@@ -821,6 +835,7 @@
 							<skipStaging>false</skipStaging>
 						</configuration>
 					</plugin>
+					-->
 					
 				</plugins>
 			</build>
@@ -834,6 +849,16 @@
 						<groupId>org.owasp</groupId>
 						<artifactId>dependency-check-maven</artifactId>
 						<version>${dependency-check-maven.version}</version>
+						<configuration>
+							<skipProvidedScope>true</skipProvidedScope>
+							<skipRuntimeScope>true</skipRuntimeScope>
+							<skipTestScope>true</skipTestScope>
+							<formats>
+								<format>HTML</format>
+								<format>CSV</format>
+								<format>JUNIT</format>
+							</formats>
+						</configuration>
 						<executions>
 							<execution>
 								<goals>

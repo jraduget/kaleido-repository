@@ -8,7 +8,7 @@
 	</parent>
 
 	<artifactId>kaleido-mailing</artifactId>
-	<name>KaleidoFoundry module for mailing</name>
+	<name>KaleidoFoundry mailing extension</name>
 	<packaging>jar</packaging>
 
 	<dependencies>
