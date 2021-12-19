@@ -32,7 +32,7 @@ jobs:
         uses: actions/setup-java@v2
         with: # running setup-java again overwrites the settings.xml
           java-version: '8'
-          distribution: 'temurin'
+          distribution: 'adopt'
           server-id: ossrh-staging
           server-username: OSS_SONATYPE_USERNAME
           server-password: OSS_SONATYPE_PASSWORD
@@ -48,6 +48,10 @@ jobs:
 
       - name: Show git information
         run: | 
+          which gpg
+          /usr/bin/gpg --version          
+          cat /home/runner/.m2/settings.xml
+          /usr/bin/gpg --list-keys
           git status
           git log --no-color --graph --oneline -n 10
           git tag --list
