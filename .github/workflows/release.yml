@@ -39,7 +39,7 @@ jobs:
           gpg-passphrase:  MAVEN_GPG_PASSPHRASE
 
       - name: Build & Publish to Apache Maven Central
-        run: mvn --batch-mode --show-version validate deploy -Prelease
+        run: mvn --batch-mode --show-version validate deploy -Prelease -X
         env:
           OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
