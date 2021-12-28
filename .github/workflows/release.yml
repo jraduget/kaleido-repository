@@ -39,8 +39,9 @@ jobs:
 #          gpg-passphrase:  MAVEN_GPG_PASSPHRASE
 
       - name: Import GPG Key
+        id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v4
-        env:
+        with:
           gpg_private_key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
