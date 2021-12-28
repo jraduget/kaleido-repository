@@ -19,16 +19,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-#      - name: Cache Maven packages
-#        uses: actions/cache@v2
-#        with:
-#          path: ~/.m2
-#          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-#          restore-keys: ${{ runner.os }}-m2
-
+      # running setup-java again overwrites the settings.xml
       - name: Set up Apache Maven Central
         uses: actions/setup-java@v2
-        with: # running setup-java again overwrites the settings.xml
+        with: 
           java-version: '8'
           distribution: 'temurin'
           cache: 'maven'
