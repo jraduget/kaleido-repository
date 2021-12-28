@@ -31,7 +31,7 @@ jobs:
         with: # running setup-java again overwrites the settings.xml
           java-version: '8'
           distribution: 'temurin'
-#          cache: 'maven'
+          cache: 'maven'
           server-id: ossrh-staging
           server-username: OSS_SONATYPE_USERNAME
           server-password: OSS_SONATYPE_PASSWORD
@@ -43,6 +43,8 @@ jobs:
         env:
           gpg_private_key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+      - name: GPG Key status
         run: | 
           gpg --version
           echo "-----------------------------"
@@ -52,10 +54,6 @@ jobs:
           echo "keyid:       ${{ steps.import_gpg.outputs.keyid }}"
           echo "name:        ${{ steps.import_gpg.outputs.name }}"
           echo "email:       ${{ steps.import_gpg.outputs.email }}"          
-        env:
-          OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
-          OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
-#          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
       - name: Build & Publish to Apache Maven Central
         run: $mvn --batch-mode --show-version validate deploy -Prelease
