@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2011 the original author or authors.
+ *  Copyright 2008-2021 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -61,6 +61,7 @@ public class ObjectHelper {
     * @return first not null value in argument
     */
    @Nullable
+   @SafeVarargs
    public static <T> T firstNonNull(final T... values) {
 	for (T value : values) {
 	   if (value != null) { return value; }
@@ -76,6 +77,7 @@ public class ObjectHelper {
     * @return list without the null argument
     */
    @NotNull
+   @SafeVarargs
    public static <T> List<T> withNoNull(final T... values) {
 	List<T> list = new ArrayList<T>();
 	if (values != null) {

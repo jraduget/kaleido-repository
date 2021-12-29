@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2014 the original author or authors
+ * Copyright 2008-2021 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +18,19 @@ package org.kaleidofoundry.core.cache;
 import java.text.DateFormat;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.kaleidofoundry.core.context.RuntimeContext;
+
+import static org.junit.Assert.*;
 
 /**
  * Test Cache Factory
  * 
  * @author jraduget
  */
-public abstract class AbstractCacheManagerTest extends Assert {
+public abstract class AbstractCacheManagerTest  {
 
    /** @return cache implementation code */
    protected abstract String getCacheImplementationCode();

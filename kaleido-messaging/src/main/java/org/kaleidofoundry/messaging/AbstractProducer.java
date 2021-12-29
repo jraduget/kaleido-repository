@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -199,7 +199,7 @@ public abstract class AbstractProducer implements Producer {
    protected void debugMessage(Message message) {
 	if (isDebug()) {
 	   LOGGER.info(">>> sending message with providerId={} , correlationId={} , parameters={}",
-		   new String[] { message.getProviderId(), message.getCorrelationId(), String.valueOf(message.getParameters()) });
+		   new Object[] { message.getProviderId(), message.getCorrelationId(), String.valueOf(message.getParameters()) });
 	   LOGGER.info("{}", message.toString());
 	}
    }

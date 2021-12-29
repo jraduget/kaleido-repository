@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.kaleidofoundry.core.lang.NotNullException;
@@ -30,7 +30,7 @@ import org.kaleidofoundry.core.lang.NotNullException;
 /**
  * @author jraduget
  */
-public class JavaSystemHelperTest extends Assert {
+public class JavaSystemHelperTest  {
 
    public static final String UNKNOWN_FOO_RESOURCE = "foo/unkwnown";
    public static final String FOO_RESOURCE = "system/foo.txt";
@@ -115,7 +115,7 @@ public class JavaSystemHelperTest extends Assert {
 	// existing jar resource
 	url = JavaSystemHelper.getResource(META_INF_JAR_RESOURCE);
 	assertNotNull(url);
-	assertTrue(url.toExternalForm().contains("jar:file:"));
+	assertTrue(url.toExternalForm().contains("file:/"));
    }
 
    @Test

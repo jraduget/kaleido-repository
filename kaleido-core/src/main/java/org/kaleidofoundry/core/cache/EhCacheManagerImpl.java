@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2014 the original author or authors
+ * Copyright 2008-2021 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ public class EhCacheManagerImpl extends AbstractCacheManager {
     */
    @Override
    public String getMetaInformations() {
-	return "ehcache-2.x (1.2.x -> 2.6.x)";
+	return "ehcache[1.2.x -> 2.6.x]";
    }
 
    /*
@@ -250,8 +250,8 @@ public class EhCacheManagerImpl extends AbstractCacheManager {
     */
    protected net.sf.ehcache.Cache createCache(final String name) {
 
-	LOGGER.info(CacheMessageBundle.getMessage("cachemanager.create.default", name, getName()));
-
+	traceCacheCreation(name);
+	
 	try {
 	   // the internal ehcache instance that will be created
 	   final net.sf.ehcache.Cache cache;

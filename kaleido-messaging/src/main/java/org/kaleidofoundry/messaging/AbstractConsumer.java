@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -244,7 +244,7 @@ public abstract class AbstractConsumer implements Consumer {
 		if (isDebug()) {
 		   LOGGER.info(
 			   "<<< receiving message with providerId={} , correlationId={} , parameters={}",
-			   new String[] { messageWrapper.getMessage().getProviderId(), messageWrapper.getMessage().getCorrelationId(),
+			   new Object[] { messageWrapper.getMessage().getProviderId(), messageWrapper.getMessage().getCorrelationId(),
 				   String.valueOf(messageWrapper.getMessage().getParameters()) });
 		   LOGGER.info("{}", messageWrapper.getMessage().toString());
 		}

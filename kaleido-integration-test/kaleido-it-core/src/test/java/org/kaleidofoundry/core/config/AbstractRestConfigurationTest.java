@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2011 the original author or authors.
+ *  Copyright 2008-2021 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,13 @@
  */
 package org.kaleidofoundry.core.config;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +29,6 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.kaleidofoundry.core.config.model.ConfigurationModel;
@@ -42,7 +48,7 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
  * 
  * @author jraduget
  */
-public abstract class AbstractRestConfigurationTest extends Assert {
+public abstract class AbstractRestConfigurationTest  {
 
    //private static final String SERVER_BASE_URL = "http://localhost:8080/kaleido-it";
    private static final String SERVER_BASE_URL = "http://localhost:8380/kaleido-it";

@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ import org.kaleidofoundry.core.store.ResourceException;
  * <li>...</li>
  * </ul>
  * <br/>
- * <b>The configuration resource content (usually file)</b> could be accessed through different way, using URI : <br/>
+ * <b>The configuration resource (usually file)</b> could be accessed through different way, using URI : <br/>
  * <br/>
  * <ul>
  * <li>File system - {@link FileSystemStore},</li>
@@ -462,8 +462,8 @@ public interface Configuration {
    Configuration extractConfiguration(@NotNull String prefix, @NotNull Configuration outConfiguration);
 
    /**
-    * Add another configuration content to current instance.<br/>
-    * The configuration argument overides the current configuration content<br/>
+    * Add another configuration content to the current instance.<br/>
+    * The configuration argument overrides the current configuration content<br/>
     * 
     * @param configuration configuration to add
     * @return Merge configuration (configuration argument crushes same existing
@@ -506,7 +506,7 @@ public interface Configuration {
    boolean isLoaded();
 
    /**
-    * Persist all configuration datas (with updade)
+    * Persist all configuration data (with update)
     * 
     * @throws ResourceException
     * @throws ConfigurationException if configuration is not loaded, or is for readonly use
@@ -536,7 +536,7 @@ public interface Configuration {
 
    /**
     * @param key requested property key
-    * @param defaultValue Default value if property content is null
+    * @param defaultValue Default value if property value  is null
     * @return value of the property requested if defined, otherwise defaultValue argument
     */
    @Nullable
@@ -549,6 +549,21 @@ public interface Configuration {
    @Nullable
    List<String> getStringList(@NotNull String key);
 
+   /**
+    * @param key requested property key
+    * @return values of the property requested
+    */
+   @Nullable
+   String[] getStrings(@NotNull String key);
+   
+   /**
+    * @param key requested property key
+    * @param defaultValue Default value if property value is null
+    * @return values of the property requested
+    */
+   @Nullable
+   String[] getStrings(@NotNull String key, String[] defaultValues);   
+   
       
    // **************************************************************************
    // -> Typed property value accessors
@@ -563,7 +578,7 @@ public interface Configuration {
 
    /**
     * @param key requested property key
-    * @param defaultValue Default value if property content is null
+    * @param defaultValue Default value if property value is null
     * @return value of the property requested if defined, otherwise defaultValue argument
     */
    @Nullable
@@ -586,7 +601,7 @@ public interface Configuration {
 
    /**
     * @param key requested property key
-    * @param defaultValue Default value if property content is null
+    * @param defaultValue Default value if property value is null
     * @return value of the property requested if defined, otherwise defaultValue argument
     * @throws NumberFormatException
     */
@@ -611,7 +626,7 @@ public interface Configuration {
 
    /**
     * @param key requested property key
-    * @param defaultValue Default value if property content is null
+    * @param defaultValue Default value if property value is null
     * @return value of the property requested if defined, otherwise defaultValue argument
     * @throws NumberFormatException
     */
@@ -635,7 +650,7 @@ public interface Configuration {
 
    /**
     * @param key requested property key
-    * @param defaultValue Default value if property content is null
+    * @param defaultValue Default value if property value is null
     * @return value of the property requested if defined, otherwise defaultValue argument
     */
    @Nullable
@@ -657,7 +672,7 @@ public interface Configuration {
 
    /**
     * @param key requested property key
-    * @param defaultValue Default value if property content is null
+    * @param defaultValue Default value if property value is null
     * @return value of the property requested if defined, otherwise defaultValue argument
     */
    @Nullable
@@ -680,7 +695,7 @@ public interface Configuration {
 
    /**
     * @param key requested property key
-    * @param defaultValue Default value if property content is null
+    * @param defaultValue Default value if property value is null
     * @return value of the property requested if defined, otherwise defaultValue argument
     * @throws NumberFormatException
     */
@@ -705,7 +720,7 @@ public interface Configuration {
 
    /**
     * @param key requested property key
-    * @param defaultValue Default value if property content is null
+    * @param defaultValue Default value if property value is null
     * @return value of the property requested if defined, otherwise defaultValue argument
     * @throws NumberFormatException
     */
@@ -730,7 +745,7 @@ public interface Configuration {
 
    /**
     * @param key requested property key
-    * @param defaultValue Default value if property content is null
+    * @param defaultValue Default value if property value is null
     * @return value of the property requested if defined, otherwise defaultValue argument
     * @throws NumberFormatException
     */
@@ -755,7 +770,7 @@ public interface Configuration {
 
    /**
     * @param key requested property key
-    * @param defaultValue Default value if property content is null
+    * @param defaultValue Default value if property value is null
     * @return value of the property requested if defined, otherwise defaultValue argument
     * @throws NumberFormatException
     */
@@ -780,7 +795,7 @@ public interface Configuration {
 
    /**
     * @param key requested property key
-    * @param defaultValue Default value if property content is null
+    * @param defaultValue Default value if property value is null
     * @return value of the property requested if defined, otherwise defaultValue argument
     * @throws NumberFormatException
     */
@@ -804,7 +819,7 @@ public interface Configuration {
 
    /**
     * @param key requested property key
-    * @param defaultValue Default value if property content is null
+    * @param defaultValue Default value if property value is null
     * @return value of the property requested if defined, otherwise defaultValue argument
     */
    @Nullable

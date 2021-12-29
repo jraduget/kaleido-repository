@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -235,7 +235,9 @@ public class SynchronousMailDispatcher implements MailDispatcher {
 		try {
 		   send(message, session);
 		} catch (MailException mae) {
+		   LOGGER.debug("Error sending mail", mae);
 		   if (handler != null) {
+			LOGGER.debug("Processing message handler");
 			handler.process(message, mae);
 		   }
 		}

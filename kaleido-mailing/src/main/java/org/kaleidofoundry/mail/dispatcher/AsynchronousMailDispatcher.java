@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,15 @@ package org.kaleidofoundry.mail.dispatcher;
 
 import static org.kaleidofoundry.mail.MailConstants.AsynchronousMailDispatcherPluginName;
 import static org.kaleidofoundry.mail.dispatcher.MailDispatcherContextBuilder.THREAD_COUNT;
+import static org.kaleidofoundry.mail.dispatcher.MailDispatcherContextBuilder.TIMEOUT;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.kaleidofoundry.core.context.RuntimeContext;
 import org.kaleidofoundry.core.plugin.Declare;
@@ -43,6 +46,7 @@ public class AsynchronousMailDispatcher extends SynchronousMailDispatcher {
    public AsynchronousMailDispatcher(final RuntimeContext<MailDispatcher> context) {
 	super(context);
 	final int threadCount = context.getInteger(THREAD_COUNT, 10);
+	LOGGER.info("Starting mail dispatcher service {} with a thread pool size of {}", context.getName(), threadCount);
 	executorService = Executors.newFixedThreadPool(threadCount);
    }
 
@@ -53,25 +57,35 @@ public class AsynchronousMailDispatcher extends SynchronousMailDispatcher {
 
    @Override
    public void send(final MailMessageErrorHandler handler, final MailMessage... messages) {
-	List<Runnable> threads = new ArrayList<Runnable>();
 
-	for (final MailMessage message : messages) {
-	   threads.add(new Runnable() {
-		@Override
-		public void run() {
-		   AsynchronousMailDispatcher.super.send(handler, message);
-		}
-	   });
-	}
+	final Integer timeout = context.getInteger(TIMEOUT);
+	Future<Void> sendFuture = executorService.submit(new Callable<Void>() {
+	   public Void call() {
+		AsynchronousMailDispatcher.super.send(handler, messages);
+		return null;
+	   }
+	});
 
-	for (Runnable thread : threads) {
-	   executorService.execute(thread);
+	try {
+	   if (timeout != null) {
+		sendFuture.get(timeout, TimeUnit.MILLISECONDS);
+	   } else {
+		sendFuture.get();
+	   }
+	} catch (InterruptedException e) {
+	   LOGGER.error("Error while sending mail messages", e);
+	} catch (ExecutionException e) {
+	   //e.getCause()
+	   //handler.
+	   LOGGER.error("Error while sending mail messages", e);
+	} catch (TimeoutException e) {
+	   LOGGER.error("Error while sending mail messages in the configured time %d ms", timeout, e);	   
 	}
 
    }
 
    public void close() {
-	LOGGER.info("Closing mail dispatcher service {}", context.getName());
+	LOGGER.info("Closing mail dispatcher service {}...", context.getName());
 
 	// Disable new tasks from being submitted
 	executorService.shutdown();
@@ -80,13 +94,15 @@ public class AsynchronousMailDispatcher extends SynchronousMailDispatcher {
 	   if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
 		executorService.shutdownNow(); // Cancel currently executing tasks
 		// Wait a while for tasks to respond to being cancelled
-		if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) System.err.println("Pool did not terminate");
+		if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) LOGGER.error("Mail dispatcher service pool did not terminate");
 	   }
 	} catch (InterruptedException ie) {
 	   // (Re-)Cancel if current thread also interrupted
 	   executorService.shutdownNow();
 	   // Preserve interrupt status
 	   Thread.currentThread().interrupt();
+	} finally {
+	   LOGGER.info("Mail dispatcher service {} closed", context.getName());
 	}
    }
 }

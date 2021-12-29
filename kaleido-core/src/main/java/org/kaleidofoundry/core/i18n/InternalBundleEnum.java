@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ public enum InternalBundleEnum {
     * @param name
     */
    public static void addCustomReservedBundle(@NotNull final String name) {
-	if (Arrays.asList(values()).contains(name)) { throw new IllegalStateException("ResourceBundle '" + name + "' is standard and reserved"); }
+	if (Arrays.asList(values()).contains(valueOf(name))) { throw new IllegalStateException("ResourceBundle '" + name + "' is standard and reserved"); }
 	if (CustomReservedBundle.contains(name)) { throw new IllegalStateException("ResourceBundle '" + name + "' is already registered"); }
 	CustomReservedBundle.add(name);
    }

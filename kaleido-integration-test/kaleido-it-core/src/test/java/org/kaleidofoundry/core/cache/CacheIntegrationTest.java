@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2014 the original author or authors
+ * Copyright 2008-2021 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,14 @@
  */
 package org.kaleidofoundry.core.cache;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.kaleidofoundry.core.cache.CacheManagerIntegrationTest.assertions;
 
 import java.util.Map;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kaleidofoundry.core.config.NamedConfiguration;
@@ -30,7 +33,7 @@ import org.kaleidofoundry.core.launcher.KaleidoJunit4ClassRunner;
  */
 @RunWith(KaleidoJunit4ClassRunner.class)
 @NamedConfiguration(name = "myConfig", uri = "classpath:/cache/myContext.properties")
-public class CacheIntegrationTest extends Assert {
+public class CacheIntegrationTest  {
 
    @Test
    public void testSample01() {

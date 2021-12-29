@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2014 the original author or authors
+ * Copyright 2008-2021 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ public class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
     */
    @Override
    public String getDefaultConfiguration() {
-	return "kaleido-cache.xml";
+	return "";
    }
 
    /*
@@ -71,7 +71,7 @@ public class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
     */
    @Override
    public String getMetaInformations() {
-	return "kaleido java.util.concurrent.ConcurrentMap";
+	return "java.util.concurrent.ConcurrentMap<K,V>";
    }
 
    /*
@@ -152,7 +152,7 @@ public class LocalCacheManagerImpl extends org.kaleidofoundry.core.cache.Abstrac
     */
    protected <K extends Serializable, V extends Serializable> LocalCacheImpl<K, V> createCache(final String name, final String configurationUri,
 	   final RuntimeContext<Cache<K, V>> context) {
-	LOGGER.info(CacheMessageBundle.getMessage("cachemanager.create.default", name, getName()));
+	traceCacheCreation(name);
 	return new LocalCacheImpl<K, V>(name, this, context);
    }
 }

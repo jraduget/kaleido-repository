@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 package org.kaleidofoundry.core.store.module;
-
-import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,10 +35,12 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.name.Named;
 
+import static org.junit.Assert.*;
+
 /**
  * @author jraduget
  */
-public class RawResourceModuleTest extends Assert {
+public class RawResourceModuleTest {
 
    private Injector injector;
    private Sample sample;

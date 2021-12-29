@@ -1,5 +1,5 @@
 /*
- *  Copyright 2008-2011 the original author or authors.
+ *  Copyright 2008-2021 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,6 +27,8 @@ import org.kaleidofoundry.core.config.model.ConfigurationModel;
 import org.kaleidofoundry.core.config.model.ConfigurationProperty;
 import org.kaleidofoundry.core.persistence.UnmanagedEntityManagerFactory;
 import org.kaleidofoundry.core.store.ResourceException;
+
+import static org.junit.Assert.*;
 
 /**
  * Test {@link ConfigurationController} with a configuration that have been registered and whose meta model have not been persisted

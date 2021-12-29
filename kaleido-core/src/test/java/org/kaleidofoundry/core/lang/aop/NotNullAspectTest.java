@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package org.kaleidofoundry.core.lang.aop;
 
 import static org.kaleidofoundry.core.lang.NotNullException.ERROR_NotNullArgument;
 import static org.kaleidofoundry.core.lang.NotNullException.ERROR_NotNullReturn;
-import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.kaleidofoundry.core.lang.NotNullException;
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author jraduget
  */
-public class NotNullAspectTest extends Assert {
+public class NotNullAspectTest  {
 
    static Logger LOGGER = LoggerFactory.getLogger(NotNullAspectTest.class);
 

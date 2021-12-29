@@ -1,5 +1,5 @@
 /*  
- * Copyright 2008-2014 the original author or authors 
+ * Copyright 2008-2021 the original author or authors 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package org.kaleidofoundry.core.cache;
 
 import org.kaleidofoundry.core.cache.annotation.EhCache;
 import org.kaleidofoundry.core.cache.annotation.InfinispanCache;
-import org.kaleidofoundry.core.cache.annotation.JbossCache;
 import org.kaleidofoundry.core.context.AbstractModule;
 
 /**
@@ -49,7 +48,6 @@ public class CacheFactoryModule extends AbstractModule<CacheManager> {
 
 	// bind custom annotation
 	bind(CacheManager.class).annotatedWith(EhCache.class).to(EhCacheManagerImpl.class).in(scope(EhCacheManagerImpl.class));
-	bind(CacheManager.class).annotatedWith(JbossCache.class).to(Jboss3xCacheManagerImpl.class).in(scope(Jboss3xCacheManagerImpl.class));
 	bind(CacheManager.class).annotatedWith(InfinispanCache.class).to(InfinispanCacheManagerImpl.class).in(scope(InfinispanCacheManagerImpl.class));
 	
    }
