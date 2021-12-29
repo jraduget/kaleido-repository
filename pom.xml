@@ -5,7 +5,7 @@
 
 	<groupId>org.kaleidofoundry</groupId>
 	<artifactId>kaleido-parent</artifactId>
-	<version>0.10.1</version>
+	<version>0.10.2-SNAPSHOT</version>
 
 	<name>KaleidoFoundry parent POM</name>
 	<url>https://github.com/jraduget/kaleido-repository/</url>
