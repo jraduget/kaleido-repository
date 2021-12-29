@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>org.kaleidofoundry</groupId>
 		<artifactId>kaleido-parent</artifactId>
-		<version>0.10.1-SNAPSHOT</version>
+		<version>0.10.1</version>
 	</parent>
 
 	<artifactId>kaleido-mailing</artifactId>
-	<name>KaleidoFoundry module for mailing</name>
+	<name>KaleidoFoundry mailing extension</name>
 	<packaging>jar</packaging>
 
 	<dependencies>
