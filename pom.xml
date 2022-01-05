@@ -65,7 +65,7 @@
 		<activemq.version>5.16.2</activemq.version>
 
 		<!-- Testing -->
-		<junit.version>4.13.1</junit.version>
+		<junit.version>4.13.2</junit.version>
 		<!-- Spring integration version -->
 		<spring.version>5.3.14</spring.version>
 
@@ -258,22 +258,22 @@
 			<dependency>
 				<groupId>org.apache.derby</groupId>
 				<artifactId>derbyclient</artifactId>
-				<version>10.14.2.0</version>
+				<version>10.15.2.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.derby</groupId>
 				<artifactId>derby</artifactId>
-				<version>10.14.2.0</version>
+				<version>10.15.2.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-server</artifactId>
-				<version>9.4.40.v20210413</version>
+				<version>10.0.7</version>
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-webapp</artifactId>
-				<version>9.4.40.v20210413</version>
+				<version>10.0.7</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mockftpserver</groupId>
