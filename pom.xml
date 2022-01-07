@@ -234,7 +234,7 @@
 			<dependency>
 				<groupId>javax</groupId>
 				<artifactId>javaee-api</artifactId>
-				<version>8.0</version>
+				<version>8.0.1</version>
 			</dependency>
 			<!-- <dependency> <groupId>jakarta.platform</groupId> <artifactId>jakarta.jakartaee-api</artifactId> 
 				<version>8.0.0</version> <scope>provided</scope> </dependency> -->
@@ -430,7 +430,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -444,7 +444,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -457,7 +457,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
@@ -559,7 +559,7 @@
 						</configuration>
 					</execution>
 				</executions>
-				<dependencies />
+				<dependencies/>
 			</plugin>
 			<!-- aop compile weaving -->
 			<plugin>
