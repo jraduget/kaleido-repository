@@ -42,7 +42,7 @@
 	<properties>
 		<!-- Java version -->
 		<jdk.version>1.8</jdk.version>
-		<aspectj.version>1.9.6</aspectj.version>
+		<aspectj.version>1.9.7</aspectj.version>
 		<!-- Logging version (logback is used only for testing) -->
 		<slf4j.version>1.7.31</slf4j.version>
 		<logback.version>1.2.3</logback.version>
@@ -430,7 +430,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -444,7 +444,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -457,7 +457,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
@@ -559,7 +559,7 @@
 						</configuration>
 					</execution>
 				</executions>
-				<dependencies />
+				<dependencies/>
 			</plugin>
 			<!-- aop compile weaving -->
 			<plugin>
