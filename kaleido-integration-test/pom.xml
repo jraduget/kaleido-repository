@@ -22,7 +22,7 @@
 
 	<properties>
 		<jersey.version>1.19.4</jersey.version>
-		<jmeter.version>5.4.1</jmeter.version>
+		<jmeter.version>5.5</jmeter.version>
 	</properties>
 
 	<dependencyManagement>
