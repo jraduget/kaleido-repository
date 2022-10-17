@@ -48,7 +48,7 @@
 		<logback.version>1.2.3</logback.version>
 		<!-- Configuration parser provider -->
 		<snakeyaml.version>1.28</snakeyaml.version>
-		<jackson.version>2.13.1</jackson.version>
+		<jackson.version>2.13.4.2</jackson.version>
 		<!-- Cache implementation version -->
 		<apache-jcs-cache.version>1.3</apache-jcs-cache.version>
 		<terracotta-ehcache.version>2.6.11</terracotta-ehcache.version>
@@ -430,7 +430,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -444,7 +444,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -457,7 +457,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
@@ -559,7 +559,7 @@
 						</configuration>
 					</execution>
 				</executions>
-				<dependencies />
+				<dependencies/>
 			</plugin>
 			<!-- aop compile weaving -->
 			<plugin>
