@@ -62,7 +62,7 @@
 		<!-- <weld.version>4.0.1.Final</weld.version> -->
 
 		<!-- Third parties -->
-		<activemq.version>5.16.2</activemq.version>
+		<activemq.version>5.17.3</activemq.version>
 
 		<!-- Testing -->
 		<junit.version>4.13.1</junit.version>
@@ -430,7 +430,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -444,7 +444,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -457,7 +457,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
@@ -559,7 +559,7 @@
 						</configuration>
 					</execution>
 				</executions>
-				<dependencies />
+				<dependencies/>
 			</plugin>
 			<!-- aop compile weaving -->
 			<plugin>
