@@ -67,7 +67,7 @@
 		<!-- Testing -->
 		<junit.version>4.13.1</junit.version>
 		<!-- Spring integration version -->
-		<spring.version>5.3.14</spring.version>
+		<spring.version>5.3.26</spring.version>
 
 		<!-- OWASP -->
 		<dependency-check-maven.version>6.5.0</dependency-check-maven.version>
@@ -430,7 +430,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -444,7 +444,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -457,7 +457,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
@@ -559,7 +559,7 @@
 						</configuration>
 					</execution>
 				</executions>
-				<dependencies />
+				<dependencies/>
 			</plugin>
 			<!-- aop compile weaving -->
 			<plugin>
