@@ -45,10 +45,10 @@
 		<aspectj.version>1.9.6</aspectj.version>
 		<!-- Logging version (logback is used only for testing) -->
 		<slf4j.version>1.7.31</slf4j.version>
-		<logback.version>1.2.3</logback.version>
+		<logback.version>1.5.13</logback.version>
 		<!-- Configuration parser provider -->
-		<snakeyaml.version>1.28</snakeyaml.version>
-		<jackson.version>2.13.1</jackson.version>
+		<snakeyaml.version>1.31</snakeyaml.version>
+		<jackson.version>2.15.0</jackson.version>
 		<!-- Cache implementation version -->
 		<apache-jcs-cache.version>1.3</apache-jcs-cache.version>
 		<terracotta-ehcache.version>2.6.11</terracotta-ehcache.version>
@@ -62,12 +62,12 @@
 		<!-- <weld.version>4.0.1.Final</weld.version> -->
 
 		<!-- Third parties -->
-		<activemq.version>5.16.2</activemq.version>
+		<activemq.version>5.16.8</activemq.version>
 
 		<!-- Testing -->
 		<junit.version>4.13.2</junit.version>
-		<!-- Spring integration version -->
-		<spring.version>5.3.14</spring.version>
+		<!-- Spring version -->
+		<spring.version>5.3.34</spring.version>
 
 		<!-- OWASP -->
 		<dependency-check-maven.version>6.5.0</dependency-check-maven.version>
@@ -258,22 +258,22 @@
 			<dependency>
 				<groupId>org.apache.derby</groupId>
 				<artifactId>derbyclient</artifactId>
-				<version>10.15.2.0</version>
+				<version>10.14.2.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.derby</groupId>
 				<artifactId>derby</artifactId>
-				<version>10.15.2.0</version>
+				<version>10.14.2.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-server</artifactId>
-				<version>10.0.7</version>
+				<version>9.4.57.v20241219</version>
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-webapp</artifactId>
-				<version>10.0.7</version>
+				<version>9.4.57.v20241219</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mockftpserver</groupId>
