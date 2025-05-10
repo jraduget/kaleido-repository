@@ -11,6 +11,5 @@ derby.log
 .DS_Store
 .tomcatplugin
 .idea/
+.vscode/
 *.iml
-
-/kaleido-admin/nbproject/private/
