@@ -31,3 +31,17 @@ server-password: OSS_SONATYPE_PASSWORD
 
 
 
+# Launch your Release
+
+```
+git flow release start <version>
+
+mvn versions:set -DnewVersion=<version>
+
+git commit -m "Release <version>" .
+
+git flow release finish <version>
+
+```
+
+
