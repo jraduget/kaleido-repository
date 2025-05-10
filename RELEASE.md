@@ -38,7 +38,7 @@ git flow release start <version>
 
 mvn versions:set -DnewVersion=<version>
 
-git commit -m "Release <version>"
+git commit -m "Release <version>" .
 
 git flow release finish <version>
 
