@@ -5,7 +5,7 @@
 
 	<groupId>org.kaleidofoundry</groupId>
 	<artifactId>kaleido-parent</artifactId>
-	<version>0.12.0</version>
+	<version>1.0.0-SNAPSHOT</version>
 
 	<name>KaleidoFoundry parent POM</name>
 	<url>https://github.com/jraduget/kaleido-repository/</url>
@@ -21,7 +21,7 @@
 	</licenses>
 
 	<prerequisites>
-		<maven>3.6.3</maven>
+		<maven>3.9.9</maven>
 	</prerequisites>
 
 	<developers>
@@ -69,8 +69,6 @@
 		<!-- Spring version -->
 		<spring.version>5.3.34</spring.version>
 
-		<!-- OWASP -->
-		<dependency-check-maven.version>6.5.0</dependency-check-maven.version>
 		<!-- source encoding options -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -236,7 +234,7 @@
 				<artifactId>javaee-api</artifactId>
 				<version>8.0</version>
 			</dependency>
-			<!-- <dependency> <groupId>jakarta.platform</groupId> <artifactId>jakarta.jakartaee-api</artifactId> 
+			<!-- <dependency> <groupId>jakarta.platform</groupId> <artifactId>jakarta.jakartaee-api</artifactId>
 				<version>8.0.0</version> <scope>provided</scope> </dependency> -->
 
 			<!-- testing -->
@@ -411,6 +409,12 @@
 					<version>3.3.0</version>
 				</plugin>
 
+				<plugin>
+					<groupId>org.openrewrite.maven</groupId>
+					<artifactId>rewrite-maven-plugin</artifactId>
+					<version>6.8.0</version>
+				</plugin>
+
 				<!-- eclipse m2e settings only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -505,8 +509,8 @@
 						-->
                     </execution>
                 </executions>
-            </plugin>			
-        
+            </plugin>
+
 			<!-- compilation -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -515,7 +519,7 @@
 				<configuration>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
-					<!-- disable annotation processors during normal compilation, use maven-processor-plugin, 
+					<!-- disable annotation processors during normal compilation, use maven-processor-plugin,
 						waiting maven compiler plugin handle it -->
 					<compilerArgument>-proc:none</compilerArgument>
 				</configuration>
@@ -650,6 +654,28 @@
 				</configuration>
 			</plugin>
 
+			<plugin>
+				<groupId>org.openrewrite.maven</groupId>
+				<artifactId>rewrite-maven-plugin</artifactId>
+				<configuration>
+					<activeRecipes>
+						<recipe>org.openrewrite.java.migrate.UpgradeToJava17</recipe>
+						<!-- <recipe>org.openrewrite.java.testing.junit5.JUnit5BestPractices</recipe> -->
+					</activeRecipes>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.openrewrite.recipe</groupId>
+						<artifactId>rewrite-migrate-java</artifactId>
+						<version>3.9.0</version>
+					</dependency>
+					<dependency>
+						<groupId>org.openrewrite.recipe</groupId>
+						<artifactId>rewrite-testing-frameworks</artifactId>
+						<version>3.8.0</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 		</plugins>
 
 	</build>
@@ -670,7 +696,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.6</version>
+				<version>3.9.0</version>
 				<configuration>
 					<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
 					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
@@ -699,12 +725,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>3.10.1</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
-				<version>2.2</version>
+				<version>3.6.0</version>
 				<configuration>
 					<aggregate>true</aggregate>
 				</configuration>
@@ -712,7 +738,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.13</version>
+				<version>3.5.3</version>
 				<configuration>
 					<aggregate>true</aggregate>
 				</configuration>
@@ -720,12 +746,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.10</version>
+				<version>3.6.0</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
-				<version>2.5</version>
+				<version>3.26.0</version>
 				<configuration>
 					<aggregate>true</aggregate>
 					<targetJdk>${jdk.version}</targetJdk>
@@ -741,7 +767,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changes-plugin</artifactId>
-				<version>2.4</version>
+				<version>3.0.0-M2</version>
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -754,7 +780,7 @@
 	</reporting>
 
 	<profiles>
-		<!-- Release / Staging before maven central 
+		<!-- Release / Staging before maven central
 			 https://central.sonatype.org/publish/publish-guide/
 		-->
 		<profile>
@@ -765,7 +791,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>3.2.0</version>
+						<version>3.3.1</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -779,7 +805,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.2.0</version>
+						<version>3.10.1</version>
 						<configuration>
 							<links>
 								<link>https://download.oracle.com/javase/8/docs/api/</link>
@@ -818,7 +844,7 @@
 							</execution>
 						</executions>
 					</plugin>
-					<!--  Manually stage the published gitflow release 
+					<!--  Manually stage the published gitflow release
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
@@ -831,7 +857,7 @@
 						</configuration>
 					</plugin>
 					-->
-					
+
 				</plugins>
 			</build>
 		</profile>
@@ -843,7 +869,7 @@
 					<plugin>
 						<groupId>org.owasp</groupId>
 						<artifactId>dependency-check-maven</artifactId>
-						<version>${dependency-check-maven.version}</version>
+						<version>12.1.0</version>
 						<configuration>
 							<skipProvidedScope>true</skipProvidedScope>
 							<skipRuntimeScope>true</skipRuntimeScope>

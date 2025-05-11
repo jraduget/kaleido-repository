@@ -16,5 +16,5 @@ Kaleido's components are based on a runtime `@Context` **injection mecanism**. Y
 
 Requirements
 ------------
- * Java >= 1.8
- * Java EE 6  (if you need an application server)
+ * Java >= 17
+ * Jakarta EE 10  (if you need an application server)
